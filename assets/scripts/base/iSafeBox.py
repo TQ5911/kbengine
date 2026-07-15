@@ -217,7 +217,7 @@ class ISafeBox(object):
             rec['itemId'],
             utils.curTS())
         self.client.onSafeBoxItemClaimed(safeBoxId)
-        self._processDirectDelivery(itemId, itemCount)
+        self._processDirectDelivery(rec['orderId'], itemId, itemCount)
         self._rebuildAndTrim()
 
     def _rebuildAndTrim(self):
@@ -324,9 +324,9 @@ class ISafeBox(object):
             self.storePurchaseToSafeBox(orderId, orderTime, itemId, itemCount, itemPrice)
             return
 
-        self._processDirectDelivery(itemId, itemCount)
+        self._processDirectDelivery(orderId, itemId, itemCount)
 
-    def _processDirectDelivery(self, itemId, itemCount):
+    def _processDirectDelivery(self, orderId, itemId, itemCount):
         if itemCount <= 0:
             LOG_ERR("in _processDirectDelivery itemcount is zero", itemId, itemCount)
             return
@@ -349,6 +349,6 @@ class ISafeBox(object):
                                        despArgs=(), srcType=AAC_AACDD.datas.BONUS_SRC_BUYCREDIT)
             return
 
-        detail = gameclass.AwardDetailCls(itemId=itemId, itemCount=itemCount)
+        detail = gameclass.AwardDetailCls(itemId=itemId, itemCount=itemCount, orderId=orderId)
         ctx = self.getAvatarAwardCtx(0, awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID))
         self.addWealth(srcType, _awardVal, opUUID, detail=detail, awardCtx=ctx)

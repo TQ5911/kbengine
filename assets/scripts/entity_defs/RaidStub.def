@@ -374,6 +374,12 @@
             <Arg>   PYTHON      </Arg>
         </switchRaidMicsMode>
 
+        <reqUpdateVoiceRoomState>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   RAID_ID     </Arg>
+            <Arg>   UINT8       </Arg>
+        </reqUpdateVoiceRoomState>
+
         <turnOnRaidMics>
             <Arg>   MAILBOX     </Arg>
             <Arg>   PLAYER_GBID     </Arg>
@@ -407,20 +413,6 @@
             <Arg>   PLAYER_GBID     </Arg>
             <Arg>   PYTHON      </Arg>
         </unblockRaidMemberMics>
-
-        <blockAllRaidMemberMics>
-            <Arg>   MAILBOX     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   PYTHON      </Arg>
-        </blockAllRaidMemberMics>
-
-        <unblockAllRaidMemberMics>
-            <Arg>   MAILBOX     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   PYTHON      </Arg>
-        </unblockAllRaidMemberMics>
 
         <!--Raid Dungeon Start-->
 

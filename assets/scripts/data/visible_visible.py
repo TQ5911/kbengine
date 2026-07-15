@@ -21,6 +21,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -30,6 +31,7 @@ datas = _tools.RODict({
         "level": 999,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -39,6 +41,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 1
     }),
@@ -48,8 +51,9 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010003,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
-        "demon": 0
+        "demon": 1
     }),
     "UI_camera": _tools.RODict({
         "function": "UI_camera",
@@ -57,6 +61,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010003,
         "day": 0,
+        "monthCard": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -66,6 +71,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -75,6 +81,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -84,6 +91,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -93,6 +101,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -102,6 +111,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -111,6 +121,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -120,6 +131,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010003,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -129,6 +141,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -138,6 +151,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -147,6 +161,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -156,6 +171,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -165,6 +181,7 @@ datas = _tools.RODict({
         "level": 999,
         "task": 86010003,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -174,6 +191,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030033,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -183,6 +201,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010003,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -192,6 +211,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010003,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -201,6 +221,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010003,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -210,6 +231,7 @@ datas = _tools.RODict({
         "level": 15,
         "task": 86010003,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -219,6 +241,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010082,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -228,6 +251,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010082,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -237,6 +261,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010082,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -246,6 +271,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010082,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -255,6 +281,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030027,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -264,6 +291,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030029,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -273,6 +301,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010013,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -282,6 +311,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030030,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -291,6 +321,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030011,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -300,6 +331,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030009,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -309,6 +341,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030038,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -318,6 +351,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030028,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -327,6 +361,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010069,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -336,6 +371,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060104,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -345,6 +381,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -354,6 +391,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -363,6 +401,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -372,6 +411,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -381,6 +421,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -390,6 +431,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -399,6 +441,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -408,6 +451,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -417,6 +461,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -426,6 +471,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -435,6 +481,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -444,6 +491,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -453,6 +501,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -462,6 +511,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -471,6 +521,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -480,6 +531,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -489,6 +541,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -498,6 +551,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060146,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -507,6 +561,7 @@ datas = _tools.RODict({
         "level": 4,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -516,15 +571,17 @@ datas = _tools.RODict({
         "level": 9,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
     "MonthCard": _tools.RODict({
         "function": "MonthCard",
         "type": "monthCard",
-        "level": 999,
+        "level": 9,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -534,6 +591,7 @@ datas = _tools.RODict({
         "level": 9,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -543,6 +601,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030033,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -552,6 +611,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030038,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -561,6 +621,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86050035,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -570,6 +631,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86050035,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -579,6 +641,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86050035,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -588,6 +651,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010068,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -597,6 +661,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030040,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -604,8 +669,9 @@ datas = _tools.RODict({
         "function": "UICollectionPanel",
         "type": "collection",
         "level": 0,
-        "task": 86010005,
+        "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -615,6 +681,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030021,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -624,6 +691,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030018,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -633,6 +701,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030031,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -642,6 +711,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010069,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -651,6 +721,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030037,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -660,6 +731,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86030039,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -669,6 +741,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010079,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -678,6 +751,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010077,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -687,6 +761,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010422,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -696,6 +771,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010309,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -703,8 +779,9 @@ datas = _tools.RODict({
         "function": "MineBattle",
         "type": "mineBattle",
         "level": 30,
-        "task": 86030013,
+        "task": 86010418,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -712,17 +789,19 @@ datas = _tools.RODict({
         "function": "UIMineBattleManagePanel",
         "type": "mineBattle",
         "level": 30,
-        "task": 86030013,
+        "task": 86010418,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
     "UIRoleAuthorizationPanel": _tools.RODict({
         "function": "UIRoleAuthorizationPanel",
         "type": "roleAuthorization",
-        "level": 0,
+        "level": 999,
         "task": 86060115,
         "day": 0,
+        "monthCard": 3,
         "switch": 0,
         "demon": 0
     }),
@@ -732,6 +811,7 @@ datas = _tools.RODict({
         "level": 999,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -741,15 +821,17 @@ datas = _tools.RODict({
         "level": 999,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
     "UIAbyssPanel": _tools.RODict({
         "function": "UIAbyssPanel",
         "type": "abyss",
-        "level": 50,
+        "level": 40,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -759,6 +841,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -768,6 +851,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -777,6 +861,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060105,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -786,6 +871,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -795,6 +881,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -804,6 +891,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060055,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -813,6 +901,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060061,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -822,6 +911,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060070,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -831,6 +921,7 @@ datas = _tools.RODict({
         "level": 6,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -840,6 +931,7 @@ datas = _tools.RODict({
         "level": 10,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -849,6 +941,7 @@ datas = _tools.RODict({
         "level": 15,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -858,6 +951,7 @@ datas = _tools.RODict({
         "level": 20,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -867,6 +961,7 @@ datas = _tools.RODict({
         "level": 25,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -876,6 +971,7 @@ datas = _tools.RODict({
         "level": 30,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -885,6 +981,7 @@ datas = _tools.RODict({
         "level": 35,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -894,6 +991,7 @@ datas = _tools.RODict({
         "level": 40,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -903,6 +1001,7 @@ datas = _tools.RODict({
         "level": 48,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -910,8 +1009,9 @@ datas = _tools.RODict({
         "function": "MageSkillUlt",
         "type": "skillMage",
         "level": 0,
-        "task": 86060090,
+        "task": 86060087,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -921,6 +1021,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060055,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -930,6 +1031,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060061,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -937,8 +1039,9 @@ datas = _tools.RODict({
         "function": "TaoistSkill03",
         "type": "skillTaoist",
         "level": 0,
-        "task": 86060089,
+        "task": 86060070,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -948,6 +1051,7 @@ datas = _tools.RODict({
         "level": 6,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -957,6 +1061,7 @@ datas = _tools.RODict({
         "level": 10,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -966,6 +1071,7 @@ datas = _tools.RODict({
         "level": 15,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -975,6 +1081,7 @@ datas = _tools.RODict({
         "level": 20,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -984,6 +1091,7 @@ datas = _tools.RODict({
         "level": 25,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -993,6 +1101,7 @@ datas = _tools.RODict({
         "level": 30,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1002,6 +1111,7 @@ datas = _tools.RODict({
         "level": 35,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1011,6 +1121,7 @@ datas = _tools.RODict({
         "level": 40,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1020,6 +1131,7 @@ datas = _tools.RODict({
         "level": 48,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1027,8 +1139,9 @@ datas = _tools.RODict({
         "function": "TaoistSkillUlt",
         "type": "skillTaoist",
         "level": 0,
-        "task": 86060090,
+        "task": 86060087,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1038,6 +1151,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060055,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1047,6 +1161,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060061,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1054,8 +1169,9 @@ datas = _tools.RODict({
         "function": "WarriorSkill03",
         "type": "skillWarrior",
         "level": 0,
-        "task": 86060089,
+        "task": 86060070,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1065,6 +1181,7 @@ datas = _tools.RODict({
         "level": 6,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1074,6 +1191,7 @@ datas = _tools.RODict({
         "level": 10,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1083,6 +1201,7 @@ datas = _tools.RODict({
         "level": 15,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1092,6 +1211,7 @@ datas = _tools.RODict({
         "level": 20,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1101,6 +1221,7 @@ datas = _tools.RODict({
         "level": 25,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1110,6 +1231,7 @@ datas = _tools.RODict({
         "level": 30,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1119,6 +1241,7 @@ datas = _tools.RODict({
         "level": 35,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1128,6 +1251,7 @@ datas = _tools.RODict({
         "level": 40,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1137,6 +1261,7 @@ datas = _tools.RODict({
         "level": 48,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1144,8 +1269,9 @@ datas = _tools.RODict({
         "function": "WarriorSkillUlt",
         "type": "skillWarrior",
         "level": 0,
-        "task": 86060090,
+        "task": 86060087,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1155,6 +1281,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010024,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1164,6 +1291,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1171,8 +1299,9 @@ datas = _tools.RODict({
         "function": "feishayaosaiopentask",
         "type": "mapTask",
         "level": 35,
-        "task": 86010058,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1182,6 +1311,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010087,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1191,6 +1321,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010087,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1198,8 +1329,9 @@ datas = _tools.RODict({
         "function": "shikuzoulangopentask",
         "type": "mapTask",
         "level": 35,
-        "task": 86010466,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1207,8 +1339,9 @@ datas = _tools.RODict({
         "function": "xinyuanchenjiaoopentask",
         "type": "mapTask",
         "level": 25,
-        "task": 86010050,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1216,8 +1349,9 @@ datas = _tools.RODict({
         "function": "zuke1Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010151,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1225,8 +1359,9 @@ datas = _tools.RODict({
         "function": "zuke2Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010161,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1234,8 +1369,9 @@ datas = _tools.RODict({
         "function": "zuke3Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010398,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1243,8 +1379,9 @@ datas = _tools.RODict({
         "function": "zuke4Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010398,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1252,8 +1389,9 @@ datas = _tools.RODict({
         "function": "zuke5Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010398,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1261,8 +1399,9 @@ datas = _tools.RODict({
         "function": "zuke6Fopentask",
         "type": "mapTask",
         "level": 40,
-        "task": 86010398,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1270,8 +1409,9 @@ datas = _tools.RODict({
         "function": "yueguang1Fopentask",
         "type": "mapTask",
         "level": 10,
-        "task": 86010013,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1279,8 +1419,9 @@ datas = _tools.RODict({
         "function": "yueguang2Fopentask",
         "type": "mapTask",
         "level": 20,
-        "task": 86010032,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1288,8 +1429,9 @@ datas = _tools.RODict({
         "function": "yueguang3Fopentask",
         "type": "mapTask",
         "level": 23,
-        "task": 86010428,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1297,8 +1439,9 @@ datas = _tools.RODict({
         "function": "yueguang4Fopentask",
         "type": "mapTask",
         "level": 28,
-        "task": 86010183,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1306,8 +1449,9 @@ datas = _tools.RODict({
         "function": "yueguang5Fopentask",
         "type": "mapTask",
         "level": 30,
-        "task": 86010338,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1315,8 +1459,9 @@ datas = _tools.RODict({
         "function": "wudu1Fopentask",
         "type": "mapTask",
         "level": 45,
-        "task": 86010466,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1324,17 +1469,19 @@ datas = _tools.RODict({
         "function": "wudu2Fopentask",
         "type": "mapTask",
         "level": 48,
-        "task": 86010466,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
-    "wudu4Fopentask": _tools.RODict({
-        "function": "wudu4Fopentask",
+    "wudu3Fopentask": _tools.RODict({
+        "function": "wudu3Fopentask",
         "type": "mapTask",
-        "level": 50,
-        "task": 86010466,
+        "level": 51,
+        "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1344,6 +1491,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1353,6 +1501,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1362,6 +1511,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1371,6 +1521,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1380,6 +1531,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1389,6 +1541,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1398,6 +1551,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010013,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1407,6 +1561,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -1416,6 +1571,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1425,6 +1581,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1434,6 +1591,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010027,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1443,6 +1601,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010037,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1452,6 +1611,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1461,6 +1621,7 @@ datas = _tools.RODict({
         "level": 15,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1470,6 +1631,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1479,6 +1641,7 @@ datas = _tools.RODict({
         "level": 20,
         "task": 0,
         "day": 1,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1488,6 +1651,7 @@ datas = _tools.RODict({
         "level": 30,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1497,6 +1661,7 @@ datas = _tools.RODict({
         "level": 30,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1506,24 +1671,27 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010291,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
     "Rental": _tools.RODict({
         "function": "Rental",
         "type": "lease",
-        "level": 0,
+        "level": 30,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
-    "Report": _tools.RODict({
-        "function": "Report",
+    "UIReportPanel": _tools.RODict({
+        "function": "UIReportPanel",
         "type": "report",
         "level": 30,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -1533,15 +1701,17 @@ datas = _tools.RODict({
         "level": 9,
         "task": 86060115,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
     "UIRoleAppearancePanel": _tools.RODict({
         "function": "UIRoleAppearancePanel",
         "type": "appearance",
-        "level": 30,
+        "level": 999,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1551,6 +1721,7 @@ datas = _tools.RODict({
         "level": 30,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1560,6 +1731,7 @@ datas = _tools.RODict({
         "level": 0,
         "task": 86010003,
         "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1569,6 +1741,27 @@ datas = _tools.RODict({
         "level": 999,
         "task": 0,
         "day": 0,
+        "monthCard": 0,
+        "switch": 0,
+        "demon": 0
+    }),
+    "Operation": _tools.RODict({
+        "function": "Operation",
+        "type": "settings_operation",
+        "level": 0,
+        "task": 86060101,
+        "day": 0,
+        "monthCard": 0,
+        "switch": 1,
+        "demon": 0
+    }),
+    "ModeChange": _tools.RODict({
+        "function": "ModeChange",
+        "type": "modeChange",
+        "level": 0,
+        "task": 86010095,
+        "day": 0,
+        "monthCard": 0,
         "switch": 0,
         "demon": 0
     })
@@ -1719,7 +1912,7 @@ yueguang4Fopentask = 140
 yueguang5Fopentask = 141
 wudu1Fopentask = 142
 wudu2Fopentask = 143
-wudu4Fopentask = 144
+wudu3Fopentask = 144
 UISettingsPanel = 145
 UIRedeemCodePanel = 146
 UIMainMenu = 147
@@ -1740,12 +1933,14 @@ UIActivityNotice = 161
 UIWorldBoss = 162
 UIEquipSoul = 163
 Rental = 164
-Report = 165
+UIReportPanel = 165
 WorldTrumpet = 166
 UIRoleAppearancePanel = 167
 UIBountyPanel = 168
 RefundRecharge = 169
 UIActionVideoPanel = 170
+Operation = 171
+ModeChange = 172
 
 
 
@@ -1894,7 +2089,7 @@ funcDic = _tools.RODict({
     "yueguang5Fopentask" : 141,
     "wudu1Fopentask" : 142,
     "wudu2Fopentask" : 143,
-    "wudu4Fopentask" : 144,
+    "wudu3Fopentask" : 144,
     "UISettingsPanel" : 145,
     "UIRedeemCodePanel" : 146,
     "UIMainMenu" : 147,
@@ -1915,18 +2110,26 @@ funcDic = _tools.RODict({
     "UIWorldBoss" : 162,
     "UIEquipSoul" : 163,
     "Rental" : 164,
-    "Report" : 165,
+    "UIReportPanel" : 165,
     "WorldTrumpet" : 166,
     "UIRoleAppearancePanel" : 167,
     "UIBountyPanel" : 168,
     "RefundRecharge" : 169,
     "UIActionVideoPanel" : 170,
+    "Operation" : 171,
+    "ModeChange" : 172,
 })
 demonDic = _tools.RODict({
     "bag" : 1,
+    "changeTarget" : 1,
 })
 typeToBitsDic = _tools.RODict({
     "bag" : _tools.RODict({
+        1 : _tools.ROList([
+            0,
+        ]),
+    }),
+    "changeTarget" : _tools.RODict({
         1 : _tools.ROList([
             0,
         ]),
@@ -2077,7 +2280,7 @@ reverseFuncDic = _tools.RODict({
     141 : "yueguang5Fopentask",
     142 : "wudu1Fopentask",
     143 : "wudu2Fopentask",
-    144 : "wudu4Fopentask",
+    144 : "wudu3Fopentask",
     145 : "UISettingsPanel",
     146 : "UIRedeemCodePanel",
     147 : "UIMainMenu",
@@ -2098,19 +2301,22 @@ reverseFuncDic = _tools.RODict({
     162 : "UIWorldBoss",
     163 : "UIEquipSoul",
     164 : "Rental",
-    165 : "Report",
+    165 : "UIReportPanel",
     166 : "WorldTrumpet",
     167 : "UIRoleAppearancePanel",
     168 : "UIBountyPanel",
     169 : "RefundRecharge",
     170 : "UIActionVideoPanel",
+    171 : "Operation",
+    172 : "ModeChange",
 })
 levelDic = _tools.RODict({
     999 : _tools.ROList([
         14,
-        54,
+        76,
         77,
         78,
+        167,
         170,
     ]),
     15 : _tools.ROList([
@@ -2125,6 +2331,7 @@ levelDic = _tools.RODict({
     ]),
     9 : _tools.ROList([
         53,
+        54,
         55,
         166,
     ]),
@@ -2142,13 +2349,16 @@ levelDic = _tools.RODict({
         141,
         161,
         162,
+        164,
         165,
-        167,
         168,
     ]),
-    50 : _tools.ROList([
+    40 : _tools.ROList([
         79,
-        144,
+        95,
+        108,
+        121,
+        136,
     ]),
     6 : _tools.ROList([
         88,
@@ -2181,12 +2391,6 @@ levelDic = _tools.RODict({
         126,
         129,
     ]),
-    40 : _tools.ROList([
-        95,
-        108,
-        121,
-        136,
-    ]),
     48 : _tools.ROList([
         96,
         109,
@@ -2201,6 +2405,9 @@ levelDic = _tools.RODict({
     ]),
     45 : _tools.ROList([
         142,
+    ]),
+    51 : _tools.ROList([
+        144,
     ]),
 })
 taskDic = _tools.RODict({
@@ -2237,6 +2444,7 @@ taskDic = _tools.RODict({
         53,
         54,
         55,
+        63,
         76,
         84,
         148,
@@ -2265,7 +2473,6 @@ taskDic = _tools.RODict({
     ]),
     86010013 : _tools.ROList([
         26,
-        137,
         151,
     ]),
     86030030 : _tools.ROList([
@@ -2305,9 +2512,6 @@ taskDic = _tools.RODict({
     86030040 : _tools.ROList([
         62,
     ]),
-    86010005 : _tools.ROList([
-        63,
-    ]),
     86030021 : _tools.ROList([
         64,
     ]),
@@ -2335,7 +2539,7 @@ taskDic = _tools.RODict({
     86010309 : _tools.ROList([
         73,
     ]),
-    86030013 : _tools.ROList([
+    86010418 : _tools.ROList([
         74,
         75,
     ]),
@@ -2354,58 +2558,20 @@ taskDic = _tools.RODict({
     ]),
     86060070 : _tools.ROList([
         87,
+        100,
+        113,
     ]),
-    86060090 : _tools.ROList([
+    86060087 : _tools.ROList([
         97,
         110,
         123,
     ]),
-    86060089 : _tools.ROList([
-        100,
-        113,
-    ]),
     86010024 : _tools.ROList([
         124,
-    ]),
-    86010058 : _tools.ROList([
-        126,
     ]),
     86010087 : _tools.ROList([
         127,
         128,
-    ]),
-    86010466 : _tools.ROList([
-        129,
-        142,
-        143,
-        144,
-    ]),
-    86010050 : _tools.ROList([
-        130,
-    ]),
-    86010151 : _tools.ROList([
-        131,
-    ]),
-    86010161 : _tools.ROList([
-        132,
-    ]),
-    86010398 : _tools.ROList([
-        133,
-        134,
-        135,
-        136,
-    ]),
-    86010032 : _tools.ROList([
-        138,
-    ]),
-    86010428 : _tools.ROList([
-        139,
-    ]),
-    86010183 : _tools.ROList([
-        140,
-    ]),
-    86010338 : _tools.ROList([
-        141,
     ]),
     86010027 : _tools.ROList([
         155,
@@ -2416,12 +2582,18 @@ taskDic = _tools.RODict({
     86010291 : _tools.ROList([
         163,
     ]),
+    86060101 : _tools.ROList([
+        171,
+    ]),
+    86010095 : _tools.ROList([
+        172,
+    ]),
 })
 dayDic = _tools.RODict({
     1 : _tools.ROList([
         160,
     ]),
 })
-maxBit = 170
+maxBit = 172
 
-typeToMain = {'UI_camera': 'UI', 'UI_cards': 'UI', 'UI_hp': 'UI', 'UI_level': 'UI', 'UI_score': 'UI', 'welfare_tenSign': 'welfare', 'welfare_attention': 'welfare', 'welfare_phoneBind': 'welfare', 'welfare_levelReward': 'welfare', 'welfare_pcLogin': 'welfare', 'welfare_resourceRecovery': 'welfare', 'welfare_sevenSign': 'welfare', 'equip_make': 'equip', 'equip_unbundle': 'equip', 'equip_strengthen': 'equip', 'equip_class': 'equip', 'equip_spirit': 'equip', 'equip_weaponGlyph': 'equip', 'equip_bless': 'equip', 'settings_giftKey': 'settings', 'pay_hotGift': 'pay', 'pay_holidayGift': 'pay', 'pay_rmb': 'pay', 'settings_hotKey': 'settings', 'equip_soul': 'equip', 'welfare_refundRecharge': 'welfare'}
+typeToMain = {'UI_camera': 'UI', 'UI_cards': 'UI', 'UI_hp': 'UI', 'UI_level': 'UI', 'UI_score': 'UI', 'welfare_tenSign': 'welfare', 'welfare_attention': 'welfare', 'welfare_phoneBind': 'welfare', 'welfare_levelReward': 'welfare', 'welfare_pcLogin': 'welfare', 'welfare_resourceRecovery': 'welfare', 'welfare_sevenSign': 'welfare', 'equip_make': 'equip', 'equip_unbundle': 'equip', 'equip_strengthen': 'equip', 'equip_class': 'equip', 'equip_spirit': 'equip', 'equip_weaponGlyph': 'equip', 'equip_bless': 'equip', 'settings_giftKey': 'settings', 'pay_hotGift': 'pay', 'pay_holidayGift': 'pay', 'pay_rmb': 'pay', 'settings_hotKey': 'settings', 'equip_soul': 'equip', 'welfare_refundRecharge': 'welfare', 'settings_operation': 'settings'}

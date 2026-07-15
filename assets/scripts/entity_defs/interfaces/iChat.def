@@ -81,6 +81,12 @@
             <Default>       0        </Default>
             <Persistent>    true            </Persistent>
         </silentFriendSpeakTime>
+
+        <notifyChatForbiddenTimer>
+            <Type>          TIMER_ID            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+        </notifyChatForbiddenTimer>
     </Properties>
 
     <BaseMethods>
@@ -171,6 +177,21 @@
             <Arg>           CHAT_CHANNEL_AVATAR_INFO    </Arg>
             <Arg>           CHAT_MSG_DATA               </Arg>
         </onRecvChannelMsg>
+
+        <onRecvTrumpet>
+            <Arg>   INT32                         </Arg>
+            <Arg>   CHAT_CHANNEL_AVATAR_INFO      </Arg>
+            <Arg>   CHAT_MSG_DATA                 </Arg>
+        </onRecvTrumpet>
+
+        <onRecvChannelMsgBatch>
+            <Arg>   PYTHON          </Arg>
+        </onRecvChannelMsgBatch>
+
+        <onNotifyChatForbiddenState>
+            <Arg>   UINT64              </Arg>
+            <Arg>   UINT8               </Arg>
+        </onNotifyChatForbiddenState>
     </BaseMethods>
 
     <CellMethods>
@@ -210,5 +231,16 @@
             <Arg>   AUCTION_ITEM_UUID   </Arg>
             <Arg>   ITEM_ID             </Arg>
         </onAuctionSaleChatting>
+
+        <onRecvTrumpet>
+            <Arg>   INT32                         </Arg>
+            <Arg>   CHAT_CHANNEL_AVATAR_INFO      </Arg>
+            <Arg>   CHAT_MSG_DATA                 </Arg>
+        </onRecvTrumpet>
+
+        <onNotifyChatForbiddenState>
+            <Arg>   UINT64              </Arg>
+            <Arg>   UINT8               </Arg>
+        </onNotifyChatForbiddenState>
     </ClientMethods>
 </root>

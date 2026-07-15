@@ -20,7 +20,9 @@ import visible_visible as UVVD
 import welfare_config as W_CDD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import LogTrackingMgr
+import redisUtils
 import login_set as LSD
+import functools
 
 class IBindPhone(object):
     def __init__(self):
@@ -31,12 +33,22 @@ class IBindPhone(object):
         if self.checkDevicePlatId(self.accountEntity.devicePlatId):
             self.accountEntity.setDefaultPersistentMiscProp(gameconst.EntityPropsEnum.firstPcLoginTimestamp, utils.curTS())
         self.sendClaimPcLoginRewardInfo()
+        self.sendRechargeStageRewardInfo()
 
     def sendClaimPcLoginRewardInfo(self):
         firstTimestamp = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.firstPcLoginTimestamp, 0)
         claimTimestamp = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.claimPcLoginRewardTimestamp, 0)
         LOG_INFO("IBindPhone sendClaimPcLoginRewardInfo", firstTimestamp, claimTimestamp, self.accountEntity.devicePlatId)
         self.client.claimPcLoginRewardInfo(firstTimestamp, claimTimestamp)
+
+    def sendRechargeStageRewardInfo(self):
+        tierRewardConditionInfo = W_CDD.datas.get('tierRewardCondition', {}).get('value', ())
+        num = len(tierRewardConditionInfo)
+        if self.accountEntity.hasTempMiscProp(gameconst.EntityPropsEnum.rechargeStageReward):
+            rechargeStageRewardInfo = self.accountEntity.getTempMiscProp(gameconst.EntityPropsEnum.rechargeStageReward, [0 for _ in range(num)])
+            self.client.rechargeStageRewardInfo(rechargeStageRewardInfo)
+        else:
+            redisUtils.RedisUtils.getRechargeStageInfo(self.accountName, functools.partial(self.onGetRechargeStageRewardInfoCB, num))
 
     def isUnlocked(self, type):
         if not iWelfareSignIn.IWelfareSignIn.checkUnlock(self, iWelfareSignIn.tagClassIDS[type]):
@@ -116,8 +128,8 @@ class IBindPhone(object):
     @gamedecorator.checkGameconfigEnable(UVVD.datas.get('phoneBind', {}).get('type', 'welfare'))
     def reqBindPhone(self, exposed, phone, verifyParam):
         LOG_INFO("IBindPhone reqBindPhone", phone, self.gbID, self.accountName, self.accountEntity.webToken)
-        if self.accountType != centralLogin.ACCOUNT_TAPTAP:
-            LOG_WARN("IBindPhone reqBindPhone channel error", self.accountType, self.accountName, centralLogin.ACCOUNT_TAPTAP)
+        if self.accountEntity.channelId != centralLogin.THIRD_LOGIN_TAPTAP:
+            LOG_WARN("IBindPhone reqBindPhone channel error", self.accountType, self.accountName, centralLogin.THIRD_LOGIN_TAPTAP)
             return
         if self.accountEntity.phone != 0:
             LOG_WARN("IBindPhone reqBindPhone alerady bind", self.accountEntity.phone)
@@ -158,6 +170,7 @@ class IBindPhone(object):
         code = data['code']
         if code == 200 or code == 202:
             self.onMessagePre(MMD.datas.smsSentSuccess, [])
+            self.client.bindPhoneReplay(gameconst.BindPhoneRes.ALERADY_SENT, self.getTempPhone())
             LOG_INFO("IBindPhone _reqBindPhoneResponse success ", self.getTempPhone())
         elif code == 1002 or code == 1003:
             curCnt = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, 0)
@@ -250,7 +263,7 @@ class IBindPhone(object):
 #####################################################################################
     def checkDevicePlatId(self, devicePlatId):
         LOG_INFO("IBindPhone checkDevicePlatId", devicePlatId)
-        return devicePlatId in (gameconst.DevicePlatId.PC_CLIENT, )
+        return devicePlatId in (gameconst.DevicePlatId.PC_CLIENT, gameconst.DevicePlatId.OSX)
     
     @AuthClsWraper.onlyHost
     @gamedecorator.checkGameconfigEnable('welfare_pcLogin')
@@ -293,13 +306,13 @@ class IBindPhone(object):
     def controlQueryRechargeLimit(self):
         LOG_INFO("IBindPhone::controlQueryRechargeLimit")
         now = utils.curTS()
-        queryRechargeTimestamp = self.getTempMiscProp(gameconst.EntityPropsEnum.queryRechargeTimestamp, 0)
+        queryRechargeTimestamp = self.accountEntity.getTempMiscProp(gameconst.EntityPropsEnum.queryRechargeTimestamp, 0)
         if queryRechargeTimestamp > now:
-            LOG_WARN("IBindPhone::controlQueryRechargeLimit")
+            LOG_WARN("IBindPhone::controlQueryRechargeLimit cd")
             self.onMessagePre(MMD.datas.frequentRequests_tryLater, [])
             return True
 
-        self.setTempMiscProp(gameconst.EntityPropsEnum.queryRechargeTimestamp, now + 3)
+        self.accountEntity.setTempMiscProp(gameconst.EntityPropsEnum.queryRechargeTimestamp, now + 3)
         return False
 
     @gamedecorator.limitcall(1)
@@ -329,7 +342,92 @@ class IBindPhone(object):
         if code == 0:
             rechargeAmount = float(data['data'])
             self.client.queryRechargeAmountReplay(rechargeAmount)
+            self.accountEntity.setTempMiscProp(gameconst.EntityPropsEnum.rechargeAmount, rechargeAmount)
             LOG_INFO("IBindPhone::_reqQueryRechargeResponse success ", rechargeAmount)
         else:
             self.onMessagePre(MMD.datas.web_requestException, [])
             LOG_WARN("IBindPhone::_reqQueryRechargeResponse exception")
+
+    @gamedecorator.limitcall(1)
+    def reqGetRechargeStageReward(self, exposed, stage, rewardId):
+        LOG_INFO("IBindPhone::reqGetRechargeStageReward", stage, rewardId, self.accountName)
+        tierRewardConditionInfo = W_CDD.datas.get('tierRewardCondition', {}).get('value', ())
+        num = len(tierRewardConditionInfo)
+        if stage >= num:
+            LOG_ERR("IBindPhone::reqGetRechargeStageReward stage error", stage)
+            return
+        tierRewardCondition = tierRewardConditionInfo[stage]
+        if len(tierRewardCondition) != 2:
+            LOG_ERR("IBindPhone::reqGetRechargeStageReward tierRewardCondition error")
+            return
+        condition = tierRewardCondition[0]
+        rewards = tierRewardCondition[1]
+        if type(rewards) is int:
+            rewards = (rewards, )
+        LOG_INFO("IBindPhone::reqGetRechargeStageReward condition, rewards", condition, rewards)
+        if rewardId not in rewards:
+            LOG_ERR("IBindPhone::reqGetRechargeStageReward reward error", rewardId, rewards)
+            return
+
+        if not self.accountEntity.hasTempMiscProp(gameconst.EntityPropsEnum.rechargeStageReward):
+            LOG_ERR("IBindPhone::reqGetRechargeStageReward no rechargeStageReward data")
+            return
+        
+        rechargeStageRewardInfo = self.accountEntity.getTempMiscProp(gameconst.EntityPropsEnum.rechargeStageReward, [0 for _ in range(num)])
+        self.doGetRechargeStageReward(stage, condition, rewardId, rechargeStageRewardInfo, num)
+
+    def onGetRechargeStageRewardInfoCB(self, num, cid, err, res):
+        LOG_INFO("IBindPhone::onGetRechargeStageRewardInfoCB", num, cid, err, res)
+        if err:
+            LOG_ERR("IBindPhone::onGetRechargeStageRewardInfoCB error")
+            return
+
+        rechargeStageRewardInfo = [0 for _ in range(num)]
+        if res:
+            infoValueStr = str(res.decode('utf-8'))
+            rechargeStageRewardInfo = self.redisValue2RechargeStageRewardInfo(infoValueStr)
+            LOG_INFO("IBindPhone::onGetRechargeStageRewardInfoCB rechargeStageRewardInfo", infoValueStr, rechargeStageRewardInfo)
+        LOG_INFO("IBindPhone::onGetRechargeStageRewardInfoCB rechargeStageRewardInfo2", rechargeStageRewardInfo)
+        if not self.accountEntity.hasTempMiscProp(gameconst.EntityPropsEnum.rechargeStageReward):
+            self.accountEntity.setTempMiscProp(gameconst.EntityPropsEnum.rechargeStageReward, rechargeStageRewardInfo)
+        self.client.rechargeStageRewardInfo(rechargeStageRewardInfo)
+
+    def onUpdateRechargeStageRewardInfoCB(self, ok, res):
+        LOG_INFO("IBindPhone::onUpdateRechargeStageRewardInfoCB", ok, res)
+        if not ok:
+            LOG_ERR("IBindPhone::onUpdateRechargeStageRewardInfoCB error")
+            return
+    
+    def doGetRechargeStageReward(self, stage, condition, rewardId, rechargeStageRewardInfo, num):
+        LOG_INFO("IBindPhone::doGetRechargeStageReward", stage, condition, rewardId, rechargeStageRewardInfo, num)
+        if rechargeStageRewardInfo[stage] != 0:
+            LOG_WARN("IBindPhone::doGetRechargeStageReward alerady get stage", stage, rewardId, rechargeStageRewardInfo)
+            return
+
+        rechargeAmount = self.accountEntity.getTempMiscProp(gameconst.EntityPropsEnum.rechargeAmount, float(0))
+        LOG_INFO("IBindPhone::doGetRechargeStageReward rechargeAmount", rechargeAmount)      
+        #queryRechargeTimestamp = self.accountEntity.getTempMiscProp(gameconst.EntityPropsEnum.queryRechargeTimestamp, 0)
+        if rechargeAmount < condition:
+            LOG_WARN("IBindPhone::doGetRechargeStageReward not enough", rechargeAmount, condition)
+            return
+
+        rechargeStageRewardInfo[stage] =  rewardId
+        self.accountEntity.setTempMiscProp(gameconst.EntityPropsEnum.rechargeStageReward, rechargeStageRewardInfo)
+        redisUtils.RedisUtils.cmdSet(gameconst.RedisKey.RECHARGE_STAGE_INFO + self.accountName, self.rechargeStageRewardInfo2RedisValue(rechargeStageRewardInfo), self.onUpdateRechargeStageRewardInfoCB)
+        detail = gameclass.AwardDetailCls()
+        srcType = AAC_AACDD.datas.BONUS_SRC_WIPE_RECHARGE_REWARD
+        awardVal = dropAward.AwardVal()
+        awardVal.addWealthByItemId(rewardId, 1)
+        awardCtx = self.getAvatarAwardCtx(0, None)
+        self.addWealth(srcType, awardVal, KBEngine.genUUID64(), detail, awardCtx=awardCtx)
+        self.client.rechargeStageRewardInfo(rechargeStageRewardInfo)
+
+    @staticmethod
+    def redisValue2RechargeStageRewardInfo(infoValueStr):
+        info = [int(id) for id in infoValueStr.split(',')]
+        return info
+     
+    @staticmethod
+    def rechargeStageRewardInfo2RedisValue(info):
+        infoValueStr = ','.join([str(id) for id in info])
+        return infoValueStr

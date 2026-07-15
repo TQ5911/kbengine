@@ -3,6 +3,8 @@ package CentralLogin
 import (
 	"bytes"
 	"centralService/src/appLog"
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -523,10 +525,74 @@ func (self *HttpService) handleExchangeActivationCode(w http.ResponseWriter, r *
 	}
 }
 
+// handleKickClient 踢下线指定账号的客户端。期望 form 参数：
+//   accountName — hex 编码的 "<accountType>-<accountName>" 字符串（accountType 已嵌入）
+//   sign        — md5(hex(accountName) + LoginConfig.LoginHttpSecret) 的 hex 大/小写均可
+// 调用后 CentralLoginApp.KickAccountClient 会断开 RPC 连接、从 gameClients 移除并清掉 Redis token，
+// 使该账号后续 VerifyLogin 的 checkClientLogin 必返回 false。
+func (self *HttpService) handleKickClient(w http.ResponseWriter, r *http.Request) {
+	appLog.Debug("handleKickClient")
+	if r.Method != "POST" {
+		w.WriteHeader(405)
+		return
+	}
+	if err := r.ParseForm(); err != nil {
+		appLog.Error("handleKickClient parse form err", err)
+		w.WriteHeader(400)
+		return
+	}
+
+	encodedAccount := strings.Join(r.Form["accountName"], "")
+	sign := strings.Join(r.Form["sign"], "")
+	if encodedAccount == "" || sign == "" {
+		appLog.Error("handleKickClient missing accountName/sign")
+		w.WriteHeader(400)
+		return
+	}
+
+	// 鉴权：md5(encodedAccount + secret)
+	h := md5.New()
+	h.Write([]byte(encodedAccount))
+	h.Write([]byte(LoginConfig.LoginHttpSecret))
+	expected := hex.EncodeToString(h.Sum(nil))
+	if !strings.EqualFold(expected, sign) {
+		appLog.Errorf("handleKickClient invalid sign: got=%s want=%s\n", sign, expected)
+		w.WriteHeader(403)
+		return
+	}
+
+	// 解码 & 还原 accountType / accountName
+	decoded, err := hex.DecodeString(encodedAccount)
+	if err != nil {
+		appLog.Error("handleKickClient hex decode err", err)
+		w.WriteHeader(400)
+		return
+	}
+	accountStr := string(decoded)
+	sepIdx := strings.Index(accountStr, ":")
+	if sepIdx <= 0 || sepIdx == len(accountStr)-1 {
+		appLog.Error("handleKickClient invalid account format:", accountStr)
+		w.WriteHeader(400)
+		return
+	}
+	platId, err := strconv.ParseUint(accountStr[:sepIdx], 10, 32)
+	if err != nil {
+		appLog.Error("handleKickClient parse platId err", err, accountStr)
+		w.WriteHeader(400)
+		return
+	}
+	accountName := accountStr[sepIdx+1:]
+
+	self.app.KickAccountClient(uint32(platId), accountName)
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "ok")
+}
+
 func (self *HttpService) startHttpServer(listenAddr string) {
 	appLog.Info("startHttpServer", listenAddr)
 
 	http.HandleFunc("/exchangeActivationCode", self.handleExchangeActivationCode)
+	http.HandleFunc("/kickClient", self.handleKickClient)
 
 	listener, err := greuse.Listen("tcp", listenAddr)
 	if err != nil {

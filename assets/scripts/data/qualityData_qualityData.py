@@ -27,18 +27,18 @@ datas = _tools.RODict({
     }),
     2: _tools.RODict({
         "equipDropPickID": 16000042,
-        "equipLimit": (23, 24, 25, 26, 27, 28, 29, 31, 33, 35),
-        "petLimit": (1, 10, 20, 40, 50)
+        "equipLimit": (23, 24, 25, 26, 27, 28, 29, 30, 32, 34),
+        "petLimit": (0, 0, 0, 0, 0)
     }),
     3: _tools.RODict({
         "equipDropPickID": 16000043,
-        "equipLimit": (45, 48, 50, 52, 54, 56, 58, 60, 62, 64),
-        "petLimit": (25, 30, 35, 45, 50)
+        "equipLimit": (35, 37, 39, 41, 43, 45, 46, 47, 48, 49),
+        "petLimit": (20, 25, 30, 30, 30)
     }),
     4: _tools.RODict({
         "equipDropPickID": 16000044,
-        "equipLimit": (65, 68, 71, 74, 77, 80, 83, 86, 89, 92),
-        "petLimit": (50, 55, 60, 65, 70)
+        "equipLimit": (50, 55, 60, 65, 70, 75, 80, 85, 90, 95),
+        "petLimit": (45, 50, 55, 60, 65)
     }),
     5: _tools.RODict({
         "equipDropPickID": 16000045,

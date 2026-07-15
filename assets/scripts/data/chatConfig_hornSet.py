@@ -20,9 +20,9 @@ datas = _tools.RODict({
         "type": 1,
         "cost": 30000315,
         "wordsLimit": 100,
-        "showTime": 20,
+        "showTime": 3,
         "cd": 5,
-        "showChannel": (1,)
+        "showChannel": (2,)
     })
 })
 minKey = 1

@@ -17,6 +17,7 @@ import redisUtils
 import gameglobal
 import gameengine
 import iCycleEvent
+import dataUtils
 
 import LogTrackingMgr
 import guild_guildConst as G_GCD
@@ -60,7 +61,8 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleE
 
         # 帮会佣金周结算
         self.registerWeekEvent('_commissionWeeklyCalc')
-
+        self.onDailyEvent()
+        
     def _loadGuildEntity(self):
         gamesql.loadAllGuildEntityInfo(self._onLoadGuildEntity)
 
@@ -140,6 +142,8 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleE
             self._onTimerCallback(tid)
         elif userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
+        elif userArg == gametimer.TIMER_CYCLE_EVENT_TICK_TIMER:
+            self.onCycleEventTick()
         else:
             self._onTimerTrigger(tid, userArg)
 
@@ -345,18 +349,18 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleE
 
     def statGuildData(self, dataType):
         LOG_INFO("GuildStub::statGuildData:", self.guildStatData)
-        if dataType not in gameconst.GuildDataType.VALID_TYPE:
-            return
-        self.guildStatData[dataType] = self.guildStatData.get(dataType, 0) + 1
-        self.gamePlayScoreLimit += 1
+
+        currentPoints = dataUtils.getGuildGamePlayPoints(dataType)
+        self.guildStatData[dataType] = self.guildStatData.get(dataType, 0) + currentPoints
+
+        self.gamePlayScoreLimit += currentPoints
 
     def _commissionWeeklyCalc(self, *args):
         LOG_INFO("GuildStub::_commissionWeeklyCalc:", self.guildStatData)
         totalPoints = 0
-        if totalPoints > 0:
-            for point in self.guildStatData.values():
-                totalPoints += point
-            self.broadcastToAllGuild('_commissionWeeklyCalc', totalPoints)
+        for point in self.guildStatData.values():
+            totalPoints += point
+        self.broadcastToAllGuild('commissionWeeklyCalc', (totalPoints,))
         self.guildStatData.clear()
         self.gamePlayScoreLimit = 0
 

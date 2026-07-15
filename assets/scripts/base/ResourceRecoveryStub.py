@@ -19,6 +19,7 @@ import abyss_config as ABC
 import teamDunChallenge_config as TDC_CFG
 import raidBossChallenge_config as RBC_CFG
 from datetime import datetime
+import gameconfig
 
 
 class ResourceRecoveryStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
@@ -55,6 +56,11 @@ class ResourceRecoveryStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITim
         self.startCheckFreeTicketNumConfigTimer()
 
         now = utils.curTS()
+        serverOpenTimestamp = gameconfig.serverOpenTime()
+        if serverOpenTimestamp > now:
+            LOG_WARN("ResourceRecoveryStub::checkFreeTicketNumConfigCallback not serverOpenTime")
+            return
+
         dateTime = utils.getIntDateTime(now)
 
         needUpdateSubType = set()

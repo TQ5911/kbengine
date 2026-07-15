@@ -10,6 +10,7 @@ import gameclass
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import dropAward
 import message_Message_def as M_M_DD
+import LogTrackingMgr
 
 class IAchievement(object):
     def __init__(self):
@@ -64,12 +65,15 @@ class IAchievement(object):
         if num <= 0:
             LOG_INFO("triggerMapExplore reach max:", mapId, tp, num)
             return
-        enum2val[tp][0] += num
-        mapExploreInfo.rewardData[0] += num * GED.mapId2Point[mapId][tp]
+        if tp in GED.mapId2Point[mapId]:
+            enum2val[tp][0] += num
+            mapExploreInfo.rewardData[0] += num * GED.mapId2Point[mapId][tp]
     
-        LOG_INFO("after triggerMapExplore:", mapId, tp, num, self.mapExploreInfo.mapDatas[mapId])
-        self.onMessagePre(M_M_DD.datas.explorationRate, [str(num * GED.mapId2Point[mapId][tp]),])
+            LOG_INFO("after triggerMapExplore:", mapId, tp, num, self.mapExploreInfo.mapDatas[mapId])
+            self.onMessagePre(M_M_DD.datas.explorationRate, [str(num * GED.mapId2Point[mapId][tp]),])
         self.client.onUpdateMapExplore([mapExploreInfo,])
+
+        LogTrackingMgr.LogTrackingMgr.map_exploration(self.gbID, self.accountEntity.clientDistinctId, mapId, tp, mapExploreInfo.rewardData[0], mapExploreInfo.rewardSlot)
 
     def sendAllMapExploreData(self):
         res = []

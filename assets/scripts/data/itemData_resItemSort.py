@@ -52,25 +52,18 @@ datas = _tools.RODict({
     }),
     6: _tools.RODict({
         "ID": 6,
-        "name": "精灵召唤券",
+        "name": "史诗精灵召唤券",
         "itemID": 30000235,
         "openID": "",
         "resRefreshMode": 0,
     }),
     7: _tools.RODict({
         "ID": 7,
-        "name": "传说精灵召唤券",
+        "name": "精良精灵召唤券",
         "itemID": 30000320,
-        "openID": "",
-        "resRefreshMode": 0,
-    }),
-    8: _tools.RODict({
-        "ID": 8,
-        "name": "巧匠令",
-        "itemID": 30000242,
         "openID": "",
         "resRefreshMode": 0,
     })
 })
 minKey = 1
-maxKey = 8
+maxKey = 7

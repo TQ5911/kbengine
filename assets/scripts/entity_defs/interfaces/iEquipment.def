@@ -159,6 +159,12 @@
             <Arg>      UUID         </Arg>
         </bagEquipSpiritWashingConfirm>
 
+        <bagEquipSpiritWashingDiscard>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UINT8        </Arg>
+            <Arg>      UUID         </Arg>
+        </bagEquipSpiritWashingDiscard>
+
         <bagEquipSoulSocket>
             <Arg>      GRIDID                       </Arg>
             <Arg>      UUID                         </Arg>
@@ -232,12 +238,6 @@
             <Arg>      ARRAY <of> GRIDID </of>  </Arg>
             <Arg>      ARRAY <of> UUID </of>  </Arg>
         </reqMultiEquipDisassemble>
-
-        <onCrossServerReqMultiEquipDisassemble>
-            <Arg>      ARRAY <of> GRIDID </of>  </Arg>
-            <Arg>      ARRAY <of> UUID </of>  </Arg>
-            <Arg>      PY_LIST  </Arg>
-        </onCrossServerReqMultiEquipDisassemble>
 
         <gmBaseDressEquips>
             <Arg>      PY_LIST  </Arg>
@@ -317,11 +317,14 @@
         <onGetDropTakeReward>
             <Arg>       UNIQUE_ID           </Arg>
             <Arg>       UINT32              </Arg>
+            <Arg>       UINT32              </Arg>
         </onGetDropTakeReward>
 
         <onGetDropInfo>
-            <Arg>       PYTHON              </Arg>
-            <Arg>       PYTHON              </Arg>
+            <Arg>       PYTHON                                  </Arg>
+            <Arg>       PYTHON                                  </Arg>
+            <Arg>       ARRAY <of> UNIQUE_ID </of>              </Arg>
+            <Arg>       ARRAY <of> UNIQUE_ID </of>              </Arg>
         </onGetDropInfo>
 
         <takeEquipBase>
@@ -457,6 +460,13 @@
             <Arg>      UINT8                        </Arg>
             <Arg>      UINT64                       </Arg>
         </reqEquipSpiritWashingConfirm>
+
+        <reqEquipSpiritWashingDiscard> <Exposed/>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT64                       </Arg>
+        </reqEquipSpiritWashingDiscard>
 
         <cellEquipSpiritWashingPreview>
             <Arg>   UINT8       </Arg>
@@ -672,6 +682,13 @@
             <Arg>      UINT8            </Arg>
         </onEquipSpiritWashingConfirmFail>
 
+        <onEquipSpiritWashingDiscardResult>
+            <Arg>      UINT8            </Arg>
+            <Arg>      GRIDID           </Arg>
+            <Arg>      UINT8            </Arg>
+            <Arg>      UINT8            </Arg>
+        </onEquipSpiritWashingDiscardResult>
+
         <onEquipGlyphWashingSucc>
             <Arg>      UINT8            </Arg>
             <Arg>      GRIDID           </Arg>
@@ -832,6 +849,15 @@
         <onEquipGlyphStatusChange>
             <Arg>      ARRAY <of>  CLI_GLYPH_STATUS_CHANGE_INFO </of>  </Arg>
         </onEquipGlyphStatusChange>
+
+        <onGetBackEquipSuccess>
+            <Arg>   UNIQUE_ID   </Arg>
+            <Arg>   UINT8       </Arg>
+        </onGetBackEquipSuccess>
+
+        <onGetDropTakeRewardSuccess>
+            <Arg>   UNIQUE_ID   </Arg>
+        </onGetDropTakeRewardSuccess>
     </ClientMethods>
 </root>
 

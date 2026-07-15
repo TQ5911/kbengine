@@ -388,6 +388,7 @@ class ICubeCell(object):
     @utils.isMyself
     def followCaptainInCube(self, exposed):
         LOG_INFO('ICubeCell::followCaptainInCube: {}'.format(self.spaceNo))
+        return
         if not formula.inCubeScene(self.spaceNo):
             LOG_ERR('ICubeCell::followCaptainInCube: not cube space: {}'.format(self.spaceNo))
             return
@@ -682,9 +683,23 @@ class ICubeCell(object):
             LOG_ERR('ICubeCell::switchCubeLine: same line: {}'.format(self.spaceNo))
             return
 
+        #大厅支持选择分线，在房间中切换分线策划需求回到大厅
         _mapId = formula.fetchMapId(self.spaceNo)
-        _floor = cube_room.datas[_mapId]['floor']
-        gameengine.getCubeStub(_floor).checkSwitchCubeLine(self.base, lineNo, _mapId)
+        if _mapId == cube_config.datas['cube_hall']['value']:
+            _floor = cube_room.datas[_mapId]['floor']
+            gameengine.getCubeStub(_floor).checkSwitchCubeLine(self.base, lineNo, _mapId)
+        else:
+            self._commonNeedCast(
+                C_C_DD.datas.teleportCast,
+                gameconst.StateEnum.Teleporting,
+                gameconst.CastEnum.teleportAnchor,
+                '_switchCubeHall',
+                (),
+                castTime=CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR)
+            )
+
+    def _switchCubeHall(self):
+        gameengine.getCubeStub(1).doEnterCubeReady(self.base, self.gbId, {})
 
     def onCheckSwitchCubeLineResult(self, lineNo, canEnter):
         LOG_INFO('ICubeCell::onCheckSwitchCubeLineResult: {}'.format(canEnter))
@@ -701,10 +716,10 @@ class ICubeCell(object):
             castTime=CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR)
         )
 
-    def _switchCubeLine(self, lineNo):
+    def _switchCubeLine(self, lineNo, extra={}):
         LOG_INFO('ICubeCell::_switchCubeLine: {}'.format(lineNo))
 
-        extra = {'enterCubeType': gameconst.ENTER_CUBE_SWITCH_LINE}
+        extra['enterCubeType'] = gameconst.ENTER_CUBE_SWITCH_LINE
         _mapId = formula.fetchMapId(self.spaceNo)
         _floor = cube_room.datas[_mapId]['floor']
         gameengine.getCubeStub(_floor).doSwitchCubeLine(

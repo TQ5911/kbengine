@@ -20,6 +20,7 @@ import gamePlay_set as GP_SD
 import formula_generalFormula as F_GFD
 import cube_room
 import worldConfig_Area as WC_AD
+import gameconfig
 
 class IRelive(object):
     def _spaceDeathPenaltyData(self, srcType=0):
@@ -87,7 +88,13 @@ class IRelive(object):
             self.curReliveCD = 0
 
     def _onDeadPenalty(self, killerGbId, killerName, killerId=0, creationId=0, srcType=0):
-        LOG_DBG('_onDeadPenalty', self.lastDeadTime, self.lastDeathPentlyTime, self.deathPenaltyTimes, self.curReliveCD, self.spaceNo, self.gbId)
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerCell('_onDeadDeductHandler', (killerGbId, killerName, killerId, creationId, srcType))
+        else:
+            self._onDeadDeductHandler(killerGbId, killerName, killerId, creationId, srcType)
+
+    def _onDeadDeductHandler(self, killerGbId, killerName, killerId=0, creationId=0, srcType=0):
+        LOG_DBG('_onDeadDeductHandler', self.lastDeadTime, self.lastDeathPentlyTime, self.deathPenaltyTimes, self.curReliveCD, self.spaceNo, self.gbId)
         _now = utils.curTS()
 
         _dpData = self._spaceDeathPenaltyData(srcType)
@@ -129,11 +136,11 @@ class IRelive(object):
         LOG_DBG('addDeathPenaltyVal', killerId, creationId, srcType)
         self.base.addDeathPenaltyVal(_deductExp, _deductMoney, killerGbId, killerName, _opUUID, {'killerId': killerId, 'creationId': creationId, 'srcType': srcType})
 
-        self.syncMethodCallToLocalServerCell("onCrossServerDeadSync", (_now, _dpData, _deductExp, _deductMoney, killerGbId, killerName, _opUUID, {'killerId': killerId, 'creationId': creationId, 'srcType': srcType}))
+        self.syncMethodCallToCrossServerCell("onLocalServerDeadSync", (_now, _dpData, _deductExp, _deductMoney, killerGbId, killerName, _opUUID, {'killerId': killerId, 'creationId': creationId, 'srcType': srcType}))
 
     #跨服死亡分4块，1复活时间相关， 2死亡爆装，3经验，4死亡扣钱, 经验在_modifyExp里处理，其他在这里处理
-    def onCrossServerDeadSync(self, now, dpData, deductExp, deductMoney, killerGbId, killerName, opUUID, killerData):
-        LOG_INFO("onCrossServerDeadSync", now, dpData, deductExp, deductMoney, killerGbId, killerName, opUUID, killerData)
+    def onLocalServerDeadSync(self, now, dpData, deductExp, deductMoney, killerGbId, killerName, opUUID, killerData):
+        LOG_INFO("onLocalServerDeadSync", now, dpData, deductExp, deductMoney, killerGbId, killerName, opUUID, killerData)
         self._dealReliveTime(now, dpData)
         self.base.addDeathPenaltyVal(deductExp, deductMoney, killerGbId, killerName, opUUID, killerData)
 

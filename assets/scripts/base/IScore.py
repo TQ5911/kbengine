@@ -62,46 +62,15 @@ class IScore(object):
         if not scoreInitFinished:
             return
 
-        if not self.updateScoreTimerId:
-            self._notifyScoreChange()
-
         self.guildBox and self.guildBox.onGuildMemberPropUpdate(self.gbID, 'score', totalScore)
         self.propChangedTimes[gameconst.LeaderBoardType.AVATAR_SCORE] = utils.curTS()
 
-
-    def _notifyScoreChange(self):
-        self.updateScoreTimerId = 0
-        now = utils.curTS()
-
-        if self.lastNotifyScoreTime + 55 > now:
-            self.updateScoreTimerId = self.addTimerCB(
-                self.lastNotifyScoreTime + 60 - now,
-                '_notifyScoreChange',
-                (),
-                gametimer.TIMER_TAG_UPDATE_SCORE
-            )
-            return
-        # if self.guildBoxBase:
-        #     self.guildBoxBase.onUpdateAttrAndDiffNotify(self.gbID, {
-        #         'battleEffect': totalScore
-        #     })
-
-        self.lastNotifyScoreTime = now
+    def onAllScoreInitFinished(self):
+        self.commonFlagBase = utils.bset(self.commonFlagBase, gameconst.BASE_COMMON_FLAG_INIT_SCORE)
 
     def _offlineNotifyScore(self):
-        if not self.updateScoreTimerId:
-            return
-
-        self.cancelTimerCB(self.updateScoreTimerId, gametimer.TIMER_TAG_UPDATE_SCORE)
-        self.updateScoreTimerId = 0
-
         totalScore = self.getTotalScore()
         self.updateScoreToRedis(totalScore)
-        # if self.guildBoxBase:
-        #     self.guildBoxBase.onUpdateAttrAndDiffNotify(self.gbID, {
-        #         'battleEffect': totalScore
-        #     })
-        self.lastNotifyScoreTime = utils.curTS()
 
     def updateScoreToRedis(self, battleEffect):
         self._modifyRedisAttr({

@@ -377,7 +377,7 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
 
         self.remoteCallCache.pop(reply.uuid)
         _box = _cache.get('box')
-        _box.onGetDropTakeReward(reply.uniqueId, reply.price)
+        _box.onGetDropTakeReward(reply.uniqueId, reply.price, reply.result)
 
     def doGetDropInfo(self, gbId, box):
         LOG_DBG('Drop doGetDropInfo', gbId)
@@ -420,39 +420,20 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         
         _dropList = []
         for _dropData in reply.dropInfos:
-            # 过滤
-            _returnData = _returnList.get(_dropData.uniqueId, None)
-            if _returnData:
-                _dropList.append((
-                    _returnData.uniqueId,
-                    cPickle.loads(_returnData.equipInfo),
-                    0,
-                    _returnData.dropType,
-                    {},
-                    0,
-                    0,
-                    0,
-                    False,
-                    _returnData.returnTime,
-                    0,
-                    0
-                ))
-                _returnList.pop(_dropData.uniqueId)
-            else:
-                _dropList.append((
-                    _dropData.uniqueId,
-                    cPickle.loads(_dropData.equipInfo),
-                    _dropData.endTime,
-                    _dropData.dropType,
-                    cPickle.loads(_dropData.extraInfo),
-                    _dropData.collExpireTime,
-                    _dropData.price,
-                    _dropData.dropTime,
-                    _dropData.hasPrice,
-                    _dropData.returnTime,
-                    _dropData.redeemWaitTime,
-                    _dropData.takerGbId
-                ))
+            _dropList.append((
+                _dropData.uniqueId,
+                cPickle.loads(_dropData.equipInfo),
+                _dropData.endTime,
+                _dropData.dropType,
+                cPickle.loads(_dropData.extraInfo),
+                _dropData.collExpireTime,
+                _dropData.price,
+                _dropData.dropTime,
+                _dropData.hasPrice,
+                _dropData.returnTime,
+                _dropData.redeemWaitTime,
+                _dropData.takerGbId
+            ))
         # 补充剩余的
         for _returnData in _returnList.values():
             _dropList.append((
@@ -473,29 +454,15 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
 
         _takerList = []
         for _takerData in reply.takerInfos:
-            # 过滤
-            _rewardData = _rewardList.get(_takerData.uniqueId, None)
-            if _rewardData:
-                _takerList.append((
-                _rewardData.uniqueId,
-                cPickle.loads(_rewardData.equipInfo),
-                0,
-                gameconst.DropType.TYPE_REWARD,
-                _rewardData.price,
-                0,
-                False,
-                0))
-                _rewardList.pop(_rewardData.uniqueId)
-            else:
-                _takerList.append((
-                _takerData.uniqueId,
-                cPickle.loads(_takerData.equipInfo),
-                _takerData.endTime,
-                _takerData.dropType,
-                _takerData.price,
-                _takerData.redeemWaitTime,
-                _takerData.hasPrice,
-                _takerData.returnTime))
+            _takerList.append((
+            _takerData.uniqueId,
+            cPickle.loads(_takerData.equipInfo),
+            _takerData.endTime,
+            _takerData.dropType,
+            _takerData.price,
+            _takerData.redeemWaitTime,
+            _takerData.hasPrice,
+            _takerData.returnTime))
         # 补充剩余的
         for _rewardData in _rewardList.values():
             _takerList.append((
@@ -503,13 +470,13 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
                 cPickle.loads(_rewardData.equipInfo),
                 0,
                 gameconst.DropType.TYPE_REWARD,
+                _rewardData.price,
                 0,
-                0,
-                False,
-                _rewardData.returnTime))
+                _rewardData.price > 0,
+                0))
             
 
-        _box.onGetDropInfo(_dropList, _takerList)
+        _box.onGetDropInfo(_dropList, _takerList, list(_returnList.keys()), list(_rewardList.keys()))
 
     def sendRepairDropMail(self, uniqueId):
         LOG_DBG('Drop sendRepairDropMail', uniqueId)

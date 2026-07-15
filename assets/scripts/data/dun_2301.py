@@ -145,12 +145,13 @@ datas ={
     "PosZ": 12.57229,
     "Props": {
       "AreaType": 1,
-      "Height": 3.0,
+      "Height": 30.0,
       "MPosX": 67.0,
       "MPosY": 0.74,
       "MPosZ": -5.0,
       "Radius": 15.0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   }
 }

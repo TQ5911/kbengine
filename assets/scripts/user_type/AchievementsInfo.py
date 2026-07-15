@@ -70,13 +70,13 @@ class AchievementsVal(userType.UserSingleType):
             if (isinstance(ctx, dict) and not ctx.get('fromCrossServer')) or (not isinstance(ctx, dict) and not hasattr(ctx, 'fromCrossServer')):
                 LOG_WARN('triggerAchieveByType isCrossServerInLocalServer and skip', targetType, ctx)
                 return
-        avatar.syncMethodCallToLocalServerBase("onCrossServerTriggerAchieveByType", (targetType, ctx))
         LOG_DBG('triggerAchieveByType', targetType, ctx)
         _waitList = self.typeDic.get(targetType, [])
         _updateList = self._updateByWaitList(avatar, _waitList, ctx)
 
         if _updateList:
             avatar.client.onUpdateAchieveDatas(_updateList)
+            avatar.syncMethodCallToLocalServerBase("onCrossServerTriggerAchieveByType", (targetType, ctx))
 
     def _addTypeDic(self, achieveVal):
         _list = self.typeDic.setdefault(achieveVal.targetType(), [])

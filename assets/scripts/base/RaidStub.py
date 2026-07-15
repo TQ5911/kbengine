@@ -2571,14 +2571,31 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     # --------------------------------------------------------------------
     # RAID MICS
+    def reqUpdateVoiceRoomState(self, srcPlayerGbId, raidUUID, voiceFlags):
+        """客户端同步语音房间状态：inVoiceRoom/enableMics/enableSpeaker（轻量广播）
+        voiceFlags: 0x01=inVoiceRoom, 0x02=enableMics, 0x04=enableSpeaker
+        """
+        if raidUUID not in self.raidDict:
+            return
+        raidVal = self.raidDict[raidUUID]
+        for _teamVal in raidVal.raidTeamDic.values():
+            member = _teamVal.teamPlayerDict.get(srcPlayerGbId)
+            if member is not None:
+                member.inVoiceRoom = (voiceFlags & 0x01) != 0
+                member.enableMics = (voiceFlags & 0x02) != 0
+                member.enableSpeaker = (voiceFlags & 0x04) != 0
+                # 更新 cell 缓存
+                raidVal.refreshPlayerPropsValToAllPlayers(_teamVal.teamIDX, srcPlayerGbId, member)
+                # 轻量统一广播语音状态
+                raidVal.broadcastMemberVoiceState(srcPlayerGbId)
+                break
+
     def switchRaidMicsMode(self, srcPlayerBox, srcPlayerGbId, raidUUID, mode, extraProps):
         LOG_INFO("switchRaidMicsMode::", srcPlayerBox, srcPlayerGbId, raidUUID, mode, extraProps)
         raidVal, err = self._switchRaidMicsMode(srcPlayerBox, srcPlayerGbId, raidUUID, mode, extraProps)
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             LOG_WARN('switchRaidMicsMode:: failed, {}'.format(err))
             return
-
-        raidVal.getAllRaidMemberMiscStatus(toClient=True)
 
     def _switchRaidMicsMode(self, srcPlayerBox, srcPlayerGbId, raidUUID, mode, extraProps):
         if raidUUID not in self.raidDict:
@@ -2637,62 +2654,6 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return None, gameconst.RaidErrno.ENUM_RAID_RAID_ID_NOT_FOUND
         raidVal = self.raidDict[raidUUID]
         return raidVal.unblockRaidMemberMisc(srcPlayerGbId, teamIDX, playerGBID, toClient=True)
-
-    def blockAllRaidMemberMics(self, srcPlayerBox, srcPlayerGbId, raidUUID, extraProps):
-        LOG_INFO("blockAllRaidMemberMics::", srcPlayerBox, srcPlayerGbId, raidUUID, extraProps)
-        raidVal, err = self._blockAllRaidMemberMics(srcPlayerBox, srcPlayerGbId, raidUUID)
-        if err != gameconst.RaidErrno.ENUM_RAID_OK:
-            LOG_WARN('blockAllRaidMemberMics:: failed, {}'.format(err))
-            return
-
-        raidVal.broadcastToAllRaidMembersClient('onBlockAllRaidMemberMics', (srcPlayerGbId, raidUUID))
-
-    def _blockAllRaidMemberMics(self, srcPlayerBox, srcPlayerGbId, raidUUID):
-        if raidUUID not in self.raidDict:
-            return None, gameconst.RaidErrno.ENUM_RAID_RAID_ID_NOT_FOUND
-
-        raidVal = self.raidDict[raidUUID]
-        if not raidVal.raidMicsSwitch:
-            return None, gameconst.RaidErrno.ENUM_RAID_MICS_SWITCH_OFF
-
-        if raidVal.raidMicsBlocked:
-            return None, gameconst.RaidErrno.ENUM_RAID_ALL_MICS_BLOCKED
-
-        for teamIDX, memberGBID, memberVal in raidVal.iterGetRaidMember():
-            if srcPlayerGbId == memberGBID:
-                continue
-            _, err = raidVal.turnOffRaidMemberMics(srcPlayerGbId, teamIDX, memberGBID, blockMics=True, toClient=False)
-            if err != gameconst.RaidErrno.ENUM_RAID_OK:
-                LOG_WARN("_blockAllRaidMemberMics::failed, errno={}".format(err),
-                            raidUUID, srcPlayerGbId, teamIDX, memberGBID, memberVal)
-
-        raidVal.raidMicsBlocked = True
-        return raidVal, gameconst.RaidErrno.ENUM_RAID_OK
-
-    def unblockAllRaidMemberMics(self, srcPlayerBox, srcPlayerGbId, raidUUID, extraProps):
-        LOG_INFO("unblockAllRaidMemberMics::", srcPlayerBox, srcPlayerGbId, raidUUID, extraProps)
-        raidVal, err = self._unblockAllRaidMemberMics(srcPlayerBox, srcPlayerGbId, raidUUID)
-        if err != gameconst.RaidErrno.ENUM_RAID_OK:
-            LOG_WARN('unblockAllRaidMemberMics:: failed, {}'.format(err))
-            return
-
-        raidVal.broadcastToAllRaidMembersClient('onUnblockAllRaidMemberMics', (srcPlayerGbId, raidUUID))
-
-    def _unblockAllRaidMemberMics(self, srcPlayerBox, srcPlayerGbId, raidUUID):
-        if raidUUID not in self.raidDict:
-            return None, gameconst.RaidErrno.ENUM_RAID_RAID_ID_NOT_FOUND
-        raidVal = self.raidDict[raidUUID]
-        if not raidVal.raidMicsSwitch:
-            return None, gameconst.RaidErrno.ENUM_RAID_MICS_SWITCH_OFF
-
-        raidVal.raidMicsBlocked = False
-        for teamIDX, memberGBID, memberVal in raidVal.iterGetRaidMember():
-            _, err = raidVal.unblockRaidMemberMisc(srcPlayerGbId, teamIDX, memberGBID, toClient=False)
-            if err != gameconst.RaidErrno.ENUM_RAID_OK:
-                LOG_WARN("_unblockAllRaidMemberMics::failed, errno={}".format(err),
-                            raidUUID, srcPlayerGbId, teamIDX, memberGBID, memberVal)
-
-        return raidVal, gameconst.RaidErrno.ENUM_RAID_OK
 
     # --------------------------------------------------------------------
 
@@ -2773,6 +2734,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def onRaidDungeonCompletedCB(self, raidUUID, dungeonNo, spaceNo, spaceUUID):
         self.clearRaidDungeonInfo(raidUUID, dungeonNo, spaceNo, spaceUUID)
+        self.raidPrepareAutoMatch(raidUUID)
         # # 解散团队
         # delRaidVal = self.raidDict.get(raidUUID, None)
         # if not delRaidVal:

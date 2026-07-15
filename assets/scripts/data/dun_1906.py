@@ -17315,17 +17315,17 @@ datas ={
     "ClassName": "Teleporter",
     "ClassNameType": 2,
     "CustomID": "",
-    "Dir": 64.25549,
-    "DisplayName": "",
+    "Dir": 64.63314,
+    "DisplayName": "\u6708\u5149\u6d77\u6e2f\u4e09\u5c42 \u00b7\u7cbe\u82f1  ",
     "EliteCustomID": "19058005",
     "EntityID": 17103301,
     "ID": 19068004,
     "Name": "\u6708\u5149\u6d77\u6e2f\u4e09\u5c42",
-    "PosX": 70.91633,
-    "PosY": 158.1224,
-    "PosZ": 200.8251,
+    "PosX": 67.88121,
+    "PosY": 157.8676,
+    "PosZ": 196.9716,
     "Props": {
-      "CameraId": 0,
+      "CameraId": 33010001,
       "GateType": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -17352,7 +17352,7 @@ datas ={
     "PosY": 149.7131,
     "PosZ": 582.64,
     "Props": {
-      "CameraId": 0,
+      "CameraId": 33010001,
       "GateType": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -17379,7 +17379,7 @@ datas ={
     "PosY": 149.3789,
     "PosZ": 199.0204,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
@@ -17402,7 +17402,7 @@ datas ={
     "PosY": 201.233,
     "PosZ": 544.063,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
@@ -17425,7 +17425,7 @@ datas ={
     "PosY": 148.9391,
     "PosZ": 520.3405,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
@@ -17448,7 +17448,7 @@ datas ={
     "PosY": 150.0,
     "PosZ": 585.0,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1

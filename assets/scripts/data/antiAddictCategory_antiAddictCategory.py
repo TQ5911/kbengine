@@ -1964,7 +1964,27 @@ datas = _tools.RODict({
         "messageId": 0,
         "rewardMessage": None,
         "group": None
+    }),
+    196: _tools.RODict({
+        "ID": 196,
+        "name": "BONUS_SRC_GUILD_WEEKLY_CALC",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    197: _tools.RODict({
+        "ID": 197,
+        "name": "BONUS_SRC_WIPE_RECHARGE_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
     })
 })
 minKey = 1
-maxKey = 195
+maxKey = 197

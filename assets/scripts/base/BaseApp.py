@@ -22,6 +22,7 @@ import iTimer
 import iBaseNoCell
 import asyncore
 import iBroadcastEvent
+import iBatchChatBroadcast
 import iGameStart
 import iWaitMapGameStart
 import elasticUtils
@@ -69,7 +70,9 @@ class InterfaceBaseappClient(BaseAppService):
         _ent.onSetAccountCompSuccess()
 
 
-class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcastEvent, iWaitMapGameStart.IWaitMapGameStart, iGameStart.IGameStart, iRouter.IRouter):
+class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcastEvent,
+              iBatchChatBroadcast.IBatchChatBroadcast,
+              iWaitMapGameStart.IWaitMapGameStart, iGameStart.IGameStart, iRouter.IRouter):
     INITIAL_INIT = 0.1
 
     def __init__(self):

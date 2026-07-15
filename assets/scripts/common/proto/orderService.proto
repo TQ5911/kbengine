@@ -33,6 +33,7 @@ message OrderRequest
   double price = 7;
   bool addToSafe = 8;
   string roleName = 9;
+  int64 payTime = 10;
 }
 
 message OrderResponse

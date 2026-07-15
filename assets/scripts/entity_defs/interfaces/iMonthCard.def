@@ -35,6 +35,20 @@
             <Persistent>    true                 </Persistent>
         </remainHangupMinutes>
 
+        <monthCardFirstPurchaseFlag>
+            <Type>          UINT8                </Type>
+            <Flags>         BASE_AND_CLIENT      </Flags>
+            <Default>       1                    </Default>
+            <Persistent>    true                 </Persistent>
+        </monthCardFirstPurchaseFlag>
+
+        <bigMonthCardFirstPurchaseFlag>
+            <Type>          UINT8                </Type>
+            <Flags>         BASE_AND_CLIENT      </Flags>
+            <Default>       1                    </Default>
+            <Persistent>    true                 </Persistent>
+        </bigMonthCardFirstPurchaseFlag>
+
         <lastMonthCardHangupGetTime>
             <Type>          LONGTIME             </Type>
             <Flags>         BASE                 </Flags>
@@ -88,13 +102,6 @@
             <Default>       0                       </Default>
             <Persistent>    true                    </Persistent>
         </bigMonthCardExpireTimeCell>
-
-        <monthCardFirstPurchaseRecord>
-            <Type>          PY_DICT                 </Type>
-            <Flags>         BASE                    </Flags>
-            <Default>       {}                      </Default>
-            <Persistent>    true                    </Persistent>
-        </monthCardFirstPurchaseRecord>
     </Properties>
 
     <BaseMethods>

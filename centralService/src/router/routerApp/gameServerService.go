@@ -47,7 +47,8 @@ func (self *GameServerService) DoOnOthersBase(in *gameServerService.OthersBaseRe
 	appLog.Debug("doOnOthersBase:", in.ServerId, in.DstServerId, in.ComponentId, in.MemoryStream)
 	otherBaseApp := self.app.getOtherBaseApp(in.DstServerId, in.ComponentId)
 	if otherBaseApp == nil {
-		return nil, errors.New(fmt.Sprint("cannot find other baseapp", in.ServerId, in.ComponentId))
+		appLog.Error("cannot find other baseapp", in.ServerId, in.ComponentId, in.DstServerId, in.ComponentId)
+		return nil, nil
 	}
 
 	//记录流量统计：按来源服务器和目标服务器分别累加请求数和字节数

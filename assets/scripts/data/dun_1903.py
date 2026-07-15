@@ -13337,17 +13337,17 @@ datas ={
     "ClassName": "Teleporter",
     "ClassNameType": 2,
     "CustomID": "10018080",
-    "Dir": 151.0352,
+    "Dir": 333.9679,
     "DisplayName": "",
     "EliteCustomID": "",
     "EntityID": 17103001,
     "ID": 19038004,
     "Name": "\u65b0\u5143\u57ce",
-    "PosX": 185.1166,
-    "PosY": 170.6331,
-    "PosZ": 515.1976,
+    "PosX": 181.06,
+    "PosY": 169.8314,
+    "PosZ": 521.5,
     "Props": {
-      "CameraId": 0,
+      "CameraId": 33010001,
       "GateType": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -13364,17 +13364,17 @@ datas ={
     "ClassName": "Teleporter",
     "ClassNameType": 2,
     "CustomID": "",
-    "Dir": 15.51132,
-    "DisplayName": "",
+    "Dir": 187.2682,
+    "DisplayName": "\u6708\u5149\u6d77\u6e2f\u4e8c\u5c42\u00b7\u7cbe\u82f1",
     "EliteCustomID": "19048004",
     "EntityID": 17103002,
     "ID": 19038005,
     "Name": "\u6708\u5149\u6d77\u6e2f\u4e8c\u5c42",
-    "PosX": 185.18,
-    "PosY": 100.8849,
-    "PosZ": 186.575,
+    "PosX": 184.13,
+    "PosY": 100.8841,
+    "PosZ": 184.01,
     "Props": {
-      "CameraId": 0,
+      "CameraId": 33010001,
       "GateType": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -13401,7 +13401,7 @@ datas ={
     "PosY": 164.6611,
     "PosZ": 433.195,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
@@ -13424,7 +13424,7 @@ datas ={
     "PosY": 135.9066,
     "PosZ": 434.9727,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
@@ -13447,7 +13447,7 @@ datas ={
     "PosY": 108.0993,
     "PosZ": 184.0384,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
@@ -13470,7 +13470,7 @@ datas ={
     "PosY": 143.9589,
     "PosZ": 347.2601,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1

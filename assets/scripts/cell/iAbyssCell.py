@@ -22,6 +22,8 @@ import const_const as CONST
 import conflict_conflict_def as C_C_DD
 import gameconfig
 
+import LogTrackingMgr
+
 class AbyssSwitch(object):
     def __init__(self, coinSwitch=False, itemSwitch=False, times=0):
         self.coinSwitch = coinSwitch
@@ -56,18 +58,6 @@ class IAbyssCell(object):
         
         if self.isCrossServer:
             self.pyAddTimer(60, 60, gametimer.CROSSSERVER_ABYSS_TIME_SYNC)
-
-    def enterAbyss(self, floor):
-        if not self.checkCanEnterAbyssCell(floor):
-            return
-
-        if self.abyssQuota.leftTime <= 0:
-            self.base.checkAndEnterAbyss(floor)
-            return
-        
-        mapId = AB_FD.datas[floor]['ID']
-        extra = {'enterAbyssType': gameconst.ABYSS_ENTER_TYPE_LEFT_TIME}
-        gameengine.getAbyssStub(mapId).doEnterAbyss(self.base, self.gbId, extra)
 
     def checkCanEnterAbyssCell(self, floor):
         if not utils.isActOpen(AB_CD.datas['abyssActID']['value']):
@@ -118,7 +108,8 @@ class IAbyssCell(object):
             'l': _lContext,
             'src': _src,
             'hasCast': True,
-            'enterType': extra.get('enterAbyssType', 0)
+            'enterType': extra.get('enterAbyssType', 0),
+            'abyssExtra': extra.get('abyssExtra', {}),
         }
 
         _options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.ENTER)
@@ -380,7 +371,7 @@ class IAbyssCell(object):
         #用票买时间
         if self.abyssQuota.leftTime <= 0:
             self.abyssQuota.addAbyssLeftTime(self, AB_CD.datas['abyssNumTime']['value'] * 60)
-            self.base.afterEnterAbyssDeductTimes()
+            self.base.afterEnterAbyssDeductTimes({'floor': floor})
 
         #本服判断可以进了，开始读条
         self._commonNeedCast(
@@ -399,7 +390,14 @@ class IAbyssCell(object):
         LOG_DBG("[lj]crossServerAbyssLeave")
         self.applyLeaveTeam(self.id)
         self.leaveRaid(self.id)
+        gameengine.getAbyssStubBySpaceNo(self.spaceNo).onLeaveAbyssWithToSpaceNo(self.gbId, 0)
         self.spaceMgr.onPlayerLeave(self.gbId, self.id, self)
+
+        LogTrackingMgr.LogTrackingMgr.abyss_leave(
+            self.gbId,
+            self.clientDistinctIdCell,
+            utils.curTS()
+        )
 
     def _onLeftTimeSync(self):
         self.abyssQuota.refreshEnterTime()
@@ -411,6 +409,9 @@ class IAbyssCell(object):
     #数据变化时同步回本服
     def doSyncAbyssData(self):
         LOG_INFO('IAbyssCell::doSyncAbyssData')
+        if not gameconfig.isCrossServer():
+            return
+
         leftTime = self.abyssQuota.calcLeftTime()
         enterTime = self.abyssQuota.enterTime
         self.syncMethodCallToLocalServerCell('onCrossServerSyncAbyssData', (leftTime, enterTime))

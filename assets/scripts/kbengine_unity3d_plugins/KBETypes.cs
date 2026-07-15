@@ -3272,6 +3272,18 @@ namespace KBEngine
 
 	}
 
+	public class GUILD_VOICE_MEMBER_STATE
+	{
+		public UInt64 gbId = 0;
+		public Byte flags = 0;
+
+	}
+
+	public class GUILD_VOICE_MEMBER_STATE_LIST : List<GUILD_VOICE_MEMBER_STATE>
+	{
+
+	}
+
 	public struct BASE_GLOBAL_IDX
 	{
 		UInt16 value;
@@ -4300,6 +4312,43 @@ namespace KBEngine
 		{
 			UInt32 tvalue = (UInt32)value;
 			return new GUILD_FUND(tvalue);
+		}
+
+		public static UInt32 MaxValue
+		{
+			get
+			{
+				return UInt32.MaxValue;
+			}
+		}
+
+		public static UInt32 MinValue
+		{
+			get
+			{
+				return UInt32.MinValue;
+			}
+		}
+	}
+
+	public struct GUILD_COMMISSION
+	{
+		UInt32 value;
+
+		GUILD_COMMISSION(UInt32 value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator UInt32(GUILD_COMMISSION value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator GUILD_COMMISSION(UInt32 value)
+		{
+			UInt32 tvalue = (UInt32)value;
+			return new GUILD_COMMISSION(tvalue);
 		}
 
 		public static UInt32 MaxValue
@@ -5807,6 +5856,8 @@ namespace KBEngine
 		public Int32 fullHp = 0;
 		public Byte enableMics = 0;
 		public Byte isBlockMics = 0;
+		public Byte enableSpeaker = 0;
+		public Byte inVoiceRoom = 0;
 		public string openId = "";
 
 	}
@@ -6852,9 +6903,9 @@ namespace KBEngine
 		public UInt32 oldLevel = 0;
 		public float oldExp = 0f;
 		public Int32 oldScore = 0;
-		public UInt64 oldBindMoney = 0;
-		public UInt64 oldMoney = 0;
-		public UInt64 oldCoin = 0;
+		public Int32 oldBindMoney = 0;
+		public Int32 oldMoney = 0;
+		public Int64 oldCoin = 0;
 		public Int64 oldDarkIron = 0;
 		public UInt64 otherGbId = 0;
 		public UInt32 authExpire = 0;

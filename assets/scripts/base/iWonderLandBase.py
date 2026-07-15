@@ -24,8 +24,8 @@ class IWonderLandBase(object):
         pass
 
     def _initWonderLandFirst(self):
-        self._wonderLandRefreshDaily()
         self.wonderLandTicket = WL_CD.datas['dailyWonderLandNum']['value']
+        self._wonderLandRefreshDaily()
 
     def _wonderLandRefreshDaily(self, *args):
         tType = args[0] if len(args) >= 1 else 0
@@ -162,7 +162,7 @@ class IWonderLandBase(object):
 
         if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
             self.wonderLandAddTimes -= num
-            self.addGuildCommissionGold(num * itemNum)
+            self.addGuildCommissionGold(itemId, num * itemNum)
 
         _src = AAC_AACDD.datas.BONUS_SRC_ADD_WONDER_LAND_TIMES
         _detail = gameclass.AwardDetailCls()

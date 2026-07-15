@@ -1073,7 +1073,6 @@ class IEventActions(object):
         else:
             context.actionProgress = gameconst.ActionProgressEnum.actionDoing
 
-
         self.setTempMiscProp(gameconst.EntityPropsEnum.chongfengData, (context, delayTime))
         return True
 

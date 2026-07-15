@@ -404,7 +404,7 @@ namespace KBEngine
 						break;
 					case 366:
 						APPEARANCE_INFO oldval_appearance = appearance;
-						appearance = ((DATATYPE_APPEARANCE_INFO)EntityDef.id2datatypes[33]).createFromStreamEx(stream);
+						appearance = ((DATATYPE_APPEARANCE_INFO)EntityDef.id2datatypes[35]).createFromStreamEx(stream);
 
 						if(prop.isBase())
 						{

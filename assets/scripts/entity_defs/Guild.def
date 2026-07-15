@@ -496,6 +496,13 @@
             <Arg>       PYTHON                  </Arg>
         </modifyGuildFund>
 
+        <modifyGuildCommission>
+            <Arg>       INT32                   </Arg>
+            <Arg>       BONUS_SRC               </Arg>
+            <Arg>       UUID                    </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </modifyGuildCommission>
+
         <removeApplyFromApplicant>
             <Arg>       PLAYER_GBID             </Arg>
         </removeApplyFromApplicant>
@@ -921,6 +928,11 @@
             <Arg>       BOOL                    </Arg>
         </onAvatarChangeGuildMics>
 
+        <onAvatarChangeGuildSpeaker>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       BOOL                    </Arg>
+        </onAvatarChangeGuildSpeaker>
+
         <onSetGuildMicsSwitch>
             <Arg>       PLAYER_GBID             </Arg>
             <Arg>       UINT8                   </Arg>
@@ -932,17 +944,17 @@
             <Arg>       BOOL                    </Arg>
         </changeMicsBlock>
 
-        <changeMicsBlockAll>
-            <Arg>       BOOL                    </Arg>
-        </changeMicsBlockAll>
-
         <inviteGuildMics>
             <Arg>       PLAYER_GBID             </Arg>
             <Arg>       PLAYER_GBID             </Arg>
         </inviteGuildMics>
 
-        <getGuildMicsMembers>
+        <getGuildVoiceMembers>
             <Arg>       ENTITYCALL          </Arg>
-        </getGuildMicsMembers>
+        </getGuildVoiceMembers>
+
+        <commissionWeeklyCalc>
+            <Arg>   UINT32  </Arg>
+        </commissionWeeklyCalc>
     </BaseMethods>
 </root>

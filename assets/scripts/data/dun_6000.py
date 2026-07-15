@@ -184,9 +184,12 @@ datas ={
     "PosY": 10.95955,
     "PosZ": 627.0863,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 7.0,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelX": 385.5851,
       "TelY": 7.0,
       "TelZ": 456.0552
@@ -213,6 +216,7 @@ datas ={
       "MaxTimes": 5,
       "RecoverTime": 300.0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelDir": [
         353.487885,
         59.05426,
@@ -305,6 +309,7 @@ datas ={
       "MaxTimes": 5,
       "RecoverTime": 300.0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelDir": [
         289.939148,
         199.146164,
@@ -377,6 +382,7 @@ datas ={
       "MaxTimes": 0,
       "RecoverTime": 0.0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelDir": [
         -11.162
       ],
@@ -409,9 +415,12 @@ datas ={
     "PosY": 88.86695,
     "PosZ": 175.3724,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 7.0,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "60000021": {
@@ -431,9 +440,12 @@ datas ={
     "PosY": 19.84144,
     "PosZ": 883.2243,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 7.0,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "60000022": {
@@ -453,9 +465,12 @@ datas ={
     "PosY": 88.86695,
     "PosZ": 175.3734,
     "Props": {
+      "MapEntityType": 0,
       "Num": 0,
       "Radius": 7.0,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelX": 246.0643,
       "TelY": 16.8,
       "TelZ": 36.45
@@ -479,12 +494,13 @@ datas ={
     "PosZ": 194.2474,
     "Props": {
       "AreaType": 2,
-      "Height": 6.0,
-      "Length": 40.0,
-      "MPosX": 327.0,
+      "Height": 60.0,
+      "Length": 80.0,
+      "MPosX": 302.0,
       "MPosY": 86.87,
-      "MPosZ": 160.0,
-      "Remark": ""
+      "MPosZ": 129.0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "60000026": {
@@ -505,12 +521,13 @@ datas ={
     "PosZ": 594.0,
     "Props": {
       "AreaType": 0,
-      "Height": 0.05,
-      "Length": 10.0,
-      "MPosX": 508.0,
+      "Height": 14.0,
+      "Length": 15.0,
+      "MPosX": 505.0,
       "MPosY": 10.7,
       "MPosZ": 590.0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "TelDir": 0.0,
       "Width": 2.5
     }
@@ -562,11 +579,16 @@ datas ={
     "PosY": 26.92026,
     "PosZ": 433.2309,
     "Props": {
+      "ChestGroupID": "",
+      "IsOnGround": 1,
       "IsOpen": 1,
+      "MapEntityType": 0,
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1.0,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "60000031": {
@@ -616,8 +638,10 @@ datas ={
     "PosY": 33.47424,
     "PosZ": 488.0592,
     "Props": {
+      "ChestGroupID": "",
       "GroupID": "",
       "Level": 1,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": "",
@@ -625,7 +649,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 0.0,
+      "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -647,12 +673,13 @@ datas ={
     "PosZ": 371.5737,
     "Props": {
       "AreaType": 2,
-      "Height": 6.0,
+      "Height": 60.0,
       "Length": 80.0,
       "MPosX": 266.0,
       "MPosY": 70.3,
       "MPosZ": 294.0,
-      "Remark": ""
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "60008002": {
@@ -673,12 +700,13 @@ datas ={
     "PosZ": 881.8049,
     "Props": {
       "AreaType": 0,
-      "Height": 3.0,
+      "Height": 30.0,
       "Length": 45.0,
       "MPosX": 318.0,
       "MPosY": 20.0,
       "MPosZ": 859.0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "Width": 40.0
     }
   }

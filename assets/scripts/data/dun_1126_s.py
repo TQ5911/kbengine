@@ -19,7 +19,8 @@ datas ={
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
-            "Level": 60,
+            "InitLoad": 0,
+            "Level": 62,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": "22",
@@ -27,8 +28,8 @@ datas ={
             "PathID": "",
             "Radius": 0.0,
             "RefreshNum": 1,
-            "RefreshTime": 30.0,
-            "RefreshTimedID": 0,
+            "RefreshTime": 0.0,
+            "RefreshTimedID": 1,
             "Remark": "",
             "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
@@ -41,10 +42,10 @@ datas ={
           "AttachedGIDList": [],
           "ClassName": "Teleporter",
           "ClassNameType": 2,
-          "CustomID": "11248010",
+          "CustomID": "",
           "Dir": 170.0,
-          "DisplayName": "",
-          "EliteCustomID": "",
+          "DisplayName": "\u4e94\u6bd2\u77f3\u7a9f\u56db\u5c42\u00b7\u7cbe\u82f1",
+          "EliteCustomID": "19158005",
           "EntityID": 17112601,
           "ID": 11268004,
           "PosX": 246.8106,
@@ -56,9 +57,9 @@ datas ={
             "Remark": "",
             "ShowInSceneMap": 1,
             "TelDir": 170.0,
-            "TelX": 246.8106,
-            "TelY": -127.9807,
-            "TelZ": 500.983
+            "TelX": 250.7737,
+            "TelY": -127.4607,
+            "TelZ": 477.931
           }
         }
       },
@@ -79,7 +80,7 @@ datas ={
           "PosZ": 277.63,
           "Props": {
             "AreaType": 1,
-            "Height": 5.0,
+            "Height": 50.0,
             "MPosX": 317.0,
             "MPosY": -101.77,
             "MPosZ": 257.0,
@@ -90,7 +91,41 @@ datas ={
         }
       }
     },
-    "TimerEntities": {},
+    "TimerEntities": {
+      "11260001": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "Monster",
+        "ClassNameType": 0,
+        "CustomID": "",
+        "Dir": 0.0,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 11326001,
+        "ID": 11260001,
+        "PosX": 337.81,
+        "PosY": -101.9789,
+        "PosZ": 278.63,
+        "Props": {
+          "ChestGroupID": "",
+          "GroupID": "",
+          "InitLoad": 0,
+          "Level": 62,
+          "LightPillar": "",
+          "MapEntityScale": 0,
+          "MapEntityType": "22",
+          "MonsterGroupID": "",
+          "PathID": "",
+          "Radius": 0.0,
+          "RefreshNum": 1,
+          "RefreshTime": 0.0,
+          "RefreshTimedID": 1,
+          "Remark": "",
+          "ShowInSceneMap": 1,
+          "ShowMonsterGroupID": ""
+        }
+      }
+    },
     "BreakAwayStuckPos": {
       "11268001": {
         "ActivityID": 0,

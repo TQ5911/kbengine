@@ -79,6 +79,7 @@ message AccountOnlineVal
     string accountName = 2;
     uint32 accountType = 3;
     string sessionIdStr = 4;
+    uint64 userId = 5;
 }
 
 message AccountOfflineVal
@@ -87,6 +88,7 @@ message AccountOfflineVal
     string accountName = 2;
     uint32 accountType = 3;
     string sessionIdStr = 4;
+    uint64 userId = 5;
 }
 
 message KickAccountVal

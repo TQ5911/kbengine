@@ -159,17 +159,17 @@ def _34010017(e):
 def _34010018(e):
     return 6
 def _34010019(e):
-    return int(e.level*0.6 + 8)
+    return int(e.level*0.5 + 8)
 def _34010020(e):
-    return int(e.level*0.6 + 8)
+    return int(e.level*0.5 + 8)
 def _34010021(e):
-    return int(e.level*0.6 + 8)
+    return int(e.level*0.5 + 8)
 def _34010022(e):
-    return int(e.level*0.6 + 8)
+    return int(e.level*0.5 + 8)
 def _34010023(e):
-    return int(e.level*0.6 + 8)
+    return int(e.level*0.5 + 8)
 def _34010024(e):
-     return int(e.level*0.6 + 8)
+     return int(e.level*0.5 + 8)
 def _34010025(e):
     return int(e.level/2*1+1)
 def _34010026(e):
@@ -183,17 +183,17 @@ def _34010029(e):
 def _34010030(e):
     return int(e.level/2*1+1)
 def _34010031(e):
-    return int(e.level*1.2 + 23)
+    return int(e.level*1 + 23)
 def _34010032(e):
-    return int(e.level*1.2 + 23)
+    return int(e.level*1 + 23)
 def _34010033(e):
-    return int(e.level*1.2 + 23)
+    return int(e.level*1 + 23)
 def _34010034(e):
-    return int(e.level*1.2 + 23)
+    return int(e.level*1 + 23)
 def _34010035(e):
-    return int(e.level*1.2 + 23)
+    return int(e.level*1 + 23)
 def _34010036(e):
-     return int(e.level*1.2 + 23)
+     return int(e.level*1 + 23)
 def _34010037(e):
     return int(e.level*1)
 def _34010038(e):

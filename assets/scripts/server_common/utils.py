@@ -1809,6 +1809,9 @@ def getRaceTypeEnum(entity):
     elif entity.IsSummon:
         return gameconst.RaceTypeEnum.summon
 
+    elif entity.IsAvatarReplica:
+        return gameconst.RaceTypeEnum.avatarReplica
+
     else:
         return gameconst.RaceTypeEnum.none
 
@@ -2622,6 +2625,10 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
                 continue
 
             _npcId = _mPrm['EntityID']
+            if not _npcId:
+                LOG_ERR('快联系策划，这个npc没有配置EntityID :', gameEntityId)
+                continue
+
             _params.update({
                 'npcId': _npcId,
                 'name': _mPrm['DisplayName'],
@@ -3468,3 +3475,56 @@ def checkInTimePeriod(curTime, deadTimePeriod, comp=0):
         return startTime < curTime and curTime < endTime
     elif comp == 3:
         return startTime <= curTime and curTime <= endTime
+    
+
+@functools.lru_cache(1)
+def getWaitmapMaxOnline():
+    cellMaxOneline = gameconfig.maxCellAvatarCount()
+    cellNum = gameconfig.cellAppCount()
+    return cellMaxOneline * cellNum
+
+
+class FNV1a64:
+    # FNV-1a 64 官方标准参数
+    FNV_OFFSET_BASIS: int = 14695981039346656037
+    FNV_PRIME: int = 1099511628211
+    # 64位无符号掩码
+    MASK64: int = 0xFFFFFFFFFFFFFFFF
+
+    def __init__(self):
+        self._hash = self.FNV_OFFSET_BASIS
+
+    def update_bytes(self, data: bytes) -> None:
+        """输入原始字节流更新哈希"""
+        b: int
+        for b in data:
+            self._hash ^= b
+            self._hash *= self.FNV_PRIME
+            # 强制约束为 uint64，防止Python大整数溢出不一致
+            self._hash &= self.MASK64
+
+    def update_int(self, value: int, byte_length: int = 8, big_endian: bool = True) -> None:
+        """写入整数，默认转8字节大端序"""
+        order = "big" if big_endian else "little"
+        b = value.to_bytes(byte_length, byteorder=order, signed=False)
+        self.update_bytes(b)
+
+    def update_str(self, text: str, encoding: str = "utf-8") -> None:
+        """写入字符串"""
+        self.update_bytes(text.encode(encoding))
+
+    def digest_uint64(self) -> int:
+        """直接返回uint64整型结果，存数据库最方便"""
+        return self._hash & self.MASK64
+
+    def digest_hex(self) -> str:
+        """返回16位小写十六进制字符串，等价md5.hexdigest风格"""
+        return f"{self.digest_uint64():016x}"
+
+    def digest_raw(self) -> bytes:
+        """返回8字节二进制bytes"""
+        return self.digest_uint64().to_bytes(8, byteorder="big", signed=False)
+
+    def reset(self) -> None:
+        """重置哈希状态，复用对象"""
+        self._hash = self.FNV_OFFSET_BASIS

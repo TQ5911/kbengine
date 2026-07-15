@@ -30,7 +30,10 @@ class ImpAvatarPK(object):
             k: v for k, v in self.redNameKillTime.items()
             if abs(current - v) <= PKD_PKDD.datas['defeatRedPlayerCDTime']['value']
         }
-        LOG_DBG('redNameKillTime on init', self.redNameKillTime)
+        preCubePKModel = self.popPersistentMiscProp(gameconst.EntityPropsEnum.preCubePKModel, None)
+        if preCubePKModel != None:
+            self.onSwitchPKModel(preCubePKModel)
+        LOG_DBG('redNameKillTime on init', self.redNameKillTime, preCubePKModel)
 
 
     def setPKModelBefore(self, pkModelBefore):
@@ -135,7 +138,7 @@ class ImpAvatarPK(object):
         if not sceneInfo:
             return True
 
-        if formula.inWorldLineScene(self.spaceNo) or formula.inWonderLandScene(self.spaceNo) or formula.inCubeScene(self.spaceNo):
+        if formula.inWorldLineScene(self.spaceNo) or formula.inWonderLandScene(self.spaceNo) or formula.inCubeScene(self.spaceNo) or formula.inAbyssScene(self.spaceNo):
             if self.areaId:
                 return utils.isInWorldPKSafeAreaByAreaId(self.areaId)
 

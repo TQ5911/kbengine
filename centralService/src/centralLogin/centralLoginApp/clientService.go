@@ -252,23 +252,15 @@ func (self *LoginClientService) _saveLoginInfoToRedis(otherJsonData string) {
 		return
 	}
 
-	conn := self.app.redisPool.Get()
-	defer conn.Close()
-
-	key := fmt.Sprintf("login:accountinfo:%d:%s", self.accountType, self.accountName)
-	_, err := conn.Do("HMSET", key,
-		"token", self.loginToken,
-		"channelId", self.channelId,
-		"userId", self.userId,
-		"otherJsonData", otherJsonData)
-	if err != nil {
-		appLog.Error("_saveLoginInfoToRedis HMSET failed", key, err.Error())
-		return
-	}
-
-	_, err = conn.Do("EXPIRE", key, 3600)
-	if err != nil {
-		appLog.Error("_saveLoginInfoToRedis EXPIRE failed", key, err.Error())
+	if err := self.app.SaveAccountLoginInfo(&AccountLoginInfo{
+		AccountType:   uint32(self.accountType),
+		AccountName:   self.accountName,
+		Token:         self.loginToken,
+		ChannelId:     self.channelId,
+		UserId:        self.userId,
+		OtherJsonData: otherJsonData,
+	}); err != nil {
+		appLog.Error("_saveLoginInfoToRedis save failed", self.accountType, self.accountName, err.Error())
 	}
 }
 
@@ -952,10 +944,12 @@ func (self *LoginClientService) _loginByThird(body map[string] interface{}, chan
 	appLog.Info(fmt.Sprintf("_loginByThird reqURL: %s", reqURL))
 
 	body["gameId"] = string(gameId)
+	/*
 	accountTypeMap := map[uint32] clientService.AccountType {
 		uint32(clientService.ThirdLoginType_THIRD_LOGIN_TAPTAP) 	: clientService.AccountType_ACCOUNT_TAPTAP,
 		uint32(clientService.ThirdLoginType_THIRD_LOGIN_OFFICIAL) 	: clientService.AccountType_ACCOUNT_OFFICIAL,
 	}
+	*/
 	jsonBody, err := json.Marshal(body)
 	if err != nil {
 		appLog.Warn("_loginByThird jsonBody Marshal error ",err.Error())
@@ -1032,7 +1026,9 @@ func (self *LoginClientService) _loginByThird(body map[string] interface{}, chan
 				"age":   uint32(age),
 				"phone": uint64(phone),
 				"message": string(generalAccessTokenResponse.Message),
-				"si": common.RandString(SESSIONID_STR_LEN),
+				"si": string(common.RandString(SESSIONID_STR_LEN)),
+				"uid": string(generalAccessTokenResponse.Data.UserInfoId),
+				"gid": string(generalAccessTokenResponse.Data.UserGameId),
 			}
 			otherJsonData, _err := json.Marshal(data)
 			if _err != nil {
@@ -1040,7 +1036,7 @@ func (self *LoginClientService) _loginByThird(body map[string] interface{}, chan
 				*loginResult = clientService.LoginReply_LOGIN_THIRD_FAILED
 				generalAccessTokenResponse.Success = false
 			} else {
-				self.accountType = accountTypeMap[channelInfo.Id]
+				self.accountType = clientService.AccountType_ACCOUNT_OFFICIAL
 				self.userId = generalAccessTokenResponse.Data.UserInfoId
 				self.accountName = generalAccessTokenResponse.Data.UserGameId
 				self.loginToken = generalAccessTokenResponse.Data.NewToken
@@ -1078,10 +1074,12 @@ func (self *LoginClientService) LoginByThird(r *clientService.ThirdLogin) (*clie
 		"registerSource": 	string(channelInfo.RegisterSource),
 		"platform": 		string(channelInfo.Platform),
 		"packageSource": 	string(channelInfo.PackageSource),
+		"accessToken": 		string(r.AccessToken),
 	}
 	var res bool = false
 	var loginResult clientService.LoginReply_LoginResult = clientService.LoginReply_LOGIN_THIRD_FAILED
 	var generalAccessToken GeneralAccessToken
+	/*
 	if channelInfo.Id == uint32(clientService.ThirdLoginType_THIRD_LOGIN_TAPTAP) {
 		err := json.Unmarshal([]byte(r.AccessToken), &generalAccessToken.TapTap)
 		if err != nil {
@@ -1102,6 +1100,7 @@ func (self *LoginClientService) LoginByThird(r *clientService.ThirdLogin) (*clie
 		return nil, errors.New(fmt.Sprintf("unsupported channel id: %d", channelInfo.Id))
 	}
 
+	*/
 	res = self._loginByThird(body, &channelInfo, &generalAccessToken, &loginResult)
 	if !res {
 		reply := clientService.LoginReply{Result: loginResult, Token: self.loginToken, CentralServerId: LoginConfig.CentralServerId, ServerId: self.serverId, GameServerHost: self.gsHost, QueueServerHost: self.qsHost, TokenTimeout: self.tokenTimeout, Reserved: self.otherJsonData}

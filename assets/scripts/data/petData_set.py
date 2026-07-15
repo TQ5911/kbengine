@@ -250,6 +250,10 @@ datas = _tools.RODict({
     "petGearRuleTip3": _tools.RODict({
         "ID": "petGearRuleTip3",
         "value": ((2, 54000970), (3, 54000970), (4, 54000971)),
+    }),
+    "petFirstShowIgnoreMap": _tools.RODict({
+        "ID": "petFirstShowIgnoreMap",
+        "value": 4002,
     })
 })
 

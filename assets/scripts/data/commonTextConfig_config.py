@@ -244,5 +244,15 @@ datas = _tools.RODict({
         "ID": "KillernameText",
         "value": "杀手：{0}",
         "Type": "string"
+    }),
+    "RemainNumText": _tools.RODict({
+        "ID": "RemainNumText",
+        "value": "剩余次数：{0}/{1}",
+        "Type": "string"
+    }),
+    "RemainNumUnlimited": _tools.RODict({
+        "ID": "RemainNumUnlimited",
+        "value": "剩余次数：无限制",
+        "Type": "string"
     })
 })

@@ -154,12 +154,6 @@
             <Arg>       ITEMID      </Arg>
         </reqBindItem>
 
-        <onCrossServerReqBindItem>
-            <Arg>       UINT8       </Arg>
-            <Arg>       UINT32      </Arg>
-            <Arg>       ITEMID      </Arg>
-        </onCrossServerReqBindItem>
-
         <reqBagSort><Exposed/>
             <Arg>       UINT8      </Arg>
         </reqBagSort>
@@ -167,10 +161,6 @@
         <unlockGrids><Exposed/>
             <Arg>       UINT8      </Arg>
         </unlockGrids>
-
-        <onCrossServerUnlockGrids>
-            <Arg>       UINT8      </Arg>
-        </onCrossServerUnlockGrids>
 
         <afterUseItemDone>
             <Arg>      BOOL     </Arg>
@@ -460,48 +450,6 @@
         <setTitle><Exposed/>
             <Arg>       UINT32         </Arg>
         </setTitle>
-
-        <onCrossServerExchangeCurrency>
-            <Arg>       UINT32      </Arg>
-            <Arg>       UINT64      </Arg>
-            <Arg>       PY_TUPLE    </Arg>
-        </onCrossServerExchangeCurrency>
-
-        <onCrossServerBagSort>
-            <Arg>       UINT8      </Arg>
-        </onCrossServerBagSort>
-
-        <onCrossServerDeductUseTimes>
-            <Arg>       GRIDID      </Arg>
-            <Arg>       ITEM_ID     </Arg>
-            <Arg>       UINT32      </Arg>
-        </onCrossServerDeductUseTimes>
-
-        <onCrossServerDeductUseItem>
-            <Arg>       UINT8      </Arg>
-            <Arg>       PYTHON      </Arg>
-            <Arg>       UUID        </Arg>
-            <Arg>       BONUS_SRC   </Arg>
-            <Arg>       PYTHON      </Arg>
-        </onCrossServerDeductUseItem>
-
-        <onCrossServerGetUseItemReward>
-            <Arg>       BONUS_SRC   </Arg>
-            <Arg>       PYTHON      </Arg>
-            <Arg>       UUID        </Arg>
-            <Arg>       PYTHON      </Arg>
-            <Arg>       PYTHON      </Arg>
-        </onCrossServerGetUseItemReward>
-
-        <onCrossServerUpdateItemCD>
-            <Arg>       ITEM_ID     </Arg>
-            <Arg>       UINT32      </Arg>
-        </onCrossServerUpdateItemCD>
-
-        <onCrossServerUseItemReturn>
-            <Arg>       ITEM_ID     </Arg>
-            <Arg>       UINT8      </Arg>
-        </onCrossServerUseItemReturn>
     </BaseMethods>
 
     <CellMethods>

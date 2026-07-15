@@ -66,7 +66,7 @@ func NewQueueApp() *QueueApp {
 		Password:    QueueConfig.RedisServer.Passwd,
 		Db:          QueueConfig.RedisServer.Db,
 		MaxIdle:     16,
-		MaxActive:   100,
+		MaxActive:   300,
 		IdleTimeout: 100,
 	})
 	waitMapServerMgr := NewWaitMapServerMgr(nil)

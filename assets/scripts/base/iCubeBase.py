@@ -186,7 +186,7 @@ class ICubeBase(object):
         self.deductWealth(_src, _award, opUUID, _detail)
         if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
             self.cubeUseCoinTimes += num
-            self.addGuildCommissionGold(num * itemNum)
+            self.addGuildCommissionGold(itemId, num * itemNum)
         else:
             self.cubeUseItemTimes = min(self.cubeUseItemTimes + num, 255)
 

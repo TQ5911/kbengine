@@ -53,7 +53,7 @@ datas = _tools.RODict({
         "ifSafeArea": 1,
         "deathPenaltyID": 1,
         "ifRide": 1,
-        "specialAreaType": 1
+        "specialAreaType": 0
     }),
     5: _tools.RODict({
         "ID": 5,
@@ -63,7 +63,7 @@ datas = _tools.RODict({
         "ifSafeArea": 1,
         "deathPenaltyID": 1,
         "ifRide": 1,
-        "specialAreaType": 1
+        "specialAreaType": 0
     }),
     6: _tools.RODict({
         "ID": 6,
@@ -73,7 +73,7 @@ datas = _tools.RODict({
         "ifSafeArea": 1,
         "deathPenaltyID": 1,
         "ifRide": 1,
-        "specialAreaType": 1
+        "specialAreaType": 0
     }),
     7: _tools.RODict({
         "ID": 7,
@@ -83,7 +83,7 @@ datas = _tools.RODict({
         "ifSafeArea": 1,
         "deathPenaltyID": 1,
         "ifRide": 1,
-        "specialAreaType": 1
+        "specialAreaType": 0
     }),
     8: _tools.RODict({
         "ID": 8,
@@ -93,7 +93,7 @@ datas = _tools.RODict({
         "ifSafeArea": 1,
         "deathPenaltyID": 1,
         "ifRide": 1,
-        "specialAreaType": 1
+        "specialAreaType": 0
     }),
     10: _tools.RODict({
         "ID": 10,
@@ -103,8 +103,18 @@ datas = _tools.RODict({
         "ifSafeArea": 1,
         "deathPenaltyID": 1,
         "ifRide": 1,
-        "specialAreaType": 1
+        "specialAreaType": 0
+    }),
+    11: _tools.RODict({
+        "ID": 11,
+        "Areaname": "归墟营地",
+        "N4": 100,
+        "N5": 150,
+        "ifSafeArea": 1,
+        "deathPenaltyID": 1,
+        "ifRide": 1,
+        "specialAreaType": 0
     })
 })
 minKey = 1
-maxKey = 10
+maxKey = 11

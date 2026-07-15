@@ -389,16 +389,6 @@
             <Exposed/>
         </turnOffTeamMics>
 
-        <turnOnTeamMemberMics>
-            <Exposed/>
-            <Arg>   PLAYER_GBID     </Arg>
-        </turnOnTeamMemberMics>
-
-        <turnOffTeamMemberMics>
-            <Exposed/>
-            <Arg>   PLAYER_GBID     </Arg>
-        </turnOffTeamMemberMics>
-
         <!-- 小队禁言团员 -->
         <blockTeamMemberMics>
             <Exposed/>
@@ -410,14 +400,6 @@
             <Exposed/>
             <Arg>   PLAYER_GBID     </Arg>
         </unblockTeamMemberMics>
-
-        <blockAllTeamMemberMics>
-            <Exposed/>
-        </blockAllTeamMemberMics>
-
-        <unblockAllTeamMemberMics>
-            <Exposed/>
-        </unblockAllTeamMemberMics>
 
         <turnOffTeamMicsByForbidVoiceChat>
         </turnOffTeamMicsByForbidVoiceChat>
@@ -580,44 +562,15 @@
             <Arg>   UINT8       </Arg>
         </onSwitchTeamMicsMode>
 
-        <onSyncAllTeamMemberMicsStatus>
-            <Arg>   TEAMID    </Arg>
-            <!-- on -->
-            <Arg>   AVATARGBID_LIST     </Arg>
-            <!-- off -->
-            <Arg>   AVATARGBID_LIST     </Arg>
-            <!-- block -->
-            <Arg>   AVATARGBID_LIST     </Arg>
-        </onSyncAllTeamMemberMicsStatus>
-
-        <onTurnOnTeamMemberMics>
-            <Arg>   PLAYER_GBID     </Arg>
+        <onBlockTeamMemberMics>
             <Arg>   TEAMID      </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-        </onTurnOnTeamMemberMics>
-
-        <onTurnOffTeamMemberMics>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
-            <!-- 是否因队长禁言被闭麦 -->
-            <Arg>   BOOL        </Arg>
-        </onTurnOffTeamMemberMics>
+        </onBlockTeamMemberMics>
 
         <onUnblockTeamMemberMics>
             <Arg>   TEAMID      </Arg>
             <Arg>   PLAYER_GBID     </Arg>
         </onUnblockTeamMemberMics>
-
-        <onBlockAllTeamMemberMics>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   TEAMID      </Arg>
-        </onBlockAllTeamMemberMics>
-
-        <onUnblockAllTeamMemberMics>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   TEAMID      </Arg>
-        </onUnblockAllTeamMemberMics>
 
         <onDelTeamMember>
             <Arg>           PLAYER_GBID     </Arg>

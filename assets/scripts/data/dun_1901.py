@@ -22687,17 +22687,17 @@ datas ={
     "ClassName": "Teleporter",
     "ClassNameType": 2,
     "CustomID": "",
-    "Dir": 119.7748,
+    "Dir": 108.6732,
     "DisplayName": "",
     "EliteCustomID": "10048016",
     "EntityID": 17101001,
     "ID": 19018004,
     "Name": "\u98de\u6c99\u8981\u585e",
-    "PosX": 362.6,
-    "PosY": 12.67538,
-    "PosZ": 594.0,
+    "PosX": 364.9261,
+    "PosY": 12.05374,
+    "PosZ": 591.0859,
     "Props": {
-      "CameraId": 0,
+      "CameraId": 33010001,
       "GateType": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -22714,17 +22714,17 @@ datas ={
     "ClassName": "Teleporter",
     "ClassNameType": 2,
     "CustomID": "",
-    "Dir": 3.217322,
-    "DisplayName": "",
+    "Dir": 0.0,
+    "DisplayName": "\u4e94\u6bd2\u77f3\u7a9f\u00b7\u7cbe\u82f1",
     "EliteCustomID": "19128004",
     "EntityID": 17101002,
     "ID": 19018005,
     "Name": "\u4e94\u6bd2\u77f3\u7a9f",
-    "PosX": 373.34,
-    "PosY": -5.704976,
-    "PosZ": 134.54,
+    "PosX": 372.532,
+    "PosY": -5.51595,
+    "PosZ": 136.0199,
     "Props": {
-      "CameraId": 0,
+      "CameraId": 33010001,
       "GateType": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -22751,7 +22751,7 @@ datas ={
     "PosY": 9.700268,
     "PosZ": 515.5029,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
@@ -22774,7 +22774,7 @@ datas ={
     "PosY": -7.18047,
     "PosZ": 194.1101,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
@@ -22797,7 +22797,7 @@ datas ={
     "PosY": 26.76124,
     "PosZ": 346.5471,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
@@ -22820,7 +22820,7 @@ datas ={
     "PosY": 10.19264,
     "PosZ": 342.791,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1

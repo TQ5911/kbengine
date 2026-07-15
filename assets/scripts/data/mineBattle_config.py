@@ -177,7 +177,7 @@ datas = _tools.RODict({
     }),
     "mineBattle_ironOreNumsOneTime": _tools.RODict({
         "ID": "mineBattle_ironOreNumsOneTime",
-        "value": 10,
+        "value": 20,
     }),
     "mineBattle_batchReviveTime": _tools.RODict({
         "ID": "mineBattle_batchReviveTime",

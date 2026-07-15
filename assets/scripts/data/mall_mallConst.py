@@ -49,7 +49,7 @@ datas = _tools.RODict({
     }),
     "dynGoodsWeight": _tools.RODict({
         "key": "dynGoodsWeight",
-        "value": 0.8,
+        "value": 0.7,
     }),
     "dynGoodsDefaultPrice": _tools.RODict({
         "key": "dynGoodsDefaultPrice",
@@ -57,10 +57,22 @@ datas = _tools.RODict({
     }),
     "monthCardExtraTimes": _tools.RODict({
         "key": "monthCardExtraTimes",
-        "value": ((10, 5), (20, 5), (30, 5), (40, 5)),
+        "value": ((30, 2), (50, 1), (70, 1)),
     }),
     "defaultBgImage": _tools.RODict({
         "key": "defaultBgImage",
         "value": "Assets/Res/ui/texture/giftstore/paystore_wechatpay_box_03_img.png",
+    }),
+    "dynGoodsExtraTimes": _tools.RODict({
+        "key": "dynGoodsExtraTimes",
+        "value": ((30, 1), (50, 1), (70, 1)),
+    }),
+    "monthCardCostItemTypeId": _tools.RODict({
+        "key": "monthCardCostItemTypeId",
+        "value": 2,
+    }),
+    "dynGoodsMonthCardTypeId": _tools.RODict({
+        "key": "dynGoodsMonthCardTypeId",
+        "value": 1,
     })
 })

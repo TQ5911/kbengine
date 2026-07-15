@@ -12,26 +12,30 @@ import gamedecorator
 import mall_giftStore as MGS
 import mall_mountsStore as MMS
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import mall_mallConst as MMC
 
 
 class IMallStore(object):
 
     def __init__(self):
-        pass
-    
+        LOG_INFO('IMallStore::__init__')
+
     @gamedecorator.checkGameconfigEnable('pay')
     @gamedecorator.limitcall(1)
     def reqGiftStoreLimit(self, exposed):
+        LOG_INFO('IMallStore::reqGiftStoreLimit:', exposed)
         self.sendMallGiftStoreLimit()
 
     @gamedecorator.checkGameconfigEnable('pay')
     @gamedecorator.limitcall(1)
     def reqMountStoreLimit(self, exposed):
+        LOG_INFO('IMallStore::reqMountStoreLimit:', exposed)
         self.sendMallMountStoreLimit()
 
     @gamedecorator.checkGameconfigEnable('pay')
     @gamedecorator.limitcall(1)
     def reqBuyGiftStore(self, exposed, storeId):
+        LOG_INFO('IMallStore::reqBuyGiftStore:', exposed, storeId)
         cfg = MGS.datas.get(storeId)
         if not cfg:
             result = gameconst.MallStoreResult.WRONG_ARGS
@@ -43,6 +47,7 @@ class IMallStore(object):
     @gamedecorator.checkGameconfigEnable('pay')
     @gamedecorator.limitcall(1)
     def reqBuyMountStore(self, exposed, storeId):
+        LOG_INFO('IMallStore::reqBuyMountStore:', exposed, storeId)
         cfg = MMS.datas.get(storeId)
         if not cfg:
             result = gameconst.MallStoreResult.WRONG_ARGS
@@ -50,8 +55,9 @@ class IMallStore(object):
         else:
             result = self._processMallPurchase(gameconst.MallStoreType.MOUNT, storeId, cfg, self.mountsStorePurchaseNumDic)
         self.client.onBuyMallMountStoreResult(storeId, result)
-        
+
     def _processMallPurchase(self, storeType, storeId, cfg, purchaseDic):
+        LOG_INFO('IMallStore::_processMallPurchase:', storeType, storeId)
         limitNumber = cfg.get('limitNumber', 0)
         if limitNumber > 0:
             bought = purchaseDic.get(storeId, 0)
@@ -60,7 +66,7 @@ class IMallStore(object):
                 return gameconst.MallStoreResult.COUNT_LIMIT
 
         costItems = cfg.get('costItem')
-        if not self.isMonthCardExpired():
+        if not self.isPremiumIdMonthCardExpired(MMC.datas['monthCardCostItemTypeId']['value']):
             monthCardCostItem = cfg.get('monthCardCostItem')
             if monthCardCostItem:
                 costItems = monthCardCostItem
@@ -95,6 +101,7 @@ class IMallStore(object):
         return gameconst.MallStoreResult.SUCCESS
 
     def _resetMallLimits(self, storeType, configDatas, purchaseDic, limitType):
+        LOG_INFO('IMallStore::_resetMallLimits:', storeType, limitType)
         hasChanged = False
         for storeId, bought in purchaseDic.items():
             cfg = configDatas.get(storeId)
@@ -109,18 +116,22 @@ class IMallStore(object):
                 self.sendMallMountStoreLimit()
 
     def _onMallPurchaseDailyUpdate(self, *args):
+        LOG_INFO('IMallStore::_onMallPurchaseDailyUpdate:', args)
         self._resetMallLimits(gameconst.MallStoreType.GIFT, MGS.datas, self.giftStorePurchaseNumDic, gameconst.MallLimitType.Daily)
         self._resetMallLimits(gameconst.MallStoreType.MOUNT, MMS.datas, self.mountsStorePurchaseNumDic, gameconst.MallLimitType.Daily)
 
     def _onMallPurchaseWeeklyUpdate(self, *args):
+        LOG_INFO('IMallStore::_onMallPurchaseWeeklyUpdate:', args)
         self._resetMallLimits(gameconst.MallStoreType.GIFT, MGS.datas, self.giftStorePurchaseNumDic, gameconst.MallLimitType.Weekly)
         self._resetMallLimits(gameconst.MallStoreType.MOUNT, MMS.datas, self.mountsStorePurchaseNumDic, gameconst.MallLimitType.Weekly)
 
     def _onMallPurchaseMonthlyUpdate(self, *args):
+        LOG_INFO('IMallStore::_onMallPurchaseMonthlyUpdate:', args)
         self._resetMallLimits(gameconst.MallStoreType.GIFT, MGS.datas, self.giftStorePurchaseNumDic, gameconst.MallLimitType.Monthly)
         self._resetMallLimits(gameconst.MallStoreType.MOUNT, MMS.datas, self.mountsStorePurchaseNumDic, gameconst.MallLimitType.Monthly)
 
     def getStoreLimitDatas(self, dic):
+        LOG_INFO('IMallStore::getStoreLimitDatas:', dic)
         storeIds = []
         usedCounts = []
         for storeId, usedCount in dic.items():
@@ -129,9 +140,11 @@ class IMallStore(object):
         return storeIds, usedCounts
 
     def sendMallGiftStoreLimit(self):
+        LOG_INFO('IMallStore::sendMallGiftStoreLimit')
         storeIds, usedCounts = self.getStoreLimitDatas(self.giftStorePurchaseNumDic)
         self.client.onMallGiftStoreLimit(storeIds, usedCounts)
 
     def sendMallMountStoreLimit(self):
+        LOG_INFO('IMallStore::sendMallMountStoreLimit')
         storeIds, usedCounts = self.getStoreLimitDatas(self.mountsStorePurchaseNumDic)
         self.client.onMallMountStoreLimit(storeIds, usedCounts)

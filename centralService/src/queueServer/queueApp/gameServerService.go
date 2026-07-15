@@ -2,6 +2,8 @@ package Queue
 
 import (
 	"centralService/src/appLog"
+	"centralService/src/common"
+	"context"
 	gameServerService "centralService/src/queueServer/queueApp/gameServerService"
 	"centralService/src/trpc"
 	"fmt"
@@ -36,7 +38,14 @@ func (self *GameServerService) clearQueue() {
 
 func (self *GameServerService) tickQueue() {
 	for {
-		conn := self.app.redisPool.Get()
+		ctx, cancel := context.WithTimeout(context.Background(), common.RedisOpTimeout)
+		conn, err := self.app.redisPool.GetContext(ctx)
+		cancel()
+		if err != nil {
+			appLog.Errorf("tickQueue get redis conn failed, hostId=%d, err=%s", self.hostId, err.Error())
+			<-self.queueTicker.C
+			continue
+		}
 		<-self.queueTicker.C
 		onlineNum, err := redis.Int(conn.Do("get", "g:normal_online_num"+strconv.Itoa(int(self.hostId))))
 		conn.Close()

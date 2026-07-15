@@ -119,14 +119,6 @@ def _78001023(self, target, context, *args):
     context.props = ['adjPVPDmgAnti']
     self.addPropByGear(target, context, ['adjPVPDmgAnti'])
 
-def _78001024(self, target, context, *args):
-    context.props = ['adjFinalDmg']
-    self.addPropByGear(target, context, ['adjFinalDmg'])
-
-def _78001025(self, target, context, *args):
-    context.props = ['adjFinalDmgAnti']
-    self.addPropByGear(target, context, ['adjFinalDmgAnti'])
-
 def _78001026(self, target, context, *args):
     context.props = ['adjKnockEnh']
     self.addPropByGear(target, context, ['adjKnockEnh'])
@@ -354,6 +346,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [1, 1], [1, 1], [1, 1]]),
         "assessmentWeight": _tools.ROList([0, 0, 33, 0]),
+        "assessmentRarity": _tools.ROList([3]),
         "qualityValue": None,
         "score": 0
     }),
@@ -371,6 +364,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [1, 1], [1, 1], [2, 2]]),
         "assessmentWeight": _tools.ROList([0, 0, 33, 5]),
+        "assessmentRarity": _tools.ROList([3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -387,7 +381,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [3, 3], [5, 5]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -404,7 +399,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [3, 3], [5, 5]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -421,7 +417,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [3, 3], [5, 5]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -438,7 +435,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [3, 3], [5, 5]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -455,7 +453,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.02, 0.02], [0.04, 0.04], [0.06, 0.06], [0.1, 0.1]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -472,7 +471,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.02, 0.02], [0.04, 0.04], [0.06, 0.06], [0.1, 0.1]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -489,7 +489,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.005, 0.005], [0.01, 0.01], [0.015, 0.015], [0.025, 0.025]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -506,7 +507,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.005, 0.005], [0.01, 0.01], [0.015, 0.015], [0.025, 0.025]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -523,7 +525,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -540,7 +543,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -557,7 +561,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -574,7 +579,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -591,7 +597,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -608,7 +615,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -625,7 +633,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -642,7 +651,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -659,7 +669,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.008, 0.008], [0.014, 0.014], [0.02, 0.02], [0.026, 0.026]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -676,7 +687,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.008, 0.008], [0.014, 0.014], [0.02, 0.02], [0.026, 0.026]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -693,7 +705,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.014, 0.014], [0.028, 0.028], [0.042, 0.042], [0.056, 0.056]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -710,7 +723,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -727,7 +741,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -744,7 +759,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -761,41 +777,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
-        "qualityValue": None,
-        "score": 0
-    }),
-    78001024: _tools.RODict({
-        "ID": 78001024,
-        "levelGap": 1,
-        "maxLevel": 1,
-        "rarityLevel": 0,
-        "type": 1,
-        "event": "onDress",
-        "actionEffect": _78001024,
-        "inscription": 0,
-        "prop": "adjFinalDmg",
-        "floor": None,
-        "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
-        "assessmentWeight": _tools.ROList([0, 0, 33, 0]),
-        "qualityValue": None,
-        "score": 0
-    }),
-    78001025: _tools.RODict({
-        "ID": 78001025,
-        "levelGap": 1,
-        "maxLevel": 1,
-        "rarityLevel": 0,
-        "type": 1,
-        "event": "onDress",
-        "actionEffect": _78001025,
-        "inscription": 0,
-        "prop": "adjFinalDmgAnti",
-        "floor": None,
-        "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
-        "assessmentWeight": _tools.ROList([0, 0, 33, 0]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -812,7 +795,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -829,7 +813,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -846,7 +831,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -863,7 +849,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -880,7 +867,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
-        "assessmentWeight": _tools.ROList([0, 0, 33, 5]),
+        "assessmentWeight": _tools.ROList([0, 0, 50, 5]),
+        "assessmentRarity": _tools.ROList([3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -897,7 +885,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[0.01, 0.01], [0.02, 0.02], [0.03, 0.03], [0.05, 0.05]]),
-        "assessmentWeight": _tools.ROList([0, 0, 33, 5]),
+        "assessmentWeight": _tools.ROList([0, 0, 50, 5]),
+        "assessmentRarity": _tools.ROList([3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -914,7 +903,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [3, 3], [5, 5]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -931,7 +921,8 @@ datas = _tools.RODict({
         "floor": None,
         "ceiling": None,
         "assessmentInterval": _tools.ROList([[1, 1], [2, 2], [3, 3], [5, 5]]),
-        "assessmentWeight": _tools.ROList([762, 200, 33, 5]),
+        "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
+        "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
         "score": 0
     }),
@@ -949,6 +940,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 200
     }),
@@ -966,6 +958,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -983,6 +976,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1000,6 +994,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1017,6 +1012,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1034,6 +1030,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1051,6 +1048,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1068,6 +1066,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -1085,6 +1084,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1102,6 +1102,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1119,6 +1120,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1136,6 +1138,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1153,6 +1156,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1170,6 +1174,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1187,6 +1192,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -1204,6 +1210,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1221,6 +1228,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1238,6 +1246,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1255,6 +1264,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -1272,6 +1282,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1289,6 +1300,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1306,6 +1318,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1323,6 +1336,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1340,6 +1354,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1357,6 +1372,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1374,6 +1390,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -1391,6 +1408,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1408,6 +1426,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1425,6 +1444,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1442,6 +1462,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1459,6 +1480,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1476,6 +1498,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1493,6 +1516,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -1510,6 +1534,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1527,6 +1552,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1544,6 +1570,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1561,6 +1588,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1578,6 +1606,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1595,6 +1624,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1612,6 +1642,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1629,6 +1660,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1646,6 +1678,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1663,6 +1696,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1680,6 +1714,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1697,6 +1732,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -1714,6 +1750,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1731,6 +1768,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1748,6 +1786,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1765,6 +1804,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -1782,6 +1822,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 200
     }),
@@ -1799,6 +1840,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1816,6 +1858,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1833,6 +1876,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1850,6 +1894,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1867,6 +1912,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1884,6 +1930,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -1901,6 +1948,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -1918,6 +1966,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1935,6 +1984,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1952,6 +2002,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -1969,6 +2020,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -1986,6 +2038,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2003,6 +2056,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2020,6 +2074,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2037,6 +2092,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2054,6 +2110,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2071,6 +2128,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -2088,6 +2146,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2105,6 +2164,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2122,6 +2182,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2139,6 +2200,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2156,6 +2218,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2173,6 +2236,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2190,6 +2254,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2207,6 +2272,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2224,6 +2290,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2241,6 +2308,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2258,6 +2326,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -2275,6 +2344,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2292,6 +2362,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2309,6 +2380,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2326,6 +2398,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -2343,6 +2416,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2360,6 +2434,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2377,6 +2452,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2394,6 +2470,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2411,6 +2488,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2428,6 +2506,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2445,6 +2524,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2462,6 +2542,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2479,6 +2560,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2496,6 +2578,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2513,6 +2596,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2530,6 +2614,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -2547,6 +2632,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2564,6 +2650,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2581,6 +2668,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2598,6 +2686,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -2615,6 +2704,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 200
     }),
@@ -2632,6 +2722,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2649,6 +2740,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2666,6 +2758,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2683,6 +2776,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -2700,6 +2794,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2717,6 +2812,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2734,6 +2830,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -2751,6 +2848,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2768,6 +2866,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2785,6 +2884,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2802,6 +2902,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2819,6 +2920,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2836,6 +2938,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2853,6 +2956,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -2870,6 +2974,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2887,6 +2992,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2904,6 +3010,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2921,6 +3028,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -2938,6 +3046,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2955,6 +3064,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -2972,6 +3082,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -2989,6 +3100,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -3006,6 +3118,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -3023,6 +3136,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -3040,6 +3154,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -3057,6 +3172,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -3074,6 +3190,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -3091,6 +3208,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -3108,6 +3226,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -3125,6 +3244,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -3142,6 +3262,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -3159,6 +3280,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -3176,6 +3298,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -3193,6 +3316,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -3210,6 +3334,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -3227,6 +3352,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -3244,6 +3370,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -3261,6 +3388,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -3278,6 +3406,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -3295,6 +3424,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -3312,6 +3442,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -3329,6 +3460,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -3346,6 +3478,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -3363,6 +3496,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -3380,6 +3514,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -3397,6 +3532,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 100
     }),
@@ -3414,6 +3550,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 250
     }),
@@ -3431,6 +3568,7 @@ datas = _tools.RODict({
         "ceiling": lambda alv:[alv*2],
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 500
     }),
@@ -3448,6 +3586,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": None,
         "score": 0
     }),
@@ -3465,6 +3604,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((3, 3), (10, 15), (20, 25), (32, 40)),
         "score": 0
     }),
@@ -3482,6 +3622,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((2, 8), (9, 24), (25, 40), (41, 64)),
         "score": 0
     }),
@@ -3499,6 +3640,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((3, 12), (13, 36), (37, 60), (61, 96)),
         "score": 0
     }),
@@ -3516,6 +3658,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((2, 8), (9, 24), (25, 40), (41, 64)),
         "score": 0
     }),
@@ -3533,6 +3676,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((3, 12), (13, 36), (37, 60), (61, 96)),
         "score": 0
     }),
@@ -3550,6 +3694,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
         "score": 0
     }),
@@ -3567,6 +3712,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
         "score": 0
     }),
@@ -3584,6 +3730,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
         "score": 0
     }),
@@ -3601,6 +3748,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((2, 8), (9, 24), (25, 40), (41, 64)),
         "score": 0
     }),
@@ -3618,6 +3766,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
         "score": 0
     }),
@@ -3635,6 +3784,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((2, 8), (9, 24), (25, 40), (41, 64)),
         "score": 0
     }),
@@ -3652,6 +3802,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
         "score": 0
     }),
@@ -3669,6 +3820,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
         "score": 0
     }),
@@ -3686,6 +3838,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
         "score": 0
     }),
@@ -3703,6 +3856,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((2, 6), (7, 18), (19, 30), (31, 48)),
         "score": 0
     }),
@@ -3720,6 +3874,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
         "score": 0
     }),
@@ -3737,6 +3892,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((2, 6), (7, 18), (19, 30), (31, 48)),
         "score": 0
     }),
@@ -3754,6 +3910,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 1), (2, 3), (4, 5), (6, 8)),
         "score": 0
     }),
@@ -3771,6 +3928,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
         "score": 0
     }),
@@ -3788,6 +3946,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((2, 6), (7, 18), (19, 30), (31, 48)),
         "score": 0
     }),
@@ -3805,6 +3964,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
         "score": 0
     }),
@@ -3822,6 +3982,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((2, 6), (7, 18), (19, 30), (31, 48)),
         "score": 0
     }),
@@ -3839,6 +4000,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 1), (2, 3), (4, 5), (6, 8)),
         "score": 0
     }),
@@ -3856,6 +4018,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
         "score": 0
     }),
@@ -3873,6 +4036,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((2, 6), (7, 18), (19, 30), (31, 48)),
         "score": 0
     }),
@@ -3890,6 +4054,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
         "score": 0
     }),
@@ -3907,6 +4072,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((2, 6), (7, 18), (19, 30), (31, 48)),
         "score": 0
     }),
@@ -3924,6 +4090,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 1), (2, 3), (4, 5), (6, 8)),
         "score": 0
     }),
@@ -3941,6 +4108,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
         "score": 0
     }),
@@ -3958,6 +4126,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
         "score": 0
     }),
@@ -3975,6 +4144,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
         "score": 0
     }),
@@ -3992,6 +4162,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
         "score": 0
     }),
@@ -4009,6 +4180,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 1), (2, 3), (4, 5), (6, 8)),
         "score": 0
     }),
@@ -4026,6 +4198,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
         "score": 0
     }),
@@ -4043,6 +4216,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
         "score": 0
     }),
@@ -4060,6 +4234,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
         "score": 0
     }),
@@ -4077,6 +4252,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
         "score": 0
     }),
@@ -4094,6 +4270,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 1), (2, 3), (4, 5), (6, 8)),
         "score": 0
     }),
@@ -4111,6 +4288,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((0, 0), (0, 0), (1, 1), (2, 2)),
         "score": 0
     }),
@@ -4128,6 +4306,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
         "score": 0
     }),
@@ -4145,6 +4324,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
         "score": 0
     }),
@@ -4162,6 +4342,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
         "score": 0
     }),
@@ -4179,6 +4360,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
         "score": 0
     }),
@@ -4196,6 +4378,7 @@ datas = _tools.RODict({
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
+        "assessmentRarity": None,
         "qualityValue": ((1, 1), (2, 3), (4, 5), (6, 8)),
         "score": 0
     })

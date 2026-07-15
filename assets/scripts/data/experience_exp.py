@@ -21,10 +21,10 @@ datas = _tools.RODict({
         "expPlayer": 15,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 1625], [1626, 1986], [1987]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 1913], [1914, 2338], [2339]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041501, 40041501, 40041501),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     2: _tools.RODict({
         "ID": 2,
@@ -32,10 +32,10 @@ datas = _tools.RODict({
         "expPlayer": 70,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 1747], [1748, 2136], [2137]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 2035], [2036, 2488], [2489]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041502, 40041502, 40041502),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     3: _tools.RODict({
         "ID": 3,
@@ -43,10 +43,10 @@ datas = _tools.RODict({
         "expPlayer": 90,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 1969], [1970, 2406], [2407]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 2257], [2258, 2758], [2759]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041503, 40041503, 40041503),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     4: _tools.RODict({
         "ID": 4,
@@ -54,10 +54,10 @@ datas = _tools.RODict({
         "expPlayer": 270,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 2091], [2092, 2556], [2557]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 2379], [2380, 2908], [2909]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041504, 40041504, 40041504),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     5: _tools.RODict({
         "ID": 5,
@@ -65,10 +65,10 @@ datas = _tools.RODict({
         "expPlayer": 3300,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 2313], [2314, 2827], [2828]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 2601], [2602, 3179], [3180]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041505, 40041505, 40041505),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     6: _tools.RODict({
         "ID": 6,
@@ -76,10 +76,10 @@ datas = _tools.RODict({
         "expPlayer": 4800,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 2453], [2454, 2998], [2999]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 2723], [2724, 3328], [3329]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041506, 40041506, 40041506),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     7: _tools.RODict({
         "ID": 7,
@@ -87,10 +87,10 @@ datas = _tools.RODict({
         "expPlayer": 5200,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 3925], [3926, 4798], [4799]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 4393], [4394, 5370], [5371]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041507, 40041507, 40041507),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     8: _tools.RODict({
         "ID": 8,
@@ -98,10 +98,10 @@ datas = _tools.RODict({
         "expPlayer": 5600,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 4282], [4283, 5233], [5234]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 4786], [4787, 5849], [5850]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041508, 40041508, 40041508),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     9: _tools.RODict({
         "ID": 9,
@@ -109,10 +109,10 @@ datas = _tools.RODict({
         "expPlayer": 6600,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 4494], [4495, 5493], [5494]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 5007], [5008, 6120], [6121]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041509, 40041509, 40041509),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     10: _tools.RODict({
         "ID": 10,
@@ -120,10 +120,10 @@ datas = _tools.RODict({
         "expPlayer": 7200,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 5674], [5675, 6935], [6936]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 6315], [6316, 7718], [7719]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041510, 40041510, 40041510),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     11: _tools.RODict({
         "ID": 11,
@@ -131,10 +131,10 @@ datas = _tools.RODict({
         "expPlayer": 15000,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 6237], [6238, 7623], [7624]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 6913], [6914, 8450], [8451]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041511, 40041511, 40041511),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     12: _tools.RODict({
         "ID": 12,
@@ -142,10 +142,10 @@ datas = _tools.RODict({
         "expPlayer": 16200,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 6948], [6949, 8492], [8493]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 7681], [7682, 9388], [9389]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041512, 40041512, 40041512),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     13: _tools.RODict({
         "ID": 13,
@@ -153,10 +153,10 @@ datas = _tools.RODict({
         "expPlayer": 21600,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 7637], [7638, 9334], [9335]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 8388], [8389, 10253], [10254]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041513, 40041513, 40041513),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     14: _tools.RODict({
         "ID": 14,
@@ -164,10 +164,10 @@ datas = _tools.RODict({
         "expPlayer": 22800,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 7804], [7805, 9539], [9540]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 8556], [8557, 10457], [10458]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041514, 40041514, 40041514),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     15: _tools.RODict({
         "ID": 15,
@@ -175,10 +175,10 @@ datas = _tools.RODict({
         "expPlayer": 30000,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 8532], [8533, 10429], [10430]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 9329], [9330, 11402], [11403]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041515, 40041515, 40041515),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     16: _tools.RODict({
         "ID": 16,
@@ -186,10 +186,10 @@ datas = _tools.RODict({
         "expPlayer": 30600,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 9077], [9078, 11094], [11095]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 9937], [9938, 12146], [12147]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041516, 40041516, 40041516),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     17: _tools.RODict({
         "ID": 17,
@@ -197,10 +197,10 @@ datas = _tools.RODict({
         "expPlayer": 32400,
         "fakeOnlineTime": 2,
         "score": 0,
-        "powerRange": ([0, 9289], [9290, 11354], [11355]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 10159], [10160, 12416], [12417]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041517, 40041517, 40041517),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     18: _tools.RODict({
         "ID": 18,
@@ -208,120 +208,120 @@ datas = _tools.RODict({
         "expPlayer": 36000,
         "fakeOnlineTime": 4,
         "score": 0,
-        "powerRange": ([0, 9678], [9679, 11829], [11830]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 10539], [10540, 12881], [12882]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041518, 40041518, 40041518),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     19: _tools.RODict({
         "ID": 19,
         "grade": 19,
-        "expPlayer": 130000,
+        "expPlayer": 100000,
         "fakeOnlineTime": 4,
         "score": 0,
-        "powerRange": ([0, 11357], [11358, 13880], [13881]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 12283], [12284, 15012], [15013]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041519, 40041519, 40041519),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     20: _tools.RODict({
         "ID": 20,
         "grade": 20,
-        "expPlayer": 150000,
+        "expPlayer": 110000,
         "fakeOnlineTime": 4,
         "score": 0,
-        "powerRange": ([0, 12271], [12272, 14998], [14999]),
-        "idleIncome": (1363, 1515, 1590),
+        "powerRange": ([0, 13138], [13139, 16057], [16058]),
+        "idleIncome": (1225, 1362, 1430),
         "itemIncome": (40041520, 40041520, 40041520),
-        "idleIncomeBig": (1636, 1818, 1908)
+        "idleIncomeBig": (1471, 1635, 1716)
     }),
     21: _tools.RODict({
         "ID": 21,
         "grade": 21,
-        "expPlayer": 175000,
+        "expPlayer": 120000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 13301], [13302, 16256], [16257]),
-        "idleIncome": (1446, 1607, 1687),
+        "powerRange": ([0, 14224], [14225, 17385], [17386]),
+        "idleIncome": (1301, 1446, 1518),
         "itemIncome": (40041521, 40041521, 40041521),
-        "idleIncomeBig": (1735, 1928, 2024)
+        "idleIncomeBig": (1561, 1735, 1821)
     }),
     22: _tools.RODict({
         "ID": 22,
         "grade": 22,
-        "expPlayer": 220000,
+        "expPlayer": 200000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 13731], [13732, 16782], [16783]),
-        "idleIncome": (1535, 1706, 1791),
+        "powerRange": ([0, 14719], [14720, 17990], [17991]),
+        "idleIncome": (1377, 1531, 1607),
         "itemIncome": (40041522, 40041522, 40041522),
-        "idleIncomeBig": (1842, 2047, 2149)
+        "idleIncomeBig": (1653, 1837, 1928)
     }),
     23: _tools.RODict({
         "ID": 23,
         "grade": 23,
-        "expPlayer": 750000,
+        "expPlayer": 540000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 15007], [15008, 18342], [18343]),
-        "idleIncome": (1620, 1800, 1890),
+        "powerRange": ([0, 16044], [16045, 19609], [19610]),
+        "idleIncome": (1455, 1617, 1697),
         "itemIncome": (40041523, 40041523, 40041523),
-        "idleIncomeBig": (1944, 2160, 2268)
+        "idleIncomeBig": (1746, 1940, 2037)
     }),
     24: _tools.RODict({
         "ID": 24,
         "grade": 24,
-        "expPlayer": 800000,
+        "expPlayer": 855000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 15458], [15459, 18893], [18894]),
-        "idleIncome": (1711, 1902, 1997),
+        "powerRange": ([0, 16533], [16534, 20208], [20209]),
+        "idleIncome": (1533, 1704, 1789),
         "itemIncome": (40041524, 40041524, 40041524),
-        "idleIncomeBig": (2054, 2283, 2397)
+        "idleIncomeBig": (1840, 2045, 2147)
     }),
     25: _tools.RODict({
         "ID": 25,
         "grade": 25,
-        "expPlayer": 850000,
+        "expPlayer": 860000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 16959], [16960, 20728], [20729]),
-        "idleIncome": (1839, 2044, 2146),
+        "powerRange": ([0, 18130], [18131, 22159], [22160]),
+        "idleIncome": (1735, 1928, 2024),
         "itemIncome": (40041525, 40041525, 40041525),
-        "idleIncomeBig": (2206, 2452, 2574)
+        "idleIncomeBig": (2082, 2314, 2429)
     }),
     26: _tools.RODict({
         "ID": 26,
         "grade": 26,
-        "expPlayer": 900000,
+        "expPlayer": 870000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 17296], [17297, 21139], [21140]),
-        "idleIncome": (1969, 2188, 2297),
+        "powerRange": ([0, 18424], [18425, 22519], [22520]),
+        "idleIncome": (1863, 2071, 2174),
         "itemIncome": (40041526, 40041526, 40041526),
-        "idleIncomeBig": (2362, 2625, 2756)
+        "idleIncomeBig": (2237, 2486, 2610)
     }),
     27: _tools.RODict({
         "ID": 27,
         "grade": 27,
-        "expPlayer": 950000,
+        "expPlayer": 900000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 18180], [18181, 22220], [22221]),
-        "idleIncome": (2054, 2283, 2397),
+        "powerRange": ([0, 19393], [19394, 23702], [23703]),
+        "idleIncome": (1951, 2168, 2276),
         "itemIncome": (40041527, 40041527, 40041527),
-        "idleIncomeBig": (2465, 2739, 2875)
+        "idleIncomeBig": (2341, 2602, 2732)
     }),
     28: _tools.RODict({
         "ID": 28,
         "grade": 28,
-        "expPlayer": 1000000,
+        "expPlayer": 920000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 18525], [18526, 22642], [22643]),
-        "idleIncome": (2187, 2430, 2551),
+        "powerRange": ([0, 19705], [19706, 24084], [24085]),
+        "idleIncome": (2084, 2316, 2431),
         "itemIncome": (40041528, 40041528, 40041528),
-        "idleIncomeBig": (2624, 2916, 3061)
+        "idleIncomeBig": (2502, 2780, 2919)
     }),
     29: _tools.RODict({
         "ID": 29,
@@ -329,326 +329,326 @@ datas = _tools.RODict({
         "expPlayer": 1500000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 19107], [19108, 23354], [23355]),
-        "idleIncome": (2313, 2571, 2699),
+        "powerRange": ([0, 20360], [20361, 24885], [24886]),
+        "idleIncome": (2212, 2458, 2580),
         "itemIncome": (40041529, 40041529, 40041529),
-        "idleIncomeBig": (2776, 3085, 3239)
+        "idleIncomeBig": (2655, 2950, 3097)
     }),
     30: _tools.RODict({
         "ID": 30,
         "grade": 30,
-        "expPlayer": 2300000,
+        "expPlayer": 1740000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 21051], [21052, 25729], [25730]),
-        "idleIncome": (2474, 2749, 2886),
+        "powerRange": ([0, 22262], [22263, 27209], [27210]),
+        "idleIncome": (2415, 2684, 2818),
         "itemIncome": (40041530, 40041530, 40041530),
-        "idleIncomeBig": (2969, 3299, 3463)
+        "idleIncomeBig": (2898, 3221, 3382)
     }),
     31: _tools.RODict({
         "ID": 31,
         "grade": 31,
-        "expPlayer": 2800000,
+        "expPlayer": 2640000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 21980], [21981, 26865], [26866]),
-        "idleIncome": (2603, 2893, 3037),
+        "powerRange": ([0, 23174], [23175, 28323], [28324]),
+        "idleIncome": (2543, 2826, 2967),
         "itemIncome": (40041531, 40041531, 40041531),
-        "idleIncomeBig": (3124, 3472, 3645)
+        "idleIncomeBig": (3051, 3391, 3560)
     }),
     32: _tools.RODict({
         "ID": 32,
         "grade": 32,
-        "expPlayer": 2850000,
+        "expPlayer": 2990000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 22910], [22911, 28001], [28002]),
-        "idleIncome": (2744, 3049, 3201),
+        "powerRange": ([0, 24085], [24086, 29438], [29439]),
+        "idleIncome": (2680, 2978, 3126),
         "itemIncome": (40041532, 40041532, 40041532),
-        "idleIncomeBig": (3293, 3659, 3841)
+        "idleIncomeBig": (3216, 3574, 3752)
     }),
     33: _tools.RODict({
         "ID": 33,
         "grade": 33,
-        "expPlayer": 2900000,
+        "expPlayer": 3010000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 23840], [23841, 29137], [29138]),
-        "idleIncome": (2876, 3196, 3355),
+        "powerRange": ([0, 24997], [24998, 30552], [30553]),
+        "idleIncome": (2809, 3122, 3278),
         "itemIncome": (40041533, 40041533, 40041533),
-        "idleIncomeBig": (3451, 3835, 4026)
+        "idleIncomeBig": (3371, 3746, 3933)
     }),
     34: _tools.RODict({
         "ID": 34,
         "grade": 34,
-        "expPlayer": 4200000,
+        "expPlayer": 4410000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 24769], [24770, 30274], [30275]),
-        "idleIncome": (3089, 3433, 3604),
+        "powerRange": ([0, 25909], [25910, 31666], [31667]),
+        "idleIncome": (3019, 3355, 3522),
         "itemIncome": (40041534, 40041534, 40041534),
-        "idleIncomeBig": (3708, 4120, 4326)
+        "idleIncomeBig": (3623, 4026, 4227)
     }),
     35: _tools.RODict({
         "ID": 35,
         "grade": 35,
-        "expPlayer": 5200000,
+        "expPlayer": 5410000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 25699], [25700, 31410], [31411]),
-        "idleIncome": (3309, 3677, 3860),
+        "powerRange": ([0, 26820], [26821, 32781], [32782]),
+        "idleIncome": (3235, 3595, 3774),
         "itemIncome": (40041535, 40041535, 40041535),
-        "idleIncomeBig": (3971, 4413, 4633)
+        "idleIncomeBig": (3882, 4314, 4529)
     }),
     36: _tools.RODict({
         "ID": 36,
         "grade": 36,
-        "expPlayer": 5700000,
+        "expPlayer": 5610000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 26629], [26630, 32546], [32547]),
-        "idleIncome": (3501, 3890, 4084),
+        "powerRange": ([0, 27732], [27733, 33895], [33896]),
+        "idleIncome": (3423, 3804, 3994),
         "itemIncome": (40041536, 40041536, 40041536),
-        "idleIncomeBig": (4201, 4668, 4901)
+        "idleIncomeBig": (4108, 4565, 4793)
     }),
     37: _tools.RODict({
         "ID": 37,
         "grade": 37,
-        "expPlayer": 5900000,
+        "expPlayer": 5730000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 27558], [27559, 33683], [33684]),
-        "idleIncome": (3683, 4093, 4297),
+        "powerRange": ([0, 28644], [28645, 35009], [35010]),
+        "idleIncome": (3601, 4002, 4202),
         "itemIncome": (40041537, 40041537, 40041537),
-        "idleIncomeBig": (4419, 4911, 5156)
+        "idleIncomeBig": (4322, 4803, 5043)
     }),
     38: _tools.RODict({
         "ID": 38,
         "grade": 38,
-        "expPlayer": 6100000,
+        "expPlayer": 5810000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 28488], [28489, 34819], [34820]),
-        "idleIncome": (3915, 4351, 4568),
+        "powerRange": ([0, 29556], [29557, 36124], [36125]),
+        "idleIncome": (3830, 4256, 4468),
         "itemIncome": (40041538, 40041538, 40041538),
-        "idleIncomeBig": (4698, 5221, 5482)
+        "idleIncomeBig": (4596, 5107, 5362)
     }),
     39: _tools.RODict({
         "ID": 39,
         "grade": 39,
-        "expPlayer": 6550000,
+        "expPlayer": 6410000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 29418], [29419, 35955], [35956]),
-        "idleIncome": (4146, 4607, 4837),
+        "powerRange": ([0, 30467], [30468, 37238], [37239]),
+        "idleIncome": (4056, 4507, 4732),
         "itemIncome": (40041539, 40041539, 40041539),
-        "idleIncomeBig": (4975, 5528, 5804)
+        "idleIncomeBig": (4867, 5408, 5678)
     }),
     40: _tools.RODict({
         "ID": 40,
         "grade": 40,
-        "expPlayer": 11480000,
+        "expPlayer": 11170000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 30351], [30352, 37096], [37097]),
-        "idleIncome": (4621, 5135, 5391),
+        "powerRange": ([0, 31380], [31381, 38353], [38354]),
+        "idleIncome": (4526, 5029, 5280),
         "itemIncome": (40041540, 40041540, 40041540),
-        "idleIncomeBig": (5545, 6162, 6470)
+        "idleIncomeBig": (5431, 6035, 6336)
     }),
     41: _tools.RODict({
         "ID": 41,
         "grade": 41,
-        "expPlayer": 12200000,
+        "expPlayer": 11870000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 31392], [31393, 38368], [38369]),
-        "idleIncome": (4866, 5407, 5677),
+        "powerRange": ([0, 32411], [32412, 39614], [39615]),
+        "idleIncome": (4767, 5297, 5561),
         "itemIncome": (40041541, 40041541, 40041541),
-        "idleIncomeBig": (5840, 6489, 6813)
+        "idleIncomeBig": (5720, 6356, 6673)
     }),
     42: _tools.RODict({
         "ID": 42,
         "grade": 42,
-        "expPlayer": 12790000,
+        "expPlayer": 12450000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 32432], [32433, 39639], [39640]),
-        "idleIncome": (5173, 5748, 6035),
+        "powerRange": ([0, 33443], [33444, 40874], [40875]),
+        "idleIncome": (5068, 5632, 5913),
         "itemIncome": (40041542, 40041542, 40041542),
-        "idleIncomeBig": (6207, 6897, 7241)
+        "idleIncomeBig": (6083, 6759, 7096)
     }),
     43: _tools.RODict({
         "ID": 43,
         "grade": 43,
-        "expPlayer": 13530000,
+        "expPlayer": 13180000,
         "fakeOnlineTime": 10,
         "score": 0,
-        "powerRange": ([0, 33472], [33473, 40911], [40912]),
-        "idleIncome": (5424, 6027, 6328),
+        "powerRange": ([0, 34474], [34475, 42135], [42136]),
+        "idleIncome": (5315, 5906, 6201),
         "itemIncome": (40041543, 40041543, 40041543),
-        "idleIncomeBig": (6508, 7232, 7593)
+        "idleIncomeBig": (6378, 7087, 7441)
     }),
     44: _tools.RODict({
         "ID": 44,
         "grade": 44,
-        "expPlayer": 14950000,
+        "expPlayer": 14460000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 34513], [34514, 42182], [42183]),
-        "idleIncome": (5740, 6378, 6696),
+        "powerRange": ([0, 35505], [35506, 43396], [43397]),
+        "idleIncome": (5625, 6251, 6563),
         "itemIncome": (40041544, 40041544, 40041544),
-        "idleIncomeBig": (6888, 7654, 8036)
+        "idleIncomeBig": (6750, 7501, 7876)
     }),
     45: _tools.RODict({
         "ID": 45,
         "grade": 45,
-        "expPlayer": 15250000,
+        "expPlayer": 14850000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 35553], [35554, 43454], [43455]),
-        "idleIncome": (6042, 6714, 7049),
+        "powerRange": ([0, 36537], [36538, 44656], [44657]),
+        "idleIncome": (5922, 6580, 6909),
         "itemIncome": (40041545, 40041545, 40041545),
-        "idleIncomeBig": (7251, 8057, 8459)
+        "idleIncomeBig": (7107, 7897, 8291)
     }),
     46: _tools.RODict({
         "ID": 46,
         "grade": 46,
-        "expPlayer": 24140000,
+        "expPlayer": 23510000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 36594], [36595, 44726], [44727]),
-        "idleIncome": (6466, 7185, 7544),
+        "powerRange": ([0, 37568], [37569, 45917], [45918]),
+        "idleIncome": (6339, 7044, 7396),
         "itemIncome": (40041546, 40041546, 40041546),
-        "idleIncomeBig": (7759, 8622, 9053)
+        "idleIncomeBig": (7607, 8453, 8875)
     }),
     47: _tools.RODict({
         "ID": 47,
         "grade": 47,
-        "expPlayer": 26740000,
+        "expPlayer": 25900000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 37634], [37635, 45997], [45998]),
-        "idleIncome": (6823, 7582, 7961),
+        "powerRange": ([0, 38600], [38601, 47177], [47178]),
+        "idleIncome": (6690, 7434, 7805),
         "itemIncome": (40041547, 40041547, 40041547),
-        "idleIncomeBig": (8188, 9098, 9552)
+        "idleIncomeBig": (8028, 8921, 9367)
     }),
     48: _tools.RODict({
         "ID": 48,
         "grade": 48,
-        "expPlayer": 26760000,
+        "expPlayer": 26070000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 38674], [38675, 47269], [47270]),
-        "idleIncome": (7203, 8004, 8404),
+        "powerRange": ([0, 39631], [39632, 48438], [48439]),
+        "idleIncome": (7064, 7849, 8241),
         "itemIncome": (40041548, 40041548, 40041548),
-        "idleIncomeBig": (8644, 9605, 10085)
+        "idleIncomeBig": (8476, 9418, 9888)
     }),
     49: _tools.RODict({
         "ID": 49,
         "grade": 49,
-        "expPlayer": 35410000,
+        "expPlayer": 33730000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 39715], [39716, 48540], [48541]),
-        "idleIncome": (7566, 8407, 8827),
+        "powerRange": ([0, 40662], [40663, 49699], [49700]),
+        "idleIncome": (7419, 8244, 8656),
         "itemIncome": (40041549, 40041549, 40041549),
-        "idleIncomeBig": (9079, 10088, 10592)
+        "idleIncomeBig": (8903, 9893, 10387)
     }),
     50: _tools.RODict({
         "ID": 50,
         "grade": 50,
-        "expPlayer": 75820000,
+        "expPlayer": 71820000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 40756], [40757, 49813], [49814]),
-        "idleIncome": (8770, 9745, 10232),
+        "powerRange": ([0, 41695], [41696, 50960], [50961]),
+        "idleIncome": (8616, 9574, 10052),
         "itemIncome": (40041550, 40041550, 40041550),
-        "idleIncomeBig": (10524, 11694, 12278)
+        "idleIncomeBig": (10340, 11489, 12063)
     }),
     51: _tools.RODict({
         "ID": 51,
         "grade": 51,
-        "expPlayer": 76760000,
+        "expPlayer": 73260000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 41877], [41878, 51183], [51184]),
-        "idleIncome": (9225, 10250, 10762),
+        "powerRange": ([0, 42795], [42796, 52306], [52307]),
+        "idleIncome": (9063, 10071, 10574),
         "itemIncome": (40041551, 40041551, 40041551),
-        "idleIncomeBig": (11070, 12301, 12916)
+        "idleIncomeBig": (10877, 12086, 12690)
     }),
     52: _tools.RODict({
         "ID": 52,
         "grade": 52,
-        "expPlayer": 80570000,
+        "expPlayer": 77130000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 42997], [42998, 52552], [52553]),
-        "idleIncome": (9744, 10827, 11368),
+        "powerRange": ([0, 43896], [43897, 53651], [53652]),
+        "idleIncome": (9591, 10657, 11189),
         "itemIncome": (40041552, 40041552, 40041552),
-        "idleIncomeBig": (11693, 12993, 13642)
+        "idleIncomeBig": (11509, 12788, 13427)
     }),
     53: _tools.RODict({
         "ID": 53,
         "grade": 53,
-        "expPlayer": 85230000,
+        "expPlayer": 81840000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 44118], [44119, 53922], [53923]),
-        "idleIncome": (10229, 11366, 11934),
+        "powerRange": ([0, 44997], [44998, 54996], [54997]),
+        "idleIncome": (10097, 11219, 11779),
         "itemIncome": (40041553, 40041553, 40041553),
-        "idleIncomeBig": (12275, 13639, 14320)
+        "idleIncomeBig": (12116, 13463, 14136)
     }),
     54: _tools.RODict({
         "ID": 54,
         "grade": 54,
-        "expPlayer": 90390000,
+        "expPlayer": 87050000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 45238], [45239, 55291], [55292]),
-        "idleIncome": (10819, 12022, 12623),
+        "powerRange": ([0, 46098], [46099, 56342], [56343]),
+        "idleIncome": (10713, 11904, 12499),
         "itemIncome": (40041554, 40041554, 40041554),
-        "idleIncomeBig": (12984, 14427, 15148)
+        "idleIncomeBig": (12856, 14285, 14999)
     }),
     55: _tools.RODict({
         "ID": 55,
         "grade": 55,
-        "expPlayer": 95380000,
+        "expPlayer": 92120000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 46359], [46360, 56661], [56662]),
-        "idleIncome": (11475, 12751, 13388),
+        "powerRange": ([0, 47198], [47199, 57687], [57688]),
+        "idleIncome": (11396, 12663, 13296),
         "itemIncome": (40041555, 40041555, 40041555),
-        "idleIncomeBig": (13770, 15301, 16066)
+        "idleIncomeBig": (13676, 15196, 15955)
     }),
     56: _tools.RODict({
         "ID": 56,
         "grade": 56,
-        "expPlayer": 100150000,
+        "expPlayer": 97010000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 47479], [47480, 58030], [58031]),
-        "idleIncome": (12109, 13455, 14127),
+        "powerRange": ([0, 48299], [48300, 59032], [59033]),
+        "idleIncome": (12060, 13400, 14070),
         "itemIncome": (40041556, 40041556, 40041556),
-        "idleIncomeBig": (14531, 16146, 16953)
+        "idleIncomeBig": (14472, 16080, 16884)
     }),
     57: _tools.RODict({
         "ID": 57,
         "grade": 57,
-        "expPlayer": 105940000,
+        "expPlayer": 102740000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 48600], [48601, 59400], [59401]),
-        "idleIncome": (12715, 14128, 14834),
+        "powerRange": ([0, 49400], [49401, 60377], [60378]),
+        "idleIncome": (12699, 14110, 14815),
         "itemIncome": (40041557, 40041557, 40041557),
-        "idleIncomeBig": (15257, 16953, 17800)
+        "idleIncomeBig": (15239, 16933, 17779)
     }),
     58: _tools.RODict({
         "ID": 58,
         "grade": 58,
-        "expPlayer": 111190000,
+        "expPlayer": 107830000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 49720], [49721, 60769], [60770]),
+        "powerRange": ([0, 50500], [50501, 61723], [61724]),
         "idleIncome": (13449, 14944, 15691),
         "itemIncome": (40041558, 40041558, 40041558),
         "idleIncomeBig": (16139, 17933, 18829)
@@ -656,10 +656,10 @@ datas = _tools.RODict({
     59: _tools.RODict({
         "ID": 59,
         "grade": 59,
-        "expPlayer": 242500000,
+        "expPlayer": 235170000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 50841], [50842, 62139], [62140]),
+        "powerRange": ([0, 51601], [51602, 63068], [63069]),
         "idleIncome": (14117, 15686, 16470),
         "itemIncome": (40041559, 40041559, 40041559),
         "idleIncomeBig": (16940, 18823, 19764)
@@ -667,10 +667,10 @@ datas = _tools.RODict({
     60: _tools.RODict({
         "ID": 60,
         "grade": 60,
-        "expPlayer": 254310000,
+        "expPlayer": 246620000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 51968], [51969, 63517], [63518]),
+        "powerRange": ([0, 52703], [52704, 64414], [64415]),
         "idleIncome": (15018, 16687, 17521),
         "itemIncome": (40041560, 40041560, 40041560),
         "idleIncomeBig": (18022, 20025, 21026)
@@ -678,10 +678,10 @@ datas = _tools.RODict({
     61: _tools.RODict({
         "ID": 61,
         "grade": 61,
-        "expPlayer": 269570000,
+        "expPlayer": 261420000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 53064], [53065, 64857], [64858]),
+        "powerRange": ([0, 53792], [53793, 65745], [65746]),
         "idleIncome": (15750, 17500, 18375),
         "itemIncome": (40041561, 40041561, 40041561),
         "idleIncomeBig": (18900, 21000, 22050)
@@ -689,10 +689,10 @@ datas = _tools.RODict({
     62: _tools.RODict({
         "ID": 62,
         "grade": 62,
-        "expPlayer": 283320000,
+        "expPlayer": 274760000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 54161], [54162, 66196], [66197]),
+        "powerRange": ([0, 54881], [54882, 67076], [67077]),
         "idleIncome": (16695, 18550, 19477),
         "itemIncome": (40041562, 40041562, 40041562),
         "idleIncomeBig": (20034, 22260, 23373)
@@ -700,10 +700,10 @@ datas = _tools.RODict({
     63: _tools.RODict({
         "ID": 63,
         "grade": 63,
-        "expPlayer": 297780000,
+        "expPlayer": 288780000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 55257], [55258, 67536], [67537]),
+        "powerRange": ([0, 55970], [55971, 68407], [68408]),
         "idleIncome": (17546, 19496, 20470),
         "itemIncome": (40041563, 40041563, 40041563),
         "idleIncomeBig": (21055, 23395, 24564)
@@ -711,10 +711,10 @@ datas = _tools.RODict({
     64: _tools.RODict({
         "ID": 64,
         "grade": 64,
-        "expPlayer": 318560000,
+        "expPlayer": 308930000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 56353], [56354, 68876], [68877]),
+        "powerRange": ([0, 57059], [57060, 69738], [69739]),
         "idleIncome": (18441, 20491, 21515),
         "itemIncome": (40041564, 40041564, 40041564),
         "idleIncomeBig": (22130, 24589, 25818)
@@ -722,10 +722,10 @@ datas = _tools.RODict({
     65: _tools.RODict({
         "ID": 65,
         "grade": 65,
-        "expPlayer": 335220000,
+        "expPlayer": 325090000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 57449], [57450, 70216], [70217]),
+        "powerRange": ([0, 58148], [58149, 71069], [71070]),
         "idleIncome": (19728, 21921, 23017),
         "itemIncome": (40041565, 40041565, 40041565),
         "idleIncomeBig": (23674, 26305, 27620)
@@ -733,10 +733,10 @@ datas = _tools.RODict({
     66: _tools.RODict({
         "ID": 66,
         "grade": 66,
-        "expPlayer": 351140000,
+        "expPlayer": 340520000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 58545], [58546, 71556], [71557]),
+        "powerRange": ([0, 59237], [59238, 72400], [72401]),
         "idleIncome": (20760, 23067, 24220),
         "itemIncome": (40041566, 40041566, 40041566),
         "idleIncomeBig": (24912, 27681, 29065)
@@ -744,10 +744,10 @@ datas = _tools.RODict({
     67: _tools.RODict({
         "ID": 67,
         "grade": 67,
-        "expPlayer": 372330000,
+        "expPlayer": 361080000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 59642], [59643, 72895], [72896]),
+        "powerRange": ([0, 60326], [60327, 73731], [73732]),
         "idleIncome": (21745, 24162, 25370),
         "itemIncome": (40041567, 40041567, 40041567),
         "idleIncomeBig": (26095, 28995, 30444)
@@ -755,10 +755,10 @@ datas = _tools.RODict({
     68: _tools.RODict({
         "ID": 68,
         "grade": 68,
-        "expPlayer": 391240000,
+        "expPlayer": 379410000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 60738], [60739, 74235], [74236]),
+        "powerRange": ([0, 61415], [61416, 75062], [75063]),
         "idleIncome": (23058, 25621, 26902),
         "itemIncome": (40041568, 40041568, 40041568),
         "idleIncomeBig": (27671, 30746, 32283)
@@ -766,10 +766,10 @@ datas = _tools.RODict({
     69: _tools.RODict({
         "ID": 69,
         "grade": 69,
-        "expPlayer": 415780000,
+        "expPlayer": 403220000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 61834], [61835, 75575], [75576]),
+        "powerRange": ([0, 62504], [62505, 76393], [76394]),
         "idleIncome": (24229, 26922, 28268),
         "itemIncome": (40041569, 40041569, 40041569),
         "idleIncomeBig": (29075, 32306, 33921)
@@ -777,10 +777,10 @@ datas = _tools.RODict({
     70: _tools.RODict({
         "ID": 70,
         "grade": 70,
-        "expPlayer": 461910000,
+        "expPlayer": 447950000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 62931], [62932, 76916], [76917]),
+        "powerRange": ([0, 63601], [63602, 77734], [77735]),
         "idleIncome": (25749, 28611, 30041),
         "itemIncome": (40041570, 40041570, 40041570),
         "idleIncomeBig": (30899, 34333, 36049)
@@ -788,10 +788,10 @@ datas = _tools.RODict({
     71: _tools.RODict({
         "ID": 71,
         "grade": 71,
-        "expPlayer": 486300000,
+        "expPlayer": 471600000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 64320], [64321, 78613], [78614]),
+        "powerRange": ([0, 64991], [64992, 79434], [79435]),
         "idleIncome": (27176, 30196, 31705),
         "itemIncome": (40041571, 40041571, 40041571),
         "idleIncomeBig": (32611, 36235, 38046)
@@ -799,10 +799,10 @@ datas = _tools.RODict({
     72: _tools.RODict({
         "ID": 72,
         "grade": 72,
-        "expPlayer": 510660000,
+        "expPlayer": 495230000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 65709], [65710, 80311], [80312]),
+        "powerRange": ([0, 66382], [66383, 81133], [81134]),
         "idleIncome": (28611, 31790, 33379),
         "itemIncome": (40041572, 40041572, 40041572),
         "idleIncomeBig": (34333, 38148, 40055)
@@ -810,10 +810,10 @@ datas = _tools.RODict({
     73: _tools.RODict({
         "ID": 73,
         "grade": 73,
-        "expPlayer": 540850000,
+        "expPlayer": 524510000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 67097], [67098, 82008], [82009]),
+        "powerRange": ([0, 67772], [67773, 82833], [82834]),
         "idleIncome": (30044, 33383, 35052),
         "itemIncome": (40041573, 40041573, 40041573),
         "idleIncomeBig": (36054, 40060, 42063)
@@ -821,10 +821,10 @@ datas = _tools.RODict({
     74: _tools.RODict({
         "ID": 74,
         "grade": 74,
-        "expPlayer": 568510000,
+        "expPlayer": 551330000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 68486], [68487, 83705], [83706]),
+        "powerRange": ([0, 69163], [69164, 84532], [84533]),
         "idleIncome": (31821, 35357, 37124),
         "itemIncome": (40041574, 40041574, 40041574),
         "idleIncomeBig": (38185, 42428, 44549)
@@ -832,10 +832,10 @@ datas = _tools.RODict({
     75: _tools.RODict({
         "ID": 75,
         "grade": 75,
-        "expPlayer": 756820000,
+        "expPlayer": 733950000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 69875], [69876, 85402], [85403]),
+        "powerRange": ([0, 70553], [70554, 86232], [86233]),
         "idleIncome": (33448, 37165, 39023),
         "itemIncome": (40041575, 40041575, 40041575),
         "idleIncomeBig": (40138, 44598, 46827)
@@ -843,10 +843,10 @@ datas = _tools.RODict({
     76: _tools.RODict({
         "ID": 76,
         "grade": 76,
-        "expPlayer": 801130000,
+        "expPlayer": 776920000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 71263], [71264, 87100], [87101]),
+        "powerRange": ([0, 71944], [71945, 87931], [87932]),
         "idleIncome": (35153, 39059, 41011),
         "itemIncome": (40041576, 40041576, 40041576),
         "idleIncomeBig": (42183, 46871, 49214)
@@ -854,10 +854,10 @@ datas = _tools.RODict({
     77: _tools.RODict({
         "ID": 77,
         "grade": 77,
-        "expPlayer": 842250000,
+        "expPlayer": 816800000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 72652], [72653, 88797], [88798]),
+        "powerRange": ([0, 73334], [73335, 89631], [89632]),
         "idleIncome": (37211, 41346, 43413),
         "itemIncome": (40041577, 40041577, 40041577),
         "idleIncomeBig": (44653, 49615, 52095)
@@ -865,10 +865,10 @@ datas = _tools.RODict({
     78: _tools.RODict({
         "ID": 78,
         "grade": 78,
-        "expPlayer": 884230000,
+        "expPlayer": 857510000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 74041], [74042, 90494], [90495]),
+        "powerRange": ([0, 74725], [74726, 91330], [91331]),
         "idleIncome": (39121, 43468, 45641),
         "itemIncome": (40041578, 40041578, 40041578),
         "idleIncomeBig": (46945, 52162, 54770)
@@ -876,10 +876,10 @@ datas = _tools.RODict({
     79: _tools.RODict({
         "ID": 79,
         "grade": 79,
-        "expPlayer": 937000000,
+        "expPlayer": 908680000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 75429], [75430, 92192], [92193]),
+        "powerRange": ([0, 76115], [76116, 93030], [93031]),
         "idleIncome": (41071, 45635, 47916),
         "itemIncome": (40041579, 40041579, 40041579),
         "idleIncomeBig": (49285, 54762, 57500)
@@ -887,10 +887,10 @@ datas = _tools.RODict({
     80: _tools.RODict({
         "ID": 80,
         "grade": 80,
-        "expPlayer": 983320000,
+        "expPlayer": 953600000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 76819], [76820, 93890], [93891]),
+        "powerRange": ([0, 77512], [77513, 94737], [94738]),
         "idleIncome": (43522, 48358, 50775),
         "itemIncome": (40041580, 40041580, 40041580),
         "idleIncomeBig": (52227, 58030, 60931)
@@ -898,10 +898,10 @@ datas = _tools.RODict({
     81: _tools.RODict({
         "ID": 81,
         "grade": 81,
-        "expPlayer": 1035870000,
+        "expPlayer": 1004560000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 77904], [77905, 95217], [95218]),
+        "powerRange": ([0, 78580], [78581, 96043], [96044]),
         "idleIncome": (45674, 50749, 53286),
         "itemIncome": (40041581, 40041581, 40041581),
         "idleIncomeBig": (54809, 60899, 63943)
@@ -909,10 +909,10 @@ datas = _tools.RODict({
     82: _tools.RODict({
         "ID": 82,
         "grade": 82,
-        "expPlayer": 1094690000,
+        "expPlayer": 1061600000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 78990], [78991, 96543], [96544]),
+        "powerRange": ([0, 79649], [79650, 97348], [97349]),
         "idleIncome": (48114, 53461, 56134),
         "itemIncome": (40041582, 40041582, 40041582),
         "idleIncomeBig": (57737, 64153, 67360)
@@ -920,10 +920,10 @@ datas = _tools.RODict({
     83: _tools.RODict({
         "ID": 83,
         "grade": 83,
-        "expPlayer": 1151900000,
+        "expPlayer": 1117090000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 80075], [80076, 97870], [97871]),
+        "powerRange": ([0, 80717], [80718, 98654], [98655]),
         "idleIncome": (50847, 56497, 59321),
         "itemIncome": (40041583, 40041583, 40041583),
         "idleIncomeBig": (61016, 67796, 71185)
@@ -931,10 +931,10 @@ datas = _tools.RODict({
     84: _tools.RODict({
         "ID": 84,
         "grade": 84,
-        "expPlayer": 1511790000,
+        "expPlayer": 1466100000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 81161], [81162, 99196], [99197]),
+        "powerRange": ([0, 81785], [81786, 99960], [99961]),
         "idleIncome": (53505, 59450, 62422),
         "itemIncome": (40041584, 40041584, 40041584),
         "idleIncomeBig": (64206, 71340, 74907)
@@ -942,10 +942,10 @@ datas = _tools.RODict({
     85: _tools.RODict({
         "ID": 85,
         "grade": 85,
-        "expPlayer": 1600730000,
+        "expPlayer": 1552350000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 82246], [82247, 100523], [100524]),
+        "powerRange": ([0, 82854], [82855, 101266], [101267]),
         "idleIncome": (56177, 62419, 65539),
         "itemIncome": (40041585, 40041585, 40041585),
         "idleIncomeBig": (67411, 74902, 78647)
@@ -953,10 +953,10 @@ datas = _tools.RODict({
     86: _tools.RODict({
         "ID": 86,
         "grade": 86,
-        "expPlayer": 1680000000,
+        "expPlayer": 1629230000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 83331], [83332, 101850], [101851]),
+        "powerRange": ([0, 83922], [83923, 102571], [102572]),
         "idleIncome": (59481, 66091, 69395),
         "itemIncome": (40041586, 40041586, 40041586),
         "idleIncomeBig": (71378, 79309, 83274)
@@ -964,10 +964,10 @@ datas = _tools.RODict({
     87: _tools.RODict({
         "ID": 87,
         "grade": 87,
-        "expPlayer": 1768110000,
+        "expPlayer": 1714670000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 84417], [84418, 103176], [103177]),
+        "powerRange": ([0, 84990], [84991, 103877], [103878]),
         "idleIncome": (62427, 69364, 72832),
         "itemIncome": (40041587, 40041587, 40041587),
         "idleIncomeBig": (74913, 83237, 87398)
@@ -975,10 +975,10 @@ datas = _tools.RODict({
     88: _tools.RODict({
         "ID": 88,
         "grade": 88,
-        "expPlayer": 1856010000,
+        "expPlayer": 1799910000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 85502], [85503, 104503], [104504]),
+        "powerRange": ([0, 86058], [86059, 105183], [105184]),
         "idleIncome": (65701, 73002, 76652),
         "itemIncome": (40041588, 40041588, 40041588),
         "idleIncomeBig": (78841, 87602, 91982)
@@ -986,10 +986,10 @@ datas = _tools.RODict({
     89: _tools.RODict({
         "ID": 89,
         "grade": 89,
-        "expPlayer": 1953130000,
+        "expPlayer": 1894100000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 86588], [86589, 105829], [105830]),
+        "powerRange": ([0, 87127], [87128, 106488], [106489]),
         "idleIncome": (68967, 76631, 80462),
         "itemIncome": (40041589, 40041589, 40041589),
         "idleIncomeBig": (82761, 91957, 96554)
@@ -997,10 +997,10 @@ datas = _tools.RODict({
     90: _tools.RODict({
         "ID": 90,
         "grade": 90,
-        "expPlayer": 2051380000,
+        "expPlayer": 1989380000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1008,10 +1008,10 @@ datas = _tools.RODict({
     91: _tools.RODict({
         "ID": 91,
         "grade": 91,
-        "expPlayer": 2154720000,
+        "expPlayer": 2089590000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1019,10 +1019,10 @@ datas = _tools.RODict({
     92: _tools.RODict({
         "ID": 92,
         "grade": 92,
-        "expPlayer": 2261430000,
+        "expPlayer": 2193090000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1030,10 +1030,10 @@ datas = _tools.RODict({
     93: _tools.RODict({
         "ID": 93,
         "grade": 93,
-        "expPlayer": 2374930000,
+        "expPlayer": 2303150000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1041,10 +1041,10 @@ datas = _tools.RODict({
     94: _tools.RODict({
         "ID": 94,
         "grade": 94,
-        "expPlayer": 2493510000,
+        "expPlayer": 2418150000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1052,10 +1052,10 @@ datas = _tools.RODict({
     95: _tools.RODict({
         "ID": 95,
         "grade": 95,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1063,10 +1063,10 @@ datas = _tools.RODict({
     96: _tools.RODict({
         "ID": 96,
         "grade": 96,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1074,10 +1074,10 @@ datas = _tools.RODict({
     97: _tools.RODict({
         "ID": 97,
         "grade": 97,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1085,10 +1085,10 @@ datas = _tools.RODict({
     98: _tools.RODict({
         "ID": 98,
         "grade": 98,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1096,10 +1096,10 @@ datas = _tools.RODict({
     99: _tools.RODict({
         "ID": 99,
         "grade": 99,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1107,10 +1107,10 @@ datas = _tools.RODict({
     100: _tools.RODict({
         "ID": 100,
         "grade": 100,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1118,10 +1118,10 @@ datas = _tools.RODict({
     101: _tools.RODict({
         "ID": 101,
         "grade": 101,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1129,10 +1129,10 @@ datas = _tools.RODict({
     102: _tools.RODict({
         "ID": 102,
         "grade": 102,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1140,10 +1140,10 @@ datas = _tools.RODict({
     103: _tools.RODict({
         "ID": 103,
         "grade": 103,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1151,10 +1151,10 @@ datas = _tools.RODict({
     104: _tools.RODict({
         "ID": 104,
         "grade": 104,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1162,10 +1162,10 @@ datas = _tools.RODict({
     105: _tools.RODict({
         "ID": 105,
         "grade": 105,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1173,10 +1173,10 @@ datas = _tools.RODict({
     106: _tools.RODict({
         "ID": 106,
         "grade": 106,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1184,10 +1184,10 @@ datas = _tools.RODict({
     107: _tools.RODict({
         "ID": 107,
         "grade": 107,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1195,10 +1195,10 @@ datas = _tools.RODict({
     108: _tools.RODict({
         "ID": 108,
         "grade": 108,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1206,10 +1206,10 @@ datas = _tools.RODict({
     109: _tools.RODict({
         "ID": 109,
         "grade": 109,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1217,10 +1217,10 @@ datas = _tools.RODict({
     110: _tools.RODict({
         "ID": 110,
         "grade": 110,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1228,10 +1228,10 @@ datas = _tools.RODict({
     111: _tools.RODict({
         "ID": 111,
         "grade": 111,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1239,10 +1239,10 @@ datas = _tools.RODict({
     112: _tools.RODict({
         "ID": 112,
         "grade": 112,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1250,10 +1250,10 @@ datas = _tools.RODict({
     113: _tools.RODict({
         "ID": 113,
         "grade": 113,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1261,10 +1261,10 @@ datas = _tools.RODict({
     114: _tools.RODict({
         "ID": 114,
         "grade": 114,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1272,10 +1272,10 @@ datas = _tools.RODict({
     115: _tools.RODict({
         "ID": 115,
         "grade": 115,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1283,10 +1283,10 @@ datas = _tools.RODict({
     116: _tools.RODict({
         "ID": 116,
         "grade": 116,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1294,10 +1294,10 @@ datas = _tools.RODict({
     117: _tools.RODict({
         "ID": 117,
         "grade": 117,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1305,10 +1305,10 @@ datas = _tools.RODict({
     118: _tools.RODict({
         "ID": 118,
         "grade": 118,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1316,10 +1316,10 @@ datas = _tools.RODict({
     119: _tools.RODict({
         "ID": 119,
         "grade": 119,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1327,10 +1327,10 @@ datas = _tools.RODict({
     120: _tools.RODict({
         "ID": 120,
         "grade": 120,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1338,10 +1338,10 @@ datas = _tools.RODict({
     121: _tools.RODict({
         "ID": 121,
         "grade": 121,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1349,10 +1349,10 @@ datas = _tools.RODict({
     122: _tools.RODict({
         "ID": 122,
         "grade": 122,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1360,10 +1360,10 @@ datas = _tools.RODict({
     123: _tools.RODict({
         "ID": 123,
         "grade": 123,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1371,10 +1371,10 @@ datas = _tools.RODict({
     124: _tools.RODict({
         "ID": 124,
         "grade": 124,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1382,10 +1382,10 @@ datas = _tools.RODict({
     125: _tools.RODict({
         "ID": 125,
         "grade": 125,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1393,10 +1393,10 @@ datas = _tools.RODict({
     126: _tools.RODict({
         "ID": 126,
         "grade": 126,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1404,10 +1404,10 @@ datas = _tools.RODict({
     127: _tools.RODict({
         "ID": 127,
         "grade": 127,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1415,10 +1415,10 @@ datas = _tools.RODict({
     128: _tools.RODict({
         "ID": 128,
         "grade": 128,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1426,10 +1426,10 @@ datas = _tools.RODict({
     129: _tools.RODict({
         "ID": 129,
         "grade": 129,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1437,10 +1437,10 @@ datas = _tools.RODict({
     130: _tools.RODict({
         "ID": 130,
         "grade": 130,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1448,10 +1448,10 @@ datas = _tools.RODict({
     131: _tools.RODict({
         "ID": 131,
         "grade": 131,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1459,10 +1459,10 @@ datas = _tools.RODict({
     132: _tools.RODict({
         "ID": 132,
         "grade": 132,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1470,10 +1470,10 @@ datas = _tools.RODict({
     133: _tools.RODict({
         "ID": 133,
         "grade": 133,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1481,10 +1481,10 @@ datas = _tools.RODict({
     134: _tools.RODict({
         "ID": 134,
         "grade": 134,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1492,10 +1492,10 @@ datas = _tools.RODict({
     135: _tools.RODict({
         "ID": 135,
         "grade": 135,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1503,10 +1503,10 @@ datas = _tools.RODict({
     136: _tools.RODict({
         "ID": 136,
         "grade": 136,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1514,10 +1514,10 @@ datas = _tools.RODict({
     137: _tools.RODict({
         "ID": 137,
         "grade": 137,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1525,10 +1525,10 @@ datas = _tools.RODict({
     138: _tools.RODict({
         "ID": 138,
         "grade": 138,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1536,10 +1536,10 @@ datas = _tools.RODict({
     139: _tools.RODict({
         "ID": 139,
         "grade": 139,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1547,10 +1547,10 @@ datas = _tools.RODict({
     140: _tools.RODict({
         "ID": 140,
         "grade": 140,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1558,10 +1558,10 @@ datas = _tools.RODict({
     141: _tools.RODict({
         "ID": 141,
         "grade": 141,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1569,10 +1569,10 @@ datas = _tools.RODict({
     142: _tools.RODict({
         "ID": 142,
         "grade": 142,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1580,10 +1580,10 @@ datas = _tools.RODict({
     143: _tools.RODict({
         "ID": 143,
         "grade": 143,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1591,10 +1591,10 @@ datas = _tools.RODict({
     144: _tools.RODict({
         "ID": 144,
         "grade": 144,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1602,10 +1602,10 @@ datas = _tools.RODict({
     145: _tools.RODict({
         "ID": 145,
         "grade": 145,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1613,10 +1613,10 @@ datas = _tools.RODict({
     146: _tools.RODict({
         "ID": 146,
         "grade": 146,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1624,10 +1624,10 @@ datas = _tools.RODict({
     147: _tools.RODict({
         "ID": 147,
         "grade": 147,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1635,10 +1635,10 @@ datas = _tools.RODict({
     148: _tools.RODict({
         "ID": 148,
         "grade": 148,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1646,10 +1646,10 @@ datas = _tools.RODict({
     149: _tools.RODict({
         "ID": 149,
         "grade": 149,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1657,10 +1657,10 @@ datas = _tools.RODict({
     150: _tools.RODict({
         "ID": 150,
         "grade": 150,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1668,10 +1668,10 @@ datas = _tools.RODict({
     151: _tools.RODict({
         "ID": 151,
         "grade": 151,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1679,10 +1679,10 @@ datas = _tools.RODict({
     152: _tools.RODict({
         "ID": 152,
         "grade": 152,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1690,10 +1690,10 @@ datas = _tools.RODict({
     153: _tools.RODict({
         "ID": 153,
         "grade": 153,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1701,10 +1701,10 @@ datas = _tools.RODict({
     154: _tools.RODict({
         "ID": 154,
         "grade": 154,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1712,10 +1712,10 @@ datas = _tools.RODict({
     155: _tools.RODict({
         "ID": 155,
         "grade": 155,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1723,10 +1723,10 @@ datas = _tools.RODict({
     156: _tools.RODict({
         "ID": 156,
         "grade": 156,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1734,10 +1734,10 @@ datas = _tools.RODict({
     157: _tools.RODict({
         "ID": 157,
         "grade": 157,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1745,10 +1745,10 @@ datas = _tools.RODict({
     158: _tools.RODict({
         "ID": 158,
         "grade": 158,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1756,10 +1756,10 @@ datas = _tools.RODict({
     159: _tools.RODict({
         "ID": 159,
         "grade": 159,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1767,10 +1767,10 @@ datas = _tools.RODict({
     160: _tools.RODict({
         "ID": 160,
         "grade": 160,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1778,10 +1778,10 @@ datas = _tools.RODict({
     161: _tools.RODict({
         "ID": 161,
         "grade": 161,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1789,10 +1789,10 @@ datas = _tools.RODict({
     162: _tools.RODict({
         "ID": 162,
         "grade": 162,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1800,10 +1800,10 @@ datas = _tools.RODict({
     163: _tools.RODict({
         "ID": 163,
         "grade": 163,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1811,10 +1811,10 @@ datas = _tools.RODict({
     164: _tools.RODict({
         "ID": 164,
         "grade": 164,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1822,10 +1822,10 @@ datas = _tools.RODict({
     165: _tools.RODict({
         "ID": 165,
         "grade": 165,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1833,10 +1833,10 @@ datas = _tools.RODict({
     166: _tools.RODict({
         "ID": 166,
         "grade": 166,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1844,10 +1844,10 @@ datas = _tools.RODict({
     167: _tools.RODict({
         "ID": 167,
         "grade": 167,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1855,10 +1855,10 @@ datas = _tools.RODict({
     168: _tools.RODict({
         "ID": 168,
         "grade": 168,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1866,10 +1866,10 @@ datas = _tools.RODict({
     169: _tools.RODict({
         "ID": 169,
         "grade": 169,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1877,10 +1877,10 @@ datas = _tools.RODict({
     170: _tools.RODict({
         "ID": 170,
         "grade": 170,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1888,10 +1888,10 @@ datas = _tools.RODict({
     171: _tools.RODict({
         "ID": 171,
         "grade": 171,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1899,10 +1899,10 @@ datas = _tools.RODict({
     172: _tools.RODict({
         "ID": 172,
         "grade": 172,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1910,10 +1910,10 @@ datas = _tools.RODict({
     173: _tools.RODict({
         "ID": 173,
         "grade": 173,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1921,10 +1921,10 @@ datas = _tools.RODict({
     174: _tools.RODict({
         "ID": 174,
         "grade": 174,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1932,10 +1932,10 @@ datas = _tools.RODict({
     175: _tools.RODict({
         "ID": 175,
         "grade": 175,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1943,10 +1943,10 @@ datas = _tools.RODict({
     176: _tools.RODict({
         "ID": 176,
         "grade": 176,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1954,10 +1954,10 @@ datas = _tools.RODict({
     177: _tools.RODict({
         "ID": 177,
         "grade": 177,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1965,10 +1965,10 @@ datas = _tools.RODict({
     178: _tools.RODict({
         "ID": 178,
         "grade": 178,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1976,10 +1976,10 @@ datas = _tools.RODict({
     179: _tools.RODict({
         "ID": 179,
         "grade": 179,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1987,10 +1987,10 @@ datas = _tools.RODict({
     180: _tools.RODict({
         "ID": 180,
         "grade": 180,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -1998,10 +1998,10 @@ datas = _tools.RODict({
     181: _tools.RODict({
         "ID": 181,
         "grade": 181,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2009,10 +2009,10 @@ datas = _tools.RODict({
     182: _tools.RODict({
         "ID": 182,
         "grade": 182,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2020,10 +2020,10 @@ datas = _tools.RODict({
     183: _tools.RODict({
         "ID": 183,
         "grade": 183,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2031,10 +2031,10 @@ datas = _tools.RODict({
     184: _tools.RODict({
         "ID": 184,
         "grade": 184,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2042,10 +2042,10 @@ datas = _tools.RODict({
     185: _tools.RODict({
         "ID": 185,
         "grade": 185,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2053,10 +2053,10 @@ datas = _tools.RODict({
     186: _tools.RODict({
         "ID": 186,
         "grade": 186,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2064,10 +2064,10 @@ datas = _tools.RODict({
     187: _tools.RODict({
         "ID": 187,
         "grade": 187,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2075,10 +2075,10 @@ datas = _tools.RODict({
     188: _tools.RODict({
         "ID": 188,
         "grade": 188,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2086,10 +2086,10 @@ datas = _tools.RODict({
     189: _tools.RODict({
         "ID": 189,
         "grade": 189,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2097,10 +2097,10 @@ datas = _tools.RODict({
     190: _tools.RODict({
         "ID": 190,
         "grade": 190,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2108,10 +2108,10 @@ datas = _tools.RODict({
     191: _tools.RODict({
         "ID": 191,
         "grade": 191,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2119,10 +2119,10 @@ datas = _tools.RODict({
     192: _tools.RODict({
         "ID": 192,
         "grade": 192,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2130,10 +2130,10 @@ datas = _tools.RODict({
     193: _tools.RODict({
         "ID": 193,
         "grade": 193,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2141,10 +2141,10 @@ datas = _tools.RODict({
     194: _tools.RODict({
         "ID": 194,
         "grade": 194,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2152,10 +2152,10 @@ datas = _tools.RODict({
     195: _tools.RODict({
         "ID": 195,
         "grade": 195,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2163,10 +2163,10 @@ datas = _tools.RODict({
     196: _tools.RODict({
         "ID": 196,
         "grade": 196,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2174,10 +2174,10 @@ datas = _tools.RODict({
     197: _tools.RODict({
         "ID": 197,
         "grade": 197,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2185,10 +2185,10 @@ datas = _tools.RODict({
     198: _tools.RODict({
         "ID": 198,
         "grade": 198,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2196,10 +2196,10 @@ datas = _tools.RODict({
     199: _tools.RODict({
         "ID": 199,
         "grade": 199,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)
@@ -2207,10 +2207,10 @@ datas = _tools.RODict({
     200: _tools.RODict({
         "ID": 200,
         "grade": 200,
-        "expPlayer": 2618860000,
+        "expPlayer": 2539710000,
         "fakeOnlineTime": 20,
         "score": 0,
-        "powerRange": ([0, 87673], [87674, 107156], [107157]),
+        "powerRange": ([0, 88200], [88201, 107800], [107801]),
         "idleIncome": (72576, 80641, 84673),
         "itemIncome": (40041590, 40041590, 40041590),
         "idleIncomeBig": (87092, 96769, 101607)

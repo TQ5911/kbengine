@@ -750,7 +750,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         # 免死事件触发：当伤害足以致死时，通知效果系统进行锁血
         if _curHp <= 0 and hpValue < 0:
             # 没有生效中的锁血效果，才会触发噬天
-            if not self.getTempMiscProp(gameconst.EntityPropsEnum.lockMinHp):
+            if not self.getTempMiscProp(gameconst.EntityPropsEnum.lockMinHp) and srcType != gameconst.SourceType.SrcTpDropDeath:
                 self.onEffectEventCall('onImmuneDie', releaseRoleId, self.id, effectEventCtx.EE_DEFAULT_CTX)
 
         # 【【任务】支持boss濒死】
@@ -953,7 +953,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 return True
 
         elif state in gameconst.StateEnum.breakSkillStates:
-            self.breakSkillByState()
+            self.breakSkillByState(gameconst.SkillTagEnum.antiBreak)
 
         elif state == gameconst.StateEnum.Flying:
             self.enterFlyingState()
@@ -1234,7 +1234,13 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if actionCtx.isClient:
             ignoreReasons |= gameconst.UseSkillCheck.USC_ENUM_TARGET_NOT_FOUND
 
-        _ret = realSkill.checkUseSkill(self, actionCtx.useTargetId, ignoreReasons, checkInRange=actionCtx.checkInRange)
+        _ret = realSkill.checkUseSkill(
+            self, 
+            actionCtx.useTargetId, 
+            ignoreReasons, 
+            checkInRange=actionCtx.checkInRange,
+            checkStage=gameconst.CHECK_SKILL_STAGE_BEFORE_BEGIN,
+        )
 
         if _ret != gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK:
             target = KBEngine.entities.get(actionCtx.useTargetId)
@@ -2134,13 +2140,16 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 continue
 
             if _entity.IsMonster:
-                targetRange += _entity.getCreepData().get('attackDistanceCompensation')
+                _targetRange = targetRange + _entity.getCreepData().get('attackDistanceCompensation')
+
+            else:
+                _targetRange = targetRange
 
             if beginSkillPos:
-                if not sMath.inRectRange2D(targetRange, _entity.position, beginSkillPos):
+                if not sMath.inRectRange2D(_targetRange, _entity.position, beginSkillPos):
                     continue
             else:
-                if not sMath.inRectRange2D(targetRange, _entity.position, self.position):
+                if not sMath.inRectRange2D(_targetRange, _entity.position, self.position):
                     continue
 
             if not self.checkCombatRangeY(_entity):
@@ -3293,14 +3302,26 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             LOG_INFO("deathCreateCollection", _props)
             KBEngine.createEntity('Collection', self.spaceID, _pos, self.direction, _props)
 
-    def deathCreateCollectionByList(self, radius, collectionIdProb, disappearTime):
+    def deathCreateCollectionByList(
+            self, radius, collectionIdProb, 
+            disappearTime, posType=gameconst.DEATH_COLL_POS_TYPE_SELF_POS, 
+            fixedPos=None):
+
         createNum = 0
         boxRadius = 0
         for (num, collectionId) in collectionIdProb:
             createNum += num
             boxRadius = max(boxRadius, NPD.datas.get(collectionId, {}).get('chestRadius', 0))
-            
-        posList = self.getRandomPositionByBoxRadius(self.position, radius, boxRadius, createNum)
+
+        if posType == gameconst.DEATH_COLL_POS_TYPE_SELF_POS:
+            _targetPos = self.position
+        elif posType == gameconst.DEATH_COLL_POS_TYPE_FIXED_POS:
+            _targetPos = fixedPos
+        else:
+            LOG_ERR('invalid pos type', posType)
+            return
+
+        posList = self.getRandomPositionByBoxRadius(_targetPos, radius, boxRadius, createNum)
 
         idx = 0
         for (num, collectionId) in collectionIdProb:
@@ -3320,13 +3341,13 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
                 KBEngine.createEntity('Collection', self.spaceID, _pos, self.direction, _props)
 
-    def breakSkillByState(self, ignoreSkillId=0):
+    def breakSkillByState(self, ignoreTag=0):
         usingSkills = self.getTempMiscProp(gameconst.EntityPropsEnum.currentUseSkill, default={})
         for sid in list(usingSkills.keys()):
             if sid not in usingSkills:
                 continue
 
-            if sid == ignoreSkillId:
+            if ignoreTag and utils.hasSkillTagById(sid, ignoreTag):
                 continue
             
             sVal, tid = usingSkills[sid]

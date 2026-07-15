@@ -87,7 +87,6 @@ class IBag(object):
             if not itemData['ifCrossServer']:
                 LOG_ERR('in reqUseItems, item can not use in cross server')
                 return
-            _useItemCtx.isCrossServerUseItem = True
 
         checkFunc = itemData['conditionCheckAction']
         if checkFunc:
@@ -721,6 +720,8 @@ class IBag(object):
         if _delta > 0:
             self.client.onHealItemResult(_delta, True)
 
+        self.syncMethodCallToCrossServerCell('useHealSalveItem', (itemId, addNum, addPct, *args))
+
         return gameconst.UseItemEnum.TRUE
 
     def checkUseAddMpItemCond(self, itemId):
@@ -736,15 +737,17 @@ class IBag(object):
 
         if addPct > 0:
             self.addMpByPct(self, actionContext.UseItemHealContext(itemId, self.id), addPct, *args)
-
+        self.syncMethodCallToCrossServerCell('useAddMpItem', (itemId, addNum, addPct, *args))
         return gameconst.UseItemEnum.TRUE
 
     def useAddBuffByItem(self, itemId, *args):
         self.addBuffBySkill(self, actionContext.UseItemHealContext(itemId, self.id), *args)
+        self.syncMethodCallToCrossServerCell('useAddBuffByItem', (itemId, *args))
         return gameconst.UseItemEnum.TRUE
 
     def useRemoveBuffByItem(self, itemId, *args):
         self.removeBuffBySkill(self, actionContext.UseItemHealContext(itemId, self.id), *args)
+        self.syncMethodCallToCrossServerCell('useRemoveBuffByItem', (itemId, *args))
         return gameconst.UseItemEnum.TRUE
 
     def useAddTargetBuffByItem(self, context, itemId, *args):
@@ -1006,7 +1009,7 @@ class IBag(object):
             LOG_WARN("in bodyItemLock, wrong arg item Id 2", equipItem.itemId, itemId)
             return
 
-        if not equipItem.isGood(self.gbID):
+        if not equipItem.isGood(self.gbId):
             LOG_WARN("in bodyItemLock, equipment item is broken ", equipItem.itemId, itemId)
             return
         

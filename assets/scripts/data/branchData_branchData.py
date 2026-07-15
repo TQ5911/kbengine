@@ -23,19 +23,19 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1002: _tools.RODict({
         "ID": 1002,
         "name": "同心谷",
         "subType": 1,
-        "num": 2,
+        "num": 5,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1003: _tools.RODict({
         "ID": 1003,
@@ -45,8 +45,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1004: _tools.RODict({
         "ID": 1004,
@@ -56,8 +56,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1005: _tools.RODict({
         "ID": 1005,
@@ -67,8 +67,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1006: _tools.RODict({
         "ID": 1006,
@@ -78,8 +78,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1010: _tools.RODict({
         "ID": 1010,
@@ -89,8 +89,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1011: _tools.RODict({
         "ID": 1011,
@@ -100,8 +100,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1020: _tools.RODict({
         "ID": 1020,
@@ -111,8 +111,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1021: _tools.RODict({
         "ID": 1021,
@@ -122,8 +122,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1024: _tools.RODict({
         "ID": 1024,
@@ -133,8 +133,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1027: _tools.RODict({
         "ID": 1027,
@@ -144,8 +144,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1028: _tools.RODict({
         "ID": 1028,
@@ -155,8 +155,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1026: _tools.RODict({
         "ID": 1026,
@@ -166,8 +166,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1030: _tools.RODict({
         "ID": 1030,
@@ -177,8 +177,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1031: _tools.RODict({
         "ID": 1031,
@@ -188,8 +188,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1032: _tools.RODict({
         "ID": 1032,
@@ -199,8 +199,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1035: _tools.RODict({
         "ID": 1035,
@@ -210,8 +210,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1036: _tools.RODict({
         "ID": 1036,
@@ -221,8 +221,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1101: _tools.RODict({
         "ID": 1101,
@@ -232,8 +232,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1102: _tools.RODict({
         "ID": 1102,
@@ -243,8 +243,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1103: _tools.RODict({
         "ID": 1103,
@@ -254,8 +254,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1110: _tools.RODict({
         "ID": 1110,
@@ -265,8 +265,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1111: _tools.RODict({
         "ID": 1111,
@@ -276,8 +276,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1112: _tools.RODict({
         "ID": 1112,
@@ -287,8 +287,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1120: _tools.RODict({
         "ID": 1120,
@@ -298,8 +298,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1121: _tools.RODict({
         "ID": 1121,
@@ -309,8 +309,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1123: _tools.RODict({
         "ID": 1123,
@@ -320,8 +320,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1124: _tools.RODict({
         "ID": 1124,
@@ -331,8 +331,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1125: _tools.RODict({
         "ID": 1125,
@@ -342,8 +342,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1126: _tools.RODict({
         "ID": 1126,
@@ -353,184 +353,184 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1901: _tools.RODict({
         "ID": 1901,
         "name": "石窟走廊(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1902: _tools.RODict({
         "ID": 1902,
         "name": "新元城郊(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1903: _tools.RODict({
         "ID": 1903,
         "name": "月光海港一层(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1904: _tools.RODict({
         "ID": 1904,
         "name": "月光海港二层(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1905: _tools.RODict({
         "ID": 1905,
         "name": "月光海港三层(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1906: _tools.RODict({
         "ID": 1906,
         "name": "月光海港四层(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1907: _tools.RODict({
         "ID": 1907,
         "name": "祖珂地堡一层(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1908: _tools.RODict({
         "ID": 1908,
         "name": "祖珂地堡二层(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1909: _tools.RODict({
         "ID": 1909,
         "name": "祖珂地堡三层(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1910: _tools.RODict({
         "ID": 1910,
         "name": "祖珂地堡四层(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1911: _tools.RODict({
         "ID": 1911,
         "name": "祖珂地堡五层(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1912: _tools.RODict({
         "ID": 1912,
         "name": "五毒石窟一层(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1913: _tools.RODict({
         "ID": 1913,
         "name": "五毒石窟二层(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1914: _tools.RODict({
         "ID": 1914,
         "name": "五毒石窟三层(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1915: _tools.RODict({
         "ID": 1915,
         "name": "五毒石窟四层(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     1916: _tools.RODict({
         "ID": 1916,
         "name": "五毒石窟五层(精英）",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     7000: _tools.RODict({
         "ID": 7000,
@@ -540,8 +540,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     3100: _tools.RODict({
         "ID": 3100,
@@ -551,193 +551,1106 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     }),
     3101: _tools.RODict({
         "ID": 3101,
         "name": "回廊一层-修行Ⅰ",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3102: _tools.RODict({
         "ID": 3102,
         "name": "回廊一层-修行Ⅱ",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3103: _tools.RODict({
         "ID": 3103,
         "name": "回廊一层-历战Ⅰ",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3104: _tools.RODict({
         "ID": 3104,
         "name": "回廊一层-历战Ⅱ",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3105: _tools.RODict({
         "ID": 3105,
         "name": "回廊一层-历战Ⅲ",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3106: _tools.RODict({
+        "ID": 3106,
+        "name": "回廊一层-魔物",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3107: _tools.RODict({
+        "ID": 3107,
+        "name": "回廊一层-首领Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3108: _tools.RODict({
+        "ID": 3108,
+        "name": "回廊一层-首领Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3109: _tools.RODict({
+        "ID": 3109,
+        "name": "回廊一层-首领Ⅲ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3110: _tools.RODict({
         "ID": 3110,
         "name": "回廊一层-俸禄Ⅰ",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3111: _tools.RODict({
         "ID": 3111,
         "name": "回廊一层-俸禄Ⅱ",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3112: _tools.RODict({
         "ID": 3112,
         "name": "回廊一层-赏金Ⅰ",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3113: _tools.RODict({
         "ID": 3113,
         "name": "回廊一层-赏金Ⅱ",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3114: _tools.RODict({
         "ID": 3114,
         "name": "回廊一层-赏金Ⅲ",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3115: _tools.RODict({
+        "ID": 3115,
+        "name": "回廊一层-镇守",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3116: _tools.RODict({
         "ID": 3116,
         "name": "回廊一层-擂台",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3117: _tools.RODict({
+        "ID": 3117,
+        "name": "回廊一层-封印",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3118: _tools.RODict({
         "ID": 3118,
         "name": "回廊一层-锻体",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3119: _tools.RODict({
         "ID": 3119,
         "name": "回廊一层-遗器",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3120: _tools.RODict({
         "ID": 3120,
         "name": "回廊一层-狂潮",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3121: _tools.RODict({
         "ID": 3121,
         "name": "回廊一层-混沌之境",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3122: _tools.RODict({
+        "ID": 3122,
+        "name": "回廊一层-隐匿",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3123: _tools.RODict({
+        "ID": 3123,
+        "name": "回廊一层-祈福",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     3124: _tools.RODict({
         "ID": 3124,
         "name": "回廊一层-心魔试炼",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3201: _tools.RODict({
+        "ID": 3201,
+        "name": "回廊二层-修行Ⅰ",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3202: _tools.RODict({
+        "ID": 3202,
+        "name": "回廊二层-修行Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3203: _tools.RODict({
+        "ID": 3203,
+        "name": "回廊二层-历战Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3204: _tools.RODict({
+        "ID": 3204,
+        "name": "回廊二层-历战Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3205: _tools.RODict({
+        "ID": 3205,
+        "name": "回廊二层-历战Ⅲ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3206: _tools.RODict({
+        "ID": 3206,
+        "name": "回廊二层-魔物",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3207: _tools.RODict({
+        "ID": 3207,
+        "name": "回廊二层-首领Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3208: _tools.RODict({
+        "ID": 3208,
+        "name": "回廊二层-首领Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3209: _tools.RODict({
+        "ID": 3209,
+        "name": "回廊二层-首领Ⅲ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3210: _tools.RODict({
+        "ID": 3210,
+        "name": "回廊二层-俸禄Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3211: _tools.RODict({
+        "ID": 3211,
+        "name": "回廊二层-俸禄Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3212: _tools.RODict({
+        "ID": 3212,
+        "name": "回廊二层-赏金Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3213: _tools.RODict({
+        "ID": 3213,
+        "name": "回廊二层-赏金Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3214: _tools.RODict({
+        "ID": 3214,
+        "name": "回廊二层-赏金Ⅲ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3215: _tools.RODict({
+        "ID": 3215,
+        "name": "回廊二层-镇守",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3216: _tools.RODict({
+        "ID": 3216,
+        "name": "回廊二层-擂台",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3217: _tools.RODict({
+        "ID": 3217,
+        "name": "回廊二层-封印",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3218: _tools.RODict({
+        "ID": 3218,
+        "name": "回廊二层-锻体",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3219: _tools.RODict({
+        "ID": 3219,
+        "name": "回廊二层-遗器",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3220: _tools.RODict({
+        "ID": 3220,
+        "name": "回廊二层-狂潮",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3221: _tools.RODict({
+        "ID": 3221,
+        "name": "回廊二层-混沌之境",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3222: _tools.RODict({
+        "ID": 3222,
+        "name": "回廊二层-隐匿之间",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3223: _tools.RODict({
+        "ID": 3223,
+        "name": "回廊二层-祈福",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3224: _tools.RODict({
+        "ID": 3224,
+        "name": "回廊二层-心魔试炼",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3301: _tools.RODict({
+        "ID": 3301,
+        "name": "回廊三层-修行Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3302: _tools.RODict({
+        "ID": 3302,
+        "name": "回廊三层-修行Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3303: _tools.RODict({
+        "ID": 3303,
+        "name": "回廊三层-历战Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3304: _tools.RODict({
+        "ID": 3304,
+        "name": "回廊三层-历战Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3305: _tools.RODict({
+        "ID": 3305,
+        "name": "回廊三层-历战Ⅲ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3306: _tools.RODict({
+        "ID": 3306,
+        "name": "回廊三层-魔物",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3307: _tools.RODict({
+        "ID": 3307,
+        "name": "回廊三层-首领Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3308: _tools.RODict({
+        "ID": 3308,
+        "name": "回廊三层-首领Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3309: _tools.RODict({
+        "ID": 3309,
+        "name": "回廊三层-首领Ⅲ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3310: _tools.RODict({
+        "ID": 3310,
+        "name": "回廊三层-俸禄Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3311: _tools.RODict({
+        "ID": 3311,
+        "name": "回廊三层-俸禄Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3312: _tools.RODict({
+        "ID": 3312,
+        "name": "回廊三层-赏金Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3313: _tools.RODict({
+        "ID": 3313,
+        "name": "回廊三层-赏金Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3314: _tools.RODict({
+        "ID": 3314,
+        "name": "回廊三层-赏金Ⅲ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3315: _tools.RODict({
+        "ID": 3315,
+        "name": "回廊三层-镇守",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3316: _tools.RODict({
+        "ID": 3316,
+        "name": "回廊三层-擂台",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3317: _tools.RODict({
+        "ID": 3317,
+        "name": "回廊三层-封印",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3318: _tools.RODict({
+        "ID": 3318,
+        "name": "回廊三层-锻体",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3319: _tools.RODict({
+        "ID": 3319,
+        "name": "回廊三层-遗器",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3320: _tools.RODict({
+        "ID": 3320,
+        "name": "回廊三层-狂潮",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3321: _tools.RODict({
+        "ID": 3321,
+        "name": "回廊三层-混沌之境",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3322: _tools.RODict({
+        "ID": 3322,
+        "name": "回廊三层-隐匿",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3323: _tools.RODict({
+        "ID": 3323,
+        "name": "回廊三层-祈福",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3324: _tools.RODict({
+        "ID": 3324,
+        "name": "回廊三层-心魔试炼",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3401: _tools.RODict({
+        "ID": 3401,
+        "name": "回廊四层-修行Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3402: _tools.RODict({
+        "ID": 3402,
+        "name": "回廊四层-修行Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3403: _tools.RODict({
+        "ID": 3403,
+        "name": "回廊四层-历战Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3404: _tools.RODict({
+        "ID": 3404,
+        "name": "回廊四层-历战Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3405: _tools.RODict({
+        "ID": 3405,
+        "name": "回廊四层-历战Ⅲ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3406: _tools.RODict({
+        "ID": 3406,
+        "name": "回廊四层-魔物",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3407: _tools.RODict({
+        "ID": 3407,
+        "name": "回廊四层-首领Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3408: _tools.RODict({
+        "ID": 3408,
+        "name": "回廊四层-首领Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3409: _tools.RODict({
+        "ID": 3409,
+        "name": "回廊四层-首领Ⅲ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3410: _tools.RODict({
+        "ID": 3410,
+        "name": "回廊四层-俸禄Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3411: _tools.RODict({
+        "ID": 3411,
+        "name": "回廊四层-俸禄Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3412: _tools.RODict({
+        "ID": 3412,
+        "name": "回廊四层-赏金Ⅰ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3413: _tools.RODict({
+        "ID": 3413,
+        "name": "回廊四层-赏金Ⅱ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3414: _tools.RODict({
+        "ID": 3414,
+        "name": "回廊四层-赏金Ⅲ",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3415: _tools.RODict({
+        "ID": 3415,
+        "name": "回廊四层-镇守",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3416: _tools.RODict({
+        "ID": 3416,
+        "name": "回廊四层-擂台",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3417: _tools.RODict({
+        "ID": 3417,
+        "name": "回廊四层-封印",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3418: _tools.RODict({
+        "ID": 3418,
+        "name": "回廊四层-锻体",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3419: _tools.RODict({
+        "ID": 3419,
+        "name": "回廊四层-遗器",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3420: _tools.RODict({
+        "ID": 3420,
+        "name": "回廊四层-狂潮",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3421: _tools.RODict({
+        "ID": 3421,
+        "name": "回廊四层-混沌之境",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3422: _tools.RODict({
+        "ID": 3422,
+        "name": "回廊四层-隐匿",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3423: _tools.RODict({
+        "ID": 3423,
+        "name": "回廊四层-祈福",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
+    }),
+    3424: _tools.RODict({
+        "ID": 3424,
+        "name": "回廊四层-心魔试炼",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 20,
+        "MergeRequired": 10
     }),
     5100: _tools.RODict({
         "ID": 5100,
         "name": "天劫崖一层",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 100,
+        "MergeRequired": 50
+    }),
+    5101: _tools.RODict({
+        "ID": 5101,
+        "name": "天劫崖二层",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 100,
+        "MergeRequired": 50
+    }),
+    5102: _tools.RODict({
+        "ID": 5102,
+        "name": "天劫崖三层",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 100,
+        "MergeRequired": 50
+    }),
+    5103: _tools.RODict({
+        "ID": 5103,
+        "name": "天劫崖四层",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
         "AddRequired": 100,
         "MergeRequired": 50
     }),
@@ -746,9 +1659,9 @@ datas = _tools.RODict({
         "name": "归墟一层",
         "subType": 1,
         "num": 1,
-        "N1": 200,
-        "N2": 180,
-        "N3": 170,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
         "AddRequired": 100,
         "MergeRequired": 50
     }),
@@ -760,8 +1673,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 200,
-        "MergeRequired": 100
+        "AddRequired": 100,
+        "MergeRequired": 50
     })
 })
 minKey = 1001

@@ -22,5 +22,9 @@ datas = _tools.RODict({
     "achievementTip_msgID": _tools.RODict({
         "ID": "achievementTip_msgID",
         "value": 54000086,
+    }),
+    "achvDelayDisplayType": _tools.RODict({
+        "ID": "achvDelayDisplayType",
+        "value": 4,
     })
 })

@@ -294,7 +294,7 @@ class ImpEquipment(object):
             'enhanceAttrs':equipItem.getEnhanceAttrs(),
         }
 
-        LogTrackingMgr.LogTrackingMgr.equip_upgrade(self.gbId, self.clientDistinctIdCell, opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, equipItem.getItemName(), equipItem.itemType, \
+        LogTrackingMgr.LogTrackingMgr.equip_upgrade(self.gbId, self.clientDistinctIdCell, opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, equipItem.getItemName(), equipItem.getEquipType(), \
                                                     equipItem.getGrade(), equipItem.getQuality(), gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, baseAttrsBefore, enhanceAttrsBefore, upgradeAttrsBefore, \
                                                     equipItem.getBaseAttrs(), equipItem.getEnhanceAttrs(), equipItem.getUpgradeAttrs(), gradeBefore, equipItem.getGrade(), bindValueBefore, bindValueAfter, \
                                                     equipItem.getEquipScore(), equipAttrsBefore, equipAttrsAfter)
@@ -359,6 +359,9 @@ class ImpEquipment(object):
             LOG_WARN('   in cellEquipSpiritWashingPreview, equip not found or uniqueId not matched:', slotId, uniqueId)
             return
 
+        spiritDataBefore = equipItem.getSpiritDatas()
+        spiritBindTypeBefore = gameconst.ItemBindType.BIND if equipItem.isSpiritBindType(spiritPos) else gameconst.ItemBindType.NORMAL
+
         ret, _, _ = equipItem.doEquipSpiritWashingPreview(self, spiritPos, unbinValue)
         if not ret:
             LOG_ERR('   in cellEquipSpiritWashingPreview, calc preview failed:', slotId, spiritPos)
@@ -371,6 +374,26 @@ class ImpEquipment(object):
         self.client.onEquipSpiritWashingPreview(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, spiritPos,
                                                 previewSpiritData.toClientData(), previewScore,
                                                 spiritBindType, equipItem.bindType, opUUID)
+
+        LogTrackingMgr.LogTrackingMgr.equip_spirit(
+            self.gbId,
+            self.clientDistinctIdCell,
+            opUUID,
+            'wash',
+            equipItem.uniqueId,
+            equipItem.itemId,
+            equipItem.getItemName(),
+            equipItem.getEquipType(),
+            equipItem.getGrade(),
+            equipItem.getQuality(),
+            gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY,
+            spiritDataBefore,
+            equipItem.getPreviewSpiritDatas(),
+            spiritBindTypeBefore,
+            spiritBindType,
+            equipItem.getEquipScore(),
+            spiritPos,
+        )
         return
 
     @gamedecorator.checkGameconfigEnable('equip_spirit')
@@ -407,7 +430,7 @@ class ImpEquipment(object):
             return
 
         spiritDataBefore = equipItem.getSpiritDatas()
-        bindValueBefore = equipItem.getBindValue()
+        spiritBindTypeBefore = gameconst.ItemBindType.BIND if equipItem.isSpiritBindType(spiritPos) else gameconst.ItemBindType.NORMAL
 
         ret = equipItem.doEquipSpiritWashingConfirm(self, spiritPos, onBody=True)
         if not ret:
@@ -417,12 +440,9 @@ class ImpEquipment(object):
             return
 
         self.updateEquipmentScore()
-        bindValueAfter = equipItem.getBindValue()
 
-        # 记录附灵绑定状态：消耗绑定材料则为绑定，否则为非绑
-        spiritBindType = gameconst.ItemBindType.BIND if equipItem.isPreviewSpiritBindType(spiritPos) else gameconst.ItemBindType.NORMAL
-        equipItem.removePreviewSpiritBindType(spiritPos)
-        equipItem.setSpiritBindType(spiritPos, spiritBindType)
+        # confirm 后读取实际绑定状态
+        spiritBindType = gameconst.ItemBindType.BIND if equipItem.isSpiritBindType(spiritPos) else gameconst.ItemBindType.NORMAL
 
         spiritData = equipItem.equipAttr.spiritDatas[spiritPos]
         self.client.onEquipSpiritWashingSucc(
@@ -436,9 +456,62 @@ class ImpEquipment(object):
         )
         self.unlockBodyEquips()
 
-        LogTrackingMgr.LogTrackingMgr.equip_spirit(self.gbId, self.clientDistinctIdCell, 0, self.gbId, equipItem.uniqueId, equipItem.itemId, equipItem.getItemName(), equipItem.itemType, \
-                                                    equipItem.getGrade(), equipItem.getQuality(), gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, spiritDataBefore,\
-                                                    equipItem.getSpiritDatas(), 0, 0, spiritBindType, equipItem.getEquipScore(), spiritPos, bindValueBefore, bindValueAfter)
+        LogTrackingMgr.LogTrackingMgr.equip_spirit(
+            self.gbId,
+            self.clientDistinctIdCell,
+            0,
+            'confirm',
+            equipItem.uniqueId,
+            equipItem.itemId,
+            equipItem.getItemName(),
+            equipItem.getEquipType(),
+            equipItem.getGrade(),
+            equipItem.getQuality(),
+            gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY,
+            spiritDataBefore,
+            equipItem.getSpiritDatas(),
+            spiritBindTypeBefore,
+            spiritBindType,
+            equipItem.getEquipScore(),
+            spiritPos,
+        )
+        return
+
+    @gamedecorator.checkGameconfigEnable('equip_spirit')
+    @utils.isMyself
+    def reqEquipSpiritWashingDiscard(self, exposed, equipIn, equipPos, spiritPos, uniqueId):
+        LOG_INFO('in reqEquipSpiritWashingDiscard:', equipIn, equipPos, spiritPos, uniqueId)
+        if equipIn == gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG:
+            self.base.bagEquipSpiritWashingDiscard(equipPos, spiritPos, uniqueId)
+            return
+        elif equipIn != gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY:
+            LOG_WARN('   in reqEquipSpiritWashingDiscard, unknown equipIn:', equipIn)
+            return
+
+        equipItem = self.bodyEquipData.getEquipItem(equipPos)
+        if not equipItem or equipItem.uniqueId != uniqueId:
+            LOG_WARN('   in reqEquipSpiritWashingDiscard, equip not found or uniqueId not matched:', equipPos, uniqueId)
+            self.client.onEquipSpiritWashingDiscardResult(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, spiritPos, 0)
+            return
+
+        if spiritPos >= len(equipItem.equipAttr.previewSpiritDatas):
+            LOG_WARN('   in reqEquipSpiritWashingDiscard, preview data not found:', equipPos, spiritPos)
+            self.client.onEquipSpiritWashingDiscardResult(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, spiritPos, 0)
+            return
+
+        previewSpiritData = equipItem.equipAttr.previewSpiritDatas[spiritPos]
+        if not previewSpiritData or len(previewSpiritData.GetSpiritAffixes()) == 0:
+            LOG_WARN('   in reqEquipSpiritWashingDiscard, preview data is empty:', equipPos, spiritPos)
+            self.client.onEquipSpiritWashingDiscardResult(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, spiritPos, 0)
+            return
+
+        ret = equipItem.doEquipSpiritWashingDiscard(self, spiritPos)
+        if not ret:
+            LOG_ERR('   in reqEquipSpiritWashingDiscard, discard failed:', equipPos, spiritPos)
+            self.client.onEquipSpiritWashingDiscardResult(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, spiritPos, 0)
+            return
+
+        self.client.onEquipSpiritWashingDiscardResult(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, spiritPos, 1)
         return
 
     @gamedecorator.checkGameconfigEnable('equip_soul')
@@ -499,7 +572,15 @@ class ImpEquipment(object):
                 soulAffixes.append(oneAffix.toAfxClientDic())
             self.client.onEquipSoulSocketSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, slotId, soulAffixes, 
                                                  equipItem.getEquipScore(), equipItem.equipAttr.soulBindType, equipItem.bindType, soulItemId)
-        return
+
+        equipAttrs = {
+            'baseAttrs':equipItem.getBaseAttrs(),
+            'upgradeAttrs':equipItem.getUpgradeAttrs(),
+            'enhanceAttrs':equipItem.getEnhanceAttrs(),
+        }
+        LogTrackingMgr.LogTrackingMgr.equip_soul(self.gbId, self.clientDistinctIdCell, equipItem.uniqueId, \
+                                                    equipItem.itemId, equipItem.getItemName(), equipItem.itemType, equipItem.getGrade(), \
+                                                        equipItem.getQuality(), equipItem.getEquipScore(), equipAttrs, soulAffixes, equipItem.soulSocketNeedItems())
 
     @gamedecorator.checkGameconfigEnable('equip_weaponGlyph')
     @utils.isMyself
@@ -650,7 +731,7 @@ class ImpEquipment(object):
             glyphData = equipItem.equipAttr.getGlyphData(glyphPos)
             self.bodyEquipData.recalculateAllInscriptionEffects(self)
             
-            LogTrackingMgr.LogTrackingMgr.equip_glyph(self.gbId, self.clientDistinctIdCell, opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, equipItem.getItemName(), equipItem.itemType, \
+            LogTrackingMgr.LogTrackingMgr.equip_glyph(self.gbId, self.clientDistinctIdCell, opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, equipItem.getItemName(), equipItem.getEquipType(), \
                                                         equipItem.getGrade(), equipItem.getQuality(), gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, glyphDataBefore,\
                                                         equipItem.getGlyphDatas(), 0, 0, bindValue, equipItem.getEquipScore(), glyphPos // 2, glyphPos, bindValueBefore, bindValueAfter)
 
@@ -725,7 +806,7 @@ class ImpEquipment(object):
         self.updateEquipmentScore()
         bindValueAfter = equipItem.getBindValue()
         if ret:
-            LogTrackingMgr.LogTrackingMgr.equip_bless(self.gbId, self.clientDistinctIdCell, opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, equipItem.getItemName(), equipItem.itemType, \
+            LogTrackingMgr.LogTrackingMgr.equip_bless(self.gbId, self.clientDistinctIdCell, opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, equipItem.getItemName(), equipItem.getEquipType(), \
                                                         equipItem.getGrade(), equipItem.getQuality(), gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, blessDataBefore, \
                                                         equipItem.getBlessDatas(), 0, 0, bindValue, blessLvRateBefore, equipItem.getBlessLvRate(), \
                                                         maxBlessLvBefore, equipItem.getBlessMaxLv(), equipItem.getEquipScore(), bindValueBefore, bindValueAfter)
@@ -1227,7 +1308,7 @@ class ImpEquipment(object):
                 'enhanceAttrs':equipItem.getEnhanceAttrs(),
             }
             
-            LogTrackingMgr.LogTrackingMgr.equip_enhancement(self.gbId, self.clientDistinctIdCell, opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, equipItem.getItemName(), equipItem.itemType, \
+            LogTrackingMgr.LogTrackingMgr.equip_enhancement(self.gbId, self.clientDistinctIdCell, opUUID, self.gbId, equipItem.uniqueId, equipItem.itemId, equipItem.getItemName(), equipItem.getEquipType(), \
                                                             equipItem.getGrade(), equipItem.getQuality(), gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, baseAttrsBefore, enhanceAttrsBefore, \
                                                             upgradeAttrsBefore, equipItem.getBaseAttrs(), equipItem.getEnhanceAttrs(), equipItem.getUpgradeAttrs(), 0, 0, bindValue, levelBefore, equipItem.getEnhanceLevel(), enhanceVal, equipItem.getEquipScore(), \
                                                             bindValueBefore, bindValueAfter, equipAttrsBefore, equipAttrsAfter)

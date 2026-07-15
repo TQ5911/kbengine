@@ -4,6 +4,7 @@ import (
 	"centralService/src/appLog"
 	"centralService/src/common"
 	clientService "centralService/src/queueServer/queueApp/clientService"
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -59,7 +60,14 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 	serverHost := ServerListCfg.GetString(fmt.Sprintf("serverList.%s", serverIdStr))
 	accountName := accountNameStr
 
-	conn := self.app.redisPool.Get()
+	ctx, cancel := context.WithTimeout(context.Background(), common.RedisOpTimeout)
+	conn, err := self.app.redisPool.GetContext(ctx)
+	cancel()
+	if err != nil {
+		appLog.Errorf("handleStartQueue get redis conn failed, account=%s server=%s, err=%s", accountNameStr, serverIdStr, err.Error())
+		self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_FAILED), serverId, serverHost, 0, 0, nil)
+		return
+	}
 	defer conn.Close()
 
 	//用户tagType

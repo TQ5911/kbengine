@@ -38,6 +38,12 @@
             <WitnessName>   true                        </WitnessName>
         </guildUUID>
 
+        <guildLevel>
+            <Type>          GUILD_LEVEL                 </Type>
+            <Flags>         CELL_PRIVATE                </Flags>
+            <Default>       0                           </Default>
+        </guildLevel>
+
         <leftGuildTS>
             <Type>          LONGTIME                    </Type>
             <Flags>         BASE_AND_CLIENT             </Flags>
@@ -450,17 +456,22 @@
         </blockGuildMemberMics>
 
         <unblockGuildMemberMics> <Exposed/>
+            <Arg>      PLAYER_GBID    </Arg>
         </unblockGuildMemberMics>
-
-        <blockAllGuildMemberMics> <Exposed/>
-        </blockAllGuildMemberMics>
-
-        <unblockAllGuildMemberMics> <Exposed/>
-        </unblockAllGuildMemberMics>
 
         <inviteGuildMics> <Exposed/>
             <Arg>      PLAYER_GBID    </Arg>
         </inviteGuildMics>
+
+        <turnOnGuildSpeaker> <Exposed/>
+        </turnOnGuildSpeaker>
+
+        <turnOffGuildSpeaker> <Exposed/>
+        </turnOffGuildSpeaker>
+
+        <onGuildLevelChangedBase>
+            <Arg>      GUILD_LEVEL          </Arg>
+        </onGuildLevelChangedBase>
     </BaseMethods>
 
     <CellMethods>
@@ -550,6 +561,10 @@
             <Arg>       GUILD_FUND              </Arg>
         </onGuildFundChanged>
 
+        <onGuildCommissionChanged>
+            <Arg>       GUILD_COMMISSION        </Arg>
+        </onGuildCommissionChanged>
+
         <onGuildJoinCondChanged>
             <Arg>       GUILD_JOIN_COND_DATA_INFO           </Arg>
         </onGuildJoinCondChanged>
@@ -636,10 +651,6 @@
         <onShareCommissionResult>
             <Arg>      BOOL                     </Arg>
         </onShareCommissionResult>
-        
-        <onGuildCommissionChanged>
-            <Arg>      GUILD_MONEY              </Arg>
-        </onGuildCommissionChanged>
 
         <onGuildGamePlayScoreCurrentChanged>
             <Arg>      UINT32                   </Arg>
@@ -652,12 +663,20 @@
         </onGetGuildGamePlayData>
 
 
-        <onSyncAllGuildMemberMicsStatus>
+        <onSyncGuildVoiceStatus>
+            <Arg>       GUILD_UUID                          </Arg>
+            <Arg>       GUILD_VOICE_MEMBER_STATE_LIST       </Arg>
+            <Arg>       AVATARGBID_LIST                     </Arg>
+        </onSyncGuildVoiceStatus>
+
+        <onUpdateGuildVoiceStatus>
             <Arg>       GUILD_UUID              </Arg>
-            <Arg>       ARRAY   <of>    PLAYER_GBID          </of>   </Arg>
-            <Arg>       ARRAY   <of>    PLAYER_GBID          </of>   </Arg>
-            <Arg>       ARRAY   <of>    PLAYER_GBID          </of>   </Arg>
-        </onSyncAllGuildMemberMicsStatus>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       UINT8                   </Arg>
+        </onUpdateGuildVoiceStatus>
 
         <onSwitchGuildMicsMode>
             <Arg>       GUILD_UUID              </Arg>
@@ -666,35 +685,8 @@
             <Arg>       UINT8                   </Arg>
         </onSwitchGuildMicsMode>
 
-        <onBlockGuildMemberMics>
-            <Arg>       PLAYER_GBID              </Arg>
-            <Arg>       GUILD_UUID               </Arg>
-            <Arg>       PLAYER_GBID              </Arg>
-        </onBlockGuildMemberMics>
-
-        <onUnblockGuildMemberMics>
-            <Arg>       GUILD_UUID               </Arg>
-            <Arg>       PLAYER_GBID              </Arg>
-        </onUnblockGuildMemberMics>
-
-        <onBlockAllGuildMemberMics>
-            <Arg>       PLAYER_GBID              </Arg>
-            <Arg>       GUILD_UUID               </Arg>
-        </onBlockAllGuildMemberMics>
-
-        <onUnblockAllGuildMemberMics>
-            <Arg>       PLAYER_GBID              </Arg>
-            <Arg>       GUILD_UUID               </Arg>
-        </onUnblockAllGuildMemberMics>
-
         <onInviteGuildMics>
             <Arg>       PLAYER_GBID              </Arg>
         </onInviteGuildMics>
-
-        <onAvatarChangeGuildMics>
-            <Arg>       GUILD_UUID               </Arg>
-            <Arg>       PLAYER_GBID              </Arg>
-            <Arg>       UINT32                   </Arg>
-        </onAvatarChangeGuildMics>
     </ClientMethods>
 </root>

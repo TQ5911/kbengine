@@ -330,7 +330,7 @@ datas = _tools.RODict({
     58000215: _tools.RODict({
         "ID": 58000215,
         "name": "boss_born5004",
-        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>世界花</color>现身于<color=#54e7f2>五毒石窟五层·精英</color>，各路豪侠可速速前往，御强敌，夺机缘！",
+        "Message": "天地灵气骤然翻涌，<color=#fe6a6a>蚀日蛊后</color>现身于<color=#54e7f2>五毒石窟五层·精英</color>，各路豪侠可速速前往，御强敌，夺机缘！",
         "channelID": (2, 99)
     }),
     58000216: _tools.RODict({

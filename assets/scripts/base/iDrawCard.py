@@ -243,6 +243,7 @@ class IDrawCard(object):
 			aftGuaranteed,
 			guaranteedType,
 			opUUID,
+			cType,
 		)
 
 	@gamedecorator.checkGameconfigEnable('drawPet')

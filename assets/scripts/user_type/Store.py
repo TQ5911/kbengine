@@ -281,14 +281,15 @@ class StoreData(userType.UserSingleType):
                 # 尚未到上架时间
                 return False
         bigMonthCardAddNum = owner._getBigMonthCardAddNum(storeItemData)
+        storeLevelAddNum = owner._getStoreLevelAddNum(storeItemData)
         if storeItemData['limitNumber'] > 0 and storeItemData['groupId'] == 0:
             # 限量购买
             storeDic = self.getStoreDic(storeId)
             if itemId not in storeDic:
                 storeDic[itemId] = StoreItem(itemId, buyNum=0)
-            if itemNum > storeItemData['limitNumber'] + bigMonthCardAddNum - storeDic[itemId].buyNum:
+            if itemNum > storeItemData['limitNumber'] + bigMonthCardAddNum + storeLevelAddNum - storeDic[itemId].buyNum:
                 LOG_WARN('   in canBuyItems, weekBuyNum limit:',
-                            storeItemData['limitNumber'], bigMonthCardAddNum, storeDic[itemId].buyNum)
+                            storeItemData['limitNumber'], bigMonthCardAddNum, storeLevelAddNum, storeDic[itemId].buyNum)
                 owner.onMessagePre(MMCD.datas['mall_itemSoldOut_msg']['value'], [])
                 return False
         
@@ -298,8 +299,8 @@ class StoreData(userType.UserSingleType):
             if itemId not in storeDic:
                 LOG_ERR('   in canBuyItems, no item in limited storeDic:', storeId, itemId, storeDic)
                 return False
-            if itemNum > storeItemData['limitNumber'] + bigMonthCardAddNum - storeDic[itemId].buyNum:
-                LOG_WARN('in canBuyItems, itemSoldOut:', storeId, itemId, itemNum, storeItemData['limitNumber'], bigMonthCardAddNum, storeDic[itemId].buyNum)
+            if itemNum > storeItemData['limitNumber'] + bigMonthCardAddNum + storeLevelAddNum - storeDic[itemId].buyNum:
+                LOG_WARN('in canBuyItems, itemSoldOut:', storeId, itemId, itemNum, storeItemData['limitNumber'], bigMonthCardAddNum, storeLevelAddNum, storeDic[itemId].buyNum)
                 owner.onMessagePre(MMCD.datas['mall_itemSoldOut_msg']['value'], [])
                 return False
             

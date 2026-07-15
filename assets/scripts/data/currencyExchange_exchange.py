@@ -24,6 +24,7 @@ datas = _tools.RODict({
         "exchangeRate": 10000,
         "timeLimit": 100,
         "dailyLimit": -1,
+        "isMonthCard": 0
     }),
     2: _tools.RODict({
         "ID": 2,
@@ -34,6 +35,7 @@ datas = _tools.RODict({
         "exchangeRate": 10000,
         "timeLimit": 100,
         "dailyLimit": -1,
+        "isMonthCard": 0
     }),
     3: _tools.RODict({
         "ID": 3,
@@ -44,6 +46,7 @@ datas = _tools.RODict({
         "exchangeRate": 100,
         "timeLimit": 100000,
         "dailyLimit": -1,
+        "isMonthCard": 0
     }),
     4: _tools.RODict({
         "ID": 4,
@@ -54,6 +57,7 @@ datas = _tools.RODict({
         "exchangeRate": 100,
         "timeLimit": 100000,
         "dailyLimit": -1,
+        "isMonthCard": 0
     }),
     5: _tools.RODict({
         "ID": 5,
@@ -64,6 +68,7 @@ datas = _tools.RODict({
         "exchangeRate": 125,
         "timeLimit": -1,
         "dailyLimit": -1,
+        "isMonthCard": 0
     }),
     6: _tools.RODict({
         "ID": 6,
@@ -74,6 +79,7 @@ datas = _tools.RODict({
         "exchangeRate": 100,
         "timeLimit": 100,
         "dailyLimit": -1,
+        "isMonthCard": 0
     }),
     7: _tools.RODict({
         "ID": 7,
@@ -84,6 +90,7 @@ datas = _tools.RODict({
         "exchangeRate": 1,
         "timeLimit": 1000,
         "dailyLimit": -1,
+        "isMonthCard": 0
     }),
     8: _tools.RODict({
         "ID": 8,
@@ -94,6 +101,7 @@ datas = _tools.RODict({
         "exchangeRate": 100,
         "timeLimit": 100,
         "dailyLimit": -1,
+        "isMonthCard": 2
     }),
     9: _tools.RODict({
         "ID": 9,
@@ -104,6 +112,7 @@ datas = _tools.RODict({
         "exchangeRate": 1,
         "timeLimit": 10000,
         "dailyLimit": -1,
+        "isMonthCard": 0
     })
 })
 minKey = 1

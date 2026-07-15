@@ -85,7 +85,7 @@ datas = _tools.RODict({
         "isGrayOut": 0,
         "iconScale": 0.4,
         "isOnMainMap": 0,
-        "isOnMiniMap": 1,
+        "isOnMiniMap": 0,
         "mapIconScale": 0.4,
         "imageColor": 31,
         "queueID": 5
@@ -257,7 +257,7 @@ datas = _tools.RODict({
     }),
     22: _tools.RODict({
         "ID": 22,
-        "type": 2,
+        "type": 0,
         "showChest": 0,
         "showLevel": 1,
         "iconGrayOut": "Assets/Res/ui/texture/worldmap/map_3_bossgray.png",
@@ -407,7 +407,7 @@ datas = _tools.RODict({
     }),
     32: _tools.RODict({
         "ID": 32,
-        "type": 1,
+        "type": 0,
         "showChest": 0,
         "showLevel": 0,
         "iconGrayOut": "",
@@ -419,7 +419,37 @@ datas = _tools.RODict({
         "mapIconScale": 1.3,
         "imageColor": 0,
         "queueID": 13
+    }),
+    33: _tools.RODict({
+        "ID": 33,
+        "type": 0,
+        "showChest": 0,
+        "showLevel": 0,
+        "iconGrayOut": "",
+        "iconGrayOutChosen": "",
+        "isGrayOut": 0,
+        "iconScale": 1.0,
+        "isOnMainMap": 1,
+        "isOnMiniMap": 1,
+        "mapIconScale": 1.3,
+        "imageColor": 0,
+        "queueID": 1
+    }),
+    34: _tools.RODict({
+        "ID": 34,
+        "type": 0,
+        "showChest": 0,
+        "showLevel": 0,
+        "iconGrayOut": "",
+        "iconGrayOutChosen": "",
+        "isGrayOut": 0,
+        "iconScale": 1.0,
+        "isOnMainMap": 1,
+        "isOnMiniMap": 1,
+        "mapIconScale": 1.3,
+        "imageColor": 0,
+        "queueID": 12
     })
 })
 minKey = 1
-maxKey = 32
+maxKey = 34

@@ -51,6 +51,7 @@ class IScore(object):
         LOG_INFO("onAllAvatarScoreBeInited, timeout:", timeout)
         self.scoreInitFinished = True
         self.popTempMiscProp(gameconst.EntityPropsEnum.avatarScoresInitChecklist)
+        self.base.onAllScoreInitFinished()
         self.client.onAvatarTotalScoreInitCompleted()
 
     def markAvatarScoreBeInited(self, key):

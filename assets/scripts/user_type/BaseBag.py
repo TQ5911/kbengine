@@ -10,6 +10,9 @@ import dataUtils
 import _pickle as cPickle
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import itemData_itemType as IDITD
+import Item
+import EquipmentItem
+import BaseItem
 
 
 class BaseBag(itemContainer.ItemContainer):
@@ -225,3 +228,30 @@ class BaseBag(itemContainer.ItemContainer):
             self.gridIdToGridObj = cPickle.loads(bak_gridId2GridObj)
             self.itemIdToGridIds = cPickle.loads(bak_itemId2gridIds)
             return True
+
+    def calFnvHash(self):
+        #字典无序，需要排序
+        checkData = []
+        for k in sorted(self.gridIdToGridObj.keys()):
+            tmpData = []
+            v = self.gridIdToGridObj[k]
+            if isinstance(v, Item.Item) or isinstance(v, BaseItem.PureItem):
+                tmpData.append((v.itemId, v.itemNum, v.uniqueId))
+            elif isinstance(v, EquipmentItem.EquipmentItem):
+                tmpData.append((v.itemId, v.itemNum, v.uniqueId, v.getEquipScore()))
+            else:
+                LOG_ERR('calFnvHash', type(self.gridIdToGridObj[k]))
+            checkData.append((k, tmpData))
+        # 3. 计算fnv
+        fnv = utils.FNV1a64()
+        fnv.update_str(str(checkData))
+        return fnv.digest_uint64()
+
+    #这里用pickle打包再解压出来的dict和原先的hash不一致，所以直接传dict
+    def getPickleBagData(self):
+        return cPickle.dumps(self.gridIdToGridObj), cPickle.dumps(self.itemIdToGridIds)
+    
+    def forceInitFromBagData(self, gridIdToGridObj, itemIdToGridIds):
+        LOG_INFO('forceInitFromBagData', gridIdToGridObj, itemIdToGridIds)
+        self.gridIdToGridObj = cPickle.loads(gridIdToGridObj)
+        self.itemIdToGridIds = cPickle.loads(itemIdToGridIds)

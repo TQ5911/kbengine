@@ -147,4 +147,5 @@ mineGlobalData = MineGlobalData.MineGlobalData()
 mineCanAttackBits = 0
 
 
+chatForbiddenSet = set()
 

@@ -254,11 +254,13 @@ class ILease(object):
         grid, item = extra['grid'], extra['item']
         if not self._canEquipItemLease(item):
             LOG_INFO("onReplyAddItemPrepare item cannot be leased", uniqueId)
+            self.leaseStub.addItemRollback(uniqueId, opUUID)
             self.onMessagePre(MMD.datas.rent01, [])
             return
 
         if self.bagData.isLocked():
             LOG_WARN("onReplyAddItemPrepare lock bag fail:", uniqueId)
+            self.leaseStub.addItemRollback(uniqueId, opUUID)
             return
 
         # 扣除手续费
@@ -501,6 +503,10 @@ class ILease(object):
         if result:
             LOG_INFO('ILease::onReplyCancelItemInLease failed:', uniqueId, result)
             self.onMessagePre(MMD.datas.rent03, [])
+
+            # 可能已经租出去了
+            if result == LEASE_STATUS_ERROR or result == LEASE_NOT_FOUND:
+                self.client.onCancelSaleItemInLeaseSucc(uniqueId)
             return
 
         if self.getBagLeftGridCount(gameconst.BagTypeEnum.BAG_TYPE_NORMAL) <= 0:
@@ -517,7 +523,7 @@ class ILease(object):
         
         returnTime = item.getReturnTime()
         if returnTime and returnTime < utils.curTS():
-            LOG_ERR("onReplyCancelItemInLease item already expired", uniqueId, returnTime)
+            LOG_INFO("onReplyCancelItemInLease item already expired", uniqueId, returnTime)
             self.onMessagePre(MMD.datas.redeem07, [])
             self.client.onCancelSaleItemInLeaseSucc(uniqueId)
             return

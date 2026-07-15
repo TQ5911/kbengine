@@ -284,7 +284,7 @@ class Bag(BaseBag.BaseBag):
         _itemData = dataUtils.getCommItemData(gridItem.itemId)
         if _itemData['itemCD'] > 0:
             self._updateItemCD(owner, gridItem.itemId)
-            owner.syncMethodCallToLocalServerBase('onCrossServerUpdateItemCD', (gridItem.itemId, self.bagType))
+            owner.syncMethodCallToCrossServerBase('onLocalServerUpdateItemCD', (gridItem.itemId, self.bagType))
 
         if gridItem.isReUseItem() and gridItem.useTimes > 0:
             owner.client.onUpdateGridItemsJson(
@@ -340,21 +340,13 @@ class Bag(BaseBag.BaseBag):
 
             if gridObj.isReUseItem():
                 gridObj.useTimes -= useNum
-                if not hasattr(useItemCtx, 'isCrossServerUseItem'):
-                    gameengine.panicStack('doUseGridItems, isCrossServerUseItem not in useItemCtx:', useItemCtx)
-                else:
-                    owner.syncMethodCallToLocalServerBase('onCrossServerDeductUseTimes', (gridId, gridObj.itemId, useNum))
+                owner.syncMethodCallToCrossServerBase('onLocalServerDeductUseTimes', (gridId, gridObj.itemId, useNum))
 
             if itemId not in C_CD.datas["eternalItemIDList"]['value']\
                     or (gridObj.isReUseItem() and gridObj.useTimes <= 0):
                 # 正常道具使用完就没了；多次使用的道具，使用次数耗尽也就没了
                 self.deductItemsByGridId(owner, {gridId: useNum}, _opUUID, srcType, detail)
-                if gameconfig.isCrossServer():
-                    #跨服调用这个接口只能是来自使用物品，如果出现其他情况一定是在这之后加的功能
-                    if not hasattr(useItemCtx, 'isCrossServerUseItem'):
-                        gameengine.panicStack('doUseGridItems, isCrossServerUseItem not in useItemCtx:', useItemCtx)
-                    else:
-                        owner.syncMethodCallToLocalServerBase('onCrossServerDeductUseItem', (self.bagType, {gridId: useNum}, _opUUID, srcType, detail))
+                owner.syncMethodCallToCrossServerBase('onLocalServerDeductUseItem', (self.bagType, {gridId: useNum}, _opUUID, srcType, detail))
             else:
                 # 无消耗道具需要调用通知接口
                 owner.client.onUpdateGridItemsNum(self.bagType, [{'gridId': gridId, 'itemNum': gridObj.itemNum,}, ])
@@ -483,7 +475,7 @@ class Bag(BaseBag.BaseBag):
             if not crossServerEnable and gameconfig.isCrossServer():
                 gameengine.panicStack('onUseItemDone, crossServerEnable is False, but gameconfig.isCrossServer() is True')
             else:
-                owner.syncMethodCallToLocalServerBase('onCrossServerUseItemReturn', (self.bagType, _info, opUUID))
+                owner.syncMethodCallToCrossServerBase('onLocalServerUseItemReturn', (self.bagType, _info, opUUID))
             self._doReturnItem(owner, _info, opUUID)
 
     def _doReturnItem(self, owner, _info, opUUID):
@@ -502,7 +494,7 @@ class Bag(BaseBag.BaseBag):
             bakGridObj.setItemNum(_info['useNum'])
             self.addItemsToNewGrid(owner, bakGridObj, _info['opUUID'], _info['srcType'], 'useItemFailed', gridId)
 
-    def _onCrossServerUseItemReturn(self, owner, info, opUUID):
+    def _onLocalServerUseItemReturn(self, owner, info, opUUID):
         self._doReturnItem(owner, info, opUUID)
 
     @utils.checkBagLocked

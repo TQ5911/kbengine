@@ -114,6 +114,14 @@ datas = _tools.RODict({
     1008: _tools.RODict({
         "ID": 1008,
         "linkToSpecificItem": "",
+    }),
+    11: _tools.RODict({
+        "ID": 11,
+        "linkToSpecificItem": "",
+    }),
+    12: _tools.RODict({
+        "ID": 12,
+        "linkToSpecificItem": "",
     })
 })
 minKey = 1

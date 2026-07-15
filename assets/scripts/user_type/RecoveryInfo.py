@@ -76,7 +76,7 @@ class freeTicketRecoveryItem(userType.UserSingleType):
                 self.dateNumDeques[subType].append([nowDateTime, curNum])
                 LOG_DBG("freeTicketRecoveryItem::update no data5 2", [firstDateTime, curNum], [nowDateTime, curNum])
             return True
-        LOG_DBG("freeTicketRecoveryItem::update has data")
+        LOG_DBG("freeTicketRecoveryItem::update has data", self.dateNumDeques[subType])
 
         lastData = self.dateNumDeques[subType][-1]
         LOG_INFO("freeTicketRecoveryItem::update has data1", lastData, nowDateTime, curNum)
@@ -91,13 +91,19 @@ class freeTicketRecoveryItem(userType.UserSingleType):
             else:
                 lastData[1] = curNum
             return False
+        elif len(self.dateNumDeques[subType]) < 2:
+            LOG_DBG("freeTicketRecoveryItem::update has data7")
+            self.dateNumDeques[subType].append([nowDateTime, curNum])
+            self._update(subType, nowDateTime, curNum, N)
+            return True
         else:
-            LOG_DBG("freeTicketRecoveryItem::_update has data4", self.dateNumDeques[subType], nowDateTime, curNum)
-            if lastData[1] == curNum:
-                LOG_DBG("freeTicketRecoveryItem::_update has data5")
+            LOG_DBG("freeTicketRecoveryItem::update has data4", nowDateTime, curNum)
+            preLastData = self.dateNumDeques[subType][-2]
+            if lastData[1] == curNum and preLastData[1] == curNum:
+                LOG_DBG("freeTicketRecoveryItem::update has data5")
                 lastData[0] = nowDateTime
             else:
-                LOG_DBG("freeTicketRecoveryItem::_update has data6")
+                LOG_DBG("freeTicketRecoveryItem::update has data6")
                 self.dateNumDeques[subType].append([nowDateTime, curNum])
             self._update(subType, nowDateTime, curNum, N)
             return True

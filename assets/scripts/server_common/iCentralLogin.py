@@ -22,7 +22,8 @@ import message_Message as MMD
 import antiAddictionSystem_config as AASC
 import random
 import SwitchServer
-
+import gameclass
+import gameengine
 
 class LoginService(GameServer):
     def __init__(self, loginMgr, address, centralServerId):
@@ -59,7 +60,8 @@ class LoginService(GameServer):
         accountType = reply.accountType
         accountName = reply.accountName
         kickReason = reply.kickReason
-        self.loginMgr.onKickAccount(accountType, accountName, kickReason)
+        stubs = gameengine.getLoginStubsByAccountName(accountName)
+        gameclass.DuplicatedCallList(stubs).onKickAccount(accountType, accountName, kickReason)
 
     def onLockedLogin(self, rpc_controller, reply, done):
         LOG_INFO("onLockedLogin", reply.accountName)
@@ -396,8 +398,8 @@ class ICentralLogin(object):
         loginClient = self.loginClientDic.get(centralServerId)
         loginClient.centralServerStub.onLoginComplete(None, _account, None)
 
-    def notifyCentralServerOnline(self, accountName, accountType, centralServerId, sessionIdStr):
-        LOG_INFO("notifyCentralServerOnline", accountName, accountType, centralServerId, sessionIdStr)
+    def notifyCentralServerOnline(self, accountName, accountType, centralServerId, sessionIdStr, userInfoId):
+        LOG_INFO("notifyCentralServerOnline", accountName, accountType, centralServerId, sessionIdStr, userInfoId)
         self.connectCentralServer(centralServerId)
 
         account = AccountOnlineVal()
@@ -405,6 +407,7 @@ class ICentralLogin(object):
         account.accountName = accountName
         account.accountType = accountType
         account.sessionIdStr = sessionIdStr
+        account.userId = userInfoId
 
         loginClient = self.loginClientDic.get(centralServerId)
         if not loginClient:
@@ -412,8 +415,8 @@ class ICentralLogin(object):
         
         loginClient.centralServerStub.onAccountOnline(None, account, None)
 
-    def notifyCentralServerOffline(self, accountName, accountType, centralServerId, sessionIdStr):
-        LOG_INFO("notifyCentralServerOffline", accountName, accountType, centralServerId, sessionIdStr)
+    def notifyCentralServerOffline(self, accountName, accountType, centralServerId, sessionIdStr, userInfoId):
+        LOG_INFO("notifyCentralServerOffline", accountName, accountType, centralServerId, sessionIdStr, userInfoId)
         self.connectCentralServer(centralServerId)
 
         _account = AccountOfflineVal()
@@ -421,6 +424,7 @@ class ICentralLogin(object):
         _account.accountName = accountName
         _account.accountType = accountType
         _account.sessionIdStr = sessionIdStr
+        _account.userId = userInfoId
 
         loginClient = self.loginClientDic.get(centralServerId)
         if not loginClient:

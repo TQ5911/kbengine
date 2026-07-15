@@ -149,8 +149,8 @@ class WealthItem(WealthUnit):
         self.data.setdefault(itemId, {}).setdefault(bindType, 0)
         self.data[itemId][bindType] += itemNum
 
-    def toItemObjs(self):
-        self.itemsObjs = self.getItemObjs()
+    def toItemObjs(self, extra):
+        self.itemsObjs = self.getItemObjs(extra=extra)
         self.data = {}
 
     def addItemObjs(self, its):
@@ -192,7 +192,7 @@ class WealthItem(WealthUnit):
         self.itemsObjs = _otherObjs
         return petItemList
     
-    def popSoulItemObjs(self):
+    def popSoulItemObjs(self, extra):
         soulList = []
         _otherObjs = []
         soulList = []
@@ -207,7 +207,7 @@ class WealthItem(WealthUnit):
             if dataUtils.getItemSubType(itemId) in gameconst.ItemSubEnum.EQUIP_SOUL_TYPE:
                 datas = self.data.pop(itemId)
                 for bindType, itemNum in datas.items():
-                    soulList.extend(itemFactory.ItemFactory.createItemList(itemId, itemNum, bindType))
+                    soulList.extend(itemFactory.ItemFactory.createItemList(itemId, itemNum, bindType, extra=extra))
         return soulList
 
     def popExtractRewardItems(self):
@@ -476,7 +476,7 @@ class AwardMixin(object):
 
 class BaseAwardVal(WealthVal, AwardMixin):
 
-    def __init__(self, exp=0, coin=0, money=0, guildContrib=0, itemObjs=None, titleList=None, guildFund=0, guildExp=0, darkIron=0, guildMoney=0, bindMoney=0, appearanceCoin=0):
+    def __init__(self, exp=0, coin=0, money=0, guildContrib=0, itemObjs=None, titleList=None, guildFund=0, guildExp=0, darkIron=0, guildMoney=0, bindMoney=0, appearanceCoin=0, guildCommission=0):
         self.exp = WealthNumeric('exp', gameconst.ItemIdEnum.EXP, exp)
         self.coin = WealthNumeric('coin', gameconst.ItemIdEnum.COIN, coin)
         self.money = WealthNumeric('money', gameconst.ItemIdEnum.MONEY, money)
@@ -487,6 +487,7 @@ class BaseAwardVal(WealthVal, AwardMixin):
         self.guildExp = WealthNumeric('guildExp', gameconst.ItemIdEnum.GUILD_EXP, guildExp)
         self.bindMoney = WealthNumeric('boundMoney', gameconst.ItemIdEnum.BIND_MONEY, bindMoney)
         self.appearanceCoin = WealthNumeric('appearanceCoin', gameconst.ItemIdEnum.APPEARANCE_COIN, appearanceCoin)
+        self.guildCommission = WealthNumeric('guildCommission', gameconst.ItemIdEnum.GUILD_COMMISSION, guildCommission)
 
         self.petItemWealth = WealthItem()
         self.itemWealth = WealthItem()
@@ -525,6 +526,7 @@ class BaseAwardVal(WealthVal, AwardMixin):
         self.appearanceCoin += other.appearanceCoin
 
         self.titleWealth += other.titleWealth
+        self.guildCommission += other.guildCommission
 
         return self
     
@@ -553,7 +555,7 @@ class BaseAwardVal(WealthVal, AwardMixin):
             self.__dict__[_k].__setstate__(v)
 
     def getNumericWealth(self):
-        return (self.exp, self.coin, self.money, self.guildContrib, self.guildFund, self.guildExp, self.darkIron, self.guildMoney, self.bindMoney, self.appearanceCoin)
+        return (self.exp, self.coin, self.money, self.guildContrib, self.guildFund, self.guildExp, self.darkIron, self.guildMoney, self.bindMoney, self.appearanceCoin, self.guildCommission)
 
     def getBaseNumeric(self):
         return (self.coin, self.money, self.guildContrib, self.darkIron, self.bindMoney, self.appearanceCoin)
@@ -681,7 +683,7 @@ class AwardVal(BaseAwardVal):
 
 
 class DeductWealthVal(WealthVal, AwardMixin):
-    def __init__(self, coin=0, money=0, itemsDic=None, petItemsDic=None, guildContrib=0, guildFund=0, guildExp=0, darkIron=0, guildMoney=0, bindMoney=0, appearanceCoin=0):
+    def __init__(self, coin=0, money=0, itemsDic=None, petItemsDic=None, guildContrib=0, guildFund=0, guildExp=0, darkIron=0, guildMoney=0, bindMoney=0, appearanceCoin=0, guildCommission=0):
         self.coin = WealthNumeric('coin', gameconst.ItemIdEnum.COIN, coin)
         self.money = WealthNumeric('', gameconst.ItemIdEnum.MONEY, money)
         self.darkIron = WealthNumeric('darkIron', gameconst.ItemIdEnum.DARK_IRON, darkIron)
@@ -693,6 +695,8 @@ class DeductWealthVal(WealthVal, AwardMixin):
         self.guildExp = WealthNumeric('guildExp', gameconst.ItemIdEnum.GUILD_EXP, guildExp)
         self.bindMoney = WealthNumeric('bindMoney', gameconst.ItemIdEnum.BIND_MONEY, bindMoney)
         self.appearanceCoin = WealthNumeric('appearanceCoin', gameconst.ItemIdEnum.APPEARANCE_COIN, appearanceCoin)
+        self.guildCommission = WealthNumeric('guildCommission', gameconst.ItemIdEnum.GUILD_COMMISSION, guildCommission)
+
     def __getstate__(self):
         st = {}
         for k, v in vars(self).items():
@@ -939,7 +943,8 @@ class MailAttachVal(BaseAwardVal):
             guildFund=self.guildFund.data,
             guildExp=self.guildExp.data,
             bindMoney=self.bindMoney.data,
-            titleList=[titleVal.titleId for titleVal in self.titleWealth.data]
+            titleList=[titleVal.titleId for titleVal in self.titleWealth.data],
+            guildCommission=self.guildCommission.data,
         )
 
         for _itemId, itemInfo in self.itemWealth.data.items():

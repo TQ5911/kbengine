@@ -459,10 +459,10 @@ def _13090289(self, target, context):
         self.attackByNum(target, context,0.45 * target.getProp("maxPhysicalAtk"))
 
 def _13090290(self, target, context):
-    self.addBuffBySkill(target, context, *context.args.ActionParam)
+    self.addMp(target, context, *context.args.ActionParam)
 
 def _13090291(self, target, context):
-    self.addBuffBySkill(target, context, *context.args.ActionParam)
+    self.addMp(target, context, *context.args.ActionParam)
 
 def _13090292(self, target, context):
 
@@ -558,7 +558,7 @@ def _13090307(self, target, context):
     self.addBuffBySkill(target, context, 64002016)
 
 def _13090308(self, target, context):
-    self.addBuffBySkill(target, context, *context.args.ActionParam)
+    self.addMp(target, context, *context.args.ActionParam)
 
 def _13090309(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
@@ -665,7 +665,7 @@ def _13090326(self, target, context):
     hpRate = curHp / float(fullHp)
 
     # 30%以下：10%增伤
-    if hpRate <= 0.3:
+    if hpRate <= 0.5:
 
         self.removeBuffBySkill(self, context, 64002148)
         self.removeBuffBySkill(self, context, 64002149)
@@ -674,7 +674,7 @@ def _13090326(self, target, context):
             self.addBuffBySkill(target, context, 64002150)
 
     # 50%以下：7%增伤
-    elif hpRate <= 0.5:
+    elif hpRate <= 0.7:
 
         self.removeBuffBySkill(self, context, 64002148)
         self.removeBuffBySkill(self, context, 64002150)
@@ -683,7 +683,7 @@ def _13090326(self, target, context):
             self.addBuffBySkill(target, context, 64002149)
 
     # 70%以下：4%增伤
-    elif hpRate <= 0.7:
+    elif hpRate <= 0.85:
 
         self.removeBuffBySkill(self, context, 64002149)
         self.removeBuffBySkill(self, context, 64002150)
@@ -1832,7 +1832,7 @@ datas = _tools.RODict({
         "EventSourceType": 1,
         "Action": _13090290,
         "Target": "self",
-        "EventCD": 30.0
+        "EventCD": 10.0
     }),
     13090291: _tools.RODict({
         "ID": 13090291,
@@ -1840,7 +1840,7 @@ datas = _tools.RODict({
         "EventSourceType": 1,
         "Action": _13090291,
         "Target": "self",
-        "EventCD": 30.0
+        "EventCD": 10.0
     }),
     13090292: _tools.RODict({
         "ID": 13090292,
@@ -1976,7 +1976,7 @@ datas = _tools.RODict({
         "EventSourceType": 1,
         "Action": _13090308,
         "Target": "self",
-        "EventCD": 30.0
+        "EventCD": 10.0
     }),
     13090309: _tools.RODict({
         "ID": 13090309,
@@ -2128,7 +2128,7 @@ datas = _tools.RODict({
         "EventSourceType": 1,
         "Action": _13090327,
         "Target": "other",
-        "EventCD": 60.0
+        "EventCD": 30.0
     }),
     13090328: _tools.RODict({
         "ID": 13090328,
@@ -2144,7 +2144,7 @@ datas = _tools.RODict({
         "EventSourceType": 1,
         "Action": _13090329,
         "Target": "self",
-        "EventCD": 30.0
+        "EventCD": 15.0
     }),
     13090330: _tools.RODict({
         "ID": 13090330,
@@ -2184,7 +2184,7 @@ datas = _tools.RODict({
         "EventSourceType": 1,
         "Action": _13090334,
         "Target": "self",
-        "EventCD": 30.0
+        "EventCD": 15.0
     }),
     13090335: _tools.RODict({
         "ID": 13090335,
@@ -2304,7 +2304,7 @@ datas = _tools.RODict({
         "EventSourceType": 1,
         "Action": _13090349,
         "Target": "self",
-        "EventCD": 30.0
+        "EventCD": 15.0
     }),
     13090350: _tools.RODict({
         "ID": 13090350,
@@ -2408,7 +2408,7 @@ datas = _tools.RODict({
         "EventSourceType": 1,
         "Action": _13090362,
         "Target": "self",
-        "EventCD": 120.0
+        "EventCD": 90.0
     }),
     13090363: _tools.RODict({
         "ID": 13090363,
@@ -2432,7 +2432,7 @@ datas = _tools.RODict({
         "EventSourceType": 1,
         "Action": _13090365,
         "Target": "self",
-        "EventCD": 80.0
+        "EventCD": 60.0
     }),
     13090366: _tools.RODict({
         "ID": 13090366,
@@ -2440,7 +2440,7 @@ datas = _tools.RODict({
         "EventSourceType": 1,
         "Action": _13090366,
         "Target": "self",
-        "EventCD": 60.0
+        "EventCD": 20.0
     }),
     13090367: _tools.RODict({
         "ID": 13090367,

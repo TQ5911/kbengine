@@ -196,12 +196,19 @@ datas = _tools.RODict({
         "soulQualityAbove": (8, 1),
         "itemQualityAbove": None,
         "itemList": None
+    }),
+    11: _tools.RODict({
+        "ID": 11,
+        "qualityAbove": None,
+        "soulQualityAbove": None,
+        "itemQualityAbove": None,
+        "itemList": (30002011,)
     })
 })
 minKey = 1
 maxKey = 1008
 
-itemDataDic = {30000220: True, 30000224: True, 30000225: True, 30000226: True, 30000231: True, 30990128: True, 30990129: True, 30990130: True, 30990131: True, 30990135: True, 30990136: True, 30990137: True, 30990138: True, 30990142: True, 30990143: True, 30990144: True, 30990145: True}
+itemDataDic = {30000220: True, 30000224: True, 30000225: True, 30000226: True, 30000231: True, 30990128: True, 30990129: True, 30990130: True, 30990131: True, 30990135: True, 30990136: True, 30990137: True, 30990138: True, 30990142: True, 30990143: True, 30990144: True, 30990145: True, 30002011: True}
 
 
 itemQualityDataDic = {'0_11': 2, '0_20': 3, '1_1': 3}

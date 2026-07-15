@@ -353,6 +353,9 @@ class IAICombatUnit(SkillManager.SkillManager):
     def getDeadAction(self):
         return self.getCreepData().get('deathAction', '')
 
+    def getDeathActionOnBranch(self):
+        return self.getCreepData().get('deathActionOnBranch', '')
+
     def getDestroyAction(self):
         return self.getCreepData().get('destroyAction', '')
 
@@ -651,6 +654,9 @@ class IAICombatUnit(SkillManager.SkillManager):
 
     def delayDeadAction(self):
         _deadAction = self.getDeadAction()
+        lineNo = formula.parseLineNo(self.spaceNo)
+        if lineNo != 0 and lineNo != -1:
+            _deadAction = self.getDeathActionOnBranch()
         _deadAction and _deadAction(self, self, actionContext.ACTION_CONTEXT_DEFAULT)
 
     def onDead(self, killer, *args, **kwargs):

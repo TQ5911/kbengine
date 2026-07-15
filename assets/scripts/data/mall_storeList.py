@@ -82,7 +82,7 @@ datas = _tools.RODict({
         "isTimeLimit": 0,
         "openTime": None,
         "closeTime": None,
-        "goodsList": (231, 232),
+        "goodsList": (231, 232, 233),
         "groupId": None,
         "numberWeight": None,
         "groupRefreshTime": 0,

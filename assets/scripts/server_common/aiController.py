@@ -793,10 +793,6 @@ class AuxFunc(object):
 
             targetId = 0 if skill.getTarget(skill.skillId) == 'None' else target.id
             skillArgs = skill.getSkillArr(owner, target, _direction)
-            if skill.isChangePosSkill(skill.skillId):
-                positionArgs = skill.getSkillDesPosition(owner, target, skillArgs)
-                skillArgs = skillArgs + positionArgs
-
             target.beHateCounter.addHateCnt(gameconst.HATE_CNT_TYPE_ATTACK)
 
             actionCtx = actionContext.UseSkillCtx(
@@ -1807,6 +1803,13 @@ class AIControllerCls(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
 
     def transformBack(self):
         self.stateMachine.transform(self, StateEnum.BACK)
+
+    def isGoHomeTooLate(self):
+        return self.stateMachine.elapsedTime() > CONST.datas['monsterBornPosResetTime']['value']
+
+    def stuckBackHomeErr(self):
+        LOG_ERR('stuckBackHomeErr', self.owner.position)
+        self.owner.position = self.owner.bornPosition
 
     def isFinishResetAnim(self):
         # 重置动画是否播完

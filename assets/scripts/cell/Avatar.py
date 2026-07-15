@@ -194,6 +194,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             "skills": self.skillDic.toReplicaSkillDict(),
             "buffs": self.toReplicaBuffData(),
             'summonSlotIdx': self.summonSlotIdx,
+            'glyphData': self.glyphEquipData.toStreamSavedDic(),
         }
 
         LOG_DBG('cloneAvatarProps:', self.spaceMgrId, self.spaceID, props)
@@ -1533,6 +1534,17 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             self.showMsg(MMD.datas.HealingWoundsMsg2, [])
             return gameconst.UseItemEnum.FALSE
 
+    def checkRemoveBuffWithItemCond(self, itemId, buffId, mesId, msgArgs):
+        if self.hasBuff(buffId):
+            return gameconst.UseItemEnum.TRUE
+        else:
+            self.showMsg(mesId, msgArgs)
+            return gameconst.UseItemEnum.FALSE
+
+    def doRemoveBuffWithItem(self, itemId, buffId, mesId, msgArgs):
+        self.showMsg(mesId, msgArgs)
+        return self.useRemoveBuffByItem(itemId, buffId,)
+
     @utils.isMyself
     @gamedecorator.limitcall(1)
     def tryHealWoundsFromNpc(self, exposed):
@@ -1566,7 +1578,11 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if recoverHpMp:
             self.modifyHP(self.fullHp, self.id, gameconst.SourceType.SrcTpHealWounds, self.id)
             self.modifyMP(self.fullMp)
+        self.syncMethodCallToCrossServerCell('_doHealWounds', (recoverHpMp,))
         return gameconst.UseItemEnum.TRUE
+
+    def _doHealWounds(self, recoverHpMp):
+        self.doHealWounds(recoverHpMp)
 
     @utils.isMyself
     @gamedecorator.limitcall(1)
@@ -1612,6 +1628,13 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         
         #坐骑
         data['mountId'] = self.curMountId
+
+        #收集
+        collectible = []
+        for tp, _ in self.collectibleSimpleClientData.items():
+            collectible.append([tp, len(self.collectibleSimpleClientData[tp])])
+        data["collectibleData"] = collectible
+        LOG_INFO("collectibleData", data["collectibleData"])
 
         return data
 
@@ -1866,3 +1889,19 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             return False
         LOG_DBG("checkSpecialVisible cell success")
         return True
+
+    def reqUpdateTeamVoiceRoomState(self, exposed, teamId, voiceFlags):
+        """客户端同步队伍语音房间状态（进房/退房/麦克风/扬声器）
+        teamId 为队伍ID，voiceFlags 为状态掩码：0x01=inVoiceRoom, 0x02=enableMics, 0x04=enableSpeaker
+        """
+        if teamId <= 0:
+            return
+        gameengine.getTeamStub(teamId).reqUpdateVoiceRoomState(self.gbId, teamId, voiceFlags)
+
+    def reqUpdateRaidVoiceRoomState(self, exposed, raidId, voiceFlags):
+        """客户端同步团队语音房间状态（进房/退房/麦克风/扬声器）
+        raidId 为团队UUID，voiceFlags 为状态掩码：0x01=inVoiceRoom, 0x02=enableMics, 0x04=enableSpeaker
+        """
+        if raidId <= 0:
+            return
+        gameengine.getRaidStub(raidId).reqUpdateVoiceRoomState(self.gbId, raidId, voiceFlags)

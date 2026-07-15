@@ -155,11 +155,6 @@ datas = _tools.RODict({
         "authorization": "guildChatMuteMode",
         "hidden": 0
     }),
-    28: _tools.RODict({
-        "ID": 28,
-        "authorization": "guildChatInvitation",
-        "hidden": 0
-    }),
     29: _tools.RODict({
         "ID": 29,
         "authorization": "guildDividend",

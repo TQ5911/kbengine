@@ -43,7 +43,7 @@ datas ={
   },
   "1008": {
     "type": "dunFailed",
-    "exitTime": 30.0,
+    "exitTime": 10.0,
     "transition": {}
   },
   "1013": {
@@ -75,7 +75,7 @@ datas ={
   },
   "1007": {
     "type": "dunEnd",
-    "exitTime": 30.0,
+    "exitTime": 10.0,
     "isDungeonDone": 1,
     "transition": {}
   },

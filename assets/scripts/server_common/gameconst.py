@@ -54,6 +54,7 @@ GLOBAL_BASE_STUB_ARCHIVE = [
     'MineWarStub',
     'BountyStub',
     'ResourceRecoveryStub',
+    'GuildStub',
     ]
 GLOBAL_BASE_STUB_UNARCHIVE = [
     'PlayerStub',
@@ -61,7 +62,6 @@ GLOBAL_BASE_STUB_UNARCHIVE = [
     'RaidStub',
     'ItemLinkStub',
     'CrossServerStub',
-    'GuildStub',
     'DropStub',
     'ActStub',
     'RaidMatchStub',
@@ -141,6 +141,8 @@ GAME_CONFIG_TYPE_AUTO_COMBAT = 4
 
 LEGAL_AGE_OF_MAJORITY = 18
 
+
+BASE_COMMON_FLAG_INIT_SCORE = 0
 
 # ======================
 # 角色基础信息表 a
@@ -380,7 +382,6 @@ INIT_CLIENT_SEND = (
         ('sendAllTitle', True),
         ('sendAllMapExploreData', True),
         ('sendAllRecoveryInfo', True),
-        ('_sendGuildMicsMembers', True),
 )
 
 class ItemEnum(object):
@@ -398,6 +399,9 @@ class ItemSubEnum(object):
     Equipment = 4
     EQUIP_CORE = 6
     TASK = 15
+    EQUIP_CORE2 = 21
+    EQUIP_CORE3 = 22
+    EQUIP_CORE4 = 23
 
     EQUIP_SOUL_WEAPON = 27
     EQUIP_SOUL_CLOTHES = 28
@@ -418,6 +422,13 @@ class ItemSubEnum(object):
                        EQUIP_SOUL_NECKLACE,\
                        EQUIP_SOUL_RING,\
                        EQUIP_SOUL_BRACELET)
+
+    EQUIP_CORE_TUP = (
+        EQUIP_CORE,
+        EQUIP_CORE2,
+        EQUIP_CORE3,
+        EQUIP_CORE4,
+    )
 
 class LingShouSubType(object):
     Egg = 0
@@ -588,6 +599,10 @@ class EntityPropsEnum(metaclass=UniqueIntEnum):
     queryRechargeTimestamp = 417
     damageRatioLimit = 418
     innerDemonCDTimestamp = 419
+    rechargeAmount = 420
+    rechargeStageReward = 421
+    cellNovice = 422
+    preCubePKModel = 423
 
 class TopSpeedType(object):
     NormalTopSpeed = 100.0
@@ -632,6 +647,7 @@ class ItemIdEnum(object):
     COLL_SKIP_MSG_HANDLE = ()
     BIND_MONEY = IDSD.datas['itemID_bind_money']['value']
     APPEARANCE_COIN = IDSD.datas['itemID_appearanceCoin']['value']
+    GUILD_COMMISSION = IDSD.datas['itemID_guildCommission']['value']
 
     GM_MODIFY_CURRENCY_ITEMS = (MONEY, BIND_MONEY, COIN, DARK_IRON, GUILD_CONTRIB)
 
@@ -1157,6 +1173,7 @@ class RedisKey(object):
     FULL_PLAYER_INFO_KEY = 'g:full_player_info'
     WAITMAP_HEARTBEAT_KEY = 'waitmap:heartbeat'
     WAITMAP_FREE_PREFIX = 'waitmap:free:'
+    RECHARGE_STAGE_INFO = 'recharfe:stage:'
 
 class ForbidType(object):
     SHORT_FORBID = 1  # 临时封禁
@@ -1229,6 +1246,7 @@ CREEP_TAG_WARNING_RANGE = 4 # 有预警范围
 CREEP_TAG_WONDERLAND_FIXED_BOSS = 5 # 天劫崖固定boss
 CREEP_TAG_WONDERLAND_SUMMON_BOSS = 6 # 天劫崖召唤boss
 CREEP_TAG_TIP_MSG = 7 # 怪物进战时对仇恨目标级队友发送tips
+CREEP_TAG_DUNGEON_KILL_COUNT_TO_PLAYER = 97 # 副本中该tag怪物击杀的目标计入玩家任务计数
 CREEP_TAG_ANTI_TAUNT = 98 # 嘲讽反制
 CREEP_TAG_ANTI_MOVE = 99 # 推拉反制
 CREEP_TAG_NO_USE_HOST_TARGET = 100 # ai不使用host的目标
@@ -1260,6 +1278,12 @@ class SkillTagEnum(metaclass=UniqueIntEnum):
     changeCDStatusSkill = 130
     DodgeSkill = 146
     birthDirection = 158 # 有这个tag的monster技能在选择节能方向时候恒定用出生方向
+    antiBreak = 152
+
+
+DEATH_COLL_POS_TYPE_SELF_POS = 1
+DEATH_COLL_POS_TYPE_FIXED_POS = 2
+
 
 class BuffTag(object):
     TagSeeHiddenEnt = 41
@@ -1435,6 +1459,10 @@ class EndCasting(object):
     ECEnumclientPick=12
 
 
+CHECK_SKILL_STAGE_DEFAULT = 1 # 在哪个阶段进行checkUseSkill
+CHECK_SKILL_STAGE_BEFORE_BEGIN = 2 # beginUseSkill前的checkUseSkill
+
+
 class UseSkillCheck(object):
     USC_ENUM_CHEKC_OK = 0
     USC_ENUM_IN_CD = 1
@@ -1452,12 +1480,14 @@ class UseSkillCheck(object):
     USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH = 1<<12
     USC_ENUM_TARGET_NOT_FOUND = 1<<13
     USC_ENUM_FORBID = 1<<14
+    USC_ENUM_STAGE_INVALID = 1 << 15 # 阶段技能阶段不合法
+    USC_ENUM_CHECK_USE_ACTION = 1 << 16
 
     #起手延迟结算时检查需要忽略的条件
-    USC_DELAY_CHECK_IGNORES = USC_ENUM_IN_CD | USC_ENUM_LACK_OF_MP | USC_ENUM_OUT_OF_RANGE | USC_ENUM_STATE_CONFLICT | USC_ENUM_INVALID_TARGET | USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH
+    USC_DELAY_CHECK_IGNORES = USC_ENUM_IN_CD | USC_ENUM_LACK_OF_MP | USC_ENUM_OUT_OF_RANGE | USC_ENUM_STATE_CONFLICT | USC_ENUM_INVALID_TARGET | USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH | USC_ENUM_CHECK_USE_ACTION
     #连击技能（例如风入松放一次可以砍出4刀，每刀单独结算）分阶段结算时，每个阶段的检查
-    USC_MUL_ATTACK_CHECK_IGNORES = USC_ENUM_IN_CD | USC_ENUM_LACK_OF_MP | USC_ENUM_STATE_CONFLICT | USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH
-    RESET_USED_SKILLID_TYPE = (USC_ENUM_IN_CD, USC_ENUM_LACK_OF_MP, USC_ENUM_SHOOTER_SKILL_CANNOT_USE, USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH, USC_ENUM_FORBID)
+    USC_MUL_ATTACK_CHECK_IGNORES = USC_ENUM_IN_CD | USC_ENUM_LACK_OF_MP | USC_ENUM_STATE_CONFLICT | USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH | USC_ENUM_CHECK_USE_ACTION
+    RESET_USED_SKILLID_TYPE = (USC_ENUM_IN_CD, USC_ENUM_LACK_OF_MP, USC_ENUM_SHOOTER_SKILL_CANNOT_USE, USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH, USC_ENUM_FORBID, USC_ENUM_CHECK_USE_ACTION)
 
 class ResetSkillReason(object):
     ReasonDefault = 0
@@ -1596,6 +1626,7 @@ class RaceTypeEnum(object):
     pet = 4
     bot = 5
     summon = 6
+    avatarReplica = 7
 
 
 class CampType(object):
@@ -2988,6 +3019,8 @@ class AvatarFlagCell(object):
     AUTO_RETURN_AFTER_REVIVE = 5
     # 反击状态
     FIGHT_BACK = 6
+    # 技能频率
+    SKILL_FREQUENT = 7
 
     QUICK_SETTING_RANGE = (AUTO_HEAL_HP, AUTO_HEAL_MP, AUTO_FIGHT_BACK, AUTO_RETURN_AFTER_REVIVE)
 
@@ -3455,9 +3488,6 @@ WONDER_LAND_EVENT_ENTER = 1
 WONDER_LAND_EVENT_EXIT = 2
 WONDER_LAND_EVENT_ADDTIME = 3
 
-ABYSS_ENTER_TYPE_TICKET = 1 # 购票进入
-ABYSS_ENTER_TYPE_LEFT_TIME = 2 # 还有剩余时间
-
 ABYSS_EVENT_ENTER = 1
 ABYSS_EVENT_EXIT = 2
 ABYSS_EVENT_ADDTIME = 3
@@ -3755,12 +3785,14 @@ LARGE_ENTITY_DEFAULT_AOI = 250
 class MonsterSuffix(object):
     # 对应creep base表中的nameSuffixID字段
     NORMAL = 1 # 小怪
-    ELITE = 4 # 头目
+    ELITE = 2 # 精英
+    SUB_BOSS = 4 # 头目
     BOSS = 5 # 首领
     WORLD_BOSS = 6 # 世界boss
     LUCKY = 7 # 幸运怪
 
-    NEED_LOG_SUFFIX = (ELITE, BOSS, WORLD_BOSS, LUCKY)
+
+    NEED_LOG_SUFFIX = (ELITE, SUB_BOSS, BOSS, WORLD_BOSS, LUCKY)
 
 class WorldLineSceneState(object):
     THUNDER = 0 # 落雷
@@ -4135,7 +4167,7 @@ class TimerEntityRefreshType(object):
 #特权用户
 class PrivilegeRedisKey(object):
     VIP = RedisKey.PRIVILEGE_TBL + ":v:"         #特权用户    (排队优先)
-    SVIP = RedisKey.PRIVILEGE_TBL + ":sv:"       #超级特权    (排队直达)
+    SVIP = "officialTagType_"                    #超级特权    (排队直达)
 
 INVINCIBLE_BUFF_ID = 64000070  # 无敌buffId
 
@@ -4816,10 +4848,10 @@ class GuildDataType(object):
     VALID_TYPE = (WORLD_BOSS_REFRESH, MIN_WAR_AREA_OPEN)
 
 class GuildGamePlayType(object):
-    # 占领矿区
-    MIN_WAR_AERA_OCCUPY = 1
     # 尾刀击杀世界boss
-    WORLD_BOSS_KILLER = 2
+    WORLD_BOSS_KILLER = 1
+    # 占领矿区
+    MIN_WAR_AERA_OCCUPY = 2
 
     VALID_TYPE = (MIN_WAR_AERA_OCCUPY, WORLD_BOSS_KILLER)
 
@@ -4829,6 +4861,12 @@ class GuildMicsMemberStat(object):
     BLOCK = 0
     OFF = 1
     OPEN = 2
+
+class GuildVoiceFlag(object):
+    NONE = 0
+    MIC_ON = 1
+    SPEAKER_ON = 2
+    ALL = MIC_ON | SPEAKER_ON
 
 class GuildMicsSwitch(object):
     OFF = 0
@@ -4840,6 +4878,7 @@ class GuildMicsSwitch(object):
 class BindPhoneRes(object):
     BIND_SUCCESSED = 0
     CHECK_CAPTCHA_VERIF = 1
+    ALERADY_SENT = 2
 
 class SpecialVisibleType:
     INNER_DEMON = 0

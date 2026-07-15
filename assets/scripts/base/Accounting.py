@@ -20,6 +20,7 @@ import iTimer
 import appearance
 import redisUtils
 import waitMapCharacter
+import antiAddictionSystem_config as AASC
 
 
 class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
@@ -55,14 +56,18 @@ class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
             return KBEngine.LOG_ON_REJECT
 
         if self.hasClient:
+            LOG_DBG('Accounting::onLogOnAttempt kick client.')
             self.client.onKickAnotherAccount()
+
+        avataring = self.avataring
+        avataring and avataring.kickAvataring(gameconst.OFFLINE_REASON_KICK_BY_CENTRAL_SERVER)
 
         return KBEngine.LOG_ON_ACCEPT
 
     def onClientEnabled(self, chn):
         LOG_INFO("Accounting::onClientEnabled~", chn)
         if not gameconfig.interfaceEnableLogin():
-            LOG_ERROR("Accounting::onClientEnabled interfaceEnableLogin is False.")
+            LOG_ERR("Accounting::onClientEnabled interfaceEnableLogin is False.")
             self.destroySelf()
             return
 
@@ -72,13 +77,14 @@ class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
             gameglobal.localMinorAccountCache[self.accountName] = self
             if gameglobal.antiAddictionData[0] == gameconst.AntiAddictionTimeType.PROHIBIT:
                 LOG_INFO("Accounting::onClientEnabled minor in prohibit time", self.accountName)
+                self.lastLoginResult = gameconst.WaitMapLoginResult.ANTI_ADDICTION
                 self.client.onLoginWaitMapResult(gameconst.WaitMapLoginResult.ANTI_ADDICTION)
-                self.destroySelf()
+                self._destroyWithAntiAddictionTip(gameconst.OFFLINE_REASON_ANIT_ADDICTION)
                 return
 
         stub = gameengine.getGlobalBase('WaitMapSpaceStub')
         if not stub:
-            LOG_ERROR("Accounting::onClientEnabled WaitMapSpaceStub not found.")
+            LOG_ERR("Accounting::onClientEnabled WaitMapSpaceStub not found.")
             self.destroySelf()
             return
         
@@ -174,6 +180,7 @@ class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
             'school': school,
             'sex': sex,
             'appearance': ap,
+            'speed': 6.0,
         })
         if not avataring:
             LOG_ERR("Accounting::createAvataring create Avataring failed.")
@@ -194,10 +201,10 @@ class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
             self.avataring.kickAvataring(gameconst.OFFLINE_REASON_MANNUALLY)
         self.destroySelf()
 
-    # 客户端角色主动下线
     def avatarOffline(self, reason):
         LOG_INFO('Accounting::avatarOffline~', reason)
-        self.destroySelf()
+        if not self.hasClient:
+            self.destroySelf()
 
     def onClientDeath(self, chn):
         LOG_INFO('Accounting::onClientDeath~', chn)
@@ -215,9 +222,37 @@ class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
 
         self.destroy(deleteFromDB=False, writeToDB=True)
 
+    def _destroyWithAntiAddictionTip(self, reason=gameconst.OFFLINE_REASON_DESTORY):
+        """防沉迷强制下线：先给客户端发提示，延迟后再销毁。"""
+        if getattr(self, '_antiAddictionTipSent', False):
+            if self.avataring:
+                self.avataring.kickAvataring(reason)
+            self.destroySelf(reason)
+            return
+
+        self._antiAddictionTipSent = True
+        targetClient = None
+        if self.avataring and self.avataring.hasClient:
+            targetClient = self.avataring.client
+        elif self.hasClient:
+            targetClient = self.client
+
+        if targetClient:
+            targetClient.onMessage(AASC.datas['antiAddictForceLogout']['value'], [])
+
+        self.addTimerCB(
+            0.2,
+            '_destroyWithAntiAddictionTip',
+            (reason,),
+            gametimer.TIMER_TAG_KICK_ACCOUNT_BY_ANIT_ADDICTION
+        )
+
     def destroyAccount(self, reason=gameconst.OFFLINE_REASON_DESTORY):
-        """防沉迷等强制下线入口：先踢 Avataring，再销毁 Accounting。"""
         LOG_INFO('Accounting::destroyAccount:', reason, self.accountName)
+        if reason == gameconst.OFFLINE_REASON_ANIT_ADDICTION:
+            self._destroyWithAntiAddictionTip(reason)
+            return
+
         if self.avataring:
             self.avataring.kickAvataring(reason)
         self.destroySelf(reason)

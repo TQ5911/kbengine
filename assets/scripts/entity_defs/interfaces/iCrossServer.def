@@ -47,6 +47,12 @@
             <Default>       0                       </Default>
         </crossServerHeartbeatTimer>
 
+        <bagFnvHashCheckTimer>
+            <Type>          TIMER_ID                </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </bagFnvHashCheckTimer>
+
         <isInLocalServer>
             <Type>          UINT8                   </Type>
             <Flags>         CELL_PRIVATE            </Flags>
@@ -143,10 +149,20 @@
             <Arg>           METHOD_ARGS             </Arg>
         </syncMethodCallToLocalServerCell>
 
+        <syncMethodCallToCrossServerCell>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </syncMethodCallToCrossServerCell>
+
         <beSyncMethodCallFromCrossServerCell>
             <Arg>           METHOD_NAME             </Arg>
             <Arg>           METHOD_ARGS             </Arg>
         </beSyncMethodCallFromCrossServerCell>
+
+        <beSyncMethodCallFromLocalServerCell>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </beSyncMethodCallFromLocalServerCell>
 
         <onCheckCrossServerTokenResp>
             <Arg>           BOOL                    </Arg>
@@ -194,6 +210,11 @@
             <Arg>           METHOD_ARGS             </Arg>
         </syncMethodCallToLocalServerCell>
 
+        <syncMethodCallToCrossServerCell>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </syncMethodCallToCrossServerCell>
+
         <beforeReqCrossServer>
             <Arg>           SERVER_ID               </Arg>
             <Arg>           UINT8                   </Arg>
@@ -203,6 +224,11 @@
             <Arg>           METHOD_NAME             </Arg>
             <Arg>           METHOD_ARGS             </Arg>
         </beSyncMethodCallFromCrossServerCell>
+
+        <beSyncMethodCallFromLocalServerCell>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </beSyncMethodCallFromLocalServerCell>
     </CellMethods>
 
     <ClientMethods>

@@ -34,46 +34,46 @@ class ImpStore(object):
         self.storeData.updateStoreDataDaily(self)
 
     def onStoreWeeklyUpdate(self, *args):
-        LOG_DBG('in onStoreWeeklyUpdate:', args)
+        LOG_INFO('in onStoreWeeklyUpdate:', args)
         self.storeData.updateStoreDataWeekly(self)
         return
 
     def onStoreMonthlyUpdate(self, *args):
-        LOG_DBG('in onStoreMonthlyUpdate:', args)
+        LOG_INFO('in onStoreMonthlyUpdate:', args)
         self.storeData.updateStoreDataMonthly(self)
         return
 
     def onLimitedStoreHourlyUpdate(self, *args):
-        LOG_DBG('in onLimitedStoreHourlyUpdate:', args)
+        LOG_INFO('in onLimitedStoreHourlyUpdate:', args)
         self.storeData.updateLimitedStoreHourly(self)
 
     def reqGetStoreList(self, exposed, storeIds):
-        LOG_DBG('in reqGetStoreList:', storeIds)
+        LOG_INFO('in reqGetStoreList:', storeIds)
         self.storeData.sendStoreList(self, storeIds)
         return
     
     def reqGetStoreLimitedItemList(self, exposed, storeId):
-        LOG_DBG('in reqGetStoreLimitedItemList:', exposed, storeId)
+        LOG_INFO('in reqGetStoreLimitedItemList:', exposed, storeId)
         self.storeData.sendStoreLimitedItemList(self, storeId)
 
     @gamedecorator.limitcall(1)
     # itemId: mall_coinPrice.datas.ID 不是物品ID
     def reqBuyItemsInStore(self, exposed, storeId, itemId, itemNum):
-        LOG_DBG('in reqBuyItemsInStore:', storeId, itemId, itemNum)
+        LOG_INFO('in reqBuyItemsInStore:', storeId, itemId, itemNum)
         self._buyItemsInStore(storeId, itemId, itemNum)
 
     @gamedecorator.limitcall(1)
     def reqBuyItemsInStoreWithSelection(self, exposed, storeId, itemId, itemNum, propSlot):
-        LOG_DBG('in reqBuyItemsInStoreWithSelection:', exposed, storeId, itemId, itemNum, propSlot)
+        LOG_INFO('in reqBuyItemsInStoreWithSelection:', exposed, storeId, itemId, itemNum, propSlot)
         self._buyItemsInStore(storeId, itemId, itemNum, propSlot)
 
     def _buyItemsInStore(self, storeId, itemId, itemNum, propSlot=0):
-        LOG_DBG('in _buyItemsInStore:', storeId, itemId, itemNum, propSlot)
+        LOG_INFO('in _buyItemsInStore:', storeId, itemId, itemNum, propSlot)
         self.buyStoreItems(storeId, itemId, itemNum, propSlot)
         return
 
     def buyStoreItems(self, storeId, itemId, itemNum, propSlot):
-        LOG_DBG('in buyStoreItems:', storeId, itemId, itemNum, propSlot)
+        LOG_INFO('in buyStoreItems:', storeId, itemId, itemNum, propSlot)
         if self.isDestroyed:
             LOG_INFO('buyStoreItems: avatar is offline', storeId, itemId, itemNum)
             return
@@ -87,7 +87,8 @@ class ImpStore(object):
         propItem = storeItemData.get('propItem')
         itemType = storeItemData.get('type')
 
-        if not self.isBigMonthCardExpired():
+        #月卡用户额外次数
+        if not self.isPremiumIdMonthCardExpired(MMC.datas['dynGoodsMonthCardTypeId']['value']):
             if itemType == gameconst.StoreItemType.DYNAMIC_PRICE:
                 newCostItem = storeItemData.get('monthCardCostItem')
                 LOG_INFO('buyStoreItems isBigMonthCard', costItem, '->', newCostItem)
@@ -177,10 +178,12 @@ class ImpStore(object):
             realItemId,
             itemNum,
             storeItemData['limitType'],
-            storeItemData['limitNumber'] + self._getBigMonthCardAddNum(storeItemData),
+            storeItemData['limitNumber'] + self._getBigMonthCardAddNum(storeItemData) + self._getStoreLevelAddNum(storeItemData),
             buyNum,
             str(costItem),
             opUUID,
+            self.accountEntity.accountName,
+            self.obId,
         )
 
     def _getBigMonthCardAddNum(self, storeItemData):
@@ -192,3 +195,13 @@ class ImpStore(object):
                     count += val[1]
             return count
         return 0
+
+    # 等级越高，能买的数量越多
+    def _getStoreLevelAddNum(self, storeItemData):
+        level = self.getRoleCacheAttr('level')
+        count = 0
+        for val in MMC.datas['dynGoodsExtraTimes']['value']:
+            if level >= val[0]:
+                count += val[1]
+        return count
+

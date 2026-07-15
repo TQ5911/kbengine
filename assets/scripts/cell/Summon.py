@@ -280,8 +280,8 @@ class Summon(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
 
         self.triggeredFlowControllerRestNumDec()
 
-        if self.getHost():
-            self.getHost().removeSummonById(self.id)
+        if _h:
+            _h.removeSummonById(self.id)
 
         self.delaySafeDestroy(self.getDestroyDelay())
 

@@ -66,10 +66,10 @@
         <auctionServerHost> 192.168.10.13:2010 </auctionServerHost>
         <orderServerHost> 192.168.10.13:2011</orderServerHost>
 
-        <redisServer> r-bp1g8xi5b70yls95di.redis.rds.aliyuncs.com </redisServer>
+        <redisServer> 192.168.10.12 </redisServer>
         <redisPort> 6379 </redisPort>
-        <redisPassword> FYWm61ZbnK </redisPassword>
-        <redisUsername> fengyan </redisUsername>
+        <redisPassword>  </redisPassword>
+        <redisUsername>  </redisUsername>
 
         <elasticServer> 192.168.10.13 </elasticServer>
         <elasticPort> 9200 </elasticPort>

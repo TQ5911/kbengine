@@ -27,8 +27,15 @@ QA_DROP_GLOBAL_CACHE = {}
 
 BATCH_SEND_SIZE = 4096  # 4K
 
-BATCH_TIME_COUNT = 10000
-BATCH_TIME_DUN_COUNT = 1
+# 动态批次大小配置
+BATCH_TIME_COUNT_INIT = 1000       # 初始批次大小
+BATCH_TIME_COUNT_MIN = 100          # 最小批次大小
+BATCH_TIME_COUNT_MAX = 50000        # 最大批次大小
+TARGET_TICK_S = 0.05                # 目标每tick耗时（秒），超过则暂停等待下个tick
+
+BATCH_TIME_DUN_COUNT_INIT = 5       # 副本掉落初始批次大小
+BATCH_TIME_DUN_COUNT_MIN = 1
+BATCH_TIME_DUN_COUNT_MAX = 50
 
 CALCTYPE_DROP_ID = 1  # 掉落id
 CALCTYPE_MONSTER_ID = 2 # 怪物id
@@ -100,7 +107,6 @@ class DropUnit():
     # 相同的请求进来会被cache机制拦掉，先做一个callback列表，不过还是会导致时间变长，尽量外部维护
     def batchGenAward(self, awardId, contextVar, totalTimes=None, clearCache=True, callback=None):
         totalTimes = totalTimes or self.totalTimes
-        leftTimes = totalTimes
         cacheKey = self._genCacheKey(awardId, contextVar, totalTimes)
         ret, cacheStatus, content, process_info = self._getCacheResult(cacheKey, clearCache, callback)
         if cacheStatus != CACHE_STATUS_NOT_FOUND:
@@ -108,32 +114,49 @@ class DropUnit():
         # 初始化合并结果列表
         allAward = dropAward.AwardVal()
         awardCtx = self._genAwardContext(contextVar)
-        # 定义回调函数，用于分批调用 getAward
-        def batch_callback(tid):
-            nonlocal allAward, leftTimes
-            genNum = 0
-            if leftTimes > BATCH_TIME_COUNT:
-                leftTimes -= BATCH_TIME_COUNT
-                genNum = BATCH_TIME_COUNT
-            else:
-                genNum = leftTimes
-                leftTimes = 0
-            LOG_INFO("DropUnit: batchGenAward rewardId:%s totalTimes:%s leftTimes:%s genNum:%s" % (awardId, self.totalTimes, leftTimes, genNum))  
-            self._update_process_info(cacheKey, genNum)
-            if genNum > 0:
-                # 调用 getAward 并将结果添加到合并列表中
-                allAward += dropAward.getAward(awardId, genNum, awardCtx, False)
-                KBEngine.addTimer(1, 0, batch_callback)
-            else:
-                # 所有批次执行完毕，调用 writeToJsonFile 写入结果
+        processed = 0
+        current_batch_size = BATCH_TIME_COUNT_INIT
+
+        def process_batch():
+            nonlocal allAward, processed, current_batch_size
+            tick_start = utils.curTS()
+
+            while processed < totalTimes:
+                remaining = totalTimes - processed
+                batch_size = min(current_batch_size, remaining)
+
+                batch_start = utils.curTS()
+                allAward += dropAward.getAward(awardId, batch_size, awardCtx, False)
+                batch_elapsed = utils.curTS() - batch_start
+
+                processed += batch_size
+                self._update_process_info(cacheKey, processed)
+
+                # 根据上次批次耗时动态调整批次大小
+                if batch_elapsed > TARGET_TICK_S * 2:
+                    current_batch_size = max(BATCH_TIME_COUNT_MIN, current_batch_size // 2)
+                elif batch_elapsed < TARGET_TICK_S * 0.5:
+                    current_batch_size = min(BATCH_TIME_COUNT_MAX, current_batch_size * 2)
+
+                LOG_DBG("DropUnit: batchGenAward rewardId:%s totalTimes:%s processed:%s batchSize:%s batchElapsed:%.4f" %
+                        (awardId, totalTimes, processed, batch_size, batch_elapsed))
+
+                # 如果当前tick已消耗超过目标时间，暂停等待下个tick
+                if utils.curTS() - tick_start >= TARGET_TICK_S:
+                    break
+
+            if processed >= totalTimes:
                 dropData = self.updateItemInfoByDropList(allAward.toBriefList(), totalTimes)
                 if not self.su:
                     self.writeToJsonFile(dropData)
                 else:
                     # 可能执行时间过长断掉连接，放缓存里
                     self._setCacheResult(cacheKey, dropData)
-        # 启动第一次回调
-        batch_callback(0)
+            else:
+                KBEngine.addTimer(1, 0, lambda tid: process_batch())
+
+        # 启动处理
+        process_batch()
         return ret, content, process_info
 
 
@@ -250,7 +273,8 @@ class DropUnit():
             'current_index': 0,
             'output': output,
             'num': num,
-            'callback': callback
+            'callback': callback,
+            'batch_size': BATCH_TIME_DUN_COUNT_INIT,
         }
         self._update_process_info(cacheKey, 0, len(count_data_list))
         # 启动第一批处理
@@ -260,58 +284,65 @@ class DropUnit():
     def _batch_getDunDrop(self, tid, _cacheKey=None):
         """
         分批处理 getDunDrop 的逻辑，直接调用 batchGenAward
+        动态调整每批次调度数量，根据 tick 耗时自适应
         """
         process_data = self._batch_dun_data
-        current_index = process_data.get('current_index', 0)
-        batch_size = BATCH_TIME_DUN_COUNT
-        end_index = current_index + batch_size
         count_data_list = process_data['count_data_list']
-        
+        total_count = len(count_data_list)
+        current_index = process_data['current_index']
+        batch_size = process_data['batch_size']
+        end_index = min(current_index + batch_size, total_count)
+        # 提前推进索引，避免同步回调触发时索引未更新导致重复处理
+        process_data['current_index'] = end_index
+
         self._update_process_info(_cacheKey, current_index)
 
-        # 用于记录待完成的回调数量
-        self._pending_callbacks = 0
+        # 本批次待回调数量
+        pending_count = end_index - current_index
+        tick_start = utils.curTS()
 
-        for i in range(current_index, min(end_index, len(count_data_list))):
+        def on_one_done():
+            nonlocal pending_count
+            pending_count -= 1
+            if pending_count <= 0:
+                _finish_batch()
+
+        def _finish_batch():
+            nonlocal batch_size
+            tick_elapsed = utils.curTS() - tick_start
+            # 根据本批次总耗时动态调整下一批的批次大小
+            if tick_elapsed > TARGET_TICK_S * 2:
+                process_data['batch_size'] = max(BATCH_TIME_DUN_COUNT_MIN, batch_size // 2)
+            elif tick_elapsed < TARGET_TICK_S * 0.5:
+                process_data['batch_size'] = min(BATCH_TIME_DUN_COUNT_MAX, batch_size * 2)
+
+            if process_data['current_index'] >= total_count:
+                if process_data['callback']:
+                    process_data['callback'](process_data['output'])
+            else:
+                KBEngine.addTimer(1, 0, lambda t, k=_cacheKey: self._batch_getDunDrop(t, k))
+
+        def make_inner_callback(_rewardId, _ClassName, _EntityID, _Level, _school, _output):
+            def inner_callback(dropData):
+                cls_dict = _output.setdefault(_ClassName, {})
+                ent_dict = cls_dict.setdefault(_EntityID, {})
+                lvl_dict = ent_dict.setdefault(_Level, {})
+                sch_dict = lvl_dict.setdefault(_school, {'drop': {}})
+                sch_dict['drop'][_rewardId] = dropData
+                on_one_done()
+            return inner_callback
+
+        for i in range(current_index, end_index):
             count_data = count_data_list[i]
-            rewardId = count_data['rewardId']
-            school = count_data['school']
-            Level = count_data['Level']
-            EntityID = count_data['EntityID']
-            ClassName = count_data['ClassName']
-
-            self._pending_callbacks += 1
-            def inner_callback(dropData, _rewardId=rewardId, _ClassName=ClassName, _EntityID=EntityID, 
-                            _Level=Level, _school=school, _output=process_data['output']):
-                if _output.get(_ClassName, {}).get(_EntityID, {}).get(_Level, {}).get(_school, {}):
-                    _output[_ClassName][_EntityID][_Level][_school]['drop'][_rewardId] = dropData
-                else:
-                    if _ClassName not in _output:
-                        _output[_ClassName] = {}
-                    if _EntityID not in _output[_ClassName]:
-                        _output[_ClassName][_EntityID] = {}
-                    if _Level not in _output[_ClassName][_EntityID]:
-                        _output[_ClassName][_EntityID][_Level] = {}
-                    if _school not in _output[_ClassName][_EntityID][_Level]:
-                        _output[_ClassName][_EntityID][_Level][_school] = {
-                            'drop': {_rewardId: dropData}
-                        }
-                self._pending_callbacks -= 1
-                # 检查是否所有回调都已完成
-                if self._pending_callbacks == 0 and process_data['current_index'] >= len(count_data_list):
-                    if process_data['callback']:
-                        process_data['callback'](process_data['output'])
-
-            # 直接调用 batchGenAward, 不清理缓存
-
-            self.batchGenAward(rewardId, {"awardId": rewardId, "level": Level, "school": school, "sex": 0}, process_data['num'], clearCache=False, callback=inner_callback)
-
-        process_data['current_index'] = end_index
-        if end_index < len(count_data_list):
-            KBEngine.addTimer(1, 0, lambda tid, _cacheKey=_cacheKey: self._batch_getDunDrop(tid, _cacheKey))
-        elif self._pending_callbacks == 0:
-            if process_data['callback']:
-                process_data['callback'](process_data['output'])
+            cb = make_inner_callback(
+                count_data['rewardId'], count_data['ClassName'],
+                count_data['EntityID'], count_data['Level'],
+                count_data['school'], process_data['output']
+            )
+            self.batchGenAward(count_data['rewardId'],
+                               {"awardId": count_data['rewardId'], "level": count_data['Level'],
+                                "school": count_data['school'], "sex": 0},
+                               process_data['num'], clearCache=False, callback=cb)
         
         
 

@@ -177,6 +177,7 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
         buffList = buffData['buffs']
         for buffId, buffMap in self.buffMgrDic.items():
             for _buffSrcKey, _buffVal in buffMap.items():
+                duration = _buffVal.getBuffRemainTime()
                 _data = {
                     'tStartTime': _buffVal.tStartTime,
                     'attNum': _buffVal.attNum,
@@ -185,10 +186,11 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
                 }
                 _buffInfo = {
                     'buffId': buffId,
-                    'buffSrcKey': _buffSrcKey,
                     'level': _buffVal.level,
-                    'releaseId': 0,
-                    'data': _data,
+                    'duration': -1 if duration == float('inf') else duration,
+                    #'buffSrcKey': _buffSrcKey,
+                    #'releaseId': 0,
+                    #'data': _data,
                 }
                 buffList.append(_buffInfo)
         return buffData
@@ -202,6 +204,9 @@ class AvatarReplica(iAICombatUnit.IAICombatUnit, iTimer.ITimer,
             duration = buffInfo['duration']
             self.addBuff(buffId, level, self.id, duration)
         LOG_DBG("AvatarReplica::initEntityGrowthData2", self.getBuffData())
+        LOG_DBG("AvatarReplica::initEntityGrowthData3", self.glyphData)
+        self.glyphEquipData.initObjFromSavedDict(self.glyphData)
+        LOG_DBG("AvatarReplica::initEntityGrowthData4", self.glyphEquipData.toStreamSavedDic())
 
     def onInitPropsCompleted(self):
         avatar = self.getReplicaAvatar()

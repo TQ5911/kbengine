@@ -9,6 +9,7 @@ import gametimer
 import gameconst
 import redisUtils
 import elasticUtils
+import gameconfig
 import actionContext
 import gameclass
 import AuthClsWraper
@@ -285,7 +286,12 @@ class IRedBag(object):
                 if self._calNeedAutoReplay(fetchDict):
                     thankMsgs = CC_CCD.datas.get('receivePacketThankMsg', {}).get('value')
                     # 自动回复
-                    replyMsg = random.choice(thankMsgs).format(fetchDict['playerName'])
+                    replyMsg = {
+                            "msg": random.choice(thankMsgs).format(fetchDict['playerName']),
+                            "code": 0,
+                            "voiceUrl": "",
+                            "msgType": 0,
+                    }
                     if fetchDict['channel'] == gameconst.RedBagChannel.WORLD:
                         self.afterCheckWorldChatMsg(replyMsg)
                     else:
@@ -312,8 +318,10 @@ class IRedBag(object):
         gameengine.getGlobalBase('RedBagStub').doFetchRedBag(self, redbagId, self.gbID, self.guildUUIDBase, self.characterName, True)
 
     # 被动删除红包缓存
-    @gamedecorator.checkGameconfigEnable('redPacket')
     def onDelRedBagCache(self, delList):
+        if not gameconfig.visibleConfigEnabled('redPacket'):
+            return
+
         for redbagId in delList:
             if redbagId in self.releaseRedBagDict:
                 LOG_INFO("onDelRedBagCache: {} {}".format(self.gbID, redbagId))

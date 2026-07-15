@@ -82,10 +82,14 @@ class CubeArenaVal(userType.UserSingleType):
                 player.removeBuff(kingBuffId)
                 player.addBuff(self.getChallengerBuff(player.spaceNo), 1, player.id)
                 player.showMsg(cube_config.datas['cube_championDefenderLose']['value'], [])
+            preCubePKModel = player.popPersistentMiscProp(gameconst.EntityPropsEnum.preCubePKModel, None)
+            if preCubePKModel != None:
+                player.onSwitchPKModel(preCubePKModel)
         else:
             if player.id == self.arenaKing:
                 LOG_WARN("onArenaChangeSafeArea", self.arenaKing)
             else:
+                player.setPersistentMiscProp(gameconst.EntityPropsEnum.preCubePKModel, player.pkModel)
                 player.onSwitchPKModel(gameconst.PKModelEnum.ATTACK)
 
     def doAddStage(self, curStage, spaceMgr):

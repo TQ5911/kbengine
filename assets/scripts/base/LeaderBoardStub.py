@@ -294,6 +294,9 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
     def _recalDynamicWorldLevel(self, *args):
         if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL:
             return
+
+        if len(self.leaderBoardList) == 0:
+            return
         
         rankWorldLevel = E_CDD.datas['rankWorldLevel']['value'] - 1
         if len(self.leaderBoardList) - 1 < rankWorldLevel:
@@ -307,3 +310,7 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             return
 
         box.onGetDynamicWorldLevel(self.dynamicWorldLevel)
+
+    def gmSetDynamicWorldLevel(self, level):
+        self.dynamicWorldLevel = level
+        LOG_WARN("gmSetDynamicWorldLevel", self.dynamicWorldLevel)

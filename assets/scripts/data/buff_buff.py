@@ -186,7 +186,12 @@ def _64004103_endByTime(self, target, context):
 
 def _64004516_endByTime(self, target, context):
     if context.getSrcEntity():
-        context.getSrcEntity().castSkill(self, context, 91044023)
+        context.getSrcEntity().castSkill(self, context, 91044024)
+
+def _64004519_endByTime(self, target, context):
+    self.addBuffBySkill(self, context, 64004902, 1, 1.0, -1)
+    if context.getSrcEntity():
+        context.getSrcEntity().regrTempSkill(self, context, 91044008, 1)
 
 def _64004901_endByTime(self, target, context):
     self.addBuffBySkill(self, context, 64004910, 1, 1.0, -1)
@@ -509,7 +514,7 @@ datas = _tools.RODict({
         "name": "坐骑加速",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": "adjSpeed", "Value": 3}]),
+        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": "adjSpeed", "Value": 5}]),
         "endByTime": -1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -614,7 +619,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64000012: _tools.RODict({
         "ID": 64000012,
@@ -7250,7 +7255,7 @@ datas = _tools.RODict({
         "isCover": 0,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": False
+        "ifSend": True
     }),
     64000614: _tools.RODict({
         "ID": 64000614,
@@ -7817,7 +7822,7 @@ datas = _tools.RODict({
         "name": "属性吸收",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": "adjFullHp", "Value": lambda d: d['addHp']*0.5}]),
+        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": "adjFullHp", "Value": lambda d: d['addHp']*0.3}]),
         "endByTime": -1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -7845,7 +7850,7 @@ datas = _tools.RODict({
         "name": "属性吸收",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": ("adjMaxMagicAtk","adjMinMagicAtk"), "Value":(lambda d: d['addMaxMagic']*0.5, lambda d: d['addMinMagic']*0.5)}]),
+        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": ("adjMaxPhysicalAtk","adjMinPhysicalAtk"), "Value":(lambda d: d['addMaxMagicAtk']*0.3, lambda d: d['addMinMagicAtk']*0.3)}]),
         "endByTime": -1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -7873,7 +7878,7 @@ datas = _tools.RODict({
         "name": "属性吸收",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": ("adjFullHp","adjMaxMagicAtk","adjMinMagicAtk"), "Value":(lambda d: d['addHp']*0.3,lambda d: d['addMaxMagic']*0.3, lambda d: d['addMinMagic']*0.3)}]),
+        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": ("adjFullHp","adjMaxPhysicalAtk","adjMinPhysicalAtk"), "Value":(lambda d: d['addHp']*0.1,lambda d: d['addMaxMagicAtk']*0.15, lambda d: d['addMinMagicAtk']*0.15)}]),
         "endByTime": -1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -10920,6 +10925,90 @@ datas = _tools.RODict({
         "duelClear": 1,
         "ifSend": True
     }),
+    64001192: _tools.RODict({
+        "ID": 64001192,
+        "name": "属性吸收",
+        "kind": 0,
+        "classTag": 3,
+        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": "adjFullHp", "Value": lambda d: d['addHp']*0.15}]),
+        "endByTime": -1.0,
+        "endByAtt": 0,
+        "endByBeat": 0,
+        "endBySkill": 0,
+        "endAction": None,
+        "endByTimeAction": None,
+        "endBySkillRemoveAction": None,
+        "endByDieRemoveAction": None,
+        "endBySkillAction": "",
+        "endByBeatAction": None,
+        "refreshAction": None,
+        "transformRemove": 0,
+        "deadDontRemove": 0,
+        "offLineLast": 0,
+        "offLineKeep": 0,
+        "forceSync": 0,
+        "tag": None,
+        "isCover": 1,
+        "scenesClear": 0,
+        "duelClear": 0,
+        "ifSend": False
+    }),
+    64001193: _tools.RODict({
+        "ID": 64001193,
+        "name": "属性吸收",
+        "kind": 0,
+        "classTag": 3,
+        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": ("adjMaxPhysicalAtk","adjMinPhysicalAtk"), "Value":(lambda d: d['addMaxMagicAtk']*0.15, lambda d: d['addMinMagicAtk']*0.15)}]),
+        "endByTime": -1.0,
+        "endByAtt": 0,
+        "endByBeat": 0,
+        "endBySkill": 0,
+        "endAction": None,
+        "endByTimeAction": None,
+        "endBySkillRemoveAction": None,
+        "endByDieRemoveAction": None,
+        "endBySkillAction": "",
+        "endByBeatAction": None,
+        "refreshAction": None,
+        "transformRemove": 0,
+        "deadDontRemove": 0,
+        "offLineLast": 0,
+        "offLineKeep": 0,
+        "forceSync": 0,
+        "tag": None,
+        "isCover": 1,
+        "scenesClear": 0,
+        "duelClear": 0,
+        "ifSend": False
+    }),
+    64001194: _tools.RODict({
+        "ID": 64001194,
+        "name": "属性吸收",
+        "kind": 0,
+        "classTag": 3,
+        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": ("adjFullHp","adjMaxPhysicalAtk","adjMinPhysicalAtk"), "Value":(lambda d: d['addHp']*0.05,lambda d: d['addMaxMagicAtk']*0.075, lambda d: d['addMinMagicAtk']*0.075)}]),
+        "endByTime": -1.0,
+        "endByAtt": 0,
+        "endByBeat": 0,
+        "endBySkill": 0,
+        "endAction": None,
+        "endByTimeAction": None,
+        "endBySkillRemoveAction": None,
+        "endByDieRemoveAction": None,
+        "endBySkillAction": "",
+        "endByBeatAction": None,
+        "refreshAction": None,
+        "transformRemove": 0,
+        "deadDontRemove": 0,
+        "offLineLast": 0,
+        "offLineKeep": 0,
+        "forceSync": 0,
+        "tag": None,
+        "isCover": 1,
+        "scenesClear": 0,
+        "duelClear": 0,
+        "ifSend": False
+    }),
     64001299: _tools.RODict({
         "ID": 64001299,
         "name": "道士新技能状态结束",
@@ -12323,8 +12412,8 @@ datas = _tools.RODict({
     64004017: _tools.RODict({
         "ID": 64004017,
         "name": "熔岩炼狱",
-        "kind": -4,
-        "classTag": 3,
+        "kind": -1,
+        "classTag": -1,
         "effectList": _tools.ROList([{"EffectId": 13080010, "Interval": 1, "Count":10, "ActionParam": lambda d: (30 * d['Layer'],)},{"EffectId": 13080060, "Interval": 1, "Count":11}]),
         "endByTime": -1.0,
         "endByAtt": 0,
@@ -14678,7 +14767,7 @@ datas = _tools.RODict({
         "kind": -1,
         "classTag": 3,
         "effectList": _tools.ROList([{"EffectId": 13010001, "Prop":("mulMinPhysicalAtk","mulMaxPhysicalAtk","mulMinMagicAtk","mulMaxMagicAtk"), "Value": (-0.15,-0.15,-0.15,-0.15)}]),
-        "endByTime": 1.0,
+        "endByTime": 15.0,
         "endByAtt": 0,
         "endByBeat": 0,
         "endBySkill": 0,
@@ -14702,11 +14791,11 @@ datas = _tools.RODict({
     }),
     64004511: _tools.RODict({
         "ID": 64004511,
-        "name": "7027_10技能1无敌",
+        "name": "隐入虚空",
         "kind": 0,
         "classTag": -1,
         "effectList": _tools.ROList([{"EffectId": 13010003, "Status": 11} ,{"EffectId": 13010003, "Status": 12}, {"EffectId": 13010003, "Status": 29}]),
-        "endByTime": 6.0,
+        "endByTime": 3.3,
         "endByAtt": 0,
         "endByBeat": 0,
         "endBySkill": 0,
@@ -14726,14 +14815,14 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 1,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004512: _tools.RODict({
         "ID": 64004512,
-        "name": "7027_10技能1刺杀警告（流血）",
-        "kind": -3,
+        "name": "死兆之示",
+        "kind": -1,
         "classTag": 1,
-        "effectList": _tools.ROList([{"EffectId": 13080010, "Interval": 1, "Count": -1, "ActionParam": (1,)}]),
+        "effectList": None,
         "endByTime": 5.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -14758,10 +14847,10 @@ datas = _tools.RODict({
     }),
     64004513: _tools.RODict({
         "ID": 64004513,
-        "name": "7027_10技能2减速",
+        "name": "减速",
         "kind": -1,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": "mulSpeed", "Value": -0.3}]),
+        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": "mulSpeed", "Value": -0.25}]),
         "endByTime": 8.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -14786,11 +14875,11 @@ datas = _tools.RODict({
     }),
     64004514: _tools.RODict({
         "ID": 64004514,
-        "name": "7027_10技能2易碎",
+        "name": "易碎",
         "kind": -1,
-        "classTag": -1,
-        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": "adjFinalDmgAnti", "Value": lambda d: (25 * d['Layer'],)}]),
-        "endByTime": 10.0,
+        "classTag": 3,
+        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": "adjFinalDmgAnti", "Value": lambda d: (-0.25 * d['Layer'],)}]),
+        "endByTime": 12.0,
         "endByAtt": 0,
         "endByBeat": 0,
         "endBySkill": 0,
@@ -14807,18 +14896,18 @@ datas = _tools.RODict({
         "offLineKeep": 0,
         "forceSync": 0,
         "tag": None,
-        "isCover": 0,
+        "isCover": 1,
         "scenesClear": 1,
         "duelClear": 0,
         "ifSend": True
     }),
     64004515: _tools.RODict({
         "ID": 64004515,
-        "name": "7027_10技能3破防",
+        "name": "破防",
         "kind": -1,
         "classTag": 3,
         "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": ("mulMaxPhysicalArmor","mulMinPhysicalArmor"), "Value": (-0.25,-0.25)}]),
-        "endByTime": 10.0,
+        "endByTime": 12.0,
         "endByAtt": 0,
         "endByBeat": 0,
         "endBySkill": 0,
@@ -14842,7 +14931,7 @@ datas = _tools.RODict({
     }),
     64004516: _tools.RODict({
         "ID": 64004516,
-        "name": "7027_10技能4点名创生物",
+        "name": "7027_20技能4点名创生物",
         "kind": -1,
         "classTag": -1,
         "effectList": None,
@@ -14867,6 +14956,118 @@ datas = _tools.RODict({
         "scenesClear": 1,
         "duelClear": 0,
         "ifSend": True
+    }),
+    64004517: _tools.RODict({
+        "ID": 64004517,
+        "name": "7027_20技能2-2预警圈",
+        "kind": -1,
+        "classTag": 3,
+        "effectList": None,
+        "endByTime": 1.85,
+        "endByAtt": 0,
+        "endByBeat": 0,
+        "endBySkill": 0,
+        "endAction": None,
+        "endByTimeAction": None,
+        "endBySkillRemoveAction": None,
+        "endByDieRemoveAction": None,
+        "endBySkillAction": "",
+        "endByBeatAction": None,
+        "refreshAction": None,
+        "transformRemove": 0,
+        "deadDontRemove": 0,
+        "offLineLast": 0,
+        "offLineKeep": 0,
+        "forceSync": 0,
+        "tag": None,
+        "isCover": 1,
+        "scenesClear": 1,
+        "duelClear": 0,
+        "ifSend": True
+    }),
+    64004518: _tools.RODict({
+        "ID": 64004518,
+        "name": "7027_20脱战清理",
+        "kind": 0,
+        "classTag": 3,
+        "effectList": _tools.ROList([{"EffectId": 13080097, "Interval":1, "Count":1}]),
+        "endByTime": 2.0,
+        "endByAtt": 0,
+        "endByBeat": 0,
+        "endBySkill": 0,
+        "endAction": None,
+        "endByTimeAction": None,
+        "endBySkillRemoveAction": None,
+        "endByDieRemoveAction": None,
+        "endBySkillAction": "",
+        "endByBeatAction": None,
+        "refreshAction": None,
+        "transformRemove": 0,
+        "deadDontRemove": 0,
+        "offLineLast": 0,
+        "offLineKeep": 0,
+        "forceSync": 0,
+        "tag": None,
+        "isCover": 1,
+        "scenesClear": 0,
+        "duelClear": 0,
+        "ifSend": False
+    }),
+    64004519: _tools.RODict({
+        "ID": 64004519,
+        "name": "7027_20狂暴预警",
+        "kind": 0,
+        "classTag": -1,
+        "effectList": None,
+        "endByTime": 70.0,
+        "endByAtt": 0,
+        "endByBeat": 0,
+        "endBySkill": 0,
+        "endAction": None,
+        "endByTimeAction": _64004519_endByTime,
+        "endBySkillRemoveAction": None,
+        "endByDieRemoveAction": None,
+        "endBySkillAction": "",
+        "endByBeatAction": None,
+        "refreshAction": None,
+        "transformRemove": 0,
+        "deadDontRemove": 0,
+        "offLineLast": 0,
+        "offLineKeep": 0,
+        "forceSync": 0,
+        "tag": None,
+        "isCover": 1,
+        "scenesClear": 0,
+        "duelClear": 0,
+        "ifSend": False
+    }),
+    64004520: _tools.RODict({
+        "ID": 64004520,
+        "name": "心魔禁受道士治疗用",
+        "kind": 0,
+        "classTag": 1,
+        "effectList": None,
+        "endByTime": -1.0,
+        "endByAtt": 0,
+        "endByBeat": 0,
+        "endBySkill": 0,
+        "endAction": None,
+        "endByTimeAction": None,
+        "endBySkillRemoveAction": None,
+        "endByDieRemoveAction": None,
+        "endBySkillAction": "",
+        "endByBeatAction": None,
+        "refreshAction": None,
+        "transformRemove": 0,
+        "deadDontRemove": 0,
+        "offLineLast": 0,
+        "offLineKeep": 0,
+        "forceSync": 0,
+        "tag": None,
+        "isCover": 1,
+        "scenesClear": 1,
+        "duelClear": 0,
+        "ifSend": False
     }),
     64004901: _tools.RODict({
         "ID": 64004901,
@@ -14894,7 +15095,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004902: _tools.RODict({
         "ID": 64004902,
@@ -14922,7 +15123,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004903: _tools.RODict({
         "ID": 64004903,
@@ -14950,7 +15151,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004904: _tools.RODict({
         "ID": 64004904,
@@ -14978,7 +15179,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004905: _tools.RODict({
         "ID": 64004905,
@@ -15006,7 +15207,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004906: _tools.RODict({
         "ID": 64004906,
@@ -15034,7 +15235,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004907: _tools.RODict({
         "ID": 64004907,
@@ -15062,7 +15263,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004908: _tools.RODict({
         "ID": 64004908,
@@ -15090,7 +15291,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004909: _tools.RODict({
         "ID": 64004909,
@@ -15146,7 +15347,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004911: _tools.RODict({
         "ID": 64004911,
@@ -16238,7 +16439,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004950: _tools.RODict({
         "ID": 64004950,
@@ -16266,7 +16467,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004951: _tools.RODict({
         "ID": 64004951,
@@ -16294,7 +16495,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004952: _tools.RODict({
         "ID": 64004952,
@@ -16378,7 +16579,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004955: _tools.RODict({
         "ID": 64004955,
@@ -16798,7 +16999,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004970: _tools.RODict({
         "ID": 64004970,
@@ -16826,7 +17027,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004971: _tools.RODict({
         "ID": 64004971,
@@ -16854,7 +17055,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004972: _tools.RODict({
         "ID": 64004972,
@@ -16882,7 +17083,7 @@ datas = _tools.RODict({
         "isCover": 1,
         "scenesClear": 0,
         "duelClear": 0,
-        "ifSend": True
+        "ifSend": False
     }),
     64004899: _tools.RODict({
         "ID": 64004899,
@@ -17085,7 +17286,7 @@ datas = _tools.RODict({
         "name": "草之刺剑",
         "kind": 0,
         "classTag": -1,
-        "effectList": _tools.ROList([{"EffectId": 13090290, "Probability": 0.1, "ActionParam": (64002006, )}]),
+        "effectList": _tools.ROList([{"EffectId": 13090290, "Probability": 0.15, "ActionParam": (25, )}]),
         "endByTime": -1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -17141,7 +17342,7 @@ datas = _tools.RODict({
         "name": "花之旋舞",
         "kind": 0,
         "classTag": -1,
-        "effectList": _tools.ROList([{"EffectId": 13090291, "Probability": 0.1, "ActionParam": (64002008, )}]),
+        "effectList": _tools.ROList([{"EffectId": 13090291, "Probability": 0.15, "ActionParam": (25, )}]),
         "endByTime": -1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -17418,10 +17619,10 @@ datas = _tools.RODict({
     }),
     64002017: _tools.RODict({
         "ID": 64002017,
-        "name": "孢子列阵",
+        "name": "本源徽记",
         "kind": 0,
         "classTag": -1,
-        "effectList": _tools.ROList([{"EffectId": 13090308, "Probability": 0.1, "ActionParam": (64002018, )}]),
+        "effectList": _tools.ROList([{"EffectId": 13090308, "Probability": 0.15, "ActionParam": (50, )}]),
         "endByTime": -1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -17446,10 +17647,10 @@ datas = _tools.RODict({
     }),
     64002018: _tools.RODict({
         "ID": 64002018,
-        "name": "孢子列阵",
+        "name": "本源徽记",
         "kind": 0,
         "classTag": -1,
-        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop":("adjMinMagicArmor","adjMaxMagicArmor"), "Value": (6,6)}]),
+        "effectList": None,
         "endByTime": 10.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -19157,7 +19358,7 @@ datas = _tools.RODict({
         "name": "水晶障壁",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13010001,"Prop":("adjFinalDmg"), "Value": (0.2,)}]),
+        "effectList": _tools.ROList([{"EffectId": 13010001,"Prop":("adjFinalDmg"), "Value": (0.15,)}]),
         "endByTime": 5.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -19381,7 +19582,7 @@ datas = _tools.RODict({
         "name": "不怕困难",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13090334, "Probability": 0.1,"ActionParam": (64002090, )}]),
+        "effectList": _tools.ROList([{"EffectId": 13090334, "Probability": 0.15,"ActionParam": (64002090, )}]),
         "endByTime": -1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -19773,7 +19974,7 @@ datas = _tools.RODict({
         "name": "滑溜",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13090349, "Probability": 0.1,"ActionParam": (64002104, )}]),
+        "effectList": _tools.ROList([{"EffectId": 13090349, "Probability": 0.15,"ActionParam": (64002104, )}]),
         "endByTime": -1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -19801,8 +20002,8 @@ datas = _tools.RODict({
         "name": "滑溜",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13010001,"Prop":("adjDodge"), "Value": (5,)}]),
-        "endByTime": 10.0,
+        "effectList": _tools.ROList([{"EffectId": 13010001,"Prop":("adjDodge"), "Value": (9,)}]),
+        "endByTime": 5.0,
         "endByAtt": 0,
         "endByBeat": 0,
         "endBySkill": 0,
@@ -20641,7 +20842,7 @@ datas = _tools.RODict({
         "name": "月蚀之力",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": ("adjPVPDmgAnti",), "Value": (0.08,)}]),
+        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": ("adjPVPDmgAnti",), "Value": (0.1,)}]),
         "endByTime": -1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -20669,7 +20870,7 @@ datas = _tools.RODict({
         "name": "征伐之枪",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13090365, "Probability": 0.1,"ActionParam": (64002136, )}]),
+        "effectList": _tools.ROList([{"EffectId": 13090365, "Probability": 0.25,"ActionParam": (64002136, )}]),
         "endByTime": -1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -20697,7 +20898,7 @@ datas = _tools.RODict({
         "name": "征伐之枪",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": ("adjMaxPhysicalArmor","adjMinPhysicalArmor","adjMaxMagicArmor","adjMinMagicArmor"), "Value": (20,20,20,20)},{"EffectId": 13080005, "Interval":1, "Count":1, "ActionParam": lambda d: (0.05,0)}]),
+        "effectList": _tools.ROList([{"EffectId": 13010001, "Probability": 0.15,"Prop": ("adjMaxPhysicalArmor","adjMinPhysicalArmor","adjMaxMagicArmor","adjMinMagicArmor"), "Value": (40,40,40,40)},{"EffectId": 13080005, "Interval":1, "Count":1, "ActionParam": lambda d: (0.05,0)}]),
         "endByTime": 10.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -20725,7 +20926,7 @@ datas = _tools.RODict({
         "name": "冰天雪地",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13090366, "Probability": 0.05,"ActionParam": (64002138, )}]),
+        "effectList": _tools.ROList([{"EffectId": 13090366, "Probability": 0.15,"ActionParam": (64002138, )}]),
         "endByTime": -1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -20893,7 +21094,7 @@ datas = _tools.RODict({
         "name": "噬空",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId": 13090371, "Probability": 0.6,"ActionParam": (64002144, )}]),
+        "effectList": _tools.ROList([{"EffectId": 13090371, "Probability": 0.4,"ActionParam": (64002144, )}]),
         "endByTime": -1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -20946,7 +21147,7 @@ datas = _tools.RODict({
     }),
     64002145: _tools.RODict({
         "ID": 64002145,
-        "name": "负壤玄龟技能3触发1",
+        "name": "先天玄盾",
         "kind": 0,
         "classTag": 3,
         "effectList": _tools.ROList([{"EffectId": 13010001,"Prop":("adjFinalDmgAnti"), "Value": (0.04,)}]),
@@ -20974,7 +21175,7 @@ datas = _tools.RODict({
     }),
     64002146: _tools.RODict({
         "ID": 64002146,
-        "name": "负壤玄龟技能3触发2",
+        "name": "先天玄盾",
         "kind": 0,
         "classTag": 3,
         "effectList": _tools.ROList([{"EffectId": 13010001,"Prop":("adjFinalDmgAnti"), "Value": (0.07,)}]),
@@ -21002,7 +21203,7 @@ datas = _tools.RODict({
     }),
     64002147: _tools.RODict({
         "ID": 64002147,
-        "name": "负壤玄龟技能3触发3",
+        "name": "先天玄盾",
         "kind": 0,
         "classTag": 3,
         "effectList": _tools.ROList([{"EffectId": 13010001,"Prop":("adjFinalDmgAnti"), "Value": (0.1,)}]),
@@ -21173,7 +21374,7 @@ datas = _tools.RODict({
         "name": "初级生命药剂",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId":13080006, "Interval":1, "Count":1, "ActionParam": lambda d: (0,((d['self'].getProp("medicineRate")+1)*400),0)}]),
+        "effectList": _tools.ROList([{"EffectId":13080006, "Interval":1, "Count":1, "ActionParam": lambda d: (0,((d['self'].getProp("medicineRate")+1)*500),0)}]),
         "endByTime": 1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -21201,7 +21402,7 @@ datas = _tools.RODict({
         "name": "初级法力药剂",
         "kind": 0,
         "classTag": 3,
-        "effectList": _tools.ROList([{"EffectId":13080007, "Interval":1, "Count":1, "ActionParam": lambda d: (0,((d['self'].getProp("medicineRate")+1)*40),0)}]),
+        "effectList": _tools.ROList([{"EffectId":13080007, "Interval":1, "Count":1, "ActionParam": lambda d: (0,((d['self'].getProp("medicineRate")+1)*50),0)}]),
         "endByTime": 1.0,
         "endByAtt": 0,
         "endByBeat": 0,
@@ -22412,7 +22613,7 @@ datas = _tools.RODict({
         "kind": -1,
         "classTag": 3,
         "effectList": _tools.ROList([{"EffectId": 13010001, "Prop": ("mulFullHp", "mulFullMp","mulMinPhysicalAtk", "mulMaxPhysicalAtk","mulMinMagicAtk", "mulMaxMagicAtk","mulMinPhysicalArmor","mulMaxPhysicalArmor","mulMinMagicArmor","mulMaxMagicArmor"), "Value": (-0.2,-0.2,-0.2,-0.2,-0.2,-0.2,-0.2,-0.2,-0.2,-0.2)}]),
-        "endByTime": 259200.0,
+        "endByTime": 3600.0,
         "endByAtt": 0,
         "endByBeat": 0,
         "endBySkill": 0,

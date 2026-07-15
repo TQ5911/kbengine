@@ -464,16 +464,6 @@
             <Exposed/>
         </turnOffRaidMics>
 
-        <turnOnRaidMemberMics>
-            <Exposed/>
-            <Arg>   PLAYER_GBID     </Arg>
-        </turnOnRaidMemberMics>
-
-        <turnOffRaidMemberMics>
-            <Exposed/>
-            <Arg>   PLAYER_GBID     </Arg>
-        </turnOffRaidMemberMics>
-
         <!-- 团长禁言团员 -->
         <blockRaidMemberMics>
             <Exposed/>
@@ -487,14 +477,6 @@
             <Arg>   TEAMID      </Arg>
             <Arg>   PLAYER_GBID     </Arg>
         </unblockRaidMemberMics>
-
-        <blockAllRaidMemberMics>
-            <Exposed/>
-        </blockAllRaidMemberMics>
-
-        <unblockAllRaidMemberMics>
-            <Exposed/>
-        </unblockAllRaidMemberMics>
 
         <turnOffRaidMicsByForbidVoiceChat>
         </turnOffRaidMicsByForbidVoiceChat>
@@ -818,31 +800,11 @@
             <Arg>   UINT8       </Arg>
         </onSwitchRaidMicsMode>
 
-        <onSyncAllRaidMemberMicsStatus>
-            <Arg>   RAID_ID     </Arg>
-            <!-- on -->
-            <Arg>   AVATARGBID_LIST     </Arg>
-            <!-- off -->
-            <Arg>   AVATARGBID_LIST     </Arg>
-            <!-- block -->
-            <Arg>   AVATARGBID_LIST     </Arg>
-        </onSyncAllRaidMemberMicsStatus>
-
-        <onTurnOnRaidMemberMics>
-            <Arg>   PLAYER_GBID     </Arg>
+        <onBlockRaidMemberMics>
             <Arg>   RAID_ID     </Arg>
             <Arg>   TEAMID      </Arg>
             <Arg>   PLAYER_GBID     </Arg>
-        </onTurnOnRaidMemberMics>
-
-        <onTurnOffRaidMemberMics>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   RAID_ID     </Arg>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
-            <!-- 是否因团长禁言被闭麦 -->
-            <Arg>   BOOL        </Arg>
-        </onTurnOffRaidMemberMics>
+        </onBlockRaidMemberMics>
 
         <onUnblockRaidMemberMics>
             <Arg>   RAID_ID     </Arg>
@@ -850,15 +812,6 @@
             <Arg>   PLAYER_GBID     </Arg>
         </onUnblockRaidMemberMics>
 
-        <onBlockAllRaidMemberMics>
-            <Arg>   PLAYER_GBID      </Arg>
-            <Arg>   RAID_ID     </Arg>
-        </onBlockAllRaidMemberMics>
-
-        <onUnblockAllRaidMemberMics>
-            <Arg>   PLAYER_GBID      </Arg>
-            <Arg>   RAID_ID     </Arg>
-        </onUnblockAllRaidMemberMics>
     </ClientMethods>
 
 </root>

@@ -98,7 +98,6 @@
         <speed>
             <Type>          FLOATATTR          </Type>
             <Flags>         ALL_CLIENTS     </Flags>
-            <Default>       6.0                   </Default>
         </speed>
 
         <isWitnessComplete>
@@ -107,11 +106,11 @@
             <Default>         2                    </Default>
         </isWitnessComplete>
 
-        <enterViewList>
+        <viewEntityDict>
             <Type>          PYTHON                  </Type>
             <Flags>         CELL_PRIVATE            </Flags>
-            <Default>       []                      </Default>
-        </enterViewList>
+            <Default>       {}                      </Default>
+        </viewEntityDict>
 
         <viewCompleteSet>
             <Type>          PYTHON              </Type>
@@ -124,18 +123,6 @@
             <Flags>         CELL_PRIVATE        </Flags>
             <Default>       set()               </Default>
         </viewNameSet>
-
-        <viewEnterViewSet>
-            <Type>          PYTHON              </Type>
-            <Flags>         CELL_PRIVATE        </Flags>
-            <Default>       set()               </Default>
-        </viewEnterViewSet>
-
-        <viewLeaveViewSet>
-            <Type>          PYTHON              </Type>
-            <Flags>         CELL_PRIVATE        </Flags>
-            <Default>       set()               </Default>
-        </viewLeaveViewSet>
 
         <isNeedResortView>
             <Type>          BOOL                </Type>
@@ -160,6 +147,12 @@
             <Flags>         CELL_PRIVATE        </Flags>
             <Default>       0                   </Default>
         </showCompleteNumTimer>
+
+        <lastResortTimes>
+            <Type>          UINT64                  </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       0                       </Default>
+        </lastResortTimes>
     </Properties>
 
     <BaseMethods>
@@ -172,6 +165,10 @@
             <Arg>       CHAT_CHANNEL_AVATAR_INFO    </Arg>
             <Arg>       CHAT_MSG_DATA       </Arg>
         </onRecvChannelMsg>
+
+        <onRecvChannelMsgBatch>
+            <Arg>       AVATARING_CHAT_MSG_BATCH    </Arg>
+        </onRecvChannelMsgBatch>
 
         <onEnterWaitMapSpace>
             <Arg>       SPACE_NO        </Arg>
@@ -236,8 +233,16 @@
     </CellMethods>
 
     <ClientMethods>
+        <syncServerTime>
+            <Arg>       INT64       </Arg>
+            <Arg>       FLOAT       </Arg>
+        </syncServerTime>
+
         <onClientDataSyncFinished>
         </onClientDataSyncFinished>
+
+        <onAnotherClientLogin>
+        </onAnotherClientLogin>
 
         <onRecvAvatarChannelMsg>
             <Arg>       CHAT_CHANNEL            </Arg>
@@ -258,5 +263,10 @@
         <onRemoveCompleteWitness>
             <Arg>        ARRAY <of> OBJECT_ID </of>   </Arg>
         </onRemoveCompleteWitness>
+
+        <onMessage>
+            <Arg>        INT32                        </Arg>
+            <Arg>        ARRAY <of> UNICODE </of>     </Arg>
+        </onMessage>
     </ClientMethods>
 </root>

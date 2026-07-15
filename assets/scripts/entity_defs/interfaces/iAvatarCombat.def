@@ -344,12 +344,6 @@
         <setShowCompleteNum> <Exposed/>
             <Arg>        UINT8          </Arg>
         </setShowCompleteNum>
-
-        <onCrossServerModifyExp>
-            <Arg>        INT64         </Arg>
-            <Arg>        INT64         </Arg>
-            <Arg>        UINT32        </Arg>
-        </onCrossServerModifyExp>
     </CellMethods>
 
     <BaseMethods>

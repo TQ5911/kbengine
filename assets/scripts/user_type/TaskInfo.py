@@ -334,14 +334,12 @@ class TaskInfo(userType.UserSingleType):
         self.hookRewardTaskIdListDaily = self._constructHookRewardTaskListDaily(hookRewardTaskNum, RRTID.DailyTaskList, myLevel)
         hookRewardTaskNum = RRTIC.datas.get('weeklyLimitNum', {}).get('value', 0)
         self.hookRewardTaskIdListWeekly = self._constructHookRewardTaskListWeekly(hookRewardTaskNum, RRTID.WeeklyTaskList, myLevel)
-        self.hookRewardTaskFnsNumWeekly = 0
 
     def refreshHookRewardTask(self, level):
         hookRewardTaskNum = RRTIC.datas.get('dailyLimitNum', {}).get('value', 0)
         self.hookRewardTaskIdListDaily = self._constructHookRewardTaskListDaily(hookRewardTaskNum, RRTID.DailyTaskList, level)
         hookRewardTaskNum = RRTIC.datas.get('weeklyLimitNum', {}).get('value', 0)
         self.hookRewardTaskIdListWeekly = self._constructHookRewardTaskListWeekly(hookRewardTaskNum, RRTID.WeeklyTaskList, level)
-        self.hookRewardTaskFnsNumWeekly = 0
 
     def _afterTaskUpdateRemoved(self, owner, removeTaskIds):
         LOG_INFO("_afterTaskUpdateRemoved", removeTaskIds)
@@ -1223,10 +1221,23 @@ class TaskInfo(userType.UserSingleType):
         taskData = dataUtils.getTaskCfg(task.taskId)
         # 判断下是否进副本的
         finRewardInstance = dataUtils.getTaskFieldVal(taskData, 'FinRewardInstance')
+        if finRewardInstance:
+            mapId = finRewardInstance.get("MapId", 0)
+            if mapId > 0 and mapId == formula.fetchMapId(owner.baseSpaceNo):
+                self.doTaskFinished(owner, task)
+                return
+            
         abanRewardInstance = dataUtils.getTaskFieldVal(taskData, 'AbanRewardInstance')
-        if finRewardInstance or abanRewardInstance:
+        if abanRewardInstance:
+            mapId = abanRewardInstance.get("MapId", 0)
+            if mapId > 0 and mapId == formula.fetchMapId(owner.baseSpaceNo):
+                self.doTaskFinished(owner, task)
+                return
+
+        if finRewardInstance or abanRewardInstance:    
             owner.cell.submitTaskCheck(task.taskId)
             return
+        
         self.doTaskFinished(owner, task)
 
     def doTaskFinished(self, owner, task):

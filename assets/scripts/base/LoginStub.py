@@ -49,6 +49,7 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         self.todayAccountRegNumTs= utils.curTS()
         self.accountTodayRegNum.setSum(self, 0)
+        self.cacheSVIPSet = set()
 
     def doNext(self):
         self._fullPrepare()
@@ -122,8 +123,8 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 (centralServerId,), 
                 gametimer.TIMER_TAG_TRY_REGISTER_SERVER)
 
-    def onAccountDestroy(self, accountName, accountType, devicePlatId, centralServerId, channelId, sessionIdStr):
-        LOG_INFO("onAccountDestroy", accountName, accountType, devicePlatId, centralServerId, channelId, sessionIdStr)
+    def onAccountDestroy(self, accountName, accountType, devicePlatId, centralServerId, channelId, sessionIdStr, userInfoId):
+        LOG_INFO("onAccountDestroy", accountName, accountType, devicePlatId, centralServerId, channelId, sessionIdStr, userInfoId)
         realAccountName = utils.mixRealAccountName(accountType, accountName)
         self.account2box.pop(realAccountName, None)
         # deduct account online num
@@ -134,37 +135,31 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         self.playerNumPlat[devicePlatId][channelId] = max(_curNum - 1, 0)
 
         if gameconfig.enableCentralLogin():
-            self.notifyCentralServerOffline(accountName, accountType, centralServerId, sessionIdStr)
-        
-        redisUtils.RedisUtils.getSVIPFlag(accountName, self._onDecSVIPAccount)
+            self.notifyCentralServerOffline(accountName, accountType, centralServerId, sessionIdStr, userInfoId)
 
-    def incSVIPOnlineNumBySetSVIP(self):
-        LOG_INFO("incSVIPOnlineNumBySetSVIP")
-        self.SVIPOnlineNum.incSum(self)
+        if accountName in self.cacheSVIPSet:
+            self.cacheSVIPSet.remove(accountName)
+            self.SVIPOnlineNum.decSum(self)
+            LOG_INFO("remove from cacheSVIPSet", accountName, self.SVIPOnlineNum.dataSum)
 
-    def _onIncSVIPAccount(self, cid, err, res):
-        LOG_INFO("_onIncSVIPAccount", "cid", cid, "err", err, "res", res)
+    def _onIncSVIPAccount(self, accountName, cid, err, res):
+        LOG_INFO("_onIncSVIPAccount", accountName, "cid", cid, "err", err, "res", res)
         if err:
             LOG_ERR("_onIncSVIPAccount", "err", err)
             return
 
-        if res and res.decode() == '1':
-            self.SVIPOnlineNum.incSum(self)
-
-    def _onDecSVIPAccount(self, cid, err, res):
-        LOG_INFO("_onDecSVIPAccount", "cid", cid, "err", err, "res", res)
-        if err:
-            LOG_ERR("_onDecSVIPAccount", "err", err)
-            return
-
-        if res and res.decode() == '1':
-            self.SVIPOnlineNum.decSum(self)
+        if res:
+            resData = set(res.decode().split(','))
+            if str(gameconst.UserTagType.GREEN_CODE) in resData:
+                self.cacheSVIPSet.add(accountName)
+                self.SVIPOnlineNum.incSum(self)
+                LOG_INFO("_onIncSVIPAccount", "add to cacheSVIPSet", accountName, self.SVIPOnlineNum.dataSum)
 
     def updateSVIPOnlineNum(self):
         redisUtils.RedisUtils.cmdSet(gameconst.RedisKey.NORMAL_ONLINE_NUM + str(gameconfig.serverId()), self.accountNumCounter.dataSum - self.SVIPOnlineNum.dataSum)
 
-    def onAccountLogin(self, accountName, devicePlatId, box, accountType, centralServerId, sessionIdStr):
-        LOG_INFO("onAccountLogin::", accountName, devicePlatId, box, accountType, centralServerId, sessionIdStr)
+    def onAccountLogin(self, accountName, devicePlatId, box, accountType, centralServerId, sessionIdStr, userInfoId):
+        LOG_INFO("onAccountLogin::", accountName, devicePlatId, box, accountType, centralServerId, sessionIdStr, userInfoId)
         realAccountName = utils.mixRealAccountName(accountType, accountName)
         if realAccountName in self.kickAccountSet:
             self.onKickAccount(accountType, accountName, gameconst.OFFLINE_REASON_KICK_BY_CENTRAL_SERVER)
@@ -172,7 +167,7 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self.account2box[realAccountName] = box
 
         if gameconfig.enableCentralLogin():
-            self.notifyCentralServerOnline(accountName, accountType, centralServerId, sessionIdStr)
+            self.notifyCentralServerOnline(accountName, accountType, centralServerId, sessionIdStr, userInfoId)
 
     def onAccountCreated(self, accountName, devicePlatId, isNew, channelId):
         LOG_INFO("onAccountCreated::", accountName, devicePlatId, isNew, channelId)
@@ -188,7 +183,7 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         _curNum = curPlat.get(channelId, 0)
         self.playerNumPlat[devicePlatId][channelId] = _curNum + 1
         
-        redisUtils.RedisUtils.getSVIPFlag(accountName, self._onIncSVIPAccount)
+        redisUtils.RedisUtils.getTagTypeFlag(accountName, functools.partial(self._onIncSVIPAccount, accountName))
 
     def onKickAccount(self, accountType, accountName, kickReason):
         realAccountName = utils.mixRealAccountName(accountType, accountName)

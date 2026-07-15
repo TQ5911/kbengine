@@ -211,6 +211,10 @@ datas = _tools.RODict({
         "ID": "equipWearLowRoleLevel",
         "value": 54000301,
     }),
+    "equipWearLowRoleLevel2": _tools.RODict({
+        "ID": "equipWearLowRoleLevel2",
+        "value": 54000312,
+    }),
     "pickListNumText": _tools.RODict({
         "ID": "pickListNumText",
         "value": "拾取记录  ({0}/{1})",

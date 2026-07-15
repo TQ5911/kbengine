@@ -35,9 +35,9 @@
     </Properties>
 
     <BaseMethods>
-        <checkAndEnterAbyss>
+        <gmEnterAbyss>
             <Arg>          UINT8                        </Arg>
-        </checkAndEnterAbyss>
+        </gmEnterAbyss>
 
         <doAddAbyssTicket>
             <Arg>          UINT8                        </Arg>
@@ -73,11 +73,13 @@
         </addAbyssDurationFailedRewindTimes>
 
         <afterEnterAbyssDeductTimes>
+            <Arg>           PY_DICT         </Arg>
         </afterEnterAbyssDeductTimes>
 
         <onLogonEnterAbyssGetSpaceBox>
             <Arg>          ENTITYCALL                   </Arg>
             <Arg>          OBJECT_ID                    </Arg>
+            <Arg>          SPACE_NO                     </Arg>
         </onLogonEnterAbyssGetSpaceBox>
 
         <onEnterCrossAbyssSpaceRemotely>
@@ -104,13 +106,15 @@
             <Arg>           UINT8                       </Arg>
             <Arg>           UINT8                       </Arg>
         </onCrossServerSyncAbyssDataBase>
+
+        <onCrossServerCheckCanEnterAbyss>
+            <Arg>           UINT32                       </Arg>
+            <Arg>           BOOL                         </Arg>
+            <Arg>           UINT8                        </Arg>
+        </onCrossServerCheckCanEnterAbyss>
     </BaseMethods>
 
     <CellMethods>
-        <enterAbyss>
-            <Arg>          UINT8                        </Arg>
-        </enterAbyss>
-
         <gmLeaveAbyss>
         </gmLeaveAbyss>
 

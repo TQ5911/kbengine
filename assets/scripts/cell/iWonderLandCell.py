@@ -112,7 +112,8 @@ class IWonderLandCell(object):
             'src': _src,
             'hasCast': False,
             'enterType': extra.get('enterWonderLandType', 0),
-            'floor': extra.get('floor', 0)
+            'floor': extra.get('floor', 0),
+            'wonderlandExtra': extra,
         }
 
         _options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.ENTER)

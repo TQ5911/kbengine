@@ -5,6 +5,7 @@ from KBEDebug import *
 
 import copy
 
+import LogTrackingMgr
 import gameengine
 import gameconst
 import gametimer
@@ -1537,6 +1538,36 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
 
     # --------------------------------------------------------------------
     # TEAM MICS
+    def reqUpdateVoiceRoomState(self, srcPlayerGbId, teamId, voiceFlags):
+        """客户端同步语音房间状态：inVoiceRoom/enableMics/enableSpeaker（轻量广播）
+        voiceFlags: 0x01=inVoiceRoom, 0x02=enableMics, 0x04=enableSpeaker
+        """
+        if teamId not in self.teamDict:
+            return
+        teamVal = self.teamDict[teamId]
+        member = teamVal.teamPlayerDict.get(srcPlayerGbId)
+        if member is None:
+            return
+        member.inVoiceRoom = (voiceFlags & 0x01) != 0
+        member.enableMics = (voiceFlags & 0x02) != 0
+        member.enableSpeaker = (voiceFlags & 0x04) != 0
+
+        # 更新其他队员的 cell 缓存（世界内头顶显示等）
+        attrDic = {'inVoiceRoom': member.inVoiceRoom, 'enableMics': member.enableMics, 'enableSpeaker': member.enableSpeaker}
+        for gbId, _teamPlayerVal in teamVal.teamPlayerDict.items():
+            if gbId == srcPlayerGbId:
+                continue
+            if not _teamPlayerVal.bOnline:
+                continue
+            _box = _teamPlayerVal.playerBox
+            if utils.checkBoxOffline(_box):
+                continue
+            if _box.cell:
+                _box.cell.onUpdateTeamMemberCell(srcPlayerGbId, attrDic)
+
+        # 轻量统一广播语音状态
+        teamVal.broadcastMemberVoiceState(srcPlayerGbId)
+
     def switchTeamMicsMode(self, srcPlayerBox, srcPlayerGbId, teamId, mode, extraProps):
         LOG_INFO("switchTeamMicsMode::", srcPlayerBox, srcPlayerGbId, teamId, mode, extraProps)
         _teamVal, err = self._switchTeamMicsMode(srcPlayerBox, srcPlayerGbId, teamId, mode, extraProps)
@@ -1544,7 +1575,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
             LOG_WARN('switchTeamMicsMode:: failed, {}'.format(err))
             return
 
-        _teamVal.getAllTeamMemberMiscStatus()
+        LogTrackingMgr.LogTrackingMgr.team_voice_state_change(srcPlayerGbId, '', mode, len(self.teamDict))
 
     def _switchTeamMicsMode(self, srcPlayerBox, srcPlayerGbId, teamId, mode, extraProps):
         if teamId not in self.teamDict:
@@ -1585,6 +1616,8 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
         if err:
             LOG_WARN('blockTeamMemberMics:: failed, {}'.format(err))
 
+        LogTrackingMgr.LogTrackingMgr.team_voice_state_forbid(srcPlayerGbId, '', playerGBID, 1)
+
     def _blockTeamMemberMics(self, srcPlayerBox, srcPlayerGbId, teamId, playerGBID):
         if teamId not in self.teamDict:
             return None, "TEAM_ID_NOT_FOUND"
@@ -1600,68 +1633,14 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
             if err == 'TEAM_ALL_MISC_BLOCKED':
                 srcPlayerBox.onMessagePre(M_M_DD.datas.voiceChat_allMicBanned, [])
 
+        LogTrackingMgr.LogTrackingMgr.team_voice_state_forbid(srcPlayerGbId, '', playerGBID, 0)
+
     def _unblockTeamMemberMics(self, srcPlayerBox, srcPlayerGbId, teamId, playerGBID):
         if teamId not in self.teamDict:
             return None, "TEAM_ID_NOT_FOUND"
 
         teamVal = self.teamDict[teamId]
         return teamVal.unblockTeamMemberMisc(playerGBID, toClient=True)
-
-    def blockAllTeamMemberMics(self, srcPlayerBox, srcPlayerGbId, teamId, extraProps):
-        LOG_INFO("blockAllTeamMemberMics::", srcPlayerBox, srcPlayerGbId, teamId, extraProps)
-        teamVal, err = self._blockAllTeamMemberMics(srcPlayerBox, srcPlayerGbId, teamId)
-        if err:
-            LOG_WARN('blockAllTeamMemberMics:: failed, {}'.format(err))
-            return
-
-        teamVal.broadcastToAllMembersClient('onBlockAllTeamMemberMics', (srcPlayerGbId, teamId))
-
-    def _blockAllTeamMemberMics(self, srcPlayerBox, srcPlayerGbId, teamId):
-        if teamId not in self.teamDict:
-            return None, "TEAM_ID_NOT_FOUND"
-
-        teamVal = self.teamDict[teamId]
-        if not teamVal.teamMicsSwitch:
-            return None, "TEAM_MICS_SWITCH_OFF"
-
-        if teamVal.teamMicsBlocked:
-            return None, "TEAM_ALL_MISC_BLOCKED"
-
-        for playerGBID, playerVal in teamVal.teamPlayerDict.items():
-            if playerGBID == srcPlayerGbId:
-                continue
-            _, err = teamVal.turnOffTeamMemberMics(srcPlayerGbId, playerGBID, blockMics=True, toClient=False)
-            if err:
-                LOG_WARN("_blockAllTeamMemberMics::failed, err={}".format(err),
-                            srcPlayerGbId, teamId, playerGBID, playerVal)
-
-        teamVal.teamMicsBlocked = True
-        return teamVal, ""
-
-    def unblockAllTeamMemberMics(self, srcPlayerBox, srcPlayerGbId, teamId, extraProps):
-        LOG_INFO("unblockAllTeamMemberMics::", srcPlayerBox, srcPlayerGbId, teamId, extraProps)
-        teamVal, err = self._unblockAllTeamMemberMics(srcPlayerBox, srcPlayerGbId, teamId)
-        if err:
-            LOG_WARN('unblockAllTeamMemberMics:: failed, {}'.format(err))
-            return
-
-        teamVal.broadcastToAllMembersClient('onUnblockAllTeamMemberMics', (srcPlayerGbId, teamId))
-
-    def _unblockAllTeamMemberMics(self, srcPlayerBox, srcPlayerGbId, teamId):
-        if teamId not in self.teamDict:
-            return "TEAM_ID_NOT_FOUND"
-
-        teamVal = self.teamDict[teamId]
-        if not teamVal.teamMicsSwitch:
-            return None, "TEAM_MICS_SWITCH_OFF"
-
-        teamVal.teamMicsBlocked = False
-        for playerGBID, playerVal in teamVal.teamPlayerDict.items():
-            _, err = teamVal.unblockTeamMemberMisc(playerGBID, toClient=False)
-            if err:
-                LOG_WARN("_unblockAllTeamMemberMics::failed, err={}".format(err),
-                            srcPlayerGbId, teamId, playerGBID, playerVal)
-        return teamVal, ""
 
     # --------------------------------------------------------------------
 

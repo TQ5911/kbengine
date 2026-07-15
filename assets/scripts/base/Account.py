@@ -34,6 +34,7 @@ import dataUtils
 
 import proto.centralLogin_pb2 as centralLogin
 
+import login_set as LGSD
 import chatConfig_channel as CC_CD
 import petData_set as PDSD
 import character_roleData as CRDD
@@ -290,7 +291,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             creationOrder += 1
             self.setPersistentMiscProp(gameconst.EntityPropsEnum.creationOrder, creationOrder)
             LogTrackingMgr.LogTrackingMgr.Server_Create_Role(
-                '',
+                avatar.gbID,
                 self.clientDistinctId,
                 self.accountName,
                 avatarProps['gbId'],
@@ -306,6 +307,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
                 _appearance.faceData.hairColorId(),
                 creationOrder,
                 avatarProps["sex"],
+                avatar.obId,
             )
         else:
             LOG_ERR('failed to create avatar', self.accountName)
@@ -795,7 +797,6 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             self.avatar)
         LOG_DBG("login state", self.loginState)
         _now = utils.curTS()
-        _clientData = self.parseClientDatas()
 
         if self.delayDestroyTimer:
             self.cancelTimerCB(self.delayDestroyTimer, gametimer.TIMER_TAG_DELAY_DESTROY_ACCOUNT)
@@ -806,6 +807,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             self.client.onKickAnotherAvatar()
             return
 
+        _clientData = self.parseClientDatas()
         _maximumLimit = gameconfig.serverMaximumLoginAccount()
         _currentLoginCount = gameglobal.localLoginStub.getGlobalAccountNum()
         if _maximumLimit > 0 and _currentLoginCount > _maximumLimit and self.loginCount == 0:
@@ -900,7 +902,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             self.operatingSystem = _clientDatas.get('operatingSystem', '')
             self.channelId = _clientDatas.get('channelId', 0)
             self.webToken = _clientDatas.get('token', '')
-            self.clientDistinctId = _clientDatas.get('distinct_id', '')
+            _distinctId = _clientDatas.get('distinct_id', None)
+            self.clientDistinctId = _distinctId if _distinctId else ''
             self.deviceId = _clientDatas.get('deviceId', '')
             if 'banPostTime' in _clientDatas\
                     and 'banPostReason' in _clientDatas\
@@ -920,8 +923,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         LOG_INFO('login account:', self.accountName, self.loginCount)
         if self.loginCount <= 1:
             stubs = gameengine.getLoginStubsByAccountName(self.__ACCOUNT_NAME__)
+            userInfoId = int(self.userInfoId) if self.userInfoId.isdigit() else 0
             gameclass.DuplicatedCallList(stubs).onAccountLogin(self.accountName, self.devicePlatId, self,
-                                                               self.accountType, self.centralServerId, self.otherData.get('si', ""))
+                                                               self.accountType, self.centralServerId, self.otherData.get('si', ""), userInfoId)
         self._loadCharacterFromDB()
 
     def _beginLoadCharacterAppearance(self):
@@ -1150,7 +1154,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         )
         self.destroyAccountReason(reason)
 
-    def destroyAccountReason(self, reason):
+    def destroyAccountReason(self, reason, msgContent=''):
         if self.isDestroyed:
             return
 
@@ -1162,6 +1166,11 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             elif reason == gameconst.OFFLINE_REASON_ANIT_ADDICTION:
                 self.avatar.client.onMessage(AASC.datas['antiAddictForceLogout']['value'], [])
                 self.addTimerCB(0.2, 'destroyActiveAvatar', (reason,), gametimer.TIMER_TAG_KICK_ACCOUNT_BY_ANIT_ADDICTION)
+                return
+            elif reason == gameconst.OFFLINE_REASON_GMKICK:
+                self.avatar.client.onMessage(LGSD.datas['forceLogout']['value'], [msgContent])
+                self.avatar.client.onAvatarOfflineClient(reason)
+                self.addTimerCB(0.2, 'destroyActiveAvatar', (reason,), gametimer.TIMER_TAG_GM_KICK_ACCOUNT)
                 return
             else:
                 try:
@@ -1176,6 +1185,11 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
                 return
             elif reason == gameconst.OFFLINE_REASON_ANIT_ADDICTION:
                 self.client.onMessage(AASC.datas['antiAddictForceLogout']['value'], [])
+                self.addTimerCB(0.2, 'destroy', (), gametimer.TIMER_TAG_KICK_ACCOUNT_BY_ANIT_ADDICTION)
+                return
+            elif reason == gameconst.OFFLINE_REASON_GMKICK:
+                self.client.onMessage(LGSD.datas['forceLogout']['value'], [msgContent])
+                self.client.onAccountOfflineClient(reason)
                 self.addTimerCB(0.2, 'destroy', (), gametimer.TIMER_TAG_KICK_ACCOUNT_BY_ANIT_ADDICTION)
                 return
 
@@ -1219,8 +1233,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         LOG_INFO("Account::onDestroy: %i." % self.id)
 
         stubs = gameengine.getLoginStubsByAccountName(self.__ACCOUNT_NAME__)
+        userInfoId = int(self.userInfoId) if self.userInfoId.isdigit() else 0
         gameclass.DuplicatedCallList(stubs).onAccountDestroy(self.accountName, self.accountType, self.devicePlatId,
-                                                             self.centralServerId, self.channelId, self.otherData.get('si', ""))
+                                                             self.centralServerId, self.channelId, self.otherData.get('si', ""), userInfoId)
 
         gameglobal.localAccountCache.pop(self.__ACCOUNT_NAME__, None)
         gameglobal.localMinorAccountCache.pop(self.__ACCOUNT_NAME__, None)
@@ -1369,6 +1384,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         if accountName == self.accountName and accountType == self.accountType:
             self.destroyAccountReason(reason)
 
+    def kickAccountSingleGm(self, msgContent):
+        self.destroyAccountReason(gameconst.OFFLINE_REASON_GMKICK, msgContent)
+
     def pyWriteToDB(self, callBackFunc=None):
         if callBackFunc:
             self.writeToDB(callBackFunc)
@@ -1398,7 +1416,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         logData = avatar.loginLogInfo()
         logData.update(clientData)
         LogTrackingMgr.LogTrackingMgr.Server_Role_Login(
-            '',
+            avatar.gbID,
             self.clientDistinctId,
             self.accountName,
             avatar.gbID,
@@ -1419,7 +1437,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             avatar.coin,
             avatar.getTempMiscProp(gameconst.EntityPropsEnum.cellMapId, 0),
         )
-        avatar.logUserSet(1)
+        avatar.logUserSetInit(10)
 
 # ---------------------------- switch avatar server start ----------------------------
     def onAvatarSwitchServer(self, avatar):

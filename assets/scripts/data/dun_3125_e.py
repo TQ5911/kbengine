@@ -149,7 +149,7 @@ datas ={
   },
   "1065": {
     "type": "delayLoop",
-    "firstDelay": 4.0,
+    "firstDelay": 6.0,
     "loopDelay": 0.0,
     "loopNum": 1,
     "transition": {

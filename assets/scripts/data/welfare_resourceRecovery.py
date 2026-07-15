@@ -21,6 +21,7 @@ datas = _tools.RODict({
         "subType": 1,
         "time": 30,
         "cost": ((7, 0, 0), (30, 30000021, 50)),
+        "condition": "UISquarePanel",
     }),
     2: _tools.RODict({
         "ID": 2,
@@ -28,6 +29,7 @@ datas = _tools.RODict({
         "subType": 2,
         "time": 30,
         "cost": ((7, 0, 0), (30, 30000021, 50)),
+        "condition": "UIWonderLandPanel",
     }),
     3: _tools.RODict({
         "ID": 3,
@@ -35,6 +37,7 @@ datas = _tools.RODict({
         "subType": 3,
         "time": 7,
         "cost": ((2, 0, 0), (7, 30000021, 50)),
+        "condition": "UIAbyssPanel",
     }),
     4: _tools.RODict({
         "ID": 4,
@@ -42,6 +45,7 @@ datas = _tools.RODict({
         "subType": 4,
         "time": 30,
         "cost": ((7, 0, 0), (30, 30000021, 50)),
+        "condition": "UITeamDunPanel",
     }),
     5: _tools.RODict({
         "ID": 5,
@@ -49,6 +53,7 @@ datas = _tools.RODict({
         "subType": 5,
         "time": 30,
         "cost": ((7, 0, 0), (30, 30000021, 50)),
+        "condition": "UICrusadeSystemPanel",
     })
 })
 minKey = 1

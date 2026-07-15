@@ -1473,46 +1473,6 @@ class ImpTeam(object):
     @gamedecorator.checkGameconfigEnable('team')
     @utils.isMyself
     @gamedecorator.crossServer
-    def turnOnTeamMemberMics(self, exposed, playerGBID):
-        """API: 打开特定成员麦克风"""
-        LOG_INFO("turnOnTeamMemberMics::~")
-        _, _err = self._turnOnTeamMemberMicsCheck()
-        if _err:
-            LOG_ERR("turnOnTeamMemberMics::failed, errno={}".format(_err))
-            return
-
-        _extraProps = {}
-        gameengine.getTeamStub(self.teamId).turnOnTeamMics(
-            self.base, self.gbId, self.teamId, playerGBID, _extraProps)
-
-    def _turnOnTeamMemberMicsCheck(self):
-        if not self.isInTeam():
-            return None, "TEAM_NOT_IN_TEAM"
-        return None, ""
-
-    @gamedecorator.checkGameconfigEnable('team')
-    @utils.isMyself
-    @gamedecorator.crossServer
-    def turnOffTeamMemberMics(self, exposed, playerGBID):
-        """API: 关闭特定成员麦克风"""
-        LOG_INFO("turnOffTeamMemberMics::~", playerGBID)
-        _, err = self._turnOffTeamMemberMicsCheck()
-        if err:
-            LOG_ERR("turnOffTeamMemberMics::failed, errno={}".format(err))
-            return
-
-        _extraProps = {}
-        gameengine.getTeamStub(self.teamId).turnOffTeamMics(
-            self.base, self.gbId, self.teamId, playerGBID, _extraProps)
-
-    def _turnOffTeamMemberMicsCheck(self):
-        if not self.isInTeam():
-            return None, "TEAM_NOT_IN_TEAM"
-        return None, ""
-
-    @gamedecorator.checkGameconfigEnable('team')
-    @utils.isMyself
-    @gamedecorator.crossServer
     def blockTeamMemberMics(self, exposed, playerGBID):
         """API: 团长禁言团员"""
         LOG_INFO("blockTeamMemberMics::~", playerGBID)
@@ -1556,53 +1516,6 @@ class ImpTeam(object):
         else:
             return None, ""
 
-    @gamedecorator.checkGameconfigEnable('team')
-    @utils.isMyself
-    @gamedecorator.limitcall(1)
-    @gamedecorator.crossServer
-    def blockAllTeamMemberMics(self, exposed):
-        """API: 队长禁言所有队员"""
-        LOG_INFO("blockAllTeamMemberMics::~")
-        _, err = self._blockAllTeamMemberMics()
-        if err:
-            LOG_ERR("blockAllTeamMemberMics::failed, errno={}".format(err))
-            return
-
-        _extraProps = {}
-        gameengine.getTeamStub(self.teamId).blockAllTeamMemberMics(
-            self.base, self.gbId, self.teamId, _extraProps)
-
-    def _blockAllTeamMemberMics(self):
-        if not self.isInTeam():
-            return None, "TEAM_NOT_IN_TEAM"
-        elif not self.isCaptain():
-            return None, "TEAM_NOT_CAPTAIN"
-        else:
-            return None, ""
-
-    @gamedecorator.checkGameconfigEnable('team')
-    @utils.isMyself
-    @gamedecorator.limitcall(1)
-    @gamedecorator.crossServer
-    def unblockAllTeamMemberMics(self, exposed):
-        """API: 队长禁言所有队员"""
-        LOG_INFO("unblockAllTeamMemberMics::~")
-        _, err = self._unblockAllTeamMemberMics()
-        if err:
-            LOG_ERR("unblockAllTeamMemberMics::failed, errno={}".format(err))
-            return
-
-        _extraProps = {}
-        gameengine.getTeamStub(self.teamId).unblockAllTeamMemberMics(
-            self.base, self.gbId, self.teamId, _extraProps)
-
-    def _unblockAllTeamMemberMics(self):
-        if not self.isInTeam():
-            return None, "TEAM_NOT_IN_TEAM"
-        elif not self.isCaptain():
-            return None, "TEAM_NOT_CAPTAIN"
-        else:
-            return None, ""
     # --------------------------------------------------------------------
 
     #------------------------------------------- 队伍标记  start -----------------------------------------------

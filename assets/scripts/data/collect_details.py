@@ -19,7 +19,7 @@ datas = _tools.RODict({
         "ID": 100001,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80111001, 0, 1], [80591001, 0, 1], [80691001, 0, 1]]),
         "props": None
     }),
@@ -27,7 +27,7 @@ datas = _tools.RODict({
         "ID": 100002,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80111001, 1, 1], [80591001, 1, 1], [80691001, 1, 1]]),
         "props": None
     }),
@@ -35,7 +35,7 @@ datas = _tools.RODict({
         "ID": 100003,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80111001, 2, 1], [80591001, 2, 1], [80691001, 2, 1]]),
         "props": None
     }),
@@ -43,7 +43,7 @@ datas = _tools.RODict({
         "ID": 100004,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80111001, 3, 1], [80591001, 3, 1], [80691001, 3, 1]]),
         "props": None
     }),
@@ -51,7 +51,7 @@ datas = _tools.RODict({
         "ID": 100005,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80111001, 4, 1], [80591001, 4, 1], [80691001, 4, 1]]),
         "props": None
     }),
@@ -59,7 +59,7 @@ datas = _tools.RODict({
         "ID": 100006,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80111001, 5, 1], [80591001, 5, 1], [80691001, 5, 1]]),
         "props": None
     }),
@@ -67,7 +67,7 @@ datas = _tools.RODict({
         "ID": 100007,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80111001, 6, 1], [80591001, 6, 1], [80691001, 6, 1]]),
         "props": None
     }),
@@ -75,7 +75,7 @@ datas = _tools.RODict({
         "ID": 100008,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80111001, 7, 1], [80591001, 7, 1], [80691001, 7, 1]]),
         "props": None
     }),
@@ -83,7 +83,7 @@ datas = _tools.RODict({
         "ID": 100009,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80111001, 0, 2], [80591001, 0, 2], [80691001, 0, 2]]),
         "props": None
     }),
@@ -91,7 +91,7 @@ datas = _tools.RODict({
         "ID": 100010,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80111001, 1, 2], [80591001, 1, 2], [80691001, 1, 2]]),
         "props": None
     }),
@@ -99,7 +99,7 @@ datas = _tools.RODict({
         "ID": 100011,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80111001, 2, 2], [80591001, 2, 2], [80691001, 2, 2]]),
         "props": None
     }),
@@ -107,7 +107,7 @@ datas = _tools.RODict({
         "ID": 100012,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80111001, 3, 2], [80591001, 3, 2], [80691001, 3, 2]]),
         "props": None
     }),
@@ -115,7 +115,7 @@ datas = _tools.RODict({
         "ID": 100013,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80111001, 4, 2], [80591001, 4, 2], [80691001, 4, 2]]),
         "props": None
     }),
@@ -123,7 +123,7 @@ datas = _tools.RODict({
         "ID": 100014,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80111001, 5, 2], [80591001, 5, 2], [80691001, 5, 2]]),
         "props": None
     }),
@@ -131,7 +131,7 @@ datas = _tools.RODict({
         "ID": 100015,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80111001, 6, 2], [80591001, 6, 2], [80691001, 6, 2]]),
         "props": None
     }),
@@ -139,7 +139,7 @@ datas = _tools.RODict({
         "ID": 100016,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80111001, 7, 2], [80591001, 7, 2], [80691001, 7, 2]]),
         "props": None
     }),
@@ -147,7 +147,7 @@ datas = _tools.RODict({
         "ID": 100017,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80111001, 0, 3], [80591001, 0, 3], [80691001, 0, 3]]),
         "props": None
     }),
@@ -155,7 +155,7 @@ datas = _tools.RODict({
         "ID": 100018,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80111001, 1, 3], [80591001, 1, 3], [80691001, 1, 3]]),
         "props": None
     }),
@@ -163,7 +163,7 @@ datas = _tools.RODict({
         "ID": 100019,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80111001, 2, 3], [80591001, 2, 3], [80691001, 2, 3]]),
         "props": None
     }),
@@ -171,7 +171,7 @@ datas = _tools.RODict({
         "ID": 100020,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80111001, 3, 3], [80591001, 3, 3], [80691001, 3, 3]]),
         "props": None
     }),
@@ -179,7 +179,7 @@ datas = _tools.RODict({
         "ID": 100021,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80111001, 4, 3], [80591001, 4, 3], [80691001, 4, 3]]),
         "props": None
     }),
@@ -187,7 +187,7 @@ datas = _tools.RODict({
         "ID": 100022,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80111001, 5, 3], [80591001, 5, 3], [80691001, 5, 3]]),
         "props": None
     }),
@@ -195,7 +195,7 @@ datas = _tools.RODict({
         "ID": 100023,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80111001, 6, 3], [80591001, 6, 3], [80691001, 6, 3]]),
         "props": None
     }),
@@ -203,7 +203,7 @@ datas = _tools.RODict({
         "ID": 100024,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80111001, 7, 3], [80591001, 7, 3], [80691001, 7, 3]]),
         "props": None
     }),
@@ -211,7 +211,7 @@ datas = _tools.RODict({
         "ID": 100025,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80111001, 0, 4], [80591001, 0, 4], [80691001, 0, 4]]),
         "props": None
     }),
@@ -219,7 +219,7 @@ datas = _tools.RODict({
         "ID": 100026,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80111001, 1, 4], [80591001, 1, 4], [80691001, 1, 4]]),
         "props": None
     }),
@@ -227,7 +227,7 @@ datas = _tools.RODict({
         "ID": 100027,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80111001, 2, 4], [80591001, 2, 4], [80691001, 2, 4]]),
         "props": None
     }),
@@ -235,7 +235,7 @@ datas = _tools.RODict({
         "ID": 100028,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80111001, 3, 4], [80591001, 3, 4], [80691001, 3, 4]]),
         "props": None
     }),
@@ -243,7 +243,7 @@ datas = _tools.RODict({
         "ID": 100029,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80111001, 4, 4], [80591001, 4, 4], [80691001, 4, 4]]),
         "props": None
     }),
@@ -251,7 +251,7 @@ datas = _tools.RODict({
         "ID": 100030,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80111001, 5, 4], [80591001, 5, 4], [80691001, 5, 4]]),
         "props": None
     }),
@@ -259,7 +259,7 @@ datas = _tools.RODict({
         "ID": 100031,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80111001, 6, 4], [80591001, 6, 4], [80691001, 6, 4]]),
         "props": None
     }),
@@ -267,7 +267,7 @@ datas = _tools.RODict({
         "ID": 100032,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80111001, 7, 4], [80591001, 7, 4], [80691001, 7, 4]]),
         "props": None
     }),
@@ -275,7 +275,7 @@ datas = _tools.RODict({
         "ID": 100033,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80111001, 0, 1], [80591001, 0, 1], [80791001, 0, 1]]),
         "props": None
     }),
@@ -283,7 +283,7 @@ datas = _tools.RODict({
         "ID": 100034,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80111001, 1, 1], [80591001, 1, 1], [80791001, 1, 1]]),
         "props": None
     }),
@@ -291,7 +291,7 @@ datas = _tools.RODict({
         "ID": 100035,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80111001, 2, 1], [80591001, 2, 1], [80791001, 2, 1]]),
         "props": None
     }),
@@ -299,7 +299,7 @@ datas = _tools.RODict({
         "ID": 100036,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80111001, 3, 1], [80591001, 3, 1], [80791001, 3, 1]]),
         "props": None
     }),
@@ -307,7 +307,7 @@ datas = _tools.RODict({
         "ID": 100037,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80111001, 4, 1], [80591001, 4, 1], [80791001, 4, 1]]),
         "props": None
     }),
@@ -315,7 +315,7 @@ datas = _tools.RODict({
         "ID": 100038,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80111001, 5, 1], [80591001, 5, 1], [80791001, 5, 1]]),
         "props": None
     }),
@@ -323,7 +323,7 @@ datas = _tools.RODict({
         "ID": 100039,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80111001, 6, 1], [80591001, 6, 1], [80791001, 6, 1]]),
         "props": None
     }),
@@ -331,7 +331,7 @@ datas = _tools.RODict({
         "ID": 100040,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80111001, 7, 1], [80591001, 7, 1], [80791001, 7, 1]]),
         "props": None
     }),
@@ -339,7 +339,7 @@ datas = _tools.RODict({
         "ID": 100041,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80111001, 0, 2], [80591001, 0, 2], [80791001, 0, 2]]),
         "props": None
     }),
@@ -347,7 +347,7 @@ datas = _tools.RODict({
         "ID": 100042,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80111001, 1, 2], [80591001, 1, 2], [80791001, 1, 2]]),
         "props": None
     }),
@@ -355,7 +355,7 @@ datas = _tools.RODict({
         "ID": 100043,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80111001, 2, 2], [80591001, 2, 2], [80791001, 2, 2]]),
         "props": None
     }),
@@ -363,7 +363,7 @@ datas = _tools.RODict({
         "ID": 100044,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80111001, 3, 2], [80591001, 3, 2], [80791001, 3, 2]]),
         "props": None
     }),
@@ -371,7 +371,7 @@ datas = _tools.RODict({
         "ID": 100045,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80111001, 4, 2], [80591001, 4, 2], [80791001, 4, 2]]),
         "props": None
     }),
@@ -379,7 +379,7 @@ datas = _tools.RODict({
         "ID": 100046,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80111001, 5, 2], [80591001, 5, 2], [80791001, 5, 2]]),
         "props": None
     }),
@@ -387,7 +387,7 @@ datas = _tools.RODict({
         "ID": 100047,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80111001, 6, 2], [80591001, 6, 2], [80791001, 6, 2]]),
         "props": None
     }),
@@ -395,7 +395,7 @@ datas = _tools.RODict({
         "ID": 100048,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80111001, 7, 2], [80591001, 7, 2], [80791001, 7, 2]]),
         "props": None
     }),
@@ -403,7 +403,7 @@ datas = _tools.RODict({
         "ID": 100049,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80111001, 0, 3], [80591001, 0, 3], [80791001, 0, 3]]),
         "props": None
     }),
@@ -411,7 +411,7 @@ datas = _tools.RODict({
         "ID": 100050,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80111001, 1, 3], [80591001, 1, 3], [80791001, 1, 3]]),
         "props": None
     }),
@@ -419,7 +419,7 @@ datas = _tools.RODict({
         "ID": 100051,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80111001, 2, 3], [80591001, 2, 3], [80791001, 2, 3]]),
         "props": None
     }),
@@ -427,7 +427,7 @@ datas = _tools.RODict({
         "ID": 100052,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80111001, 3, 3], [80591001, 3, 3], [80791001, 3, 3]]),
         "props": None
     }),
@@ -435,7 +435,7 @@ datas = _tools.RODict({
         "ID": 100053,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80111001, 4, 3], [80591001, 4, 3], [80791001, 4, 3]]),
         "props": None
     }),
@@ -443,7 +443,7 @@ datas = _tools.RODict({
         "ID": 100054,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80111001, 5, 3], [80591001, 5, 3], [80791001, 5, 3]]),
         "props": None
     }),
@@ -451,7 +451,7 @@ datas = _tools.RODict({
         "ID": 100055,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80111001, 6, 3], [80591001, 6, 3], [80791001, 6, 3]]),
         "props": None
     }),
@@ -459,7 +459,7 @@ datas = _tools.RODict({
         "ID": 100056,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80111001, 7, 3], [80591001, 7, 3], [80791001, 7, 3]]),
         "props": None
     }),
@@ -467,7 +467,7 @@ datas = _tools.RODict({
         "ID": 100057,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80111001, 0, 4], [80591001, 0, 4], [80791001, 0, 4]]),
         "props": None
     }),
@@ -475,7 +475,7 @@ datas = _tools.RODict({
         "ID": 100058,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80111001, 1, 4], [80591001, 1, 4], [80791001, 1, 4]]),
         "props": None
     }),
@@ -483,7 +483,7 @@ datas = _tools.RODict({
         "ID": 100059,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80111001, 2, 4], [80591001, 2, 4], [80791001, 2, 4]]),
         "props": None
     }),
@@ -491,7 +491,7 @@ datas = _tools.RODict({
         "ID": 100060,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80111001, 3, 4], [80591001, 3, 4], [80791001, 3, 4]]),
         "props": None
     }),
@@ -499,7 +499,7 @@ datas = _tools.RODict({
         "ID": 100061,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80111001, 4, 4], [80591001, 4, 4], [80791001, 4, 4]]),
         "props": None
     }),
@@ -507,7 +507,7 @@ datas = _tools.RODict({
         "ID": 100062,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80111001, 5, 4], [80591001, 5, 4], [80791001, 5, 4]]),
         "props": None
     }),
@@ -515,7 +515,7 @@ datas = _tools.RODict({
         "ID": 100063,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80111001, 6, 4], [80591001, 6, 4], [80791001, 6, 4]]),
         "props": None
     }),
@@ -523,7 +523,7 @@ datas = _tools.RODict({
         "ID": 100064,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80111001, 7, 4], [80591001, 7, 4], [80791001, 7, 4]]),
         "props": None
     }),
@@ -531,7 +531,7 @@ datas = _tools.RODict({
         "ID": 100065,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":30}),
+        "propList": _tools.RODict({"adjFullHp":20}),
         "equipment": _tools.ROList([[80211001, 0, 1], [80811001, 0, 1], [80791001, 0, 1]]),
         "props": None
     }),
@@ -539,7 +539,7 @@ datas = _tools.RODict({
         "ID": 100066,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":45}),
+        "propList": _tools.RODict({"adjFullHp":30}),
         "equipment": _tools.ROList([[80211001, 1, 1], [80811001, 1, 1], [80791001, 1, 1]]),
         "props": None
     }),
@@ -547,7 +547,7 @@ datas = _tools.RODict({
         "ID": 100067,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":60}),
+        "propList": _tools.RODict({"adjFullHp":40}),
         "equipment": _tools.ROList([[80211001, 2, 1], [80811001, 2, 1], [80791001, 2, 1]]),
         "props": None
     }),
@@ -555,7 +555,7 @@ datas = _tools.RODict({
         "ID": 100068,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":75}),
+        "propList": _tools.RODict({"adjFullHp":50}),
         "equipment": _tools.ROList([[80211001, 3, 1], [80811001, 3, 1], [80791001, 3, 1]]),
         "props": None
     }),
@@ -563,7 +563,7 @@ datas = _tools.RODict({
         "ID": 100069,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":90}),
+        "propList": _tools.RODict({"adjFullHp":60}),
         "equipment": _tools.ROList([[80211001, 4, 1], [80811001, 4, 1], [80791001, 4, 1]]),
         "props": None
     }),
@@ -571,7 +571,7 @@ datas = _tools.RODict({
         "ID": 100070,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":120}),
+        "propList": _tools.RODict({"adjFullHp":85}),
         "equipment": _tools.ROList([[80211001, 5, 1], [80811001, 5, 1], [80791001, 5, 1]]),
         "props": None
     }),
@@ -579,7 +579,7 @@ datas = _tools.RODict({
         "ID": 100071,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":160}),
+        "propList": _tools.RODict({"adjFullHp":110}),
         "equipment": _tools.ROList([[80211001, 6, 1], [80811001, 6, 1], [80791001, 6, 1]]),
         "props": None
     }),
@@ -587,7 +587,7 @@ datas = _tools.RODict({
         "ID": 100072,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":250}),
+        "propList": _tools.RODict({"adjFullHp":175}),
         "equipment": _tools.ROList([[80211001, 7, 1], [80811001, 7, 1], [80791001, 7, 1]]),
         "props": None
     }),
@@ -595,7 +595,7 @@ datas = _tools.RODict({
         "ID": 100073,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":60}),
+        "propList": _tools.RODict({"adjFullHp":40}),
         "equipment": _tools.ROList([[80211001, 0, 2], [80811001, 0, 2], [80791001, 0, 2]]),
         "props": None
     }),
@@ -603,7 +603,7 @@ datas = _tools.RODict({
         "ID": 100074,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":75}),
+        "propList": _tools.RODict({"adjFullHp":50}),
         "equipment": _tools.ROList([[80211001, 1, 2], [80811001, 1, 2], [80791001, 1, 2]]),
         "props": None
     }),
@@ -611,7 +611,7 @@ datas = _tools.RODict({
         "ID": 100075,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":90}),
+        "propList": _tools.RODict({"adjFullHp":60}),
         "equipment": _tools.ROList([[80211001, 2, 2], [80811001, 2, 2], [80791001, 2, 2]]),
         "props": None
     }),
@@ -619,7 +619,7 @@ datas = _tools.RODict({
         "ID": 100076,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":105}),
+        "propList": _tools.RODict({"adjFullHp":75}),
         "equipment": _tools.ROList([[80211001, 3, 2], [80811001, 3, 2], [80791001, 3, 2]]),
         "props": None
     }),
@@ -627,7 +627,7 @@ datas = _tools.RODict({
         "ID": 100077,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":120}),
+        "propList": _tools.RODict({"adjFullHp":85}),
         "equipment": _tools.ROList([[80211001, 4, 2], [80811001, 4, 2], [80791001, 4, 2]]),
         "props": None
     }),
@@ -635,7 +635,7 @@ datas = _tools.RODict({
         "ID": 100078,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":150}),
+        "propList": _tools.RODict({"adjFullHp":105}),
         "equipment": _tools.ROList([[80211001, 5, 2], [80811001, 5, 2], [80791001, 5, 2]]),
         "props": None
     }),
@@ -643,7 +643,7 @@ datas = _tools.RODict({
         "ID": 100079,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":190}),
+        "propList": _tools.RODict({"adjFullHp":135}),
         "equipment": _tools.ROList([[80211001, 6, 2], [80811001, 6, 2], [80791001, 6, 2]]),
         "props": None
     }),
@@ -651,7 +651,7 @@ datas = _tools.RODict({
         "ID": 100080,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":300}),
+        "propList": _tools.RODict({"adjFullHp":210}),
         "equipment": _tools.ROList([[80211001, 7, 2], [80811001, 7, 2], [80791001, 7, 2]]),
         "props": None
     }),
@@ -659,7 +659,7 @@ datas = _tools.RODict({
         "ID": 100081,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":90}),
+        "propList": _tools.RODict({"adjFullHp":65}),
         "equipment": _tools.ROList([[80211001, 0, 3], [80811001, 0, 3], [80791001, 0, 3]]),
         "props": None
     }),
@@ -667,7 +667,7 @@ datas = _tools.RODict({
         "ID": 100082,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":105}),
+        "propList": _tools.RODict({"adjFullHp":75}),
         "equipment": _tools.ROList([[80211001, 1, 3], [80811001, 1, 3], [80791001, 1, 3]]),
         "props": None
     }),
@@ -675,7 +675,7 @@ datas = _tools.RODict({
         "ID": 100083,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":120}),
+        "propList": _tools.RODict({"adjFullHp":85}),
         "equipment": _tools.ROList([[80211001, 2, 3], [80811001, 2, 3], [80791001, 2, 3]]),
         "props": None
     }),
@@ -683,7 +683,7 @@ datas = _tools.RODict({
         "ID": 100084,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":140}),
+        "propList": _tools.RODict({"adjFullHp":100}),
         "equipment": _tools.ROList([[80211001, 3, 3], [80811001, 3, 3], [80791001, 3, 3]]),
         "props": None
     }),
@@ -691,7 +691,7 @@ datas = _tools.RODict({
         "ID": 100085,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":155}),
+        "propList": _tools.RODict({"adjFullHp":110}),
         "equipment": _tools.ROList([[80211001, 4, 3], [80811001, 4, 3], [80791001, 4, 3]]),
         "props": None
     }),
@@ -699,7 +699,7 @@ datas = _tools.RODict({
         "ID": 100086,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":185}),
+        "propList": _tools.RODict({"adjFullHp":130}),
         "equipment": _tools.ROList([[80211001, 5, 3], [80811001, 5, 3], [80791001, 5, 3]]),
         "props": None
     }),
@@ -707,7 +707,7 @@ datas = _tools.RODict({
         "ID": 100087,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":225}),
+        "propList": _tools.RODict({"adjFullHp":160}),
         "equipment": _tools.ROList([[80211001, 6, 3], [80811001, 6, 3], [80791001, 6, 3]]),
         "props": None
     }),
@@ -715,7 +715,7 @@ datas = _tools.RODict({
         "ID": 100088,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":350}),
+        "propList": _tools.RODict({"adjFullHp":245}),
         "equipment": _tools.ROList([[80211001, 7, 3], [80811001, 7, 3], [80791001, 7, 3]]),
         "props": None
     }),
@@ -723,7 +723,7 @@ datas = _tools.RODict({
         "ID": 100089,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":130}),
+        "propList": _tools.RODict({"adjFullHp":90}),
         "equipment": _tools.ROList([[80211001, 0, 4], [80811001, 0, 4], [80791001, 0, 4]]),
         "props": None
     }),
@@ -731,7 +731,7 @@ datas = _tools.RODict({
         "ID": 100090,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":145}),
+        "propList": _tools.RODict({"adjFullHp":100}),
         "equipment": _tools.ROList([[80211001, 1, 4], [80811001, 1, 4], [80791001, 1, 4]]),
         "props": None
     }),
@@ -739,7 +739,7 @@ datas = _tools.RODict({
         "ID": 100091,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":160}),
+        "propList": _tools.RODict({"adjFullHp":115}),
         "equipment": _tools.ROList([[80211001, 2, 4], [80811001, 2, 4], [80791001, 2, 4]]),
         "props": None
     }),
@@ -747,7 +747,7 @@ datas = _tools.RODict({
         "ID": 100092,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":180}),
+        "propList": _tools.RODict({"adjFullHp":125}),
         "equipment": _tools.ROList([[80211001, 3, 4], [80811001, 3, 4], [80791001, 3, 4]]),
         "props": None
     }),
@@ -755,7 +755,7 @@ datas = _tools.RODict({
         "ID": 100093,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":200}),
+        "propList": _tools.RODict({"adjFullHp":140}),
         "equipment": _tools.ROList([[80211001, 4, 4], [80811001, 4, 4], [80791001, 4, 4]]),
         "props": None
     }),
@@ -763,7 +763,7 @@ datas = _tools.RODict({
         "ID": 100094,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":225}),
+        "propList": _tools.RODict({"adjFullHp":160}),
         "equipment": _tools.ROList([[80211001, 5, 4], [80811001, 5, 4], [80791001, 5, 4]]),
         "props": None
     }),
@@ -771,7 +771,7 @@ datas = _tools.RODict({
         "ID": 100095,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":270}),
+        "propList": _tools.RODict({"adjFullHp":190}),
         "equipment": _tools.ROList([[80211001, 6, 4], [80811001, 6, 4], [80791001, 6, 4]]),
         "props": None
     }),
@@ -779,7 +779,7 @@ datas = _tools.RODict({
         "ID": 100096,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullHp":400}),
+        "propList": _tools.RODict({"adjFullHp":280}),
         "equipment": _tools.ROList([[80211001, 7, 4], [80811001, 7, 4], [80791001, 7, 4]]),
         "props": None
     }),
@@ -787,7 +787,7 @@ datas = _tools.RODict({
         "ID": 100097,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":3}),
+        "propList": _tools.RODict({"adjFullMp":2}),
         "equipment": _tools.ROList([[80211001, 0, 1], [80591001, 0, 1], [80691001, 0, 1]]),
         "props": None
     }),
@@ -795,7 +795,7 @@ datas = _tools.RODict({
         "ID": 100098,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":4}),
+        "propList": _tools.RODict({"adjFullMp":3}),
         "equipment": _tools.ROList([[80211001, 1, 1], [80591001, 1, 1], [80691001, 1, 1]]),
         "props": None
     }),
@@ -803,7 +803,7 @@ datas = _tools.RODict({
         "ID": 100099,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":6}),
+        "propList": _tools.RODict({"adjFullMp":4}),
         "equipment": _tools.ROList([[80211001, 2, 1], [80591001, 2, 1], [80691001, 2, 1]]),
         "props": None
     }),
@@ -811,7 +811,7 @@ datas = _tools.RODict({
         "ID": 100100,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":8}),
+        "propList": _tools.RODict({"adjFullMp":5}),
         "equipment": _tools.ROList([[80211001, 3, 1], [80591001, 3, 1], [80691001, 3, 1]]),
         "props": None
     }),
@@ -819,7 +819,7 @@ datas = _tools.RODict({
         "ID": 100101,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":9}),
+        "propList": _tools.RODict({"adjFullMp":6}),
         "equipment": _tools.ROList([[80211001, 4, 1], [80591001, 4, 1], [80691001, 4, 1]]),
         "props": None
     }),
@@ -827,7 +827,7 @@ datas = _tools.RODict({
         "ID": 100102,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":13}),
+        "propList": _tools.RODict({"adjFullMp":8}),
         "equipment": _tools.ROList([[80211001, 5, 1], [80591001, 5, 1], [80691001, 5, 1]]),
         "props": None
     }),
@@ -835,7 +835,7 @@ datas = _tools.RODict({
         "ID": 100103,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":17}),
+        "propList": _tools.RODict({"adjFullMp":11}),
         "equipment": _tools.ROList([[80211001, 6, 1], [80591001, 6, 1], [80691001, 6, 1]]),
         "props": None
     }),
@@ -843,7 +843,7 @@ datas = _tools.RODict({
         "ID": 100104,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":26}),
+        "propList": _tools.RODict({"adjFullMp":18}),
         "equipment": _tools.ROList([[80211001, 7, 1], [80591001, 7, 1], [80691001, 7, 1]]),
         "props": None
     }),
@@ -851,7 +851,7 @@ datas = _tools.RODict({
         "ID": 100105,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":6}),
+        "propList": _tools.RODict({"adjFullMp":4}),
         "equipment": _tools.ROList([[80211001, 0, 2], [80591001, 0, 2], [80691001, 0, 2]]),
         "props": None
     }),
@@ -859,7 +859,7 @@ datas = _tools.RODict({
         "ID": 100106,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":8}),
+        "propList": _tools.RODict({"adjFullMp":5}),
         "equipment": _tools.ROList([[80211001, 1, 2], [80591001, 1, 2], [80691001, 1, 2]]),
         "props": None
     }),
@@ -867,7 +867,7 @@ datas = _tools.RODict({
         "ID": 100107,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":9}),
+        "propList": _tools.RODict({"adjFullMp":6}),
         "equipment": _tools.ROList([[80211001, 2, 2], [80591001, 2, 2], [80691001, 2, 2]]),
         "props": None
     }),
@@ -875,7 +875,7 @@ datas = _tools.RODict({
         "ID": 100108,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":12}),
+        "propList": _tools.RODict({"adjFullMp":8}),
         "equipment": _tools.ROList([[80211001, 3, 2], [80591001, 3, 2], [80691001, 3, 2]]),
         "props": None
     }),
@@ -883,7 +883,7 @@ datas = _tools.RODict({
         "ID": 100109,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":13}),
+        "propList": _tools.RODict({"adjFullMp":9}),
         "equipment": _tools.ROList([[80211001, 4, 2], [80591001, 4, 2], [80691001, 4, 2]]),
         "props": None
     }),
@@ -891,7 +891,7 @@ datas = _tools.RODict({
         "ID": 100110,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":16}),
+        "propList": _tools.RODict({"adjFullMp":10}),
         "equipment": _tools.ROList([[80211001, 5, 2], [80591001, 5, 2], [80691001, 5, 2]]),
         "props": None
     }),
@@ -899,7 +899,7 @@ datas = _tools.RODict({
         "ID": 100111,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":19}),
+        "propList": _tools.RODict({"adjFullMp":14}),
         "equipment": _tools.ROList([[80211001, 6, 2], [80591001, 6, 2], [80691001, 6, 2]]),
         "props": None
     }),
@@ -907,7 +907,7 @@ datas = _tools.RODict({
         "ID": 100112,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":28}),
+        "propList": _tools.RODict({"adjFullMp":21}),
         "equipment": _tools.ROList([[80211001, 7, 2], [80591001, 7, 2], [80691001, 7, 2]]),
         "props": None
     }),
@@ -915,7 +915,7 @@ datas = _tools.RODict({
         "ID": 100113,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":9}),
+        "propList": _tools.RODict({"adjFullMp":6}),
         "equipment": _tools.ROList([[80211001, 0, 3], [80591001, 0, 3], [80691001, 0, 3]]),
         "props": None
     }),
@@ -923,7 +923,7 @@ datas = _tools.RODict({
         "ID": 100114,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":11}),
+        "propList": _tools.RODict({"adjFullMp":7}),
         "equipment": _tools.ROList([[80211001, 1, 3], [80591001, 1, 3], [80691001, 1, 3]]),
         "props": None
     }),
@@ -931,7 +931,7 @@ datas = _tools.RODict({
         "ID": 100115,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":13}),
+        "propList": _tools.RODict({"adjFullMp":9}),
         "equipment": _tools.ROList([[80211001, 2, 3], [80591001, 2, 3], [80691001, 2, 3]]),
         "props": None
     }),
@@ -939,7 +939,7 @@ datas = _tools.RODict({
         "ID": 100116,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":14}),
+        "propList": _tools.RODict({"adjFullMp":10}),
         "equipment": _tools.ROList([[80211001, 3, 3], [80591001, 3, 3], [80691001, 3, 3]]),
         "props": None
     }),
@@ -947,7 +947,7 @@ datas = _tools.RODict({
         "ID": 100117,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":16}),
+        "propList": _tools.RODict({"adjFullMp":11}),
         "equipment": _tools.ROList([[80211001, 4, 3], [80591001, 4, 3], [80691001, 4, 3]]),
         "props": None
     }),
@@ -955,7 +955,7 @@ datas = _tools.RODict({
         "ID": 100118,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":19}),
+        "propList": _tools.RODict({"adjFullMp":13}),
         "equipment": _tools.ROList([[80211001, 5, 3], [80591001, 5, 3], [80691001, 5, 3]]),
         "props": None
     }),
@@ -963,7 +963,7 @@ datas = _tools.RODict({
         "ID": 100119,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":23}),
+        "propList": _tools.RODict({"adjFullMp":16}),
         "equipment": _tools.ROList([[80211001, 6, 3], [80591001, 6, 3], [80691001, 6, 3]]),
         "props": None
     }),
@@ -971,7 +971,7 @@ datas = _tools.RODict({
         "ID": 100120,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":32}),
+        "propList": _tools.RODict({"adjFullMp":25}),
         "equipment": _tools.ROList([[80211001, 7, 3], [80591001, 7, 3], [80691001, 7, 3]]),
         "props": None
     }),
@@ -979,7 +979,7 @@ datas = _tools.RODict({
         "ID": 100121,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":13}),
+        "propList": _tools.RODict({"adjFullMp":9}),
         "equipment": _tools.ROList([[80211001, 0, 4], [80591001, 0, 4], [80691001, 0, 4]]),
         "props": None
     }),
@@ -987,7 +987,7 @@ datas = _tools.RODict({
         "ID": 100122,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":14}),
+        "propList": _tools.RODict({"adjFullMp":10}),
         "equipment": _tools.ROList([[80211001, 1, 4], [80591001, 1, 4], [80691001, 1, 4]]),
         "props": None
     }),
@@ -995,7 +995,7 @@ datas = _tools.RODict({
         "ID": 100123,
         "type": 1,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":16}),
+        "propList": _tools.RODict({"adjFullMp":11}),
         "equipment": _tools.ROList([[80211001, 2, 4], [80591001, 2, 4], [80691001, 2, 4]]),
         "props": None
     }),
@@ -1003,7 +1003,7 @@ datas = _tools.RODict({
         "ID": 100124,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":18}),
+        "propList": _tools.RODict({"adjFullMp":12}),
         "equipment": _tools.ROList([[80211001, 3, 4], [80591001, 3, 4], [80691001, 3, 4]]),
         "props": None
     }),
@@ -1011,7 +1011,7 @@ datas = _tools.RODict({
         "ID": 100125,
         "type": 2,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":19}),
+        "propList": _tools.RODict({"adjFullMp":14}),
         "equipment": _tools.ROList([[80211001, 4, 4], [80591001, 4, 4], [80691001, 4, 4]]),
         "props": None
     }),
@@ -1019,7 +1019,7 @@ datas = _tools.RODict({
         "ID": 100126,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":23}),
+        "propList": _tools.RODict({"adjFullMp":16}),
         "equipment": _tools.ROList([[80211001, 5, 4], [80591001, 5, 4], [80691001, 5, 4]]),
         "props": None
     }),
@@ -1027,7 +1027,7 @@ datas = _tools.RODict({
         "ID": 100127,
         "type": 3,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":25}),
+        "propList": _tools.RODict({"adjFullMp":19}),
         "equipment": _tools.ROList([[80211001, 6, 4], [80591001, 6, 4], [80691001, 6, 4]]),
         "props": None
     }),
@@ -1035,7 +1035,7 @@ datas = _tools.RODict({
         "ID": 100128,
         "type": 4,
         "unavailableClass": _tools.ROList([1002, 1003]),
-        "propList": _tools.RODict({"adjFullMp":38}),
+        "propList": _tools.RODict({"adjFullMp":28}),
         "equipment": _tools.ROList([[80211001, 7, 4], [80591001, 7, 4], [80691001, 7, 4]]),
         "props": None
     }),
@@ -4739,7 +4739,7 @@ datas = _tools.RODict({
         "ID": 100591,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80121001, 0, 1], [80591001, 0, 1], [80691001, 0, 1]]),
         "props": None
     }),
@@ -4747,7 +4747,7 @@ datas = _tools.RODict({
         "ID": 100592,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80121001, 1, 1], [80591001, 1, 1], [80691001, 1, 1]]),
         "props": None
     }),
@@ -4755,7 +4755,7 @@ datas = _tools.RODict({
         "ID": 100593,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80121001, 2, 1], [80591001, 2, 1], [80691001, 2, 1]]),
         "props": None
     }),
@@ -4763,7 +4763,7 @@ datas = _tools.RODict({
         "ID": 100594,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80121001, 3, 1], [80591001, 3, 1], [80691001, 3, 1]]),
         "props": None
     }),
@@ -4771,7 +4771,7 @@ datas = _tools.RODict({
         "ID": 100595,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80121001, 4, 1], [80591001, 4, 1], [80691001, 4, 1]]),
         "props": None
     }),
@@ -4779,7 +4779,7 @@ datas = _tools.RODict({
         "ID": 100596,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80121001, 5, 1], [80591001, 5, 1], [80691001, 5, 1]]),
         "props": None
     }),
@@ -4787,7 +4787,7 @@ datas = _tools.RODict({
         "ID": 100597,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80121001, 6, 1], [80591001, 6, 1], [80691001, 6, 1]]),
         "props": None
     }),
@@ -4795,7 +4795,7 @@ datas = _tools.RODict({
         "ID": 100598,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80121001, 7, 1], [80591001, 7, 1], [80691001, 7, 1]]),
         "props": None
     }),
@@ -4803,7 +4803,7 @@ datas = _tools.RODict({
         "ID": 100599,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80121001, 0, 2], [80591001, 0, 2], [80691001, 0, 2]]),
         "props": None
     }),
@@ -4811,7 +4811,7 @@ datas = _tools.RODict({
         "ID": 100600,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80121001, 1, 2], [80591001, 1, 2], [80691001, 1, 2]]),
         "props": None
     }),
@@ -4819,7 +4819,7 @@ datas = _tools.RODict({
         "ID": 100601,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80121001, 2, 2], [80591001, 2, 2], [80691001, 2, 2]]),
         "props": None
     }),
@@ -4827,7 +4827,7 @@ datas = _tools.RODict({
         "ID": 100602,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80121001, 3, 2], [80591001, 3, 2], [80691001, 3, 2]]),
         "props": None
     }),
@@ -4835,7 +4835,7 @@ datas = _tools.RODict({
         "ID": 100603,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80121001, 4, 2], [80591001, 4, 2], [80691001, 4, 2]]),
         "props": None
     }),
@@ -4843,7 +4843,7 @@ datas = _tools.RODict({
         "ID": 100604,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80121001, 5, 2], [80591001, 5, 2], [80691001, 5, 2]]),
         "props": None
     }),
@@ -4851,7 +4851,7 @@ datas = _tools.RODict({
         "ID": 100605,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80121001, 6, 2], [80591001, 6, 2], [80691001, 6, 2]]),
         "props": None
     }),
@@ -4859,7 +4859,7 @@ datas = _tools.RODict({
         "ID": 100606,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80121001, 7, 2], [80591001, 7, 2], [80691001, 7, 2]]),
         "props": None
     }),
@@ -4867,7 +4867,7 @@ datas = _tools.RODict({
         "ID": 100607,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80121001, 0, 3], [80591001, 0, 3], [80691001, 0, 3]]),
         "props": None
     }),
@@ -4875,7 +4875,7 @@ datas = _tools.RODict({
         "ID": 100608,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80121001, 1, 3], [80591001, 1, 3], [80691001, 1, 3]]),
         "props": None
     }),
@@ -4883,7 +4883,7 @@ datas = _tools.RODict({
         "ID": 100609,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80121001, 2, 3], [80591001, 2, 3], [80691001, 2, 3]]),
         "props": None
     }),
@@ -4891,7 +4891,7 @@ datas = _tools.RODict({
         "ID": 100610,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80121001, 3, 3], [80591001, 3, 3], [80691001, 3, 3]]),
         "props": None
     }),
@@ -4899,7 +4899,7 @@ datas = _tools.RODict({
         "ID": 100611,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80121001, 4, 3], [80591001, 4, 3], [80691001, 4, 3]]),
         "props": None
     }),
@@ -4907,7 +4907,7 @@ datas = _tools.RODict({
         "ID": 100612,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80121001, 5, 3], [80591001, 5, 3], [80691001, 5, 3]]),
         "props": None
     }),
@@ -4915,7 +4915,7 @@ datas = _tools.RODict({
         "ID": 100613,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80121001, 6, 3], [80591001, 6, 3], [80691001, 6, 3]]),
         "props": None
     }),
@@ -4923,7 +4923,7 @@ datas = _tools.RODict({
         "ID": 100614,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80121001, 7, 3], [80591001, 7, 3], [80691001, 7, 3]]),
         "props": None
     }),
@@ -4931,7 +4931,7 @@ datas = _tools.RODict({
         "ID": 100615,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80121001, 0, 4], [80591001, 0, 4], [80691001, 0, 4]]),
         "props": None
     }),
@@ -4939,7 +4939,7 @@ datas = _tools.RODict({
         "ID": 100616,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80121001, 1, 4], [80591001, 1, 4], [80691001, 1, 4]]),
         "props": None
     }),
@@ -4947,7 +4947,7 @@ datas = _tools.RODict({
         "ID": 100617,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80121001, 2, 4], [80591001, 2, 4], [80691001, 2, 4]]),
         "props": None
     }),
@@ -4955,7 +4955,7 @@ datas = _tools.RODict({
         "ID": 100618,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80121001, 3, 4], [80591001, 3, 4], [80691001, 3, 4]]),
         "props": None
     }),
@@ -4963,7 +4963,7 @@ datas = _tools.RODict({
         "ID": 100619,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80121001, 4, 4], [80591001, 4, 4], [80691001, 4, 4]]),
         "props": None
     }),
@@ -4971,7 +4971,7 @@ datas = _tools.RODict({
         "ID": 100620,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80121001, 5, 4], [80591001, 5, 4], [80691001, 5, 4]]),
         "props": None
     }),
@@ -4979,7 +4979,7 @@ datas = _tools.RODict({
         "ID": 100621,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80121001, 6, 4], [80591001, 6, 4], [80691001, 6, 4]]),
         "props": None
     }),
@@ -4987,7 +4987,7 @@ datas = _tools.RODict({
         "ID": 100622,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMaxMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80121001, 7, 4], [80591001, 7, 4], [80691001, 7, 4]]),
         "props": None
     }),
@@ -4995,7 +4995,7 @@ datas = _tools.RODict({
         "ID": 100623,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80121001, 0, 1], [80591001, 0, 1], [80791001, 0, 1]]),
         "props": None
     }),
@@ -5003,7 +5003,7 @@ datas = _tools.RODict({
         "ID": 100624,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80121001, 1, 1], [80591001, 1, 1], [80791001, 1, 1]]),
         "props": None
     }),
@@ -5011,7 +5011,7 @@ datas = _tools.RODict({
         "ID": 100625,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80121001, 2, 1], [80591001, 2, 1], [80791001, 2, 1]]),
         "props": None
     }),
@@ -5019,7 +5019,7 @@ datas = _tools.RODict({
         "ID": 100626,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80121001, 3, 1], [80591001, 3, 1], [80791001, 3, 1]]),
         "props": None
     }),
@@ -5027,7 +5027,7 @@ datas = _tools.RODict({
         "ID": 100627,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80121001, 4, 1], [80591001, 4, 1], [80791001, 4, 1]]),
         "props": None
     }),
@@ -5035,7 +5035,7 @@ datas = _tools.RODict({
         "ID": 100628,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80121001, 5, 1], [80591001, 5, 1], [80791001, 5, 1]]),
         "props": None
     }),
@@ -5043,7 +5043,7 @@ datas = _tools.RODict({
         "ID": 100629,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80121001, 6, 1], [80591001, 6, 1], [80791001, 6, 1]]),
         "props": None
     }),
@@ -5051,7 +5051,7 @@ datas = _tools.RODict({
         "ID": 100630,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80121001, 7, 1], [80591001, 7, 1], [80791001, 7, 1]]),
         "props": None
     }),
@@ -5059,7 +5059,7 @@ datas = _tools.RODict({
         "ID": 100631,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80121001, 0, 2], [80591001, 0, 2], [80791001, 0, 2]]),
         "props": None
     }),
@@ -5067,7 +5067,7 @@ datas = _tools.RODict({
         "ID": 100632,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80121001, 1, 2], [80591001, 1, 2], [80791001, 1, 2]]),
         "props": None
     }),
@@ -5075,7 +5075,7 @@ datas = _tools.RODict({
         "ID": 100633,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80121001, 2, 2], [80591001, 2, 2], [80791001, 2, 2]]),
         "props": None
     }),
@@ -5083,7 +5083,7 @@ datas = _tools.RODict({
         "ID": 100634,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80121001, 3, 2], [80591001, 3, 2], [80791001, 3, 2]]),
         "props": None
     }),
@@ -5091,7 +5091,7 @@ datas = _tools.RODict({
         "ID": 100635,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80121001, 4, 2], [80591001, 4, 2], [80791001, 4, 2]]),
         "props": None
     }),
@@ -5099,7 +5099,7 @@ datas = _tools.RODict({
         "ID": 100636,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80121001, 5, 2], [80591001, 5, 2], [80791001, 5, 2]]),
         "props": None
     }),
@@ -5107,7 +5107,7 @@ datas = _tools.RODict({
         "ID": 100637,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80121001, 6, 2], [80591001, 6, 2], [80791001, 6, 2]]),
         "props": None
     }),
@@ -5115,7 +5115,7 @@ datas = _tools.RODict({
         "ID": 100638,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80121001, 7, 2], [80591001, 7, 2], [80791001, 7, 2]]),
         "props": None
     }),
@@ -5123,7 +5123,7 @@ datas = _tools.RODict({
         "ID": 100639,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80121001, 0, 3], [80591001, 0, 3], [80791001, 0, 3]]),
         "props": None
     }),
@@ -5131,7 +5131,7 @@ datas = _tools.RODict({
         "ID": 100640,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80121001, 1, 3], [80591001, 1, 3], [80791001, 1, 3]]),
         "props": None
     }),
@@ -5139,7 +5139,7 @@ datas = _tools.RODict({
         "ID": 100641,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80121001, 2, 3], [80591001, 2, 3], [80791001, 2, 3]]),
         "props": None
     }),
@@ -5147,7 +5147,7 @@ datas = _tools.RODict({
         "ID": 100642,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80121001, 3, 3], [80591001, 3, 3], [80791001, 3, 3]]),
         "props": None
     }),
@@ -5155,7 +5155,7 @@ datas = _tools.RODict({
         "ID": 100643,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80121001, 4, 3], [80591001, 4, 3], [80791001, 4, 3]]),
         "props": None
     }),
@@ -5163,7 +5163,7 @@ datas = _tools.RODict({
         "ID": 100644,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80121001, 5, 3], [80591001, 5, 3], [80791001, 5, 3]]),
         "props": None
     }),
@@ -5171,7 +5171,7 @@ datas = _tools.RODict({
         "ID": 100645,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80121001, 6, 3], [80591001, 6, 3], [80791001, 6, 3]]),
         "props": None
     }),
@@ -5179,7 +5179,7 @@ datas = _tools.RODict({
         "ID": 100646,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80121001, 7, 3], [80591001, 7, 3], [80791001, 7, 3]]),
         "props": None
     }),
@@ -5187,7 +5187,7 @@ datas = _tools.RODict({
         "ID": 100647,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80121001, 0, 4], [80591001, 0, 4], [80791001, 0, 4]]),
         "props": None
     }),
@@ -5195,7 +5195,7 @@ datas = _tools.RODict({
         "ID": 100648,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80121001, 1, 4], [80591001, 1, 4], [80791001, 1, 4]]),
         "props": None
     }),
@@ -5203,7 +5203,7 @@ datas = _tools.RODict({
         "ID": 100649,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80121001, 2, 4], [80591001, 2, 4], [80791001, 2, 4]]),
         "props": None
     }),
@@ -5211,7 +5211,7 @@ datas = _tools.RODict({
         "ID": 100650,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80121001, 3, 4], [80591001, 3, 4], [80791001, 3, 4]]),
         "props": None
     }),
@@ -5219,7 +5219,7 @@ datas = _tools.RODict({
         "ID": 100651,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80121001, 4, 4], [80591001, 4, 4], [80791001, 4, 4]]),
         "props": None
     }),
@@ -5227,7 +5227,7 @@ datas = _tools.RODict({
         "ID": 100652,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80121001, 5, 4], [80591001, 5, 4], [80791001, 5, 4]]),
         "props": None
     }),
@@ -5235,7 +5235,7 @@ datas = _tools.RODict({
         "ID": 100653,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80121001, 6, 4], [80591001, 6, 4], [80791001, 6, 4]]),
         "props": None
     }),
@@ -5243,7 +5243,7 @@ datas = _tools.RODict({
         "ID": 100654,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjMinMagicAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80121001, 7, 4], [80591001, 7, 4], [80791001, 7, 4]]),
         "props": None
     }),
@@ -5251,7 +5251,7 @@ datas = _tools.RODict({
         "ID": 100655,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":30}),
+        "propList": _tools.RODict({"adjFullHp":20}),
         "equipment": _tools.ROList([[80221001, 0, 1], [80821001, 0, 1], [80791001, 0, 1]]),
         "props": None
     }),
@@ -5259,7 +5259,7 @@ datas = _tools.RODict({
         "ID": 100656,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":45}),
+        "propList": _tools.RODict({"adjFullHp":30}),
         "equipment": _tools.ROList([[80221001, 1, 1], [80821001, 1, 1], [80791001, 1, 1]]),
         "props": None
     }),
@@ -5267,7 +5267,7 @@ datas = _tools.RODict({
         "ID": 100657,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":60}),
+        "propList": _tools.RODict({"adjFullHp":40}),
         "equipment": _tools.ROList([[80221001, 2, 1], [80821001, 2, 1], [80791001, 2, 1]]),
         "props": None
     }),
@@ -5275,7 +5275,7 @@ datas = _tools.RODict({
         "ID": 100658,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":75}),
+        "propList": _tools.RODict({"adjFullHp":50}),
         "equipment": _tools.ROList([[80221001, 3, 1], [80821001, 3, 1], [80791001, 3, 1]]),
         "props": None
     }),
@@ -5283,7 +5283,7 @@ datas = _tools.RODict({
         "ID": 100659,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":90}),
+        "propList": _tools.RODict({"adjFullHp":60}),
         "equipment": _tools.ROList([[80221001, 4, 1], [80821001, 4, 1], [80791001, 4, 1]]),
         "props": None
     }),
@@ -5291,7 +5291,7 @@ datas = _tools.RODict({
         "ID": 100660,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":120}),
+        "propList": _tools.RODict({"adjFullHp":85}),
         "equipment": _tools.ROList([[80221001, 5, 1], [80821001, 5, 1], [80791001, 5, 1]]),
         "props": None
     }),
@@ -5299,7 +5299,7 @@ datas = _tools.RODict({
         "ID": 100661,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":160}),
+        "propList": _tools.RODict({"adjFullHp":110}),
         "equipment": _tools.ROList([[80221001, 6, 1], [80821001, 6, 1], [80791001, 6, 1]]),
         "props": None
     }),
@@ -5307,7 +5307,7 @@ datas = _tools.RODict({
         "ID": 100662,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":250}),
+        "propList": _tools.RODict({"adjFullHp":175}),
         "equipment": _tools.ROList([[80221001, 7, 1], [80821001, 7, 1], [80791001, 7, 1]]),
         "props": None
     }),
@@ -5315,7 +5315,7 @@ datas = _tools.RODict({
         "ID": 100663,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":60}),
+        "propList": _tools.RODict({"adjFullHp":40}),
         "equipment": _tools.ROList([[80221001, 0, 2], [80821001, 0, 2], [80791001, 0, 2]]),
         "props": None
     }),
@@ -5323,7 +5323,7 @@ datas = _tools.RODict({
         "ID": 100664,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":75}),
+        "propList": _tools.RODict({"adjFullHp":50}),
         "equipment": _tools.ROList([[80221001, 1, 2], [80821001, 1, 2], [80791001, 1, 2]]),
         "props": None
     }),
@@ -5331,7 +5331,7 @@ datas = _tools.RODict({
         "ID": 100665,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":90}),
+        "propList": _tools.RODict({"adjFullHp":60}),
         "equipment": _tools.ROList([[80221001, 2, 2], [80821001, 2, 2], [80791001, 2, 2]]),
         "props": None
     }),
@@ -5339,7 +5339,7 @@ datas = _tools.RODict({
         "ID": 100666,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":105}),
+        "propList": _tools.RODict({"adjFullHp":75}),
         "equipment": _tools.ROList([[80221001, 3, 2], [80821001, 3, 2], [80791001, 3, 2]]),
         "props": None
     }),
@@ -5347,7 +5347,7 @@ datas = _tools.RODict({
         "ID": 100667,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":120}),
+        "propList": _tools.RODict({"adjFullHp":85}),
         "equipment": _tools.ROList([[80221001, 4, 2], [80821001, 4, 2], [80791001, 4, 2]]),
         "props": None
     }),
@@ -5355,7 +5355,7 @@ datas = _tools.RODict({
         "ID": 100668,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":150}),
+        "propList": _tools.RODict({"adjFullHp":105}),
         "equipment": _tools.ROList([[80221001, 5, 2], [80821001, 5, 2], [80791001, 5, 2]]),
         "props": None
     }),
@@ -5363,7 +5363,7 @@ datas = _tools.RODict({
         "ID": 100669,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":190}),
+        "propList": _tools.RODict({"adjFullHp":135}),
         "equipment": _tools.ROList([[80221001, 6, 2], [80821001, 6, 2], [80791001, 6, 2]]),
         "props": None
     }),
@@ -5371,7 +5371,7 @@ datas = _tools.RODict({
         "ID": 100670,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":300}),
+        "propList": _tools.RODict({"adjFullHp":210}),
         "equipment": _tools.ROList([[80221001, 7, 2], [80821001, 7, 2], [80791001, 7, 2]]),
         "props": None
     }),
@@ -5379,7 +5379,7 @@ datas = _tools.RODict({
         "ID": 100671,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":90}),
+        "propList": _tools.RODict({"adjFullHp":65}),
         "equipment": _tools.ROList([[80221001, 0, 3], [80821001, 0, 3], [80791001, 0, 3]]),
         "props": None
     }),
@@ -5387,7 +5387,7 @@ datas = _tools.RODict({
         "ID": 100672,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":105}),
+        "propList": _tools.RODict({"adjFullHp":75}),
         "equipment": _tools.ROList([[80221001, 1, 3], [80821001, 1, 3], [80791001, 1, 3]]),
         "props": None
     }),
@@ -5395,7 +5395,7 @@ datas = _tools.RODict({
         "ID": 100673,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":120}),
+        "propList": _tools.RODict({"adjFullHp":85}),
         "equipment": _tools.ROList([[80221001, 2, 3], [80821001, 2, 3], [80791001, 2, 3]]),
         "props": None
     }),
@@ -5403,7 +5403,7 @@ datas = _tools.RODict({
         "ID": 100674,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":140}),
+        "propList": _tools.RODict({"adjFullHp":100}),
         "equipment": _tools.ROList([[80221001, 3, 3], [80821001, 3, 3], [80791001, 3, 3]]),
         "props": None
     }),
@@ -5411,7 +5411,7 @@ datas = _tools.RODict({
         "ID": 100675,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":155}),
+        "propList": _tools.RODict({"adjFullHp":110}),
         "equipment": _tools.ROList([[80221001, 4, 3], [80821001, 4, 3], [80791001, 4, 3]]),
         "props": None
     }),
@@ -5419,7 +5419,7 @@ datas = _tools.RODict({
         "ID": 100676,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":185}),
+        "propList": _tools.RODict({"adjFullHp":130}),
         "equipment": _tools.ROList([[80221001, 5, 3], [80821001, 5, 3], [80791001, 5, 3]]),
         "props": None
     }),
@@ -5427,7 +5427,7 @@ datas = _tools.RODict({
         "ID": 100677,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":225}),
+        "propList": _tools.RODict({"adjFullHp":160}),
         "equipment": _tools.ROList([[80221001, 6, 3], [80821001, 6, 3], [80791001, 6, 3]]),
         "props": None
     }),
@@ -5435,7 +5435,7 @@ datas = _tools.RODict({
         "ID": 100678,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":350}),
+        "propList": _tools.RODict({"adjFullHp":245}),
         "equipment": _tools.ROList([[80221001, 7, 3], [80821001, 7, 3], [80791001, 7, 3]]),
         "props": None
     }),
@@ -5443,7 +5443,7 @@ datas = _tools.RODict({
         "ID": 100679,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":130}),
+        "propList": _tools.RODict({"adjFullHp":90}),
         "equipment": _tools.ROList([[80221001, 0, 4], [80821001, 0, 4], [80791001, 0, 4]]),
         "props": None
     }),
@@ -5451,7 +5451,7 @@ datas = _tools.RODict({
         "ID": 100680,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":145}),
+        "propList": _tools.RODict({"adjFullHp":100}),
         "equipment": _tools.ROList([[80221001, 1, 4], [80821001, 1, 4], [80791001, 1, 4]]),
         "props": None
     }),
@@ -5459,7 +5459,7 @@ datas = _tools.RODict({
         "ID": 100681,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":160}),
+        "propList": _tools.RODict({"adjFullHp":115}),
         "equipment": _tools.ROList([[80221001, 2, 4], [80821001, 2, 4], [80791001, 2, 4]]),
         "props": None
     }),
@@ -5467,7 +5467,7 @@ datas = _tools.RODict({
         "ID": 100682,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":180}),
+        "propList": _tools.RODict({"adjFullHp":125}),
         "equipment": _tools.ROList([[80221001, 3, 4], [80821001, 3, 4], [80791001, 3, 4]]),
         "props": None
     }),
@@ -5475,7 +5475,7 @@ datas = _tools.RODict({
         "ID": 100683,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":200}),
+        "propList": _tools.RODict({"adjFullHp":140}),
         "equipment": _tools.ROList([[80221001, 4, 4], [80821001, 4, 4], [80791001, 4, 4]]),
         "props": None
     }),
@@ -5483,7 +5483,7 @@ datas = _tools.RODict({
         "ID": 100684,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":225}),
+        "propList": _tools.RODict({"adjFullHp":160}),
         "equipment": _tools.ROList([[80221001, 5, 4], [80821001, 5, 4], [80791001, 5, 4]]),
         "props": None
     }),
@@ -5491,7 +5491,7 @@ datas = _tools.RODict({
         "ID": 100685,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":270}),
+        "propList": _tools.RODict({"adjFullHp":190}),
         "equipment": _tools.ROList([[80221001, 6, 4], [80821001, 6, 4], [80791001, 6, 4]]),
         "props": None
     }),
@@ -5499,7 +5499,7 @@ datas = _tools.RODict({
         "ID": 100686,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullHp":400}),
+        "propList": _tools.RODict({"adjFullHp":280}),
         "equipment": _tools.ROList([[80221001, 7, 4], [80821001, 7, 4], [80791001, 7, 4]]),
         "props": None
     }),
@@ -5507,7 +5507,7 @@ datas = _tools.RODict({
         "ID": 100687,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":3}),
+        "propList": _tools.RODict({"adjFullMp":2}),
         "equipment": _tools.ROList([[80221001, 0, 1], [80591001, 0, 1], [80691001, 0, 1]]),
         "props": None
     }),
@@ -5515,7 +5515,7 @@ datas = _tools.RODict({
         "ID": 100688,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":4}),
+        "propList": _tools.RODict({"adjFullMp":3}),
         "equipment": _tools.ROList([[80221001, 1, 1], [80591001, 1, 1], [80691001, 1, 1]]),
         "props": None
     }),
@@ -5523,7 +5523,7 @@ datas = _tools.RODict({
         "ID": 100689,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":6}),
+        "propList": _tools.RODict({"adjFullMp":4}),
         "equipment": _tools.ROList([[80221001, 2, 1], [80591001, 2, 1], [80691001, 2, 1]]),
         "props": None
     }),
@@ -5531,7 +5531,7 @@ datas = _tools.RODict({
         "ID": 100690,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":8}),
+        "propList": _tools.RODict({"adjFullMp":5}),
         "equipment": _tools.ROList([[80221001, 3, 1], [80591001, 3, 1], [80691001, 3, 1]]),
         "props": None
     }),
@@ -5539,7 +5539,7 @@ datas = _tools.RODict({
         "ID": 100691,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":9}),
+        "propList": _tools.RODict({"adjFullMp":6}),
         "equipment": _tools.ROList([[80221001, 4, 1], [80591001, 4, 1], [80691001, 4, 1]]),
         "props": None
     }),
@@ -5547,7 +5547,7 @@ datas = _tools.RODict({
         "ID": 100692,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":13}),
+        "propList": _tools.RODict({"adjFullMp":8}),
         "equipment": _tools.ROList([[80221001, 5, 1], [80591001, 5, 1], [80691001, 5, 1]]),
         "props": None
     }),
@@ -5555,7 +5555,7 @@ datas = _tools.RODict({
         "ID": 100693,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":17}),
+        "propList": _tools.RODict({"adjFullMp":11}),
         "equipment": _tools.ROList([[80221001, 6, 1], [80591001, 6, 1], [80691001, 6, 1]]),
         "props": None
     }),
@@ -5563,7 +5563,7 @@ datas = _tools.RODict({
         "ID": 100694,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":26}),
+        "propList": _tools.RODict({"adjFullMp":18}),
         "equipment": _tools.ROList([[80221001, 7, 1], [80591001, 7, 1], [80691001, 7, 1]]),
         "props": None
     }),
@@ -5571,7 +5571,7 @@ datas = _tools.RODict({
         "ID": 100695,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":6}),
+        "propList": _tools.RODict({"adjFullMp":4}),
         "equipment": _tools.ROList([[80221001, 0, 2], [80591001, 0, 2], [80691001, 0, 2]]),
         "props": None
     }),
@@ -5579,7 +5579,7 @@ datas = _tools.RODict({
         "ID": 100696,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":8}),
+        "propList": _tools.RODict({"adjFullMp":5}),
         "equipment": _tools.ROList([[80221001, 1, 2], [80591001, 1, 2], [80691001, 1, 2]]),
         "props": None
     }),
@@ -5587,7 +5587,7 @@ datas = _tools.RODict({
         "ID": 100697,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":9}),
+        "propList": _tools.RODict({"adjFullMp":6}),
         "equipment": _tools.ROList([[80221001, 2, 2], [80591001, 2, 2], [80691001, 2, 2]]),
         "props": None
     }),
@@ -5595,7 +5595,7 @@ datas = _tools.RODict({
         "ID": 100698,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":12}),
+        "propList": _tools.RODict({"adjFullMp":8}),
         "equipment": _tools.ROList([[80221001, 3, 2], [80591001, 3, 2], [80691001, 3, 2]]),
         "props": None
     }),
@@ -5603,7 +5603,7 @@ datas = _tools.RODict({
         "ID": 100699,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":13}),
+        "propList": _tools.RODict({"adjFullMp":9}),
         "equipment": _tools.ROList([[80221001, 4, 2], [80591001, 4, 2], [80691001, 4, 2]]),
         "props": None
     }),
@@ -5611,7 +5611,7 @@ datas = _tools.RODict({
         "ID": 100700,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":16}),
+        "propList": _tools.RODict({"adjFullMp":10}),
         "equipment": _tools.ROList([[80221001, 5, 2], [80591001, 5, 2], [80691001, 5, 2]]),
         "props": None
     }),
@@ -5619,7 +5619,7 @@ datas = _tools.RODict({
         "ID": 100701,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":19}),
+        "propList": _tools.RODict({"adjFullMp":14}),
         "equipment": _tools.ROList([[80221001, 6, 2], [80591001, 6, 2], [80691001, 6, 2]]),
         "props": None
     }),
@@ -5627,7 +5627,7 @@ datas = _tools.RODict({
         "ID": 100702,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":28}),
+        "propList": _tools.RODict({"adjFullMp":21}),
         "equipment": _tools.ROList([[80221001, 7, 2], [80591001, 7, 2], [80691001, 7, 2]]),
         "props": None
     }),
@@ -5635,7 +5635,7 @@ datas = _tools.RODict({
         "ID": 100703,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":9}),
+        "propList": _tools.RODict({"adjFullMp":6}),
         "equipment": _tools.ROList([[80221001, 0, 3], [80591001, 0, 3], [80691001, 0, 3]]),
         "props": None
     }),
@@ -5643,7 +5643,7 @@ datas = _tools.RODict({
         "ID": 100704,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":11}),
+        "propList": _tools.RODict({"adjFullMp":7}),
         "equipment": _tools.ROList([[80221001, 1, 3], [80591001, 1, 3], [80691001, 1, 3]]),
         "props": None
     }),
@@ -5651,7 +5651,7 @@ datas = _tools.RODict({
         "ID": 100705,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":13}),
+        "propList": _tools.RODict({"adjFullMp":9}),
         "equipment": _tools.ROList([[80221001, 2, 3], [80591001, 2, 3], [80691001, 2, 3]]),
         "props": None
     }),
@@ -5659,7 +5659,7 @@ datas = _tools.RODict({
         "ID": 100706,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":14}),
+        "propList": _tools.RODict({"adjFullMp":10}),
         "equipment": _tools.ROList([[80221001, 3, 3], [80591001, 3, 3], [80691001, 3, 3]]),
         "props": None
     }),
@@ -5667,7 +5667,7 @@ datas = _tools.RODict({
         "ID": 100707,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":16}),
+        "propList": _tools.RODict({"adjFullMp":11}),
         "equipment": _tools.ROList([[80221001, 4, 3], [80591001, 4, 3], [80691001, 4, 3]]),
         "props": None
     }),
@@ -5675,7 +5675,7 @@ datas = _tools.RODict({
         "ID": 100708,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":19}),
+        "propList": _tools.RODict({"adjFullMp":13}),
         "equipment": _tools.ROList([[80221001, 5, 3], [80591001, 5, 3], [80691001, 5, 3]]),
         "props": None
     }),
@@ -5683,7 +5683,7 @@ datas = _tools.RODict({
         "ID": 100709,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":23}),
+        "propList": _tools.RODict({"adjFullMp":16}),
         "equipment": _tools.ROList([[80221001, 6, 3], [80591001, 6, 3], [80691001, 6, 3]]),
         "props": None
     }),
@@ -5691,7 +5691,7 @@ datas = _tools.RODict({
         "ID": 100710,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":32}),
+        "propList": _tools.RODict({"adjFullMp":25}),
         "equipment": _tools.ROList([[80221001, 7, 3], [80591001, 7, 3], [80691001, 7, 3]]),
         "props": None
     }),
@@ -5699,7 +5699,7 @@ datas = _tools.RODict({
         "ID": 100711,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":13}),
+        "propList": _tools.RODict({"adjFullMp":9}),
         "equipment": _tools.ROList([[80221001, 0, 4], [80591001, 0, 4], [80691001, 0, 4]]),
         "props": None
     }),
@@ -5707,7 +5707,7 @@ datas = _tools.RODict({
         "ID": 100712,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":14}),
+        "propList": _tools.RODict({"adjFullMp":10}),
         "equipment": _tools.ROList([[80221001, 1, 4], [80591001, 1, 4], [80691001, 1, 4]]),
         "props": None
     }),
@@ -5715,7 +5715,7 @@ datas = _tools.RODict({
         "ID": 100713,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":16}),
+        "propList": _tools.RODict({"adjFullMp":11}),
         "equipment": _tools.ROList([[80221001, 2, 4], [80591001, 2, 4], [80691001, 2, 4]]),
         "props": None
     }),
@@ -5723,7 +5723,7 @@ datas = _tools.RODict({
         "ID": 100714,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":18}),
+        "propList": _tools.RODict({"adjFullMp":12}),
         "equipment": _tools.ROList([[80221001, 3, 4], [80591001, 3, 4], [80691001, 3, 4]]),
         "props": None
     }),
@@ -5731,7 +5731,7 @@ datas = _tools.RODict({
         "ID": 100715,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":19}),
+        "propList": _tools.RODict({"adjFullMp":14}),
         "equipment": _tools.ROList([[80221001, 4, 4], [80591001, 4, 4], [80691001, 4, 4]]),
         "props": None
     }),
@@ -5739,7 +5739,7 @@ datas = _tools.RODict({
         "ID": 100716,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":23}),
+        "propList": _tools.RODict({"adjFullMp":16}),
         "equipment": _tools.ROList([[80221001, 5, 4], [80591001, 5, 4], [80691001, 5, 4]]),
         "props": None
     }),
@@ -5747,7 +5747,7 @@ datas = _tools.RODict({
         "ID": 100717,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":25}),
+        "propList": _tools.RODict({"adjFullMp":19}),
         "equipment": _tools.ROList([[80221001, 6, 4], [80591001, 6, 4], [80691001, 6, 4]]),
         "props": None
     }),
@@ -5755,7 +5755,7 @@ datas = _tools.RODict({
         "ID": 100718,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1003]),
-        "propList": _tools.RODict({"adjFullMp":38}),
+        "propList": _tools.RODict({"adjFullMp":28}),
         "equipment": _tools.ROList([[80221001, 7, 4], [80591001, 7, 4], [80691001, 7, 4]]),
         "props": None
     }),
@@ -9459,7 +9459,7 @@ datas = _tools.RODict({
         "ID": 101181,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80131001, 0, 1], [80581001, 0, 1], [80681001, 0, 1]]),
         "props": None
     }),
@@ -9467,7 +9467,7 @@ datas = _tools.RODict({
         "ID": 101182,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80131001, 1, 1], [80581001, 1, 1], [80681001, 1, 1]]),
         "props": None
     }),
@@ -9475,7 +9475,7 @@ datas = _tools.RODict({
         "ID": 101183,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80131001, 2, 1], [80581001, 2, 1], [80681001, 2, 1]]),
         "props": None
     }),
@@ -9483,7 +9483,7 @@ datas = _tools.RODict({
         "ID": 101184,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80131001, 3, 1], [80581001, 3, 1], [80681001, 3, 1]]),
         "props": None
     }),
@@ -9491,7 +9491,7 @@ datas = _tools.RODict({
         "ID": 101185,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80131001, 4, 1], [80581001, 4, 1], [80681001, 4, 1]]),
         "props": None
     }),
@@ -9499,7 +9499,7 @@ datas = _tools.RODict({
         "ID": 101186,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80131001, 5, 1], [80581001, 5, 1], [80681001, 5, 1]]),
         "props": None
     }),
@@ -9507,7 +9507,7 @@ datas = _tools.RODict({
         "ID": 101187,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80131001, 6, 1], [80581001, 6, 1], [80681001, 6, 1]]),
         "props": None
     }),
@@ -9515,7 +9515,7 @@ datas = _tools.RODict({
         "ID": 101188,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80131001, 7, 1], [80581001, 7, 1], [80681001, 7, 1]]),
         "props": None
     }),
@@ -9523,7 +9523,7 @@ datas = _tools.RODict({
         "ID": 101189,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80131001, 0, 2], [80581001, 0, 2], [80681001, 0, 2]]),
         "props": None
     }),
@@ -9531,7 +9531,7 @@ datas = _tools.RODict({
         "ID": 101190,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80131001, 1, 2], [80581001, 1, 2], [80681001, 1, 2]]),
         "props": None
     }),
@@ -9539,7 +9539,7 @@ datas = _tools.RODict({
         "ID": 101191,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80131001, 2, 2], [80581001, 2, 2], [80681001, 2, 2]]),
         "props": None
     }),
@@ -9547,7 +9547,7 @@ datas = _tools.RODict({
         "ID": 101192,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80131001, 3, 2], [80581001, 3, 2], [80681001, 3, 2]]),
         "props": None
     }),
@@ -9555,7 +9555,7 @@ datas = _tools.RODict({
         "ID": 101193,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80131001, 4, 2], [80581001, 4, 2], [80681001, 4, 2]]),
         "props": None
     }),
@@ -9563,7 +9563,7 @@ datas = _tools.RODict({
         "ID": 101194,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80131001, 5, 2], [80581001, 5, 2], [80681001, 5, 2]]),
         "props": None
     }),
@@ -9571,7 +9571,7 @@ datas = _tools.RODict({
         "ID": 101195,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80131001, 6, 2], [80581001, 6, 2], [80681001, 6, 2]]),
         "props": None
     }),
@@ -9579,7 +9579,7 @@ datas = _tools.RODict({
         "ID": 101196,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80131001, 7, 2], [80581001, 7, 2], [80681001, 7, 2]]),
         "props": None
     }),
@@ -9587,7 +9587,7 @@ datas = _tools.RODict({
         "ID": 101197,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80131001, 0, 3], [80581001, 0, 3], [80681001, 0, 3]]),
         "props": None
     }),
@@ -9595,7 +9595,7 @@ datas = _tools.RODict({
         "ID": 101198,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80131001, 1, 3], [80581001, 1, 3], [80681001, 1, 3]]),
         "props": None
     }),
@@ -9603,7 +9603,7 @@ datas = _tools.RODict({
         "ID": 101199,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80131001, 2, 3], [80581001, 2, 3], [80681001, 2, 3]]),
         "props": None
     }),
@@ -9611,7 +9611,7 @@ datas = _tools.RODict({
         "ID": 101200,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80131001, 3, 3], [80581001, 3, 3], [80681001, 3, 3]]),
         "props": None
     }),
@@ -9619,7 +9619,7 @@ datas = _tools.RODict({
         "ID": 101201,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80131001, 4, 3], [80581001, 4, 3], [80681001, 4, 3]]),
         "props": None
     }),
@@ -9627,7 +9627,7 @@ datas = _tools.RODict({
         "ID": 101202,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80131001, 5, 3], [80581001, 5, 3], [80681001, 5, 3]]),
         "props": None
     }),
@@ -9635,7 +9635,7 @@ datas = _tools.RODict({
         "ID": 101203,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80131001, 6, 3], [80581001, 6, 3], [80681001, 6, 3]]),
         "props": None
     }),
@@ -9643,7 +9643,7 @@ datas = _tools.RODict({
         "ID": 101204,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80131001, 7, 3], [80581001, 7, 3], [80681001, 7, 3]]),
         "props": None
     }),
@@ -9651,7 +9651,7 @@ datas = _tools.RODict({
         "ID": 101205,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80131001, 0, 4], [80581001, 0, 4], [80681001, 0, 4]]),
         "props": None
     }),
@@ -9659,7 +9659,7 @@ datas = _tools.RODict({
         "ID": 101206,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":1}),
         "equipment": _tools.ROList([[80131001, 1, 4], [80581001, 1, 4], [80681001, 1, 4]]),
         "props": None
     }),
@@ -9667,7 +9667,7 @@ datas = _tools.RODict({
         "ID": 101207,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80131001, 2, 4], [80581001, 2, 4], [80681001, 2, 4]]),
         "props": None
     }),
@@ -9675,7 +9675,7 @@ datas = _tools.RODict({
         "ID": 101208,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":2}),
         "equipment": _tools.ROList([[80131001, 3, 4], [80581001, 3, 4], [80681001, 3, 4]]),
         "props": None
     }),
@@ -9683,7 +9683,7 @@ datas = _tools.RODict({
         "ID": 101209,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80131001, 4, 4], [80581001, 4, 4], [80681001, 4, 4]]),
         "props": None
     }),
@@ -9691,7 +9691,7 @@ datas = _tools.RODict({
         "ID": 101210,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":3}),
         "equipment": _tools.ROList([[80131001, 5, 4], [80581001, 5, 4], [80681001, 5, 4]]),
         "props": None
     }),
@@ -9699,7 +9699,7 @@ datas = _tools.RODict({
         "ID": 101211,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80131001, 6, 4], [80581001, 6, 4], [80681001, 6, 4]]),
         "props": None
     }),
@@ -9707,7 +9707,7 @@ datas = _tools.RODict({
         "ID": 101212,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMaxPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxPhysicalArmor":4}),
         "equipment": _tools.ROList([[80131001, 7, 4], [80581001, 7, 4], [80681001, 7, 4]]),
         "props": None
     }),
@@ -9715,7 +9715,7 @@ datas = _tools.RODict({
         "ID": 101213,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80131001, 0, 1], [80581001, 0, 1], [80781001, 0, 1]]),
         "props": None
     }),
@@ -9723,7 +9723,7 @@ datas = _tools.RODict({
         "ID": 101214,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80131001, 1, 1], [80581001, 1, 1], [80781001, 1, 1]]),
         "props": None
     }),
@@ -9731,7 +9731,7 @@ datas = _tools.RODict({
         "ID": 101215,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80131001, 2, 1], [80581001, 2, 1], [80781001, 2, 1]]),
         "props": None
     }),
@@ -9739,7 +9739,7 @@ datas = _tools.RODict({
         "ID": 101216,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80131001, 3, 1], [80581001, 3, 1], [80781001, 3, 1]]),
         "props": None
     }),
@@ -9747,7 +9747,7 @@ datas = _tools.RODict({
         "ID": 101217,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80131001, 4, 1], [80581001, 4, 1], [80781001, 4, 1]]),
         "props": None
     }),
@@ -9755,7 +9755,7 @@ datas = _tools.RODict({
         "ID": 101218,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80131001, 5, 1], [80581001, 5, 1], [80781001, 5, 1]]),
         "props": None
     }),
@@ -9763,7 +9763,7 @@ datas = _tools.RODict({
         "ID": 101219,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80131001, 6, 1], [80581001, 6, 1], [80781001, 6, 1]]),
         "props": None
     }),
@@ -9771,7 +9771,7 @@ datas = _tools.RODict({
         "ID": 101220,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80131001, 7, 1], [80581001, 7, 1], [80781001, 7, 1]]),
         "props": None
     }),
@@ -9779,7 +9779,7 @@ datas = _tools.RODict({
         "ID": 101221,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80131001, 0, 2], [80581001, 0, 2], [80781001, 0, 2]]),
         "props": None
     }),
@@ -9787,7 +9787,7 @@ datas = _tools.RODict({
         "ID": 101222,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80131001, 1, 2], [80581001, 1, 2], [80781001, 1, 2]]),
         "props": None
     }),
@@ -9795,7 +9795,7 @@ datas = _tools.RODict({
         "ID": 101223,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80131001, 2, 2], [80581001, 2, 2], [80781001, 2, 2]]),
         "props": None
     }),
@@ -9803,7 +9803,7 @@ datas = _tools.RODict({
         "ID": 101224,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80131001, 3, 2], [80581001, 3, 2], [80781001, 3, 2]]),
         "props": None
     }),
@@ -9811,7 +9811,7 @@ datas = _tools.RODict({
         "ID": 101225,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80131001, 4, 2], [80581001, 4, 2], [80781001, 4, 2]]),
         "props": None
     }),
@@ -9819,7 +9819,7 @@ datas = _tools.RODict({
         "ID": 101226,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80131001, 5, 2], [80581001, 5, 2], [80781001, 5, 2]]),
         "props": None
     }),
@@ -9827,7 +9827,7 @@ datas = _tools.RODict({
         "ID": 101227,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80131001, 6, 2], [80581001, 6, 2], [80781001, 6, 2]]),
         "props": None
     }),
@@ -9835,7 +9835,7 @@ datas = _tools.RODict({
         "ID": 101228,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80131001, 7, 2], [80581001, 7, 2], [80781001, 7, 2]]),
         "props": None
     }),
@@ -9843,7 +9843,7 @@ datas = _tools.RODict({
         "ID": 101229,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80131001, 0, 3], [80581001, 0, 3], [80781001, 0, 3]]),
         "props": None
     }),
@@ -9851,7 +9851,7 @@ datas = _tools.RODict({
         "ID": 101230,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80131001, 1, 3], [80581001, 1, 3], [80781001, 1, 3]]),
         "props": None
     }),
@@ -9859,7 +9859,7 @@ datas = _tools.RODict({
         "ID": 101231,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80131001, 2, 3], [80581001, 2, 3], [80781001, 2, 3]]),
         "props": None
     }),
@@ -9867,7 +9867,7 @@ datas = _tools.RODict({
         "ID": 101232,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80131001, 3, 3], [80581001, 3, 3], [80781001, 3, 3]]),
         "props": None
     }),
@@ -9875,7 +9875,7 @@ datas = _tools.RODict({
         "ID": 101233,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80131001, 4, 3], [80581001, 4, 3], [80781001, 4, 3]]),
         "props": None
     }),
@@ -9883,7 +9883,7 @@ datas = _tools.RODict({
         "ID": 101234,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80131001, 5, 3], [80581001, 5, 3], [80781001, 5, 3]]),
         "props": None
     }),
@@ -9891,7 +9891,7 @@ datas = _tools.RODict({
         "ID": 101235,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80131001, 6, 3], [80581001, 6, 3], [80781001, 6, 3]]),
         "props": None
     }),
@@ -9899,7 +9899,7 @@ datas = _tools.RODict({
         "ID": 101236,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80131001, 7, 3], [80581001, 7, 3], [80781001, 7, 3]]),
         "props": None
     }),
@@ -9907,7 +9907,7 @@ datas = _tools.RODict({
         "ID": 101237,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80131001, 0, 4], [80581001, 0, 4], [80781001, 0, 4]]),
         "props": None
     }),
@@ -9915,7 +9915,7 @@ datas = _tools.RODict({
         "ID": 101238,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":1}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":1}),
         "equipment": _tools.ROList([[80131001, 1, 4], [80581001, 1, 4], [80781001, 1, 4]]),
         "props": None
     }),
@@ -9923,7 +9923,7 @@ datas = _tools.RODict({
         "ID": 101239,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80131001, 2, 4], [80581001, 2, 4], [80781001, 2, 4]]),
         "props": None
     }),
@@ -9931,7 +9931,7 @@ datas = _tools.RODict({
         "ID": 101240,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":2}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":2}),
         "equipment": _tools.ROList([[80131001, 3, 4], [80581001, 3, 4], [80781001, 3, 4]]),
         "props": None
     }),
@@ -9939,7 +9939,7 @@ datas = _tools.RODict({
         "ID": 101241,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80131001, 4, 4], [80581001, 4, 4], [80781001, 4, 4]]),
         "props": None
     }),
@@ -9947,7 +9947,7 @@ datas = _tools.RODict({
         "ID": 101242,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":3}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":3}),
         "equipment": _tools.ROList([[80131001, 5, 4], [80581001, 5, 4], [80781001, 5, 4]]),
         "props": None
     }),
@@ -9955,7 +9955,7 @@ datas = _tools.RODict({
         "ID": 101243,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80131001, 6, 4], [80581001, 6, 4], [80781001, 6, 4]]),
         "props": None
     }),
@@ -9963,7 +9963,7 @@ datas = _tools.RODict({
         "ID": 101244,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjMinPhysicalAtk":4}),
+        "propList": _tools.RODict({"adjMaxMagicArmor":4}),
         "equipment": _tools.ROList([[80131001, 7, 4], [80581001, 7, 4], [80781001, 7, 4]]),
         "props": None
     }),
@@ -9971,7 +9971,7 @@ datas = _tools.RODict({
         "ID": 101245,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":30}),
+        "propList": _tools.RODict({"adjFullHp":20}),
         "equipment": _tools.ROList([[80231001, 0, 1], [80831001, 0, 1], [80781001, 0, 1]]),
         "props": None
     }),
@@ -9979,7 +9979,7 @@ datas = _tools.RODict({
         "ID": 101246,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":45}),
+        "propList": _tools.RODict({"adjFullHp":30}),
         "equipment": _tools.ROList([[80231001, 1, 1], [80831001, 1, 1], [80781001, 1, 1]]),
         "props": None
     }),
@@ -9987,7 +9987,7 @@ datas = _tools.RODict({
         "ID": 101247,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":60}),
+        "propList": _tools.RODict({"adjFullHp":40}),
         "equipment": _tools.ROList([[80231001, 2, 1], [80831001, 2, 1], [80781001, 2, 1]]),
         "props": None
     }),
@@ -9995,7 +9995,7 @@ datas = _tools.RODict({
         "ID": 101248,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":75}),
+        "propList": _tools.RODict({"adjFullHp":50}),
         "equipment": _tools.ROList([[80231001, 3, 1], [80831001, 3, 1], [80781001, 3, 1]]),
         "props": None
     }),
@@ -10003,7 +10003,7 @@ datas = _tools.RODict({
         "ID": 101249,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":90}),
+        "propList": _tools.RODict({"adjFullHp":60}),
         "equipment": _tools.ROList([[80231001, 4, 1], [80831001, 4, 1], [80781001, 4, 1]]),
         "props": None
     }),
@@ -10011,7 +10011,7 @@ datas = _tools.RODict({
         "ID": 101250,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":120}),
+        "propList": _tools.RODict({"adjFullHp":85}),
         "equipment": _tools.ROList([[80231001, 5, 1], [80831001, 5, 1], [80781001, 5, 1]]),
         "props": None
     }),
@@ -10019,7 +10019,7 @@ datas = _tools.RODict({
         "ID": 101251,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":160}),
+        "propList": _tools.RODict({"adjFullHp":110}),
         "equipment": _tools.ROList([[80231001, 6, 1], [80831001, 6, 1], [80781001, 6, 1]]),
         "props": None
     }),
@@ -10027,7 +10027,7 @@ datas = _tools.RODict({
         "ID": 101252,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":250}),
+        "propList": _tools.RODict({"adjFullHp":175}),
         "equipment": _tools.ROList([[80231001, 7, 1], [80831001, 7, 1], [80781001, 7, 1]]),
         "props": None
     }),
@@ -10035,7 +10035,7 @@ datas = _tools.RODict({
         "ID": 101253,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":60}),
+        "propList": _tools.RODict({"adjFullHp":40}),
         "equipment": _tools.ROList([[80231001, 0, 2], [80831001, 0, 2], [80781001, 0, 2]]),
         "props": None
     }),
@@ -10043,7 +10043,7 @@ datas = _tools.RODict({
         "ID": 101254,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":75}),
+        "propList": _tools.RODict({"adjFullHp":50}),
         "equipment": _tools.ROList([[80231001, 1, 2], [80831001, 1, 2], [80781001, 1, 2]]),
         "props": None
     }),
@@ -10051,7 +10051,7 @@ datas = _tools.RODict({
         "ID": 101255,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":90}),
+        "propList": _tools.RODict({"adjFullHp":60}),
         "equipment": _tools.ROList([[80231001, 2, 2], [80831001, 2, 2], [80781001, 2, 2]]),
         "props": None
     }),
@@ -10059,7 +10059,7 @@ datas = _tools.RODict({
         "ID": 101256,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":105}),
+        "propList": _tools.RODict({"adjFullHp":75}),
         "equipment": _tools.ROList([[80231001, 3, 2], [80831001, 3, 2], [80781001, 3, 2]]),
         "props": None
     }),
@@ -10067,7 +10067,7 @@ datas = _tools.RODict({
         "ID": 101257,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":120}),
+        "propList": _tools.RODict({"adjFullHp":85}),
         "equipment": _tools.ROList([[80231001, 4, 2], [80831001, 4, 2], [80781001, 4, 2]]),
         "props": None
     }),
@@ -10075,7 +10075,7 @@ datas = _tools.RODict({
         "ID": 101258,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":150}),
+        "propList": _tools.RODict({"adjFullHp":105}),
         "equipment": _tools.ROList([[80231001, 5, 2], [80831001, 5, 2], [80781001, 5, 2]]),
         "props": None
     }),
@@ -10083,7 +10083,7 @@ datas = _tools.RODict({
         "ID": 101259,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":190}),
+        "propList": _tools.RODict({"adjFullHp":135}),
         "equipment": _tools.ROList([[80231001, 6, 2], [80831001, 6, 2], [80781001, 6, 2]]),
         "props": None
     }),
@@ -10091,7 +10091,7 @@ datas = _tools.RODict({
         "ID": 101260,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":300}),
+        "propList": _tools.RODict({"adjFullHp":210}),
         "equipment": _tools.ROList([[80231001, 7, 2], [80831001, 7, 2], [80781001, 7, 2]]),
         "props": None
     }),
@@ -10099,7 +10099,7 @@ datas = _tools.RODict({
         "ID": 101261,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":90}),
+        "propList": _tools.RODict({"adjFullHp":65}),
         "equipment": _tools.ROList([[80231001, 0, 3], [80831001, 0, 3], [80781001, 0, 3]]),
         "props": None
     }),
@@ -10107,7 +10107,7 @@ datas = _tools.RODict({
         "ID": 101262,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":105}),
+        "propList": _tools.RODict({"adjFullHp":75}),
         "equipment": _tools.ROList([[80231001, 1, 3], [80831001, 1, 3], [80781001, 1, 3]]),
         "props": None
     }),
@@ -10115,7 +10115,7 @@ datas = _tools.RODict({
         "ID": 101263,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":120}),
+        "propList": _tools.RODict({"adjFullHp":85}),
         "equipment": _tools.ROList([[80231001, 2, 3], [80831001, 2, 3], [80781001, 2, 3]]),
         "props": None
     }),
@@ -10123,7 +10123,7 @@ datas = _tools.RODict({
         "ID": 101264,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":140}),
+        "propList": _tools.RODict({"adjFullHp":100}),
         "equipment": _tools.ROList([[80231001, 3, 3], [80831001, 3, 3], [80781001, 3, 3]]),
         "props": None
     }),
@@ -10131,7 +10131,7 @@ datas = _tools.RODict({
         "ID": 101265,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":155}),
+        "propList": _tools.RODict({"adjFullHp":110}),
         "equipment": _tools.ROList([[80231001, 4, 3], [80831001, 4, 3], [80781001, 4, 3]]),
         "props": None
     }),
@@ -10139,7 +10139,7 @@ datas = _tools.RODict({
         "ID": 101266,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":185}),
+        "propList": _tools.RODict({"adjFullHp":130}),
         "equipment": _tools.ROList([[80231001, 5, 3], [80831001, 5, 3], [80781001, 5, 3]]),
         "props": None
     }),
@@ -10147,7 +10147,7 @@ datas = _tools.RODict({
         "ID": 101267,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":225}),
+        "propList": _tools.RODict({"adjFullHp":160}),
         "equipment": _tools.ROList([[80231001, 6, 3], [80831001, 6, 3], [80781001, 6, 3]]),
         "props": None
     }),
@@ -10155,7 +10155,7 @@ datas = _tools.RODict({
         "ID": 101268,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":350}),
+        "propList": _tools.RODict({"adjFullHp":245}),
         "equipment": _tools.ROList([[80231001, 7, 3], [80831001, 7, 3], [80781001, 7, 3]]),
         "props": None
     }),
@@ -10163,7 +10163,7 @@ datas = _tools.RODict({
         "ID": 101269,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":130}),
+        "propList": _tools.RODict({"adjFullHp":90}),
         "equipment": _tools.ROList([[80231001, 0, 4], [80831001, 0, 4], [80781001, 0, 4]]),
         "props": None
     }),
@@ -10171,7 +10171,7 @@ datas = _tools.RODict({
         "ID": 101270,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":145}),
+        "propList": _tools.RODict({"adjFullHp":100}),
         "equipment": _tools.ROList([[80231001, 1, 4], [80831001, 1, 4], [80781001, 1, 4]]),
         "props": None
     }),
@@ -10179,7 +10179,7 @@ datas = _tools.RODict({
         "ID": 101271,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":160}),
+        "propList": _tools.RODict({"adjFullHp":115}),
         "equipment": _tools.ROList([[80231001, 2, 4], [80831001, 2, 4], [80781001, 2, 4]]),
         "props": None
     }),
@@ -10187,7 +10187,7 @@ datas = _tools.RODict({
         "ID": 101272,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":180}),
+        "propList": _tools.RODict({"adjFullHp":125}),
         "equipment": _tools.ROList([[80231001, 3, 4], [80831001, 3, 4], [80781001, 3, 4]]),
         "props": None
     }),
@@ -10195,7 +10195,7 @@ datas = _tools.RODict({
         "ID": 101273,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":200}),
+        "propList": _tools.RODict({"adjFullHp":140}),
         "equipment": _tools.ROList([[80231001, 4, 4], [80831001, 4, 4], [80781001, 4, 4]]),
         "props": None
     }),
@@ -10203,7 +10203,7 @@ datas = _tools.RODict({
         "ID": 101274,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":225}),
+        "propList": _tools.RODict({"adjFullHp":160}),
         "equipment": _tools.ROList([[80231001, 5, 4], [80831001, 5, 4], [80781001, 5, 4]]),
         "props": None
     }),
@@ -10211,7 +10211,7 @@ datas = _tools.RODict({
         "ID": 101275,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":270}),
+        "propList": _tools.RODict({"adjFullHp":190}),
         "equipment": _tools.ROList([[80231001, 6, 4], [80831001, 6, 4], [80781001, 6, 4]]),
         "props": None
     }),
@@ -10219,7 +10219,7 @@ datas = _tools.RODict({
         "ID": 101276,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullHp":400}),
+        "propList": _tools.RODict({"adjFullHp":280}),
         "equipment": _tools.ROList([[80231001, 7, 4], [80831001, 7, 4], [80781001, 7, 4]]),
         "props": None
     }),
@@ -10227,7 +10227,7 @@ datas = _tools.RODict({
         "ID": 101277,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":3}),
+        "propList": _tools.RODict({"adjFullMp":2}),
         "equipment": _tools.ROList([[80231001, 0, 1], [80581001, 0, 1], [80681001, 0, 1]]),
         "props": None
     }),
@@ -10235,7 +10235,7 @@ datas = _tools.RODict({
         "ID": 101278,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":4}),
+        "propList": _tools.RODict({"adjFullMp":3}),
         "equipment": _tools.ROList([[80231001, 1, 1], [80581001, 1, 1], [80681001, 1, 1]]),
         "props": None
     }),
@@ -10243,7 +10243,7 @@ datas = _tools.RODict({
         "ID": 101279,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":6}),
+        "propList": _tools.RODict({"adjFullMp":4}),
         "equipment": _tools.ROList([[80231001, 2, 1], [80581001, 2, 1], [80681001, 2, 1]]),
         "props": None
     }),
@@ -10251,7 +10251,7 @@ datas = _tools.RODict({
         "ID": 101280,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":8}),
+        "propList": _tools.RODict({"adjFullMp":5}),
         "equipment": _tools.ROList([[80231001, 3, 1], [80581001, 3, 1], [80681001, 3, 1]]),
         "props": None
     }),
@@ -10259,7 +10259,7 @@ datas = _tools.RODict({
         "ID": 101281,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":9}),
+        "propList": _tools.RODict({"adjFullMp":6}),
         "equipment": _tools.ROList([[80231001, 4, 1], [80581001, 4, 1], [80681001, 4, 1]]),
         "props": None
     }),
@@ -10267,7 +10267,7 @@ datas = _tools.RODict({
         "ID": 101282,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":13}),
+        "propList": _tools.RODict({"adjFullMp":8}),
         "equipment": _tools.ROList([[80231001, 5, 1], [80581001, 5, 1], [80681001, 5, 1]]),
         "props": None
     }),
@@ -10275,7 +10275,7 @@ datas = _tools.RODict({
         "ID": 101283,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":17}),
+        "propList": _tools.RODict({"adjFullMp":11}),
         "equipment": _tools.ROList([[80231001, 6, 1], [80581001, 6, 1], [80681001, 6, 1]]),
         "props": None
     }),
@@ -10283,7 +10283,7 @@ datas = _tools.RODict({
         "ID": 101284,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":26}),
+        "propList": _tools.RODict({"adjFullMp":18}),
         "equipment": _tools.ROList([[80231001, 7, 1], [80581001, 7, 1], [80681001, 7, 1]]),
         "props": None
     }),
@@ -10291,7 +10291,7 @@ datas = _tools.RODict({
         "ID": 101285,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":6}),
+        "propList": _tools.RODict({"adjFullMp":4}),
         "equipment": _tools.ROList([[80231001, 0, 2], [80581001, 0, 2], [80681001, 0, 2]]),
         "props": None
     }),
@@ -10299,7 +10299,7 @@ datas = _tools.RODict({
         "ID": 101286,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":8}),
+        "propList": _tools.RODict({"adjFullMp":5}),
         "equipment": _tools.ROList([[80231001, 1, 2], [80581001, 1, 2], [80681001, 1, 2]]),
         "props": None
     }),
@@ -10307,7 +10307,7 @@ datas = _tools.RODict({
         "ID": 101287,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":9}),
+        "propList": _tools.RODict({"adjFullMp":6}),
         "equipment": _tools.ROList([[80231001, 2, 2], [80581001, 2, 2], [80681001, 2, 2]]),
         "props": None
     }),
@@ -10315,7 +10315,7 @@ datas = _tools.RODict({
         "ID": 101288,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":12}),
+        "propList": _tools.RODict({"adjFullMp":8}),
         "equipment": _tools.ROList([[80231001, 3, 2], [80581001, 3, 2], [80681001, 3, 2]]),
         "props": None
     }),
@@ -10323,7 +10323,7 @@ datas = _tools.RODict({
         "ID": 101289,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":13}),
+        "propList": _tools.RODict({"adjFullMp":9}),
         "equipment": _tools.ROList([[80231001, 4, 2], [80581001, 4, 2], [80681001, 4, 2]]),
         "props": None
     }),
@@ -10331,7 +10331,7 @@ datas = _tools.RODict({
         "ID": 101290,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":16}),
+        "propList": _tools.RODict({"adjFullMp":10}),
         "equipment": _tools.ROList([[80231001, 5, 2], [80581001, 5, 2], [80681001, 5, 2]]),
         "props": None
     }),
@@ -10339,7 +10339,7 @@ datas = _tools.RODict({
         "ID": 101291,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":19}),
+        "propList": _tools.RODict({"adjFullMp":14}),
         "equipment": _tools.ROList([[80231001, 6, 2], [80581001, 6, 2], [80681001, 6, 2]]),
         "props": None
     }),
@@ -10347,7 +10347,7 @@ datas = _tools.RODict({
         "ID": 101292,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":28}),
+        "propList": _tools.RODict({"adjFullMp":21}),
         "equipment": _tools.ROList([[80231001, 7, 2], [80581001, 7, 2], [80681001, 7, 2]]),
         "props": None
     }),
@@ -10355,7 +10355,7 @@ datas = _tools.RODict({
         "ID": 101293,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":9}),
+        "propList": _tools.RODict({"adjFullMp":6}),
         "equipment": _tools.ROList([[80231001, 0, 3], [80581001, 0, 3], [80681001, 0, 3]]),
         "props": None
     }),
@@ -10363,7 +10363,7 @@ datas = _tools.RODict({
         "ID": 101294,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":11}),
+        "propList": _tools.RODict({"adjFullMp":7}),
         "equipment": _tools.ROList([[80231001, 1, 3], [80581001, 1, 3], [80681001, 1, 3]]),
         "props": None
     }),
@@ -10371,7 +10371,7 @@ datas = _tools.RODict({
         "ID": 101295,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":13}),
+        "propList": _tools.RODict({"adjFullMp":9}),
         "equipment": _tools.ROList([[80231001, 2, 3], [80581001, 2, 3], [80681001, 2, 3]]),
         "props": None
     }),
@@ -10379,7 +10379,7 @@ datas = _tools.RODict({
         "ID": 101296,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":14}),
+        "propList": _tools.RODict({"adjFullMp":10}),
         "equipment": _tools.ROList([[80231001, 3, 3], [80581001, 3, 3], [80681001, 3, 3]]),
         "props": None
     }),
@@ -10387,7 +10387,7 @@ datas = _tools.RODict({
         "ID": 101297,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":16}),
+        "propList": _tools.RODict({"adjFullMp":11}),
         "equipment": _tools.ROList([[80231001, 4, 3], [80581001, 4, 3], [80681001, 4, 3]]),
         "props": None
     }),
@@ -10395,7 +10395,7 @@ datas = _tools.RODict({
         "ID": 101298,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":19}),
+        "propList": _tools.RODict({"adjFullMp":13}),
         "equipment": _tools.ROList([[80231001, 5, 3], [80581001, 5, 3], [80681001, 5, 3]]),
         "props": None
     }),
@@ -10403,7 +10403,7 @@ datas = _tools.RODict({
         "ID": 101299,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":23}),
+        "propList": _tools.RODict({"adjFullMp":16}),
         "equipment": _tools.ROList([[80231001, 6, 3], [80581001, 6, 3], [80681001, 6, 3]]),
         "props": None
     }),
@@ -10411,7 +10411,7 @@ datas = _tools.RODict({
         "ID": 101300,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":32}),
+        "propList": _tools.RODict({"adjFullMp":25}),
         "equipment": _tools.ROList([[80231001, 7, 3], [80581001, 7, 3], [80681001, 7, 3]]),
         "props": None
     }),
@@ -10419,7 +10419,7 @@ datas = _tools.RODict({
         "ID": 101301,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":13}),
+        "propList": _tools.RODict({"adjFullMp":9}),
         "equipment": _tools.ROList([[80231001, 0, 4], [80581001, 0, 4], [80681001, 0, 4]]),
         "props": None
     }),
@@ -10427,7 +10427,7 @@ datas = _tools.RODict({
         "ID": 101302,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":14}),
+        "propList": _tools.RODict({"adjFullMp":10}),
         "equipment": _tools.ROList([[80231001, 1, 4], [80581001, 1, 4], [80681001, 1, 4]]),
         "props": None
     }),
@@ -10435,7 +10435,7 @@ datas = _tools.RODict({
         "ID": 101303,
         "type": 1,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":16}),
+        "propList": _tools.RODict({"adjFullMp":11}),
         "equipment": _tools.ROList([[80231001, 2, 4], [80581001, 2, 4], [80681001, 2, 4]]),
         "props": None
     }),
@@ -10443,7 +10443,7 @@ datas = _tools.RODict({
         "ID": 101304,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":18}),
+        "propList": _tools.RODict({"adjFullMp":12}),
         "equipment": _tools.ROList([[80231001, 3, 4], [80581001, 3, 4], [80681001, 3, 4]]),
         "props": None
     }),
@@ -10451,7 +10451,7 @@ datas = _tools.RODict({
         "ID": 101305,
         "type": 2,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":19}),
+        "propList": _tools.RODict({"adjFullMp":14}),
         "equipment": _tools.ROList([[80231001, 4, 4], [80581001, 4, 4], [80681001, 4, 4]]),
         "props": None
     }),
@@ -10459,7 +10459,7 @@ datas = _tools.RODict({
         "ID": 101306,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":23}),
+        "propList": _tools.RODict({"adjFullMp":16}),
         "equipment": _tools.ROList([[80231001, 5, 4], [80581001, 5, 4], [80681001, 5, 4]]),
         "props": None
     }),
@@ -10467,7 +10467,7 @@ datas = _tools.RODict({
         "ID": 101307,
         "type": 3,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":25}),
+        "propList": _tools.RODict({"adjFullMp":19}),
         "equipment": _tools.ROList([[80231001, 6, 4], [80581001, 6, 4], [80681001, 6, 4]]),
         "props": None
     }),
@@ -10475,7 +10475,7 @@ datas = _tools.RODict({
         "ID": 101308,
         "type": 4,
         "unavailableClass": _tools.ROList([1001, 1002]),
-        "propList": _tools.RODict({"adjFullMp":38}),
+        "propList": _tools.RODict({"adjFullMp":28}),
         "equipment": _tools.ROList([[80231001, 7, 4], [80581001, 7, 4], [80681001, 7, 4]]),
         "props": None
     }),

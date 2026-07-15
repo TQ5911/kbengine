@@ -1605,6 +1605,12 @@ datas = _tools.RODict({
         "TaskName": "迷雾初散",
         "TaskDetailDesc": "凌凝道出海港深处尚有大量船员被魔物掳去，但此地危机四伏、势单力薄。她劝少侠先回新元城向功曹大人禀报实情、请示对策。少侠且速速返程，将此间凶险与船员之难悉数告知，待功曹定夺。临别时，凌凝自报名讳，亦对少侠身边那只自称“未来大侠”的精灵兔邦尼颇感好奇——不过眼下，还是复命要紧。",
     }),
+    86030032: _tools.RODict({
+        "TaskId": 86030032,
+        "TaskGroup": 0,
+        "TaskName": "精英地图",
+        "TaskDetailDesc": "",
+    }),
     86010098: _tools.RODict({
         "TaskId": 86010098,
         "TaskGroup": 0,
@@ -1665,6 +1671,12 @@ datas = _tools.RODict({
         "TaskName": "所谓帮会",
         "TaskDetailDesc": "一位士兵忧心忡忡地找到你。他的表弟“阿光”过去有些劣迹，如今参军已久，他一直挂念其是否安分守己、走上正途。因军务在身不便亲自探问，他恳请你帮忙在军营中打听一下阿光如今的表现。",
     }),
+    86050074: _tools.RODict({
+        "TaskId": 86050074,
+        "TaskGroup": 0,
+        "TaskName": "所谓帮会",
+        "TaskDetailDesc": "你受托打听士兵“阿光”的近况，只知他最后出现在镖局附近。同时，透露线索的混混拜托你顺路去镖局门口，向一个叫“梅川”的混混带一句充满火药味的战书，似乎关乎旧日的江湖恩怨。",
+    }),
     86050072: _tools.RODict({
         "TaskId": 86050072,
         "TaskGroup": 0,
@@ -1695,6 +1707,12 @@ datas = _tools.RODict({
         "TaskName": "所谓帮会贰",
         "TaskDetailDesc": "阿光离开后，毒蛇帮被白虎帮打得节节败退，帮主拉不下脸亲自求人，希望少侠帮忙传话给离帮的阿光，请他回来担任副帮主。",
     }),
+    86030044: _tools.RODict({
+        "TaskId": 86030044,
+        "TaskGroup": 0,
+        "TaskName": "所谓帮会贰",
+        "TaskDetailDesc": "阿光离开后，毒蛇帮被白虎帮打得节节败退，帮主拉不下脸亲自求人，希望少侠帮忙传话给离帮的阿光，请他回来担任副帮主。",
+    }),
     86030025: _tools.RODict({
         "TaskId": 86030025,
         "TaskGroup": 0,
@@ -1709,6 +1727,12 @@ datas = _tools.RODict({
     }),
     86030021: _tools.RODict({
         "TaskId": 86030021,
+        "TaskGroup": 0,
+        "TaskName": "绝世宝物",
+        "TaskDetailDesc": "黑市商人在寻找藏有一种材料的宝箱。据说，若能集齐四种材料并按特定顺序合成，便有几率获得绝世宝物。",
+    }),
+    86030043: _tools.RODict({
+        "TaskId": 86030043,
         "TaskGroup": 0,
         "TaskName": "绝世宝物",
         "TaskDetailDesc": "黑市商人在寻找藏有一种材料的宝箱。据说，若能集齐四种材料并按特定顺序合成，便有几率获得绝世宝物。",
@@ -1737,6 +1761,12 @@ datas = _tools.RODict({
         "TaskName": "惩恶扬善",
         "TaskDetailDesc": "近日江湖上出现一名来历不明的贼子，横行无忌，搅乱秩序。此人实力颇强，寻常侠士难以将其击败。听闻少侠历经四方、武艺不凡，特来请求相助。",
     }),
+    86030041: _tools.RODict({
+        "TaskId": 86030041,
+        "TaskGroup": 0,
+        "TaskName": "惩恶扬善",
+        "TaskDetailDesc": "近日江湖上出现一名来历不明的贼子，横行无忌，搅乱秩序。此人实力颇强，寻常侠士难以将其击败。听闻少侠历经四方、武艺不凡，特来请求相助。",
+    }),
     86030003: _tools.RODict({
         "TaskId": 86030003,
         "TaskGroup": 0,
@@ -1753,7 +1783,7 @@ datas = _tools.RODict({
         "TaskId": 86030001,
         "TaskGroup": 0,
         "TaskName": "pk模式切换引导",
-        "TaskDetailDesc": "近日江湖上出现一名来历不明的贼子，横行无忌，搅乱比武秩序。此人实力颇强，寻常侠士难以将其击败。听闻少侠历经四方、武艺不凡，特来请求相助。",
+        "TaskDetailDesc": "",
     }),
     86030002: _tools.RODict({
         "TaskId": 86030002,
@@ -1772,6 +1802,12 @@ datas = _tools.RODict({
         "TaskGroup": 0,
         "TaskName": "铁匠的委托",
         "TaskDetailDesc": "铁匠大叔的打铁台老旧不堪，急需升级。他听说月光海港一层有优质矿脉，希望少侠帮忙采集一些铁矿石。",
+    }),
+    86030042: _tools.RODict({
+        "TaskId": 86030042,
+        "TaskGroup": 0,
+        "TaskName": "铁匠的委托",
+        "TaskDetailDesc": "近日江湖上出现一名来历不明的贼子，横行无忌，搅乱秩序。此人实力颇强，寻常侠士难以将其击败。听闻少侠历经四方、武艺不凡，特来请求相助。",
     }),
     86030019: _tools.RODict({
         "TaskId": 86030019,
@@ -1793,6 +1829,12 @@ datas = _tools.RODict({
     }),
     86010069: _tools.RODict({
         "TaskId": 86010069,
+        "TaskGroup": 0,
+        "TaskName": "江湖通途",
+        "TaskDetailDesc": "一位商贾模样之人向你求助：他托张屠户置办的一批货物眼看就要逾期，自己分身乏术，恳请少侠代为传话通禀。江湖路远，一诺千金，不妨跑此一程，替人解急。",
+    }),
+    86010361: _tools.RODict({
+        "TaskId": 86010361,
         "TaskGroup": 0,
         "TaskName": "江湖通途",
         "TaskDetailDesc": "一位商贾模样之人向你求助：他托张屠户置办的一批货物眼看就要逾期，自己分身乏术，恳请少侠代为传话通禀。江湖路远，一诺千金，不妨跑此一程，替人解急。",
@@ -2124,7 +2166,7 @@ datas = _tools.RODict({
     86010070: _tools.RODict({
         "TaskId": 86010070,
         "TaskGroup": 0,
-        "TaskName": "混沌回廊",
+        "TaskName": "混沌回廊壹",
         "TaskDetailDesc": "一位神秘人物看穿了你的来历与渴望，他揭示了城中“传送门”实为连接不同空间的“裂隙”。他向你推荐了一处名为混沌回廊的奇异空间，那里时间流速与灵气性质迥异，是快速提升修为的绝佳场所，但同时也伴随着未知的风险。",
     }),
     86030040: _tools.RODict({
@@ -2136,14 +2178,14 @@ datas = _tools.RODict({
     86010196: _tools.RODict({
         "TaskId": 86010196,
         "TaskGroup": 0,
-        "TaskName": "混沌回廊",
-        "TaskDetailDesc": "一位神秘人物看穿了你的来历与渴望，他揭示了城中“传送门”实为连接不同空间的“裂隙”。他向你推荐了一处名为混沌回廊的奇异空间，那里时间流速与灵气性质迥异，是快速提升修为的绝佳场所，但同时也伴随着未知的风险。",
+        "TaskName": "混沌回廊贰",
+        "TaskDetailDesc": "前往混沌回廊传送管理员哪都通处。（在哪都通处可调节混沌回廊层级）",
     }),
     86010198: _tools.RODict({
         "TaskId": 86010198,
         "TaskGroup": 0,
-        "TaskName": "混沌回廊",
-        "TaskDetailDesc": "一位神秘人物看穿了你的来历与渴望，他揭示了城中“传送门”实为连接不同空间的“裂隙”。他向你推荐了一处名为混沌回廊的奇异空间，那里时间流速与灵气性质迥异，是快速提升修为的绝佳场所，但同时也伴随着未知的风险。",
+        "TaskName": "混沌回廊贰",
+        "TaskDetailDesc": "前往混沌回廊传送管理员哪都通处。（在哪都通处可调节混沌回廊层级）",
     }),
     86010423: _tools.RODict({
         "TaskId": 86010423,
@@ -2227,18 +2269,6 @@ datas = _tools.RODict({
         "TaskId": 86010360,
         "TaskGroup": 0,
         "TaskName": "踏破魔障",
-        "TaskDetailDesc": "被你救出的船员惊魂未定，他们告诉你：还有更多同伴被困在这片区域深处，其中水手“阿焦”被单独押在一头巨型魔物身边，重兵看守。奇怪的是，所有魔物只是死死围困，并未伤及船员性命。你无心追究魔物背后的意图——先把所有人救出来再说。\n请深入被困区域，突破魔物防线，找到阿焦与其他水手。",
-    }),
-    86010361: _tools.RODict({
-        "TaskId": 86010361,
-        "TaskGroup": 0,
-        "TaskName": "情劫共渡",
-        "TaskDetailDesc": "",
-    }),
-    86010362: _tools.RODict({
-        "TaskId": 86010362,
-        "TaskGroup": 0,
-        "TaskName": "虎口夺人",
         "TaskDetailDesc": "被你救出的船员惊魂未定，他们告诉你：还有更多同伴被困在这片区域深处，其中水手“阿焦”被单独押在一头巨型魔物身边，重兵看守。奇怪的是，所有魔物只是死死围困，并未伤及船员性命。你无心追究魔物背后的意图——先把所有人救出来再说。\n请深入被困区域，突破魔物防线，找到阿焦与其他水手。",
     }),
     86010363: _tools.RODict({
@@ -2883,6 +2913,12 @@ datas = _tools.RODict({
         "TaskName": "老江湖的说法",
         "TaskDetailDesc": "从一位与恶人帮有过节的道上人物口中，你获得了关键线索：恶人帮如今盘踞在新元城郊北边。他们对老势力的排挤，正是其猖獗的证明。现在，你已掌握了他们的活动区域，是时候前往该地，进行实地探查或清剿了。",
     }),
+    86010470: _tools.RODict({
+        "TaskId": 86010470,
+        "TaskGroup": 0,
+        "TaskName": "异乡隔阂",
+        "TaskDetailDesc": "",
+    }),
     86010137: _tools.RODict({
         "TaskId": 86010137,
         "TaskGroup": 0,
@@ -2953,7 +2989,7 @@ datas = _tools.RODict({
         "TaskId": 86010077,
         "TaskGroup": 0,
         "TaskName": "首领巢穴",
-        "TaskDetailDesc": "首领讨伐",
+        "TaskDetailDesc": "",
     }),
     86010420: _tools.RODict({
         "TaskId": 86010420,
@@ -3153,8 +3189,20 @@ datas = _tools.RODict({
         "TaskName": "凝气溯源",
         "TaskDetailDesc": "月光海港四层的魔气已凝结成实质气束，狂暴肆虐，寻常生灵触之即被侵体。所幸异界之人不受桎梏。前辈命你收集散落各处的魔气碎片，以便剖析根源，查明这片海域魔气异变的真相。",
     }),
+    86010471: _tools.RODict({
+        "TaskId": 86010471,
+        "TaskGroup": 0,
+        "TaskName": "凝气溯源",
+        "TaskDetailDesc": "月光海港四层的魔气已凝结成实质气束，狂暴肆虐，寻常生灵触之即被侵体。所幸异界之人不受桎梏。前辈命你收集散落各处的魔气碎片，以便剖析根源，查明这片海域魔气异变的真相。",
+    }),
     86010313: _tools.RODict({
         "TaskId": 86010313,
+        "TaskGroup": 0,
+        "TaskName": "凝气溯源",
+        "TaskDetailDesc": "月光海港四层的魔气已凝结成实质气束，狂暴肆虐，寻常生灵触之即被侵体。所幸异界之人不受桎梏。前辈命你收集散落各处的魔气碎片，以便剖析根源，查明这片海域魔气异变的真相。",
+    }),
+    86010472: _tools.RODict({
+        "TaskId": 86010472,
         "TaskGroup": 0,
         "TaskName": "凝气溯源",
         "TaskDetailDesc": "月光海港四层的魔气已凝结成实质气束，狂暴肆虐，寻常生灵触之即被侵体。所幸异界之人不受桎梏。前辈命你收集散落各处的魔气碎片，以便剖析根源，查明这片海域魔气异变的真相。",
@@ -3303,8 +3351,8 @@ datas = _tools.RODict({
         "TaskName": "成长的证明伍",
         "TaskDetailDesc": "通道虽已顺利开启，但法圣探查到裂隙深处盘踞着修为远超于你的顶级魔物。以你如今的战力贸然闯入，只会身陷死局。她命你先潜心历练、夯实实力，待足够强横时再回来，彻底根除这尊祸源。",
     }),
-    86010337: _tools.RODict({
-        "TaskId": 86010337,
+    86010339: _tools.RODict({
+        "TaskId": 86010339,
         "TaskGroup": 0,
         "TaskName": "深海挽歌",
         "TaskDetailDesc": "",
@@ -3314,12 +3362,6 @@ datas = _tools.RODict({
         "TaskGroup": 0,
         "TaskName": "整装待发",
         "TaskDetailDesc": "深海大战序幕拉开，前路凶险滔天。前辈询问你是否做好准备，你坚定回答：早已整装待发，随时可奔赴战场。",
-    }),
-    86010339: _tools.RODict({
-        "TaskId": 86010339,
-        "TaskGroup": 0,
-        "TaskName": "深海挽歌",
-        "TaskDetailDesc": "",
     }),
     86010340: _tools.RODict({
         "TaskId": 86010340,
@@ -3475,7 +3517,7 @@ datas = _tools.RODict({
         "TaskId": 86010136,
         "TaskGroup": 0,
         "TaskName": "强敌溃败",
-        "TaskDetailDesc": "击败入侵的祖珂教众",
+        "TaskDetailDesc": "击败入侵的祖珂教众。",
     }),
     86010264: _tools.RODict({
         "TaskId": 86010264,
@@ -3487,7 +3529,7 @@ datas = _tools.RODict({
         "TaskId": 86010265,
         "TaskGroup": 0,
         "TaskName": "强敌溃败",
-        "TaskDetailDesc": "击败入侵的祖珂教众",
+        "TaskDetailDesc": "击败入侵的祖珂教众。",
     }),
     86010149: _tools.RODict({
         "TaskId": 86010149,
@@ -3655,7 +3697,7 @@ datas = _tools.RODict({
         "TaskId": 86060142,
         "TaskGroup": 0,
         "TaskName": "血脉钥匙叁",
-        "TaskDetailDesc": "取回第三个血脉结晶",
+        "TaskDetailDesc": "取回第三个血脉结晶。",
     }),
     86060143: _tools.RODict({
         "TaskId": 86060143,
@@ -3764,18 +3806,6 @@ datas = _tools.RODict({
         "TaskGroup": 0,
         "TaskName": "同源异命",
         "TaskDetailDesc": "",
-    }),
-    86010393: _tools.RODict({
-        "TaskId": 86010393,
-        "TaskGroup": 0,
-        "TaskName": "双首破障壹",
-        "TaskDetailDesc": "祖珂残部藏身于幻术屏障之后。道尊告知，必须先斩杀镇守封印的两名巨型魔物首领，解开封印，方能破除屏障，彻底探明其巢穴所在。",
-    }),
-    86010394: _tools.RODict({
-        "TaskId": 86010394,
-        "TaskGroup": 0,
-        "TaskName": "双首破障壹",
-        "TaskDetailDesc": "祖珂残部藏身于幻术屏障之后。道尊告知，必须先斩杀镇守封印的两名巨型魔物首领，解开封印，方能破除屏障，彻底探明其巢穴所在。",
     }),
     86010395: _tools.RODict({
         "TaskId": 86010395,
@@ -3955,7 +3985,7 @@ datas = _tools.RODict({
         "TaskId": 86010083,
         "TaskGroup": 0,
         "TaskName": "矿脉探秘",
-        "TaskDetailDesc": "",
+        "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
     }),
     86010398: _tools.RODict({
         "TaskId": 86010398,
@@ -3963,101 +3993,71 @@ datas = _tools.RODict({
         "TaskName": "矿脉探秘",
         "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
     }),
-    86010399: _tools.RODict({
-        "TaskId": 86010399,
-        "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
-        "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
-    }),
-    86010400: _tools.RODict({
-        "TaskId": 86010400,
-        "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
-        "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
-    }),
-    86010401: _tools.RODict({
-        "TaskId": 86010401,
-        "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
-        "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
-    }),
-    86010402: _tools.RODict({
-        "TaskId": 86010402,
-        "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
-        "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
-    }),
-    86010403: _tools.RODict({
-        "TaskId": 86010403,
-        "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
-        "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
-    }),
-    86010443: _tools.RODict({
-        "TaskId": 86010443,
-        "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
-        "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
-    }),
     86010404: _tools.RODict({
         "TaskId": 86010404,
         "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
-        "TaskDetailDesc": "",
+        "TaskName": "矿脉探秘壹",
+        "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
     }),
     86010405: _tools.RODict({
         "TaskId": 86010405,
         "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
+        "TaskName": "矿脉探秘壹",
         "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
     }),
     86010406: _tools.RODict({
         "TaskId": 86010406,
         "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
+        "TaskName": "矿脉探秘壹",
         "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
     }),
     86010444: _tools.RODict({
         "TaskId": 86010444,
         "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
+        "TaskName": "矿脉探秘壹",
         "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
     }),
     86010445: _tools.RODict({
         "TaskId": 86010445,
         "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
+        "TaskName": "矿脉探秘壹",
         "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
     }),
     86010446: _tools.RODict({
         "TaskId": 86010446,
         "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
+        "TaskName": "矿脉探秘壹",
         "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
     }),
     86010447: _tools.RODict({
         "TaskId": 86010447,
         "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
+        "TaskName": "矿脉探秘壹",
         "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
     }),
     86010448: _tools.RODict({
         "TaskId": 86010448,
         "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
+        "TaskName": "矿脉探秘壹",
         "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
     }),
     86010449: _tools.RODict({
         "TaskId": 86010449,
         "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
+        "TaskName": "矿脉探秘壹",
         "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
     }),
     86010450: _tools.RODict({
         "TaskId": 86010450,
         "TaskGroup": 0,
-        "TaskName": "矿脉探秘",
+        "TaskName": "矿脉探秘壹",
         "TaskDetailDesc": "来人称赞你辅佐道尊肃清祖珂地堡的功绩，并告知如今地堡下方的矿脉已然安稳，希望劳烦你前去探查一番。接受任务后，前往地堡矿脉区域，查明其中状况。",
+    }),
+    86010337: _tools.RODict({
+        "TaskId": 86010337,
+        "TaskGroup": 0,
+        "TaskName": "矿脉探秘贰",
+        "TaskDetailDesc": "",
     }),
     86010451: _tools.RODict({
         "TaskId": 86010451,
@@ -4068,7 +4068,7 @@ datas = _tools.RODict({
     86010407: _tools.RODict({
         "TaskId": 86010407,
         "TaskGroup": 0,
-        "TaskName": "矿脉之争",
+        "TaskName": "矿脉之争壹",
         "TaskDetailDesc": "",
     }),
     86010408: _tools.RODict({
@@ -4077,46 +4077,10 @@ datas = _tools.RODict({
         "TaskName": "寻踪失联",
         "TaskDetailDesc": "祖珂矿脉解禁开启，各方势力争相涌入。青龙帮也想分一杯羹，但先前派去打探矿脉的弟兄全部失联、杳无音讯。帮主恳请你帮忙寻找他们的下落。",
     }),
-    86010409: _tools.RODict({
-        "TaskId": 86010409,
-        "TaskGroup": 0,
-        "TaskName": "矿区功能",
-        "TaskDetailDesc": "",
-    }),
-    86010410: _tools.RODict({
-        "TaskId": 86010410,
-        "TaskGroup": 0,
-        "TaskName": "寻踪失联",
-        "TaskDetailDesc": "祖珂矿脉解禁开启，各方势力争相涌入。青龙帮也想分一杯羹，但先前派去打探矿脉的弟兄全部失联、杳无音讯。帮主恳请你帮忙寻找他们的下落。",
-    }),
-    86010411: _tools.RODict({
-        "TaskId": 86010411,
-        "TaskGroup": 0,
-        "TaskName": "寻踪失联",
-        "TaskDetailDesc": "祖珂矿脉解禁开启，各方势力争相涌入。青龙帮也想分一杯羹，但先前派去打探矿脉的弟兄全部失联、杳无音讯。帮主恳请你帮忙寻找他们的下落。",
-    }),
-    86010412: _tools.RODict({
-        "TaskId": 86010412,
-        "TaskGroup": 0,
-        "TaskName": "寻踪失联",
-        "TaskDetailDesc": "祖珂矿脉解禁开启，各方势力争相涌入。青龙帮也想分一杯羹，但先前派去打探矿脉的弟兄全部失联、杳无音讯。帮主恳请你帮忙寻找他们的下落。",
-    }),
-    86010413: _tools.RODict({
-        "TaskId": 86010413,
-        "TaskGroup": 0,
-        "TaskName": "寻踪失联",
-        "TaskDetailDesc": "祖珂矿脉解禁开启，各方势力争相涌入。青龙帮也想分一杯羹，但先前派去打探矿脉的弟兄全部失联、杳无音讯。帮主恳请你帮忙寻找他们的下落。",
-    }),
-    86010414: _tools.RODict({
-        "TaskId": 86010414,
-        "TaskGroup": 0,
-        "TaskName": "寻踪失联",
-        "TaskDetailDesc": "祖珂矿脉解禁开启，各方势力争相涌入。青龙帮也想分一杯羹，但先前派去打探矿脉的弟兄全部失联、杳无音讯。帮主恳请你帮忙寻找他们的下落。",
-    }),
     86010415: _tools.RODict({
         "TaskId": 86010415,
         "TaskGroup": 0,
-        "TaskName": "矿区功能",
+        "TaskName": "矿脉之争贰",
         "TaskDetailDesc": "",
     }),
     86010416: _tools.RODict({
@@ -4140,7 +4104,7 @@ datas = _tools.RODict({
     86010418: _tools.RODict({
         "TaskId": 86010418,
         "TaskGroup": 0,
-        "TaskName": "矿区功能",
+        "TaskName": "矿脉之争叁",
         "TaskDetailDesc": "",
     }),
     86010453: _tools.RODict({
@@ -4177,13 +4141,13 @@ datas = _tools.RODict({
         "TaskId": 86010059,
         "TaskGroup": 0,
         "TaskName": "支援飞沙",
-        "TaskDetailDesc": "前往飞沙要塞支援",
+        "TaskDetailDesc": "前往飞沙要塞支援。",
     }),
     86010080: _tools.RODict({
         "TaskId": 86010080,
         "TaskGroup": 0,
         "TaskName": "支援飞沙",
-        "TaskDetailDesc": "前往飞沙要塞支援",
+        "TaskDetailDesc": "前往飞沙要塞支援。",
     }),
     86010454: _tools.RODict({
         "TaskId": 86010454,
@@ -4195,13 +4159,13 @@ datas = _tools.RODict({
         "TaskId": 86010468,
         "TaskGroup": 0,
         "TaskName": "支援飞沙",
-        "TaskDetailDesc": "前往飞沙要塞支援",
+        "TaskDetailDesc": "前往飞沙要塞支援。",
     }),
     86010455: _tools.RODict({
         "TaskId": 86010455,
         "TaskGroup": 0,
         "TaskName": "支援飞沙",
-        "TaskDetailDesc": "前往飞沙要塞支援",
+        "TaskDetailDesc": "前往飞沙要塞支援。",
     }),
     86010456: _tools.RODict({
         "TaskId": 86010456,

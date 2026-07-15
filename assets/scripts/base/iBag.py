@@ -128,23 +128,42 @@ class AwardMixin(object):
         award.coin.data += math.floor(float(award.coin.data) * copper)
 
     def doAwardOnKillMonster(self, dropCtx, award0, award1):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_doAwardOnKillMonster', (dropCtx, award0, award1))
+        else:
+            self._doAwardOnKillMonster(dropCtx, award0, award1)
+
+    def _doAwardOnKillMonster(self, dropCtx, award0, award1):
         LOG_DBG("iBag->doAwardOnKillMonster ", dropCtx, award0, award1)
         opUUID = dropCtx.opUUID
         srcType = dropCtx.srcType
         detail = dropCtx.detail
+        crossServerData = []
         # 进包裹的
         if len(award0) > 0:
             for data in award0:
                 awardId = data[0]
                 awardNum = data[1]
-                self.addAwards(srcType, awardId, awardNum, opUUID, detail, dropCtx)
+                ret = self.addAwards(srcType, awardId, awardNum, opUUID, detail, dropCtx)
+                if ret:
+                    crossServerData.append(ret)
         # 掉地上的
         if len(award1) > 0:
-            for data in award1:
-                awardId = data[0]
-                awardNum = data[1]
-                self.dropAwards(srcType, awardId, awardNum, opUUID, detail, dropCtx)
-        return
+            if self.isCrossServerInLocalServer:
+                LOG_ERR("cross server drop award unsupport")
+                return
+            else:
+                for data in award1:
+                    awardId = data[0]
+                    awardNum = data[1]
+                    self.dropAwards(srcType, awardId, awardNum, opUUID, detail, dropCtx)
+        self.syncMethodCallToCrossServerBase('_onLocalServerDoAwardOnKillMonster', (crossServerData, srcType, opUUID, detail, dropCtx))
+
+    def _onLocalServerDoAwardOnKillMonster(self, crossServerData, srcType, opUUID, detail, dropCtx):
+        LOG_INFO('iBag->_onLocalServerDoAwardOnKillMonster', crossServerData, srcType, opUUID, detail, dropCtx)
+        for awardVal in crossServerData:
+            self.doAwardAdditionProps(awardVal, dropCtx)
+            self.addWealth(srcType, awardVal, opUUID, detail, dropCtx)
     
     def _onKillMonsterItemWealthAdjust(self, oldItemWealth, newItemWealth, rewardProp, newBindType):
         # data
@@ -357,7 +376,7 @@ class AwardMixin(object):
         self.doAwardAdditionProps(awardVal, awardCtx)
         LOG_INFO('addAwards, awardVal:', awardVal, srcType, awardNum, awardId, opUUID)
         self._doAddAwards(srcType, awardId, awardVal, awardNum, opUUID, detail, awardCtx, notify=notify, popWindow=popWindow)
-        return True
+        return awardVal
 
     def _doAddAwards(self, srcType, awardId, awardVal, num, opUUID, detail, awardCtx, notify=True, popWindow=False):
         self.addWealth(srcType, awardVal, opUUID, detail, awardCtx, notify=notify, popWindow=popWindow)
@@ -462,6 +481,11 @@ class AwardMixin(object):
 
         if awardVal.isEmpty():
             return
+
+        #跨服获取道具链路，在本服addwealth前将物品生成出来
+        if self.isCrossServerInLocalServer:
+            awardVal.itemWealth.toItemObjs(extra={'school':self.getRoleCacheAttr('school')})
+            awardVal.petItemWealth.toItemObjs(extra={'school':self.getRoleCacheAttr('school')})
         
         # 合并分解出来的同类数据
         mergedDisaItems = {}
@@ -487,7 +511,8 @@ class AwardMixin(object):
                     awardVal.itemWealth.addItemObjs(equipList)
                 # 检测魂魄自动分解开关
                 if dataUtils.checkSoulSwitch(autoEquipDisassemble):
-                    soulList = awardVal.itemWealth.popSoulItemObjs()
+                    extra={'school':self.getRoleCacheAttr('school')}
+                    soulList = awardVal.itemWealth.popSoulItemObjs(extra)
                     disassembleSouls = []
                     for it in soulList:
                         # 魂魄要属性为空的才自动分解
@@ -575,14 +600,18 @@ class AwardMixin(object):
             self.addGuildContrib(awardVal.guildContrib.data, opUUID, srcType, detail, srcSubType, idipSource)
             self.triggerAchievementWithCtx(gameconst.AchieveType.GUILD_CONTRIB, actionContext.AchievementCtx(num=awardVal.guildContrib.data))
 
-        if awardVal.guildMoney and awardVal.guildMoney.data > 0 and self.guildBox:
-            self.guildBox.modifyGuildMoney(awardVal.guildMoney.data, srcType, opUUID, detail)
+        if self.guildBox:
+            if awardVal.guildMoney and awardVal.guildMoney.data > 0:
+                self.guildBox.modifyGuildMoney(awardVal.guildMoney.data, srcType, opUUID, detail)
 
-        if awardVal.guildFund and awardVal.guildFund.data > 0 and self.guildBox:
-            self.guildBox.modifyGuildFund(awardVal.guildFund.data, srcType, opUUID, detail)
+            if awardVal.guildFund and awardVal.guildFund.data > 0:
+                self.guildBox.modifyGuildFund(awardVal.guildFund.data, srcType, opUUID, detail)
 
-        if awardVal.guildExp and awardVal.guildExp.data > 0 and self.guildBox:
-            self.guildBox.addGuildExp(awardVal.guildExp.data, srcType, opUUID, detail)
+            if awardVal.guildExp and awardVal.guildExp.data > 0:
+                self.guildBox.addGuildExp(awardVal.guildExp.data, srcType, opUUID, detail)
+
+            if awardVal.guildCommission and awardVal.guildCommission.data > 0:
+                self.guildBox.modifyGuildCommission(awardVal.guildCommission.data, srcType, opUUID, detail)
 
         if awardVal.titleWealth and awardVal.titleWealth.data:
             self.addTitle(awardVal.titleWealth.data, opUUID, srcType, detail, srcSubType, idipSource)
@@ -1053,8 +1082,14 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
     def reqGetOnlineTimeReward(self, exposed, rewardIdx):
         return
 
-    @gamedecorator.checkGameconfigEnable('bag', ['checkInnerDemonUseItems'])
+    @gamedecorator.checkSpecialGameconfigEnable('bag', ['checkInnerDemonUseItems'])
     def baseUseItems(self, gridId, itemId, useNum, useItemCtx, isBaseAct=False):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_baseUseItems', (gridId, itemId, useNum, useItemCtx, isBaseAct))
+        else:
+            self._baseUseItems(gridId, itemId, useNum, useItemCtx, isBaseAct)
+
+    def _baseUseItems(self, gridId, itemId, useNum, useItemCtx, isBaseAct):
         LOG_INFO('in baseUseItems:', gridId, itemId, useNum, useItemCtx.targetId)
         if dataUtils.isLingShouItem(itemId):
             _bag = self.getBagByType(gameconst.BagTypeEnum.BAG_TYPE_LINGSHOU_PEN)
@@ -1120,20 +1155,23 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         _bag = self.getBagByType(_bagType)
         _bag.onUseItemDone(self, isSucceed, opUUID, crossServerEnable)
 
-    def onCrossServerUpdateItemCD(self, itemId, bagType):
-        LOG_INFO('onCrossServerUpdateItemCD:', itemId, bagType)
+    def onLocalServerUpdateItemCD(self, itemId, bagType):
+        LOG_INFO('onLocalServerUpdateItemCD:', itemId, bagType)
         _bag = self.getBagByType(bagType)
         _bag._updateItemCD(self, itemId)
 
-    def onCrossServerUseItemReturn(self, bagType, info, opUUID):
-        LOG_INFO('onCrossServerUseItemReturn:', bagType, info, opUUID)
+    def onLocalServerUseItemReturn(self, bagType, info, opUUID):
+        LOG_INFO('onLocalServerUseItemReturn:', bagType, info, opUUID)
         _bag = self.getBagByType(bagType)
-        _bag._onCrossServerUseItemReturn(self, info, opUUID)
+        _bag._onLocalServerUseItemReturn(self, info, opUUID)
 
     @gamedecorator.checkGameconfigEnable('bag')
     @gamedecorator.crossServer
     def reqBindItem(self, exposed, bagType, gridId, itemId):
-        self._reqBindItem(exposed, bagType, gridId, itemId)
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_reqBindItem', (exposed, bagType, gridId, itemId))
+        else:
+            self._reqBindItem(exposed, bagType, gridId, itemId)
 
     def _reqBindItem(self, exposed, bagType, gridId, itemId):
         LOG_INFO('in reqBindItem::', bagType, gridId, itemId)
@@ -1172,10 +1210,10 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             _normalCnt, 
             _detail)
         
-        self.syncMethodCallToLocalServerBase('onCrossServerReqBindItem', (bagType, gridId, itemId))
+        self.syncMethodCallToCrossServerBase('onLocalServerReqBindItem', (bagType, gridId, itemId))
     
-    def onCrossServerReqBindItem(self, bagType, gridId, itemId):
-        LOG_INFO('onCrossServerReqBindItem:', bagType, gridId, itemId)
+    def onLocalServerReqBindItem(self, bagType, gridId, itemId):
+        LOG_INFO('onLocalServerReqBindItem:', bagType, gridId, itemId)
         self._reqBindItem(self.id, bagType, gridId, itemId)
 
 
@@ -1291,7 +1329,10 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
     @gamedecorator.limitcall(1)
     @gamedecorator.crossServer
     def reqBagSort(self, exposed, bagType):
-        self._reqBagSort(exposed, bagType)
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_reqBagSort', (exposed, bagType))
+        else:
+            self._reqBagSort(exposed, bagType)
 
     def _reqBagSort(self, exposed, bagType):
         LOG_INFO('in bagSort:', bagType)
@@ -1299,10 +1340,10 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         bag = self.getBagByType(bagType)
         if bag.doBagSort(self):
             self.sendStreamBagData(bag, gameconst.StreamStringID.NORMAL_BAG_SORT_INFO)
-        self.syncMethodCallToLocalServerBase('onCrossServerBagSort', (bagType,))
+            self.syncMethodCallToCrossServerBase('onLocalServerBagSort', (bagType,))
 
-    def onCrossServerBagSort(self, bagType):
-        LOG_INFO('onCrossServerBagSort:', bagType)
+    def onLocalServerBagSort(self, bagType):
+        LOG_INFO('onLocalServerBagSort:', bagType)
         self._reqBagSort(self.id, bagType)
 
     def sendStreamBagData(self, bag, stringStringID):
@@ -1316,7 +1357,10 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
     @gamedecorator.checkGameconfigEnable('bag')
     @gamedecorator.crossServer
     def unlockGrids(self, exposed, gridNum):
-        self._unlockGrids(exposed, gridNum)
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_unlockGrids', (exposed, gridNum))
+        else:
+            self._unlockGrids(exposed, gridNum)
 
     def _unlockGrids(self, exposed, gridNum):
         LOG_INFO('in unlockGrids', gridNum)
@@ -1326,21 +1370,21 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         newCapacity = self.bagData.doUnlockGrids(self, gridNum)
         if newCapacity:
             self.client.onUnlockGrids(gameconst.BagOPStat.OPERATE_BAG_STAT_OK, newCapacity)
-            self.syncMethodCallToLocalServerBase('onCrossServerUnlockGrids', (gridNum,))
+            self.syncMethodCallToCrossServerBase('onLocalServerUnlockGrids', (gridNum,))
             return True
 
-    def onCrossServerUnlockGrids(self, gridNum):
-        LOG_INFO('onCrossServerUnlockGrids', gridNum)
-        #跨服解锁了本服却解锁失败了
+    def onLocalServerUnlockGrids(self, gridNum):
+        LOG_INFO('onLocalServerUnlockGrids', gridNum)
+        #本服解锁了跨服却解锁失败了
         if not self._unlockGrids(self.id, gridNum):
-            LOG_ERR('onCrossServerUnlockGrids failed:', gridNum)
+            LOG_ERR('onLocalServerUnlockGrids failed:', gridNum)
 
     def canDeductWealth(self, deductWealthVal: dropAward.DeductWealthVal, sendMsg=False):
         if deductWealthVal.coin.data and deductWealthVal.coin.data > self.coin:
             sendMsg and self.onMessagePre(M_M_DD.datas.itemNotEnough, [str(deductWealthVal.coin.itemId)])
             return gameclass.ResultBool(False, 'coin')
 
-        if deductWealthVal.money.data > self.money:
+        if deductWealthVal.money.data and deductWealthVal.money.data > self.money:
             sendMsg and self.onMessagePre(M_M_DD.datas.itemNotEnough, [str(deductWealthVal.money.itemId)])
             return False
 
@@ -1348,19 +1392,19 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             self.onMessagePre(A_ACD.datas['dailyGoldLimitMsg']['value'], [])
             return False
 
-        if deductWealthVal.darkIron.data > self.darkIron:
+        if deductWealthVal.darkIron.data and deductWealthVal.darkIron.data > self.darkIron:
             sendMsg and self.onMessagePre(M_M_DD.datas.itemNotEnough, [str(deductWealthVal.darkIron.itemId)])
             return False
 
-        if deductWealthVal.guildContrib.data > self.guildContrib:
+        if deductWealthVal.guildContrib.data and deductWealthVal.guildContrib.data > self.guildContrib:
             sendMsg and self.onMessagePre(M_M_DD.datas.itemNotEnough, [str(deductWealthVal.guildContrib.itemId)])
             return False
         
-        if deductWealthVal.bindMoney.data > self.bindMoney:
+        if deductWealthVal.bindMoney.data and deductWealthVal.bindMoney.data > self.bindMoney:
             sendMsg and self.onMessagePre(M_M_DD.datas.itemNotEnough, [str(deductWealthVal.bindMoney.itemId)])
             return False
 
-        if deductWealthVal.appearanceCoin.data > self.appearanceCoin:
+        if deductWealthVal.appearanceCoin.data and deductWealthVal.appearanceCoin.data > self.appearanceCoin:
             sendMsg and self.onMessagePre(M_M_DD.datas.itemNotEnough, [str(deductWealthVal.appearanceCoin.itemId)])
             return False
 
@@ -1966,8 +2010,11 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 if pickData['type'] == gameconst.CollectionType.FIRST_BLOOD:
                     awardVal = dropAward.AwardVal()
                     for customAwardVal in context.customAward:
-                        awardVal.addWealthByItemId(customAwardVal['itemId'], customAwardVal['count'])
-                    self.addWealth(AAC_AAC_DD.datas.BONUS_SRC_GATHER, awardVal, opUUID, detail, awardCtx)
+                        awardVal.addWealthByItemId(customAwardVal['itemId'], customAwardVal['count'], customAwardVal['FBBind'])
+                    if gameconfig.isCrossServer():
+                        self.syncMethodCallToLocalServerBase("onCrossServerGatherAdd", (AAC_AAC_DD.datas.BONUS_SRC_GATHER, awardVal, opUUID, detail, awardCtx))
+                    else:
+                        self.addWealth(AAC_AAC_DD.datas.BONUS_SRC_GATHER, awardVal, opUUID, detail, awardCtx)
                 else:
                     self.addAwards(
                         AAC_AAC_DD.datas.BONUS_SRC_GATHER, 
@@ -1980,6 +2027,15 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if lifeSkMakeItemId:
             # 生活技能采集
             self.gatherItemsByLifeSkill(lifeSkMakeItemId, collectionId)
+
+    def onCrossServerGatherAdd(self, src, awardVal, opUUID, detail, awardCtx):
+        LOG_INFO("onCrossServerGatherAdd", src, awardVal, opUUID, detail, awardCtx)
+        self.addWealth(src, awardVal, opUUID, detail, awardCtx)
+        self.syncMethodCallToCrossServerBase("onLocalServerGatherAdd", (src, awardVal, opUUID, detail, awardCtx))
+
+    def onLocalServerGatherAdd(self, src, awardVal, opUUID, detail, awardCtx):
+        LOG_INFO("onLocalServerGatherAdd", src, awardVal, opUUID, detail, awardCtx)
+        self.addWealth(src, awardVal, opUUID, detail, awardCtx)
 
     def getAwardFactor(self, collectionId):
         factor = 1.0
@@ -2332,29 +2388,24 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             return
 
         self.addWealth(srcType, _wealthVal, opUUID, detail, _awardCtx)
-        if gameconfig.isCrossServer():
-            #跨服调用这个接口只能是来自使用物品，如果出现其他情况一定是在这之后加的功能
-            if not hasattr(ctx, 'isCrossServerUseItem'):
-                gameengine.panicStack('getRewardByIdBase, isCrossServerUseItem not in ctx:', ctx)
-            else:
-                self.syncMethodCallToLocalServerBase('onCrossServerGetUseItemReward', (srcType, _wealthVal, opUUID, detail, _awardCtx))
+        self.syncMethodCallToCrossServerBase('onLocalServerGetUseItemReward', (srcType, _wealthVal, opUUID, detail, _awardCtx))
         self.cell.onPendingUseItemFinished(ctx.pendingOpId, gameconst.UseItemEnum.TRUE)
         
-    def onCrossServerDeductUseTimes(self, gridId, itemId, useNum):
-        LOG_INFO("onCrossServerDeductUseTimes", gridId, itemId, useNum)
+    def onLocalServerDeductUseTimes(self, gridId, itemId, useNum):
+        LOG_INFO("onLocalServerDeductUseTimes", gridId, itemId, useNum)
         gridObj = self.getItemObjByGridId(gridId)
         if gridObj.itemId != itemId:
-            gameengine.panicStack('onCrossServerDeductUseTimes, itemId not match:', gridObj.itemId, itemId)
+            gameengine.panicStack('onLocalServerDeductUseTimes, itemId not match:', gridObj.itemId, itemId)
             return
         gridObj.useTimes -= useNum
 
-    def onCrossServerDeductUseItem(self, bagType, grid2ItemNum, opUUID, srcType, detail):
-        LOG_INFO("onCrossServerDeductUseItem", bagType, grid2ItemNum, opUUID, srcType, detail)
+    def onLocalServerDeductUseItem(self, bagType, grid2ItemNum, opUUID, srcType, detail):
+        LOG_INFO("onLocalServerDeductUseItem", bagType, grid2ItemNum, opUUID, srcType, detail)
         _bag = self.getBagByType(bagType)
         _bag.deductItemsByGridId(self, grid2ItemNum, opUUID, srcType, detail)
 
-    def onCrossServerGetUseItemReward(self, srcType, wealthVal, opUUID, detail, awardCtx):
-        LOG_INFO("onCrossServerGetUseItemReward", srcType, wealthVal, opUUID, detail, awardCtx)
+    def onLocalServerGetUseItemReward(self, srcType, wealthVal, opUUID, detail, awardCtx):
+        LOG_INFO("onLocalServerGetUseItemReward", srcType, wealthVal, opUUID, detail, awardCtx)
         self.addWealth(srcType, wealthVal, opUUID, detail, awardCtx)
 
     def getRewardByBoxItem(self, gridId, itemId, useNum, opUUID, context, itemsDic):
@@ -2375,6 +2426,16 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
     # --------------------------------- 自动吃药  begin ------------------------
 
     def useItemWithActionInternal(self, bagType, itemId, targetId):
+        if gameconfig.isCrossServer():
+            itemData = ITEM_DATA.datas[itemId]
+            if not itemData['ifCrossServer']:
+                LOG_ERR('in useItemWithActionInternal, item can not use in cross server')
+                return
+            self.syncMethodCallToLocalServerBase('_useItemWithActionInternal', (bagType, itemId, targetId))
+        else:
+            self._useItemWithActionInternal(bagType, itemId, targetId)
+
+    def _useItemWithActionInternal(self, bagType, itemId, targetId):
         bag = self.getBagByType(bagType)
         if not bag:
             return False
@@ -2644,7 +2705,10 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
     @gamedecorator.checkGameconfigEnable('currencyExchange')
     @gamedecorator.crossServer
     def exchangeCurrency(self, exposed, cId, cost):
-        self._exchangeCurrency(exposed, cId, cost)
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_exchangeCurrency', (exposed, cId, cost))
+        else:
+            self._exchangeCurrency(exposed, cId, cost)
 
     def _exchangeCurrency(self, exposed, cId, cost):
         LOG_INFO("exchangeCurrency", cId, cost)
@@ -2676,7 +2740,14 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             if dailyUsed + cost > dailyLimit:
                 LOG_ERR("exchangeCurrency dailyLimit", cId, dailyUsed, dailyLimit)
                 return
-        
+
+        #月卡用户才能购买
+        monthCardLimit = data['isMonthCard']
+        if monthCardLimit != 0:
+            if self.isPremiumIdMonthCardExpired(monthCardLimit):
+                LOG_ERR("exchangeCurrency monthCardLimit", cId, cost, monthCardLimit)
+                return
+
         # 多换1不能整除
         if data['exchangeType'] == 1:
             if cost % data['exchangeRate'] != 0:
@@ -2725,19 +2796,21 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             dailyLimit,
             dailyUsed,
             dailyUsed + cost,
+            self.accountEntity.accountName,
+            self.obId,
         )
 
         checkData = (costItemId, cost, addItemId, addNum)
-        self.syncMethodCallToLocalServerBase('onCrossServerExchangeCurrency', (cId, cost, checkData))
+        self.syncMethodCallToCrossServerBase('onLocalServerExchangeCurrency', (cId, cost, checkData))
         return checkData
 
-    def onCrossServerExchangeCurrency(self, cId, cost, checkData):
+    def onLocalServerExchangeCurrency(self, cId, cost, checkData):
         _checkData = self._exchangeCurrency(self.id, cId, cost)
         #跨服兑换货币，本服也会同时兑换一次，校验一下两边兑换的结果是否一致
         if _checkData != checkData:
-            gameengine.panicStack("onCrossServerExchangeCurrency failed!!!!", checkData, _checkData)
+            gameengine.panicStack("onLocalServerExchangeCurrency failed!!!!", checkData, _checkData)
         else:
-            LOG_INFO("onCrossServerExchangeCurrency check ok", checkData, _checkData)
+            LOG_INFO("onLocalServerExchangeCurrency check ok", checkData, _checkData)
 
     @gamedecorator.checkGameconfigEnable('bag')
     @gamedecorator.limitcall(2)
@@ -2936,10 +3009,6 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         itemIdList = []
         costItemInfo = {}
         getItemInfo = {}
-        # if self.bagData.isFull():
-        #     self.onMessagePre(M_M_DD.datas.bagFullGeneralMessage, [])
-        #     self.client.onRandomSynthesis(itemIdList)
-        #     return
 
         srcType = AAC_AAC_DD.datas.BONUS_SRC_RANDOM_SYNTHESIS
         detail = gameclass.AwardDetailCls()
@@ -2977,10 +3046,12 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         curSubType = None
         curQuality = None
         curItemNum = 0
+        curGroupInfoList = []
         ranItemAddVal = dropAward.AwardVal()
         synthesisUpgradeNumList = []
         synthesisUpgradeKeySet = set()
         normalItemNum = 0
+        deductVal = dropAward.DeductWealthVal()
         for itemId, itemNum, bindType in realItemInfoList:
             costItemInfo[itemId] = costItemInfo.get(itemId, 0) + itemNum
             hasBindType = True if bindType == gameconst.ItemBindType.BIND else hasBindType
@@ -3028,9 +3099,31 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 self.client.onRandomSynthesis(itemIdList)
                 return
             curItemNum += itemNum
+            curGroupInfoList.append((itemId, itemNum, bindType))
             synthesisNeedNum = 4
             while curItemNum >= synthesisNeedNum:
                 curItemNum -= synthesisNeedNum
+                curGroupDeductNum = 0
+                curGroupInfo = []
+                curGroupInfoListLen = len(curGroupInfoList)
+                for _ in range(curGroupInfoListLen):
+                    if len(curGroupInfoList) <=0:
+                        break
+                    if curGroupDeductNum >= synthesisNeedNum:
+                        break
+                    itemId, itemNum, bindType = curGroupInfoList[0]
+                    deductNum = min(synthesisNeedNum - curGroupDeductNum, itemNum)
+                    curGroupDeductNum += deductNum
+                    if deductNum < itemNum:
+                        itemNum -= deductNum
+                        curGroupInfoList[0] = (itemId, itemNum, bindType)
+                        curGroupInfo.append((itemId, deductNum, bindType))
+                    else:
+                        curGroupInfo.append(curGroupInfoList.pop(0))
+                if self.getRoleCacheAttr('level', 0) < cfgData['openLv'][quality]:
+                    LOG_WARN("reqRandomSynthesis level not enough", self.getRoleCacheAttr('level', 0), cfgData['openLv'][quality])
+                    itemIdList.append({'itemId': 0, 'itemNum': 0, 'bindType': 0})
+                    continue
                 prob = cfgData['probList'][quality]
                 if not prob:
                     LOG_ERR("reqRandomSynthesis prob not found", quality)
@@ -3071,6 +3164,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 if curNormalNum > 0 and len(_randomCfg) > curNormalNum and random.randint(0, 100) <= _randomCfg[curNormalNum]:
                     itemBindType = gameconst.ItemBindType.NORMAL
                 #LOG_INFO("reqRandomSynthesis, normalItemNum:", normalItemNum, curNormalNum)
+                for (itemId, itemNum, bindType) in curGroupInfo:
+                    deductVal.addWealthByItemId(itemId, itemNum, bindType)
                 randItem = itemFactory.ItemFactory.createItem(ranItemId, 1, itemBindType)
                 itemIdList.append({'itemId': ranItemId, 'itemNum': 1, 'bindType': itemBindType})
                 ranItemAddVal.addWealthByObjList([randItem])
@@ -3243,18 +3338,36 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         totalNum = 0
         refNumSet = set()
         qualitySet = set()
-        mainTypeList = []
         subTypeList = []
         costItemInfo = {}
+        _synPools = dataUtils.getSynthesPools()
+        _poolIdx = None
+        _mainType = None
         for info in infoList:
             key = info['key']
             num = info['num']
+
             costItemInfo[key] = costItemInfo.get(key, 0) + num
 
             synthesisKey = key // 10
             quality = key % 10
             mainType = synthesisKey // 1000
             subType = synthesisKey % 1000
+
+            # 校验subKey 是不是合法
+            if _poolIdx is None:
+                for _idx, _pool in enumerate(_synPools):
+                    if subType in _pool:
+                        _poolIdx = _idx
+                        break
+                else:
+                    LOG_ERR('reqRandomUpgradeSynthesis subType invalid:', subType, _synPools)
+
+            else:
+                if subType not in _synPools[_poolIdx]:
+                    LOG_ERR('reqRandomUpgradeSynthesis subType invalid', subType, _poolIdx)
+                    return
+
             cfgData = RSSD.datas.get(synthesisKey, None)
             if not cfgData:
                 LOG_ERR("reqRandomUpgradeSynthesis cfgData not found", synthesisKey)
@@ -3266,8 +3379,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             totalNum += num
             refNumSet.add(cfgData['refNumber'])
             qualitySet.add(quality)
-            mainTypeList.append(mainType)
             subTypeList.append(subType)
+            _mainType = mainType
             
         if len(refNumSet) != 1:
             LOG_ERR("reqRandomUpgradeSynthesis not same random synthesis")
@@ -3287,10 +3400,9 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         school = self.getRoleCacheAttr('school')
         # 获取可以随机的道具
         ranItemIdSet = set()
-        for idx, mainType in enumerate(mainTypeList):
-            subType = subTypeList[idx]
-            ranItemIdSet |= (IDIDS.categoryWithQualityDatas.get((mainType, subType, itemQuality, school), set()))
-            ranItemIdSet |= (IDIDS.categoryWithQualityDatas.get((mainType, subType, itemQuality, 0), set()))
+        for _subType in _synPools[_poolIdx]:
+            ranItemIdSet |= (IDIDS.categoryWithQualityDatas.get((_mainType, _subType, itemQuality, school), set()))
+            ranItemIdSet |= (IDIDS.categoryWithQualityDatas.get((_mainType, _subType, itemQuality, 0), set()))
 
         LOG_DBG("reqRandomUpgradeSynthesis ranItemIdSet", ranItemIdSet)
 
@@ -3308,7 +3420,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         for ranItemId in rmItemIdList:
             ranItemIdList.remove(ranItemId)
         if len(ranItemIdList) < 1:
-            LOG_ERR("reqRandomUpgradeSynthesis ranItemIdList not found", mainTypeList, subTypeList, itemQuality, school)
+            LOG_ERR("reqRandomUpgradeSynthesis ranItemIdList not found", _mainType, subTypeList, itemQuality, school)
             return
 
         for key, num in costItemInfo.items():
@@ -3406,6 +3518,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             self.onMessagePre(TC_NCD.datas['cntAlert_NameError']['value'], [])
             return
 
+        oldName = self.getRoleCacheAttr('name', '')
         self.cell.onPendingUseRenameItemResult(True, pendingUseId, newName)
         self.updateRoleCache({'name': newName})
         self.guildBox and self.guildBox.onGuildMemberPropUpdate(self.gbID, 'name', newName)
@@ -3420,6 +3533,15 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         #改名通知城战模块
         self.onSiegeWarRename(newName)
+
+        # 角色改名埋点
+        LogTrackingMgr.LogTrackingMgr.role_rename(
+            self.gbID,
+            self.accountEntity.clientDistinctId if self.accountEntity else '',
+            utils.getNowTimeStr(),
+            oldName,
+            newName,
+        )
 
     def delOldName(self, oldName):
         gameglobal.localBaseApp.getRedisClient().hdel(
@@ -3450,8 +3572,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             LOG_WARN('   in bagExpansion, reach limit 2:', newCapacity)
             newCapacity = commonBagCapacity
         self.bagData.capacity = newCapacity
-        if gameconfig.isCrossServer():
-            self.syncMethodCallToLocalServerBase('onCrossServerBagExpansion', (oldCapacity, newCapacity))
+        self.syncMethodCallToCrossServerBase('onLocalServerBagExpansion', (oldCapacity, newCapacity))
         self.cell.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.TRUE)
 
         LogTrackingMgr.LogTrackingMgr.Capacity_Expansion(
@@ -3469,10 +3590,10 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         self.client.onUnlockGrids(gameconst.BagOPStat.OPERATE_BAG_STAT_OK, newCapacity)
     
-    def onCrossServerBagExpansion(self, oldCapacity, newCapacity):
-        LOG_INFO('onCrossServerBagExpansion:', oldCapacity, newCapacity)
+    def onLocalServerBagExpansion(self, oldCapacity, newCapacity):
+        LOG_INFO('onLocalServerBagExpansion:', oldCapacity, newCapacity)
         if self.bagData.capacity != oldCapacity:
-            gameengine.panicStack('onCrossServerBagExpansion, bag capacity not match:', self.bagData.capacity, oldCapacity)
+            gameengine.panicStack('onLocalServerBagExpansion, bag capacity not match:', self.bagData.capacity, oldCapacity)
         self.bagData.capacity = newCapacity
         self.client.onUnlockGrids(gameconst.BagOPStat.OPERATE_BAG_STAT_OK, newCapacity)
 
@@ -3651,3 +3772,55 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         res = self.instantPotionSlots.checkInnerDemonUseItems(itemId)
         LOG_DBG("checkInnerDemonUseItems base", gridId, itemId, useNum, useItemCtx, isBaseAct, res)
         return res
+
+    #本服跨服fnv哈希校验
+    def doBagFnvHashCheck(self):
+        self._doBagFnvHashCheck(gameconst.BagTypeEnum.BAG_TYPE_NORMAL)
+        self._doBagFnvHashCheck(gameconst.BagTypeEnum.BAG_TYPE_LINGSHOU_PEN)
+
+    def _doBagFnvHashCheck(self, bagTp):
+        if not self.isCrossServerInLocalServer:
+            return
+        bag = self.getBagByType(bagTp)
+        if bag.isLocked():
+            LOG_INFO('doBagFnvHashCheck pass, bag is locked')
+            return
+        res = bag.calFnvHash()
+        self.syncMethodCallToCrossServerBase('onFnvCheck', (res, bagTp))
+    
+    #跨服fnv哈希校验
+    def onFnvCheck(self, res, bagTp):
+        bag = self.getBagByType(bagTp)
+        if bag.isLocked():
+            LOG_INFO('onFnvCheck pass, bag is locked')
+            return
+
+        _res = bag.calFnvHash()
+        if res != _res:
+            LOG_ERR('onFnvCheck failed', res, _res, bagTp)
+            self.syncMethodCallToLocalServerBase('onFnvCheckFailed', (res, _res, bagTp))
+
+    #校验失败本服背包数据打包
+    def onFnvCheckFailed(self, res, _res, bagTp):
+        LOG_ERR('onFnvCheck failed', res, _res, bagTp)
+
+        bag = self.getBagByType(bagTp)
+        if bag.isLocked():
+            LOG_ERR('onFnvCheckFailed pass, bag is locked')
+            return
+        
+        gridIdToGridObj, itemIdToGridIds = bag.getPickleBagData()
+        self.syncMethodCallToCrossServerBase('onSyncBagPickleData', (gridIdToGridObj, itemIdToGridIds, bagTp))
+
+    #跨服覆盖背包数据
+    def onSyncBagPickleData(self, gridIdToGridObj, itemIdToGridIds, bagTp):
+        LOG_INFO('onSyncBagPickleData', gridIdToGridObj, itemIdToGridIds, bagTp)
+        
+        bag = self.getBagByType(bagTp)
+        if bag.isLocked():
+            LOG_ERR('onSyncBagPickleData pass, bag is locked')
+            return
+        
+        bag.forceInitFromBagData(gridIdToGridObj, itemIdToGridIds)
+        LOG_INFO('onSyncBagPickleData success', bag.calFnvHash())
+        self.sendBagData()

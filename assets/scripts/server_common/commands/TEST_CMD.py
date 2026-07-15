@@ -31,6 +31,7 @@ import itemData_itemData as ID
 import petData_petData as PD
 import gearBase_typeExplanation as GBE
 import gearBase_gearBase as GBG
+import qualityData_qualityData as QD
 import buff_buff as B_BD
 import skill_skill as SSD
 import skill_skill as SSD
@@ -61,24 +62,28 @@ def getAllPlayers(su):
         return
     gameengine.callBaseApps("utils.getAllAvatarByGm", (su, gameglobal.localBaseApp))
 
-def _do_remoteCall(su, player, method, args):
+def _do_remoteCall(su, player, method, args, times):
     if not hasattr(player, method):
         return su.onCommandResult(0, f'method {method} not found in player', {})
     func = getattr(player, method)
     if not callable(func):
         return su.onCommandResult(0, f'{method} is not callable', {})
     try:
+        results = []
         args = ast.literal_eval(args) if args else []
         args = [player.id] + list(args)
-        result = func(*args)
-        return su.onCommandResult(0, 'ok', {"result": result})
+        for _ in range(times):
+            LOG_DBG(f'Calling method {method} on player {player.id} with args: {args}')
+            result = func(*args)
+            results.append(result)
+        return su.onCommandResult(0, 'ok', {"result": results})
     except Exception as e:
         error_msg = f'Error calling method {method} on player {player.id}: {str(e)}'
         LOG_ERR(error_msg)
         return su.onCommandResult(0, error_msg, {})
 
-@gm_cmd('$remoteCall', (Player("gbId or Id"), Str("component"), Str("method"), Str("args")), RARG(0), BASE, '指定用户执行方法', ALLSIDE, GOD_GROUPS, minArgs=3)
-def remoteCall(su, player, component, method, args=''):
+@gm_cmd('$remoteCall', (Player("gbId or Id"), Str("component"), Str("method"), Str("args"), Int("times")), RARG(0), BASE, '指定用户执行方法', ALLSIDE, GOD_GROUPS, minArgs=3)
+def remoteCall(su, player, component, method, args='', times=1):
     if KBEngine.publish():
         su.onCommandResult(0, 'can not run in publish server', {})
         return
@@ -86,19 +91,20 @@ def remoteCall(su, player, component, method, args=''):
         return su.onCommandResult(0, 'player not found', {})
     if component not in ['cell', 'base']:
         return su.onCommandResult(0, 'invalid component', {})
+    times = max(1, times)
     if component == 'cell':
-        forwardGMCommand(su, '$_remoteCall-cell', player.id, method, args)
+        forwardGMCommand(su, '$_remoteCall-cell', player.id, method, args, times)
     else:
-        return _do_remoteCall(su, player, method, args)
+        return _do_remoteCall(su, player, method, args, times)
     
 @gm_cmd('$_remoteCall-cell', (Player("gbId or Id"), Str("method"), Str("args")), RARG(0), CELL, '指定用户执行方法-cell', ALLSIDE, GOD_GROUPS)
-def remoteCall_cell(su, player, method, args):
+def remoteCall_cell(su, player, method, args, times):
     if KBEngine.publish():
         su.onCommandResult(0, 'can not run in publish server', {})
         return
     if not player:
         return su.onCommandResult(0, 'player not found', {})
-    return _do_remoteCall(su, player, method, args)
+    return _do_remoteCall(su, player, method, args, times)
 
 
 @gm_cmd('$getAvatarAoiMonster', (Player("gbId or Id"), Int("int range")), RARG(0), CELL, '获取玩家AOI附近怪物', ALLSIDE, GOD_GROUPS, minArgs=1)
@@ -250,7 +256,7 @@ def getPetItemList():
             petItemListValid.append(itemId)
     return petItemListValid
 
-def activatePets(player, itemId=0):
+def activatePets(player, itemId=0, roleLevel=0):
     #  1.获得道具
     itemList = getPetItemList() if itemId == 0 else [itemId]
     bindType = 0
@@ -263,18 +269,46 @@ def activatePets(player, itemId=0):
         abCtx = actionContext.AddLingShouCtx(gameconst.AddLingShouReason.normal, extra={'opUUID':opUUID, 'item': it, 'school':player.getAvatarSchool()})
         player.addLingShouBase(abCtx)
     #  3.设置出战
-    battleIndex = player.battleIndex
-    allPetIds = list(player.lingShouInfo.pets.keys())
-    slotNum = len(player.lingShouInfo.getBattleListByIndex(battleIndex))
-    slotNum = min(slotNum, len(allPetIds))
-    petIds = random.sample(allPetIds, slotNum)
-    for slotId, petId in enumerate(petIds):
-        player.updateLingShouBattleList(player.id, battleIndex, petId, slotId)
+    petIds = _setBattlePets(player, roleLevel)
     #  4.穿戴装备
     #  5.设置跟随
-    player.setFollowPet(player.id, True, petIds[0])
+    if petIds:
+        player.setFollowPet(player.id, True, petIds[0])
 
-def _getItems(school, quality, awardCtx):
+def _setBattlePets(player, roleLevel=0):
+    # 现在精灵出战受等级限制
+    battleIndex = player.battleIndex
+    oldPetIds = player.lingShouInfo.getBattleListByIndex(battleIndex)
+    roleLevel = roleLevel or player.getRoleCacheAttr('level', 0)
+    petIdByQuality = {}
+    petIds = []
+    for petId in player.lingShouInfo.pets.keys():
+        if petId in oldPetIds:
+            continue
+        petData = PD.datas.get(petId, {})
+        petRank = petData.get('petRank', 0)
+        if petRank not in petIdByQuality:
+            petIdByQuality[petRank] = []
+        petIdByQuality[petRank].append(petId)
+    
+    for quality in range(QD.maxKey, QD.minKey, -1):
+        if quality in petIdByQuality:
+            petLimit = QD.datas.get(quality, {}).get('petLimit', []) or []
+            limitNum = 0
+            for limitLv in petLimit:
+                if roleLevel >= limitLv:
+                    limitNum += 1
+            if limitNum > 0:
+                petIds.extend(random.sample(petIdByQuality[quality], min(limitNum, len(petIdByQuality[quality]))))
+    LOG_DBG(f'_setBattlePets: petIdByQuality={petIdByQuality}, petIds={petIds}')
+    slotNum = len(oldPetIds)
+    slotNum = min(slotNum, len(petIds))
+    petIds = random.sample(petIds, slotNum)
+    for slotId, petId in enumerate(petIds):
+        player.updateLingShouBattleList(player.id, battleIndex, petId, slotId)
+    return petIds
+
+def _getItems(school, quality, awardCtx, qualityLimit=None):
     _targetList = []
     for k, v in GBE.auctionDic.items():
         # k : (1, 1001), v: [(1, 11), (2, 21), (3, 31), (4, 41)]
@@ -286,16 +320,53 @@ def _getItems(school, quality, awardCtx):
     print('_targetList', _targetList)
 
     _itemIds = []
-    for k, v in GBG.auctionDic.items():
-        if (k[0], k[1]) not in _targetList:
-            continue
+    if qualityLimit:
+        slotEquips = {6: 2, 7: 2}  # 部位装备限制,未限制的都是1
+        
+        # 记录每个部位已经获取的数量
+        slotCount = {}
+        
+        for quality, limitNum in qualityLimit.items():
+            if limitNum <= 0:
+                continue
+            _limitNum = limitNum  # 当前品质剩余配额
+            
+            for (slot, school) in _targetList:
+                if _limitNum <= 0:
+                    break
+                # 获取当前部位需要的装备数量
+                needCount = slotEquips.get(slot, 1)
+                # 获取当前部位已经获取的数量
+                hasCount = slotCount.get(slot, 0)
+                # 计算还需要获取的数量
+                stillNeed = needCount - hasCount
+                
+                if stillNeed <= 0:
+                    continue  # 该部位已经满足需求，跳过
+                
+                key = (slot, school, quality)
+                if key not in GBG.auctionDic:
+                    continue
+                itemList = GBG.auctionDic[key]
+                itemIndex = 0
+                while stillNeed > 0 and _limitNum > 0:
+                    i = itemList[itemIndex % len(itemList)]
+                    _itemIds.append(i)
+                    _limitNum -= 1
+                    stillNeed -= 1
+                    slotCount[slot] = slotCount.get(slot, 0) + 1
+                    itemIndex += 1
+    else:
+        for k, v in GBG.auctionDic.items():
+            if (k[0], k[1]) not in _targetList:
+                continue
 
-        if k[2] != quality:
-            continue
-        for i in v:
-            _itemIds.append(i)
-            if k[0] == 6 or k[0] == 7:
+            if k[2] != quality:
+                continue
+            for i in v:
                 _itemIds.append(i)
+                if k[0] == 6 or k[0] == 7:
+                    _itemIds.append(i)
 
     _items = []
     for _itemId in _itemIds:
@@ -316,7 +387,7 @@ def dropWithoutDress(su, player, count):
 
     return True, 'command success'
 
-def _gmGetEquipment(player, school, quality, grade, enhanceLv):
+def _gmGetEquipment(player, school, quality, grade, enhanceLv, qulaityLimit=None):
     awardCtx = awardContext.CommonContext(0)
     awardVal = dropAward.AwardVal()
     if school == 0:
@@ -335,7 +406,7 @@ def _gmGetEquipment(player, school, quality, grade, enhanceLv):
         
     awardCtx.addContextVar('grade', grade)
     awardCtx.addContextVar('enhanceLv', enhanceLv)
-    _items = _getItems(school, quality, awardCtx)
+    _items = _getItems(school, quality, awardCtx, qulaityLimit)
 
     awardVal.addWealthByObjList(_items)
     player.addWealth(
@@ -353,17 +424,29 @@ def gmGetEquipment(su, player, school, quality, grade, enhanceLv):
     return ret, msg
     
 
-@gm_cmd('$enhanceRole', (Player("gbId or Id"),Int('enhanceLevel')), RARG(0), gameconst.BASE, '根据配置强化角色', ALLSIDE, GOD_GROUPS, minArgs=1)
-def enhanceRole(su, player, enhanceLevel=0):
+@gm_cmd('$enhanceRole', (Player("gbId or Id"),Int('roleLevel')), RARG(0), gameconst.BASE, '根据配置强化角色', ALLSIDE, GOD_GROUPS, minArgs=1)
+def enhanceRole(su, player, roleLevel=0):
     # from test.roleStrengthConfig import data as roleStrengthData
     # 等级设置
-    maxRoleLevel = utils.getMaxPlayerLevel()
+    if roleLevel > 0:
+        maxRoleLevel = min(roleLevel, utils.getMaxPlayerLevel())
+    else:
+        maxRoleLevel = utils.getMaxPlayerLevel()
     forwardGMCommand(su,"$setlv", player.id, maxRoleLevel)
     # 装备获取
-    maxQuality = 4
+    vaildQuality = {}
+    for quality in range(QD.maxKey, QD.minKey, -1):
+        equipLimit = QD.datas.get(quality, {}).get('equipLimit', []) or []
+        limitNum = 0
+        for limitLv in equipLimit:
+            if maxRoleLevel >= limitLv:
+                limitNum += 1
+        if limitNum > 0:
+            vaildQuality[quality] = limitNum
+    maxQuality = max(vaildQuality.keys())
     maxClassLevel = GEGCD.datas['equipmentClassLevel']['value']
     maxEnhanceLevel = len(GEGCD.datas['strengthenPercent']['value'])
-    _, _, items = _gmGetEquipment(player, 0, maxQuality, maxClassLevel, maxEnhanceLevel)
+    _, _, items = _gmGetEquipment(player, 0, maxQuality, maxClassLevel, maxEnhanceLevel, vaildQuality)
 
     # 装备改造
     # 1.铭文 因为gm穿戴有延迟，所以先在包里处理铭文
@@ -379,19 +462,38 @@ def enhanceRole(su, player, enhanceLevel=0):
     # forwardGMCommand(su, "$glyphWashingEquipmentsInEquip", player.id)
     # 2.祝福
     # 3.穿戴
-    dressSlotIds = list(range(gameconst.BodyEquipSlot.EQUIP_WEAPON_SLOT, gameconst.BodyEquipSlot.EQUIP_BELT_SLOT + 1))
-    player.gmBaseDressEquips(dressSlotIds, maxQuality)
-    # 技能改造 
-    # 1.技能升级
-    update_skills_by_playerLevel(player, maxRoleLevel)
-    # 精灵穿戴
-    activatePets(player)
-
-    # 收集系统
-    _gmFinishCollect(player, 0)
-    # 经脉系统
-    player.gmUnlockAllMeridian()
-    return su.onCommandResult(0, 'ok', {})
+    # 下面的流程不分步执行的话，客户端会断连
+    gm_step = 1 
+    def _delay_call():
+        nonlocal gm_step
+        if gm_step == 1:
+            dressSlotIds = list(range(gameconst.BodyEquipSlot.EQUIP_WEAPON_SLOT, gameconst.BodyEquipSlot.EQUIP_BELT_SLOT + 1))
+            player.gmBaseDressEquips(dressSlotIds, -1)
+            gm_step += 1
+        elif gm_step == 2:
+            # 技能改造 
+            # 1.技能升级
+            update_skills_by_playerLevel(player, maxRoleLevel)
+            gm_step += 1
+        elif gm_step == 3:
+            # 精灵穿戴
+            activatePets(player, 0, maxRoleLevel)
+            gm_step += 1
+        elif gm_step == 4:
+            # 收集系统
+            _gmFinishCollect(player, 0)
+            gm_step += 1
+        elif gm_step == 5:
+            # 经脉系统
+            player.gmUnlockAllMeridian()
+            gm_step += 1
+        elif gm_step >= 6:
+            LOG_DBG(f'enhanceRole: finished for player {player.id}')
+            return su.onCommandResult(0, 'ok', {})
+            
+        KBEngine.addTimer(1, 0, lambda tid: _delay_call())    
+    KBEngine.addTimer(1, 0, lambda tid: _delay_call())    
+    # return su.onCommandResult(0, 'ok', {})
 
 @gm_cmd('$modifyAttrByLevel', (Player("gbId or Id"),Int('level')), RARG(0), gameconst.CELL, '根据等级设置角色属性', ALLSIDE, GOD_GROUPS)
 def modifyAttrByLevel(su, player, level):
@@ -461,6 +563,10 @@ def activeMount(su, player, itemId=0):
 @gm_cmd('$activePet', (Player("gbId or Id"), Int("itemId"),), RARG(0), gameconst.BASE, '激活宠物', ALLSIDE, GOD_GROUPS, minArgs=0)
 def activePet(su, player, itemId=0):
     activatePets(player, itemId)
+
+@gm_cmd('$changeBattlePet', (Player("gbId or Id"),), RARG(0), gameconst.BASE, '更换出战精灵', ALLSIDE, GOD_GROUPS, minArgs=0)
+def changeBattlePet(su, player):
+    _setBattlePets(player)
 
 @gm_cmd('$setskillLv', (Player("gbId or Id"), Int("int skillLevel"),), RARG(0), gameconst.BASE, '设置技能等级', ALLSIDE, GOD_GROUPS, minArgs=0)
 def setskillLv(su, player, skillLevel=0):
@@ -1366,8 +1472,12 @@ def glyphWashingEquipmentsInEquip(su, player, equipPos=0, affixIds=''):
     itemId = equipItem.itemId
     affixIds = [int(item) for item in affixIds.split(',') if item.isdigit()]
     if not affixIds:
-        affixList = equipItem.equipAttr._genGlyphAffix(2 * len(equipItem.equipAttr.glyphSlotNum))
-        affixIds = [affix.getAffixId() for affix in affixList]
+        # 改一下，没有指定词缀的话，取两个不重复的词缀
+        oldAffixIds = []
+        for _info in equipItem.getGlyphAffixes():
+            oldAffixIds.append(_info.getAffixId())
+        affixList = equipItem.equipAttr._genGlyphAffix(2 * (len(equipItem.equipAttr.glyphSlotNum)+len(oldAffixIds)))
+        affixIds = [affix.getAffixId() for affix in affixList if affix.getAffixId() not in oldAffixIds]
     for slotId in equipItem.equipAttr.glyphSlotNum:
         affixId1 = affixIds.pop(0) if affixIds else 0
         affixId2 = affixIds.pop(0) if affixIds else 0
@@ -1561,6 +1671,16 @@ def _gmFinishCollect(player, collectId):
         player.client.onGetCollectInfo([player.collectibleData.collectibleDict[collectId].toStreamSavedDic()])
     return True, 'command success'
 
+
+@gm_cmd('$setAutoCombat', (Player("gbId or Id"), Int('isStart')), RARG(0), CELL, '指令控制自动战斗', ALLSIDE, GOD_GROUPS, minArgs=1)
+def gmSetAutoCombat(su, player, isStart=0):
+    if isStart == 1:
+        player._startAutoCombat()
+    else:
+        player.stopAutoCombat(player.id)
+    return True, 'command success'
+
+
 @gm_cmd('$gmFinishCollect', (Player("gbId or Id"), Int('collectId')), RARG(0), gameconst.BASE, '完成收集系统', ALLSIDE, GOD_GROUPS)
 def gmFinishCollect(su, player, collectId):
     if player is None:
@@ -1653,8 +1773,6 @@ def getLineCellDist(su):
         avatarCountBySpace[avatar.spaceNo] = avatarCountBySpace.get(avatar.spaceNo, 0) + 1
 
     for spaceEnt in utils.getEntityList('Space'):
-        if not formula.inLineScene(spaceEnt.spaceNo):
-            continue
         mapId = formula.fetchMapId(spaceEnt.spaceNo)
         lineNo = formula.parseLineNo(spaceEnt.spaceNo)
         avatarNum = avatarCountBySpace.get(spaceEnt.spaceNo, 0)

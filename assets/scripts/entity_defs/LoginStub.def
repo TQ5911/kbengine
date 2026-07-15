@@ -104,10 +104,8 @@
             <Arg>       UINT32      </Arg>
             <Arg>       UINT8       </Arg>
             <Arg>       STRING      </Arg>
+            <Arg>       UINT64      </Arg>
         </onAccountDestroy>
-
-        <incSVIPOnlineNumBySetSVIP>
-        </incSVIPOnlineNumBySetSVIP>
 
         <onAccountLogin>
             <Arg>       UNICODE     </Arg>
@@ -116,7 +114,14 @@
             <Arg>       UINT32      </Arg>
             <Arg>       UINT32      </Arg>
             <Arg>       STRING      </Arg>
+            <Arg>       UINT64      </Arg>
         </onAccountLogin>
+
+        <onKickAccount>
+            <Arg>       UINT32      </Arg>
+            <Arg>       STRING      </Arg>
+            <Arg>       PYTHON      </Arg>
+        </onKickAccount>
 
         <onAccountCreated>
             <Arg>   UNICODE </Arg>

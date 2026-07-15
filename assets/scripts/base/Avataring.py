@@ -2,6 +2,8 @@
 import KBEngine
 from KBEDebug import *
 
+import time
+import formula
 import gametimer
 import gameconst
 import gameengine
@@ -26,11 +28,15 @@ class Avataring(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
 
         self.initAvataringCache()
 
+        self.pyAddTimer(10, 10, gametimer.TIMER_AVATAR_SYNC_SERVER_TIME)
+
     def onTimer(self, tid, userArg):
+        self._onTimerTrigger(tid, userArg)
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
-        else:
-            self._onTimerTrigger(tid, userArg)
+        elif userArg == gametimer.TIMER_AVATAR_SYNC_SERVER_TIME:
+            if self.client:
+                self.client.syncServerTime(int(time.time() * 1000), utils.getTimeZoneOffset())
 
     @property
     def accounting(self):
@@ -38,7 +44,10 @@ class Avataring(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
 
     def onClientEnabled(self, chn):
         LOG_INFO("Avataring::onClientEnabled~", chn)
-        
+
+        if self.client:
+            self.client.syncServerTime(int(time.time() * 1000), utils.getTimeZoneOffset())
+
         stub = gameengine.getGlobalBase('WaitMapSpaceStub')
         if not stub:
             self.destroySelf()
@@ -56,9 +65,13 @@ class Avataring(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
             self.destroySelf()
             return
 
+        mapId = formula.fetchMapId(spaceNo)
+        _pos, _dir = formula.getSpaceBornPosAndDir(mapId)
+
         self.cellData['spaceNo'] = spaceNo
-        self.cellData['position'] = (350, 100, 350)
-        self.cellData['speed'] = 6.0
+        self.cellData['position'] = _pos
+        self.cellData['direction'] = _dir
+
         spaceBox.createCellNearSelf(self)
 
     def createCellNearHere(self, cellBox):
@@ -118,10 +131,15 @@ class Avataring(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
         if self.delayDestroyTimer:
             self.cancelTimerCB(self.delayDestroyTimer, gametimer.TIMER_TAG_DELAY_DESTROY_AVATARING)
             self.delayDestroyTimer = 0
+
         if self.spaceno:
             stub = gameengine.getGlobalBase('WaitMapSpaceStub', reportErr=False)
             stub and stub.onPlayerLeave(self.gbID, self.spaceno)
+        
         self.popAvataringCache()
+
+        accountEnt = self.accounting
+        accountEnt and accountEnt.avatarOffline(gameconst.OFFLINE_REASON_DESTORY)
 
     def initAvataringCache(self):
         ap = self.cellData.get('appearance', None)
@@ -150,16 +168,31 @@ class Avataring(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
         if channelCfg and now < self.sendWorldMsgTime + channelCfg['channelCD']:
             return
         self.sendWorldMsgTime = now
-        gameengine.broadcastBaseapp(
-            'broadcastToAllAvataring',
-            ('onRecvChannelMsg',
-             (gameconst.ChatChannelEnum.WORLD, self._getChatChannelAvatarInfo(), msg), ())
-        )
+
+        # 改为入队，由 BaseApp 定时器聚合后统一广播，降低 N×M 广播风暴
+        baseApp = gameglobal.localBaseApp
+        if baseApp:
+            baseApp.addAvataringChatMsg(
+                gameconst.ChatChannelEnum.WORLD,
+                self._getChatChannelAvatarInfo(),
+                msg
+            )
 
     def onRecvChannelMsg(self, channelID, avatarInfo, msg):
         LOG_DBG('Avataring::onRecvChannelMsg', self.id, channelID, avatarInfo, msg)
         if self.client:
             self.client.onRecvAvatarChannelMsg(channelID, avatarInfo, msg)
+
+    def onRecvChannelMsgBatch(self, msgBatch):
+        LOG_DBG('Avataring::onRecvChannelMsgBatch', self.id, len(msgBatch))
+        if not self.client:
+            return
+        for item in msgBatch:
+            self.client.onRecvAvatarChannelMsg(
+                item['channelID'],
+                item['avatarInfo'],
+                item['msg']
+            )
 
     def _getChatChannelAvatarInfo(self):
         return utils.buildChatChannelAvatarData(
@@ -173,10 +206,13 @@ class Avataring(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
         )
 
     def kickAvataring(self, reason):
-        LOG_DBG('Avataring::kickAvataring~', reason)
+        LOG_INFO('Avataring::kickAvataring~', reason)
+        if reason == gameconst.OFFLINE_REASON_KICK_BY_CENTRAL_SERVER:
+            if self.hasClient:
+                LOG_DBG('Avataring::kickAvataring kick client.')
+                self.client.onAnotherClientLogin()
+
         self.destroySelf(reason)
 
     def startOffline(self, reason):
         LOG_DBG('Avataring::startOffline~', reason)
-        accountEnt = self.accounting
-        accountEnt and accountEnt.avatarOffline(reason)

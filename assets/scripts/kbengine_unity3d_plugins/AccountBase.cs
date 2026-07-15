@@ -24,6 +24,7 @@ namespace KBEngine
 		public UInt64 phone = 0;
 		public virtual void onPhoneChanged(UInt64 oldValue) {}
 
+		public virtual void onAccountOfflineClient(Byte arg1) {} 
 		public virtual void onAvatarDetailInAccount(UInt64 arg1, Int32 arg2, UInt32 arg3, string arg4, Int32 arg5) {} 
 		public virtual void onAvatarOfflineTime(UInt64 arg1, UInt32 arg2) {} 
 		public virtual void onCharInfoChange(CHARACTER_VAL arg1) {} 
@@ -130,6 +131,10 @@ namespace KBEngine
 				case 145:
 					UInt64 minorAccountConstraintTip_arg1 = stream.readUint64();
 					minorAccountConstraintTip(minorAccountConstraintTip_arg1);
+					break;
+				case 1241:
+					Byte onAccountOfflineClient_arg1 = stream.readUint8();
+					onAccountOfflineClient(onAccountOfflineClient_arg1);
 					break;
 				case 750:
 					UInt64 onAvatarDetailInAccount_arg1 = stream.readUint64();

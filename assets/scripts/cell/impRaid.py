@@ -1533,15 +1533,11 @@ class ImpRaid(object):
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             LOG_ERR('leaveRaid:: check failed, {}'.format(err))
             return
-        # 在副本里的时候，客户端直接进行退队操作，那就先从副本里出来
-        if self.isInRaidDungeon():
-            src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
-            self.selfLeaveRaidDungeon(src)
-        else:
-            _raidUUID = self.raidUUID
-            extraProps = {}
-            gameengine.getRaidStub(_raidUUID).leaveRaid(self.base, self.gbId, _raidUUID, extraProps)
         
+        _raidUUID = self.raidUUID
+        extraProps = {}
+        gameengine.getRaidStub(_raidUUID).leaveRaid(self.base, self.gbId, _raidUUID, extraProps)
+            
         #主动离开team会清空怪物上的首刀归属者标记
         for e in self.entitiesInView(True):
             if e.IsMonster:
@@ -2130,50 +2126,6 @@ class ImpRaid(object):
     @utils.isMyself
     @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER)
     @gamedecorator.crossServer
-    def turnOnRaidMemberMics(self, exposed, playerGBID):
-        """API: 打开特定成员麦克风"""
-        LOG_INFO("turnOnRaidMemberMics::~")
-        _, err = self._turnOnRaidMemberMicsCheck()
-        if err != gameconst.RaidErrno.ENUM_RAID_OK:
-            LOG_ERR("turnOnRaidMemberMics::failed, errno={}".format(err))
-            return
-
-        _raidUUID = self.raidUUID
-        extraProps = {}
-        gameengine.getRaidStub(_raidUUID).turnOnRaidMics(
-            self.base, self.gbId, _raidUUID, playerGBID, extraProps)
-
-    def _turnOnRaidMemberMicsCheck(self):
-        if not self.inRaid():
-            return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
-        return None, gameconst.RaidErrno.ENUM_RAID_OK
-
-    @gamedecorator.checkGameconfigEnable('raid')
-    @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER)
-    @gamedecorator.crossServer
-    def turnOffRaidMemberMics(self, exposed, playerGBID):
-        """API: 关闭特定成员麦克风"""
-        LOG_INFO("turnOffRaidMemberMics::~", playerGBID)
-        _, err = self._turnOffRaidMemberMicsCheck()
-        if err != gameconst.RaidErrno.ENUM_RAID_OK:
-            LOG_ERR("turnOffRaidMemberMics::failed, errno={}".format(err))
-            return
-
-        _raidUUID = self.raidUUID
-        extraProps = {}
-        gameengine.getRaidStub(_raidUUID).turnOffRaidMics(
-            self.base, self.gbId, _raidUUID, playerGBID, extraProps)
-
-    def _turnOffRaidMemberMicsCheck(self):
-        if not self.inRaid():
-            return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
-        return None, gameconst.RaidErrno.ENUM_RAID_OK
-
-    @gamedecorator.checkGameconfigEnable('raid')
-    @utils.isMyself
-    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER)
-    @gamedecorator.crossServer
     def blockRaidMemberMics(self, exposed, teamIDX, playerGBID):
         """API: 团长禁言团员"""
         LOG_INFO("blockRaidMemberMics::~")
@@ -2217,57 +2169,6 @@ class ImpRaid(object):
         if not self.isRaidLeader():
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_RAID_LEADER
         return None, gameconst.RaidErrno.ENUM_RAID_OK
-
-    @gamedecorator.checkGameconfigEnable('raid')
-    @utils.isMyself
-    @gamedecorator.limitcall(1)
-    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER)
-    @gamedecorator.crossServer
-    def blockAllRaidMemberMics(self, exposed):
-        """API: 团长全员禁麦"""
-        LOG_INFO("blockAllRaidMemberMics::~")
-        _, err = self._blockAllRaidMemberMics()
-        if err != gameconst.RaidErrno.ENUM_RAID_OK:
-            LOG_ERR("blockAllRaidMemberMics::failed, errno={}".format(err))
-            return
-
-        _raidUUID = self.raidUUID
-        extraProps = {}
-        gameengine.getRaidStub(_raidUUID).blockAllRaidMemberMics(
-            self.base, self.gbId, _raidUUID, extraProps)
-
-    def _blockAllRaidMemberMics(self):
-        if not self.inRaid():
-            return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
-        if not self.isRaidLeader():
-            return None, gameconst.RaidErrno.ENUM_RAID_NOT_RAID_LEADER
-        return None, gameconst.RaidErrno.ENUM_RAID_OK
-
-    @gamedecorator.checkGameconfigEnable('raid')
-    @utils.isMyself
-    @gamedecorator.limitcall(1)
-    @raidPermissionCheck(needPermission=gameconst.RaidPermissionEnum.LEADER)
-    @gamedecorator.crossServer
-    def unblockAllRaidMemberMics(self, exposed):
-        """API: 团长全员禁麦"""
-        LOG_INFO("unblockAllRaidMemberMics::~")
-        _, err = self._unblockAllRaidMemberMics()
-        if err != gameconst.RaidErrno.ENUM_RAID_OK:
-            LOG_ERR("unblockAllRaidMemberMics::failed, errno={}".format(err))
-            return
-
-        _raidUUID = self.raidUUID
-        extraProps = {}
-        gameengine.getRaidStub(_raidUUID).unblockAllRaidMemberMics(
-            self.base, self.gbId, _raidUUID, extraProps)
-
-    def _unblockAllRaidMemberMics(self):
-        if not self.inRaid():
-            return None, gameconst.RaidErrno.ENUM_RAID_NOT_IN_RAID
-        if not self.isRaidLeader():
-            return None, gameconst.RaidErrno.ENUM_RAID_NOT_RAID_LEADER
-        return None, gameconst.RaidErrno.ENUM_RAID_OK
-
 
     # --------------------------------------------------------------------
 

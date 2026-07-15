@@ -33,8 +33,7 @@ datas ={
     "transition": {
       "finished": [
         1046,
-        1048,
-        1050
+        1048
       ]
     }
   },
@@ -44,7 +43,7 @@ datas ={
       40430001
     ],
     "compare": 5,
-    "hpPercent": 80.0,
+    "hpPercent": 90.0,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {
@@ -67,7 +66,7 @@ datas ={
       40430001
     ],
     "compare": 5,
-    "hpPercent": 40.0,
+    "hpPercent": 60.0,
     "checkNow": 0,
     "checkOnce": 0,
     "transition": {

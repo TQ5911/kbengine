@@ -360,7 +360,7 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         if _rcMemberSpaceFailedList:
             self.showMsg(M_M_DD.datas.testMessage, ["{0}不在团本中，无法就位".format('、'.join([_i[1] for _i in _rcMemberSpaceFailedList])), ])
         if _rewardNumFailedList:
-            self.client.onLackChallengeNum(dungeonNo, [_i[1] for _i in _rcMemberSpaceFailedList])
+            self.client.onLackChallengeNum(dungeonNo, [_i[1] for _i in _rewardNumFailedList])
 
             for data in _rewardNumFailedList:
                 gameengine.getGlobalBase('PlayerStub').doOnOthersClient(

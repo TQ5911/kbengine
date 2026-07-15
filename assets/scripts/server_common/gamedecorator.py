@@ -184,6 +184,24 @@ def doCheckGameConfig(avatar, name, needMsg, checkList, *args):
             if not v:
                 LOG_WARN('gameconfig not enable: 4', name)
                 return False
+
+    if not doCheckSpecialGameConfig(avatar, name, needMsg, checkList, *args):
+        return False
+
+    return True
+
+def checkGameconfigEnable(name, checkList=[]):
+    def f(func):
+        @functools.wraps(func)
+        def wrapper(*args):
+            if doCheckGameConfig(args[0], name, True, checkList, *args):
+                return func(*args)
+
+        return wrapper
+
+    return f
+
+def doCheckSpecialGameConfig(avatar, name, needMsg, checkList, *args):
     for _type in gameconst.SpecialVisibleType.VALID_SPECIAL_VISIBLE_TYPE:
         if not avatar._isSpecialVisible(_type):
             continue
@@ -205,11 +223,11 @@ def doCheckGameConfig(avatar, name, needMsg, checkList, *args):
 
     return True
 
-def checkGameconfigEnable(name, checkList=[]):
+def checkSpecialGameconfigEnable(name, checkList=[]):
     def f(func):
         @functools.wraps(func)
         def wrapper(*args):
-            if doCheckGameConfig(args[0], name, True, checkList, *args):
+            if doCheckSpecialGameConfig(args[0], name, True, checkList, *args):
                 return func(*args)
 
         return wrapper

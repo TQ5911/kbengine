@@ -11943,17 +11943,17 @@ datas ={
     "ClassName": "Teleporter",
     "ClassNameType": 2,
     "CustomID": "",
-    "Dir": 104.3057,
-    "DisplayName": "",
+    "Dir": 272.4696,
+    "DisplayName": "\u7956\u73c2\u5730\u5821\u4e09\u5c42 \u00b7\u7cbe\u82f1",
     "EliteCustomID": "19098005",
     "EntityID": 17102301,
     "ID": 19108004,
     "Name": "\u7956\u73c2\u5730\u5821\u4e09\u5c42",
-    "PosX": 146.46,
-    "PosY": 75.95806,
-    "PosZ": 551.73,
+    "PosX": 149.9621,
+    "PosY": 75.96454,
+    "PosZ": 548.8687,
     "Props": {
-      "CameraId": 0,
+      "CameraId": 33010001,
       "GateType": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -11980,7 +11980,7 @@ datas ={
     "PosY": 86.98374,
     "PosZ": 147.09,
     "Props": {
-      "CameraId": 0,
+      "CameraId": 33010001,
       "GateType": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -12007,7 +12007,7 @@ datas ={
     "PosY": 48.32615,
     "PosZ": 234.9514,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
@@ -12030,7 +12030,7 @@ datas ={
     "PosY": 56.0652,
     "PosZ": 265.0288,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
@@ -12053,7 +12053,7 @@ datas ={
     "PosY": 83.73734,
     "PosZ": 481.0239,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
@@ -12076,7 +12076,7 @@ datas ={
     "PosY": 80.6879,
     "PosZ": 201.5919,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1

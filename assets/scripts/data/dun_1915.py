@@ -13100,7 +13100,7 @@ datas ={
     "ClassNameType": 2,
     "CustomID": "",
     "Dir": 322.5849,
-    "DisplayName": "",
+    "DisplayName": "\u4e94\u6bd2\u77f3\u7a9f\u4e09\u5c42\u00b7\u7cbe\u82f1 ",
     "EliteCustomID": "19148005",
     "EntityID": 17112301,
     "ID": 19158004,
@@ -13109,7 +13109,7 @@ datas ={
     "PosY": 179.4287,
     "PosZ": 173.2215,
     "Props": {
-      "CameraId": 0,
+      "CameraId": 33010001,
       "GateType": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -13128,7 +13128,7 @@ datas ={
     "CustomID": "",
     "Dir": 117.5188,
     "DisplayName": "",
-    "EliteCustomID": "",
+    "EliteCustomID": "11268004",
     "EntityID": 17112502,
     "ID": 19158005,
     "Name": "\u4e94\u6bd2\u77f3\u7a9f\u4e94\u5c42\u00b7\u7cbe\u82f1",
@@ -13136,7 +13136,7 @@ datas ={
     "PosY": 210.8224,
     "PosZ": 522.67,
     "Props": {
-      "CameraId": 0,
+      "CameraId": 33010001,
       "GateType": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -13163,7 +13163,7 @@ datas ={
     "PosY": 200.0187,
     "PosZ": 398.422,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
@@ -13186,7 +13186,7 @@ datas ={
     "PosY": 192.3197,
     "PosZ": 288.8124,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
@@ -13290,6 +13290,41 @@ datas ={
       "RefreshTimedID": 0,
       "Remark": "",
       "ShowInSceneMap": 1
+    }
+  },
+  "19158012": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "FastMovePoint",
+    "ClassNameType": 19,
+    "CustomID": "",
+    "Dir": 349.5239,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 13000001,
+    "ID": 19158012,
+    "Name": "\u75be\u63a0\u70b9",
+    "PosX": 322.718,
+    "PosY": 80.69508,
+    "PosZ": 208.8249,
+    "Props": {
+      "Remark": "",
+      "ShowInSceneMap": 1,
+      "SubPoints": [
+        [
+          312.705383,
+          79.98803,
+          239.689026,
+          8.0,
+          4.0,
+          312.925568,
+          80.00261,
+          239.836914,
+          8.0,
+          4.0
+        ]
+      ]
     }
   }
 }

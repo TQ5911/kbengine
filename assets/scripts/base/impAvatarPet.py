@@ -26,6 +26,7 @@ import qualityData_qualityData as QD_QDD
 import agent_agentFunction as A_AFD
 import petData_petGear as PDPGD
 import gacha_reroll as GC_RR
+import gameconfig
 
 class ImpAvatarPet(object):
     def initPetProps(self):
@@ -287,21 +288,23 @@ class ImpAvatarPet(object):
 
         abCtx = actionContext.AddLingShouCtx(gameconst.AddLingShouReason.normal, extra={'opUUID':opUUID, 'item': info['gridObj'], 'school':self.getAvatarSchool()})
         self.addLingShouBase(abCtx)
-        self.syncMethodCallToLocalServerBase('onCrossServerAddLingShouBase', (abCtx,))
+        self.syncMethodCallToCrossServerBase('onLocalServerAddLingShouBase', (abCtx,))
 
         # self.onMessagePre(MMD.datas.petEggHatchTip, [])
         self.cell.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.TRUE)
     
-    def onCrossServerAddLingShouBase(self, abCtx):
-        LOG_INFO('onCrossServerAddLingShouBase')
+    def onLocalServerAddLingShouBase(self, abCtx):
+        LOG_INFO('onLocalServerAddLingShouBase')
         self.addLingShouBase(abCtx)
 
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     @gamedecorator.crossServer
     def useLingShouEquip(self, exposed, gridId, petId, slotId):
-        if self._useLingShouEquip(gridId, petId, slotId):
-            self.syncMethodCallToLocalServerBase('onCrossServerUseLingShouEquip', (gridId, petId, slotId))
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_useLingShouEquip', (gridId, petId, slotId))
+        else:
+            self._useLingShouEquip(gridId, petId, slotId)
 
     def _useLingShouEquip(self, gridId, petId, slotId):
         LOG_INFO("useLingShouEquip ", gridId, petId, slotId)
@@ -336,6 +339,8 @@ class ImpAvatarPet(object):
         self.removePetEquipNumByPet(pet)
         pet.modifyPetEquip(self, slotId, itemId)
         self.addPetEquipNumByPet(pet)
+        
+        self.syncMethodCallToCrossServerBase('onLocalServerUseLingShouEquip', (gridId, petId, slotId))
 
         self.achievementInfo.triggerAchieveByType(
             self,
@@ -343,10 +348,10 @@ class ImpAvatarPet(object):
             actionContext.AchievementCtx())
         return True
     
-    def onCrossServerUseLingShouEquip(self, gridId, petId, slotId):
-        LOG_INFO('onCrossServerUseLingShouEquip')
+    def onLocalServerUseLingShouEquip(self, gridId, petId, slotId):
+        LOG_INFO('onLocalServerUseLingShouEquip')
         if not self._useLingShouEquip(gridId, petId, slotId):
-            gameengine.panicStack('onCrossServerUseLingShouEquip failed', gridId, petId, slotId)
+            gameengine.panicStack('onLocalServerUseLingShouEquip failed', gridId, petId, slotId)
 
     def addLingShouBase(self, addContext):
         LOG_INFO("addLingShouBase ", addContext.__dict__)
@@ -367,10 +372,10 @@ class ImpAvatarPet(object):
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     @gamedecorator.crossServer
     def levelUpPet(self, exposed, gridIds, petId):
-        ret = self._levelUpPet(gridIds, petId)
-        if ret:
-            ok, curLevel, curExp, isTopLevel = ret
-            self.syncMethodCallToLocalServerBase('onCrossServerLevelUpPet', (gridIds, petId, curLevel, curExp, isTopLevel))
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_levelUpPet', (gridIds, petId))
+        else:
+            self._levelUpPet(gridIds, petId)
 
     def _levelUpPet(self, gridIds, petId):
         LOG_INFO("levelUpPet ", gridIds, petId)
@@ -479,22 +484,29 @@ class ImpAvatarPet(object):
         LOG_INFO("levelUpPet end:", petId, curLevel, curExp, totalExp, isTopLevel)
         # 更新客户端宠物数据   
         self.client.onLevelUpPet(petId, curLevel, curExp, isTopLevel)
+        self.syncMethodCallToCrossServerBase('onLocalServerLevelUpPet', (gridIds, petId, curLevel, curExp, isTopLevel))
         return True, curLevel, curExp, isTopLevel
 
-    def onCrossServerLevelUpPet(self, gridIds, petId, curLevel, curExp, isTopLevel):
-        LOG_INFO('onCrossServerLevelUpPet')
+    def onLocalServerLevelUpPet(self, gridIds, petId, curLevel, curExp, isTopLevel):
+        LOG_INFO('onLocalServerLevelUpPet')
         ret = self._levelUpPet(gridIds, petId)
         if not ret:
-            gameengine.panicStack('onCrossServerLevelUpPet failed', gridIds, petId, curLevel, curExp, isTopLevel)
+            gameengine.panicStack('onLocalServerLevelUpPet failed', gridIds, petId, curLevel, curExp, isTopLevel)
         else:
             ok, curLevel, curExp, isTopLevel = ret
             if curLevel != curLevel or curExp != curExp or isTopLevel != isTopLevel:
-                gameengine.panicStack('onCrossServerLevelUpPet check failed', gridIds, petId, curLevel, curExp, isTopLevel)
+                gameengine.panicStack('onLocalServerLevelUpPet check failed', gridIds, petId, curLevel, curExp, isTopLevel)
     
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     @gamedecorator.crossServer
     def remodelingPet(self, exposed, gridId):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_remodelingPet', (gridId,))
+        else:
+            self._remodelingPet(gridId)
+
+    def _remodelingPet(self, gridId):
         LOG_INFO("remodelingPet ", gridId)
         itemObj = self.petBag.getItemObjByGridId(gridId)
         if not itemObj:
@@ -575,16 +587,15 @@ class ImpAvatarPet(object):
         crossAddWealthData = (srcType, addWealthVal, opUUID, detail)
 
         self.client.onRemodelingPet(gameconst.RemodelingPetResult.SUCCESS, itemId, 1)
-        self.syncMethodCallToLocalServerBase('onCrossServerRemodelingPet', (crossDeductWealthData, crossDeductItemsData, crossAddWealthData))
+        self.syncMethodCallToCrossServerBase('onLocalServerRemodelingPet', (crossDeductWealthData, crossDeductItemsData, crossAddWealthData))
 
-    def onCrossServerRemodelingPet(self, crossDeductWealthData, crossDeductItemsData, crossAddWealthData):
-        LOG_INFO('onCrossServerRemodelingPet', crossDeductWealthData, crossDeductItemsData, crossAddWealthData)
-        #精灵重塑校验没过得运营手动补偿了
+    #精灵重塑在跨服中的校验
+    def onLocalServerRemodelingPet(self, crossDeductWealthData, crossDeductItemsData, crossAddWealthData):
+        LOG_INFO('onLocalServerRemodelingPet', crossDeductWealthData, crossDeductItemsData, crossAddWealthData)
         srcType, deductWealthVal, opUUID, detail = crossDeductWealthData
         if not self.deductWealth(srcType, deductWealthVal, opUUID, detail):
-            gameengine.panicStack('onCrossServerRemodelingPet deduct wealth failed', srcType, deductWealthVal, opUUID, detail)
+            gameengine.panicStack('onLocalServerRemodelingPet deduct wealth failed', srcType, deductWealthVal, opUUID, detail)
             return
-        #扣不了会直接抛异常
         grid2num, opUUID, srcType, detail = crossDeductItemsData
         self.petBag.deductItemsByGridId(self, grid2num, opUUID, srcType, detail)
         srcType, addWealthVal, opUUID, detail = crossAddWealthData

@@ -5,6 +5,7 @@ import (
 	"centralService/src/common"
 	gameServerService "centralService/src/dropServer/dropApp/gameServerService"
 	"centralService/src/trpc"
+	dtSQL "database/sql"
 	"errors"
 	"fmt"
 	"math"
@@ -539,16 +540,16 @@ func (gss *GameServerService) Redeem(in *gameServerService.RedeemRequest) (*game
 			return
 		}
 
-		// var now = common.GetNowTime()
-		// // 采集消失后，返还结束前，损毁之前
-		// if now < collExpireTime || (returnTime > 0 && now >= returnTime) || now >= endTime {
-		// 	gss.Client.(*gameServerService.GameServerClient).OnRedeem(&gameServerService.RedeemResponse{
-		// 		UniqueId: in.UniqueId,
-		// 		Result:   gameServerService.DropResult_DropResult_REDEEM_TIME_EXPIRED,
-		// 		Uuid:     in.Uuid,
-		// 	})
-		// 	return
-		// }
+		var now = common.GetNowTime()
+		// 采集消失后，返还结束前，损毁之前
+		if now < collExpireTime || (returnTime > 0 && now >= returnTime) || now >= endTime {
+			gss.Client.(*gameServerService.GameServerClient).OnRedeem(&gameServerService.RedeemResponse{
+				UniqueId: in.UniqueId,
+				Result:   gameServerService.DropResult_DropResult_REDEEM_TIME_EXPIRED,
+				Uuid:     in.Uuid,
+			})
+			return
+		}
 
 		if dropType != TYPE_DROP {
 			appLog.Error("Redeem: drop type is not drop or take: ", dropType)
@@ -572,12 +573,23 @@ func (gss *GameServerService) Redeem(in *gameServerService.RedeemRequest) (*game
 			return
 		}
 
-		// 被人赎回了，处理下转移关系
-		sql = `INSERT INTO custody_info 
-		(uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId) 
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?) on duplicate key update holderGbId=?, holderServerId=?`
-		_, err = gss.app.db.Exec(sql, in.UniqueId, TYPE_RETURN_WAIT, equipInfo, in.RedeemerGbId, in.ServerId,
-			returnTime, ownerGbId, ownerServerId, in.RedeemerGbId, in.ServerId)
+		if returnTime > 0 {
+			// 被人赎回了，处理下转移关系
+			sql = `INSERT INTO custody_info 
+					(uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId) 
+					VALUES (?, ?, ?, ?, ?, ?, ?, ?) on duplicate key update holderGbId=?, holderServerId=?`
+			_, err = gss.app.db.Exec(sql, in.UniqueId, TYPE_RETURN_WAIT, equipInfo, in.RedeemerGbId, in.ServerId,
+				returnTime, ownerGbId, ownerServerId, in.RedeemerGbId, in.ServerId)
+			if err != nil {
+				appLog.Error("Redeem: insert custody info error: ", err.Error())
+				gss.Client.(*gameServerService.GameServerClient).OnRedeem(&gameServerService.RedeemResponse{
+					UniqueId: in.UniqueId,
+					Result:   gameServerService.DropResult_DropResult_STATE_ERROR,
+					Uuid:     in.Uuid,
+				})
+				return
+			}
+		}
 
 		result := gameServerService.RedeemResponse{
 			UniqueId: in.UniqueId,
@@ -1580,11 +1592,30 @@ func (gss *GameServerService) SetDropEquipPayPrice(in *gameServerService.SetDrop
 			return
 		}
 
-		newPrice := price - int64(math.Floor((in.RewardRatio)*float64(price)))
+		sql = "SELECT price FROM reward_info WHERE uniqueId=?"
+		row = gss.app.db.QueryRow(sql, in.UniqueId)
+		var oldPrice int64
+		err = row.Scan(&oldPrice)
+		if err != nil {
+			if err != dtSQL.ErrNoRows {
+				appLog.Error("SetDropEquipPayPrice: get take reward drop info error: ", err.Error())
+				gss.Client.(*gameServerService.GameServerClient).OnSetDropEquipPayPrice(&gameServerService.SetDropEquipPayPriceResponse{
+					Uuid:     in.Uuid,
+					GbId:     in.GbId,
+					UniqueId: in.UniqueId,
+					Price:    in.Price,
+					Result:   gameServerService.DropResult_DropResult_STATE_ERROR,
+				})
+				return
+			}
+		}
+
+		newPrice := price - int64(math.Floor((in.RewardRatio)*float64(price))) + oldPrice
 		if newPrice > 0 {
-			sql = `INSERT INTO reward_info (uniqueId, gbId, serverId, price, equipInfo) VALUES (?, ?, ?, ?, ?)`
-			_, err = gss.app.db.Exec(sql, in.UniqueId, takeGbId, takerServerId, newPrice, equipInfo)
+			sql = `INSERT INTO reward_info (uniqueId, gbId, serverId, price, equipInfo) VALUES (?, ?, ?, ?, ?) on duplicate key update price=?`
+			_, err = gss.app.db.Exec(sql, in.UniqueId, takeGbId, takerServerId, newPrice, equipInfo, newPrice)
 			if err != nil {
+				appLog.Error("SetDropEquipPayPrice: insert take reward drop info error: ", err.Error())
 				gss.Client.(*gameServerService.GameServerClient).OnSetDropEquipPayPrice(&gameServerService.SetDropEquipPayPriceResponse{
 					Uuid:     in.Uuid,
 					GbId:     in.GbId,

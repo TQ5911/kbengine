@@ -56,5 +56,9 @@
             <Arg>       SPACE_NO       </Arg>
             <Arg>       INT32          </Arg>
         </onFightingPlayersCntSync>
+
+        <checkCanEnterCrossAbyss>
+            <Arg>          PYTHON                   </Arg>
+        </checkCanEnterCrossAbyss>
     </BaseMethods>
 </root>

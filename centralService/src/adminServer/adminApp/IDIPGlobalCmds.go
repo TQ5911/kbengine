@@ -24,7 +24,12 @@ type IDIPGlobalCmd struct {
 }
 
 func handleBanAccount(service *HttpCommandService, reqData *CommandRequest, args ...interface{}) (int, []byte) {
-	urlStr := strings.Join([]string{"http://", adminConfig.CentralLoginCmdAddress, "/doLoginCommand",
+	// $banaccount 当前只打列表里的第一个 centralLogin；如需 fanout 可参考 handleKickAccount。
+	addr := ""
+	if len(adminConfig.CentralLoginCmdAddressList) > 0 {
+		addr = adminConfig.CentralLoginCmdAddressList[0]
+	}
+	urlStr := strings.Join([]string{"http://", addr, "/doLoginCommand",
 		"?Cmd=", reqData.Command, "&args=", reqData.Args, "&partition=", strconv.Itoa(int(reqData.Partition)),
 	}, "")
 	appLog.Debug("urlStr", urlStr)

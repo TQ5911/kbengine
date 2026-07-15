@@ -41,11 +41,19 @@ def attack(self, target, context, *args):
     # 是否传入命中，如果传入命中的值则用，没有传或args[5] 是None时,则在这个函数里去得命中结果，并且传入到 attackShare 
     arg7 = args[6] if len(args) >= 7 else 0
     #是否传入大招充能值，不传入默认为0
-    if arg6 > 0 and (self.IsAvatar or self.IsAvatarReplica):
-        if not hasattr(context, 'has_added_ultra_power'):
-            self.addUltraSkillPower(arg7, context)
-            context.has_added_ultra_power = True
+    if arg6 > 0:
+        if (self.IsAvatar or self.IsAvatarReplica) and not hasattr(context, 'has_added_ultra_power'):
+            addTgt = self
+            addTgt.addUltraSkillPower(arg7, context)
             #命中时，才增加大招充能
+            context.has_added_ultra_power = True
+        elif self.IsCreation and self.getHost() and self.getHost().IsAvatar and not hasattr(self.context, 'has_added_ultra_power'):
+            addTgt = self.getHost()
+            addTgt.addUltraSkillPower(arg7, context)
+            self.context.has_added_ultra_power = True
+        else:
+            addTgt = None
+
     result = attackShare(self, target, context, arg1, arg2, 0.0, 0, arg3, arg4, arg5, 0, arg6)
     return result
 
@@ -499,7 +507,7 @@ def isHit(self, target, context):
 
     targetHost = utils.getHostEntity(target)
     selfHost = utils.getHostEntity(self)
-    if targetHost and targetHost.IsAvatar and selfHost and selfHost.IsAvatar:
+    if targetHost and (targetHost.IsAvatar or targetHost.IsAvatarReplica) and selfHost and (selfHost.IsAvatar or selfHost.IsAvatarReplica):
         AtkRatio = self.getProp("hit")
         DefRatio = target.getProp("dodge")
     else:
@@ -649,7 +657,7 @@ def realDmgRatio(self, target, context):
 
     targetHost = utils.getHostEntity(target)
     selfHost = utils.getHostEntity(self)
-    if targetHost and targetHost.IsAvatar and selfHost and selfHost.IsAvatar:
+    if targetHost and (targetHost.IsAvatar or targetHost.IsAvatarReplica) and selfHost and (selfHost.IsAvatar or selfHost.IsAvatarReplica):
         AtkDmgRatio = self.getProp("PVPDmg")
         DefDmgRatio = target.getProp("PVPDmgAnti")
     else:
@@ -1194,43 +1202,27 @@ def levelDmgRatio(self, target, context):
 def frozenBox(self, target, context, *args):
     arg1 = args[0] if len(args) >= 1 else 0.0
     # 持续时间
-    arg2 = args[1] if len(args) >= 2 else 0.0
-    # 概率
-    arg3 = args[2] if len(args) >= 3 else 1
-    # 是否参与控制衰减计算，0表示不参与，1表示参与，不填默认参与
-    arg4 = args[3] if len(args) >= 4 else 0
-    # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
-    arg5 = args[4] if len(args) >= 5 else 0
-    # 什么环境下生效，0代表都生效，1代表只PVP生效，2代表只PVE生效
+    arg2 = args[1] if len(args) >= 2 else 1
 
     if not target:
         return
 
-    # 是否参与控制衰减计算
-    isDecay = True
-    if arg3 == 0:
-        isDecay = False
-    elif arg3 == 1:
-        isDecay = True
-    # 控制BuffID
     controlBuffID = 64000011
-    # 控制状态ID
     stateID = 10
+    dispelTag = 24
 
-    # 控制穿透
-    controlEnh = self.getProp("frozenEnh")
-    # 控制抵抗
-    controlAnti = target.getProp("frozenAnti")
-    # 控制抵抗调整值
-    adjControlAnti = target.getProp("adjFrozenAnti")
-
-    if arg5 == 1 and not utils.isPVP(self, target):
-        return False
-    elif arg5 == 2 and utils.isPVP(self, target):
-        return False
-    else:
-        return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh,
-                         controlAnti, adjControlAnti, )
+    return controlResist(
+        self,
+        target,
+        context,
+        arg1,
+        arg2,
+        False,
+        0,
+        controlBuffID,
+        stateID,
+        dispelTag
+    )
 
 def snarecommom(self, target, context, *args):
     # 通用定身（走的迟缓属性）
@@ -1274,3 +1266,6 @@ def snarecommom(self, target, context, *args):
     else:
         return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh, controlAnti, adjControlAnti, dispelTag)
 
+
+
+datas = {}

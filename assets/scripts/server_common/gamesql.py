@@ -365,9 +365,8 @@ def unforbidChat(accountName):
     KBEngine.executeRawDatabaseCommand(_sql)
 
 
-def queryAccountDBID(platId, accountName, callback):
-    accountType = utils.fetchAccountTypeByPlatId(platId)
-    _sql = f"select entityDBID from kbe_accountinfos where accountName = '{accountType}:{accountName}'"
+def queryAccountDBID(accountName, callback):
+    _sql = f"select entityDBID from kbe_accountinfos where accountName = '{accountName}'"
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 
 
@@ -1007,3 +1006,22 @@ def recordOrderId(orderId, callback):
         f'VALUES ({utils.escape_string(orderId)})'
     )
     KBEngine.executeRawDatabaseCommand(_sql, callback)
+
+
+def recordTakeOver(accountName, dbid):
+    _sql = f'INSERT INTO game_take_over (accountName, entityDBID) VALUES ("{accountName}", {dbid})'
+    KBEngine.executeRawDatabaseCommand(_sql, None)
+
+
+def getTakeOverOriginDBID(accountName, cb):
+    _sql = f'SELECT entityDBID FROM game_take_over WHERE accountName = "{accountName}"'
+    KBEngine.executeRawDatabaseCommand(_sql, cb)
+
+
+def takeOverAccount(accountName, dbid):
+    _sql = f'UPDATE kbe_accountinfos SET entityDBID = {dbid} WHERE accountName = "{accountName}"'
+    KBEngine.executeRawDatabaseCommand(_sql, None)
+
+
+
+

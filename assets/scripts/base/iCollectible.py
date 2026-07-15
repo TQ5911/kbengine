@@ -110,8 +110,8 @@ class ICollectible(object):
                 self.gbID,
                 self.accountEntity.clientDistinctId, 
                 collectID,
-                gameconst.CollectibleDetailStatus.COLLECTING,
                 "",
+                gameconst.CollectibleDetailStatus.COLLECTING,
                 opUUID,
             )
             return

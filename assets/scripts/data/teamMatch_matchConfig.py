@@ -461,7 +461,7 @@ datas = _tools.RODict({
     }),
     "teamGoal_2": _tools.RODict({
         "ID": "teamGoal_2",
-        "value": "自由目标",
+        "value": "自设目标",
     }),
     "teamFullAutoStart": _tools.RODict({
         "ID": "teamFullAutoStart",

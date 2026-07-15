@@ -309,7 +309,7 @@ datas = _tools.RODict({
     }),
     "cube_innerDemonTimeline": _tools.RODict({
         "ID": "cube_innerDemonTimeline",
-        "value": 98000001,
+        "value": 98090001,
     }),
     "cube_innerDemonExit": _tools.RODict({
         "ID": "cube_innerDemonExit",
@@ -338,5 +338,9 @@ datas = _tools.RODict({
     "cube_prayPaidVerb": _tools.RODict({
         "ID": "cube_prayPaidVerb",
         "value": "祈福",
+    }),
+    "cube_freeIconPath": _tools.RODict({
+        "ID": "cube_freeIconPath",
+        "value": "Assets/Res/ui/texturenp/item/item_018.png",
     })
 })

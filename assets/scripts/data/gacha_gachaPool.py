@@ -17,7 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     101: _tools.RODict({
         "ID": 101,
-        "name": "精英召唤",
+        "name": "史诗召唤",
         "poolGroupId": 101,
         "timeLimit": 0,
         "startTime": "",
@@ -32,11 +32,11 @@ datas = _tools.RODict({
         "pityPullCount": 1000,
         "pityReset": (1, 0, 3),
         "pityReward": 30000330,
-        "pityInfo": 29
+        "pityInfo": 29,
     }),
     102: _tools.RODict({
         "ID": 102,
-        "name": "普通召唤",
+        "name": "精良召唤",
         "poolGroupId": 102,
         "timeLimit": 0,
         "startTime": "",
@@ -51,7 +51,7 @@ datas = _tools.RODict({
         "pityPullCount": 1000,
         "pityReset": (1, 0, 3),
         "pityReward": 30000330,
-        "pityInfo": 71
+        "pityInfo": 71,
     })
 })
 minKey = 101

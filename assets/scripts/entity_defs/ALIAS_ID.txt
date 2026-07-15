@@ -1,6 +1,7 @@
 AbyssSpaceMgr property force 4
 AbyssSpaceMgr property spaceNo 5
 Account method minorAccountConstraintTip 16
+Account method onAccountOfflineClient 19
 Account method onAvatarDetailInAccount 4
 Account method onAvatarOfflineTime 7
 Account method onCharInfoChange 11
@@ -24,6 +25,7 @@ Accounting method minorAccountConstraintTip 7
 Accounting method onGetAvataringCharacter 6
 Accounting method onKickAnotherAccount 1
 Accounting method onLoginWaitMapResult 5
+Accounting method onMessage 8
 Accounting method popDialog 2
 Accounting method showPopoverMsg 3
 Accounting method showPopoverMsgWithArg 4
@@ -48,6 +50,7 @@ Avatar property autoRaidMatchTarget 84
 Avatar property battleIndex 31
 Avatar property bePushedSpeed 15
 Avatar property bigMonthCardExpireTime 59
+Avatar property bigMonthCardFirstPurchaseFlag 99
 Avatar property bindMoney 9
 Avatar property blazeIds 97
 Avatar property chatChannel 58
@@ -131,6 +134,7 @@ Avatar property money 13
 Avatar property monsterDmg 137
 Avatar property monsterDmgAnti 138
 Avatar property monthCardExpireTime 7
+Avatar property monthCardFirstPurchaseFlag 106
 Avatar property moralValue 44
 Avatar property mortal 101
 Avatar property mp 194
@@ -256,8 +260,10 @@ AvatarReplica property state 31
 AvatarReplica property state2 32
 AvatarReplica property summonSlotIdx 42
 AvatarReplica property ultraSkillPower 43
+Avataring method onAnotherClientLogin 11
 Avataring method onBreakAwayStuckSuccess 5
 Avataring method onClientDataSyncFinished 1
+Avataring method onMessage 12
 Avataring method onRecvAvatarChannelMsg 2
 Avataring method onRemoveCompleteWitness 6
 Avataring method onStartPlayEmote 3
@@ -265,6 +271,7 @@ Avataring method onStopPlayEmote 4
 Avataring method popDialog 8
 Avataring method showPopoverMsg 9
 Avataring method showPopoverMsgWithArg 10
+Avataring method syncServerTime 7
 Avataring property appearance 4
 Avataring property gbId 6
 Avataring property isWitnessComplete 13

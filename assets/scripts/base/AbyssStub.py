@@ -77,15 +77,20 @@ class AbyssStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
 
         return spaceVals[0]
 
-    def logonEnterAbyss(self, box, gbId, spaceNo):
-        _spaceVal = self.staticSpaces.get(spaceNo)
+    def logonEnterAbyss(self, box, gbId, _):
+        _mapId = AB_FD.datas[self.floor]['ID']
+        _lineNo = 0
+        if _mapId in B_BD.datas:
+            _lineNo = self._autoSelectLine(box, gbId, iLinePlayersStub.EnterLineExtra.new({}, -1), lineType=_mapId)
+        _spaceNo = formula.combineLineSpaceNo(_mapId, _lineNo)
+        _spaceVal = self.staticSpaces.get(_spaceNo)
         if not _spaceVal:
             LOG_ERR('AbyssStub::logonEnterAbyss: spaceVal not found')
             return
 
         self.addEnterPlayer(box, gbId, 0, 0, linePlayers.LinePlayerVal.ENTERING, _spaceVal.getSpaceNo(), {})
 
-        box.onLogonEnterAbyssGetSpaceBox(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id)
+        box.onLogonEnterAbyssGetSpaceBox(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id, _spaceNo)
 
     def doEnterAbyss(self, box, gbId, extra):
         _mapId = AB_FD.datas[self.floor]['ID']
@@ -175,3 +180,11 @@ class AbyssStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
             self.addEnterPlayer(box, gbId, 0, 0, linePlayers.LinePlayerVal.ENTERING, toSpaceNo, {})
             
         box.cell.doSwitchAbyssLine(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id, _spaceVal.getSpaceNo(), extra)
+
+    def checkCanEnterCrossAbyss(self, box):
+        for spaceNo, spaceVal in self.staticSpaces.items():
+            if self.canSpaceEnter(spaceNo):
+                box.onCrossServerCheckCanEnterAbyss(self.floor, True, 0)
+                return
+
+        box.onCrossServerCheckCanEnterAbyss(self.floor, False, 0)

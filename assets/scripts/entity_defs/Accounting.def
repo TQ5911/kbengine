@@ -90,5 +90,10 @@
         <minorAccountConstraintTip>
             <Arg>       UINT64              </Arg>
         </minorAccountConstraintTip>
+
+        <onMessage>
+            <Arg>        INT32                        </Arg>
+            <Arg>        ARRAY <of> UNICODE </of>     </Arg>
+        </onMessage>
     </ClientMethods>
 </root>

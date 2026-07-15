@@ -211,4 +211,4 @@ UIEquipBlessPage = 28
 UlEquipSoul = 29
 UIAbyssPanel = 30
 Rental = 31
-KillOrder = 32
+UIBountyPanel = 32

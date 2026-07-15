@@ -35,6 +35,10 @@ datas = _tools.RODict({
         "ID": "upgradeItemText",
         "value": "混沌熔炉",
     }),
+    "upgradeItemText2": _tools.RODict({
+        "ID": "upgradeItemText2",
+        "value": ('重器熔炉', '巧匠熔炉'),
+    }),
     "msgId_syntheticNoItem": _tools.RODict({
         "ID": "msgId_syntheticNoItem",
         "value": 54000056,
@@ -49,7 +53,7 @@ datas = _tools.RODict({
     }),
     "synthesisIntervalTime": _tools.RODict({
         "ID": "synthesisIntervalTime",
-        "value": 2.0,
+        "value": 0.5,
     }),
     "synthesisRecordDes": _tools.RODict({
         "ID": "synthesisRecordDes",
@@ -71,10 +75,6 @@ datas = _tools.RODict({
         "ID": "synthesisUnboundProbability",
         "value": _tools.ROList([0, 0, 25, 50, 100]),
     }),
-    "synthesRandomType": _tools.RODict({
-        "ID": "synthesRandomType",
-        "value": _tools.ROList([6, 22]),
-    }),
     "synthesRandomPityCounter": _tools.RODict({
         "ID": "synthesRandomPityCounter",
         "value": 30,
@@ -87,6 +87,10 @@ datas = _tools.RODict({
         "ID": "synthesRandomMsg",
         "value": 54003501,
     }),
+    "synthesLimitMsg": _tools.RODict({
+        "ID": "synthesLimitMsg",
+        "value": 54003502,
+    }),
     "upgradeIconNormal": _tools.RODict({
         "ID": "upgradeIconNormal",
         "value": "Assets/Res/ui/texture/synthesis/synthesis_tripod_icon.png",
@@ -94,5 +98,9 @@ datas = _tools.RODict({
     "upgradeIconRandom": _tools.RODict({
         "ID": "upgradeIconRandom",
         "value": "Assets/Res/ui/texture/synthesis/synthesis_tripod_icon02.png",
+    }),
+    "synthesRandomType": _tools.RODict({
+        "ID": "synthesRandomType",
+        "value": ((1, 6, 21), (2, 22, 23)),
     })
 })

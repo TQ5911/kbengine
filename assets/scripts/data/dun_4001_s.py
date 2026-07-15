@@ -365,6 +365,7 @@ datas ={
           "PosY": 48.91617,
           "PosZ": 18.71423,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
             "Level": 5.0,
             "LightPillar": "",
@@ -901,12 +902,13 @@ datas ={
           "PosZ": 122.2014,
           "Props": {
             "AreaType": 2,
-            "Height": 3.0,
-            "Length": 30.0,
-            "MPosX": 129.0,
+            "Height": 30.0,
+            "Length": 40.0,
+            "MPosX": 121.0,
             "MPosY": 64.89,
-            "MPosZ": 100.0,
-            "Remark": ""
+            "MPosZ": 93.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40018002": {
@@ -925,12 +927,13 @@ datas ={
           "PosZ": 130.949,
           "Props": {
             "AreaType": 2,
-            "Height": 3.0,
-            "Length": 20.0,
-            "MPosX": 166.0,
+            "Height": 30.0,
+            "Length": 40.0,
+            "MPosX": 146.0,
             "MPosY": 63.02,
-            "MPosZ": 125.0,
-            "Remark": ""
+            "MPosZ": 122.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40018003": {
@@ -949,12 +952,13 @@ datas ={
           "PosZ": 114.6303,
           "Props": {
             "AreaType": 2,
-            "Height": 3.0,
-            "Length": 20.0,
-            "MPosX": 195.0,
+            "Height": 30.0,
+            "Length": 40.0,
+            "MPosX": 183.0,
             "MPosY": 62.44,
-            "MPosZ": 95.0,
-            "Remark": ""
+            "MPosZ": 79.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40018004": {
@@ -973,12 +977,13 @@ datas ={
           "PosZ": 82.81308,
           "Props": {
             "AreaType": 2,
-            "Height": 3.0,
-            "Length": 25.0,
-            "MPosX": 190.0,
+            "Height": 30.0,
+            "Length": 50.0,
+            "MPosX": 176.0,
             "MPosY": 64.03,
-            "MPosZ": 59.0,
-            "Remark": ""
+            "MPosZ": 38.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40018005": {
@@ -997,12 +1002,13 @@ datas ={
           "PosZ": 62.2,
           "Props": {
             "AreaType": 2,
-            "Height": 4.0,
-            "Length": 80.0,
-            "MPosX": 133.0,
+            "Height": 40.0,
+            "Length": 100.0,
+            "MPosX": 129.0,
             "MPosY": 62.5,
-            "MPosZ": -19.0,
-            "Remark": ""
+            "MPosZ": -38.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40018006": {
@@ -1021,12 +1027,13 @@ datas ={
           "PosZ": 45.23708,
           "Props": {
             "AreaType": 2,
-            "Height": 3.0,
-            "Length": 20.0,
-            "MPosX": 189.0,
+            "Height": 30.0,
+            "Length": 40.0,
+            "MPosX": 182.0,
             "MPosY": 53.54,
-            "MPosZ": 24.0,
-            "Remark": ""
+            "MPosZ": 5.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40018007": {
@@ -1045,12 +1052,13 @@ datas ={
           "PosZ": 31.96,
           "Props": {
             "AreaType": 2,
-            "Height": 4.0,
-            "Length": 15.0,
-            "MPosX": 194.0,
+            "Height": 40.0,
+            "Length": 30.0,
+            "MPosX": 179.0,
             "MPosY": 41.83,
-            "MPosZ": 26.0,
-            "Remark": ""
+            "MPosZ": 23.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40018008": {
@@ -1065,16 +1073,17 @@ datas ={
           "EntityID": 1,
           "ID": 40018008,
           "PosX": 226.6805,
-          "PosY": 47.9009,
+          "PosY": 31.2,
           "PosZ": -9.021379,
           "Props": {
             "AreaType": 2,
-            "Height": 3.0,
-            "Length": 30.0,
-            "MPosX": 196.0,
-            "MPosY": 47.9,
-            "MPosZ": -22.0,
-            "Remark": ""
+            "Height": 50.0,
+            "Length": 60.0,
+            "MPosX": 168.0,
+            "MPosY": 31.2,
+            "MPosZ": -33.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40018009": {
@@ -1088,17 +1097,18 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 1,
           "ID": 40018009,
-          "PosX": 245.2522,
-          "PosY": 29.72058,
-          "PosZ": 36.24208,
+          "PosX": 251.17,
+          "PosY": 15.85,
+          "PosZ": 38.49,
           "Props": {
             "AreaType": 2,
-            "Height": 3.0,
-            "Length": 35.0,
-            "MPosX": 210.0,
-            "MPosY": 29.72,
-            "MPosZ": 21.0,
-            "Remark": ""
+            "Height": 60.0,
+            "Length": 60.0,
+            "MPosX": 192.0,
+            "MPosY": 15.85,
+            "MPosZ": 14.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40018010": {
@@ -1112,17 +1122,18 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 1,
           "ID": 40018010,
-          "PosX": 272.4569,
-          "PosY": 23.32564,
-          "PosZ": 66.93156,
+          "PosX": 271.07,
+          "PosY": 20.56,
+          "PosZ": 66.46,
           "Props": {
             "AreaType": 2,
-            "Height": 3.0,
-            "Length": 20.0,
-            "MPosX": 263.0,
-            "MPosY": 23.33,
-            "MPosZ": 45.0,
-            "Remark": ""
+            "Height": 60.0,
+            "Length": 40.0,
+            "MPosX": 255.0,
+            "MPosY": 20.56,
+            "MPosZ": 26.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40018011": {
@@ -1141,12 +1152,13 @@ datas ={
           "PosZ": 86.14203,
           "Props": {
             "AreaType": 2,
-            "Height": 2.0,
-            "Length": 30.0,
-            "MPosX": 258.0,
+            "Height": 30.0,
+            "Length": 60.0,
+            "MPosX": 240.0,
             "MPosY": 18.29,
-            "MPosZ": 59.0,
-            "Remark": ""
+            "MPosZ": 36.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40018012": {
@@ -1165,12 +1177,13 @@ datas ={
           "PosZ": 65.80173,
           "Props": {
             "AreaType": 2,
-            "Height": 2.0,
-            "Length": 50.0,
-            "MPosX": 292.0,
+            "Height": 50.0,
+            "Length": 100.0,
+            "MPosX": 266.0,
             "MPosY": 19.75,
-            "MPosZ": 20.0,
-            "Remark": ""
+            "MPosZ": -23.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40018013": {
@@ -1185,16 +1198,17 @@ datas ={
           "EntityID": 1,
           "ID": 40018013,
           "PosX": 299.5358,
-          "PosY": 20.54124,
+          "PosY": 15.0,
           "PosZ": 0.1690439,
           "Props": {
             "AreaType": 2,
-            "Height": 2.0,
-            "Length": 50.0,
-            "MPosX": 247.0,
-            "MPosY": 20.54,
-            "MPosZ": -3.0,
-            "Remark": ""
+            "Height": 40.0,
+            "Length": 100.0,
+            "MPosX": 197.0,
+            "MPosY": 15.0,
+            "MPosZ": -4.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "40018014": {
@@ -1213,12 +1227,13 @@ datas ={
           "PosZ": 13.66478,
           "Props": {
             "AreaType": 2,
-            "Height": 2.0,
-            "Length": 20.0,
-            "MPosX": 326.0,
+            "Height": 40.0,
+            "Length": 40.0,
+            "MPosX": 319.0,
             "MPosY": 21.86,
-            "MPosZ": -8.0,
-            "Remark": ""
+            "MPosZ": -27.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         }
       }

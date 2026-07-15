@@ -129,11 +129,6 @@ func (mhs *MapleHttpService) getAllServer(w http.ResponseWriter, r *http.Request
 			appLog.Error("scan row error: ", err.Error())
 		}
 
-		// 0 是隐藏状态
-		if server.ServerState == 0 {
-			continue
-		}
-
 		server.ZoneName = zoneMap[uint32(server.ZoneId)]
 		serverList = append(serverList, server)
 	}

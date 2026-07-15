@@ -534,7 +534,7 @@ datas = _tools.RODict({
     }),
     17112302: _tools.RODict({
         "ID": 17112302,
-        "name": "五毒石窟五层·矿战",
+        "name": "五毒石窟五层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -545,7 +545,7 @@ datas = _tools.RODict({
     }),
     17112401: _tools.RODict({
         "ID": 17112401,
-        "name": "五毒石窟五层·矿战",
+        "name": "五毒石窟五层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,

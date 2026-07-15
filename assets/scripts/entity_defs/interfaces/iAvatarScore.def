@@ -19,18 +19,6 @@
             <WitnessName>   true    </WitnessName>
         </totalScore>
 
-        <updateScoreTimerId>
-            <Type>      OBJECT_ID       </Type>
-            <Flags>     BASE            </Flags>
-            <Default>   0               </Default>
-        </updateScoreTimerId>
-
-        <lastNotifyScoreTime>
-            <Type>      LONGTIME        </Type>
-            <Flags>     BASE            </Flags>
-            <Default>   0               </Default>
-        </lastNotifyScoreTime>
-
         <scoreInitFinished>
             <Type>      BOOL       </Type>
             <Flags>     CELL_PRIVATE    </Flags>
@@ -50,6 +38,9 @@
             <Arg>   UNICODE </Arg>
             <Arg>   SCORE   </Arg>
         </baseScoreChanged>
+
+        <onAllScoreInitFinished>
+        </onAllScoreInitFinished>
     </BaseMethods>
 
     <CellMethods>

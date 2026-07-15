@@ -18,12 +18,14 @@ import visible_visible as V_VD
 import creep_base as CBD
 import welfare_resourceRecovery as W_RR
 import copy
+import gameconfig
 import message_Message_def as MMD
 
 
 class IResourceRecovery(object):
     def __init__(self):
         LOG_DBG("IResourceRecovery::__init__")
+        self.setTempMiscProp(gameconst.EntityPropsEnum.cellNovice, self.getCellData('novice', 1))
         self.subType2FreeTicketInfo = {
             gameconst.FreeTicketSubType.CUBE            :   [lambda self: self.leftCubeTimes, lambda self: self.modifyLeftCubeTimes, lambda self: self._cubeDailyRefresh],
             gameconst.FreeTicketSubType.WONDER_LAND     :   [lambda self: self.wonderLandTicket, lambda self: self.modifyWonderLandTicket, lambda self: self._wonderLandRefreshDaily],
@@ -38,14 +40,16 @@ class IResourceRecovery(object):
             self.updateFreeTicketRecoveryInfo(subType)
 
     def resourceRecoveryOnLogin(self):
+        cellNovice = self.getTempMiscProp(gameconst.EntityPropsEnum.cellNovice, 0)
+        LOG_INFO("IResourceRecovery::resourceRecoveryOnLogin cellNovice", cellNovice)
+        if cellNovice:
+            return
         LOG_INFO("IResourceRecovery::resourceRecoveryOnLogin")
-
         for subType in gameconst.FreeTicketSubType.VALID_SUB_TYPE:
             self.updateFreeTicketInfo(subType, self.subType2FreeTicketInfo[subType][0](self), gameconst.FreeTicketUpdateType.LOGIN)
 
     def resourceRecoveryOnOffline(self):
         LOG_INFO("IResourceRecovery::resourceRecoveryOnOffline")
-
         for subType in gameconst.FreeTicketSubType.VALID_SUB_TYPE:
             self.updateFreeTicketInfo(subType, self.subType2FreeTicketInfo[subType][0](self), gameconst.FreeTicketUpdateType.OFFLINE, self.tLastUpdateTime)
 
@@ -56,29 +60,54 @@ class IResourceRecovery(object):
                 return cfgList[cfgIdx][1]
         return 0
 
+    def checkFreeTicketNumConfig(self, subType):
+        if not gameglobal.freeTicketNumConfig.get(subType, []):
+            LOG_WARN("IResourceRecovery::checkFreeTicketNumConfig not serverOpenTime", subType)
+            return False
+        return True
+
+    def checkGameConfigEnable(self, subType):
+        cfgData = W_RR.datas.get(subType + 1, {})
+        if not cfgData:
+            LOG_ERR("IResourceRecovery::checkGameConfigEnable no cfg", subType + 1)
+            return False
+        condition = cfgData['condition']
+        conditionType = V_VD.datas.get(condition).get("type", "")
+        if not gameconfig.visibleConfigEnabled(conditionType):
+            LOG_WARN("IResourceRecovery::checkGameConfigEnable not open", conditionType)
+            return False
+        
+        return True
+
     def updateFreeTicketInfo(self, subType, leftNum, reason, now=0):
+        if not self.checkFreeTicketNumConfig(subType):
+            return
         now = now if now else utils.curTS()
         curDateTime = utils.getIntDateTime(now)
         LOG_INFO("IResourceRecovery::updateFreeTicketInfo", now, curDateTime, subType, leftNum, reason)
-        LOG_INFO("IResourceRecovery::updateFreeTicketInfo", gameglobal.freeTicketNumConfig.get(subType, []))
-        LOG_INFO("IResourceRecovery::updateFreeTicketInfo", self.freeTicketUseInfo.get(subType, []))
+        LOG_DBG("IResourceRecovery::updateFreeTicketInfo", gameglobal.freeTicketNumConfig.get(subType, []))
+        LOG_DBG("IResourceRecovery::updateFreeTicketInfo", self.freeTicketUseInfo.get(subType, []))
         infoList = self.freeTicketUseInfo.setdefault(subType, [])
-        LOG_DBG("IResourceRecovery::updateFreeTicketInfo2", infoList)
+        cfgList = gameglobal.freeTicketNumConfig.get(subType, [])
+        LOG_INFO("IResourceRecovery::updateFreeTicketInfo2", infoList)
         lastData = infoList[-1] if infoList else None
+        lastCfgData = cfgList[-1]
 
         if reason == gameconst.FreeTicketUpdateType.LOGIN or reason == gameconst.FreeTicketUpdateType.OFFLINE:
-            LOG_WARN("IResourceRecovery::updateFreeTicketInfo3", lastData, curDateTime)
+            LOG_INFO("IResourceRecovery::updateFreeTicketInfo3", lastData, curDateTime)
             if not lastData or lastData[0] < curDateTime:
                 infoList.append([curDateTime, leftNum])
             elif lastData[0] == curDateTime:
                 lastData[1] = leftNum
+                if lastCfgData[0] == lastData[0]:
+                    return
             else:
                 return
         elif reason == gameconst.FreeTicketUpdateType.TIMED or reason == gameconst.FreeTicketUpdateType.UPDATE:
             curDataTimestamp = utils.getIntTimestamp(str(curDateTime) + gameconst.RESOURCE_RECOVER_TIME_POINT_STR)
             preDataTimestamp = curDataTimestamp - 86400
             preDataTime = utils.getIntDateTime(preDataTimestamp)
-            LOG_DBG("IResourceRecovery::updateFreeTicketInfo5", lastData, preDataTime)
+            LOG_INFO("IResourceRecovery::updateFreeTicketInfo5", lastData, preDataTime)
             if not lastData or lastData[0] < preDataTime:
                 infoList.append([preDataTime, leftNum])
             elif lastData[0] == preDataTime:
@@ -88,10 +117,6 @@ class IResourceRecovery(object):
 
         LOG_DBG("IResourceRecovery::updateFreeTicketInfo6", infoList)
 
-        cfgList = gameglobal.freeTicketNumConfig.get(subType, [])
-        if not cfgList:
-            LOG_WARN("IResourceRecovery::updateFreeTicketInfo6")
-            return
         idx = 0
         while infoList:
             if idx >= len(infoList):
@@ -111,6 +136,7 @@ class IResourceRecovery(object):
             while adjIdx < len(adjInfoList):
                 if adjInfoList[adjIdx][0] == info[0]:
                     adjInfoList[adjIdx][1] = info[1]
+                    adjIdx += 1
                     break
                 else:
                     adjIdx += 1
@@ -120,11 +146,13 @@ class IResourceRecovery(object):
         self.updateFreeTicketRecoveryInfo(subType)
     
     def updateFreeTicketRecoveryInfo(self, subType):
+        if not self.checkFreeTicketNumConfig(subType):
+            return
         cfgData = W_RR.datas.get(subType + 1, {})
         if not cfgData:
             LOG_ERR("IResourceRecovery::updateFreeTicketRecoveryInfo no cfg", subType + 1)
             return
-        LOG_INFO("IResourceRecovery::updateFreeTicketRecoveryInfo", self.freeTicketUseInfo[subType], cfgData)
+        LOG_DBG("IResourceRecovery::updateFreeTicketRecoveryInfo", self.freeTicketUseInfo.get(subType, []), cfgData)
         infoList = self.freeTicketUseInfo.get(subType, [])
         costCfg = cfgData['cost']
         recoveryInfoList = []
@@ -175,6 +203,10 @@ class IResourceRecovery(object):
             return
         if num <= 0:
             LOG_WARN("IResourceRecovery::reqFreeTicketRecovery num", num)
+            return
+        if not self.checkGameConfigEnable(subType):
+            return
+        if not self.checkFreeTicketNumConfig(subType):
             return
 
         deductWealthVal = dropAward.DeductWealthVal()
@@ -242,6 +274,10 @@ class IResourceRecovery(object):
         elif rType == gameconst.FreeTicketOneClickRecoveryType.PAID:
             checkRTypeFunc = lambda val: val > 0
         for subType in gameconst.FreeTicketSubType.VALID_SUB_TYPE:
+            if not self.checkFreeTicketNumConfig(subType):
+                continue
+            if not self.checkGameConfigEnable(subType):
+                continue
             num = gameconst.UINT32_MAX
             costInfo = []
             leftNum = self.calFreeTicketRecovery(subType, num, deductWealthVal, costInfo, checkRTypeFunc)

@@ -7,7 +7,7 @@ datas ={
         "ClassName": "BornPos",
         "ClassNameType": 6,
         "CustomID": "",
-        "Dir": 40.64771,
+        "Dir": 40.647709999999996,
         "DisplayName": "",
         "EliteCustomID": "",
         "EntityID": 0,
@@ -99,7 +99,7 @@ datas ={
           "PosZ": 97.31,
           "Props": {
             "AreaType": 2,
-            "Height": 6.0,
+            "Height": 60.0,
             "Length": 70.0,
             "MPosX": 143.0,
             "MPosY": 530.85,
@@ -124,7 +124,7 @@ datas ={
           "PosZ": 130.9982,
           "Props": {
             "AreaType": 2,
-            "Height": 6.0,
+            "Height": 60.0,
             "Length": 70.0,
             "MPosX": 142.0,
             "MPosY": 533.48,
@@ -149,7 +149,7 @@ datas ={
           "PosZ": 102.1208,
           "Props": {
             "AreaType": 2,
-            "Height": 6.0,
+            "Height": 60.0,
             "Length": 80.0,
             "MPosX": 188.0,
             "MPosY": 533.78,

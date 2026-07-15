@@ -149,11 +149,11 @@ datas = _tools.RODict({
     }),
     "miniMonthlyPassPerks": _tools.RODict({
         "ID": "miniMonthlyPassPerks",
-        "value": ('可使用交易行上架商品', '装备掉落可交易概率加成', '精灵召唤月卡特权'),
+        "value": ('开通月卡解锁可交易道具获取资格，及交易行上架资格', '可交易道具掉落额外增加战力排行加成', '周礼包专享绑元购买 及 史诗精灵召唤券绑元购买'),
     }),
     "premiumMonthlyPassPerks": _tools.RODict({
         "ID": "premiumMonthlyPassPerks",
-        "value": ('资源商城月卡特权', '装备掉落可交易概率加成', '离线挂机增加8小时，且可获得道具奖励'),
+        "value": ('挂机时长8小时增加到16小时，并可获得道具奖励', '可交易道具掉落概率+5%（购买赤铜月卡后生效）', '材料特供专享绑元购买，且购买次数增加 '),
     }),
     "monthCardRenew": _tools.RODict({
         "ID": "monthCardRenew",

@@ -503,7 +503,8 @@ class ImpAutoCombat(object):
             _target = self.getNearestEnemy()
         elif targetType == 'Self':
             _target = self
-        elif targetType in ('Friend', 'FriendExGB'):
+        elif targetType in ('Friend', 'FriendExGB', 'TeamFriend'):
+        # elif targetType in ('Friend', 'FriendExGB'):
             _target = self.getTeamTarget(True, skill)
         elif targetType == 'FriendExS':
             _target = self.getTeamTarget(False, skill)
@@ -610,12 +611,14 @@ class ImpAutoCombat(object):
             return
 
         if self.hasState(gameconst.StateEnum.autoFight):
-            targetId = self.autoCmbtDic.get('targetId', 0)
-            target = KBEngine.entities.get(targetId, None)
-            if not target or not target.IsAvatar:
-                if _ent.IsAvatar:
-                    self.doSetSelectedTargetId(srcEntId)
-                    self.selectAutoCombatTarget(self.id, srcEntId)
+            #已经在自动反击状态下就不再重新设置目标了，这里只解决自动战斗时候被玩家打
+            if not self.getCommonFlagCell(gameconst.AvatarFlagCell.FIGHT_BACK):
+                targetId = self.autoCmbtDic.get('targetId', 0)
+                target = KBEngine.entities.get(targetId, None)
+                if not target or not target.IsAvatar:
+                    if _ent.IsAvatar:
+                        self.doSetSelectedTargetId(srcEntId)
+                        self.selectAutoCombatTarget(self.id, srcEntId)
             return
 
         if self.fightBackTimerId:
@@ -920,9 +923,6 @@ class ImpAutoCombat(object):
                 self.direction = (0.0, 0.0, yaw)
 
         arr = _skill.getSkillArr(self, _target, _direction)
-        if _skill.isChangePosSkill(_skill.skillId):
-            positionArgs = _skill.getSkillDesPosition(self, _target, arr)
-            arr = arr + positionArgs
 
         if self.checkSetSelectedTargetId(_skill):
             self.doSetSelectedTargetId(_target.id)

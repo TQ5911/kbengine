@@ -16,14 +16,17 @@ class ICollectible(object):
         for propIndex in propIndexList:
             propList = PDETAIL.datas.get(propIndex, {}).get('propList', {})
             propChange = self._addAwardCollectPropsCell(propList)
+            
+            coType = PDETAIL.datas.get(propIndex, {}).get('type', '')
+            self.collectibleSimpleClientData.setdefault(coType, {}).setdefault(propIndex, True)
             if not opUUID:
                 continue
             LogTrackingMgr.LogTrackingMgr.collectible_detail(
                 self.gbId,
                 self.clientDistinctIdCell,
                 propIndex,
-                gameconst.CollectibleDetailStatus.COLLECTED,
                 propChange,
+                gameconst.CollectibleDetailStatus.COLLECTED,
                 opUUID,
             )
 

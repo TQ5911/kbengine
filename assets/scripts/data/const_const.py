@@ -317,7 +317,7 @@ datas = _tools.RODict({
     }),
     "eternalItemIDList": _tools.RODict({
         "ID": "eternalItemIDList",
-        "value": set([30050087,30001044,30001045,30001301,30001302]),
+        "value": set([]),
     }),
     "teleportStoneInvalidMsg": _tools.RODict({
         "ID": "teleportStoneInvalidMsg",
@@ -389,7 +389,7 @@ datas = _tools.RODict({
     }),
     "autoFightSettingsDefaultStatus": _tools.RODict({
         "ID": "autoFightSettingsDefaultStatus",
-        "value": (1, 1, 0, 0, 1, 0),
+        "value": (1, 1, 0, 0, 1, 0, 0, 1),
     }),
     "autoFightSettingsReliveTime": _tools.RODict({
         "ID": "autoFightSettingsReliveTime",
@@ -534,6 +534,18 @@ datas = _tools.RODict({
     "uiVisiblePropmt": _tools.RODict({
         "ID": "uiVisiblePropmt",
         "value": 54001959,
+    }),
+    "uiVisibleCard1LimitMsg": _tools.RODict({
+        "ID": "uiVisibleCard1LimitMsg",
+        "value": 54000214,
+    }),
+    "uiVisibleCard2LimitMsg": _tools.RODict({
+        "ID": "uiVisibleCard2LimitMsg",
+        "value": 54000215,
+    }),
+    "uiVisibleCard3LimitMsg": _tools.RODict({
+        "ID": "uiVisibleCard3LimitMsg",
+        "value": 54000216,
     }),
     "leaveTheScene": _tools.RODict({
         "ID": "leaveTheScene",
@@ -710,6 +722,10 @@ datas = _tools.RODict({
     "selectedTargetMonster": _tools.RODict({
         "ID": "selectedTargetMonster",
         "value": "Assets/Res/ui/texture/maincity/target_monster_icon.png",
+    }),
+    "selectedTargetBoss": _tools.RODict({
+        "ID": "selectedTargetBoss",
+        "value": "Assets/Res/ui/texture/maincity/target_boss_icon.png",
     }),
     "selectedTargetNeutrality": _tools.RODict({
         "ID": "selectedTargetNeutrality",
@@ -1410,5 +1426,17 @@ datas = _tools.RODict({
     "bagFullGeneralMessage": _tools.RODict({
         "ID": "bagFullGeneralMessage",
         "value": 54000663,
+    }),
+    "itemNotExist": _tools.RODict({
+        "ID": "itemNotExist",
+        "value": 54001330,
+    }),
+    "smsSentSuccess": _tools.RODict({
+        "ID": "smsSentSuccess",
+        "value": 54002073,
+    }),
+    "monsterBornPosResetTime": _tools.RODict({
+        "ID": "monsterBornPosResetTime",
+        "value": 60,
     })
 })

@@ -83,18 +83,32 @@ func NewRedisPool(opts RedisPoolOptions) *redis.Pool {
 	go func() {
 		ticker := time.NewTicker(30 * time.Second)
 		defer ticker.Stop()
+		var okTicks int
 		for range ticker.C {
 			ctx, cancel := context.WithTimeout(context.Background(), RedisDialTimeout)
+			getStart := time.Now()
 			conn, err := pool.GetContext(ctx)
+			getCost := time.Since(getStart)
 			cancel()
 			if err != nil {
-				appLog.Errorf("[%s] redis health check failed (get conn), addr=%s, err=%s", opts.ServerName, opts.Addr, err.Error())
+				stats := pool.Stats()
+				appLog.Errorf("[%s] redis health check failed (get conn), addr=%s, cost=%v, active=%d/%d idle=%d, err=%s",
+					opts.ServerName, opts.Addr, getCost,
+					stats.ActiveCount, opts.MaxActive, stats.IdleCount,
+					err.Error())
 				continue
 			}
-			_, err = conn.Do("PING")
+			_, pingErr := conn.Do("PING")
 			conn.Close()
-			if err != nil {
-				appLog.Errorf("[%s] redis health check failed, addr=%s, err=%s", opts.ServerName, opts.Addr, err.Error())
+			if pingErr != nil {
+				appLog.Errorf("[%s] redis health check failed, addr=%s, err=%s", opts.ServerName, opts.Addr, pingErr.Error())
+				continue
+			}
+			okTicks++
+			if okTicks%60 == 0 {
+				stats := pool.Stats()
+				appLog.Infof("[%s] redis health check ok, addr=%s, active=%d/%d idle=%d",
+					opts.ServerName, opts.Addr, stats.ActiveCount, opts.MaxActive, stats.IdleCount)
 			}
 		}
 	}()

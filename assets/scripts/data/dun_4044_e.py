@@ -51,16 +51,7 @@ datas ={
     "entityID": [
       40440001,
       40440002,
-      40440003,
-      40440004,
-      40440005,
-      40440006,
-      40440007,
-      40440008,
-      40440009,
-      40440010,
-      40440011,
-      40440012
+      40440003
     ],
     "num": 0,
     "lv": "25",
@@ -100,7 +91,7 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1050
+        1052
       ]
     }
   },
@@ -113,5 +104,46 @@ datas ={
     "lv": "0",
     "ifSetBoss": 0,
     "transition": {}
+  },
+  "1052": {
+    "type": "createMonster",
+    "entityID": [
+      40440007,
+      40440008,
+      40440009,
+      40440010,
+      40440011,
+      40440012
+    ],
+    "num": 0,
+    "lv": "25",
+    "initState": 0,
+    "hp": 0,
+    "minAtk": 0,
+    "maxAtk": 0,
+    "ifSetBoss": 0,
+    "aiName": 0,
+    "hpPercent": 0.0,
+    "transition": {
+      "finished": [
+        1054
+      ]
+    }
+  },
+  "1054": {
+    "type": "monsterRestNum",
+    "monsterID": [
+      -1
+    ],
+    "compare": 1,
+    "restNum": 0,
+    "usePrototypeID": 0,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1050
+      ]
+    }
   }
 }

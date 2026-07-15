@@ -49,9 +49,10 @@ class AvatarBuildsMixin(object):
     def baseLevelUpSkill(self, newSkillId, oldSkillId, levelDelta):
         LOG_INFO('baseLevelUpSkill', newSkillId, oldSkillId, levelDelta)
         _skillId = dataUtils.getSkillIdByMorphState(newSkillId, self.morphState)
-        self._levelUpSkill(_skillId, oldSkillId, levelDelta)
+        ret = self._levelUpSkill(_skillId, oldSkillId, levelDelta)
         self.updateSkillScore()
-        self.syncMethodCallToLocalServerBase('onCrossServerLevelUpSkill', (_skillId, oldSkillId, levelDelta))
+        if ret:
+            self.syncMethodCallToCrossServerBase('onLocalServerLevelUpSkill', (_skillId, oldSkillId, levelDelta))
 
     def _levelUpSkill(self, newSkillId, oldSkillId, levelDelta):
         LOG_INFO("_levelUpSkill", newSkillId, oldSkillId, levelDelta)
@@ -60,9 +61,9 @@ class AvatarBuildsMixin(object):
             return False
         return True
 
-    #本服也会重走升级技能接口而不是直接写结果
-    def onCrossServerLevelUpSkill(self, _skillId, oldSkillId, levelDelta):
-        LOG_INFO('onCrossServerLevelUpSkill', _skillId, oldSkillId, levelDelta)
+    #本服升完，跨服也会重走升级技能接口
+    def onLocalServerLevelUpSkill(self, _skillId, oldSkillId, levelDelta):
+        LOG_INFO('onLocalServerLevelUpSkill', _skillId, oldSkillId, levelDelta)
         self._levelUpSkill(_skillId, oldSkillId, levelDelta)
         self.updateSkillScore()
 
@@ -270,8 +271,10 @@ class ImpCombat(AvatarBuildsMixin):
 
     @gamedecorator.crossServer
     def recoverDeathPenaltyExp(self, exposed, expireTime, itemId):
-        self._recoverDeathPenaltyExp(expireTime, itemId)
-        self.syncMethodCallToLocalServerBase('_recoverDeathPenaltyExp', (expireTime, itemId))
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_recoverDeathPenaltyExp', (expireTime, itemId))
+        else:
+            self._recoverDeathPenaltyExp(expireTime, itemId)
 
     def _recoverDeathPenaltyExp(self, expireTime, itemId):
         LOG_INFO('recoverDeathPenaltyExp:', expireTime, itemId)
@@ -322,16 +325,20 @@ class ImpCombat(AvatarBuildsMixin):
         self.addWealth(_src, _awardVal, _opUUID, gameclass.AwardDetailCls())
 
         self.client.onDeathPenaltyExpChange([{"expireTime": expireTime, "exp": 0}])
+        self.syncMethodCallToCrossServerBase('_recoverDeathPenaltyExp', (expireTime, itemId))
 
     @gamedecorator.crossServer
     def removeDeathPenaltyExp(self, exposed, expireTime):
-        self._removeDeathPenaltyExp(expireTime)
-        self.syncMethodCallToLocalServerBase('_removeDeathPenaltyExp', (expireTime,))
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_removeDeathPenaltyExp', (expireTime,))
+        else:
+            self._removeDeathPenaltyExp(expireTime)
 
     def _removeDeathPenaltyExp(self, expireTime):
         LOG_INFO('removeDeathPenaltyExp:', expireTime)
         if self.deathPenaltyData.removeDeathPenaltyVal(expireTime):
             self.client.onDeathPenaltyExpChange([{"expireTime": expireTime, "exp": 0}])
+            self.syncMethodCallToCrossServerBase('_removeDeathPenaltyExp', (expireTime,))
 
     # ------------------- dead and relive end -------------------
 
@@ -467,7 +474,13 @@ class ImpCombat(AvatarBuildsMixin):
     # 快捷吃药 start ---------------------------------
 
     @gamedecorator.checkGameconfigEnable('quickSettings')
+    @gamedecorator.crossServer
     def setInstantPotionSlots(self, exposed, potion):
+        self._setInstantPotionSlots(potion)
+        self.syncMethodCallToLocalServerBase('_setInstantPotionSlots', (potion,))
+
+
+    def _setInstantPotionSlots(self, potion):
         LOG_INFO('setInstantPotionSlots', potion)
         _oldAutoHealHp = self.instantPotionSlots._hasAutoHealHp()
         _oldAutoHealMp = self.instantPotionSlots._hasAutoHealMp()

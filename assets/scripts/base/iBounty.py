@@ -22,6 +22,7 @@ import gameclass
 import random
 import actionContext
 import gamedecorator
+import gameconfig
 
 class IBounty(object):
     def __init__(self):
@@ -161,7 +162,7 @@ class IBounty(object):
     @gamedecorator.checkGameconfigEnable('order')
     def reqPublishBounty(self, exposed, preyName, money, bountyType, hunterName):
         if not self.checkAuthDisassembleAndMsg(
-                A_AFD.KillOrder, 
+                A_AFD.UIBountyPanel, 
                 A_ACD.datas['restrictedPromptMsg1']['value']):
             return
 
@@ -436,7 +437,7 @@ class IBounty(object):
     def reqAcceptBounty(self, exposed, uuid):
         LOG_INFO("IBounty::reqAcceptBounty", uuid)
         if not self.checkAuthDisassembleAndMsg(
-                A_AFD.KillOrder, 
+                A_AFD.UIBountyPanel, 
                 A_ACD.datas['restrictedPromptMsg1']['value']):
             return
 
@@ -661,6 +662,8 @@ class IBounty(object):
                 #self.reqGetAvatarBountyInfo(self.gbID, gameconst.AvatarBountyInfoType.HUNTER)
 
     def updateBountyRes(self, updateInfo):
+        if gameconfig.isCrossServer():
+            return
         LOG_INFO("IBounty::updateBountyRes", updateInfo)
         for baType, infoDictList in updateInfo.items():
             LOG_DBG("IBounty::updateBountyRes", baType, infoDictList)

@@ -19,6 +19,13 @@ CREATE TABLE IF NOT EXISTS `game_state_info`
         PRIMARY KEY  `name` (`name`)
         );
 		
+CREATE TABLE IF NOT EXISTS `game_take_over`
+        (
+        `accountName` varchar(128) NOT NULL,
+        `entityDBID` bigint(15) NOT NULL,
+        PRIMARY KEY  `accountName` (`accountName`)
+        );
+		
 CREATE TABLE IF NOT EXISTS `game_leader_board_stub_info`
         (
         `lbType` int(10) NOT NULL,

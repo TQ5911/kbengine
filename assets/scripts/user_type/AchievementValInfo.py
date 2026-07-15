@@ -65,8 +65,8 @@ def _checkAchievePetBattleNum(avatar, achieveData, achieveVal, ctx):
     return achieveVal.step >= achieveData['targetParam'][0]
 
 def _checkAchievePetEquipNum(avatar, achieveData, achieveVal, ctx):
-    _quality = achieveData['targetParam'][0]
-    _num = achieveData['targetParam'][1]
+    _quality = achieveData['targetParam'][1]
+    _num = achieveData['targetParam'][0]
     achieveVal.step = max(achieveVal.step, avatar.getPetEquipNum(_quality))
     return achieveVal.step >= _num
 
@@ -101,9 +101,9 @@ def _checkAchieveTask(avatar, achieveData, achieveVal, ctx):
     return True
 
 def _checkAchieveActivityFinished(avatar, achieveData, achieveVal, ctx):
-    if getattr(ctx, 'activityId', 0) == achieveData['targetParam'][0]:
+    if getattr(ctx, 'activityId', 0) == achieveData['targetParam'][1]:
         achieveVal.step += 1
-        return achieveVal.step >= achieveData['targetParam'][1]
+        return achieveVal.step >= achieveData['targetParam'][0]
 
     return False
 

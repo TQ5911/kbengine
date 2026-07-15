@@ -15,19 +15,20 @@ type REDISConfig struct {
 }
 
 type AppConfig struct {
-	ClientServiceAddr     string
-	GameServerServiceAddr string
-	Mysql                 MYSQLConfig
-	CentralServerId       uint32
-	AddressForDebug       string
-	IdipHttpServer        string
-	LogPath               string
-	LogLevel              string
-	LogRotateSize         string
-	RedisServer           REDISConfig
-	AccountTypes          []uint8
-	TapTap				  map[string]interface{}
-	Official			  map[string]interface{}
+	ClientServiceAddr       string
+	GameServerServiceAddr   string
+	Mysql                   MYSQLConfig
+	CentralServerId         uint32
+	AddressForDebug         string
+	IdipHttpServer          string
+	LogPath                 string
+	LogLevel                string
+	LogRotateSize           string
+	RedisServer             REDISConfig
+	AccountTypes            []uint8
+	TapTap			        map[string]interface{}
+	Official		        map[string]interface{}
+	LoginHttpSecret         string
 }
 
 type ServerListConfig struct {

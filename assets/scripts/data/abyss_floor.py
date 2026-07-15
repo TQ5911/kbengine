@@ -18,20 +18,20 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "floor": 1,
         "ID": 5201,
-        "needScore": 5000,
-        "needLv": 50,
+        "needScore": 25000,
+        "needLv": 40,
     }),
     2: _tools.RODict({
         "floor": 2,
         "ID": 5202,
-        "needScore": 10000,
-        "needLv": 55,
+        "needScore": 30000,
+        "needLv": 43,
     }),
     3: _tools.RODict({
         "floor": 3,
         "ID": 5203,
-        "needScore": 15000,
-        "needLv": 60,
+        "needScore": 35000,
+        "needLv": 47,
     })
 })
 minKey = 1

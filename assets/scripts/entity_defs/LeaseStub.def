@@ -78,5 +78,22 @@
             <Arg>       SERVER_ID       </Arg>
             <Arg>       PLAYER_GBID     </Arg>
         </getMySaleList>
+
+        <onReplyAddItemPrepareOffline>
+            <Arg>       PYTHON          </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       UNIQUE_ID       </Arg>
+            <Arg>       INT32           </Arg>
+            <Arg>       UNIQUE_ID       </Arg>
+        </onReplyAddItemPrepareOffline>
+
+        <onReplyLeaseItemPrepareOffline>
+            <Arg>       PYTHON          </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       UNIQUE_ID       </Arg>
+            <Arg>       INT64           </Arg>
+            <Arg>       INT32           </Arg>
+            <Arg>       UNIQUE_ID       </Arg>
+        </onReplyLeaseItemPrepareOffline>
     </BaseMethods>
 </root>

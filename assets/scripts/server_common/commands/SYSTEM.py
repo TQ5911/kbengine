@@ -5,12 +5,15 @@ import gmCommand
 import functools
 import importlib
 import gameglobal
+import gamesql
 import gameconfig
 import redisUtils
+import KBEngine
 from KBEDebug import *
 from commands.CMD_COMMON import *
 
 import login_set as LGSD
+from server_common import gameengine
 
 BASE, CELL, ALL, INSIDE, ALLSIDE = gameconst.BASE, gameconst.CELL,\
     gameconst.ALL, gmAdmin.INSIDE, gmAdmin.ALLSIDE
@@ -80,6 +83,161 @@ def reloadDataBase(su):
     LOG_DBG('begin reloadDataBase')
     import gamerefresh
     gamerefresh.refreshData()
+
+
+def _recoverAfterGetDBID(ctx, ret, num, insertId, err):
+    if err:
+        LOG_ERR('_recoverAfterGetDBID', err)
+        ctx['su'].onCommandResult(0, f'meet error', {
+            'effective': 0,
+            'err': err,
+        })
+        return
+
+    if not ret:
+        LOG_ERR('_recoverAfterGetDBID not found account')
+        ctx['su'].onCommandResult(0, f'not found account', {
+            'effective': 0,
+        })
+        return
+
+    _dbid = int(ret[0][0])
+    gamesql.takeOverAccount(ctx['selfAccount'], _dbid)
+    ctx['su'].onCommandResult(0, f'command success', {
+        'effective': 1,
+    })
+
+
+@gm_cmd('$recoverTakeOver', (Str("accountName"), ), RONE, BASE, '恢复账号接管', ALLSIDE, GOD_GROUPS)
+def recoverTakeOver(su, selfAccount):
+    _ctx = {
+        'selfAccount': selfAccount,
+        'su': su,
+    }
+    gamesql.getTakeOverOriginDBID(
+        selfAccount,
+        functools.partial(_recoverAfterGetDBID, _ctx)
+    )
+
+
+def _afterQueryOtherAccount(ctx, ret, num, insertId, err):
+    if err:
+        LOG_ERR('_afterQueryOtherAccount', err)
+        ctx['su'].onCommandResult(0, f'meet err', {
+            'effective': 0,
+            'err': err,
+        })
+        return
+
+    if not ret:
+        LOG_ERR('_afterQueryOtherAccount not found account')
+        ctx['su'].onCommandResult(0, f'not found account', {
+            'effective': 0,
+        })
+        return
+
+    _otherDBID = int(ret[0][0])
+    gamesql.recordTakeOver(ctx['selfAccount'], ctx['selfDBID'])
+    gamesql.takeOverAccount(ctx['selfAccount'], _otherDBID)
+    ctx['su'].onCommandResult(0, f'command success', {
+        'effective': 1,
+    })
+
+
+def _afterQuerySelfAccount(ctx, ret, num, insertId, err):
+    if err:
+        LOG_ERR('_afterQuerySelfAccount', err)
+        ctx['su'].onCommandResult(0, f'meet error', {
+            'effective': 0,
+            'err': err,
+        })
+        return
+
+    if not ret:
+        LOG_ERR('_afterQuerySelfAccount not found account')
+        ctx['su'].onCommandResult(0, f'not found account', {
+            'effective': 0,
+        })
+        return
+
+    _selfDBID = int(ret[0][0])
+    ctx['selfDBID'] = _selfDBID
+    gamesql.queryAccountDBID(
+        ctx['otherAccount'], 
+        functools.partial(_afterQueryOtherAccount, ctx)
+    )
+
+
+@gm_cmd('$takeOverAccount', (Str("selfAccountName"), Str('otherAccountName')), RONE, BASE, '接管other的账号', ALLSIDE, GOD_GROUPS)
+def takeOverAccount(su, selfAccount, otherAccount):
+    _ctx = {
+        'selfAccount': selfAccount,
+        'otherAccount': otherAccount,
+        'su': su,
+    }
+
+    gamesql.queryAccountDBID(
+        selfAccount, 
+        functools.partial(_afterQuerySelfAccount, _ctx)
+    )
+
+
+def _kickAccountAfterLook(ctx, box):
+    if box is False:
+        LOG_ERR('_kickAccountAfterLook not online', ctx['accountName'])
+        ctx['su'].onCommandResult(0, f'not online', {
+            'effective': 0,
+        })
+        return
+
+    elif box is True:
+        LOG_INFO('_kickAccountAfterLook already offline', ctx['accountName'])
+        ctx['su'].onCommandResult(0, f'command success', {
+            'effective': 0,
+        })
+        return 
+
+    box.kickAccountSingleGm(ctx['msgCont'])
+    ctx['su'].onCommandResult(0, f'command success', {
+        'effective': 1,
+    })
+
+
+def _kickaccount(ctx, ret, num, insertId, err):
+    if err:
+        LOG_ERR('_kickaccount', err)
+        ctx['su'].onCommandResult(0, f'meet error', {
+            'effective': 0,
+            'err': err
+        })
+        return
+
+    if not ret:
+        LOG_WARN('_kickaccount not found', ret)
+        ctx['su'].onCommandResult(0, f'not found', {
+            'effective': 0,
+        })
+        return
+
+    KBEngine.lookUpEntityByDBID(
+        'Account',
+        int(ret[0][0]),
+        functools.partial(_kickAccountAfterLook, ctx)
+    )
+
+
+@gm_cmd('$kickaccount', (Str("accountName"), Str('msg content')), RONE, BASE, '踢账号下线', ALLSIDE, GOD_GROUPS)
+def kickaccount(su, accountName, msgContent):
+    _ctx = {
+        'msgCont': msgContent,
+        'accountName': accountName,
+        'su': su,
+    }
+    gamesql.queryAccountDBID(
+        accountName,
+        functools.partial(_kickaccount, _ctx)
+    )
+
 
 @gm_cmd('$kickavatar', (Player("gbId or Id", raw=True), Str('msg content')), RARG(0), BASE, '踢玩家下线', ALLSIDE, GOD_GROUPS,minArgs=1)
 def kickAvatar(su, player, msgContent):

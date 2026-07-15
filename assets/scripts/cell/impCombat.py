@@ -577,7 +577,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def goDie(self, killer, srcType, srcId, forceDead=False, context=None):
         dmgHostEnt = utils.getHostEntity(killer)
         posMsg = "<link position x={} z={} spaceNo={} colorId=0>".format(int(self.position.x), int(self.position.z), self.spaceNo)
-        if self.hasState(gameconst.StateEnum.Fall):
+        if srcType == gameconst.SourceType.SrcTpDropDeath:
             self.showMsg(CONST.datas['highFallingMsgID']['value'], [])
         else:
             if dmgHostEnt and dmgHostEnt.IsAvatar:
@@ -673,7 +673,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         #     str(detail),
         # )
 
-    def makeUpdateExpLog(self, deltaVal, modifyVal, opUUID, src):
+    def makeUpdateExpLog(self, deltaVal, modifyVal, opUUID, src, detail):
         LogTrackingMgr.LogTrackingMgr.Update_Exp(
             self.gbId,
             self.clientDistinctIdCell, 
@@ -683,23 +683,26 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             opUUID,
             src,
             self.spaceNo,
-            self.level
+            self.level,
+            str(detail),
         )
 
-    def _modifyExp(self, expVal, opUUID, src, detail, chaseExp=0, srcSubType=0, idipSource=0):
-        self.syncMethodCallToLocalServerCell("onCrossServerModifyExp", (expVal, opUUID, src))
+    def _modifyExp(self, expVal, opUUID, src, detail, chaseExp=0, srcSubType=0, idipSource=0, local2Cross=False):
+        if self.isCrossServerInOtherServer and not local2Cross:
+            self.syncMethodCallToLocalServerCell("onCrossServerModifyExp", (expVal, opUUID, src, detail))
+            return
         # oldLevel = self.level
         expVal = int(expVal)
         befExpVal = self.exp
         if expVal <= 0:
             self.exp = max(0, self.exp + expVal)
-            self.makeUpdateExpLog(expVal, self.exp - befExpVal, opUUID, src)
+            self.makeUpdateExpLog(expVal, self.exp - befExpVal, opUUID, src, detail)
             return
 
         exp = self.exp + expVal
         if exp <= 0:
             self.exp = 0
-            self.makeUpdateExpLog(expVal, self.exp - befExpVal, opUUID, src)
+            self.makeUpdateExpLog(expVal, self.exp - befExpVal, opUUID, src, detail)
             return
 
         level = self.level
@@ -728,10 +731,12 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             )
             self.levelUp(level, opUUID, src, detail)
         self.exp = int(exp)
-        self.makeUpdateExpLog(expVal, expVal, opUUID, src)
+        self.makeUpdateExpLog(expVal, expVal, opUUID, src, detail)
         self._updateExpRateToBase()
+        self.syncMethodCallToCrossServerCell("onLocalServerModifyExp", (expVal, opUUID, src, detail))
 
-    def onCrossServerModifyExp(self, expVal, opUUID, src):
+    # 本服收到来自跨服的加经验请求
+    def onCrossServerModifyExp(self, expVal, opUUID, src, detail):
         if src not in gameconst.CrossServerExpWhitelist:
             gameengine.panicStack("onCrossServerModifyExp: src not in gameconst.CrossServerExpWhitelist", src)
             return
@@ -739,8 +744,10 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if src in gameconst.CrossServerExpIgnorelist:
             return
 
-        _detail = gameclass.AwardDetailCls()
-        self._modifyExp(expVal, opUUID, src, _detail)
+        self._modifyExp(expVal, opUUID, src, detail)
+
+    def onLocalServerModifyExp(self, expVal, opUUID, src, detail):
+        self._modifyExp(expVal, opUUID, src, detail, local2Cross=True)
 
     def _updateExpRateToBase(self):
         levelExp = EPED.datas[self.level]['expPlayer']
@@ -820,10 +827,11 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         buffList = buffData['buffs']
         for buffId, buffMap in self.buffMgrDic.items():
             for buffSrcKey, buffVal in buffMap.items():
+                duration = buffVal.getBuffRemainTime()
                 buffInfo = {
                     'buffId': buffId,
                     'level': buffVal.level,
-                    'duration': buffVal.getBuffRemainTime()
+                    'duration': -1 if duration == float('inf') else duration,
                 }
                 buffList.append(buffInfo)
         return buffData
@@ -894,13 +902,19 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             self.client.onUseSkill(False, skillID, targetID, [], [], [])
             return False
 
-        if realSkillVal.getTarget(realSkillVal.skillId) != "None" and _target and (
-                not _target.IsCombatUnit or _target.isDie()):
-            self.showMsg(M_M_DD.datas.SkillTargetWrong, [])
-            self.client.onUseSkill(False, skillID, targetID, [], [], [])
-            LOG_DBG('dead target', skillID, targetID)
-            return False
+        targetType = realSkillVal.getTarget(realSkillVal.skillId)
+        if targetType != "None" and _target:
+            if not _target.IsCombatUnit:
+                self.showMsg(M_M_DD.datas.SkillTargetWrong, [])
+                self.client.onUseSkill(False, skillID, targetID, [], [], [])
+                LOG_DBG('not combat target', skillID, targetID)
+                return False
 
+            if _target.isDie() and not utils.checkTargetTypeValid(targetType, self, _target):
+                self.showMsg(M_M_DD.datas.SkillTargetWrong, [])
+                self.client.onUseSkill(False, skillID, targetID, [], [], [])
+                LOG_DBG('dead target', skillID, targetID)
+                return False
         return True
 
     @utils.isMyself
@@ -1058,8 +1072,18 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def _updateCommonFlagCell(self, flagType, flag):
         if flag:
             self.commonFlagCell = utils.bset(self.commonFlagCell, flagType)
+
+            # HACK
+            # 技能频度没在 commonFlagCell 属性中，先这么处理一下初始值
+            if flagType == gameconst.AvatarFlagCell.SKILL_FREQUENT:
+                self.autoCombatSkillFrequent = True
         else:
             self.commonFlagCell = utils.breset(self.commonFlagCell, flagType)
+
+            # HACK
+            # 技能频度没在 commonFlagCell 属性中，先这么处理一下初始值
+            if flagType == gameconst.AvatarFlagCell.SKILL_FREQUENT:
+                self.autoCombatSkillFrequent = False
 
     def getCommonFlagCell(self, flagType):
         return utils.bhas(self.commonFlagCell, flagType)
@@ -1389,6 +1413,12 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     @gamedecorator.checkGameconfigEnable('skillUpgrade')
     @gamedecorator.crossServer
     def levelUpSkill(self, exposed, skillId, levelDelta):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerCell('_levelUpSkill', (skillId, levelDelta))
+        else:
+            self._levelUpSkill(skillId, levelDelta)
+
+    def _levelUpSkill(self, skillId, levelDelta):
         LOG_INFO('levelUpSkill 1', skillId, levelDelta)
         newSkillId, oldSkillId = self.glyphEquipData.getInscriptionSrcSkillId(skillId)
         LOG_INFO('levelUpSkill 2, after check inscription', skillId, newSkillId, oldSkillId, levelDelta)

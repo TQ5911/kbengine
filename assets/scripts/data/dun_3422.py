@@ -423,11 +423,11 @@ datas ={
     "PosZ": 83.54,
     "Props": {
       "AreaType": 2,
-      "Height": 5.0,
-      "Length": 60.0,
+      "Height": 50.0,
+      "Length": 180.0,
       "MPosX": 87.0,
       "MPosY": 3.85,
-      "MPosZ": 21.0,
+      "MPosZ": -99.0,
       "Remark": "",
       "ShowInSceneMap": 1
     }
@@ -450,11 +450,11 @@ datas ={
     "PosZ": 85.17,
     "Props": {
       "AreaType": 2,
-      "Height": 5.0,
-      "Length": 60.0,
+      "Height": 50.0,
+      "Length": 180.0,
       "MPosX": 47.0,
       "MPosY": 3.85,
-      "MPosZ": 23.0,
+      "MPosZ": -97.0,
       "Remark": "",
       "ShowInSceneMap": 1
     }

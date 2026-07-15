@@ -129,6 +129,6 @@ class IMultiStaticSpacePlayer(object):
                 _linePlayers = linePlayers.LinePlayers(formula.parseLineNo(_spaceNo))
                 self.allLines[_spaceNo] = _linePlayers
             ret[lineNo] = _linePlayers
-            LOG_INFO('getMapBranchLinePlayers:lineNo={}, linePlayers={}'.format(lineNo, _linePlayers))
+            LOG_DBG('getMapBranchLinePlayers:lineNo={}, linePlayers={}'.format(lineNo, _linePlayers))
 
         return ret

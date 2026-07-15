@@ -466,7 +466,7 @@ def updateFreeTicketNumConfig(dateNumInfo):
                 expandInfoList.append([adjDataTime, expandInfoList[-1][1]])
         gameglobal.freeTicketNumConfig[subType] = expandInfoList
 
-        LOG_DBG("updateFreeTicketNumConfig gameglobal.freeTicketNumConfig", subType, expandInfoList)
+        LOG_INFO("updateFreeTicketNumConfig gameglobal.freeTicketNumConfig", subType, expandInfoList)
         gameglobal.localBaseApp.doUpdateFreeTicketNumConfig(subType, expandInfoList)
 
 def updateAntiAddictionData(timeType, nextStartTime):
@@ -601,3 +601,10 @@ def setMineCanAttackBits(bitFlag, isSet):
     else:
         gameglobal.mineCanAttackBits &= ~bitFlag
 
+def updateChatForbiddenState(gbid, state):
+    LOG_DBG("gameengine updateChatForbiddenState", gbid, state, gameglobal.chatForbiddenSet)
+    if state:
+        gameglobal.chatForbiddenSet.add(gbid)
+    else:
+        gameglobal.chatForbiddenSet.discard(gbid)
+    gameglobal.localBaseApp.broadcastToAllAvatar(gameconst.BASE, 'onNotifyChatForbiddenState', (gbid, state), ())

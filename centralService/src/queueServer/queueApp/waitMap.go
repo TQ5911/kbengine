@@ -2,6 +2,8 @@ package Queue
 
 import (
 	"centralService/src/appLog"
+	"centralService/src/common"
+	"context"
 	"errors"
 	"strconv"
 	"sync"
@@ -21,7 +23,7 @@ const (
 	WaitMapHeartbeatKey      = "waitmap:heartbeat"
 	WaitMapFreeKeyPrefix     = "waitmap:free:"
 	WaitMapOfflineTimeoutSec = 20
-	WaitMapCacheTTL          = 30 * time.Second
+	WaitMapCacheTTL          = 5 * time.Second
 )
 
 type WaitMapServerMgr struct {
@@ -59,7 +61,16 @@ func (self *WaitMapServerMgr) GetAliveFreeServers() (map[string]int, error) {
 		return self.copyCachedServersLocked(), nil
 	}
 
-	conn := self.app.redisPool.Get()
+	ctx, cancel := context.WithTimeout(context.Background(), common.RedisOpTimeout)
+	conn, err := self.app.redisPool.GetContext(ctx)
+	cancel()
+	if err != nil {
+		appLog.Error("WaitMapServerMgr GetAliveFreeServers get conn failed", err.Error())
+		if len(self.cachedServers) > 0 {
+			return self.copyCachedServersLocked(), nil
+		}
+		return nil, err
+	}
 	defer conn.Close()
 
 	// 读取所有等待服的心跳

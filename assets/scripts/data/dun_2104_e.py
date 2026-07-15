@@ -28,7 +28,7 @@ datas ={
       21040027
     ],
     "num": 0,
-    "lv": "40",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -68,7 +68,7 @@ datas ={
   },
   "1008": {
     "type": "dunFailed",
-    "exitTime": 30.0,
+    "exitTime": 10.0,
     "transition": {}
   },
   "1009": {
@@ -128,7 +128,7 @@ datas ={
       21040051
     ],
     "num": 0,
-    "lv": "40",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -164,7 +164,7 @@ datas ={
       21040003
     ],
     "num": 0,
-    "lv": "40",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -195,12 +195,6 @@ datas ={
   "1086": {
     "type": "createAirWall",
     "entityID": [
-      21048004,
-      21048005,
-      21048006,
-      21048007,
-      21048008,
-      21048009,
       21048012
     ],
     "num": 1,
@@ -242,7 +236,7 @@ datas ={
       21040058
     ],
     "num": 0,
-    "lv": "40",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -292,7 +286,7 @@ datas ={
       21040074
     ],
     "num": 0,
-    "lv": "40",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -337,7 +331,7 @@ datas ={
       21040084
     ],
     "num": 0,
-    "lv": "40",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -373,7 +367,7 @@ datas ={
       21040001
     ],
     "num": 0,
-    "lv": "40",
+    "lv": "31",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -399,7 +393,7 @@ datas ={
       21040090
     ],
     "num": 0,
-    "lv": "40",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -440,7 +434,7 @@ datas ={
       21040096
     ],
     "num": 0,
-    "lv": "40",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -485,7 +479,7 @@ datas ={
       21040106
     ],
     "num": 0,
-    "lv": "40",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -535,7 +529,7 @@ datas ={
       21040121
     ],
     "num": 0,
-    "lv": "40",
+    "lv": "30",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -571,7 +565,7 @@ datas ={
       21040002
     ],
     "num": 0,
-    "lv": "40",
+    "lv": "32",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -680,7 +674,7 @@ datas ={
   },
   "1151": {
     "type": "dunEnd",
-    "exitTime": 30.0,
+    "exitTime": 10.0,
     "isDungeonDone": 1,
     "transition": {}
   },

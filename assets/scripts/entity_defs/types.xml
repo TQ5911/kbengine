@@ -87,6 +87,20 @@
     <CROSS_ENTITYCALL> PYTHON </CROSS_ENTITYCALL>
     <!-- 跨服end -->
     <AVATARGBID_LIST> ARRAY <of> PLAYER_GBID </of> </AVATARGBID_LIST>
+
+    <!-- 公会语音成员状态：gbId + flags (MIC_ON | SPEAKER_ON) -->
+    <GUILD_VOICE_MEMBER_STATE> FIXED_DICT
+        <Properties>
+            <gbId>
+                <Type> PLAYER_GBID </Type>
+            </gbId>
+            <flags>
+                <Type> UINT8 </Type>
+            </flags>
+        </Properties>
+    </GUILD_VOICE_MEMBER_STATE>
+    <GUILD_VOICE_MEMBER_STATE_LIST> ARRAY <of> GUILD_VOICE_MEMBER_STATE </of> </GUILD_VOICE_MEMBER_STATE_LIST>
+
     <BASE_GLOBAL_IDX>       UINT16          </BASE_GLOBAL_IDX>
     <SLOTID>             UINT8          </SLOTID>
     <FRIEND_MESSAGE>        BLOB            </FRIEND_MESSAGE>
@@ -116,6 +130,7 @@
     <GUILD_EVENT_ID>    UINT32         </GUILD_EVENT_ID>
     <GUILD_CONTRIB>     INT32          </GUILD_CONTRIB>
     <GUILD_FUND>        UINT32          </GUILD_FUND>
+    <GUILD_COMMISSION>        UINT32          </GUILD_COMMISSION>
     <GUILD_BUILDING_ID>        UINT8    </GUILD_BUILDING_ID>
     <GUILD_ICON_ID>     UINT8           </GUILD_ICON_ID>
     <PENDING_USE_ID>     UINT16           </PENDING_USE_ID>
@@ -1273,6 +1288,22 @@
         </Properties>
     </CHAT_MSG_DATA>
 
+    <AVATARING_CHAT_MSG_ITEM> FIXED_DICT
+        <Properties>
+            <channelID>
+                <Type>  CHAT_CHANNEL              </Type>
+            </channelID>
+            <avatarInfo>
+                <Type>  CHAT_CHANNEL_AVATAR_INFO  </Type>
+            </avatarInfo>
+            <msg>
+                <Type>  CHAT_MSG_DATA             </Type>
+            </msg>
+        </Properties>
+    </AVATARING_CHAT_MSG_ITEM>
+
+    <AVATARING_CHAT_MSG_BATCH> ARRAY <of> AVATARING_CHAT_MSG_ITEM </of> </AVATARING_CHAT_MSG_BATCH>
+
     <!--Team dungeon founders struc-->
     <TEAM_DUNGEON_FOUNDER_VAL> FIXED_DICT
         <Properties>
@@ -1358,6 +1389,12 @@
             <isBlockMics>
                 <Type>  BOOL            </Type>
             </isBlockMics>
+            <enableSpeaker>
+                <Type>  BOOL            </Type>
+            </enableSpeaker>
+            <inVoiceRoom>
+                <Type>  BOOL            </Type>
+            </inVoiceRoom>
             <openId>
                 <Type> UNICODE </Type>
             </openId>
@@ -4964,13 +5001,13 @@
                 <Type>  SCORE                   </Type>
             </oldScore>
             <oldBindMoney>
-                <Type>  MONEY                   </Type>
+                <Type>  MONEY_NUM               </Type>
             </oldBindMoney>
             <oldMoney>
-                <Type>  MONEY                   </Type>
+                <Type>  MONEY_NUM               </Type>
             </oldMoney>
             <oldCoin>
-                <Type>  COIN                    </Type>
+                <Type>  SCOIN                   </Type>
             </oldCoin>
             <oldDarkIron>
                 <Type>  DARK_IRON               </Type>

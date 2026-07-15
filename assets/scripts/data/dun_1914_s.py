@@ -9866,16 +9866,16 @@ datas ={
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "",
-          "Dir": 240.1367,
-          "DisplayName": "",
+          "Dir": 52.63766,
+          "DisplayName": "\u4e94\u6bd2\u77f3\u7a9f\u4e8c\u5c42\u00b7\u7cbe\u82f1",
           "EliteCustomID": "19138005",
           "EntityID": 17112201,
           "ID": 19148004,
-          "PosX": 470.1745,
-          "PosY": 174.5047,
-          "PosZ": 449.3414,
+          "PosX": 482.9558,
+          "PosY": 173.9548,
+          "PosZ": 456.575,
           "Props": {
-            "CameraId": 0,
+            "CameraId": 33010001,
             "GateType": 0,
             "Remark": "",
             "ShowInSceneMap": 1,
@@ -9891,16 +9891,16 @@ datas ={
           "ClassName": "Teleporter",
           "ClassNameType": 2,
           "CustomID": "",
-          "Dir": 80.14403,
-          "DisplayName": "",
+          "Dir": 85.79544,
+          "DisplayName": "\u4e94\u6bd2\u77f3\u7a9f\u56db\u5c42\u00b7\u7cbe\u82f1",
           "EliteCustomID": "19158004",
           "EntityID": 17112202,
           "ID": 19148005,
-          "PosX": 137.223,
-          "PosY": 186.3804,
-          "PosZ": 193.0743,
+          "PosX": 138.0609,
+          "PosY": 186.1802,
+          "PosZ": 196.8856,
           "Props": {
-            "CameraId": 0,
+            "CameraId": 33010001,
             "GateType": 0,
             "Remark": "",
             "ShowInSceneMap": 1,
@@ -10129,7 +10129,7 @@ datas ={
         "PosY": 180.1242,
         "PosZ": 346.6823,
         "Props": {
-          "CameraId": 0,
+          "CameraId": "33010001",
           "MapEntityType": "26",
           "Remark": "",
           "ShowInSceneMap": 1
@@ -10150,7 +10150,7 @@ datas ={
         "PosY": 194.4102,
         "PosZ": 203.6546,
         "Props": {
-          "CameraId": 0,
+          "CameraId": "33010001",
           "MapEntityType": "26",
           "Remark": "",
           "ShowInSceneMap": 1
@@ -10171,7 +10171,7 @@ datas ={
         "PosY": 172.8953,
         "PosZ": 410.8231,
         "Props": {
-          "CameraId": 0,
+          "CameraId": "33010001",
           "MapEntityType": "26",
           "Remark": "",
           "ShowInSceneMap": 1
@@ -10192,7 +10192,7 @@ datas ={
         "PosY": 184.074,
         "PosZ": 257.9792,
         "Props": {
-          "CameraId": 0,
+          "CameraId": "33010001",
           "MapEntityType": "26",
           "Remark": "",
           "ShowInSceneMap": 1

@@ -62,5 +62,9 @@
         <getDynamicWorldLevel>
             <Arg>          ENTITYCALL                  </Arg>
         </getDynamicWorldLevel>
+
+        <gmSetDynamicWorldLevel>
+            <Arg>          LEVEL                       </Arg>
+        </gmSetDynamicWorldLevel>
     </BaseMethods>
 </root>

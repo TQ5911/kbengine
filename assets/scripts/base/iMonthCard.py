@@ -46,6 +46,13 @@ class IMonthCard(object):
             return True
         return self.bigMonthCardExpireTime < utils.curTS()
 
+    def isPremiumIdMonthCardExpired(self, premiumId):
+        if premiumId == gameconst.PremiumType.SMALL_MONTH_CARD:
+            return self.isMonthCardExpired()
+        elif premiumId == gameconst.PremiumType.BIG_MONTH_CARD:
+            return self.isBigMonthCardExpired()
+        return True
+
     def isDayHasBigMonthCardPrivilege(self, ts=None):
         ts = ts if ts else utils.curTS()
         if self.bigMonthCardExpireTime >= ts:
@@ -112,7 +119,8 @@ class IMonthCard(object):
             self.getAvatarLevel(),
             utils.curTS(),
             self.monthCardExpireTime,
-            opUUID
+            opUUID,
+            monthCardId
         )
 
         LogTrackingMgr.LogTrackingMgr.MonthCard_Expire_Time_Set(
@@ -120,6 +128,8 @@ class IMonthCard(object):
             self.accountEntity.clientDistinctId,
             self.monthCardExpireTime
         )
+
+        self.checkAndGetHangupTime()
         return opUUID
     
 
@@ -169,6 +179,9 @@ class IMonthCard(object):
         #挂机时长奖励
         self.checkAndGetHangupTime()
 
+    def _checkAndGetHangupTime(self, *args):
+        self.checkAndGetHangupTime()
+
     #领取挂机时长
     def checkAndGetHangupTime(self):
         self._checkAndGetFreeHangupTime()
@@ -197,10 +210,9 @@ class IMonthCard(object):
         
         LOG_INFO("lastMonthCardHangupGetTime:", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.lastMonthCardHangupGetTime)),
                  "->", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(utils.curTS())))
-        LOG_INFO("remainHangupMinutes:", self.remainHangupMinutes, "->", G_EXP.datas['offlineExpTime']['value'])
         self.lastMonthCardHangupGetTime = utils.curTS()
-        self.tempLastDayRemainHangupMinutes = self.remainHangupMinutes
         self.remainHangupMinutes += G_EXP.datas['offlineExpTime']['value']
+        LOG_INFO("remainHangupMinutes:", self.remainHangupMinutes)
         return True
 
     def _checkAndAddIdleIncome(self, minutes):
@@ -370,7 +382,7 @@ class IMonthCard(object):
             LOG_INFO("checkOfflineHangup begin", "timeDelta", timeDelta, "totalMinutes", totalMinutes, "totalBigMonthCardMinutes", totalBigMonthCardMinutes, "accumulateTime", accumulateTime, "tsLastOfflineBase", self.tsLastOfflineBase)
 
             #中间天数(大月卡)
-            bmcDayDelta = (utils.getCurDayTS(self.bigMonthCardExpireTime - gameconst.GENERAL_CYCLE_TIME, gameconst.GENERAL_CYCLE_TIME) - \
+            bmcDayDelta = (utils.getCurDayTS(min(self.bigMonthCardExpireTime, now) - gameconst.GENERAL_CYCLE_TIME, gameconst.GENERAL_CYCLE_TIME) - \
                        utils.getCurDayTS(self.tsLastOfflineBase - gameconst.GENERAL_CYCLE_TIME, gameconst.GENERAL_CYCLE_TIME)) // gameconst.ONE_DAY_COST_SECONDS - 1
             if bmcDayDelta > 0:
                 minutes = min(accumulateTime, (G_EXP.datas['offlineExpTime']['value'] + BCBCCD.datas['dailyBaseTime']['value']) * bmcDayDelta)
@@ -381,7 +393,7 @@ class IMonthCard(object):
             #中间天数(大月卡失效后的每天免费8小时)
             dayDelta = (utils.getCurDayTS(now - gameconst.GENERAL_CYCLE_TIME, gameconst.GENERAL_CYCLE_TIME) - \
                        utils.getCurDayTS(self.tsLastOfflineBase - gameconst.GENERAL_CYCLE_TIME, gameconst.GENERAL_CYCLE_TIME)) // gameconst.ONE_DAY_COST_SECONDS - 1
-            dayDelta = bmcDayDelta - dayDelta
+            dayDelta = dayDelta - max(0, bmcDayDelta)
             if dayDelta > 0:
                 minutes = min(accumulateTime, BCBCCD.datas['dailyBaseTime']['value'] * dayDelta)
                 totalMinutes += minutes
@@ -392,9 +404,9 @@ class IMonthCard(object):
             minutes = min((now - utils.getCurDayTS(now - gameconst.GENERAL_CYCLE_TIME, gameconst.GENERAL_CYCLE_TIME)) // 60, self.remainHangupMinutes)
             minutes = min(minutes, accumulateTime)
             if self.isDayHasBigMonthCardPrivilege(now):
-                totalBigMonthCardMinutes += timeDelta
+                totalBigMonthCardMinutes += minutes
             else:
-                totalMinutes += timeDelta
+                totalMinutes += minutes
             LOG_INFO("checkOfflineHangup end", "minutes", minutes, "totalMinutes", totalMinutes, "totalBigMonthCardMinutes", totalBigMonthCardMinutes, "accumulateTime", accumulateTime)
 
             #今天的要扣掉今天的时长
@@ -521,13 +533,20 @@ class IMonthCard(object):
 
         self.buyMonthCard(premiumId)
 
+    def _isMonthCardFirstPurchase(self, premiumId):
+        if premiumId == gameconst.PremiumType.BIG_MONTH_CARD:
+            return self.bigMonthCardFirstPurchaseFlag
+        if premiumId == gameconst.PremiumType.SMALL_MONTH_CARD:
+            return self.monthCardFirstPurchaseFlag
+        return False
+
     def buyMonthCard(self, premiumId):
         cfgData = BCBPGD.datas.get(premiumId)
         if not self.checkCanAddMonthCard(premiumId):
             self.onMessagePre(BCBCCD.datas["durationHoursLimitMsg"]["value"], [])
             return
         costItem = cfgData.get('costItem')
-        if premiumId not in self.monthCardFirstPurchaseRecord:
+        if self._isMonthCardFirstPurchase(premiumId):
             costItem = cfgData.get('costItemFirst')
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(costItem[0], costItem[1])
@@ -543,9 +562,12 @@ class IMonthCard(object):
 
         seconds = BCBCCD.datas['durationHours']['value'] * 3600
         opUUID = self.doAddMonthCard(seconds, premiumId)
-        if premiumId not in self.monthCardFirstPurchaseRecord:
+        if self._isMonthCardFirstPurchase(premiumId):
             LOG_INFO("buyMonthCard", "first purchase", premiumId)
-            self.monthCardFirstPurchaseRecord[premiumId] = utils.curTS()
+            if premiumId == gameconst.PremiumType.BIG_MONTH_CARD:
+                self.bigMonthCardFirstPurchaseFlag = 0
+            else:
+                self.monthCardFirstPurchaseFlag = 0
         LogTrackingMgr.LogTrackingMgr.Gift_Buy(
             self.gbID,
             self.accountEntity.clientDistinctId, 

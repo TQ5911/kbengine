@@ -20,9 +20,15 @@ import auction_auctionConst as AUT_CONST
 import chatConfig_hornSet as CHS
 import dropAward
 import gameclass
+import gametimer
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import LogTrackingMgr
+import gameconfig
 
 class IChat(object):
+    def chatOnLogin(self):
+        self.updateChatForbiddenState(isGm=False)
+
     @gamedecorator.crossServer
     def setChatChannel(self, exposed, channel):
         LOG_INFO('setChatChannel', channel)
@@ -71,6 +77,13 @@ class IChat(object):
     @gamedecorator.crossServer
     @gamedecorator.checkGameconfigEnable('chat')
     def sendPaidChatMsg(self, exposed, hornId, msg):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_sendPaidChatMsg', (hornId, msg))
+        else:
+            self._sendPaidChatMsg(hornId, msg)
+
+
+    def _sendPaidChatMsg(self, hornId, msg):
         LOG_DBG('sendPaidChatMsg', hornId, msg)
         if self.isAllServerForbidChat():
             self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
@@ -87,23 +100,34 @@ class IChat(object):
             return
 
         self.sendPaidMsgTime = now
-        self.afterCheckPaidChatMsg(msg, channel)
+        self.afterCheckPaidChatMsg(msg, hornId)
 
-        self.syncMethodCallToLocalServerBase("onCrossServerPaidChatMsg", (hornId,))
+        self.syncMethodCallToCrossServerBase("onLocalServerPaidChatMsg", (hornId, msg))
+
+        LogTrackingMgr.LogTrackingMgr.horn_msg(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            CHS.datas[hornId]['cost'],
+            1,
+            len(msg['msg'])
+        )
         
-    def onCrossServerPaidChatMsg(self, hornId):
+    def onLocalServerPaidChatMsg(self, hornId, msg):
         if not self._deductHornItem(hornId):
-            gameengine.panicStack('onCrossServerPaidChatMsg: deductHornItem failed', hornId)
+            gameengine.panicStack('onLocalServerPaidChatMsg: deductHornItem failed', hornId)
+        self.afterCheckPaidChatMsg(msg, hornId)
 
-    def afterCheckPaidChatMsg(self, originalMsg, channel):
-        LOG_DBG("afterCheckPaidChatMsg", originalMsg)
-        if self.isSilentChat(gameconst.SilentSpeakScene.ENUM_CHAT):
-            self.client.onRecvAvatarChannelMsg(channel, self._getChatChannelAvatarInfo(), originalMsg)
-            return
+    def afterCheckPaidChatMsg(self, originalMsg, hornId):
+        LOG_INFO("afterCheckPaidChatMsg", originalMsg, hornId)
 
-        gameengine.broadcastBaseapp('broadcastToAllAvatar',
-                                    (gameconst.BASE, 'onRecvChannelMsg',
-                                     (channel, self._getChatChannelAvatarInfo(), originalMsg), ()))
+        baseApp = gameglobal.localBaseApp
+        if baseApp:
+            baseApp.addAvatarChatMsg(
+                'trumpet',
+                hornId,
+                self._getChatChannelAvatarInfo(),
+                originalMsg
+            )
 
     @gamedecorator.crossServer
     @gamedecorator.checkGameconfigEnable('chat')
@@ -131,9 +155,14 @@ class IChat(object):
             self.client.onRecvAvatarChannelMsg(gameconst.ChatChannelEnum.WORLD, self._getChatChannelAvatarInfo(), originalMsg)
             return
 
-        gameengine.broadcastBaseapp('broadcastToAllAvatar',
-                                    (gameconst.BASE, 'onRecvChannelMsg',
-                                     (gameconst.ChatChannelEnum.WORLD, self._getChatChannelAvatarInfo(), originalMsg), ()))
+        baseApp = gameglobal.localBaseApp
+        if baseApp:
+            baseApp.addAvatarChatMsg(
+                'channel',
+                gameconst.ChatChannelEnum.WORLD,
+                self._getChatChannelAvatarInfo(),
+                originalMsg
+            )
         # self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannelEnum.WORLD)
 
     @gamedecorator.crossServer
@@ -199,6 +228,24 @@ class IChat(object):
             return
 
         self.localCrossClient.onRecvAvatarChannelMsg(channelID, avatarInfo, msg)
+    
+    def onRecvTrumpet(self, hornId, avatarInfo, msg):
+        LOG_INFO("onRecvTrumpet", hornId, avatarInfo, msg)
+        
+        self.localCrossClient.onRecvTrumpet(hornId, avatarInfo, msg)
+
+    def onRecvChannelMsgBatch(self, msgBatch):
+        LOG_DBG('IChat.onRecvChannelMsgBatch', self.id, len(msgBatch))
+        for item in msgBatch:
+            msgType = item.get('type')
+            args = item.get('args', ())
+            if msgType == 'channel':
+                self.onRecvChannelMsg(*args)
+            elif msgType == 'trumpet':
+                self.onRecvTrumpet(*args)
+            else:
+                LOG_WARN('IChat.onRecvChannelMsgBatch unknown msgType', msgType, args)
+
 
     def sendGuildPickChatMsg(self, messageId):
         LOG_DBG('sendGuildPickChatMsg', messageId)
@@ -463,3 +510,37 @@ class IChat(object):
 
         return False
 
+    def onNotifyChatForbiddenState(self, gbid, state):
+        LOG_DBG("onNotifyChatForbiddenState", gbid, state)
+        self.localCrossClient.onNotifyChatForbiddenState(gbid, state)
+
+    def cancelNotifyChatForbiddenTimer(self):
+        if not self.notifyChatForbiddenTimer:
+            return
+        self._cancelDatetimeCallback(self.notifyChatForbiddenTimer, gametimer.TIMER_TAG_NOTIFY_CHAT_FORBIDDEN)
+        self.notifyChatForbiddenTimer = 0
+
+    def setNotifyChatForbiddenTimer(self, endTime):
+        self.cancelNotifyChatForbiddenTimer()
+        LOG_INFO("setNotifyChatForbiddenTimer", endTime)
+        self.notifyChatForbiddenTimer = self._datetimeCallback(endTime, 'notifyChatForbiddenTimerCallback', (), gametimer.TIMER_TAG_NOTIFY_CHAT_FORBIDDEN, 'notifyChatForbiddenTimer')
+
+    def notifyChatForbiddenTimerCallback(self):
+        LOG_INFO("notifyChatForbiddenTimerCallback", utils.getCurrentTimeFmt())
+        gameengine.callBaseApps('gameengine.updateChatForbiddenState', (self.gbID, 0))
+
+    def updateChatForbiddenState(self, isGm=True):
+        LOG_INFO("updateChatForbiddenState1", isGm, gameglobal.chatForbiddenSet)
+        if self.isAllServerForbidChat():
+            endTime = self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0)
+            self.setNotifyChatForbiddenTimer(endTime)
+            LOG_INFO("updateChatForbiddenState2", endTime)
+            if not isGm and self.gbID in gameglobal.chatForbiddenSet:
+                return
+            gameengine.callBaseApps('gameengine.updateChatForbiddenState', (self.gbID, 1))
+        else:
+            if self.gbID not in gameglobal.chatForbiddenSet:
+                return
+            self.cancelNotifyChatForbiddenTimer()
+            LOG_INFO("updateChatForbiddenState3")
+            gameengine.callBaseApps('gameengine.updateChatForbiddenState', (self.gbID, 0))

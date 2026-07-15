@@ -351,9 +351,13 @@ datas = _tools.RODict({
         "ID": "chat_voicePermission",
         "value": 54001626,
     }),
+    "chat_itemShareError": _tools.RODict({
+        "ID": "chat_itemShareError",
+        "value": 54001627,
+    }),
     "buyTranssion": _tools.RODict({
         "ID": "buyTranssion",
-        "value": "Openinterface,UIPayStorePanel,1",
+        "value": "Openinterface,UIPayStorePanel,1,2002",
     }),
     "voiceChat_teamChannelName": _tools.RODict({
         "ID": "voiceChat_teamChannelName",

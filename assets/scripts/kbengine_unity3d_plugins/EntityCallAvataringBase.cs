@@ -27,7 +27,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[119]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 

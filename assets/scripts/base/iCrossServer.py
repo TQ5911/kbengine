@@ -117,7 +117,16 @@ class ICrossServer(object):
 
     def startCrossServerHeartbeat(self):
         self.stopCrossServerHeartbeat()
-        self.crossServerHeartbeatTimer = self.pyAddTimer(1, 300, gametimer.TIMER_CROSS_SERVER_HEARTBEAT)
+        self.crossServerHeartbeatTimer = self.pyAddTimer(1, 120, gametimer.TIMER_CROSS_SERVER_HEARTBEAT)
+
+    def startBagFnvHashCheck(self):
+        self.stopBagFnvHashCheck()
+        self.bagFnvHashCheckTimer = self.pyAddTimer(5, 5, gametimer.TIMER_BAG_FNV_HASH_CHECK)
+
+    def stopBagFnvHashCheck(self):
+        if self.bagFnvHashCheckTimer:
+            self.pyDelTimer(self.bagFnvHashCheckTimer, gametimer.TIMER_BAG_FNV_HASH_CHECK)
+            self.bagFnvHashCheckTimer = 0
 
     def crossServerHeartbeat(self):
         if not self.otherServerAvatarBox:
@@ -222,6 +231,7 @@ class ICrossServer(object):
 
     def onCrossServerSuc(self, otherServerAvatarBox):
         LOG_INFO("onCrossServerSuc", otherServerAvatarBox)
+        self.startBagFnvHashCheck()
         if self.crossServerState != gameconst.CrossServerState.ENUM_GOTO_CROSS_SERVER:
             LOG_WARN("onCrossServerSuc state is not GOTO_CROSS_SERVER", self.crossServerState)
 
@@ -277,6 +287,7 @@ class ICrossServer(object):
 
     def onCrossServerEnd(self, callbackComponent, callbackName, args):
         LOG_INFO("onCrossServerEnd", callbackComponent, callbackName, args)
+        self.stopBagFnvHashCheck()
         if self.crossServerState != gameconst.CrossServerState.ENUM_IN_CROSS_SERVER:
             LOG_ERR("onCrossServerSuc state is not IN_CROSS_SERVER", self.crossServerState)
             return
@@ -353,14 +364,14 @@ class ICrossServer(object):
 
     # CrossServer
     def syncMethodCallToLocalServerBase(self, fnname, fnargs):
-        LOG_DBG("syncMethodCallToLocalServerBase::", fnname, fnargs)
         if self.isCrossServerInOtherServer and self.otherServerAvatarBox:
+            LOG_DBG("syncMethodCallToLocalServerBase::", fnname, fnargs)
             self.otherServerAvatarBox.beSyncMethodCallFromCrossServerBase(fnname, fnargs)
 
     # CrossServer
     def syncMethodCallToCrossServerBase(self, fnname, fnargs):
-        LOG_DBG("syncMethodCallToCrossServerBase::", fnname, fnargs)
         if self.isCrossServerInLocalServer and self.otherServerAvatarBox:
+            LOG_DBG("syncMethodCallToCrossServerBase::", fnname, fnargs)
             self.otherServerAvatarBox.beSyncMethodCallFromLocalServerBase(fnname, fnargs)
 
     # localServer
@@ -375,9 +386,17 @@ class ICrossServer(object):
 
     # CrossServer
     def syncMethodCallToLocalServerCell(self, fnname, fnargs):
-        LOG_DBG("syncMethodCallToLocalServerCell::", fnname, fnargs)
         if self.isCrossServerInOtherServer and self.otherServerAvatarBox:
+            LOG_DBG("syncMethodCallToLocalServerCell::", fnname, fnargs)
             self.otherServerAvatarBox.beSyncMethodCallFromCrossServerCell(fnname, fnargs)
+
+    # localServer
+    def syncMethodCallToCrossServerCell(self, fnname, fnargs):
+        self.otherServerAvatarBox.beSyncMethodCallFromLocalServerCell(fnname, fnargs)
+    
+    def beSyncMethodCallFromLocalServerCell(self, fnname, fnargs):
+        LOG_DBG("beSyncMethodCallFromLocalServerCell::", fnname, fnargs)
+        self.cell.beSyncMethodCallFromLocalServerCell(fnname, fnargs)
 
     def onPlayerGetExp_localCrossClient(self, src, expVal, realExpVal, chaseExp):
         LOG_INFO("onPlayerGetExp_localCrossClient::", src, expVal, realExpVal, chaseExp)

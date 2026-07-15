@@ -94,21 +94,25 @@ class IMineWarBase(object):
         # 重新请求
         self.reqSyncGuildData()
 
-    @gamedecorator.checkGameconfigEnable('mineBattle')
     def onMineWarPreparePlayer(self, state, startTime):
         """
         MINE_WAR_STATE.PREPARE状态开始
         """
+        if not gameconfig.visibleConfigEnabled('mineBattle'):
+            return
+
         LOG_INFO('Avatar.onMineWarPreparePlayer state:', state, 'startTime:', startTime)
         self.client.showMineWarPrepare(state, startTime - utils.curTS())
 
         self.syncCellMineWarInfo(state)
 
-    @gamedecorator.checkGameconfigEnable('mineBattle')
     def onMineWarStartPlayer(self, state, endTime):
         """
         MINE_WAR_STATE.RUNNING状态开始
         """
+        if not gameconfig.visibleConfigEnabled('mineBattle'):
+            return
+
         LOG_INFO('Avatar.onMineWarStartPlayer state:', state, 'endTime:', endTime)
         self.client.showMineWarStart(state, endTime - utils.curTS())
         
@@ -195,11 +199,12 @@ class IMineWarBase(object):
         if formula.inMineWarScene(self.baseSpaceNo):
             self.getMineWarInfo()
 
-    @gamedecorator.checkGameconfigEnable('mineBattle')
     def onMineWarFlagBeDestroyed(self, mapId, guildGbId, destroyNum, lostMineNum):
         """
         矿战荣誉旗帜被破坏回调
         """
+        if not gameconfig.visibleConfigEnabled('mineBattle'):
+            return
         #
         if self.guildUUIDBase != guildGbId:
             return
@@ -209,11 +214,13 @@ class IMineWarBase(object):
         guildMsgId = MBC.datas['mineBatte_chatChannelMsg4']['value']
         self.onMessagePre(utils.getTranslatedMsgId(guildMsgId), [utils.getTranslatedArg(mapName), str(destroyNum), str(damageCfg[0]), str(lostMineNum)])
 
-    @gamedecorator.checkGameconfigEnable('mineBattle')
     def onMineWarFlagAllDestroyed(self, mapId, guildName, guildGbId):
         """
         矿战荣誉旗帜被全部破坏回调
         """
+        if not gameconfig.visibleConfigEnabled('mineBattle'):
+            return
+
         mapName = MBMA.datas[mapId]['name']
         # 帮派消息
         if self.guildUUIDBase == guildGbId:
@@ -229,20 +236,23 @@ class IMineWarBase(object):
         msgId = MBC.datas['mineBatte_chatChannelMsg7']['value']
         self.onMessagePre(utils.getTranslatedMsgId(msgId), [guildName, utils.getTranslatedArg(mapName)])
 
-    @gamedecorator.checkGameconfigEnable('mineBattle')
     def onMineWarFlagHpChangeWarning(self, mapId):
         """
         矿战荣誉旗帜血量变化预警回调
         """
+        if not gameconfig.visibleConfigEnabled('mineBattle'):
+            return
+
         mapName = MBMA.datas[mapId]['name']
         msgId = MBC.datas['mineBatte_chatChannelMsg3']['value']
         self.onMessagePre(utils.getTranslatedMsgId(msgId), [utils.getTranslatedArg(mapName), str(mapId)])
 
-    @gamedecorator.checkGameconfigEnable('mineBattle')
     def onMineWarFlagHpLowWarning(self, mapId):
         """
         矿战荣誉旗帜血量过低预警回调
         """
+        if not gameconfig.visibleConfigEnabled('mineBattle'):
+            return
         mapName = MBMA.datas[mapId]['name']
         msgId = MBC.datas['mineBatte_chatChannelMsg6']['value']
         self.onMessagePre(utils.getTranslatedMsgId(msgId), [utils.getTranslatedArg(mapName)])
@@ -262,11 +272,13 @@ class IMineWarBase(object):
         self.client.onMineWarFlagSyncClient(flagStateList)
         
 
-    @gamedecorator.checkGameconfigEnable('mineBattle')
     def onMineWarHpWarning(self, spaceNo, percent):
         """
         矿战核心血量预警
         """
+        if not gameconfig.visibleConfigEnabled('mineBattle'):
+            return
+
         if spaceNo != self.baseSpaceNo or self.guildUUIDBase <= 0:
             return
         LOG_INFO('IMineWarBase.onMineWarHpWarning called for player:', self.id, 'spaceNo:', spaceNo, 'percent:', percent)

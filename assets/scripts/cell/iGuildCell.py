@@ -20,6 +20,9 @@ class IGuildCell(object):
         if 'guildBox' in attrDict:
             self.guildBoxCell = attrDict['guildBox']
 
+        if 'guildLevel' in attrDict:
+            self.guildLevel = attrDict['guildLevel']
+
     def doFinishGuildDungeonTask(self):
         if not self.guildUUID:
             return

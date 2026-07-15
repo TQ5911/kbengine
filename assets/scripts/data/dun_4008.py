@@ -16,8 +16,10 @@ datas ={
     "PosY": 11.99748,
     "PosZ": 434.62,
     "Props": {
+      "ChestGroupID": "",
       "GroupID": "",
       "Level": 1,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": "",
@@ -27,6 +29,7 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },
@@ -37,18 +40,20 @@ datas ={
     "ClassName": "Monster",
     "ClassNameType": 0,
     "CustomID": "",
-    "Dir": 251.3141,
+    "Dir": 292.9192,
     "DisplayName": "",
     "EliteCustomID": "",
     "EntityID": 11213101,
     "ID": 40080002,
     "Name": "\u5c3e\u7130\u72fc\u738b",
-    "PosX": 434.9,
-    "PosY": 11.52,
-    "PosZ": 419.34,
+    "PosX": 461.795,
+    "PosY": 7.58308,
+    "PosZ": 409.6938,
     "Props": {
+      "ChestGroupID": "",
       "GroupID": "",
       "Level": 1,
+      "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,
       "MonsterGroupID": "",
@@ -58,6 +63,7 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""
     }
   },

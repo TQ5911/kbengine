@@ -1269,6 +1269,10 @@ class IComplexTeleport(object):
         _type = _extra.get('enterCubeType')
         floor = _extra.get('floor', 0)
 
+        if _extra.get('isMerge'):
+            if _extra.get('isAutoFight'):
+                self._startAutoCombat()
+
         if _type == gameconst.ENTER_CUBE_DEDUCT_TIMES:
             _dur = cube_config.datas['cubeNumTime']['value'] * 60
             self.cubeQuota.addCubeLeftTime(self, _dur)
@@ -1347,6 +1351,11 @@ class IComplexTeleport(object):
             self._dealWithCubeKickTimer(fromSpaceNo, toSpaceNo)
             self._dealWithCubeTimer(fromSpaceNo, toSpaceNo)
 
+        if formula._isArenaSpace(fromSpaceNo):
+            preCubePKModel = self.popPersistentMiscProp(gameconst.EntityPropsEnum.preCubePKModel, None)
+            if preCubePKModel != None:
+                self.onSwitchPKModel(preCubePKModel)
+
         _fromMapId = formula.fetchMapId(fromSpaceNo)
         _floor = cube_room.datas[_fromMapId]['floor']
         LogTrackingMgr.LogTrackingMgr.Cube_Info(
@@ -1394,6 +1403,11 @@ class IComplexTeleport(object):
         self.spaceMgr.onPlayerEnter(self.id)
 
         gameengine.getWonderLandStubBySpaceNo(toSpaceNo).onEnterWonderLandSuccess(self.gbId, toSpaceNo)
+
+        _extra = context.get('wonderlandExtra')
+        if _extra.get('isMerge'):
+            if _extra.get('isAutoFight'):
+                self._startAutoCombat()
 
         enterType = context.get('enterType')
         floor = context.get('floor', 0)
@@ -1501,24 +1515,15 @@ class IComplexTeleport(object):
 
         gameengine.getAbyssStubBySpaceNo(toSpaceNo).onEnterAbyssSuccess(self.gbId, toSpaceNo)
 
-        if context.get('enterType') == gameconst.ABYSS_ENTER_TYPE_TICKET:
-            self.abyssQuota.addAbyssLeftTime(self, AB_CD.datas['abyssNumTime']['value'] * 60)
-            self.base.afterEnterAbyssDeductTimes()
-            self.base.activityComplete(AB_CD.datas['abyssActID']['value'])
-            self.doSyncAbyssData()
+        _extra = context.get('abyssExtra')
+        if _extra.get('isMerge'):
+            if _extra.get('isAutoFight'):
+                self._startAutoCombat()
 
         self.base.completeGuildTask(gameconst.GuildTaskType.ENTERMAP, AB_CD.datas['abyssActID']['value'], 1)
         self._dealWithAbyssTimer(fromSpaceNo, toSpaceNo)
 
         _mapId = formula.fetchMapId(toSpaceNo)
-        # TODO abyss
-        # LogTrackingMgr.LogTrackingMgr.Abyss_Info(
-        #     self.gbId,
-        #     gameconfig.gameId(),
-        #     AB_FD.id2floor[_mapId],
-        #     gameconst.ABYSS_EVENT_ENTER,
-        #     self.abyssQuota.calcLeftTime(),
-        # )
         return True
 
     def _beforeLeave_abyss(self, fromSpaceNo, toSpaceNo, options, context):
@@ -1551,14 +1556,11 @@ class IComplexTeleport(object):
 
         _mapId = formula.fetchMapId(fromSpaceNo)
 
-        # TODO abyss
-        # LogTrackingMgr.LogTrackingMgr.Abyss_Info(
-        #     self.gbId,
-        #     gameconfig.gameId(),
-        #     AB_FD.id2floor[_mapId],
-        #     gameconst.ABYSS_EVENT_EXIT,
-        #     self.abyssQuota.calcLeftTime(),
-        # )
+        LogTrackingMgr.LogTrackingMgr.abyss_leave(
+            self.gbId,
+            self.clientDistinctIdCell,
+            utils.curTS()
+        )
         return True
     # ----------------------------------------------------------------------
 

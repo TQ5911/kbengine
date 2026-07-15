@@ -39,6 +39,7 @@ import rewardData_rewardData as RDDT
 import gearEnhance_equipmentClass as GEES
 import gearEnhance_equipmentAttributes as GEEA
 import soul_soulRconst as SSRCD
+import affix_affixCountWeight as AFAFCW
 import traceback
 
 class EquipmentItem(BaseItem.BaseItem):
@@ -490,6 +491,10 @@ class EquipmentItem(BaseItem.BaseItem):
                 self.equipAttr.spiritDatas.append(SpiritInfo.SpiritInfo())
         self.equipAttr.spiritDatas[spiritPos].UpdateSpiritAffixes(previewSpiritData.GetSpiritAffixes())
 
+        # 将 preview 绑定状态应用到正式附灵槽位
+        spiritBindType = gameconst.ItemBindType.BIND if self.isPreviewSpiritBindType(spiritPos) else gameconst.ItemBindType.NORMAL
+        self.setSpiritBindType(spiritPos, spiritBindType)
+
         # 清空 preview 数据
         previewSpiritData.UpdateSpiritAffixes([])
         self.removePreviewSpiritBindType(spiritPos)
@@ -500,6 +505,30 @@ class EquipmentItem(BaseItem.BaseItem):
 
         if onBody:
             self.applyEquipEffectToAvatar(owner)
+        return True
+
+    def doEquipSpiritWashingDiscard(self, owner, spiritPos):
+        """
+        附灵 discard：丢弃 previewSpiritDatas[spiritPos] 的预览数据。
+        """
+        if spiritPos < 0 or spiritPos >= self.equipAttr.spiritSlotNum:
+            LOG_ERR('in doEquipSpiritWashingDiscard invalid spiritPos', spiritPos)
+            return False
+
+        if spiritPos >= len(self.equipAttr.previewSpiritDatas):
+            LOG_ERR('in doEquipSpiritWashingDiscard previewSpiritDatas not initialized', spiritPos)
+            return False
+
+        previewSpiritData = self.equipAttr.previewSpiritDatas[spiritPos]
+        if not previewSpiritData or len(previewSpiritData.GetSpiritAffixes()) == 0:
+            LOG_ERR('in doEquipSpiritWashingDiscard previewSpiritDatas is empty', spiritPos)
+            return False
+
+        # 清空 preview 数据
+        previewSpiritData.UpdateSpiritAffixes([])
+        self.removePreviewSpiritBindType(spiritPos)
+        self.equipAttr.setDirtyFlag()
+
         return True
     
     def doEquipSoulSocket(self, owner, rollProps, itemId, isEquip=False):
@@ -662,11 +691,13 @@ class EquipmentItem(BaseItem.BaseItem):
             if pos in previewSpiritBindTypes:
                 previewSpiritBindTypes.remove(pos)
         self.equipAttr.previewSpiritBindTypes = previewSpiritBindTypes
-        self.equipAttr.setDirtyFlag()
 
     def isPreviewSpiritBindType(self, pos):
         """判断指定 preview 槽位是否为绑定状态"""
         return pos in self.equipAttr.previewSpiritBindTypes
+    
+    def isSpiritBindType(self, pos):
+        return pos in self.equipAttr.spiritBindTypes
 
     def removePreviewSpiritBindType(self, pos):
         """移除指定 preview 槽位的绑定状态"""
@@ -674,7 +705,6 @@ class EquipmentItem(BaseItem.BaseItem):
         if pos in previewSpiritBindTypes:
             previewSpiritBindTypes.remove(pos)
             self.equipAttr.previewSpiritBindTypes = previewSpiritBindTypes
-            self.equipAttr.setDirtyFlag()
 
     def calcSpiritWashingPreviewScore(self, spiritPos):
         """根据 previewSpiritDatas 计算本次确认后的装备评分（不修改装备数据）"""
@@ -925,6 +955,12 @@ class EquipmentItem(BaseItem.BaseItem):
         for spiritData in self.equipAttr.spiritDatas:
             spiritDatas.append(spiritData.toClientData())
         return spiritDatas
+
+    def getPreviewSpiritDatas(self):
+        previewSpiritDatas = []
+        for previewSpiritData in self.equipAttr.previewSpiritDatas:
+            previewSpiritDatas.append(previewSpiritData.toClientData() if previewSpiritData else None)
+        return previewSpiritDatas
     
     def getGlyphDatas(self):
         glyphDatas = []
@@ -1543,63 +1579,75 @@ class EquipAttr(userType.UserSingleType):
             LOG_ERR('in _genSpiritAffix: error quality', self.quality, totalAffixesNum, specificAffixId)
             return randomAffixes
 
-        if totalAffixesNum == 0:
-            weight_list = AFRAFCWD.affixNumWeightDic.get(self.quality)
-            if not weight_list:
-                LOG_ERR('in _genSpiritAffix: missing weight list', self.quality, totalAffixesNum, specificAffixId)
-                return randomAffixes
-            rdIdx = utils.randomByWeight(weight_list)
-            rdAfNum = rdIdx
-        else:
-            rdAfNum = totalAffixesNum
+        affixGroup = []
+        weight_list = AFAFCW.affixWeightDic.get(self.quality)
+        if not weight_list or len(weight_list) != 2 or not len(weight_list[0]):
+            LOG_ERR('in _genSpiritAffix: missing weight list', weight_list, self.quality, totalAffixesNum, specificAffixId)
+            return randomAffixes
+        rdIdx = utils.randomByWeight(weight_list[1])
+        if rdIdx == None:
+            LOG_ERR('in _genSpiritAffix: rdIdx', weight_list)
+            return randomAffixes
+        affixGroup = AFAFCW.datas[weight_list[0][rdIdx]]["group"]
+        rdAfNum = len(affixGroup)
 
+        LOG_INFO(' in _genSpiritAffix: affixGroup, rdAfNum', affixGroup, rdAfNum)
         key = 'gear_' + str(self.equipSubType) + '_' + str(self.quality)
-        affixIdList = []
-        affixIdWeightList = []
+        affixIdListDic = {}
+        affixIdWeightListDic = {}
         for affixId, val in AFAFTWD.datas.items():
-            if affixId == specificAffixId:
-                continue
-
-            # 没有消耗非绑材料就不给幸运词条了
-            if blessAffixId and affixId == blessAffixId:
-                if not hasUnbindCond:
-                    continue
-                # 如果不是项链也不出
-                if self.equipType != gameconst.EquipTypes.MAIN_TYPE_NECKLACE:
-                    continue
-            
             wt = val.get(key, 0)
-            if wt:
-                affixIdList.append(affixId)
-                affixIdWeightList.append(wt)
+            if not wt:
+                continue
+            affixData = AFAFD.datas.get(affixId)
+            if not affixData:
+                continue
+            assessmentRarity = affixData.get('assessmentRarity', [])
+            if not assessmentRarity:
+                continue
+            for quality in set(affixGroup):
+                allIdList = affixIdListDic.setdefault(gameconst.ItemQuality.ALL_QUALITY, [])
+                allWeightList = affixIdWeightListDic.setdefault(gameconst.ItemQuality.ALL_QUALITY, [])
+                if affixId not in allIdList:
+                    allIdList.append(affixId)
+                    allWeightList.append(wt)
+                if quality not in assessmentRarity:
+                    continue
+                idList =  affixIdListDic.setdefault(quality, [])
+                weightList = affixIdWeightListDic.setdefault(quality, [])
+                if affixId not in idList:
+                    idList.append(affixId)
+                    weightList.append(wt)
+
+        LOG_DBG('in _genSpiritAffix: affixIdListDic', affixIdListDic)
+        LOG_DBG('in _genSpiritAffix: affixIdWeightListDic', affixIdWeightListDic)
 
         for idx in range(rdAfNum):
-            needRandom = True
-            if specificAffixId > 0:
-                needRandom = False
-                randomAffixId = specificAffixId
-                specificAffixId = 0
-                # 如果保底的刚好是幸运词条，那就看是否是消耗了未绑定材料
-                if randomAffixId == blessAffixId:
-                    if not hasUnbindCond:
-                        needRandom = True
-                    # 如果不是项链也不出
-                    if self.equipType != gameconst.EquipTypes.MAIN_TYPE_NECKLACE:
-                        needRandom = True
-            if needRandom:
-                rdIdx = utils.randomByWeight(affixIdWeightList)
-                randomAffixId = affixIdList[rdIdx]
-                if idx < rdAfNum - 1:
-                    affixIdList.pop(rdIdx)
-                    affixIdWeightList.pop(rdIdx)
-            affix = self.generateAffix(randomAffixId, False)
+            quality = affixGroup[idx]
+            affixIdWeightList = affixIdWeightListDic[quality]
+            affixIdList = affixIdListDic[quality]
+            rdIdx = utils.randomByWeight(affixIdWeightList)
+            if rdIdx == None:
+                LOG_WARN('in _genSpiritAffix:  not rdIdx', affixIdWeightList)
+                continue
+            randomAffixId = affixIdList[rdIdx]
+            if idx < rdAfNum - 1:
+                affixIdList.pop(rdIdx)
+                affixIdWeightList.pop(rdIdx)
+                for _quality, _affixIdList in affixIdListDic.items():
+                    if randomAffixId not in _affixIdList:
+                        continue
+                    popIdx = _affixIdList.index(randomAffixId)
+                    _affixIdList.pop(popIdx)
+                    affixIdWeightListDic[_quality].pop(popIdx)
+            affix = self.generateAffix(randomAffixId, False, quality)
             if not affix:
                 continue
             randomAffixes.append(affix)
 
         return randomAffixes
         
-    def generateAffix(self, affixId, isGlyph):
+    def generateAffix(self, affixId, isGlyph, quality=None):
         affixData = AFAFD.datas.get(affixId)
         if not affixData:
             return None
@@ -1620,8 +1668,11 @@ class EquipAttr(userType.UserSingleType):
                     _val = round(_val, 4)
                 break
         elif assessmentWeight:
-            LOG_INFO('generateAffix 2', assessmentWeight)
-            rdIdx = utils.randomByWeight(assessmentWeight)
+            LOG_INFO('generateAffix 2', assessmentWeight, quality)
+            if not quality:
+                rdIdx = utils.randomByWeight(assessmentWeight)
+            else:
+                rdIdx = max(0, quality - 1)
             assessmentInterval = AFAFD.datas.get(affixId, {}).get('assessmentInterval')
             if not assessmentInterval:
                 LOG_WARN('in _doRandomAffix, no assessmentInterval:', affixId)

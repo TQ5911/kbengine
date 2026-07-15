@@ -404,6 +404,12 @@
             <Arg>   PYTHON      </Arg>
         </switchTeamMicsMode>
 
+        <reqUpdateVoiceRoomState>
+            <Arg>   PLAYER_GBID     </Arg>
+            <Arg>   TEAMID      </Arg>
+            <Arg>   UINT8       </Arg>
+        </reqUpdateVoiceRoomState>
+
         <turnOnTeamMics>
             <Arg>   MAILBOX     </Arg>
             <Arg>   PLAYER_GBID     </Arg>
@@ -435,20 +441,6 @@
             <Arg>   PLAYER_GBID     </Arg>
             <Arg>   PYTHON      </Arg>
         </unblockTeamMemberMics>
-
-        <blockAllTeamMemberMics>
-            <Arg>   MAILBOX     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   PYTHON      </Arg>
-        </blockAllTeamMemberMics>
-
-        <unblockAllTeamMemberMics>
-            <Arg>   MAILBOX     </Arg>
-            <Arg>   PLAYER_GBID     </Arg>
-            <Arg>   TEAMID      </Arg>
-            <Arg>   PYTHON      </Arg>
-        </unblockAllTeamMemberMics>
 
         <debugAllTeamInfo>
         </debugAllTeamInfo>

@@ -123,22 +123,13 @@ namespace KBEngine
 
 			bundle.writeUint64(arg1);
 			bundle.writeUint8(arg2);
-			((DATATYPE_AUTH_PERMISSION_DATA_INFO)EntityDef.id2datatypes[369]).addToStreamEx(bundle, arg3);
+			((DATATYPE_AUTH_PERMISSION_DATA_INFO)EntityDef.id2datatypes[373]).addToStreamEx(bundle, arg3);
 			sendCall(null);
 		}
 
 		public void biddingFailRedPointCheck()
 		{
 			Bundle pBundle = newCall("biddingFailRedPointCheck", 0);
-			if(pBundle == null)
-				return;
-
-			sendCall(null);
-		}
-
-		public void blockAllGuildMemberMics()
-		{
-			Bundle pBundle = newCall("blockAllGuildMemberMics", 0);
 			if(pBundle == null)
 				return;
 
@@ -262,7 +253,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_GUILD_CREATE_DATA)EntityDef.id2datatypes[204]).addToStreamEx(bundle, arg1);
+			((DATATYPE_GUILD_CREATE_DATA)EntityDef.id2datatypes[208]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -480,7 +471,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_ITEMID_LIST)EntityDef.id2datatypes[25]).addToStreamEx(bundle, arg1);
+			((DATATYPE_ITEMID_LIST)EntityDef.id2datatypes[27]).addToStreamEx(bundle, arg1);
 			bundle.writeUint8(arg2);
 			sendCall(null);
 		}
@@ -491,7 +482,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AUCTIONID_LIST)EntityDef.id2datatypes[23]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AUCTIONID_LIST)EntityDef.id2datatypes[25]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -911,7 +902,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AUTH_PERMISSION_DATA_INFO)EntityDef.id2datatypes[369]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AUTH_PERMISSION_DATA_INFO)EntityDef.id2datatypes[373]).addToStreamEx(bundle, arg1);
 			bundle.writeUint8(arg2);
 			sendCall(null);
 		}
@@ -973,7 +964,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_GUILD_JOIN_COND_DATA_INFO)EntityDef.id2datatypes[203]).addToStreamEx(bundle, arg1);
+			((DATATYPE_GUILD_JOIN_COND_DATA_INFO)EntityDef.id2datatypes[207]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -1688,6 +1679,17 @@ namespace KBEngine
 		public void reqGetPublicRankList(Byte arg1, UInt32 arg2)
 		{
 			Bundle pBundle = newCall("reqGetPublicRankList", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			bundle.writeUint32(arg2);
+			sendCall(null);
+		}
+
+		public void reqGetRechargeStageReward(Byte arg1, UInt32 arg2)
+		{
+			Bundle pBundle = newCall("reqGetRechargeStageReward", 0);
 			if(pBundle == null)
 				return;
 
@@ -2430,7 +2432,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_ITEMID_LIST)EntityDef.id2datatypes[25]).addToStreamEx(bundle, arg1);
+			((DATATYPE_ITEMID_LIST)EntityDef.id2datatypes[27]).addToStreamEx(bundle, arg1);
 			bundle.writeUint32(arg2);
 			bundle.writeUint32(arg3);
 			bundle.writeUint64(arg4);
@@ -2476,7 +2478,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[119]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2486,7 +2488,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[119]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2497,7 +2499,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeInt32(arg1);
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[119]).addToStreamEx(bundle, arg2);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -2508,7 +2510,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint64(arg1);
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[119]).addToStreamEx(bundle, arg2);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -2532,7 +2534,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[119]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2543,7 +2545,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint64(arg1);
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[119]).addToStreamEx(bundle, arg2);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -2567,7 +2569,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[119]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2629,7 +2631,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_INSTANT_POTION_DATA_INFO)EntityDef.id2datatypes[345]).addToStreamEx(bundle, arg1);
+			((DATATYPE_INSTANT_POTION_DATA_INFO)EntityDef.id2datatypes[349]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2793,6 +2795,15 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void turnOffGuildSpeaker()
+		{
+			Bundle pBundle = newCall("turnOffGuildSpeaker", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
 		public void turnOnGuildMics()
 		{
 			Bundle pBundle = newCall("turnOnGuildMics", 0);
@@ -2802,21 +2813,22 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void unblockAllGuildMemberMics()
+		public void turnOnGuildSpeaker()
 		{
-			Bundle pBundle = newCall("unblockAllGuildMemberMics", 0);
+			Bundle pBundle = newCall("turnOnGuildSpeaker", 0);
 			if(pBundle == null)
 				return;
 
 			sendCall(null);
 		}
 
-		public void unblockGuildMemberMics()
+		public void unblockGuildMemberMics(UInt64 arg1)
 		{
 			Bundle pBundle = newCall("unblockGuildMemberMics", 0);
 			if(pBundle == null)
 				return;
 
+			bundle.writeUint64(arg1);
 			sendCall(null);
 		}
 
@@ -3219,24 +3231,6 @@ namespace KBEngine
 		public void blazeEnd()
 		{
 			Bundle pBundle = newCall("blazeEnd", 0);
-			if(pBundle == null)
-				return;
-
-			sendCall(null);
-		}
-
-		public void blockAllRaidMemberMics()
-		{
-			Bundle pBundle = newCall("blockAllRaidMemberMics", 0);
-			if(pBundle == null)
-				return;
-
-			sendCall(null);
-		}
-
-		public void blockAllTeamMemberMics()
-		{
-			Bundle pBundle = newCall("blockAllTeamMemberMics", 0);
 			if(pBundle == null)
 				return;
 
@@ -4196,7 +4190,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
-			((DATATYPE_ABYSS_SWITCH)EntityDef.id2datatypes[233]).addToStreamEx(bundle, arg2);
+			((DATATYPE_ABYSS_SWITCH)EntityDef.id2datatypes[237]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -4207,7 +4201,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
-			((DATATYPE_CUBE_SWITCH)EntityDef.id2datatypes[231]).addToStreamEx(bundle, arg2);
+			((DATATYPE_CUBE_SWITCH)EntityDef.id2datatypes[235]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -4238,7 +4232,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
-			((DATATYPE_WONDER_LAND_SWITCH)EntityDef.id2datatypes[232]).addToStreamEx(bundle, arg2);
+			((DATATYPE_WONDER_LAND_SWITCH)EntityDef.id2datatypes[236]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -4407,6 +4401,19 @@ namespace KBEngine
 		public void reqEquipSpiritWashingConfirm(Byte arg1, UInt32 arg2, Byte arg3, UInt64 arg4)
 		{
 			Bundle pBundle = newCall("reqEquipSpiritWashingConfirm", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			bundle.writeUint32(arg2);
+			bundle.writeUint8(arg3);
+			bundle.writeUint64(arg4);
+			sendCall(null);
+		}
+
+		public void reqEquipSpiritWashingDiscard(Byte arg1, UInt32 arg2, Byte arg3, UInt64 arg4)
+		{
+			Bundle pBundle = newCall("reqEquipSpiritWashingDiscard", 0);
 			if(pBundle == null)
 				return;
 
@@ -4683,6 +4690,17 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void reqUpdateRaidVoiceRoomState(UInt64 arg1, Byte arg2)
+		{
+			Bundle pBundle = newCall("reqUpdateRaidVoiceRoomState", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			bundle.writeUint8(arg2);
+			sendCall(null);
+		}
+
 		public void reqUpdateTaskByTalkToNpc(Byte arg1, Int32 arg2, UInt32 arg3, UInt64 arg4)
 		{
 			Bundle pBundle = newCall("reqUpdateTaskByTalkToNpc", 0);
@@ -4703,6 +4721,17 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
+			sendCall(null);
+		}
+
+		public void reqUpdateTeamVoiceRoomState(UInt64 arg1, Byte arg2)
+		{
+			Bundle pBundle = newCall("reqUpdateTeamVoiceRoomState", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			bundle.writeUint8(arg2);
 			sendCall(null);
 		}
 
@@ -4903,7 +4932,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_SIEGEWAR_MINIMAP_SIGNAL_VAL)EntityDef.id2datatypes[255]).addToStreamEx(bundle, arg1);
+			((DATATYPE_SIEGEWAR_MINIMAP_SIGNAL_VAL)EntityDef.id2datatypes[259]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -5114,32 +5143,12 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void turnOffRaidMemberMics(UInt64 arg1)
-		{
-			Bundle pBundle = newCall("turnOffRaidMemberMics", 0);
-			if(pBundle == null)
-				return;
-
-			bundle.writeUint64(arg1);
-			sendCall(null);
-		}
-
 		public void turnOffRaidMics()
 		{
 			Bundle pBundle = newCall("turnOffRaidMics", 0);
 			if(pBundle == null)
 				return;
 
-			sendCall(null);
-		}
-
-		public void turnOffTeamMemberMics(UInt64 arg1)
-		{
-			Bundle pBundle = newCall("turnOffTeamMemberMics", 0);
-			if(pBundle == null)
-				return;
-
-			bundle.writeUint64(arg1);
 			sendCall(null);
 		}
 
@@ -5152,16 +5161,6 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void turnOnRaidMemberMics(UInt64 arg1)
-		{
-			Bundle pBundle = newCall("turnOnRaidMemberMics", 0);
-			if(pBundle == null)
-				return;
-
-			bundle.writeUint64(arg1);
-			sendCall(null);
-		}
-
 		public void turnOnRaidMics()
 		{
 			Bundle pBundle = newCall("turnOnRaidMics", 0);
@@ -5171,37 +5170,9 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void turnOnTeamMemberMics(UInt64 arg1)
-		{
-			Bundle pBundle = newCall("turnOnTeamMemberMics", 0);
-			if(pBundle == null)
-				return;
-
-			bundle.writeUint64(arg1);
-			sendCall(null);
-		}
-
 		public void turnOnTeamMics()
 		{
 			Bundle pBundle = newCall("turnOnTeamMics", 0);
-			if(pBundle == null)
-				return;
-
-			sendCall(null);
-		}
-
-		public void unblockAllRaidMemberMics()
-		{
-			Bundle pBundle = newCall("unblockAllRaidMemberMics", 0);
-			if(pBundle == null)
-				return;
-
-			sendCall(null);
-		}
-
-		public void unblockAllTeamMemberMics()
-		{
-			Bundle pBundle = newCall("unblockAllTeamMemberMics", 0);
 			if(pBundle == null)
 				return;
 

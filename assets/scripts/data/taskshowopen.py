@@ -51,13 +51,13 @@ datas ={
     "TaskType": 1
   },
   "86010068": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86010069": {
-    "TaskType": 2
+    "TaskType": 5
   },
   "86010070": {
-    "TaskType": 2
+    "TaskType": 5
   },
   "86010071": {
     "TaskType": 1
@@ -66,19 +66,19 @@ datas ={
     "TaskType": 1
   },
   "86010077": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86010078": {
     "TaskType": 1
   },
   "86010079": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86010081": {
-    "TaskType": 2
+    "TaskType": 5
   },
   "86010083": {
-    "TaskType": 2
+    "TaskType": 5
   },
   "86010084": {
     "TaskType": 1
@@ -150,7 +150,7 @@ datas ={
     "TaskType": 1
   },
   "86010196": {
-    "TaskType": 2
+    "TaskType": 5
   },
   "86010200": {
     "TaskType": 1
@@ -159,7 +159,7 @@ datas ={
     "TaskType": 1
   },
   "86010206": {
-    "TaskType": 0
+    "TaskType": 1
   },
   "86010209": {
     "TaskType": 1
@@ -234,7 +234,7 @@ datas ={
     "TaskType": 1
   },
   "86010337": {
-    "TaskType": 1
+    "TaskType": 5
   },
   "86010339": {
     "TaskType": 1
@@ -243,9 +243,6 @@ datas ={
     "TaskType": 1
   },
   "86010356": {
-    "TaskType": 1
-  },
-  "86010361": {
     "TaskType": 1
   },
   "86010363": {
@@ -267,25 +264,22 @@ datas ={
     "TaskType": 1
   },
   "86010404": {
-    "TaskType": 2
+    "TaskType": 5
   },
   "86010407": {
-    "TaskType": 2
-  },
-  "86010409": {
-    "TaskType": 2
+    "TaskType": 5
   },
   "86010415": {
-    "TaskType": 2
+    "TaskType": 5
   },
   "86010418": {
-    "TaskType": 1
+    "TaskType": 5
   },
   "86010420": {
     "TaskType": 1
   },
   "86010422": {
-    "TaskType": 0
+    "TaskType": 3
   },
   "86010423": {
     "TaskType": 1
@@ -308,6 +302,9 @@ datas ={
   "86010467": {
     "TaskType": 1
   },
+  "86010470": {
+    "TaskType": 1
+  },
   "86020001": {
     "TaskType": 4
   },
@@ -321,97 +318,97 @@ datas ={
     "TaskType": 8
   },
   "86030001": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030004": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030005": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030006": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030008": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030009": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030010": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030011": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030012": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030013": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030014": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030015": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030016": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030017": {
-    "TaskType": 2
+    "TaskType": 5
   },
   "86030018": {
-    "TaskType": 2
+    "TaskType": 5
   },
   "86030021": {
-    "TaskType": 2
+    "TaskType": 5
   },
   "86030024": {
-    "TaskType": 2
+    "TaskType": 5
   },
   "86030026": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030027": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030028": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030029": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030030": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030031": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030032": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030033": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030034": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030035": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030037": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030038": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030039": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86030040": {
-    "TaskType": 5
+    "TaskType": 3
   },
   "86050001": {
     "TaskType": 1
@@ -441,7 +438,7 @@ datas ={
     "TaskType": 0
   },
   "86050035": {
-    "TaskType": 2
+    "TaskType": 5
   },
   "86050053": {
     "TaskType": 2
@@ -495,7 +492,7 @@ datas ={
     "TaskType": 1
   },
   "86060090": {
-    "TaskType": 0
+    "TaskType": 1
   },
   "86060097": {
     "TaskType": 1

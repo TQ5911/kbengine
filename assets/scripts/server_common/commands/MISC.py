@@ -812,14 +812,8 @@ def gm_getReward(superUser, playerEnt, dropId, num):
 def gm_getDropid(superUser, playerEnt, dropId, num):
     if gameconfig.isCrossServer():
         return False, '跨服禁止执行'
+    awardCtx = playerEnt.getAvatarAwardCtx(0, None)
     for i in range(num):
-        awardCtx = awardContext.CommonContext(0, {'lv': playerEnt.getRoleCacheAttr('level', 0)})
-        awardCtx.addContextVar('avatarId', playerEnt.id)
-        awardCtx.addContextVar('school', playerEnt.getRoleCacheAttr('school', 0))
-        awardCtx.addContextVar('isMonthCardExpired', playerEnt.getRoleCacheAttr('monthCardExpired', True))
-        awardCtx.addContextVar('isBigMonthCardExpired', playerEnt.getRoleCacheAttr('bigMonthCardExpired', True))
-        awardCtx.addContextVar('avatarScoreRank', playerEnt.avatarScoreRank)
-        awardCtx.addContextVar('isCrossServer', playerEnt.isCrossServer)
         _opUUID = KBEngine.genUUID64()
         awardVal = dropAward._getDropAward([dropId], awardCtx)
         autoDisassemble = playerEnt.cliConfigDic.get(gameconst.CliConfigDef.EQUIP_AUTO_DISA_KEY,
@@ -2078,7 +2072,7 @@ def gm_enterMap(superUser, playerEnt, mapId):
 
 @gm_cmd('$EnterAbyss', (Player("gbId or Id"), Int("int floor")), RARG(0), BASE, '进入归墟', ALLSIDE, GOD_GROUPS)
 def gm_EnterAbyss(superUser, playerEnt, floor):
-    playerEnt.checkAndEnterAbyss(floor)
+    playerEnt.gmEnterAbyss(floor)
     return True, 'command success'
 
 @gm_cmd('$LeaveAbyss', (Player("gbId or Id"),), RARG(0), BASE, '离开归墟', ALLSIDE, GOD_GROUPS)
@@ -2481,11 +2475,6 @@ def gm_setVIP(superUser, playerEnt, account):
     redisUtils.RedisUtils.cmdSet(gameconst.PrivilegeRedisKey.VIP + account, "1")
     return True, 'command success'
 
-@gm_cmd('$setSVIP', (Player("gbId or Id"), Str("str account"),), RARG(0), gameconst.BASE, '设置特权', ALLSIDE, GOD_GROUPS)
-def gm_setSVIP(superUser, playerEnt, account):
-    redisUtils.RedisUtils.cmdSet(gameconst.PrivilegeRedisKey.SVIP + account, "1")
-    return True, 'command success'
-
 @gm_cmd('$gmOpForbiddenTaskIds', (Int('opType'), Int('taskId')), RONE, BASE, '禁止任务', ALLSIDE, GOD_GROUPS)
 def gm_gmOpForbiddenTaskIds(superUser, opType, taskId):
     if opType != gameconst.ForbiddenTaskIdOpType.QUERY and str(taskId) not in TDD.datas:
@@ -2534,4 +2523,9 @@ def gm_reqGetPublicRankList(superUser, playerEnt, type, vid):
 @gm_cmd('$reqGetPublicBountyList', (Player("gbId or Id"), Int('startIdx'),), RARG(0), BASE, '获取悬赏列表', ALLSIDE, GOD_GROUPS)
 def gm_reqGetPublicBountyList(superUser, playerEnt, startIdx):
     playerEnt.reqGetPublicBountyList(playerEnt.gbID, startIdx)
+    return True, 'command success'
+
+@gm_cmd('$setDynamicWorldLevel', (Player("gbId or Id"), Int('level'),), RONE, BASE, '设置动态世界等级', ALLSIDE, GOD_GROUPS)
+def gm_setDynamicWorldLevel(superUser, playerEnt, level):
+    gameengine.getGlobalBase('LeaderBoardStub' + str(gameconst.LeaderBoardType.AVATAR_LEVEL)).gmSetDynamicWorldLevel(level)
     return True, 'command success'

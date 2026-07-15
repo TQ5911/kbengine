@@ -23,6 +23,7 @@ import const_const as CONST
 import agent_agentFunction as A_AFD
 import agent_agentConfig as A_ACD
 import formula
+import iRouter
 
 
 class IAbyssBase(object):
@@ -47,19 +48,22 @@ class IAbyssBase(object):
     def sumAbyssTicket(self):
         return self.abyssTicket + self.paidAbyssTicket
 
-    def checkAndEnterAbyss(self, floor):
-        if self.sumAbyssTicket() <= 0:
-            LOG_WARN('IAbyssBase::checkAndEnterAbyss: self.sumAbyssTicket <= 0')
-            return
-
+    def gmEnterAbyss(self, floor):
         mapId = AB_FD.datas[floor]['ID']
-        extra = {
-            'enterAbyssType': gameconst.ABYSS_ENTER_TYPE_TICKET
-        }
-        gameengine.getAbyssStub(mapId).doEnterAbyss(self, self.gbID, extra)
+        gameengine.getAbyssStub(mapId).doEnterAbyss(self, self.gbID, {})
 
-    def afterEnterAbyssDeductTimes(self):
-        self.modifyAbyssTicket(-1, AAC_AACDD.datas.BONUS_SRC_ENTER_ABYSS, KBEngine.genUUID64())
+    def afterEnterAbyssDeductTimes(self, extra):
+        ticketType = self.modifyAbyssTicket(-1, AAC_AACDD.datas.BONUS_SRC_ENTER_ABYSS, KBEngine.genUUID64())
+        floor = extra.get('floor', 0)
+        if floor:
+            LogTrackingMgr.LogTrackingMgr.abyss_enter(
+                self.gbID,
+                self.accountEntity.clientDistinctId, 
+                floor,
+                utils.curTS(),
+                ticketType,
+                1,
+            )
 
     @gamedecorator.checkGameconfigEnable('abyss')
     @gamedecorator.crossServer
@@ -113,16 +117,6 @@ class IAbyssBase(object):
 
         self.cell.doSyncAbyssData()
 
-        # TODO abyss
-        # LogTrackingMgr.LogTrackingMgr.Abyss_Ticket(
-        #     self.gbID,
-        #     src,
-        #     delta,
-        #     self.abyssTicket,
-        #     self.paidAbyssTicket,
-        #     opUUID,
-        # )
-
     def doAddAbyssTicket(self, addType, itemId, itemNum, num, isAddDuration, hasCheckCell, reason, opUUID):
         LOG_INFO('IAbyssBase::doAddAbyssTicket: addType: {}, itemId: {}, itemNum: {}, num: {}, isAddDuration: {}, hasCheckCell: {}, reason: {}'.format(addType, itemId, itemNum, num, isAddDuration, hasCheckCell, reason))
         if isAddDuration and num != 1:
@@ -154,12 +148,48 @@ class IAbyssBase(object):
 
         if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
             self.abyssAddTimes -= num
-            self.addGuildCommissionGold(num * itemNum)
+            self.addGuildCommissionGold(itemId, num * itemNum)
             
         _src = AAC_AACDD.datas.BONUS_SRC_ADD_ABYSS_TIMES
         _detail = gameclass.AwardDetailCls()
+
+
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_doAddAbyssTicketLocalServer', (addType, itemId, itemNum, num, isAddDuration, _src, _award, opUUID, _detail))
+            return
+        
         self.deductWealth(_src, _award, opUUID, _detail)
 
+        if isAddDuration:
+            self.cell.directlyAddAbyssDuration('addAbyssDurFailed', (opUUID, addType, itemId, itemNum, num))
+        else:
+            self.modifyAbyssTicket(num, _src, opUUID)
+        
+        self.cell.doSyncAbyssData()
+
+        LogTrackingMgr.LogTrackingMgr.abyss_ticketBuy(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            addType,
+        )
+
+    #跨服扣道具增加次数和时长
+    def _doAddAbyssTicketLocalServer(self, addType, itemId, itemNum, num, isAddDuration, _src, _award, opUUID, _detail):
+        res = self.deductWealth(_src, _award, opUUID, _detail)
+        if res is None:
+            gameengine.panicStack('doAddAbyssTicket deduct wealth failed', _src, _award, opUUID, _detail, res)
+            return
+
+        LogTrackingMgr.LogTrackingMgr.abyss_ticketBuy(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            addType,
+        )
+
+        self.syncMethodCallToCrossServerBase('_doAddAbyssTicketCrossServer', (addType, itemId, itemNum, num, isAddDuration, _src, _award, opUUID, _detail))
+
+    def _doAddAbyssTicketCrossServer(self, addType, itemId, itemNum, num, isAddDuration, _src, _award, opUUID, _detail):
+        self.deductWealth(_src, _award, opUUID, _detail)
         if isAddDuration:
             self.cell.directlyAddAbyssDuration('addAbyssDurFailed', (opUUID, addType, itemId, itemNum, num))
         else:
@@ -237,7 +267,8 @@ class IAbyssBase(object):
     def sendAbyssLoginData(self):
         self.cell.doSendAbyssLoginData()
 
-    def onLogonEnterAbyssGetSpaceBox(self, spaceBox, spaceMgrBoxCellId):
+    def onLogonEnterAbyssGetSpaceBox(self, spaceBox, spaceMgrBoxCellId, spaceNo):
+        self.cellData['spaceNo'] = spaceNo
         self.addCreateCellCB('onLogonEnterAbyssCB', (spaceMgrBoxCellId,))
         spaceBox.createCellNearSelf(self)
         
@@ -248,6 +279,16 @@ class IAbyssBase(object):
         if not self.checkAuthDisassembleAndMsg(
                 A_AFD.UIAbyssPanel, 
                 A_ACD.datas['restrictedPromptMsg2']['value']):
+            return
+
+        _stub = iRouter.RemoteServerStubEntityCall(gameconfig.getCrossServerId(), 'AbyssStub%d' % floor)
+        crossServerBox = iRouter.RemoteServerBoxEntityCall(gameconfig.serverId(), self)
+        _stub.checkCanEnterCrossAbyss(crossServerBox)
+        
+
+    def onCrossServerCheckCanEnterAbyss(self, floor, canEnter, ec):
+        if not canEnter:
+            self.onMessagePre(AB_CD.datas['abyss_fullyBooked']['value'], [])
             return
 
         noTicket = self.sumAbyssTicket() <= 0

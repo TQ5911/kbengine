@@ -466,56 +466,56 @@ datas = _tools.RODict({
     80781001: _tools.RODict({
         "ID": 80781001,
         "isOpen": 1,
-        "consumeItem": ((30990123, 1), (30000285, 20)),
+        "consumeItem": ((30990124, 1), (30000286, 20)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 200),)
     }),
     80782001: _tools.RODict({
         "ID": 80782001,
         "isOpen": 1,
-        "consumeItem": ((30990130, 1), (30000289, 30)),
+        "consumeItem": ((30990131, 1), (30000290, 30)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 1000),)
     }),
     80783001: _tools.RODict({
         "ID": 80783001,
         "isOpen": 1,
-        "consumeItem": ((30990137, 1), (30000293, 50)),
+        "consumeItem": ((30990138, 1), (30000294, 50)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 20000),)
     }),
     80784001: _tools.RODict({
         "ID": 80784001,
         "isOpen": 1,
-        "consumeItem": ((30990144, 1), (30000297, 150)),
+        "consumeItem": ((30990145, 1), (30000298, 150)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 500000),)
     }),
     80791001: _tools.RODict({
         "ID": 80791001,
         "isOpen": 1,
-        "consumeItem": ((30990123, 1), (30000285, 20)),
+        "consumeItem": ((30990124, 1), (30000286, 20)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 200),)
     }),
     80792001: _tools.RODict({
         "ID": 80792001,
         "isOpen": 1,
-        "consumeItem": ((30990130, 1), (30000289, 30)),
+        "consumeItem": ((30990131, 1), (30000290, 30)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 1000),)
     }),
     80793001: _tools.RODict({
         "ID": 80793001,
         "isOpen": 1,
-        "consumeItem": ((30990137, 1), (30000293, 50)),
+        "consumeItem": ((30990138, 1), (30000294, 50)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 20000),)
     }),
     80794001: _tools.RODict({
         "ID": 80794001,
         "isOpen": 1,
-        "consumeItem": ((30990144, 1), (30000297, 150)),
+        "consumeItem": ((30990145, 1), (30000298, 150)),
         "consumeItem2": None,
         "consumeMoney": ((30000013, 500000),)
     }),

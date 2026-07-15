@@ -233,9 +233,9 @@ datas = _tools.RODict({
     }),
     30770400: _tools.RODict({
         "ID": 30770400,
-        "equipmentID": 2,
+        "equipmentID": 4,
         "propertyNum": ((0, 0), (1, 100), (2, 0)),
-        "baseProp": ((78004001, 200),),
+        "baseProp": ((78004023, 200),),
         "rareProp": None,
         "qualityWeight": ((1, 8000), (2, 0), (3, 0)),
         "LuckyWeight": None

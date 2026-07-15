@@ -121,11 +121,19 @@ namespace KBEngine
 
 			switch(method.methodUtype)
 			{
+				case 1236:
+					onAnotherClientLogin();
+					break;
 				case 1202:
 					onBreakAwayStuckSuccess();
 					break;
 				case 1173:
 					onClientDataSyncFinished();
+					break;
+				case 1244:
+					Int32 onMessage_arg1 = stream.readInt32();
+					List<string> onMessage_arg2 = ((DATATYPE_AnonymousArray_10001)method.args[1]).createFromStreamEx(stream);
+					onMessage(onMessage_arg1, onMessage_arg2);
 					break;
 				case 1194:
 					UInt32 onRecvAvatarChannelMsg_arg1 = stream.readUint32();
@@ -156,6 +164,11 @@ namespace KBEngine
 					UInt32 showPopoverMsgWithArg_arg1 = stream.readUint32();
 					List<string> showPopoverMsgWithArg_arg2 = ((DATATYPE_AnonymousArray_10001)method.args[1]).createFromStreamEx(stream);
 					showPopoverMsgWithArg(showPopoverMsgWithArg_arg1, showPopoverMsgWithArg_arg2);
+					break;
+				case 1234:
+					Int64 syncServerTime_arg1 = stream.readInt64();
+					float syncServerTime_arg2 = stream.readFloat();
+					syncServerTime(syncServerTime_arg1, syncServerTime_arg2);
 					break;
 				default:
 					break;
@@ -203,7 +216,7 @@ namespace KBEngine
 				{
 					case 593:
 						APPEARANCE_INFO oldval_appearance = appearance;
-						appearance = ((DATATYPE_APPEARANCE_INFO)EntityDef.id2datatypes[33]).createFromStreamEx(stream);
+						appearance = ((DATATYPE_APPEARANCE_INFO)EntityDef.id2datatypes[35]).createFromStreamEx(stream);
 
 						if(prop.isBase())
 						{

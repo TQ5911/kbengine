@@ -169,7 +169,7 @@ datas ={
     "PosY": 102.4235,
     "PosZ": 182.83,
     "Props": {
-      "CameraId": 0,
+      "CameraId": 33010001,
       "GateType": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
@@ -222,7 +222,7 @@ datas ={
     "PosY": 102.1951,
     "PosZ": 165.706,
     "Props": {
-      "CameraId": 0,
+      "CameraId": "33010001",
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1

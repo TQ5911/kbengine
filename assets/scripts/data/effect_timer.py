@@ -53,10 +53,11 @@ def _13080005(self, target, context):
         buffSrc.healByPct(target, context, *context.args.ActionParam)
 
 def _13080006(self, target, context):
-    buffSrc = context.getSrcEntity()
-    if buffSrc and target:
-        healNum = target.getProp("fullHp") * context.args.ActionParam[0] + context.args.ActionParam[1]
-        buffSrc.healByNum(target, context, healNum)
+    if not self.hasBuff(64004520):
+        buffSrc = context.getSrcEntity()
+        if buffSrc and target:
+            healNum = target.getProp("fullHp") * context.args.ActionParam[0] + context.args.ActionParam[1]
+            buffSrc.healByNum(target, context, healNum)
 
 def _13080007(self, target, context):
     buffSrc = context.getSrcEntity()
@@ -495,6 +496,14 @@ def _13080095(self, target, context):
 def _13080096(self, target, context):
     self.addExpAction(int(1.1*580*math.pow(1.052, min( self.level,60)-50)))
 
+def _13080097(self, target, context):
+    buffSrc = context.getSrcEntity()
+    if buffSrc:
+        self.removeBuff(64004519)
+        self.removeBuff(64004902)
+        self.removeBuff(64004903)
+    self.changeAllSkill([(91044011,1),(91044012,999),(91044014,100),(91044016,30),(91044021,30),(91044009,300)])
+
 datas = _tools.RODict({ 
     13080000: _tools.RODict({
         "ID": 13080000,
@@ -847,7 +856,11 @@ datas = _tools.RODict({
     13080096: _tools.RODict({
         "ID": 13080096,
         "Action": _13080096
+    }),
+    13080097: _tools.RODict({
+        "ID": 13080097,
+        "Action": _13080097
     })
 })
 minKey = 13080000
-maxKey = 13080096
+maxKey = 13080097

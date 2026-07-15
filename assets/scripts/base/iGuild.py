@@ -58,6 +58,12 @@ class IGuild(object):
 
         gamesql.loadAvatarGuildInfo(self.gbID, self._onLoadGuildInfo)
 
+    def onGuildLevelChangedBase(self, guildLevel):
+        self.cell.syncModifyGuildInfo({
+            'guildLevel': guildLevel,
+        })
+        self.client.onGuildLevelChanged(guildLevel)
+
     def onSetGuildInfoCross(self, guildUUID, guildName, isOnline):
         LOG_INFO("IGuild::onSetGuildInfoCross:", guildUUID, guildName, isOnline)
         self.guildUUIDBase = guildUUID
@@ -222,6 +228,7 @@ class IGuild(object):
             'guildUUID': guildUUID,
             'guildName': joinGuildData['guildName'],
             'guildBox': guildBox,
+            'guildLevel': joinGuildData['guildLevel'],
         })
 
         self.applyedGuilds.clear()
@@ -319,6 +326,7 @@ class IGuild(object):
             'guildUUID': 0,
             'guildName': "",
             'guildBox': None,
+            'guildLevel': 0,
         })
 
         self.client.onExitGuildClient()
@@ -1424,7 +1432,10 @@ class IGuild(object):
             TaskInfoList.append(GuildTaskInfo.GuildTaskInfoVal(taskID,taskInfo['num'],taskInfo['isCompleted']))
         self.client.syncGuildTaskInfo(TaskInfoList)
     
-    def addGuildCommissionGold(self, goldCount):
+    def addGuildCommissionGold(self, itemId, goldCount):
+        if itemId != gameconst.ItemIdEnum.MONEY:
+            return
+        
         # 通知公会折算
         if self.guildBox:
             self.guildBox.addCommissionGold(self.gbID, goldCount)
@@ -1479,53 +1490,53 @@ class IGuild(object):
     @gamedecorator.checkGameconfigEnable('guild')
     def turnOffGuildMics(self, exposed):
         if not self.guildBox:
-            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
+            LOG_ERR('IGuild::turnOffGuildMics: guildBox is None')
             return
         self.guildBox.onAvatarChangeGuildMics(self.gbID, False)
 
     @gamedecorator.checkGameconfigEnable('guild')
+    def turnOnGuildSpeaker(self, exposed):
+        if not self.guildBox:
+            LOG_ERR('IGuild::turnOnGuildSpeaker: guildBox is None')
+            return
+        self.guildBox.onAvatarChangeGuildSpeaker(self.gbID, True)
+
+    @gamedecorator.checkGameconfigEnable('guild')
+    def turnOffGuildSpeaker(self, exposed):
+        if not self.guildBox:
+            LOG_ERR('IGuild::turnOffGuildSpeaker: guildBox is None')
+            return
+        self.guildBox.onAvatarChangeGuildSpeaker(self.gbID, False)
+
+    @gamedecorator.checkGameconfigEnable('guild')
     def switchGuildMicsMode(self, exposed, mode):
         if not self.guildBox:
-            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
+            LOG_ERR('IGuild::switchGuildMicsMode: guildBox is None')
             return
         self.guildBox.onSetGuildMicsSwitch(self.gbID, mode)
 
     @gamedecorator.checkGameconfigEnable('guild')
     def blockGuildMemberMics(self, exposed, gbId):
         if not self.guildBox:
-            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
+            LOG_ERR('IGuild::blockGuildMemberMics: guildBox is None')
             return
         self.guildBox.changeMicsBlock(self.gbID, gbId, True)
 
     @gamedecorator.checkGameconfigEnable('guild')
     def unblockGuildMemberMics(self, exposed, gbId):
         if not self.guildBox:
-            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
+            LOG_ERR('IGuild::unblockGuildMemberMics: guildBox is None')
             return
         self.guildBox.changeMicsBlock(self.gbID, gbId, False)
 
     @gamedecorator.checkGameconfigEnable('guild')
-    def blockAllGuildMemberMics(self, exposed):
-        if not self.guildBox:
-            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
-            return
-        self.guildBox.changeMicsBlockAll(True)
-
-    @gamedecorator.checkGameconfigEnable('guild')
-    def unblockAllGuildMemberMics(self, exposed):
-        if not self.guildBox:
-            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
-            return
-        self.guildBox.changeMicsBlockAll(False)
-
-    @gamedecorator.checkGameconfigEnable('guild')
     def inviteGuildMics(self, exposed, gbId):
         if not self.guildBox:
-            LOG_ERR('IGuild::inviteGuildMember: guildBox is None')
+            LOG_ERR('IGuild::inviteGuildMics: guildBox is None')
             return
         self.guildBox.inviteGuildMics(self.gbID, gbId)
 
-    def _sendGuildMicsMembers(self):
+    def _sendGuildVoiceMembers(self):
         if not self.guildBox:
             return
-        self.guildBox.getGuildMicsMembers(self)
+        self.guildBox.getGuildVoiceMembers(self)

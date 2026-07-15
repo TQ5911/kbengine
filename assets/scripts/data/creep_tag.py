@@ -43,6 +43,10 @@ datas = _tools.RODict({
         "ID": 7,
         "value": "54479001"
     }),
+    97: _tools.RODict({
+        "ID": 97,
+        "value": ""
+    }),
     98: _tools.RODict({
         "ID": 98,
         "value": ""

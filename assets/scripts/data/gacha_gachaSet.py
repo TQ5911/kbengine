@@ -169,11 +169,11 @@ datas = _tools.RODict({
     }),
     "highQualityPetScale": _tools.RODict({
         "ID": "highQualityPetScale",
-        "value": 2.2,
+        "value": 1.8,
     }),
     "highQualityPetOffset": _tools.RODict({
         "ID": "highQualityPetOffset",
-        "value": -1.5,
+        "value": -1.0,
     }),
     "rerollItemTips": _tools.RODict({
         "ID": "rerollItemTips",

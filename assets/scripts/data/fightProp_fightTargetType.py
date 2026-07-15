@@ -37,11 +37,11 @@ datas = _tools.RODict({
     }),
     "FriendExGB": _tools.RODict({
         "ID": "FriendExGB",
-        "value": ((1, 2, 6, 5), (2,), (2, 3), (0,))
+        "value": ((1, 2, 6, 5, 7), (2,), (2, 3), (0,))
     }),
     "AnyExGB": _tools.RODict({
         "ID": "AnyExGB",
-        "value": ((1, 2, 6, 5), (2,), (0,), (0,))
+        "value": ((1, 2, 6, 5, 7), (2,), (0,), (0,))
     }),
     "FriendExS": _tools.RODict({
         "ID": "FriendExS",
@@ -49,7 +49,7 @@ datas = _tools.RODict({
     }),
     "CorpsePlayerExS": _tools.RODict({
         "ID": "CorpsePlayerExS",
-        "value": ((1,), (1,), (3,), (0,))
+        "value": ((1, 7), (1,), (3,), (0,))
     }),
     "Monster": _tools.RODict({
         "ID": "Monster",
@@ -61,15 +61,15 @@ datas = _tools.RODict({
     }),
     "FriendPlayerExS": _tools.RODict({
         "ID": "FriendPlayerExS",
-        "value": ((1,), (2,), (3,), (0,))
+        "value": ((1, 7), (2,), (3,), (0,))
     }),
     "PlayerExS": _tools.RODict({
         "ID": "PlayerExS",
-        "value": ((1,), (2,), (1, 3), (0,))
+        "value": ((1, 7), (2,), (1, 3), (0,))
     }),
     "PlayerEnemy": _tools.RODict({
         "ID": "PlayerEnemy",
-        "value": ((1,), (2,), (1,), (0,))
+        "value": ((1, 7), (2,), (1,), (0,))
     }),
     "EnemyExTarget": _tools.RODict({
         "ID": "EnemyExTarget",
@@ -89,14 +89,14 @@ datas = _tools.RODict({
     }),
     "TeamPlayer": _tools.RODict({
         "ID": "TeamPlayer",
-        "value": ((1,), (2,), (2, 6), (0,))
+        "value": ((1, 7), (2,), (2, 6), (0,))
     }),
     "TeamFriend": _tools.RODict({
         "ID": "TeamFriend",
-        "value": ((1,), (0,), (2, 3), (1, 2, 3))
+        "value": ((1, 7), (0,), (2, 3), (1, 2, 3))
     }),
     "TeamExCorpse": _tools.RODict({
         "ID": "TeamExCorpse",
-        "value": ((1,), (2,), (2, 3), (1, 2, 3))
+        "value": ((1, 7), (2,), (2, 3), (1, 2, 3))
     })
 })

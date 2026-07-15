@@ -73,7 +73,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         if hasattr(self, 'FBTime'):
             self.fBProtectTime = self.createTime + self.FBTime
             self.awardContext = awardContext.DropAwardCtx(self.collectionId, 1)
-            self.awardContext.addContextVar('customAward', [{'itemId': self.FBItemId, 'count': 1}])
+            self.awardContext.addContextVar('customAward', [{'itemId': self.FBItemId, 'count': 1, 'FBBind': self.FBBind}])
 
     def _doInitBornState(self):
         ifBornState = NPD.datas[self.collectionId]['ifBornState']

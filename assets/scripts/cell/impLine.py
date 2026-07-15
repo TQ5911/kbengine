@@ -176,6 +176,10 @@ class ImpLine(object):
             gameengine.getWonderLandStub(formula.fetchMapId(self.spaceNo)).doSwitchWonderLandLine(toLineNo, self.base, self.gbId, {})
             return
 
+        if formula.inAbyssScene(self.spaceNo):
+            gameengine.getAbyssStub(formula.fetchMapId(self.spaceNo)).doSwitchAbyssLine(toLineNo, self.base, self.gbId, {})
+            return
+
         self.switchLineAndPosition(toLineNo, None, src=_src, needPending=False)
 
     def switchLineAndPosition(self, toLineNo, toPosition, src=None, extra=None, needPending=True):
@@ -256,16 +260,21 @@ class ImpLine(object):
     def onMergeLine(self, toLineNo):
         LOG_DBG("onMergeLine", self.spaceNo, toLineNo)
         self.client.beginMergeLine()
+        extra = {'isMerge': True, 'isAutoFight': self.hasState(gameconst.StateEnum.autoFight)}
         #合线要跳过读条
         if formula.inCubeScene(self.spaceNo):
-            self._switchCubeLine(toLineNo)
+            self._switchCubeLine(toLineNo, extra)
             return
         
         if formula.inWonderLandScene(self.spaceNo):
-            gameengine.getWonderLandStub(formula.fetchMapId(self.spaceNo)).doSwitchWonderLandLine(toLineNo, self.base, self.gbId, {'isMerge': True})
+            gameengine.getWonderLandStub(formula.fetchMapId(self.spaceNo)).doSwitchWonderLandLine(toLineNo, self.base, self.gbId, extra)
             return
 
-        self._switchLineInternalAfterCast(toLineNo, None, None, {})
+        if formula.inAbyssScene(self.spaceNo):
+            gameengine.getAbyssStub(formula.fetchMapId(self.spaceNo)).doSwitchAbyssLine(toLineNo, self.base, self.gbId, extra)
+            return
+
+        self._switchLineInternalAfterCast(toLineNo, None, None, extra)
 
     def _switchLineInternalAfterCast(self, toLineNo, toPosition, toDir, extra):
         lineType = formula.fetchMapId(self.spaceNo)
@@ -322,6 +331,10 @@ class ImpLine(object):
         if extra and extra.get('callback'):
             _func = getattr(self, extra['callback'])
             _func and _func(*extra.get('callbackArgs', ()))
+
+        if extra and extra.get('isMerge'):
+            if extra.get('isAutoFight'):
+                self._startAutoCombat()
 
         self.spaceMgrId = self.getCurrentSpace().spaceMgrId
         self.spaceMgr.onPlayerEnter(self.id)

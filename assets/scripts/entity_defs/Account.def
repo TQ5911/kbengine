@@ -315,6 +315,10 @@
         <onPatchVersion>
             <Arg>   STRING              </Arg>
         </onPatchVersion>
+
+        <onAccountOfflineClient>
+            <Arg>       UINT8       </Arg>
+        </onAccountOfflineClient>
     </ClientMethods>
 
     <BaseMethods>
@@ -406,6 +410,11 @@
         <getAuthOfflineTimeButOffline>
             <Arg>    ARRAY  <of>    PLAYER_GBID     </of>   </Arg>
         </getAuthOfflineTimeButOffline>
+
+        <kickAccountSingleGm>
+            <Arg>    UNICODE        </Arg>
+        </kickAccountSingleGm>
+
     </BaseMethods>
 
     <CellMethods>

@@ -205,6 +205,14 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         self.leaseService.serviceStub.getMySaleList(None, request, None)
 
+    def onReplyAddItemPrepareOffline(self, failGbIds, playerGBID, uniqueId, result, opUUID):
+        LOG_WARN("onReplyAddItemPrepareOffline", failGbIds, playerGBID, uniqueId, result, opUUID)
+        self.addItemRollback(uniqueId, opUUID)
+
+    def onReplyLeaseItemPrepareOffline(self, failGbIds, playerGBID, uniqueId, totalPrice, result, opUUID):
+        LOG_WARN("onReplyLeaseItemPrepareOffline", failGbIds, playerGBID, uniqueId, totalPrice, result, opUUID)
+        self.leaseItemRollback(uniqueId, opUUID)
+
 
 class LeaseStubService(GameServer):
     def __init__(self, leaseStub, address):
@@ -288,7 +296,8 @@ class LeaseStubService(GameServer):
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
             [playerGBID], "onReplyAddItemPrepare",
             (uniqueId, result, opUUID),
-            None, '', ()
+            self.leaseStub, 'onReplyAddItemPrepareOffline',
+            (playerGBID, uniqueId, result, opUUID)
         )
 
     def replyAddItemCommit(self, rpc_controller, request, done):
@@ -323,7 +332,8 @@ class LeaseStubService(GameServer):
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
             [playerGBID], "onReplyLeaseItemPrepare",
             (uniqueId, totalPrice, result, opUUID),
-            None, '', ()
+            self.leaseStub, 'onReplyLeaseItemPrepareOffline',
+            (playerGBID, uniqueId, totalPrice, result, opUUID)
         )
 
     def replyLeaseItemCommit(self, rpc_controller, request, done):

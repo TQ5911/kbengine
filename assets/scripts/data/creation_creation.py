@@ -1405,7 +1405,7 @@ def _66000142(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.75)
+        self.attack(ent, context, 4)
 
 # 生成的技能代码
 def _66000143(self, target, context):
@@ -1418,7 +1418,7 @@ def _66000143(self, target, context):
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
-        self.attack(ent, context, 1.75)
+        self.attack(ent, context, 6)
 
 def _66000144(self, target, context):
     import action_FightAction
@@ -6221,7 +6221,7 @@ datas = _tools.RODict({
     }),
     66000139: _tools.RODict({
         "ID": 66000139,
-        "name": "7027_10技能4创生物",
+        "name": "7027_20技能4创生物",
         "type": "FixPosition",
         "isAttackSkill": 0,
         "classTag": 1,

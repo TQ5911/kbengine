@@ -64,16 +64,16 @@ class IMount(object):
                 actionContext.AchievementCtx())
         
         #目前只有使用道具添加坐骑，所以这里直接同步
-        self.syncMethodCallToLocalServerBase('onCrossServerDoAddMount', (pid, mountId, durationDays))
+        self.syncMethodCallToCrossServerBase('onLocalServerDoAddMount', (pid, mountId, durationDays))
 
-    def onCrossServerDoAddMount(self, pid, mountId, durationDays):
-        LOG_INFO('onCrossServerDoAddMount:', pid, mountId, durationDays)
+    def onLocalServerDoAddMount(self, pid, mountId, durationDays):
+        LOG_INFO('onLocalServerDoAddMount:', pid, mountId, durationDays)
         self.doAddMount(pid, mountId, durationDays)
 
     @gamedecorator.crossServer
     def setCurMount(self, exposed, mountId):
         self._setCurMount(mountId)
-        self.syncMethodCallToLocalServerBase('onCrossServerSetCurMount', (mountId,))
+        self.syncMethodCallToLocalServerBase('_setCurMount', (mountId,))
 
     def _setCurMount(self, mountId):
         LOG_INFO(' set cur mount:', mountId)
@@ -86,10 +86,6 @@ class IMount(object):
 
         self.cell.setCurMountCell(mountId)
         self.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetMountRide'])
-
-    def onCrossServerSetCurMount(self, mountId):
-        LOG_INFO('onCrossServerSetCurMount:', mountId)
-        self._setCurMount(mountId)
 
     def _eventActionAddMount(self, eventActionSrc, mountId, durationDays, *args, **kwargs):
         LOG_INFO('_eventActionAddMount:', mountId, durationDays)

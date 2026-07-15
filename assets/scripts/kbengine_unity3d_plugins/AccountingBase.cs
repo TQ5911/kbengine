@@ -128,6 +128,11 @@ namespace KBEngine
 					Byte onLoginWaitMapResult_arg1 = stream.readUint8();
 					onLoginWaitMapResult(onLoginWaitMapResult_arg1);
 					break;
+				case 1243:
+					Int32 onMessage_arg1 = stream.readInt32();
+					List<string> onMessage_arg2 = ((DATATYPE_AnonymousArray_10001)method.args[1]).createFromStreamEx(stream);
+					onMessage(onMessage_arg1, onMessage_arg2);
+					break;
 				case 1168:
 					Int32 popDialog_arg1 = stream.readInt32();
 					popDialog(popDialog_arg1);

@@ -284,6 +284,7 @@ Avatar awardFightPropDic 30105
 Avatar bTeamCaptain 75
 Avatar backPeaceTimer 30050
 Avatar bagData 30386
+Avatar bagFnvHashCheckTimer 30047
 Avatar banLogin 32172
 Avatar banMail 30852
 Avatar baseAccuracy 32267
@@ -343,6 +344,7 @@ Avatar beHateCounter 31661
 Avatar bePushedSpeed 70
 Avatar bigMonthCardExpireTime 552
 Avatar bigMonthCardExpireTimeCell 32827
+Avatar bigMonthCardFirstPurchaseFlag 649
 Avatar bigWorldRouteController 30013
 Avatar bindMoney 29
 Avatar birthInDB 30310
@@ -376,10 +378,12 @@ Avatar coinAuctionInfo 31400
 Avatar coinBillInfo 30392
 Avatar coinFraction 53
 Avatar collectibleData 30970
+Avatar collectibleSimpleClientData 30902
 Avatar collectionAuctionIdCategoryList 31493
 Avatar collectionAuctionIdList 30993
 Avatar collectionAuctionItemCategoryList 31494
 Avatar combatReturnInfo 31433
+Avatar commonFlagBase 31032
 Avatar commonFlagCell 431
 Avatar controlledByReasonDic 30036
 Avatar controlledStates 30439
@@ -464,6 +468,7 @@ Avatar fightBackTarget 31435
 Avatar fightBackTimerId 31434
 Avatar finalDmg 471
 Avatar finalDmgAnti 472
+Avatar firstLoginTime 30331
 Avatar flyResumeTimer 32350
 Avatar flyResumeValue 32351
 Avatar flyValue 179
@@ -503,6 +508,7 @@ Avatar guildContrib 427
 Avatar guildDonateCoin 428
 Avatar guildDonateMoney 429
 Avatar guildDonateToken 227
+Avatar guildLevel 30999
 Avatar guildName 430
 Avatar guildNameBase 31431
 Avatar guildRelationVersion 31854
@@ -547,7 +553,6 @@ Avatar lastFreeHangupGetTime 32865
 Avatar lastMonthCardDailyRewardTime 31613
 Avatar lastMonthCardHangupGetTime 31658
 Avatar lastMonthcardLoginTime 32297
-Avatar lastNotifyScoreTime 30048
 Avatar lastPlayTime 32383
 Avatar lastPosition 32353
 Avatar lastResortTimes 30075
@@ -601,7 +606,7 @@ Avatar monsterDmgAnti 468
 Avatar monsterGroupId 30735
 Avatar monthCardExpireTime 31610
 Avatar monthCardExpireTimeCell 32826
-Avatar monthCardFirstPurchaseRecord 30829
+Avatar monthCardFirstPurchaseFlag 648
 Avatar monthlyLimit 30553
 Avatar moralLevel 30909
 Avatar moralValue 87
@@ -638,6 +643,7 @@ Avatar nextRecoverGuildAssistTime 31395
 Avatar nextRecoverQixieAssistTime 199
 Avatar notEnemiesCacheSet 30459
 Avatar notFriendsCacheSet 30603
+Avatar notifyChatForbiddenTimer 31012
 Avatar novice 30311
 Avatar obId 95
 Avatar offlineReason 30338
@@ -797,16 +803,17 @@ Avatar titleTimerId 32518
 Avatar tmpProps 30369
 Avatar tmpTaskSkillIds 31609
 Avatar totalGameTime 30337
+Avatar totalLoginDay 30535
 Avatar totalOfflineAward 30017
 Avatar totalOfflineExp 31657
 Avatar totalOfflineMinute 31660
+Avatar totalOnlineTime 30590
 Avatar totalPayFreeReliveTimes 30117
 Avatar totalScore 83
 Avatar trainDic 31385
 Avatar tsLastOfflineBase 32385
 Avatar ttl 30370
 Avatar ultraSkillPower 114
-Avatar updateScoreTimerId 30047
 Avatar useTargetTypeCacheFlag 30446
 Avatar viewCompleteSet 30350
 Avatar viewCrossServerSet 31683
@@ -1125,11 +1132,11 @@ Avataring datetimeTimerIdBaseCount 32807
 Avataring datetimeTimerIdCell 31124
 Avataring datetimeTimerIdCellCount 31118
 Avataring delayDestroyTimer 32843
-Avataring enterViewList 30331
 Avataring gbID 31137
 Avataring gbId 578
 Avataring isNeedResortView 30616
 Avataring isWitnessComplete 647
+Avataring lastResortTimes 30829
 Avataring lastSetCompleteNumTime 30842
 Avataring methodPoolBase 30870
 Avataring name 600
@@ -1146,8 +1153,7 @@ Avataring state2 630
 Avataring timerDataBase 32806
 Avataring timerDataCell 30043
 Avataring viewCompleteSet 30332
-Avataring viewEnterViewSet 30535
-Avataring viewLeaveViewSet 30590
+Avataring viewEntityDict 30961
 Avataring viewNameSet 30497
 Barrier barrierId 436
 Barrier baseGlobalIdx 31443

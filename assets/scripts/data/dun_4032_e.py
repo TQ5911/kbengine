@@ -397,7 +397,7 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1071
+        1080
       ]
     }
   },
@@ -481,7 +481,7 @@ datas ={
     "entityID": [
       40320001
     ],
-    "dialogID": 19900594,
+    "dialogID": 19900595,
     "transition": {}
   },
   "1077": {
@@ -489,7 +489,7 @@ datas ={
     "entityID": [
       40320001
     ],
-    "dialogID": 19900594,
+    "dialogID": 19900596,
     "transition": {}
   },
   "1078": {
@@ -511,5 +511,37 @@ datas ={
     "lv": "0",
     "ifSetBoss": 0,
     "transition": {}
+  },
+  "1080": {
+    "type": "transferToTheDesignatedMap",
+    "mapId": 4032,
+    "posX": 311.0,
+    "posY": 98.0,
+    "posZ": 370.0,
+    "angle": 157,
+    "transition": {
+      "finished": [
+        1081
+      ]
+    }
+  },
+  "1081": {
+    "type": "castCinemaPlay",
+    "cinemaPlayID": 98010028,
+    "transition": {
+      "finished": [
+        1082
+      ]
+    }
+  },
+  "1082": {
+    "type": "jumpCinemaPlay",
+    "cinemaPlayID": 98010028,
+    "exitTime": 19.0,
+    "transition": {
+      "finished": [
+        1071
+      ]
+    }
   }
 }

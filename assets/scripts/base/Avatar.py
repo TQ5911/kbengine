@@ -42,6 +42,7 @@ import ExposedWrapper
 import iFubenSpace
 import message_chatMessage as MCMD
 import tutorConst_newbieCreate as TCNCD
+import skill_skill as SSD
 import message_Message_def as MMD
 import visible_visible as UVVD
 import experience_exp as EXPD
@@ -174,7 +175,11 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
 
         self.shouldAutoBackup = False
         self.destroyTimer = 0
+        if utils.checkDiffDay(self.tLoginBase, utils.curTS(), gameconst.GENERAL_CYCLE_TIME):
+            self.totalLoginDay += 1
         self.tLoginBase = utils.curTS()
+        if not self.firstLoginTime:
+            self.firstLoginTime = utils.curTS()
         self.initFirst()
         self.logInfo = {}
         self.lastYidunCheckTime = utils.curTS()
@@ -218,7 +223,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
             return
 
         self.refreshFreeRecoverDeathPenaltyTimes()
-        self._cubeDailyRefresh()
 
     def createCellNearHere(self, cellMailbox):
         try:
@@ -316,6 +320,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         self.bountyOnLogin()
         self.resourceRecoveryOnLogin()
         self.reportOnLogin()
+        self.chatOnLogin()
         self._startTitleTimer()
 
         self.setTempMiscProp(gameconst.EntityPropsEnum.gameLengthMarkTime, utils.curTS())
@@ -405,6 +410,21 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
 
         return spaceNo, mapId
 
+    def _rebuildSkillDic(self):
+        _skillDic = self.cellData.get('skillDic')
+        if not _skillDic:
+            return
+
+        for _skillId in list(_skillDic.keys()):
+            _modId = SSD.skillToModDic.get(_skillId)
+            if not _modId:
+                continue
+
+            _newSkillId = SSD.modDic[_modId][self.morphState]
+            if _newSkillId != _skillId:
+                LOG_WARN('_rebuildSkillDic pop _skillId', _skillId)
+                _skillDic.pop(_skillId)
+
     def createCell(self):
         """
         defined method.
@@ -430,6 +450,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         _cellData['tLogin'] = self.tLoginBase
         _cellData['accountNameCell'] = self.accountEntity.accountName
         _cellData['clientDistinctIdCell'] = self.accountEntity.clientDistinctId
+        self._rebuildSkillDic()
         tempMiscProps = _cellData.setdefault('tempMiscProps', {})
         tempMiscProps[gameconst.EntityPropsEnum.offlineTimeForRestoreBuff] = self.tsLastOfflineBase
         tempMiscProps[gameconst.EntityPropsEnum.newbieStepCellCache] = self.newbieStep
@@ -606,6 +627,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
             self.onCycleEventTick()
         elif userArg == gametimer.TIMER_CROSS_SERVER_HEARTBEAT:
             self.crossServerHeartbeat()
+        elif userArg == gametimer.TIMER_BAG_FNV_HASH_CHECK:
+            self.doBagFnvHashCheck()
         elif userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
         elif userArg == gametimer.TASK_UPDATE_TIMER:
@@ -943,6 +966,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
                 self.getClient(gameconst.ClientCallChannel.SUB_CHANNEL).onBackSelectCharacter()
 
             self.tsLastOfflineBase = utils.curTS()
+            self.totalOnlineTime += self.tsLastOfflineBase - self.tLoginBase
 
             spaceNo = self.baseSpaceNo
             teamId = self.getCellData('teamId', 0)
@@ -1504,6 +1528,11 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         self.initNoviceHookRewardTask()
         self._initWonderLandFirst()
         self._initAbyssFirst()
+        self._cubeDailyRefresh()
+
+
+        self.setTempMiscProp(gameconst.EntityPropsEnum.cellNovice, 0)
+        self.resourceRecoveryOnLogin()
 
     def loginLogInfo(self):
         logData = {
@@ -1536,6 +1565,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
             self.coin,
             formula.fetchMapId(self.baseSpaceNo),
             reason,
+            utils.curTS() - self.tLoginBase,
+            self.obId,
         )
 
     def bindEvents(self):
@@ -1572,6 +1603,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         self.registerMonthEvent('onWorkshopMonthlyUpdate')
         self.registerDailyEvent('onReportDailyUpdate')
         self.registerDailyEvent('onInnerDemonRewardCntRefreshDaily')
+        self.registerDailyEvent('_checkAndGetHangupTime')
 
     def reqDeleteAvatar(self, exposed):
         if gameconfig.enableOldLogout():
@@ -1846,8 +1878,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         self.cell.offline(gameconst.OFFLINE_REASON_GMKICK)
 
     @gamedecorator.offlineCallback
-    def gmBanMail(self, endTime, banType):
-        self.banMail[banType] = (utils.curTS(), endTime)
+    def gmBanMail(self, startTime, endTime, banType):
+        self.banMail[banType] = (startTime, endTime)
         LOG_INFO('gmbanMail', endTime, banType, self.banMail)
 
     def onGetCellAppearance(self, appearance):
@@ -1860,10 +1892,10 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
     @gamedecorator.crossServer
     def onYiDunCheckToken(self, exposed, token, clientCode, gameVersion, assetVersion):
         LOG_INFO("onYiDunCheckToken")
-        if gameconfig.getYidunEnable() == 0:
+        if int(gameconfig.getYidunEnable()) == 0:
             LOG_WARN("onYiDunCheckToken but yidun is not enabled")
             return
-        if self.accountType in (centralLogin.ACCOUNT_UNKNOW, centralLogin.ACCOUNT_BOT,):
+        if self.isBotBase or self.accountType in (centralLogin.ACCOUNT_UNKNOW, centralLogin.ACCOUNT_BOT,):
             LOG_WARN("onYiDunCheckToken but accountType is 0 (robot)")
             return
         platform = self.accountEntity.operatingSystem
@@ -1953,6 +1985,29 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
             formula.fetchMapId(self.baseSpaceNo),
         )
 
+    def _checkAllSystemOk(self):
+        if not utils.bhas(self.commonFlagBase, gameconst.BASE_COMMON_FLAG_INIT_SCORE):
+            return False
+
+        if not self.guildInitStatus:
+            return False
+
+        return True
+
+    def logUserSetInit(self, times):
+        if times <= 0:
+            LOG_ERR('logUserSetInit meet max times')
+        else:
+            if not self._checkAllSystemOk():
+                self.addTimerCB(
+                    6, 
+                    'logUserSetInit', 
+                    (times - 1,), 
+                    gametimer.TIMER_TAG_LOG_USER_SET_INIT)
+                return
+
+        self.logUserSet(1)
+
     def logUserSet(self, online):
         if gameconfig.isCrossServer():
             return
@@ -1975,14 +2030,12 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
             gameconfig.gameId(),
             online,
             self.enemyMgr.getEnemyCount(),
-            -9999,
-            utils.curTS(),
-            utils.curTS(),
+            self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.creationOrder, 0),
+            self.firstLoginTime,
             self.tLoginBase,
-            utils.curTS(),
             self.bindMoney,
             self.coin,
-            -9999,
+            self.getTempMiscProp(gameconst.EntityPropsEnum.cellExperience, 0),
             self.guildContrib,
             self.darkIron,
             self.money,
@@ -1998,11 +2051,9 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
             max(0, self.bigMonthCardExpireTime - utils.curTS()),
             0 if self.isMonthCardExpired() else 1,
             max(0, self.monthCardExpireTime - utils.curTS()),
-            -9999,
-            -9999,
-            -9999,
-            -9999,
-            -9999
+            self.totalLoginDay,
+            self.totalOnlineTime,
+            len(self.friendship.friendsDict)
         )
 
     def onGetFullPlayerInfo(self, data, src):
@@ -2047,17 +2098,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
             data["unlock"] |= gameconst.FullPlayerInfoUnlockType.Ach
         LOG_INFO("achievementData", data["achieveNum"], data["achievePoint"])
 
-        #收集
-        if self._isUIVisible(V_VD.UICollectionPanel):
-            data["unlock"] |= gameconst.FullPlayerInfoUnlockType.Collect
-        clientData = []
-        for item in self.collectibleData.collectibleDict.values():
-            clientData.append(
-                item.toStreamSavedDic()
-            )
-        data["collectibleData"] = clientData
-        LOG_INFO("collectibleData", data["collectibleData"])
-
         #灵兽
         data['lingShouBattleList'] = []
         data['lingShouNum'] = self.lingShouInfo.lingShouNum()
@@ -2078,6 +2118,10 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
                         }
                     )
             LOG_INFO("lingShouBattleList", data["lingShouBattleList"])
+
+        #收集
+        if self._isUIVisible(V_VD.UICollectionPanel):
+            data["unlock"] |= gameconst.FullPlayerInfoUnlockType.Collect
 
         #排行榜
         if self._isUIVisible(V_VD.UIRankPanel):
@@ -2132,7 +2176,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         res['sendTime'] = datetime.fromtimestamp(utils.curTS()).strftime("%Y-%m-%d %H:%M:%S")
         res['idempotentKey'] = str(uuid.uuid4()).replace("-", "")
         res = json.dumps(res)
-        LOG_INFO("onChatIllegal", res)
+        LogTrackingMgr.LogTrackingMgr.tencent_risk(self.gbID, self.accountEntity.clientDistinctId, res)
 
     def updateSpecialVisibleBySpace(self, spaceNo):
         LOG_DBG("updateSpecialVisibleBySpace1", spaceNo)
@@ -2172,3 +2216,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
             return False
         LOG_DBG("checkSpecialVisible base success")
         return True
+
+
+
+

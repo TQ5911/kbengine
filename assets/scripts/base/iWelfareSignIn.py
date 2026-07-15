@@ -7,6 +7,7 @@ import dropAward
 import gameengine
 import gameglobal
 import gamedecorator
+import gameconfig
 import utils
 import welfare_welfarePages as WWCONFIG
 import welfare_serverLogin as WSLCONFIG
@@ -54,12 +55,16 @@ class IWelfareSignIn(object):
             LOG_ERR('call reqWelfareSignIn: no welfareType', welfareType)
             return
 
-    @gamedecorator.checkGameconfigEnable('welfare_tenSign')
     def reqWelfareSignInTenDay(self, welfareType, signInDayNo):
+        if not gameconfig.visibleConfigEnabled('welfare_tenSign'):
+            return
+
         self._reqWelfareSignIn(welfareType, signInDayNo)
 
-    @gamedecorator.checkGameconfigEnable('welfare_sevenSign')
     def reqWelfareSignInSevenDay(self, welfareType, signInDayNo):
+        if not gameconfig.visibleConfigEnabled('welfare_tenSign'):
+            return
+
         self._reqWelfareSignIn(welfareType, signInDayNo)
     
     def _reqWelfareSignIn(self, welfareType, signInDayNo):

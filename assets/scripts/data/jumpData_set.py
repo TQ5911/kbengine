@@ -17,12 +17,12 @@ import crontab
 datas = _tools.RODict({ 
     "jumpSpeed": _tools.RODict({
         "ID": "jumpSpeed",
-        "value": "11",
+        "value": "10",
         "Type": "float"
     }),
     "jumpGravity": _tools.RODict({
         "ID": "jumpGravity",
-        "value": "21",
+        "value": "16",
         "Type": "float"
     }),
     "jumpAirStand": _tools.RODict({
@@ -32,12 +32,12 @@ datas = _tools.RODict({
     }),
     "doubleJumpSpeed": _tools.RODict({
         "ID": "doubleJumpSpeed",
-        "value": "10",
+        "value": "11.3",
         "Type": "float"
     }),
     "doubleJumpGravity": _tools.RODict({
         "ID": "doubleJumpGravity",
-        "value": "14.3",
+        "value": "14.7",
         "Type": "float"
     }),
     "doubleJumpAirStand": _tools.RODict({
@@ -117,7 +117,7 @@ datas = _tools.RODict({
     }),
     "flyHorizontalSpeed": _tools.RODict({
         "ID": "flyHorizontalSpeed",
-        "value": "15",
+        "value": "17.5",
         "Type": "float"
     }),
     "flyTurnSpeed": _tools.RODict({
@@ -167,7 +167,7 @@ datas = _tools.RODict({
     }),
     "mountHorizontalMaxSpeed": _tools.RODict({
         "ID": "mountHorizontalMaxSpeed",
-        "value": "9",
+        "value": "11",
         "Type": "int"
     }),
     "mountHorizontalSpeedBlend": _tools.RODict({

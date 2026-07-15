@@ -343,18 +343,13 @@ func decryptDatas(origData string, secret string) ([]byte, error) {
 	return dst, nil
 }
 
-func (self *GameServerService) doBehaviorReport(accountType, online uint32, accountName, sessionIdStr string) {
+func (self *GameServerService) doBehaviorReport(accountType, online uint32, accountName, sessionIdStr string, userId uint64) {
 	appLog.Info(fmt.Sprintf("doBehaviorReport: accountType=%d, online=%d, accountName=%s, sessionIdStr=%s", accountType, online, accountName, sessionIdStr))
 
 	if accountType != uint32(clientService.AccountType_ACCOUNT_OFFICIAL) {
 		appLog.Info("doBehaviorReport not official account", clientService.AccountType_ACCOUNT_OFFICIAL)
 		return
 	}
-	userId, err := strconv.ParseUint(accountName, 10, 64)
-	if err != nil {
-		appLog.Warn("doBehaviorReport accountName type error", accountName)
-		return
-	} 
 	var reqHost string
 	if value, ok := LoginConfig.Official["reqhost"]; ok {
 		reqHost = value.(string)
@@ -436,14 +431,14 @@ func (self *GameServerService) doBehaviorReport(accountType, online uint32, acco
 }
 
 func (self *GameServerService) OnAccountOnline(in *gameServerService.AccountOnlineVal) (*gameServerService.Void, error) {
-	appLog.Info("OnAccountOnline:", in.AccountName, in.AccountType, in.HostId, in.SessionIdStr)
-	self.doBehaviorReport(in.AccountType, 1, in.AccountName, in.SessionIdStr)
+	appLog.Info("OnAccountOnline:", in.AccountName, in.AccountType, in.HostId, in.SessionIdStr, in.UserId)
+	self.doBehaviorReport(in.AccountType, 1, in.AccountName, in.SessionIdStr, in.UserId)
 	return nil, nil
 }
 
 func (self *GameServerService) OnAccountOffline(in *gameServerService.AccountOfflineVal) (*gameServerService.Void, error) {
-	appLog.Info("OnAccountOffline:", in.AccountName, in.AccountType, in.HostId, in.SessionIdStr)
-	self.doBehaviorReport(in.AccountType, 0, in.AccountName, in.SessionIdStr)
+	appLog.Info("OnAccountOffline:", in.AccountName, in.AccountType, in.HostId, in.SessionIdStr, in.UserId)
+	self.doBehaviorReport(in.AccountType, 0, in.AccountName, in.SessionIdStr, in.UserId)
 	conn := self.app.redisPool.Get()
 	defer conn.Close()
 	lastServerId, err := redis.Int(conn.Do("get", "AccountLogin_"+in.AccountName))

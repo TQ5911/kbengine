@@ -54,6 +54,55 @@ namespace KBEngine
 
 
 
+	public class DATATYPE_GUILD_VOICE_MEMBER_STATE : DATATYPE_BASE
+	{
+		public GUILD_VOICE_MEMBER_STATE createFromStreamEx(MemoryStream stream)
+		{
+			GUILD_VOICE_MEMBER_STATE datas = new GUILD_VOICE_MEMBER_STATE();
+			datas.gbId = stream.readUint64();
+			datas.flags = stream.readUint8();
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, GUILD_VOICE_MEMBER_STATE v)
+		{
+			stream.writeUint64(v.gbId);
+			stream.writeUint8(v.flags);
+		}
+	}
+
+
+
+	public class DATATYPE_GUILD_VOICE_MEMBER_STATE_LIST : DATATYPE_BASE
+	{
+		private DATATYPE_GUILD_VOICE_MEMBER_STATE itemType = new DATATYPE_GUILD_VOICE_MEMBER_STATE();
+
+		public GUILD_VOICE_MEMBER_STATE_LIST createFromStreamEx(MemoryStream stream)
+		{
+			UInt32 size = stream.readUint32();
+			GUILD_VOICE_MEMBER_STATE_LIST datas = new GUILD_VOICE_MEMBER_STATE_LIST();
+
+			while(size > 0)
+			{
+				--size;
+				datas.Add(itemType.createFromStreamEx(stream));
+			};
+
+			return datas;
+		}
+
+		public void addToStreamEx(Bundle stream, GUILD_VOICE_MEMBER_STATE_LIST v)
+		{
+			stream.writeUint32((UInt32)v.Count);
+			for(int i=0; i<v.Count; ++i)
+			{
+				itemType.addToStreamEx(stream, v[i]);
+			};
+		}
+	}
+
+
+
 	public class DATATYPE_AUCTIONID_LIST : DATATYPE_BASE
 	{
 		public AUCTIONID_LIST updateFromStream(MemoryStream stream, AUCTIONID_LIST oldList)
@@ -1756,6 +1805,8 @@ namespace KBEngine
 			datas.fullHp = stream.readInt32();
 			datas.enableMics = stream.readUint8();
 			datas.isBlockMics = stream.readUint8();
+			datas.enableSpeaker = stream.readUint8();
+			datas.inVoiceRoom = stream.readUint8();
 			datas.openId = stream.readUnicode();
 			return datas;
 		}
@@ -1776,6 +1827,8 @@ namespace KBEngine
 			stream.writeInt32(v.fullHp);
 			stream.writeUint8(v.enableMics);
 			stream.writeUint8(v.isBlockMics);
+			stream.writeUint8(v.enableSpeaker);
+			stream.writeUint8(v.inVoiceRoom);
 			stream.writeUnicode(v.openId);
 		}
 	}
@@ -5448,9 +5501,9 @@ namespace KBEngine
 			datas.oldLevel = stream.readUint32();
 			datas.oldExp = stream.readFloat();
 			datas.oldScore = stream.readInt32();
-			datas.oldBindMoney = stream.readUint64();
-			datas.oldMoney = stream.readUint64();
-			datas.oldCoin = stream.readUint64();
+			datas.oldBindMoney = stream.readInt32();
+			datas.oldMoney = stream.readInt32();
+			datas.oldCoin = stream.readInt64();
 			datas.oldDarkIron = stream.readInt64();
 			datas.otherGbId = stream.readUint64();
 			datas.authExpire = stream.readUint32();
@@ -5469,9 +5522,9 @@ namespace KBEngine
 			stream.writeUint32(v.oldLevel);
 			stream.writeFloat(v.oldExp);
 			stream.writeInt32(v.oldScore);
-			stream.writeUint64(v.oldBindMoney);
-			stream.writeUint64(v.oldMoney);
-			stream.writeUint64(v.oldCoin);
+			stream.writeInt32(v.oldBindMoney);
+			stream.writeInt32(v.oldMoney);
+			stream.writeInt64(v.oldCoin);
 			stream.writeInt64(v.oldDarkIron);
 			stream.writeUint64(v.otherGbId);
 			stream.writeUint32(v.authExpire);

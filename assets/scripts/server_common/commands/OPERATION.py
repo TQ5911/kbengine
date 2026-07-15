@@ -151,6 +151,10 @@ def _afterBanIDIP(gbId, banType, endTime, isAuto, ret, num, insertId, err):
         LOG_ERR('_afterBanIDIP', err, ret)
         return
 
+    state = 1 if endTime > utils.curTS() else 0
+    if banType == gameconst.IDIPBanType.CHAT:
+        LOG_INFO("_afterBanIDIP", gbId, state)
+        gameengine.callBaseApps('gameengine.updateChatForbiddenState', (gbId, state))
     KBEngine.addTimer(2, 0, functools.partial(_banIDIPAgain, gbId, banType, endTime, isAuto))
 
 def _onBeginBanIDIP(su, gbId, endTime, isAuto, ret, num, insertId, err):
@@ -170,10 +174,10 @@ def _onBeginBanIDIP(su, gbId, endTime, isAuto, ret, num, insertId, err):
     
     LOG_INFO('_onBeginBanIDIP: idipBanDict:', idipBanDict, 'idipBanDataDict:', idipBanDataDict)
 
+    banType = gameconst.IDIPBanType.CHAT
     if isAuto:
         isBan = False
         lastIsAuto = False
-        banType = gameconst.IDIPBanType.CHAT
         if banType in idipBanDict:
             if idipBanDict[banType] >= utils.curTS():
                 isBan = True
@@ -225,11 +229,16 @@ def _setChatForbidden(superUser, playerEnt, endTime, isAuto, banType):
     else:
         LOG_INFO("gm online setChatForbidden")
         playerEnt.IDIPBanState(superUser, gameconst.IDIPBanType.CHAT, endTime, isAuto)
+        playerEnt.updateChatForbiddenState()
 
-def _afterDisbanIDIP(superUser, gbId, ret, num, insertId, err):
+def _afterDisbanIDIP(superUser, gbId, banType, ret, num, insertId, err):
     if err:
         LOG_ERR('_afterDisbanIDIP err:', err)
         return
+
+    if banType == gameconst.IDIPBanType.CHAT:
+        LOG_INFO("_afterDisbanIDIP")
+        gameengine.callBaseApps('gameengine.updateChatForbiddenState', (gbId, 0))
 
 def _beginDisbanIDIP(superUser, gbId, ret, num, insertId, err):
     if err:
@@ -247,7 +256,7 @@ def _beginDisbanIDIP(superUser, gbId, ret, num, insertId, err):
             "isAuto": idipBanDataDict[gameconst.IDIPBanType.CHAT]['isAuto'], "banType": 2})
         idipBanDict.pop(gameconst.IDIPBanType.CHAT)
         idipBanDataDict.pop(gameconst.IDIPBanType.CHAT)
-        gamesql.disbanIDIP(gbId, idipBanDict, idipBanDataDict, functools.partial(_afterDisbanIDIP, superUser, gbId))
+        gamesql.disbanIDIP(gbId, idipBanDict, idipBanDataDict, functools.partial(_afterDisbanIDIP, superUser, gbId, gameconst.IDIPBanType.CHAT))
     else:
         superUser.onCommandResult(gameconst.ChatSysGMErr.OK, 'command success', {"wasBanned": 0, "previousBanExpireTime": 0, "isAuto": 0, "banType": 0})
 
@@ -262,6 +271,7 @@ def _removeChatForbidden(superUser, playerEnt):
     else:
         LOG_INFO(f"gm online removeChatForbidden")
         playerEnt.IDIPRemoveBanState(superUser, gameconst.IDIPBanType.CHAT)
+        playerEnt.updateChatForbiddenState()
 
 def _afterBanLogin(gbId, endTime, isAuto, ret, num, insertId, err):
     if err:
@@ -362,7 +372,7 @@ def disbanAvatar(su, player, banType):
 @gm_cmd('$banMail', (Player("gbId or Id", raw=True), Int('endTime'), Int('banType')), RARG(0), BASE, '封禁邮件', ALLSIDE, DEVE_GROUPS)
 def banMail(su, player, endTime, banType):
     LOG_INFO('banMail', player, endTime, banType)
-    _args = (endTime, banType)
+    _args = (utils.curTS(), endTime, banType)
     if gmCommand.isRawPlayer(player):
         gbId, name, accountName, dbId = player
         gamesql.recordAvatarOfflineCallback(gbId, 'gmBanMail', _args)

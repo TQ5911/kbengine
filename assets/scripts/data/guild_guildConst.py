@@ -677,7 +677,7 @@ datas = _tools.RODict({
     }),
     "guild_gameplayPoints": _tools.RODict({
         "key": "guild_gameplayPoints",
-        "value": ([1, 3], [2, 1]),
+        "value": ([1, 1], [2, 3]),
     }),
     "guild_dividendTime": _tools.RODict({
         "key": "guild_dividendTime",
@@ -698,6 +698,10 @@ datas = _tools.RODict({
     "guild_dividendConversionGoldMail": _tools.RODict({
         "key": "guild_dividendConversionGoldMail",
         "value": 37002018,
+    }),
+    "guild_commissionGoldLimit": _tools.RODict({
+        "key": "guild_commissionGoldLimit",
+        "value": 999999999,
     }),
     "guild_unionApplicationTimeLimit": _tools.RODict({
         "key": "guild_unionApplicationTimeLimit",
@@ -878,5 +882,21 @@ datas = _tools.RODict({
     "guild_commissionHelpinfoID": _tools.RODict({
         "key": "guild_commissionHelpinfoID",
         "value": 74,
+    }),
+    "guild_unionEventLimit": _tools.RODict({
+        "key": "guild_unionEventLimit",
+        "value": 50,
+    }),
+    "guild_unionNameMinLength": _tools.RODict({
+        "key": "guild_unionNameMinLength",
+        "value": 2,
+    }),
+    "guild_unionNameMaxLength": _tools.RODict({
+        "key": "guild_unionNameMaxLength",
+        "value": 7,
+    }),
+    "guild_unionCreedMaxLength": _tools.RODict({
+        "key": "guild_unionCreedMaxLength",
+        "value": 45,
     })
 })

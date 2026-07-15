@@ -105,11 +105,11 @@ datas = _tools.RODict({
     }),
     "refundRechargeTips1": _tools.RODict({
         "ID": "refundRechargeTips1",
-        "value": "充值 0 - 50000 元，返还 100% <#itemId={0}>和 20% <#itemId={1}>\n充值 50000 元以上，返还 100% <#itemId={0}>",
+        "value": "本次测试期间，同一账号在同一渠道的累计真实充值金额，将在公测时按以下阶梯标准进行返还:",
     }),
     "refundRechargeTips2": _tools.RODict({
         "ID": "refundRechargeTips2",
-        "value": "已累计充值",
+        "value": "当前账号累计充值",
     }),
     "refundRechargeTips3": _tools.RODict({
         "ID": "refundRechargeTips3",
@@ -122,5 +122,25 @@ datas = _tools.RODict({
     "refundRechargeItem2": _tools.RODict({
         "ID": "refundRechargeItem2",
         "value": "30000021",
+    }),
+    "tierRewardCondition": _tools.RODict({
+        "ID": "tierRewardCondition",
+        "value": ([5000, (30002003, 30002007, 30002010)], [30000, 30002011]),
+    }),
+    "tier1RewardShow": _tools.RODict({
+        "ID": "tier1RewardShow",
+        "value": 30000552,
+    }),
+    "VIPCustomerCondition": _tools.RODict({
+        "ID": "VIPCustomerCondition",
+        "value": 9999999,
+    }),
+    "rechargeExchangeRate": _tools.RODict({
+        "ID": "rechargeExchangeRate",
+        "value": 10,
+    }),
+    "totalRechargeText": _tools.RODict({
+        "ID": "totalRechargeText",
+        "value": "累计充值{0}可领取",
     })
 })

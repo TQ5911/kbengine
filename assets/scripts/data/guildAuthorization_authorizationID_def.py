@@ -44,7 +44,6 @@ class datas(object, metaclass=_tools.VarNameDefinedMeta):
     guildChatRoomCreate = 25
     guildChatMicMode = 26
     guildChatMuteMode = 27
-    guildChatInvitation = 28
     guildDividend = 29
     guildRevenue = 30
     guildMicrophone = 31

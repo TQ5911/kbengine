@@ -182,5 +182,9 @@ datas = _tools.RODict({
     "abyss_enterLimit": _tools.RODict({
         "ID": "abyss_enterLimit",
         "value": 54003431,
+    }),
+    "abyss_freeIconPath": _tools.RODict({
+        "ID": "abyss_freeIconPath",
+        "value": "Assets/Res/ui/texturenp/item/item_0354.png",
     })
 })

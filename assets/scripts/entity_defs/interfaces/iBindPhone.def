@@ -17,6 +17,11 @@
 
         <reqQueryRecharge> <Exposed/>
         </reqQueryRecharge>
+
+        <reqGetRechargeStageReward> <Exposed/>
+            <Arg>   UINT8           </Arg>
+            <Arg>   UINT32          </Arg>
+        </reqGetRechargeStageReward>
     </BaseMethods>
 
     <ClientMethods>
@@ -33,5 +38,9 @@
         <queryRechargeAmountReplay>
             <Arg>   FLOAT               </Arg>
         </queryRechargeAmountReplay>
+
+        <rechargeStageRewardInfo>
+            <Arg>   ARRAY   <of>    UINT32  </of>   </Arg>
+        </rechargeStageRewardInfo>
     </ClientMethods>
 </root>

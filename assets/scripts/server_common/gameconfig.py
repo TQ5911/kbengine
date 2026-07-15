@@ -1145,12 +1145,3 @@ def isWaitMapServer():
         return Bool(val)
     except:
         return False
-
-
-@cache_wraper
-def waitMapMaxOnline():
-    try:
-        val = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/waitMapMaxOnline')
-        return int(val)
-    except:
-        return 2000

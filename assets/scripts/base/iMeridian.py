@@ -163,7 +163,7 @@ class IMeridian(object):
             
             self._syncMeridianDataToClient()
             
-            LogTrackingMgr.LogTrackingMgr.Meridian_UpGrade(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, slotIdx, pointIdx, newLevel)
+            LogTrackingMgr.LogTrackingMgr.Meridian_UpGrade(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, slotIdx, pointIdx, newLevel, needItems)
             self.triggerAchievementWithCtx(gameconst.AchieveType.MERIDIAN, actionContext.AchievementCtx(slotIdx=slotIdx))
         else:
             LOG_DBG("IMeridian.reqLevelUpMeridianPoint: level up failed {}, {}, {}".format(
@@ -224,7 +224,7 @@ class IMeridian(object):
             
             self._syncMeridianDataToClient()
             
-            LogTrackingMgr.LogTrackingMgr.Meridian_Enhance(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, slotIdx)
+            LogTrackingMgr.LogTrackingMgr.Meridian_Enhance(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, slotIdx, needItems)
         else:
             LOG_DBG("IMeridian.reqEnhanceMeridianSlot: enhance failed {}".format(slotIdx))
 

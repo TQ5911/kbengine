@@ -35,7 +35,8 @@ class ApplyJoinPlayerVal(userType.UserSingleType):
 class TeamMemberCacheVal(userType.UserSingleType):
     def __init__(self, playerGbId, playerBox, playerName, level, school, sex, picFrameId, bOnline,
                  spaceNo=0, position=(0, 0, 0), hp=1, fullHp=1, score=0, mountState=0,
-                 raidUUID=0, enableMics=False, isBlockMics=False, isDead=True, openId='', siegeWarCamp=0, joinType=gameconst.TeamJoinType.DEFAULT):
+                 raidUUID=0, enableMics=False, isBlockMics=False, isDead=True, openId='', siegeWarCamp=0, joinType=gameconst.TeamJoinType.DEFAULT,
+                 enableSpeaker=False, inVoiceRoom=False):
         self.playerBox = playerBox
         self.playerGbId = playerGbId
         self.playerName = playerName
@@ -53,6 +54,8 @@ class TeamMemberCacheVal(userType.UserSingleType):
         self.raidUUID = raidUUID
         self.enableMics = enableMics
         self.isBlockMics = isBlockMics
+        self.enableSpeaker = enableSpeaker
+        self.inVoiceRoom = inVoiceRoom
         self.isDead = isDead
         self.openId = openId
         self.siegeWarCamp = siegeWarCamp
@@ -75,6 +78,8 @@ class TeamMemberCacheVal(userType.UserSingleType):
             'score': self.score,
             'raidUUID': self.raidUUID,
             'isDead': self.isDead,
+            'enableSpeaker': self.enableSpeaker,
+            'inVoiceRoom': self.inVoiceRoom,
             'openId': self.openId,
             'siegeWarCamp': self.siegeWarCamp,
             'joinType': self.joinType
@@ -99,6 +104,8 @@ class TeamMemberCacheVal(userType.UserSingleType):
             'enableMics': self.enableMics,
             'raidUUID': self.raidUUID,
             'isBlockMics': self.isBlockMics,
+            'enableSpeaker': self.enableSpeaker,
+            'inVoiceRoom': self.inVoiceRoom,
             'isDead': self.isDead,
             'openId': self.openId,
             'siegeWarCamp': self.siegeWarCamp,
@@ -121,6 +128,8 @@ class TeamMemberCacheVal(userType.UserSingleType):
                 'score': self.score,
                 'enableMics': self.enableMics,
                 'isBlockMics': self.isBlockMics,
+                'enableSpeaker': self.enableSpeaker,
+                'inVoiceRoom': self.inVoiceRoom,
                 'openId': self.openId,
             }
 
@@ -138,17 +147,9 @@ class TeamMemberCacheVal(userType.UserSingleType):
 # TEAM DUNGEON CACHE STRUCT
 
 class TeamDungeonCache(userType.UserDictType):
-
-    def initFromDict(self, dataDic):
-        for _i in dataDic['dungeons']:
-            self[_i.dungeonNo] = _i
-
     def _lateReload(self):
         for _v in self.values():
             _v.reloadScript()
-
-    def toStreamSavedDic(self):
-        return {'dungeons': [_i for _i in self.values()]}
 
     def addDungeonCache(self, dungeonNo, spaceNo, spaceUUID):
         LOG_INFO("addDungeonCache", dungeonNo, spaceNo, spaceUUID)
@@ -275,17 +276,17 @@ class TeamDungeonFounders(userType.UserDictType):
         for _v in self.values():
             _v.reloadScript()
 
-    def addFounder(self, spaceNo, gbId, playerBox, *args, **kwargs):
-        self[gbId] = TeamDungeonFounderVal(spaceNo, gbId, playerBox, *args, **kwargs)
+    def addFounder(self, spaceNo, playerGbId, playerBox, *args, **kwargs):
+        self[playerGbId] = TeamDungeonFounderVal(spaceNo, playerGbId, playerBox, *args, **kwargs)
 
-    def getFounderVal(self, gbId):
-        if gbId in self:
-            return self[gbId]
+    def getFounderVal(self, playerGbId):
+        if playerGbId in self:
+            return self[playerGbId]
 
         return None
 
-    def destoryFounder(self, gbId):
-        self.pop(gbId, None)
+    def destoryFounder(self, playerGbId):
+        self.pop(playerGbId, None)
 
 
 class TeamDungeonFounderVal(userType.UserSingleType):
@@ -398,6 +399,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
         # team mics
         self.teamMicsSwitch = teamMicsSwitch        # type: int
         self.teamMicsBlocked = teamMicsBlocked      # type: bool
+        self.blockedMembers = set()                 # set[gbId] — 被禁麦成员，持久化
         # -----------------------------------------------------------
         self.enemyGuildLeaderMirrorInfo = {}
         self.isPublish = False
@@ -447,7 +449,9 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
         self.isInDungeon = savedDataDict['isInDungeon']
         self.lastDungeonFinishedTime = savedDataDict['lastDungeonFinishedTime']
         for i in savedDataDict['teamDungeonList']:
-            self.teamDungeonDict[i.dungeonNo] = i
+            t = TeamDungeonSpaceCacheVal(i['dungeonNo'], i['spaceNo'], i['spaceUUID'])
+            t.initFromDict(i)
+            self.teamDungeonDict[i['dungeonNo']] = t
 
         teamMemberList = savedDataDict['teamMemberList']
         for _teamMemberDict in teamMemberList:
@@ -481,7 +485,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             'teamMinLv':self.teamMinLv,  
             'teamCaptainGbId': self.teamCaptainGbId,
             'teamMemberList': [i.toStreamSavedDic() for i in self.teamPlayerDict.values()],
-            'teamDungeonList': [_ for _ in self.teamDungeonDict.values()],
+            'teamDungeonList': [i.toStreamSavedDic() for i in self.teamDungeonDict.values()],
             'teamHonorPKMatchTime': self.teamHonorPKMatchTime, 
             'isSilent':self.isSilent,
             'teamMicsSwitch': self.teamMicsSwitch, 
@@ -544,9 +548,8 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
                         bOnline, score, isDead, openId)
             return False, gameconst.RaidErrno.ENUM_RAID_RAID_TEAM_IS_FULL
 
-        isBlockMics = False
-        if self.teamMicsBlocked:
-            isBlockMics = True
+        isBlockMics = playerGbId in self.blockedMembers
+        inVoiceRoom = self.teamMicsSwitch != gameconst.TeamMicsModeEnum.OFF
 
         _newMember = TeamMemberCacheVal(
             playerGbId, 
@@ -561,7 +564,9 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             mountState=mountState, 
             isDead=isDead, 
             openId=openId,
-            isBlockMics=isBlockMics, 
+            isBlockMics=isBlockMics,
+            enableSpeaker=inVoiceRoom,
+            inVoiceRoom=inVoiceRoom,
             joinType=joinType)
 
         self.teamPlayerDict[playerGbId] = _newMember
@@ -626,6 +631,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
                     LOG_WARN('delMember teamMember has no client', _gbId)
 
         self.teamPlayerDict.pop(playerGbId, None)
+        self.blockedMembers.discard(playerGbId)
         self.updateTeamMatchInfo()
     
     def setCaptainGbId(self, captainGbId):
@@ -668,6 +674,14 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             tmpTeamPlayerDic[_gbId] = _teamPlayerVal
         # 替换旧队列
         self.teamPlayerDict = tmpTeamPlayerDic
+
+        # 新队长不会被禁麦
+        if captainGbId in self.blockedMembers:
+            self.blockedMembers.discard(captainGbId)
+            _memberVal = self.teamPlayerDict.get(captainGbId)
+            if _memberVal:
+                _memberVal.isBlockMics = False
+                self.broadcastMemberVoiceState(captainGbId)
 
         if _oldCaptainGbId in self.teamPlayerDict:
             self.turnOffTeamMemberMics(captainGbId, _oldCaptainGbId,
@@ -1013,9 +1027,6 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             if _teamMemberVal.isBlockMics:
                 _blockList.append(_teamMemberVal.playerGbId)
 
-        self.broadcastToAllMembersClient('onSyncAllTeamMemberMicsStatus',
-                                                    (self.teamId, _onList, _offList, _blockList))
-
         return _onList, _offList, _blockList
 
     def switchTeamMiscMode(self, srcGbId, mode, extraProps):
@@ -1048,6 +1059,10 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
         LOG_INFO('_onTeamMiscModeSwitchOff::')
         for _teamMemberVal in self.teamPlayerDict.values():
             _teamMemberVal.enableMics = _teamMemberVal.isBlockMics = False
+            _teamMemberVal.enableSpeaker = False
+            _teamMemberVal.inVoiceRoom = False
+        for gbId in self.teamPlayerDict:
+            self.broadcastMemberVoiceState(gbId)
 
     def _onTeamMiscModeSwitchToFree(self, extraProps):
         LOG_INFO("_onTeamMiscModeSwitchToFree::", extraProps)
@@ -1060,6 +1075,10 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
                     _teamMemberVal.enableMics, _teamMemberVal.isBlockMics = True, False
             else:
                 _teamMemberVal.enableMics = _teamMemberVal.isBlockMics = False
+            _teamMemberVal.enableSpeaker = True
+            _teamMemberVal.inVoiceRoom = True
+        for gbId in self.teamPlayerDict:
+            self.broadcastMemberVoiceState(gbId)
 
     def _onTeamMiscModeSwitchToLeader(self, extraProps):
         LOG_INFO("_onTeamMiscModeSwitchToLeader::", extraProps)
@@ -1071,7 +1090,28 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
                 else:
                     _teamMemberVal.enableMics, _teamMemberVal.isBlockMics = True, False
             else:
-                _teamMemberVal.enableMics = _teamMemberVal.isBlockMics = False, True
+                _teamMemberVal.enableMics , _teamMemberVal.isBlockMics = False, True
+            _teamMemberVal.enableSpeaker = True
+            _teamMemberVal.inVoiceRoom = True
+        for gbId in self.teamPlayerDict:
+            self.broadcastMemberVoiceState(gbId)
+
+    def _buildVoiceFlags(self, gbId):
+        """根据玩家当前状态构建 voiceFlags bitmask"""
+        member = self.teamPlayerDict.get(gbId)
+        if member is None:
+            return 0
+        flags = 0
+        if member.inVoiceRoom:   flags |= 0x01
+        if member.enableMics:    flags |= 0x02
+        if member.enableSpeaker: flags |= 0x04
+        if member.isBlockMics:   flags |= 0x08
+        return flags
+
+    def broadcastMemberVoiceState(self, gbId):
+        """统一向所有队员广播语音状态变更"""
+        flags = self._buildVoiceFlags(gbId)
+        self.broadcastToAllMembersClient('onUpdateMemberVoiceState', (gbId, flags))
 
     def turnOnTeamMemberMics(self, srcGbId, playerGBID, toClient=False):
         if not self.teamMicsSwitch:
@@ -1102,10 +1142,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             _memberVal.enableMics = True
 
         if toClient:
-            _unblockMics and self.broadcastToAllMembersClient('onUnblockTeamMemberMics',
-                                                            (self.teamId, playerGBID))
-            self.broadcastToAllMembersClient('onTurnOnTeamMemberMics',
-                                           (srcGbId, self.teamId, playerGBID))
+            self.broadcastMemberVoiceState(playerGBID)
         return _memberVal, ""
 
     def turnOffTeamMemberMics(self, srcGbId, playerGBID, blockMics=False, toClient=False):
@@ -1129,10 +1166,10 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
 
         if blockMics:
             _memberVal.isBlockMics = True
+            self.blockedMembers.add(playerGBID)
 
         if toClient:
-            self.broadcastToAllMembersClient('onTurnOffTeamMemberMics',
-                                           (srcGbId, self.teamId, playerGBID, blockMics))
+            self.broadcastMemberVoiceState(playerGBID)
 
         return _memberVal, ""
 
@@ -1145,10 +1182,10 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
 
         _memberVal = self.teamPlayerDict[playerGBID]
         _memberVal.isBlockMics = False
+        self.blockedMembers.discard(playerGBID)
 
         if toClient:
-            self.broadcastToAllMembersClient('onUnblockTeamMemberMics',
-                                           (self.teamId, playerGBID))
+            self.broadcastMemberVoiceState(playerGBID)
 
         return _memberVal, ""
     # --------------------------------------------------------------------

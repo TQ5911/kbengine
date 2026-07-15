@@ -143,12 +143,22 @@ class ICrossServer(object):
 
     # CrossServer
     def syncMethodCallToLocalServerCell(self, fnname, fnargs):
-        LOG_DBG("syncMethodCallToLocalServerCell::", fnname, fnargs)
         if self.isCrossServerInOtherServer:
+            LOG_DBG("syncMethodCallToLocalServerCell::", fnname, fnargs)
             self.base.syncMethodCallToLocalServerCell(fnname, fnargs)
     
     def beSyncMethodCallFromCrossServerCell(self, fnname, fnargs):
         LOG_DBG("beSyncMethodCallFromCrossServerCell::", fnname, fnargs)
+        getattr(self, fnname)(*fnargs)
+
+    # LocalServer
+    def syncMethodCallToCrossServerCell(self, fnname, fnargs):
+        if self.isCrossServerInLocalServer:
+            LOG_DBG("syncMethodCallToCrossServerCell::", fnname, fnargs)
+            self.base.syncMethodCallToCrossServerCell(fnname, fnargs)
+    
+    def beSyncMethodCallFromLocalServerCell(self, fnname, fnargs):
+        LOG_DBG("beSyncMethodCallFromLocalServerCell::", fnname, fnargs)
         getattr(self, fnname)(*fnargs)
 
     def beforeReqCrossServer(self, toServerId, reasonNo):

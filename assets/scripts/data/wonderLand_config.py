@@ -210,5 +210,9 @@ datas = _tools.RODict({
     "WonderLand_fullyBooked": _tools.RODict({
         "ID": "WonderLand_fullyBooked",
         "value": 54003266,
+    }),
+    "WonderLanf_FreeIconPath": _tools.RODict({
+        "ID": "WonderLanf_FreeIconPath",
+        "value": "Assets/Res/ui/texturenp/item/item_017.png",
     })
 })

@@ -199,7 +199,8 @@ public class KBEMain : MonoBehaviour
         //针对安卓10以下系统上报IMEI，IOS上报IDFA，此字段不要进行任何加密，记录原始信息即可。
         //目前iOS系统主流的IDFA广告获取设备标识符方式，用户可开启、关闭，每次切换会改变为新的取值。 10以下的版本关闭时也能取到唯一值, >= 10的iOS版本关闭时取到的值为00000000000 ；系统大版本升级（如11 到 12） IDFA也会发生变化
 #if UNITY_IOS && !UNITY_EDITOR
-        return UnityEngine.iOS.Device.advertisingIdentifier;
+        //return UnityEngine.iOS.Device.advertisingIdentifier;
+        return SystemInfo.deviceUniqueIdentifier;
 #elif UNITY_ANDROID && !UNITY_EDITOR
         if (MyUtils.GetSystemVersionOfYourPhone() < 10)
         {

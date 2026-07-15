@@ -429,12 +429,16 @@ class RedisUtils(object):
         gameglobal.localBaseApp.getRedisClient().get(gameconst.PrivilegeRedisKey.VIP + accountName, cb)
 
     @classmethod
-    def getSVIPFlag(cls, accountName, cb):
+    def getTagTypeFlag(cls, accountName, cb):
         gameglobal.localBaseApp.getRedisClient().get(gameconst.PrivilegeRedisKey.SVIP + accountName, cb)
     
     @classmethod
     def getFullPlayerInfo(cls, gbId, cb):
         gameglobal.localBaseApp.getRedisClient().get(gameconst.RedisKey.FULL_PLAYER_INFO_KEY + ":" + str(gbId), cb)
+
+    @classmethod
+    def getRechargeStageInfo(cls, accountName, cb):
+        gameglobal.localBaseApp.getRedisClient().get(gameconst.RedisKey.RECHARGE_STAGE_INFO + accountName, cb)
 
 class FriendUtils(object):
     @classmethod
@@ -984,9 +988,7 @@ class PlayerLeaseRecord(object):
     @staticmethod
     def _getKey(gbId, rtype=1):
         # rtype: 1=我的出租 2=我的租赁
-        return "{server_id}_lease_rcd_{gbId}_{rtype}".format(
-            server_id=str(gameconfig.serverId()),
-            gbId=gbId, rtype=rtype)
+        return "lease_rcd_{gbId}_{rtype}".format(gbId=gbId, rtype=rtype)
 
     @staticmethod
     def _encodeMessage(timestamp, returnTime, itemData, uniqueId, bindGold, gold, cost, ownerGBID, opUUID=0):

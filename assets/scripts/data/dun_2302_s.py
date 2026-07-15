@@ -75,7 +75,7 @@ datas ={
           "PosZ": -37.88,
           "Props": {
             "AreaType": 1,
-            "Height": 3.0,
+            "Height": 30.0,
             "MPosX": 181.0,
             "MPosY": 91.99,
             "MPosZ": -53.0,

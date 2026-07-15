@@ -51,6 +51,9 @@ import gearEnhance_gearconst as GEGCD
 import gearEnhance_equipmentClass as GEES
 import mail_mail as MAMAD
 import appearance_ModelResource as AMRD
+import randomSynthesis_config as RS_CD
+import guild_guildConst as G_GCD
+
 
 def getRaidConstDataValue(key):
     raidConstData = RAID_CONST.datas.get(key, None)
@@ -861,3 +864,22 @@ def checkItemCanBeDisassembled(itemId, bindType):
             return False, None
     return True, dissassemblyReward
 
+def getSynthesPools():
+    _datas = RS_CD.datas['synthesRandomType']['value']
+    _pools = []
+    for _data in _datas:
+        _idx, *_poolData = _data
+        _pools.append(_poolData)
+
+    return _pools
+
+def getGuildGamePlayPoints(dataType):
+    if dataType not in gameconst.GuildDataType.VALID_TYPE:
+        return 0
+    pointsCfgDatas = G_GCD.datas['guild_gameplayPoints']['value']
+    currentPoints = None
+    for pointCfgData in pointsCfgDatas:
+        pointType, currentPoints = pointCfgData
+        if pointType == dataType:
+            break
+    return 0 if currentPoints is None else currentPoints

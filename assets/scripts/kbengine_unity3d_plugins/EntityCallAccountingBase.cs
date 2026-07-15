@@ -42,8 +42,8 @@ namespace KBEngine
 			bundle.writeUint8(arg4);
 			bundle.writeUint8(arg5);
 			bundle.writeUint8(arg6);
-			((DATATYPE_OUTFIT_DATA)EntityDef.id2datatypes[31]).addToStreamEx(bundle, arg7);
-			((DATATYPE_FACE_DATA)EntityDef.id2datatypes[26]).addToStreamEx(bundle, arg8);
+			((DATATYPE_OUTFIT_DATA)EntityDef.id2datatypes[33]).addToStreamEx(bundle, arg7);
+			((DATATYPE_FACE_DATA)EntityDef.id2datatypes[28]).addToStreamEx(bundle, arg8);
 			sendCall(null);
 		}
 

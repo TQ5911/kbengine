@@ -63,6 +63,12 @@ def getImportInfo(methodInfo:MI.MethodInfo):
                         inStr = None
                 elif c in ('"', "'"):
                     inStr = c
+                elif c == '\\' and i + 1 < n and text[i+1] in ('\n', '\r'):
+                    if text[i+1] == '\r' and i + 2 < n and text[i+2] == '\n':
+                        i += 3
+                    else:
+                        i += 2
+                    continue
                 elif c == '(':
                     paren += 1
                 elif c == ')':
@@ -91,15 +97,8 @@ def getImportInfo(methodInfo:MI.MethodInfo):
 
             continue
 
-        _matchImport = IMPORT_AS_PT.search(strLine) or IMPORT_PT.search(strLine)
-        if _matchImport:
-            moduleName = _matchImport.groups()[0].strip()
-            if moduleName in funcGlobals:
-                _importLines.append(strLine.replace('\r\n', '\n'))
-                importedMods.append(moduleName)
-
-            continue
-
+        # 优先匹配 `from ... import ...`，因为 IMPORT_PT 会把 `import y` 匹配上
+        # 导致 `from x import y` 走错分支。
         matchFrom = FROM_IMPORT_PT.search(strLine)
         if matchFrom:
             moduleName = matchFrom.group(1).split('.')[0].strip()
@@ -113,6 +112,15 @@ def getImportInfo(methodInfo:MI.MethodInfo):
                     continue
                 if sym in funcGlobals and sym not in importedMods:
                     importedMods.append(sym)
+
+            continue
+
+        _matchImport = IMPORT_AS_PT.search(strLine) or IMPORT_PT.search(strLine)
+        if _matchImport:
+            moduleName = _matchImport.groups()[0].strip()
+            if moduleName in funcGlobals:
+                _importLines.append(strLine.replace('\r\n', '\n'))
+                importedMods.append(moduleName)
 
             continue
 

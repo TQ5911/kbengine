@@ -2,6 +2,7 @@
 import KBEngine
 from KBEDebug import *
 
+import math
 import gameconst
 import gameglobal
 import gametimer
@@ -16,11 +17,12 @@ import performanceLevel_set as PLSD
 
 
 class AvataringStateRef(object):
-    """Avataring 状态位参考定义（0~127），实际语义由客户端控制。"""
+    """Avataring 状态位参考定义"""
     Idle        = 0
     Moving      = 1
     Jump        = 21
     DoubleJump  = 22
+    Fall        = 23
     Posture     = 47
 
 
@@ -96,6 +98,10 @@ class Avataring(KBEngine.Entity, iTimer.ITimer):
     @utils.isMyself
     def clientSetState(self, exposed, stateIdx):
         LOG_DBG('Avataring::clientSetState', stateIdx)
+        if stateIdx == AvataringStateRef.Fall:
+            self.removeAvataringState(AvataringStateRef.Jump)
+            self.removeAvataringState(AvataringStateRef.DoubleJump)
+
         self.setAvataringState(stateIdx)
 
     @utils.isMyself
@@ -105,20 +111,27 @@ class Avataring(KBEngine.Entity, iTimer.ITimer):
 
     @utils.isMyself
     def offline(self, exposed, reason):
-        LOG_DBG('Avataring::offline~')
+        LOG_INFO('Avataring::offline~', reason)
         self.base.startOffline(reason)
         self.destroy()
 
     @utils.isMyself
     def jump(self, exposed, jumpType, spaceNo):
         LOG_DBG('Avataring::jump~', jumpType, spaceNo)
-        if jumpType == AvataringStateRef.Jump or jumpType == AvataringStateRef.DoubleJump:
-            self.setAvataringState(jumpType)
+        if jumpType == 1:
+            self.setAvataringState(AvataringStateRef.Jump)
+        elif jumpType == 2:
+            self.removeAvataringState(AvataringStateRef.Jump)
+            self.setAvataringState(AvataringStateRef.DoubleJump)
+        else:
+            LOG_ERR('Avataring::jump invalid jumpType:', jumpType)
 
     @utils.isMyself
     def breakAwayStuck(self, exposed):
         LOG_DBG('Avataring::breakAwayStuck~')
-        self.position = (350, 100, 350)
+        _pos, _dir = utils.getPlayerBreakAwayStuckPos(self.spaceNo, self.position)
+        self.position = _pos
+        self.direction = (0.0, 0.0, _dir * math.pi / 180)
         self.client.onBreakAwayStuckSuccess()
 
     def _cancelPlayEmoteTimer(self):
@@ -135,7 +148,7 @@ class Avataring(KBEngine.Entity, iTimer.ITimer):
         self.playTimerId = self.addTimerCB(emoteTime + 1, 'stopPlayEmote', (gameconst.StopPlayEmoteReason.TimeOut,), gametimer.TIMER_TAG_STOP_PLAY_EMOTE, 'playTimerId')
         self.emoteId = emoteId
         self.setAvataringState(AvataringStateRef.Posture)
-        self.client.onStartPlayEmote(emoteId)
+        self.allClients.onStartPlayEmote(emoteId)
 
     @utils.isMyself
     def reqStopPlayEmote(self, exposed):
@@ -149,7 +162,7 @@ class Avataring(KBEngine.Entity, iTimer.ITimer):
         self._cancelPlayEmoteTimer()
         self.emoteId = 0
         self.removeAvataringState(AvataringStateRef.Posture)
-        self.client.onStopPlayEmote()
+        self.allClients.onStopPlayEmote()
 
     @utils.isMyself
     def setShowCompleteNum(self, exposed, showCompleteNum):
@@ -213,15 +226,15 @@ class Avataring(KBEngine.Entity, iTimer.ITimer):
             _complete, _names, _hides, _removes = _ret
             for i in _complete:
                 entity = KBEngine.entities.get(i)
-                entity and entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_ALL)
+                entity and entity.setWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_ALL)
 
             for i in _names:
                 entity = KBEngine.entities.get(i)
-                entity and entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_NAME)
+                entity and entity.setWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_NAME)
 
             for i in _hides:
                 entity = KBEngine.entities.get(i)
-                entity and entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_HIDE)
+                entity and entity.setWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_HIDE)
 
             if _removes:
                 self.client.onRemoveCompleteWitness(_removes)
@@ -231,27 +244,19 @@ class Avataring(KBEngine.Entity, iTimer.ITimer):
         self.reSortRelationList()
 
     def addViewRelation(self, targetId):
-        if targetId not in self.enterViewList:
-            self.enterViewList.append(targetId)
-            self.viewEnterViewSet.add(targetId)
+        if targetId not in self.viewEntityDict:
+            self.viewEntityDict[targetId] = True
             self.isNeedResortView = True
 
     def removeViewRelation(self, targetId):
-        if targetId in self.enterViewList:
-            self.enterViewList.remove(targetId)
-            self.viewLeaveViewSet.add(targetId)
-            self.viewEnterViewSet.discard(targetId)
+        if targetId in self.viewEntityDict:
+            self.viewEntityDict.pop(targetId, None)
             self.isNeedResortView = True
-
-    def pySetWitnessType(self, eId, witnessType):
-        self.setWitnessType(eId, witnessType)
 
     def reSortRelationList(self):
         """
         等待服 AOI 优化：仅对视野内 Avataring 按距离与进视野顺序分层显示。
-        enterViewList: 所有真实在视野内玩家
-        viewEnterViewSet: 上次sort之后进AOI的玩家
-        viewLeaveViewSet: 上次sort之后离开AOI的玩家
+        viewEntityDict: 所有真实在视野内玩家（dict，key 为 entity id，value 为 near/far 标记）
         viewCompleteSet: 当前全模型set
         viewNameSet: 只显示名字的set
         优先级
@@ -261,69 +266,81 @@ class Avataring(KBEngine.Entity, iTimer.ITimer):
         if not self.isNeedResortView:
             return
 
-        _nearList = []
-        _farList = []
-        for _eid in self.enterViewList:
-            _entity = KBEngine.entities.get(_eid)
-            if _entity and sMath.manhattanDist(self.position, _entity.position) <= CONST.datas['targetSurroundArea']['value']:
-                _nearList.append(_eid)
-            else:
-                _farList.append(_eid)
+        _load = KBEngine.getAverageLoad()
+        if _load > 0.8:
+            if KBEngine.time() - self.lastResortTimes < 30:
+                return
+        elif _load > 0.7:
+            if KBEngine.time() - self.lastResortTimes < 20:
+                return
 
-        _allList = _nearList + _farList
+        _listLen = len(self.viewEntityDict)
+        if _listLen == 0:
+            self.reSortRelationListWithAllList([])
+            return
+
+        _targetSurroundArea = CONST.datas['targetSurroundArea']['value']
+        _entities = KBEngine.entities
+
+        # 第一遍：计算距离并在 value 中标记 near/far，同时统计 near 数量
+        _nearCount = 0
+        for _eid in self.viewEntityDict:
+            _entity = _entities.get(_eid)
+            _isNear = _entity is not None and sMath.manhattanDist(self.position, _entity.position) <= _targetSurroundArea
+            self.viewEntityDict[_eid] = _isNear
+            if _isNear:
+                _nearCount += 1
+
+        # 第二遍：按进入 AOI 顺序填充等长 list，近的在前，远的在后
+        _allList = [None] * _listLen
+        _nearIdx = 0
+        _farIdx = _nearCount
+        for _eid, _isNear in self.viewEntityDict.items():
+            if _isNear:
+                _allList[_nearIdx] = _eid
+                _nearIdx += 1
+            else:
+                _allList[_farIdx] = _eid
+                _farIdx += 1
+
         self.reSortRelationListWithAllList(_allList)
 
     def reSortRelationListWithAllList(self, allList):
-        _removeCurLevelSet = self.viewEnterViewSet.copy()
         listLen = len(allList)
 
         showCompleteModelNum = self.showCompleteNum
         showNameNum = utils.fetchShowNameNum()
+
+        # 新的 complete / name 集合
         curCompleteSet = set(allList[:min(listLen, showCompleteModelNum)])
+        curNameSet = set()
+        if listLen > showCompleteModelNum:
+            curNameSet = set(allList[showCompleteModelNum:min(listLen, showCompleteModelNum + showNameNum)])
+
         LOG_DBG('Avataring::reSortRelationList curCompleteSet', curCompleteSet)
-        _addList = curCompleteSet.difference(self.viewCompleteSet)
-        for _eId in _addList:
+
+        # 升级到 complete
+        for _eId in curCompleteSet.difference(self.viewCompleteSet):
             entity = KBEngine.entities.get(_eId)
-            entity and entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_ALL)
-            _removeCurLevelSet.discard(_eId)
-        _rmCompleteSet = self.viewCompleteSet.difference(curCompleteSet)
-        _removeCurLevelSet.update(_rmCompleteSet)
-        if len(_rmCompleteSet) > 0:
-            self.client.onRemoveCompleteWitness(list(_rmCompleteSet))
+            entity and entity.setWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_ALL)
+
+        # 通知客户端移除不再 complete 的实体
+        completeRemove = self.viewCompleteSet.difference(curCompleteSet)
+        if completeRemove:
+            self.client.onRemoveCompleteWitness(list(completeRemove))
+
+        # 升级到 name（包括从 complete 降级为 name 的实体）
+        for _eId in curNameSet.difference(self.viewNameSet):
+            entity = KBEngine.entities.get(_eId)
+            entity and entity.setWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_NAME)
+
+        # 需要隐藏的：之前在 complete 或 name 中，但现在不在新的 complete 或 name 中
+        hideSet = (self.viewCompleteSet | self.viewNameSet).difference(curCompleteSet | curNameSet)
+        for _eId in hideSet:
+            entity = KBEngine.entities.get(_eId)
+            entity and entity.setWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_HIDE)
+
         self.viewCompleteSet = curCompleteSet
-
-        _ignoreNum = showCompleteModelNum + showNameNum
-        if listLen >= showCompleteModelNum:
-            _curNameSet = set(allList[showCompleteModelNum:min(listLen, _ignoreNum)])
-            _addNameList = _curNameSet.difference(self.viewNameSet)
-            for _eId in _addNameList:
-                _removeCurLevelSet.discard(_eId)
-                _entity = KBEngine.entities.get(_eId)
-                _entity and _entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_NAME)
-
-            _rmNameSet = self.viewNameSet.difference(_curNameSet)
-            _rmNameSet = _rmNameSet.difference(self.viewCompleteSet)
-            _removeCurLevelSet.update(_rmNameSet)
-            self.viewNameSet = _curNameSet
-        else:
-            self.viewNameSet.clear()
-
-        # 处理同一帧内出去又进来的情况
-        for _eId in (self.viewEnterViewSet & self.viewLeaveViewSet):
-            _removeCurLevelSet.discard(_eId)
-            entity = KBEngine.entities.get(_eId)
-            if _eId in self.viewCompleteSet:
-                entity and entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_ALL)
-            elif _eId in self.viewNameSet:
-                entity and entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_NAME)
-            else:
-                entity and entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_HIDE)
-
-        for _eId in _removeCurLevelSet:
-            if _eId in self.enterViewList:
-                _entity = KBEngine.entities.get(_eId)
-                _entity and _entity.pySetWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_HIDE)
-
+        self.viewNameSet = curNameSet
         self.isNeedResortView = False
-        self.viewEnterViewSet.clear()
-        self.viewLeaveViewSet.clear()
+        self.lastResortTimes = KBEngine.time()

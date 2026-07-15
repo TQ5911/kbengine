@@ -428,6 +428,12 @@
             <Persistent>    true                    </Persistent>
         </commonFlagCell>
 
+        <commonFlagBase>
+            <Type>          UINT32                  </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </commonFlagBase>
+
         <clientIP>
             <Type>          UINT32                  </Type>
             <Flags>         BASE                    </Flags>
@@ -621,6 +627,27 @@
             <Flags>         CELL_PRIVATE            </Flags>
             <Default>       0                       </Default>
         </lastResortTimes>
+
+        <firstLoginTime>
+            <Type>          LONGTIME            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+            <Persistent>    true                </Persistent>
+        </firstLoginTime>
+
+        <totalLoginDay>
+            <Type>          LONGTIME            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+            <Persistent>    true                </Persistent>
+        </totalLoginDay>
+
+        <totalOnlineTime>
+            <Type>          LONGTIME            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+            <Persistent>    true                </Persistent>
+        </totalOnlineTime>
     </Properties>
 
     <BaseMethods>
@@ -842,6 +869,16 @@
     </BaseMethods>
 
     <CellMethods>
+        <reqUpdateTeamVoiceRoomState> <Exposed/>
+            <Arg>        TEAMID      </Arg>
+            <Arg>        UINT8       </Arg>
+        </reqUpdateTeamVoiceRoomState>
+
+        <reqUpdateRaidVoiceRoomState> <Exposed/>
+            <Arg>        RAID_ID     </Arg>
+            <Arg>        UINT8       </Arg>
+        </reqUpdateRaidVoiceRoomState>
+
         <transmitWithMapPointCallback>
             <Arg>       BOOL            </Arg>
             <Arg>       PY_DICT         </Arg>
@@ -1130,5 +1167,14 @@
             <Arg>       UINT8       </Arg>
             <Arg>      LONGTIME     </Arg>
         </onRefreshLastDungeonFinishedTime>
+
+        <onAvatarOfflineClient>
+            <Arg>       UINT8       </Arg>
+        </onAvatarOfflineClient>
+        
+        <onUpdateMemberVoiceState>
+            <Arg>           PLAYER_GBID     </Arg>
+            <Arg>           UINT8           </Arg>
+        </onUpdateMemberVoiceState>
     </ClientMethods>
 </root>

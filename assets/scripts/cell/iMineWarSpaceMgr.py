@@ -9,6 +9,7 @@ import gameconst
 import iTimer
 import formula
 import creep_base
+import gameconfig
 import const_const as CONST
 import iMapMonsterRefresh
 import gameglobal
@@ -798,9 +799,11 @@ class IMineWarSpaceMgr(object):
         self.addPlayerMineWarScore(playerBox, playerGbId, takePartScore[1], 1)
         LOG_INFO('onMineWarPlayerTakePartAward add take part score', self.spaceNo, playerGbId, takePartScore[1], self.mineWarTakePartScore[playerGbId])
 
-    @gamedecorator.checkGameconfigEnable('mineBattle')
     def onEndMineWarShow(self):
         """矿战结束回调"""
+        if not gameconfig.visibleConfigEnabled('mineBattle'):
+            return
+
         if not self.checkMineWarSpace():
             return
         

@@ -70,7 +70,7 @@ class WaitMapSpaceStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iGlobal.IGlobal):
             accounting.accountingLoginResult(gameconst.WaitMapLoginResult.OK)
             return
 
-        accountLimit = gameconfig.waitMapMaxOnline()
+        accountLimit = utils.getWaitmapMaxOnline()
         if len(self.loginAccount) >= accountLimit:
             accounting.accountingLoginResult(gameconst.WaitMapLoginResult.ACCOUNT_LIMIT)
             return
@@ -90,6 +90,7 @@ class WaitMapSpaceStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iGlobal.IGlobal):
         avataring.onEnterWaitMapSpace(spaceNo, spaceBox)
 
     def onPlayerLeave(self, gbid, spaceNo):
+        LOG_INFO('WaitMapSpaceStub::onPlayerLeave~', gbid, spaceNo)
         self.spaceFinder.leaveSpace(gbid, spaceNo)
 
     def onPlayerLogout(self, accountName):
@@ -99,7 +100,7 @@ class WaitMapSpaceStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iGlobal.IGlobal):
     def _reportWaitMapStatus(self):
         serverId = gameconfig.serverId()
         actual = len(self.loginAccount)
-        freeNum = max(0, gameconfig.waitMapMaxOnline() - actual)
+        freeNum = max(0, utils.getWaitmapMaxOnline() - actual)
         nowTs = utils.curTS()
         LOG_DBG('WaitMapSpaceStub::_reportWaitMapStatus', serverId, actual, freeNum, nowTs)
 
@@ -144,8 +145,14 @@ class WaitSpaceFinder(object):
 
     def enterSpace(self, gbid, avataring):
         cellMaxPlayerNum = gameconfig.maxCellAvatarCount()
+        countList = [len(spaceInfo['avataring']) for spaceInfo in self.spaces.values() if spaceInfo['ready']]
+        minCount = min(countList) if countList else 0
+
+        perCount = 20
+        startCount = (minCount // perCount) * perCount
+
         # 线性填充
-        for i in range(0, cellMaxPlayerNum, 50):
+        for i in range(startCount, cellMaxPlayerNum+1, perCount):
             for spaceNo, spaceInfo in self.spaces.items():
                 if not spaceInfo['ready']: continue
                 if len(spaceInfo['avataring']) >= i: continue
@@ -166,7 +173,7 @@ class WaitSpaceFinder(object):
         LOG_ERR('WaitSpaceFinder::enterSpace no ready space yet.')
         return 0, None
 
-    def leaveSpace(self, spaceNo, gbid):
+    def leaveSpace(self, gbid, spaceNo):
         if spaceNo not in self.spaces:
             return
         self.spaces[spaceNo]['avataring'].pop(gbid, None)

@@ -37,6 +37,10 @@ func NewAdminApp() *AdminApp {
 		appLog.Error("failed to parse config file\n")
 		return nil
 	}
+	if err := adminConfig.Validate(); err != nil {
+		appLog.Errorf("admin config validate failed: %s\n", err.Error())
+		return nil
+	}
 	gameServers := make(map[uint32]map[uint32]*GameServerInfo)
 	channelMap := make(map[uuid.UUID]uint32)
 	accountCmds := make(map[string]chan *gsmanager.HttpAPICommandResponse)

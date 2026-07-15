@@ -21173,6 +21173,131 @@ datas ={
             "Remark": "",
             "ShowInSceneMap": 1
           }
+        },
+        "10104003": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 321.0244,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 18000982,
+          "ID": 10104003,
+          "PosX": 464.3633,
+          "PosY": 10.62199,
+          "PosZ": 515.139,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": "11",
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
+        },
+        "10104004": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 321.0244,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 18000981,
+          "ID": 10104004,
+          "PosX": 453.8707,
+          "PosY": 11.09924,
+          "PosZ": 508.4137,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": "11",
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
+        },
+        "10104005": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 63.14061,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 18000980,
+          "ID": 10104005,
+          "PosX": 210.2778,
+          "PosY": 32.58494,
+          "PosZ": 312.1338,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": "11",
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
+        },
+        "10104006": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 82.82081,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 18000983,
+          "ID": 10104006,
+          "PosX": 205.8,
+          "PosY": 30.27232,
+          "PosZ": 329.35,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": "11",
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
+        },
+        "10104007": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 112.2589,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 18000979,
+          "ID": 10104007,
+          "PosX": 261.1706,
+          "PosY": 9.703747,
+          "PosZ": 426.8191,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": "11",
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
         }
       },
       "Teleporter": {
@@ -21191,8 +21316,10 @@ datas ={
           "PosY": -5.51595,
           "PosZ": 136.0199,
           "Props": {
-            "CameraId": 0,
+            "CameraId": 33010001,
+            "GateType": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "TelDir": 0.0,
             "TelX": 372.532,
             "TelY": -5.51595,
@@ -21214,8 +21341,10 @@ datas ={
           "PosY": 12.05374,
           "PosZ": 591.0859,
           "Props": {
-            "CameraId": 0,
+            "CameraId": 33010001,
+            "GateType": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "TelDir": 127.6015,
             "TelX": 374.5499,
             "TelY": 9.73374,
@@ -21466,6 +21595,87 @@ datas ={
             "Remark": "",
             "ShowInSceneMap": 1
           }
+        },
+        "10108075": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Collection",
+          "ClassNameType": 3,
+          "CustomID": "",
+          "Dir": 287.7339,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 16006007,
+          "ID": 10108075,
+          "PosX": 389.0294,
+          "PosY": 13.95979,
+          "PosZ": 447.4846,
+          "Props": {
+            "ChestGroupID": "",
+            "IsOnGround": 1,
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
+        },
+        "10108076": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Collection",
+          "ClassNameType": 3,
+          "CustomID": "",
+          "Dir": 287.7339,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 16006008,
+          "ID": 10108076,
+          "PosX": 363.7322,
+          "PosY": 33.84991,
+          "PosZ": 295.0752,
+          "Props": {
+            "ChestGroupID": "",
+            "IsOnGround": 1,
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
+        },
+        "10108077": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Collection",
+          "ClassNameType": 3,
+          "CustomID": "",
+          "Dir": 287.7339,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 16006009,
+          "ID": 10108077,
+          "PosX": 193.7944,
+          "PosY": 66.51828,
+          "PosZ": 309.0956,
+          "Props": {
+            "ChestGroupID": "",
+            "IsOnGround": 1,
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
         }
       }
     },
@@ -21530,7 +21740,7 @@ datas ={
         "PosY": 6.572841,
         "PosZ": 504.5079,
         "Props": {
-          "CameraId": 0,
+          "CameraId": "33010001",
           "MapEntityType": "26",
           "Remark": "",
           "ShowInSceneMap": 1
@@ -21551,7 +21761,7 @@ datas ={
         "PosY": -5.517537,
         "PosZ": 235.751,
         "Props": {
-          "CameraId": 0,
+          "CameraId": "33010001",
           "MapEntityType": "26",
           "Remark": "",
           "ShowInSceneMap": 1
@@ -21572,7 +21782,7 @@ datas ={
         "PosY": 25.46377,
         "PosZ": 343.1574,
         "Props": {
-          "CameraId": 0,
+          "CameraId": "33010001",
           "MapEntityType": "26",
           "Remark": "",
           "ShowInSceneMap": 1
@@ -21593,7 +21803,7 @@ datas ={
         "PosY": 10.88734,
         "PosZ": 322.8847,
         "Props": {
-          "CameraId": 0,
+          "CameraId": "33010001",
           "MapEntityType": "26",
           "Remark": "",
           "ShowInSceneMap": 1

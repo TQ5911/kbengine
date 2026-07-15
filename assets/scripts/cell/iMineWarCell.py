@@ -6,6 +6,7 @@ import formula
 import utils
 import gameconst
 import gameengine
+import gameconfig
 import gametimer
 import gameglobal
 import CollectionCheckContext
@@ -98,11 +99,13 @@ class IMineWarCell(object):
         # 通知矿战stub
         self.spaceMgr.onMineWarPlayerBeKill(killerId, selfId)
 
-    @gamedecorator.checkGameconfigEnable('mineBattle')
     def onEnterMineWarSpace(self):
         """
         进入矿战场景回调（战斗期间）
         """
+        if not gameconfig.visibleConfigEnabled('mineBattle'):
+            return
+
         if self.scoreTimer:
             return
 

@@ -110,5 +110,9 @@ datas = _tools.RODict({
     "dropDelay": _tools.RODict({
         "ID": "dropDelay",
         "value": 1.0,
+    }),
+    "collection_showVerticalDistance": _tools.RODict({
+        "ID": "collection_showVerticalDistance",
+        "value": 3,
     })
 })

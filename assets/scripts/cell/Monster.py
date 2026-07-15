@@ -593,15 +593,21 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             self._addAttackAvatarId(killer.id)
             self.triggerAllAttackerTask()
 
+            # 带有副本击杀归属tag的怪物，将其击杀的目标任务计数计入副本归属玩家
+            if killer.IsMonster and killer.hasCreepTag(gameconst.CREEP_TAG_DUNGEON_KILL_COUNT_TO_PLAYER):
+                self._triggerDungeonPlayerKillMonsterTask(killer)
+
             opUUID = KBEngine.genUUID64()
             srcType = AAC_AACDD.datas.BONUS_SRC_KILL_MONSTER
             detail = gameclass.AwardDetailCls(monsterId=self.monsterId, spaceNo=self.spaceNo)
             rewardIDList, shareRewardIDList, displayModeList = self.getDeathDrop()
             factor = 1.0
-            if formula.inLineScene(self.spaceNo) and self.getCreepData().get('nameSuffixID', 0) == gameconst.MonsterSuffix.NORMAL:
-                host = utils.getEntityRealEntity(killer)
-                if host and host.IsAvatar:
-                    factor = host.getKillMonsterAwardFactor(self.level)
+            if formula.inLineScene(self.spaceNo):
+                nameSuffixID = self.getCreepData().get('nameSuffixID', 0)
+                if nameSuffixID == gameconst.MonsterSuffix.NORMAL or nameSuffixID == gameconst.MonsterSuffix.ELITE:
+                    host = utils.getEntityRealEntity(killer)
+                    if host and host.IsAvatar:
+                        factor = host.getKillMonsterAwardFactor(self.level)
             dropCtx = awardContext.DropAwardCtx(self.id,
                                                 self.level,
                                                 {'lv': self.level, 'factor': factor},
@@ -613,39 +619,39 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             dropCtx.addContextVar('opUUID', opUUID)
             dropCtx.addContextVar('detail', detail)
 
-            if not self.FirstBloodTargetId:
-                host = utils.getEntityRealEntity(killer)
-                if host and host.IsAvatar:
-                    self.FirstBloodTargetId = host.id
-                else:
-                    self.FirstBloodTargetId = killer.id
-                    LOG_ERR('unknown FirstBloodTargetId', killer, self.FirstBloodTargetId)
+            if gameconst.DropShareRewardType.FIRST_BLOOD in shareRewardIDList:
+                if not self.FirstBloodTargetId:
+                    host = utils.getEntityRealEntity(killer)
+                    if host and host.IsAvatar:
+                        self.FirstBloodTargetId = host.id
+                    else:
+                        self.FirstBloodTargetId = killer.id
+                        LOG_ERR('unknown FirstBloodTargetId', killer, self.FirstBloodTargetId)
 
-            dropCtx.addContextVar('FBtargetId', self.FirstBloodTargetId)
+                fbTarget = KBEngine.entities.get(self.FirstBloodTargetId, None)
+                if not fbTarget:
+                    fbTarget = killer
 
-            fbTarget = KBEngine.entities.get(self.FirstBloodTargetId, None)
-            if not fbTarget:
-                fbTarget = killer
-
-            for i in range(len(rewardIDList)):
-                if shareRewardIDList[i] == gameconst.DropShareRewardType.FIRST_BLOOD:
-                    _ctx = fbTarget.getAvatarAwardCtxCell(rewardIDList[i], None)
-                    award = dropAward.getAwardOne(
-                        rewardIDList[i],
-                        _ctx
-                    )
-                    items = award.itemWealth.getItemObjs() + award.petItemWealth.getItemObjs()
-                    radius = NPC_PC.datas['pickupPermissionRange']['value']
-                    collectionId = NPC_PC.datas['pickupPermissionId']['value']
-                    boxRadius = NPD.datas.get(collectionId, {}).get('chestRadius', 0)
-                    posList = self.getRandomPositionByBoxRadius(self.position, radius, boxRadius, len(items))
-                    LOG_INFO("FB posList", posList, len(items))
-                    for j in range(len(items)):
-                        # (1, 1)第一个1表示随机的权重，第二个表示数量，后面的(1,NPC_PC.datas['pickupPermissionId']['value'])里的1也是权重, 这里因为只有一个，所以权重没用
-                        self.deathCreateCollection(radius,((1,1),),
-                        ((1,NPC_PC.datas['pickupPermissionId']['value']),),
-                        NPC_PC.datas['pickupPermissionValidTime']['value'],
-                        {"needFBTarget":True, "FBTime":NPC_PC.datas['pickupPermissionTime']['value'], "FBItemId": items[j].itemId, "fromMonsterId": self.id, "FBPos": posList[j]})
+                for i in range(len(rewardIDList)):
+                    if shareRewardIDList[i] == gameconst.DropShareRewardType.FIRST_BLOOD:
+                        _ctx = fbTarget.getAvatarAwardCtxCell(rewardIDList[i], None)
+                        award = dropAward.getAwardOne(
+                            rewardIDList[i],
+                            _ctx
+                        )
+                        items = award.itemWealth.getItemObjs() + award.petItemWealth.getItemObjs()
+                        radius = NPC_PC.datas['pickupPermissionRange']['value']
+                        collectionId = NPC_PC.datas['pickupPermissionId']['value']
+                        boxRadius = NPD.datas.get(collectionId, {}).get('chestRadius', 0)
+                        posList = self.getRandomPositionByBoxRadius(self.position, radius, boxRadius, len(items))
+                        LOG_INFO("FB posList", posList, len(items))
+                        for j in range(len(items)):
+                            # (1, 1)第一个1表示随机的权重，第二个表示数量，后面的(1,NPC_PC.datas['pickupPermissionId']['value'])里的1也是权重, 这里因为只有一个，所以权重没用
+                            self.deathCreateCollection(radius,((1,1),),
+                            ((1,NPC_PC.datas['pickupPermissionId']['value']),),
+                            NPC_PC.datas['pickupPermissionValidTime']['value'],
+                            {"needFBTarget":True, "FBTime":NPC_PC.datas['pickupPermissionTime']['value'], "FBItemId": items[j].itemId,
+                            "fromMonsterId": self.id, "FBPos": posList[j], "FBBind":items[j].bindType})
 
             self.doDispatchAward(killer, rewardIDList, shareRewardIDList, displayModeList, dropCtx)
 
@@ -783,6 +789,26 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         for entId, t in list(self.beAttackAvatarIds.items()):
             if now - t > gameconst.MONSTER_BE_ATTACK_CLEAR_DUR: # 超过5分钟 清除
                 self.beAttackAvatarIds.pop(entId)
+
+    def _triggerDungeonPlayerKillMonsterTask(self, killer):
+        """
+        带有 CREEP_TAG_DUNGEON_KILL_COUNT_TO_PLAYER tag 的怪物击杀目标时，
+        将目标任务计数计入当前单人副本的归属玩家身上。
+        """
+        if not self.spaceMgr:
+            return
+        if not hasattr(self.spaceMgr, 'singleDungeonBelongPlayerGBID'):
+            return
+
+        playerGBID = self.spaceMgr.singleDungeonBelongPlayerGBID
+        if not playerGBID:
+            return
+
+        for pid in self.spaceMgr.players:
+            ent = KBEngine.entities.get(pid)
+            if ent and ent.IsAvatar and ent.gbId == playerGBID and ent.spaceNo == self.spaceNo:
+                ent.checkKillMonsterTrigger(self.monsterId, self.id)
+                break
 
     def _initBelongHate(self, aiController):
         belongGuideNpcId = self.getBelongGuideNpcId()
@@ -989,6 +1015,12 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             LOG_INFO("lose FBT by hate", self.FirstBloodTargetId, "->", 0)
             self.FirstBloodTargetId = 0
             self.lastLoseFTTime = now
+
+    def safeDestroy(self, forceDestroy=False):
+        if self.hasCreepTag(gameconst.CREEP_TAG_LARGE_ENT):
+            self.unsetBodySize()
+
+        return super().safeDestroy(forceDestroy)
 
     def calcFirstBloodTarget(self, srcOriId):
         if not self.isFirstBloodMonster:

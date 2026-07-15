@@ -118,6 +118,14 @@ class ImpTask(impTalk.ImpTalk):
         if not levelCondResult:
             return levelCondResult
 
+        # guild level check
+        _openCondCheckGuildLv = dataUtils.getTaskFieldVal(taskData, 'OpenCondCheckGuildLv')
+        if _openCondCheckGuildLv and self.guildLevel < _openCondCheckGuildLv:
+            return gameclass.TaskCondResultCls(
+                False,
+                playerName=self.name,
+            )
+
         # 职业
         # openCondCheckProfres 默认值可能是 字符串 "0"、空字符串、整数0
         openCondCheckProfres = dataUtils.getTaskFieldVal(taskData, 'OpenCondCheckProfres')

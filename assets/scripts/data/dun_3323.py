@@ -96,14 +96,14 @@ datas ={
     "PosZ": 97.31,
     "Props": {
       "AreaType": 0,
-      "Height": 6.0,
+      "Height": 60.0,
       "Length": 70.0,
       "MPosX": 170.0,
       "MPosY": 530.85,
       "MPosZ": 72.0,
       "Remark": "",
       "ShowInSceneMap": 1,
-      "Width": 0.0
+      "Width": 2.0
     }
   },
   "33238007": {
@@ -124,14 +124,14 @@ datas ={
     "PosZ": 130.9982,
     "Props": {
       "AreaType": 0,
-      "Height": 6.0,
+      "Height": 60.0,
       "Length": 70.0,
       "MPosX": 164.0,
       "MPosY": 533.48,
-      "MPosZ": 102.0,
+      "MPosZ": 101.0,
       "Remark": "",
       "ShowInSceneMap": 1,
-      "Width": 0.0
+      "Width": 2.0
     }
   },
   "33238008": {
@@ -152,14 +152,14 @@ datas ={
     "PosZ": 102.1208,
     "Props": {
       "AreaType": 0,
-      "Height": 6.0,
+      "Height": 60.0,
       "Length": 80.0,
       "MPosX": 214.0,
       "MPosY": 533.78,
-      "MPosZ": 69.0,
+      "MPosZ": 68.0,
       "Remark": "",
       "ShowInSceneMap": 1,
-      "Width": 0.0
+      "Width": 2.0
     }
   }
 }

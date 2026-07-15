@@ -94,6 +94,7 @@ class RaidVal(userType.UserSTSoleType):
         # raid mics
         self.raidMicsBlocked = raidMicsBlocked      # type: bool
         self.raidMicsSwitch = raidMicsSwitch        # type: int
+        self.raidBlockedMembers = set()             # set[gbId] — 被禁麦成员，持久化
         # -----------------------------------------------------------
         # -----------------------------------------------------------
         # raid dungeon
@@ -131,12 +132,6 @@ class RaidVal(userType.UserSTSoleType):
         if self.getRaidLeader().enableMics:
             return max(0, _num - 1)
         return _num
-
-    @property
-    def maxRaidMemberMicsNum(self):
-        # NOTE(): 需要减去团长的限额
-        _num = CC_CFG.datas["voiceChat_maxMicsExceptAdmin"]["value"]
-        return max(0, _num - 1)
 
     def getNextActivePlayer(self, excepted=()):
         for teamIDX, _teamVal in self.raidTeamDic.items():
@@ -444,6 +439,9 @@ class RaidVal(userType.UserSTSoleType):
             raidMemberVal, err = self._addNewMemberAutomatic(playerGBID, avatarProps, toClient)
 
         if err == gameconst.RaidErrno.ENUM_RAID_OK:
+            # 检查该成员是否在禁麦列表中
+            if playerGBID in self.raidBlockedMembers:
+                raidMemberVal.isBlockMics = True
             # 新来的，应该刷一下团队信息缓存
             self.refreshRaidCacheValToAllPlayers()
             self.broadcastToAllRaidMembersCell('onRaidAddNewMember', (raidMemberVal.playerBox.id,), (playerGBID,))
@@ -674,6 +672,7 @@ class RaidVal(userType.UserSTSoleType):
         if raidTeamVal.isEmpty():
             LOG_INFO('popMember:: pop team when it empty')
             self.raidTeamDic.pop(teamIdx)
+        self.raidBlockedMembers.discard(playerGBID)
         self.raidFilterPlayers[playerGBID] = utils.curTS()
         return _raidMemberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
@@ -693,6 +692,13 @@ class RaidVal(userType.UserSTSoleType):
         _oldLeaderTeamIDX = self.raidLeaderTeamIDX
         self.raidLeaderGBID = leaderGBID
         self.raidLeaderTeamIDX = leaderTeamIDX
+
+        # 新团长不会被禁麦
+        if leaderGBID in self.raidBlockedMembers:
+            self.raidBlockedMembers.discard(leaderGBID)
+            _leaderMember = _teamVal.teamPlayerDict[leaderGBID]
+            if _leaderMember:
+                _leaderMember.isBlockMics = False
 
         if _oldLeaderTeamIDX in self.raidTeamDic and _oldLeaderGBID in self.raidTeamDic[_oldLeaderTeamIDX].teamPlayerDict:
             self.turnOffRaidMemberMics(leaderGBID, _oldLeaderTeamIDX, _oldLeaderGBID,
@@ -836,8 +842,6 @@ class RaidVal(userType.UserSTSoleType):
 
                 _blockList.append(_raidMemberVal.playerGbId)
 
-        toClient and self.broadcastToAllRaidMembersClient('onSyncAllRaidMemberMicsStatus',
-                                                        (self.raidUUID, _onList, _offList, _blockList))
         return _onList, _offList, _blockList
 
     def switchRaidMiscMode(self, srcAvatarGbId, mode, extraProps, toClient=False):
@@ -878,6 +882,10 @@ class RaidVal(userType.UserSTSoleType):
         for _raidTeamVal in self.raidTeamDic.values():
             for _raidMemberVal in _raidTeamVal.teamPlayerDict.values():
                 _raidMemberVal.enableMics = _raidMemberVal.isBlockMics = False
+                _raidMemberVal.enableSpeaker = False
+                _raidMemberVal.inVoiceRoom = False
+        for gbId in self._allMemberGbIds():
+            self.broadcastMemberVoiceState(gbId)
 
     def _onRaidMiscModeSwitchToFree(self, extraProps):
         for _raidTeamVal in self.raidTeamDic.values():
@@ -889,6 +897,10 @@ class RaidVal(userType.UserSTSoleType):
                         _raidMemberVal.enableMics, _raidMemberVal.isBlockMics = True, False
                 else:
                     _raidMemberVal.enableMics = _raidMemberVal.isBlockMics = False
+                _raidMemberVal.enableSpeaker = True
+                _raidMemberVal.inVoiceRoom = True
+        for gbId in self._allMemberGbIds():
+            self.broadcastMemberVoiceState(gbId)
 
     def _onRaidMiscModeSwitchToLeader(self, extraProps):
         for _raidTeamVal in self.raidTeamDic.values():
@@ -900,6 +912,34 @@ class RaidVal(userType.UserSTSoleType):
                         _raidMemberVal.enableMics, _raidMemberVal.isBlockMics = True, False
                 else:
                     _raidMemberVal.enableMics, _raidMemberVal.isBlockMics = False, True
+            _raidMemberVal.enableSpeaker = True
+            _raidMemberVal.inVoiceRoom = True
+        for gbId in self._allMemberGbIds():
+            self.broadcastMemberVoiceState(gbId)
+
+    def _allMemberGbIds(self):
+        """获取所有副本成员 GBID"""
+        gbIds = []
+        for _raidTeamVal in self.raidTeamDic.values():
+            gbIds.extend(_raidTeamVal.teamPlayerDict.keys())
+        return gbIds
+
+    def _buildVoiceFlags(self, gbId):
+        for _raidTeamVal in self.raidTeamDic.values():
+            member = _raidTeamVal.teamPlayerDict.get(gbId)
+            if member:
+                flags = 0
+                if member.inVoiceRoom:   flags |= 0x01
+                if member.enableMics:    flags |= 0x02
+                if member.enableSpeaker: flags |= 0x04
+                if member.isBlockMics:   flags |= 0x08
+                return flags
+        return 0
+
+    def broadcastMemberVoiceState(self, gbId):
+        """统一向所有副本成员广播语音状态变更"""
+        flags = self._buildVoiceFlags(gbId)
+        self.broadcastToAllRaidMembersClient('onUpdateMemberVoiceState', (gbId, flags))
 
     def turnOnRaidMemberMics(self, srcAvatarGbId, teamIDX, playerGBID, toClient=False):
         if not self.raidMicsSwitch:
@@ -928,12 +968,6 @@ class RaidVal(userType.UserSTSoleType):
                                                                               raidUUID=self.raidUUID,
                                                                               teamIDX=teamIDX)
 
-        if (not _isSrcPlayerRaidLeader) and self.raidMemberMicsNum >= self.maxRaidMemberMicsNum():
-            return None, gameconst.RaidErrno.ENUM_RAID_MICS_NUM_OUT_OF_RANGE.initkvbody(source='turnOnRaidMemberMics',
-                                                                                   srcPlayerGbId=srcAvatarGbId,
-                                                                                   raidUUID=self.raidUUID,
-                                                                                   teamIDX=teamIDX)
-
         if teamIDX not in self.raidTeamDic:
             return None, gameconst.RaidErrno.ENUM_RAID_TEAM_IDX_NOT_FOUND.initkvbody(source='turnOnRaidMemberMics',
                                                                                 srcPlayerGbId=srcAvatarGbId,
@@ -952,6 +986,7 @@ class RaidVal(userType.UserSTSoleType):
         if _memberVal.isBlockMics:
             if srcAvatarGbId == self.raidLeaderGBID:
                 _memberVal.isBlockMics = False
+                self.raidBlockedMembers.discard(playerGBID)
                 _unblockMics = True
 
             else:
@@ -965,8 +1000,7 @@ class RaidVal(userType.UserSTSoleType):
             _memberVal.enableMics = True
 
         if toClient:
-            _unblockMics and self.broadcastToAllRaidMembersClient('onUnblockRaidMemberMics', (self.raidUUID, teamIDX, playerGBID))
-            self.broadcastToAllRaidMembersClient('onTurnOnRaidMemberMics', (srcAvatarGbId, self.raidUUID, teamIDX, playerGBID))
+            self.broadcastMemberVoiceState(playerGBID)
 
         return _memberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
@@ -1016,9 +1050,11 @@ class RaidVal(userType.UserSTSoleType):
 
         if blockMics or self.raidMicsSwitch == gameconst.RaidMicsModeEnum.LEADER:
             _memberVal.isBlockMics = True
+        if blockMics:
+            self.raidBlockedMembers.add(playerGBID)
 
         if toClient:
-            self.broadcastToAllRaidMembersClient('onTurnOffRaidMemberMics', (srcAvatarGbId, self.raidUUID, teamIDX, playerGBID, blockMics))
+            self.broadcastMemberVoiceState(playerGBID)
 
         return _memberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
@@ -1043,9 +1079,10 @@ class RaidVal(userType.UserSTSoleType):
 
         _memberVal = _teamVal.teamPlayerDict[playerGBID]
         _memberVal.isBlockMics = False
+        self.raidBlockedMembers.discard(playerGBID)
 
         if toClient:
-            self.broadcastToAllRaidMembersClient('onUnblockRaidMemberMics', (self.raidUUID, teamIDX, playerGBID))
+            self.broadcastMemberVoiceState(playerGBID)
 
         return _memberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
@@ -1053,10 +1090,10 @@ class RaidVal(userType.UserSTSoleType):
         if self.raidMicsBlocked:
             return dict(isBlockMics=True)
         if self.raidMicsSwitch == gameconst.RaidMicsModeEnum.FREE:
-            return dict()
+            return dict(inVoiceRoom=True, enableSpeaker=True)
         elif self.raidMicsSwitch == gameconst.RaidMicsModeEnum.LEADER:
-            return dict(isBlockMics=True)
-        return dict()
+            return dict(isBlockMics=True, inVoiceRoom=True, enableSpeaker=True)
+        return dict(inVoiceRoom=True, enableSpeaker=True)
 
     # --------------------------------------------------------------------
 

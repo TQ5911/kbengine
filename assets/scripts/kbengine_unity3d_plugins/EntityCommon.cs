@@ -16,6 +16,7 @@ namespace KBEngine
 		public virtual void onAddBuff(CLIENT_BUFF_VAL arg1) {} //Avatar Monster Summon Npc Creation AvatarReplica 
 		public virtual void onAddPassiveSkill(UInt32 arg1, UInt32 arg2) {} //Avatar Monster Summon Npc Creation AvatarReplica 
 		public virtual void onAddSkill(UInt32 arg1, UInt32 arg2, Byte arg3, double arg4, float arg5, Byte arg6) {} //Avatar Monster Summon Npc Creation AvatarReplica 
+		public virtual void onAnotherClientLogin() {} //Avatar Avataring 
 		public virtual void onBornAction() {} //Monster Npc AvatarReplica 
 		public virtual void onBreakAwayStuckSuccess() {} //Avatar Avataring 
 		public virtual void onBreakCastingSkill(Int32 arg1, UInt32 arg2, Int32 arg3) {} //Avatar Monster Summon Npc Creation AvatarReplica 
@@ -28,7 +29,7 @@ namespace KBEngine
 		public virtual void onGetBuffInfo(Int32 arg1, CLIENT_BUFFS arg2) {} //Avatar Monster Summon Npc Creation AvatarReplica 
 		public virtual void onHotfixVersion(string arg1) {} //Account Avatar 
 		public virtual void onKickAnotherAccount() {} //Account Accounting 
-		public virtual void onMessage(Int32 arg1, List<string> arg2) {} //Account Avatar Monster Summon Npc Creation AvatarReplica 
+		public virtual void onMessage(Int32 arg1, List<string> arg2) {} //Account Avatar Monster Summon Npc Creation AvatarReplica Accounting Avataring 
 		public virtual void onOthersSkillDamage(Int32 arg1, List<Int32> arg2) {} //Avatar Monster Summon Npc Creation AvatarReplica 
 		public virtual void onPatchVersion(string arg1) {} //Account Avatar 
 		public virtual void onRecvAvatarChannelMsg(UInt32 arg1, CHAT_CHANNEL_AVATAR_INFO arg2, CHAT_MSG_DATA arg3) {} //Avatar Avataring 
@@ -52,6 +53,7 @@ namespace KBEngine
 		public virtual void popDialog(Int32 arg1) {} //Avatar Monster Summon Npc Collection Accounting Avataring 
 		public virtual void showPopoverMsg(UInt32 arg1) {} //Avatar Monster Summon Npc Collection Accounting Avataring 
 		public virtual void showPopoverMsgWithArg(UInt32 arg1, List<string> arg2) {} //Avatar Monster Summon Npc Collection Accounting Avataring 
+		public virtual void syncServerTime(Int64 arg1, float arg2) {} //Avatar Avataring 
 		public virtual void updateForbidSkillTags(List<UInt16> arg1) {} //Avatar Monster Summon Npc Creation AvatarReplica 
 
 

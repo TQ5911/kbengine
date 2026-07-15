@@ -367,15 +367,9 @@ class SkillBaseClass(userType.UserSingleType):
                     LOG_DBG("in getCDDur, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.MODIFY_CD, datas)
             totalCD -= addValue
             if totalCD < 0:
+                LOG_ERR('getCDDur getInscriptionEffects to zero', self.skillId)
                 totalCD = 0
-            if totalCD > 0:
-                ret, datas = host.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.REFRESH_CD)
-                if ret:
-                    if len(datas) == 1:
-                        addValue = datas[0]
-                        if random.uniform(0, 1) <= addValue:
-                            totalCD = 0
-                            LOG_DBG("in getCDDur, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.REFRESH_CD, datas)
+
         return totalCD
 
     # 修改cd时长
@@ -568,6 +562,11 @@ class SkillBaseClass(userType.UserSingleType):
         if not rangeData:
             return (0,)
         return rangeData
+
+    @staticmethod
+    @functools.lru_cache(1024)
+    def getShiftDistance(skillId):
+        return SkillBaseClass.getSkillCfg(skillId).get('shiftDistance')
 
     def getRange(self, owner, skillId, skillLv=1):
         rangeData = self.getRangeData(skillId)
@@ -1194,6 +1193,10 @@ class SkillBaseClass(userType.UserSingleType):
         elif _scopeType == gameconst.SkillScopeEnum.MULTI_SECTOR:
             _arr = list(direction)
 
+        if self.isChangePosSkill(self.skillId):
+            positionArgs = self.getSkillDesPosition(caster, target, _arr)
+            _arr = _arr + positionArgs
+
         return _arr
 
     def getSkillDesPosition(self, caster, target, skillArgs):
@@ -1221,7 +1224,11 @@ class SkillBaseClass(userType.UserSingleType):
             desPosition = list(_realDstPos)
         elif self.hasSkillTag(gameconst.SkillTagEnum.Chongfeng):
             skillPos, skillDir = self.getSkillPosAndDir(caster, target, skillArgs)
-            dstPosition = caster.position + skillDir * self.getRange(caster, self.skillId, self.skillLv)
+            _shiftDistance = self.getShiftDistance(self.skillId)
+            if _shiftDistance > 1e-6:
+                dstPosition = caster.position + skillDir * _shiftDistance
+            else:
+                dstPosition = caster.position + skillDir * self.getRange(caster, self.skillId, self.skillLv)
 
             dstPosition = utils.getSurfacePos(caster.spaceID, dstPosition)
             dstPosition = utils.getRaycastPosition(caster.spaceID, caster.position, dstPosition)
@@ -1490,6 +1497,15 @@ class SkillBaseClass(userType.UserSingleType):
 
     def _checkUseSkillOwner(self, owner, targetId, ignoreReasons=0, checkInRange=True):
         LOG_DBG('_checkUseSkillOwner', self.skillId, targetId, ignoreReasons, checkInRange)
+        code = gameconst.UseSkillCheck.USC_ENUM_CHECK_USE_ACTION
+        if not code & ignoreReasons:
+            checkAction = self.getSkillCfg(self.skillId).get('checkUseSkillAction', None)
+            if checkAction:
+                target = KBEngine.entities.get(targetId)
+                if not checkAction(owner, target, actionContext.UseSkillCtx(owner.id, self.skillId, [], targetId, skillObj=self)):
+                    owner.debugCombatMsg('_checkUseSkillOwner check use action: skillId:%s', self.getSkillId())
+                    return code
+        
         code = gameconst.UseSkillCheck.USC_ENUM_FORBID
         if not code & ignoreReasons and owner.checkForbidSkill(self.getSkillId()):
             owner.debugCombatMsg('_checkUseSkillOwner forbid skill: skillId:%s', self.getSkillId())
@@ -1610,7 +1626,7 @@ class SkillBaseClass(userType.UserSingleType):
 
         return gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK
 
-    def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True):
+    def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True, checkStage=gameconst.CHECK_SKILL_STAGE_DEFAULT):
         code = self._checkUseSkillOwner(owner, targetId, ignoreReasons, checkInRange)
         if code != gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK:
             return code
@@ -1639,8 +1655,19 @@ class SkillBaseClass(userType.UserSingleType):
             addCD = delayCd
             self.tNextCast = time.time() + delayCd
         else:
-            addCD = self.getCDDur(owner)
-            self.tNextCast = time.time() + addCD - 0.1
+            if owner.IsAvatar:
+                ret, datas = owner.getInscriptionEffects(self.skillId, gameconst.InscriptionEffectType.REFRESH_CD)
+                if ret and len(datas) == 1 and random.uniform(0, 1) <= datas[0]:
+                    self.tNextCast = time.time() - 0.1
+                    LOG_DBG("in getCDDur, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", self.skillId, gameconst.InscriptionEffectType.REFRESH_CD, datas)
+                else:
+                    addCD = self.getCDDur(owner)
+                    self.tNextCast = time.time() + addCD - 0.1
+
+            else:
+                addCD = self.getCDDur(owner)
+                self.tNextCast = time.time() + addCD - 0.1
+
         LOG_DBG('doEnterCDTime 2', self.skillId, self.tNextCast, addCD, delayCd)
 
     def onInvalidateRefreshCD(self, owner, doReset=True, notifyClient=True):
@@ -2015,8 +2042,19 @@ class CommonSkillVal(SkillBaseClass):
                 # 消耗一次
                 if releasedCount > 0:
                     self.setTempData(owner, gameconst.SkillTempDataKey.RELEASED_CNT, releasedCount - 1)
-            self.doEnterCDTime(owner)
-            owner.client.onSetAddSkillCd(self.skillId, float(self.getCDDur(owner)), float(self.tNextCast), False, self.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), self.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), self.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), not self.isSkillCDStatusFrozen())
+
+            if enterCD:
+                self.doEnterCDTime(owner)
+                owner.client.onSetAddSkillCd(
+                    self.skillId, 
+                    float(self.getCDDur(owner)), 
+                    float(self.tNextCast), 
+                    False, 
+                    self.getTempData(gameconst.SkillTempDataKey.RELEASE_TIME, 0), 
+                    self.getTempData(gameconst.SkillTempDataKey.TOTAL_RELEASE_CNT, 0), 
+                    self.getTempData(gameconst.SkillTempDataKey.RELEASED_CNT, 0), 
+                    not self.isSkillCDStatusFrozen()
+                )
 
         owner.IsAvatar and owner.modifyMP(-self.getCostMp(owner, self.skillId, owner.mpCostRatio))
 
@@ -2228,16 +2266,16 @@ class CastingSkillVal(CommonSkillVal):
         super(CastingSkillVal, self).__init__(skillId, skillLv, tNextCast, cdDelta, parentSkill)
         self.castingStartTime = 0
 
-    def checkUseSkill(self, owner, targetID, ignoreReasons=0, checkInRange=True):
+    def checkUseSkill(self, owner, targetID, ignoreReasons=0, checkInRange=True, checkStage=gameconst.CHECK_SKILL_STAGE_DEFAULT):
         _realSkillVal, _ = self.getRealSkillVal(owner)
         if _realSkillVal != self:
-            ret = super(CastingSkillVal, self).checkUseSkill(owner, targetID, ignoreReasons, checkInRange)
+            ret = super(CastingSkillVal, self).checkUseSkill(owner, targetID, ignoreReasons, checkInRange, checkStage)
         else:
             castingSucc = self.isCastingSucc()
             if castingSucc:
                 ignoreReasons |= gameconst.UseSkillCheck.USC_ENUM_OUT_OF_RANGE
 
-            ret = super(CastingSkillVal, self).checkUseSkill(owner, targetID, ignoreReasons, checkInRange)
+            ret = super(CastingSkillVal, self).checkUseSkill(owner, targetID, ignoreReasons, checkInRange, checkStage)
 
             if not castingSucc:
                 code = gameconst.UseSkillCheck.USC_ENUM_NEED_CAST
@@ -2342,12 +2380,19 @@ class StagedSkill(CommonSkillVal):
         super(StagedSkill, self).__init__(skillId, skillLv, tNextCast, cdDelta, parentSkill)
         self.stageIndex = 0
 
-    def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True):
-        _realSkillVal, _ = self.getRealSkillVal(owner)
-        if _realSkillVal == self:
-            return super(StagedSkill, self).checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
+    # 如果仍然使用第一段来做校验，如果第二段是解控的就没法用了
+    def checkUseSkill(self, owner, targetId, ignoreReasons=0, checkInRange=True, checkStage=gameconst.CHECK_SKILL_STAGE_DEFAULT):
+        _ret = super(StagedSkill, self).checkUseSkill(owner, targetId, ignoreReasons, checkInRange, checkStage)
+        if _ret:
+            return _ret
 
-        return _realSkillVal.checkUseSkill(owner, targetId, ignoreReasons, checkInRange)
+        if checkStage == gameconst.CHECK_SKILL_STAGE_BEFORE_BEGIN:
+            _rootSkillVal = self.getRootSkillVal()
+            _stageSkillIds = self.getSkillCfg(_rootSkillVal.skillId).get('mulSkillID')
+            if _rootSkillVal.stageIndex > len(_stageSkillIds):
+                _ret |= gameconst.UseSkillCheck.USC_ENUM_STAGE_INVALID
+
+        return _ret
 
     def canRemoveFromBuild(self):
         return self.stageIndex == 0 and super(StagedSkill, self).canRemoveFromBuild()

@@ -58,8 +58,20 @@ md5sum 文件
 
 #实时查看文件最后20行
 tail -f -n 20 a.txt	
-查看文件最后20行	
+#实时查看文件包含key的行
+tail -F a.txt | grep 'key'
+#查看文件最后20行	
 tail -n 20 a.txt
+
+#用cat查看文件里包含'key'的行(会输出所有的)
+cat a.txt | grep 'key'
+#如果有很多行,可以（less，支持上下翻页搜索，# 空格：下一页  b：上一页  q：退出  /关键词：再搜索）
+cat a.txt | grep 'key' | less
+#太过的话输出到本地临时文件
+cat a.txt | grep 'key' > key_log.tmp
+#追加写入
+cat a.txt | grep 'key' >> key_log.tmp
+
 
 查找文件里指定字符串
 # -n显示行号

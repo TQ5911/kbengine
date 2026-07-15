@@ -214,6 +214,7 @@ class StatePatrol(StateImpCls):
         if not aiController.patrolTickSkip():
             aiController.patrol()
 
+
 @withName('angry')
 class StateAngry(StateImpCls):
     '''通用激怒（会脱战）'''
@@ -275,7 +276,8 @@ class StateBack(StateImpCls):
             aiController.restart()
 
         elif not aiController.inMoving():
-            if not aiController.clearHateAndGoHome():
+            if aiController.isGoHomeTooLate():
+                aiController.stuckBackHomeErr()
                 # 寻路失败了也算到家了
                 aiController.addContinueBuff()
                 aiController.addHomeBuff()
@@ -541,8 +543,10 @@ class StateluckyGroupAngry(StateImpCls):
 
     def tick(self, aiController):
         if not aiController.owner.checkInCombatArea(aiController.owner.position) or not aiController.inHate():
+            aiController.addHomeBuff()
             aiController.luckyGroupStand()
         else:
+            aiController.doAiAction()
             aiController.executeRandomSkill()
             aiController.stopRoutingMove()
 
@@ -661,7 +665,7 @@ class MachineImpCls(object):
         for state, name in stMap.items():
             self.stateDic[state] = STATE_MAP[name]
         self.state = self.stateDic[StateEnum.IDLE]
-
+        self.changeStateTime = 0
         self.moveable = True
         self.turnable = True
         self.onBeAttack = False
@@ -677,6 +681,10 @@ class MachineImpCls(object):
     def transform(self, aiController, name):
         if name in self.stateDic and self.state.name != name:
             self.state = self.stateDic[name]
+            self.changeStateTime = time.time()
+
+    def elapsedTime(self):
+        return time.time() - self.changeStateTime
 
     def testEvent(self, event):
         return not self.state.mask & event
@@ -688,17 +696,12 @@ class MachineImpCls(object):
 class MachineWithChangeTime(MachineImpCls):
     def __init__(self, stMap):
         super(MachineWithChangeTime, self).__init__(stMap)
-        self.changeStateTime = 0
         self.changeTimer = 0
 
     def transform(self, aiController, name):
         super(MachineWithChangeTime, self).transform(aiController, name)
-        self.changeStateTime = time.time()
         aiController.cancelTickCallBack(self.changeTimer)
         self.changeTimer = 0
-
-    def elapsedTime(self):
-        return time.time() - self.changeStateTime
 
     def setChangeTimer(self, timerId):
         self.changeTimer = timerId
