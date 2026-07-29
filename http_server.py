@@ -117,11 +117,24 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
             self.wfile.write(b"{\"code\":200, \"message\":\"POST Response from other\"}")
-            
+
         elif self.path == '/SendCode':
-            pass
+            code = 200
+            context = json.dumps({"code": code, "message": "alerady send"})
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(context.encode("utf-8"))
+
         elif self.path == '/VerifyCode':
-            pass
+            code = 200
+            msg = "verify success"
+            if post_data['code'] != '123456':
+                code = 1000
+                msg = "verify failed"
+            context = json.dumps({"code": code, "message": msg})
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(context.encode("utf-8"))
 
 def run_server():
     server_address = ('', 23456)
