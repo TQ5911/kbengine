@@ -18,7 +18,7 @@ import (
 	"crypto/cipher"
 	"io"
 
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 
 	gameServerService "centralService/src/centralLogin/centralLoginApp/gameServerService"
 	clientService "centralService/src/centralLogin/centralLoginApp/clientService"
@@ -33,11 +33,17 @@ type GameServerService struct {
 }
 
 func (self *GameServerService) OnLoseConnection() {
+	remoteAddr := self.GetRpcChannel().GetRemoteAddr()
+	appLog.Error("lose connection from:", remoteAddr.String(), "serverId:", self.hostId, "onlineNum:", self.onlineNum)
 	self.app.removeGameServer(self)
 }
 
 func (self *GameServerService) DoVerifyLogin(in *gameServerService.VerifyAccountRequest) gameServerService.VerifyAccountReply_VerifyResult {
-	conn := self.app.redisPool.Get()
+	conn, err := common.GetRedisConn(self.app.redisPool, "login.DoVerifyLogin")
+	if err != nil {
+		appLog.Error("VerifyLogin get redis conn failed", in.AccountName, err.Error())
+		return gameServerService.VerifyAccountReply_VERIFY_ACCOUNT_FAIL
+	}
 	defer conn.Close()
 
 	isLock, err := redis.Int(conn.Do("get", self.LockLoginSwitchServerKey(in.AccountName)))
@@ -81,7 +87,7 @@ func (self *GameServerService) DoVerifyLogin(in *gameServerService.VerifyAccount
 								appLog.Error("VerifyLogin->OnKickAccount failed: ", accountType, in.AccountName, lastServerId, in.HostId)
 							}
 						} else {
-							appLog.Error("VerifyLogin getGameServer failed", lastServerId)
+							appLog.Warn("VerifyLogin getGameServer failed:", lastServerId)
 						}
 
 						_, err := redis.String(conn.Do("set", "AccountLogin_"+in.AccountName, in.HostId))
@@ -103,7 +109,11 @@ func (self *GameServerService) DoVerifyLogin(in *gameServerService.VerifyAccount
 }
 
 func (self *GameServerService) mergeOfficialTagIntoOtherJson(accountName, otherJson string) string {
-	conn := self.app.redisPool.Get()
+	conn, err := common.GetRedisConn(self.app.redisPool, "login.mergeOfficialTagIntoOtherJson")
+	if err != nil {
+		appLog.Warn("mergeOfficialTagIntoOtherJson get redis conn failed", accountName, err.Error())
+		return otherJson
+	}
 	defer conn.Close()
 
 	tagType, err := redis.String(conn.Do("get", "officialTagType_"+accountName))
@@ -134,6 +144,11 @@ func AddKVToJson(oldJson string, key, value string) (string, error) {
 }
 
 func (self *GameServerService) VerifyLogin(in *gameServerService.VerifyAccountRequest) (*gameServerService.Void, error) {
+	go self.asyncVerifyLogin(in)
+	return nil, nil
+}
+
+func (self *GameServerService) asyncVerifyLogin(in *gameServerService.VerifyAccountRequest) {
 	res := gameServerService.VerifyAccountReply_VERIFY_ACCOUNT_UNKNOWN
 	isLogin, channelId, userId, otherJsonData := self.app.checkClientLogin(self, in.AccountType, in.AccountName, in.Token)
 	if !isLogin {
@@ -173,12 +188,10 @@ func (self *GameServerService) VerifyLogin(in *gameServerService.VerifyAccountRe
 		UserId:           userId,
 		OtherJsonData:    otherJsonData}
 	self.Client.(*gameServerService.GameServerClient).OnVerifyLogin(&result)
-
-	return nil, nil
 }
 
 func (self *GameServerService) RegisterServer(in *gameServerService.GameServerInfo) (*gameServerService.Void, error) {
-	appLog.Debug("register server:", in.HostId)
+	appLog.Info("register server:", in.HostId)
 
 	server := self.app.getGameServer(in.HostId)
 	if server != nil {
@@ -192,9 +205,13 @@ func (self *GameServerService) RegisterServer(in *gameServerService.GameServerIn
 	self.hostId = in.HostId
 	self.onlineNum = in.OnlineNum
 
-	conn := self.app.redisPool.Get()
+	conn, err := common.GetRedisConn(self.app.redisPool, "login.RegisterServer")
+	if err != nil {
+		appLog.Error("ServerRegister get redis conn failed", in.HostId, err.Error())
+		return nil, err
+	}
 	defer conn.Close()
-	_, err := conn.Do("set", self.ServerOnlineNumKey(in.HostId), 0)
+	_, err = conn.Do("set", self.ServerOnlineNumKey(in.HostId), 0)
 	if err != nil {
 		appLog.Error("ServerRegister set failed", in.HostId, err.Error())
 		return nil, err
@@ -209,9 +226,13 @@ func (self *GameServerService) UpdateServerInfo(in *gameServerService.GameServer
 	defer self.app.serversLock.Unlock()
 	self.onlineNum = in.OnlineNum
 
-	conn := self.app.redisPool.Get()
+	conn, err := common.GetRedisConn(self.app.redisPool, "login.UpdateServerInfo")
+	if err != nil {
+		appLog.Error("UpdateServerInfo get redis conn failed", in.HostId, err.Error())
+		return nil, err
+	}
 	defer conn.Close()
-	_, err := conn.Do("set", self.ServerOnlineNumKey(in.HostId), in.OnlineNum)
+	_, err = conn.Do("set", self.ServerOnlineNumKey(in.HostId), in.OnlineNum)
 	if err != nil {
 		appLog.Error("UpdateServerInfo set failed", in.HostId, err.Error())
 		return nil, err
@@ -439,7 +460,11 @@ func (self *GameServerService) OnAccountOnline(in *gameServerService.AccountOnli
 func (self *GameServerService) OnAccountOffline(in *gameServerService.AccountOfflineVal) (*gameServerService.Void, error) {
 	appLog.Info("OnAccountOffline:", in.AccountName, in.AccountType, in.HostId, in.SessionIdStr, in.UserId)
 	self.doBehaviorReport(in.AccountType, 0, in.AccountName, in.SessionIdStr, in.UserId)
-	conn := self.app.redisPool.Get()
+	conn, err := common.GetRedisConn(self.app.redisPool, "login.OnAccountOffline")
+	if err != nil {
+		appLog.Error("OnAccountOffline get redis conn failed", in.AccountName, err.Error())
+		return nil, err
+	}
 	defer conn.Close()
 	lastServerId, err := redis.Int(conn.Do("get", "AccountLogin_"+in.AccountName))
 	if err != nil {
@@ -482,9 +507,13 @@ func (self *GameServerService) ServerOnlineNumKey(serverId uint32) string {
 }
 
 func (self *GameServerService) LockLoginSwitchServer(in *gameServerService.LockLoginSwitchServerVal) (*gameServerService.Void, error) {
-	conn := self.app.redisPool.Get()
+	conn, err := common.GetRedisConn(self.app.redisPool, "login.LockLoginSwitchServer")
+	if err != nil {
+		appLog.Error("LockLoginSwitchServer get redis conn failed", in.AccountName, err.Error())
+		return nil, err
+	}
 	defer conn.Close()
-	_, err := conn.Do("set", self.LockLoginSwitchServerKey(in.AccountName), 1)
+	_, err = conn.Do("set", self.LockLoginSwitchServerKey(in.AccountName), 1)
 	if err != nil {
 		appLog.Error("LockLoginSwitchServer set failed", in.AccountName, err.Error())
 		return nil, err
@@ -496,9 +525,13 @@ func (self *GameServerService) LockLoginSwitchServer(in *gameServerService.LockL
 }
 
 func (self *GameServerService) UnlockLoginSwitchServer(in *gameServerService.UnlockLoginSwitchServerVal) (*gameServerService.Void, error) {
-	conn := self.app.redisPool.Get()
+	conn, err := common.GetRedisConn(self.app.redisPool, "login.UnlockLoginSwitchServer")
+	if err != nil {
+		appLog.Error("UnlockLoginSwitchServer get redis conn failed", in.AccountName, err.Error())
+		return nil, err
+	}
 	defer conn.Close()
-	_, err := conn.Do("del", self.LockLoginSwitchServerKey(in.AccountName))
+	_, err = conn.Do("del", self.LockLoginSwitchServerKey(in.AccountName))
 	if err != nil {
 		appLog.Error("UnlockLoginSwitchServer del failed", in.AccountName, err.Error())
 		return nil, err

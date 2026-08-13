@@ -689,9 +689,9 @@ func (au *AuctionApp) GetItemLastPrice(itemId uint32) (float32, error) {
 	return lastPrice, nil
 }
 
-func (au *AuctionApp) GetItemAvgPrice(itemId uint32) (float32, error) {
-	avgPrice := au.auctionMgr.GetItemAvgPrice(itemId)
-	return avgPrice, nil
+func (au *AuctionApp) GetItemAvgPrice(itemId uint32) (float32, float32, error) {
+	avgPrice, avgPrice7 := au.auctionMgr.GetItemAvgPrice(itemId)
+	return avgPrice, avgPrice7, nil
 }
 
 func (au *AuctionApp) GetPlayerAuctionItems(playerGBID uint64) []*AuctionItem {
@@ -1554,4 +1554,25 @@ func (au *AuctionApp) getAuctionItemsByAuctionIds(auctionIds []uint64) ([]*Aucti
 		auctionItems = append(auctionItems, auctionItem)
 	}
 	return auctionItems, nil
+}
+
+func (au *AuctionApp) getAllItemsPriceInfoList() []*gameServerService.ItemPriceInfo{
+	return au.auctionMgr.getAllItemsPriceInfoList()
+}
+
+func (au *AuctionApp) broadcastAllItemsPriceInfoList() {
+	infoList := au.getAllItemsPriceInfoList()
+	au.serversMutex.RLock()
+	defer au.serversMutex.RUnlock()
+	allServerIds := au.getAllServerIds()
+	for _, serverId := range allServerIds {
+		if gameServerMap, ok := au.gameServers[serverId]; ok {
+			if len(gameServerMap) == 0 {
+				continue
+			}
+			for _, gameServer := range gameServerMap {
+				gameServer.AuctionService.(*GameServerService).PushItemPriceInfoList(infoList)
+			}
+		}
+	}
 }

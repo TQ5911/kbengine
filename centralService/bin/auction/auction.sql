@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `auction_priceRecord_avgPrices`
     `totalPrice` bigint unsigned not null DEFAULT 0,
     `number` bigint unsigned not null DEFAULT 0,
 	`avgPrice` float not null DEFAULT 0.0,
+    `recentPrices` LONGTEXT NULL,
     INDEX (`itemId`),
     PRIMARY KEY idKey (id)
     );

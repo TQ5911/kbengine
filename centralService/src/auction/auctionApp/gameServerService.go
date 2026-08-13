@@ -6,6 +6,7 @@ import (
 	"centralService/src/trpc"
 	"sync"
 	"time"
+	"encoding/json"
 )
 
 // 给游戏服务器提供的接口
@@ -136,6 +137,12 @@ var getAuctionItemsByAuctionIdsRespPool = sync.Pool{
 	},
 }
 
+var pushItemPriceInfoListPool = sync.Pool{
+	New: func() interface{} {
+		return &gameServerService.ItemPriceInfoList{}
+	},
+}
+
 func (gs *GameServerService) newAuctionItem() *gameServerService.AuctionItem {
 	item := protoAuctionItemPool.Get().(*gameServerService.AuctionItem)
 	item.Reset()
@@ -152,7 +159,6 @@ func (gs *GameServerService) putAuctionItem(auctionItem *gameServerService.Aucti
 }
 
 func (gs *GameServerService) OnLoseConnection() {
-	close(gs.pushQueue)
 	gs.status = ServiceStatus_Disconnected
 	gs.app.unRegisterServer(gs)
 }
@@ -164,6 +170,8 @@ func (gs *GameServerService) RegisterServer(in *gameServerService.ServerInfoMess
 	}
 	gs.serverId = in.ServerId
 	gs.compId = in.CompId
+	infoList := gs.app.getAllItemsPriceInfoList()
+	gs.PushItemPriceInfoList(infoList)
 	return nil, nil
 }
 
@@ -540,7 +548,7 @@ func (gs *GameServerService) GetItemLastAndAvgPrice(in *gameServerService.GetIte
 			appLog.Errorw("GetItemLastAndAvgPrice", "err", err)
 			return
 		}
-		avgPrice, err := gs.app.GetItemAvgPrice(in.ItemId)
+		avgPrice, avgPrice7, err := gs.app.GetItemAvgPrice(in.ItemId)
 		if err != nil {
 			appLog.Errorw("GetItemLastAndAvgPrice", "err", err)
 			return
@@ -551,6 +559,19 @@ func (gs *GameServerService) GetItemLastAndAvgPrice(in *gameServerService.GetIte
 		response.LastPrice = lastPrice
 		response.AvgPrice = avgPrice
 		response.Extra = in.Extra
+
+		var extra map[string]interface{}
+		if err := json.Unmarshal([]byte(in.Extra), &extra); err != nil {
+			appLog.Errorw("GetItemLastAndAvgPrice Unmarshal err ", err.Error())
+			return
+		}
+		extra["avgPrice7"] = avgPrice7
+		extraJsonData, err := json.Marshal(extra)
+		if err != nil {
+			appLog.Errorw("GetItemLastAndAvgPrice Marshal err ", err.Error())
+			return
+		}
+		response.Extra = string(extraJsonData)
 
 		_, err = gs.GetClientEndPoint().(*gameServerService.GameServerClient).ReplyGetItemLastAndAvgPrice(response)
 		if err != nil {
@@ -581,7 +602,7 @@ func (gs *GameServerService) GetCurrentSaleItemInfo(in *gameServerService.GetCur
 		}
 
 		lastPrice, _ := gs.app.GetItemLastPrice(in.ItemId)
-		avgPrice, _ := gs.app.GetItemAvgPrice(in.ItemId)
+		avgPrice, avgPrice7, _ := gs.app.GetItemAvgPrice(in.ItemId)
 		response := getCurrentSaleItemInfoRespPool.Get().(*gameServerService.GetCurrentSaleItemInfoResp)
 		response.PlayerGBID = in.PlayerGBID
 		response.ItemId = in.ItemId
@@ -590,6 +611,19 @@ func (gs *GameServerService) GetCurrentSaleItemInfo(in *gameServerService.GetCur
 		response.LastPrice = lastPrice
 		response.AvgPrice = avgPrice
 		response.IsPublicity = in.IsPublicity
+
+		var extra map[string]interface{}
+		if err := json.Unmarshal([]byte(in.Extra), &extra); err != nil {
+			appLog.Errorw("GetCurrentSaleItemInfo Unmarshal err ", err.Error())
+			return
+		}
+		extra["avgPrice7"] = avgPrice7
+		extraJsonData, err := json.Marshal(extra)
+		if err != nil {
+			appLog.Errorw("GetCurrentSaleItemInfo Marshal err ", err.Error())
+			return
+		}
+		response.Extra = string(extraJsonData)
 
 		_, err = gs.GetClientEndPoint().(*gameServerService.GameServerClient).ReplyGetCurrentSaleItemInfo(response)
 		if err != nil {
@@ -808,5 +842,28 @@ func (gs *GameServerService) GetAuctionItemsByAuctionIds(in *gameServerService.G
 		response.Reset()
 		getAuctionItemsByAuctionIdsRespPool.Put(response)
 	}()
+	return nil, nil
+}
+
+func (gs *GameServerService) PushItemPriceInfoList(infoList []*gameServerService.ItemPriceInfo) (*gameServerService.Void, error) {
+	for start := 0; start < len(infoList); start += 10 {
+		end := start + 10
+		if end > len(infoList) {
+			end = len(infoList)
+		}
+		priceInfoList := pushItemPriceInfoListPool.Get().(*gameServerService.ItemPriceInfoList)
+		batchData := make([]*gameServerService.ItemPriceInfo, 0, end-start)
+		batchData = append(batchData, infoList[start:end]...)
+		priceInfoList.InfoList = batchData
+
+		_, err := gs.GetClientEndPoint().(*gameServerService.GameServerClient).PushItemPriceInfoList(priceInfoList)
+		if err != nil {
+			appLog.Errorw("PushItemPriceInfoList", "err", err)
+		}
+
+		priceInfoList.Reset()
+		pushItemPriceInfoListPool.Put(priceInfoList)
+	}
+
 	return nil, nil
 }

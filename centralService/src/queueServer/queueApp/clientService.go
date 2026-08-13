@@ -54,7 +54,7 @@ func (self *QueueClientService) startCheckLastRecvTimer() {
 	for range ticker.C {
 		log.Println("checkLastRecv", self.tLastRecv)
 		var curTime = time.Now().Unix()
-		if curTime-self.tLastRecv > 10 {
+		if curTime-self.tLastRecv > 180 {
 			appLog.Warn("checkLastRecv longtime not receive, remove it", self.tLastRecv, curTime)
 			self.app.removeClient(self)
 			return

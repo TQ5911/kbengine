@@ -342,6 +342,19 @@ message GetAuctionItemByAuctionIdsResp
   uint32 categoryId = 2;
   repeated AuctionItem auctionItems = 3;
 }
+
+message ItemPriceInfo
+{
+  uint32 itemId = 1;
+  float avgPrice = 2;
+  float avgPrice7 = 3;
+}
+
+message ItemPriceInfoList
+{
+  repeated ItemPriceInfo infoList = 1;
+}
+
 //中心服务器向游戏服提供的rpc
 service AuctionServer
 {
@@ -365,7 +378,7 @@ service AuctionServer
   rpc getAuctionItemsByAuctionIds(GetAuctionItemByAuctionIdsReq) returns(Void);
 }
 
-//游戏服向中心服的rpc
+//中心服向游戏服的rpc
 service GameServer
 {
   rpc activeTickCallback(Void) returns(Void);
@@ -387,4 +400,5 @@ service GameServer
   rpc replyBuyItemByItemId(BuyItemByItemIdResp) returns(Void);
   rpc replyDoBuyItemByItemId(DoBuyItemByItemIdResp) returns(Void);
   rpc replyGetAuctionItemsByAuctionIds(GetAuctionItemByAuctionIdsResp) returns(Void);
+  rpc pushItemPriceInfoList(ItemPriceInfoList) returns(Void);
 }

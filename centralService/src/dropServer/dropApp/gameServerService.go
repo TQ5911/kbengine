@@ -8,7 +8,6 @@ import (
 	dtSQL "database/sql"
 	"errors"
 	"fmt"
-	"math"
 	"slices"
 	"strings"
 )
@@ -609,10 +608,11 @@ func (gss *GameServerService) ActiveTick(in *gameServerService.Void) (*gameServe
 func (gss *GameServerService) GetTakeReward(in *gameServerService.GetTakeRewardRequest) (*gameServerService.Void, error) {
 	common.ExecuteConcurrently(func() {
 		appLog.Info("on get take reward:", in.UniqueId, in.TakerGbId)
-		sql := "SELECT price FROM reward_info WHERE uniqueId=?"
+		sql := "SELECT bindMoney, money FROM reward_info WHERE uniqueId=?"
 		row := gss.app.db.QueryRow(sql, in.UniqueId)
-		var price uint32
-		err := row.Scan(&price)
+		var bindMoney uint32
+		var money uint32
+		err := row.Scan(&bindMoney, &money)
 		if err != nil {
 			appLog.Error("GetTakeReward: get take reward drop info error: ", err.Error())
 			gss.Client.(*gameServerService.GameServerClient).OnGetTakeReward(&gameServerService.GetTakeRewardResponse{
@@ -636,10 +636,11 @@ func (gss *GameServerService) GetTakeReward(in *gameServerService.GetTakeRewardR
 		}
 
 		gss.Client.(*gameServerService.GameServerClient).OnGetTakeReward(&gameServerService.GetTakeRewardResponse{
-			UniqueId: in.UniqueId,
-			Result:   gameServerService.DropResult_DropResult_SUCCESS,
-			Price:    price,
-			Uuid:     in.Uuid,
+			UniqueId:  in.UniqueId,
+			Result:    gameServerService.DropResult_DropResult_SUCCESS,
+			BindMoney: bindMoney,
+			Money:     money,
+			Uuid:      in.Uuid,
 		})
 	})
 	return nil, nil
@@ -747,7 +748,7 @@ func (gss *GameServerService) GetDropInfo(in *gameServerService.GetDropInfoReque
 		}
 
 		rewardInfoList := make([]*gameServerService.RewardInfo, 0)
-		sql = "SELECT uniqueId, equipInfo, price FROM reward_info WHERE gbId=?"
+		sql = "SELECT uniqueId, equipInfo, bindMoney, money FROM reward_info WHERE gbId=?"
 		rows, err = gss.app.db.Query(sql, in.GbId)
 		if err != nil {
 			appLog.Error("GetDropInfo: query reward info error: ", err.Error())
@@ -758,8 +759,9 @@ func (gss *GameServerService) GetDropInfo(in *gameServerService.GetDropInfoReque
 		for rows.Next() {
 			var uniqueId uint64
 			var equipInfo []byte
-			var price uint64
-			err = rows.Scan(&uniqueId, &equipInfo, &price)
+			var bindMoney uint64
+			var money uint64
+			err = rows.Scan(&uniqueId, &equipInfo, &bindMoney, &money)
 			if err != nil {
 				appLog.Error("GetDropInfo: scan reward info error: ", err.Error())
 				continue
@@ -768,7 +770,8 @@ func (gss *GameServerService) GetDropInfo(in *gameServerService.GetDropInfoReque
 			rewardInfoList = append(rewardInfoList, &gameServerService.RewardInfo{
 				UniqueId:  uniqueId,
 				EquipInfo: equipInfo,
-				Price:     price,
+				BindMoney: bindMoney,
+				Money:     money,
 			})
 		}
 
@@ -870,77 +873,6 @@ func (gss *GameServerService) UpdateCollEndTime(in *gameServerService.UpdateColl
 	return nil, nil
 }
 
-func (gss *GameServerService) CheckDropExpire(in *gameServerService.CheckDropExpireRequest) (*gameServerService.Void, error) {
-	common.ExecuteConcurrently(func() {
-		appLog.Info("on check drop expire:", in.UniqueId, in.GbId)
-		gss.app.dropItemLock.Lock(in.UniqueId)
-		defer gss.app.dropItemLock.Unlock(in.UniqueId)
-
-		sql := "SELECT uniqueId, ownerServerId, ownerGbId, serverId, dropGbId, takerGbId, dropType, equipInfo, endTime, returnTime FROM drop_info WHERE uniqueId=?"
-		row := gss.app.db.QueryRow(sql, in.UniqueId)
-		var uniqueId uint64
-		var ownerServerId uint32
-		var ownerGbId uint64
-		var dropServerId uint32
-		var dropGbId uint64
-		var takerGbId uint64
-		var dropType uint32
-		var equipInfo []byte
-		var endTime int64
-		var returnTime int64
-		err := row.Scan(&uniqueId, &ownerServerId, &ownerGbId, &dropServerId, &dropGbId, &takerGbId, &dropType, &equipInfo, &endTime, &returnTime)
-		if err != nil {
-			appLog.Error("CheckDropExpire: check drop expire error: ", err.Error())
-			gss.Client.(*gameServerService.GameServerClient).OnCheckDropExpire(&gameServerService.CheckDropExpireResponse{
-				UniqueId: in.UniqueId,
-				Uuid:     in.Uuid,
-				Result:   gameServerService.DropResult_DropResult_NOT_FOUND,
-			})
-			return
-		}
-
-		// 掉落状态
-		if dropType != TYPE_DROP {
-			gss.Client.(*gameServerService.GameServerClient).OnCheckDropExpire(&gameServerService.CheckDropExpireResponse{
-				UniqueId: in.UniqueId,
-				Uuid:     in.Uuid,
-				Result:   gameServerService.DropResult_DropResult_STATE_ERROR,
-			})
-			return
-		}
-
-		now := common.GetNowTime()
-		// 超过返还时间，更新下状态
-		if now < endTime {
-			gss.Client.(*gameServerService.GameServerClient).OnCheckDropExpire(&gameServerService.CheckDropExpireResponse{
-				UniqueId: in.UniqueId,
-				Uuid:     in.Uuid,
-				Result:   gameServerService.DropResult_DropResult_NOT_EXPIRE,
-			})
-			return
-		}
-		sql = "DELETE FROM drop_info WHERE uniqueId=?"
-		_, err = gss.app.db.Exec(sql, in.UniqueId)
-		if err != nil {
-			appLog.Error("CheckDropExpire: delete drop info error: ", err.Error())
-			gss.Client.(*gameServerService.GameServerClient).OnCheckDropExpire(&gameServerService.CheckDropExpireResponse{
-				UniqueId: in.UniqueId,
-				Uuid:     in.Uuid,
-				Result:   gameServerService.DropResult_DropResult_STATE_ERROR,
-			})
-			return
-		}
-		gss.Client.(*gameServerService.GameServerClient).OnCheckDropExpire(&gameServerService.CheckDropExpireResponse{
-			Uuid:     in.Uuid,
-			UniqueId: in.UniqueId,
-			Result:   gameServerService.DropResult_DropResult_SUCCESS,
-		})
-		// 通知掉落者移除
-		gss._notifyDropTypeChange(dropServerId, uniqueId, NOTIFY_REMOVE_DROP, &gameServerService.DropNotifyArgs{Args: []int64{0}}, dropGbId)
-	})
-	return nil, nil
-}
-
 func (gss *GameServerService) SetTakeEquipRedeemPrice(in *gameServerService.SetTakeEquipRedeemPriceRequest) (*gameServerService.Void, error) {
 	common.ExecuteConcurrently(func() {
 		appLog.Info("set take equip redeem price:", in.UniqueId, in.GbId)
@@ -1016,117 +948,10 @@ func (gss *GameServerService) SetTakeEquipRedeemPrice(in *gameServerService.SetT
 	return nil, nil
 }
 
-func (gss *GameServerService) CheckRedeemExpire(in *gameServerService.CheckRedeemExpireRequest) (*gameServerService.Void, error) {
-	common.ExecuteConcurrently(func() {
-		// appLog.Info("on check redeem expire:", in.UniqueId, in.GbId)
-		gss.app.dropItemLock.Lock(in.UniqueId)
-		defer gss.app.dropItemLock.Unlock(in.UniqueId)
-		sql := "SELECT dropGbId, serverId, takerGbId, takerServerId, dropType, uniqueId, equipInfo, redeemWaitTime, returnTime, endTime, returnTimeBack, ownerGbId FROM drop_info WHERE uniqueId=? and dropType=?"
-		row := gss.app.db.QueryRow(sql, in.UniqueId, TYPE_TAKE)
-		var dropGbId uint64
-		var dropServerId uint32
-		var takerGbId uint64
-		var takerServerId uint32
-		var dropType uint32
-		var uniqueId uint64
-		var equipInfo []byte
-		var redeemWaitTime int64
-		var returnTime int64
-		var endTime uint32
-		var returnTimeBack int64
-		var ownerGbId uint64
-
-		err := row.Scan(&dropGbId, &dropServerId, &takerGbId, &takerServerId, &dropType, &uniqueId, &equipInfo, &redeemWaitTime, &returnTime, &endTime, &returnTimeBack, &ownerGbId)
-		if err != nil {
-			appLog.Error("CheckRedeemExpire: check redeem expire error: ", err.Error())
-			gss.Client.(*gameServerService.GameServerClient).OnCheckRedeemExpire(&gameServerService.CheckRedeemExpireResponse{
-				Uuid:     in.Uuid,
-				UniqueId: in.UniqueId,
-				Result:   gameServerService.DropResult_DropResult_NOT_FOUND,
-			})
-			return
-		}
-
-		now := common.GetNowTime()
-		// 超过返还时间
-		if returnTime > 0 && now >= returnTime {
-			// 操作成功
-			gss.Client.(*gameServerService.GameServerClient).OnCheckRedeemExpire(&gameServerService.CheckRedeemExpireResponse{
-				UniqueId: in.UniqueId,
-				Uuid:     in.Uuid,
-				Result:   gameServerService.DropResult_DropResult_SUCCESS,
-			})
-			return
-		}
-		// 检查下赎回时间，不到不处理
-		if now < redeemWaitTime {
-			gss.Client.(*gameServerService.GameServerClient).OnCheckRedeemExpire(&gameServerService.CheckRedeemExpireResponse{
-				UniqueId: in.UniqueId,
-				Uuid:     in.Uuid,
-				Result:   gameServerService.DropResult_DropResult_REDEEM_TIME_NOT_EXPIRED,
-			})
-			return
-		}
-		// 合法的赎回超时
-		if dropType != TYPE_TAKE {
-			gss.Client.(*gameServerService.GameServerClient).OnCheckRedeemExpire(&gameServerService.CheckRedeemExpireResponse{
-				UniqueId: in.UniqueId,
-				Uuid:     in.Uuid,
-				Result:   gameServerService.DropResult_DropResult_STATE_ERROR,
-			})
-			return
-		}
-		sql = "UPDATE drop_info SET dropType=?, returnTime=? WHERE uniqueId=?"
-		_, err = gss.app.db.Exec(sql, TYPE_REDEEM_EXPIRE_WAIT_TAKE_GET, returnTimeBack, in.UniqueId)
-		if err != nil {
-			appLog.Error("CheckRedeemExpire: update drop info error: ", err.Error())
-			gss.Client.(*gameServerService.GameServerClient).OnCheckRedeemExpire(&gameServerService.CheckRedeemExpireResponse{
-				UniqueId: in.UniqueId,
-				Uuid:     in.Uuid,
-				Result:   gameServerService.DropResult_DropResult_STATE_ERROR,
-			})
-			return
-		}
-		// 首次掉落的，需要处理下进入等待归还
-		if returnTime == 0 {
-			// 被人拾取了，处理下转移关系
-			sql = `INSERT INTO custody_info 
-				(uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId) 
-				VALUES (?, ?, ?, ?, ?, ?, ?, ?) on duplicate key update holderGbId=?, holderServerId=?`
-			_, err = gss.app.db.Exec(sql, in.UniqueId, TYPE_RETURN_WAIT, equipInfo, takerGbId, takerServerId,
-				returnTimeBack, dropGbId, dropServerId, takerGbId, takerServerId)
-			if err != nil {
-				gss.Client.(*gameServerService.GameServerClient).OnCheckRedeemExpire(&gameServerService.CheckRedeemExpireResponse{
-					UniqueId: in.UniqueId,
-					Uuid:     in.Uuid,
-					Result:   gameServerService.DropResult_DropResult_STATE_ERROR,
-				})
-				return
-			}
-		}
-
-		gss.Client.(*gameServerService.GameServerClient).OnCheckRedeemExpire(&gameServerService.CheckRedeemExpireResponse{
-			Uuid:     in.Uuid,
-			UniqueId: in.UniqueId,
-			Result:   gameServerService.DropResult_DropResult_SUCCESS,
-		})
-		// 通知拾取者更新状态
-		gss._notifyDropTypeChange(takerServerId, uniqueId, NOTIFY_TYPE_REDEEM_EXPIRE_WAIT_TAKE_GET, &gameServerService.DropNotifyArgs{Args: []int64{returnTime}}, takerGbId)
-		if dropGbId == ownerGbId {
-			// 通知拥有者更新状态
-			gss._notifyDropTypeChange(dropServerId, uniqueId, NOTIFY_TYPE_RETURN_WAIT, &gameServerService.DropNotifyArgs{Args: []int64{returnTime}}, dropGbId)
-		} else {
-			// 通知掉落者更新状态
-			gss._notifyDropTypeChange(dropServerId, uniqueId, NOTIFY_REMOVE_DROP, &gameServerService.DropNotifyArgs{Args: []int64{0}}, dropGbId)
-		}
-	})
-	return nil, nil
-}
-
 func (gss *GameServerService) CheckDropReturnExpire(in *gameServerService.CheckDropReturnExpireRequest) (*gameServerService.Void, error) {
 	common.ExecuteConcurrently(func() {
 		//appLog.Info("on checkDropReturnExpire:", in.Uuid, in.ServerId)
-		sql := "SELECT uniqueId, holderGbId, holderServerId, ownerGbId, ownerServerId, returnTime FROM custody_info WHERE ownerServerId=? and dropType=? and returnTime < ? limit 500"
+		sql := "SELECT uniqueId, holderGbId, holderServerId, ownerGbId, ownerServerId, returnTime FROM custody_info WHERE ownerServerId=? and dropType=? and returnTime < ? limit 200"
 		// 延迟几秒过期，防止临界问题
 		curTime := common.GetNowTime()
 		limitTime := curTime + 5
@@ -1592,10 +1417,11 @@ func (gss *GameServerService) SetDropEquipPayPrice(in *gameServerService.SetDrop
 			return
 		}
 
-		sql = "SELECT price FROM reward_info WHERE uniqueId=?"
+		sql = "SELECT bindMoney, money FROM reward_info WHERE uniqueId=?"
 		row = gss.app.db.QueryRow(sql, in.UniqueId)
-		var oldPrice int64
-		err = row.Scan(&oldPrice)
+		var oldBindMoney int64
+		var oldMoney int64
+		err = row.Scan(&oldBindMoney, &oldMoney)
 		if err != nil {
 			if err != dtSQL.ErrNoRows {
 				appLog.Error("SetDropEquipPayPrice: get take reward drop info error: ", err.Error())
@@ -1610,10 +1436,11 @@ func (gss *GameServerService) SetDropEquipPayPrice(in *gameServerService.SetDrop
 			}
 		}
 
-		newPrice := price - int64(math.Floor((in.RewardRatio)*float64(price))) + oldPrice
-		if newPrice > 0 {
-			sql = `INSERT INTO reward_info (uniqueId, gbId, serverId, price, equipInfo) VALUES (?, ?, ?, ?, ?) on duplicate key update price=?`
-			_, err = gss.app.db.Exec(sql, in.UniqueId, takeGbId, takerServerId, newPrice, equipInfo, newPrice)
+		bindMoney := oldBindMoney + int64(in.BindMoney)
+		money := oldMoney + int64(in.Money)
+		if bindMoney > 0 || money > 0 {
+			sql = `INSERT INTO reward_info (uniqueId, gbId, serverId, bindMoney, money, equipInfo) VALUES (?, ?, ?, ?, ?, ?) on duplicate key update bindMoney=?,money=?`
+			_, err = gss.app.db.Exec(sql, in.UniqueId, takeGbId, takerServerId, bindMoney, money, equipInfo, bindMoney, money)
 			if err != nil {
 				appLog.Error("SetDropEquipPayPrice: insert take reward drop info error: ", err.Error())
 				gss.Client.(*gameServerService.GameServerClient).OnSetDropEquipPayPrice(&gameServerService.SetDropEquipPayPriceResponse{
@@ -1625,7 +1452,7 @@ func (gss *GameServerService) SetDropEquipPayPrice(in *gameServerService.SetDrop
 				})
 				return
 			}
-			gss._notifyDropTypeChange(takerServerId, in.UniqueId, NOTIFY_TYPE_REWARD, &gameServerService.DropNotifyArgs{Args: []int64{newPrice}}, takeGbId)
+			gss._notifyDropTypeChange(takerServerId, in.UniqueId, NOTIFY_TYPE_REWARD, &gameServerService.DropNotifyArgs{Args: []int64{bindMoney, money}}, takeGbId)
 		} else {
 			gss._notifyDropTypeChange(takerServerId, in.UniqueId, NOTIFY_REMOVE_TAKE, &gameServerService.DropNotifyArgs{Args: []int64{0}}, takeGbId)
 		}

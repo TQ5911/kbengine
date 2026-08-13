@@ -4,7 +4,6 @@ import (
 	"centralService/src/appLog"
 	"centralService/src/common"
 	clientService "centralService/src/queueServer/queueApp/clientService"
-	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -13,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 	"github.com/gogf/greuse"
 )
 
@@ -51,24 +50,38 @@ func (self *HttpService) doQueueReply(w http.ResponseWriter, queueId uint32, sta
 	}
 	fmt.Fprintf(w, string(data))
 }
+func (self *HttpService) getOnlineNum(serverIdStr string) (int, error) {
+	conn, err := common.GetRedisConn(self.app.redisPool, "queue.getOnlineNum")
+	if err != nil {
+		return 0, err
+	}
+	defer conn.Close()
+
+	return redis.Int(conn.Do("get", "g:normal_online_num"+serverIdStr))
+}
+
 func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	var accountNameStr = strings.Join(r.Form["accountName"], "")
 	var serverIdStr = strings.Join(r.Form["serverId"], "")
-	log.Println("handleStartQueue", accountNameStr, serverIdStr)
+	appLog.Info("handleStartQueue", accountNameStr, serverIdStr)
 	serverId := common.Str2UInt32(serverIdStr)
 	serverHost := ServerListCfg.GetString(fmt.Sprintf("serverList.%s", serverIdStr))
 	accountName := accountNameStr
 
-	ctx, cancel := context.WithTimeout(context.Background(), common.RedisOpTimeout)
-	conn, err := self.app.redisPool.GetContext(ctx)
-	cancel()
+	conn, err := common.GetRedisConn(self.app.redisPool, "queue.handleStartQueue")
 	if err != nil {
 		appLog.Errorf("handleStartQueue get redis conn failed, account=%s server=%s, err=%s", accountNameStr, serverIdStr, err.Error())
 		self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_FAILED), serverId, serverHost, 0, 0, nil)
 		return
 	}
-	defer conn.Close()
+	startTime := time.Now()
+	defer func(){
+		conn.Close()
+		if time.Since(startTime) > 500 * time.Millisecond {
+			appLog.Error("handleStartQueue cost over 500ms", accountName)
+		}
+	}()
 
 	//用户tagType
 	userTagTypeSet := map[string]bool{}
@@ -134,10 +147,8 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 		gameServer = self.app.NewHttpServerService(serverId)
 	}
 
-	accountKey := self.app.buildAccountKey(accountNameStr, strconv.Itoa(int(clientService.AccountType_ACCOUNT_TOKEN)))
-
 	//已经在线
-	lastServerId, err := redis.Int(conn.Do("get", "AccountLogin_"+accountKey))
+	lastServerId, err := redis.Int(conn.Do("get", "AccountLogin_"+accountNameStr))
 	if err != nil {
 		appLog.Info("handleStartQueue account is not online:", accountNameStr, "  err:", err.Error())
 	} else {
@@ -202,8 +213,12 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 
 		client.SetQueueId(self.app.enQueue(serverId, accountName, VIPFlag))
 
-		// 进入排队时返回存活等待服列表（客户端自行选择）
-		waitMapServers, _ := self.app.waitMapServerMgr.GetAliveFreeServers()
+		// 目标服人数+当前排队人数超过最大人数限制时，才返回存活等待服列表（客户端自行选择）；
+		// 否则返回nil，让客户端不要进等待服
+		var waitMapServers map[string]int
+		if onlineNum+self.app.queueSize(serverId) > MaxOnlineNum {
+			waitMapServers, _ = self.app.waitMapServerMgr.GetAliveFreeServers()
+		}
 
 		self.doQueueReply(w, uint32(client.GetQueueId()), uint8(clientService.QueueReply_QUEUE_IN_PROCESS), serverId, client.GetServerHost(), client.GetWaitTime(), 0, waitMapServers)
 	}
@@ -250,7 +265,16 @@ func (self *HttpService) handleGetQueueInfo(w http.ResponseWriter, r *http.Reque
 			response.ServerId = serverId
 			response.ServerHost = client.GetServerHost()
 			response.WaitTime = client.GetWaitTime()
-			response.WaitMapServers, _ = self.app.waitMapServerMgr.GetAliveFreeServers()
+
+			// 目标服人数+当前排队人数超过最大人数限制时，才返回存活等待服列表；
+			// 否则返回nil，让客户端不要进等待服。获取在线人数失败时也返回nil
+			onlineNum, err := self.getOnlineNum(serverIdStr)
+			if err != nil {
+				appLog.Warn("handleGetQueueInfo get online num failed", accountNameStr, serverIdStr, err.Error())
+			} else if onlineNum+self.app.queueSize(serverId) > MaxOnlineNum {
+				response.WaitMapServers, _ = self.app.waitMapServerMgr.GetAliveFreeServers()
+			}
+
 			data, err := json.Marshal(response)
 			if err != nil {
 				appLog.Error("handleGetQueueInfo json response failed", err.Error())

@@ -14,6 +14,4 @@ type AppConfig struct {
 	LogRotateSize       string
 	CrossDataServerAddr string
 	AddressForDebug     string
-	UnionMaxNum         int
-	EnemyMaxNum         int
 }

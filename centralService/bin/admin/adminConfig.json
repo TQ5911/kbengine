@@ -9,7 +9,7 @@
     "MachinePort": 20099,
     "transferAvatarSignSecret": "FCC81DFE52A45DEA476B4FFC408831B8",
     "httpCmdSignKey":"3Pi0ZsIoRha8h0MG6jfHdxG1WLcE7XplB0kzhFitVIZzUNIbKc871DMEZnHGygno",
-    "centralLoginIDIPAddress":"localhost:8999",
+    "centralLoginCmdAddressList":["localhost:8999"],
     "logPath":"./admin.log",
     "logLevel":0,
     "logRotateSize":500,

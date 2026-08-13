@@ -26,6 +26,8 @@ CREATE TABLE `drop_info` (
   KEY (`dropGbId`),
   KEY (`takerGbId`),
   KEY (`ownerServerId`, `dropType`, `returnTime`),
+  KEY `idx_dropType_endTime` (`dropType`, `endTime`),
+  KEY `idx_dropType_redeemWaitTime` (`dropType`, `redeemWaitTime`),
   PRIMARY KEY (`uniqueId`)
 );
 
@@ -34,7 +36,8 @@ CREATE TABLE `reward_info` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `uniqueId` BIGINT UNSIGNED NOT NULL,
   `gbId` BIGINT UNSIGNED NOT NULL,
-  `price` INT UNSIGNED NOT NULL,
+  `bindMoney` INT UNSIGNED NOT NULL,
+  `money` INT UNSIGNED NOT NULL,
   `serverId` INT UNSIGNED NOT NULL,
   `equipInfo` BLOB NOT NULL,
   KEY (`id`),
@@ -83,6 +86,7 @@ PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
+SET @table_name = 'drop_info';
 SET @column_name = 'hasRedeemPrice';
 SET @column_def = 'INT UNSIGNED NOT NULL';
 
@@ -99,6 +103,7 @@ PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
+SET @table_name = 'drop_info';
 SET @column_name = 'takerServerId';
 SET @column_def = 'INT UNSIGNED NOT NULL';
 
@@ -115,10 +120,7 @@ PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
+SET @table_name = 'drop_info';
 SET @column_name = 'returnTimeBack';
 SET @column_def = 'INT UNSIGNED NOT NULL';
 
@@ -135,3 +137,76 @@ PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
+SET @table_name = 'reward_info';
+SET @column_name = 'bindMoney';
+SET @column_def = 'INT UNSIGNED NOT NULL';
+
+SET @sql = IF(
+    (SELECT COUNT(*) FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = @db_name
+       AND TABLE_NAME = @table_name
+       AND COLUMN_NAME = @column_name) = 0,
+    CONCAT('ALTER TABLE ', @table_name, ' ADD COLUMN ', @column_name, ' ', @column_def),
+    'SELECT concat(concat(concat("Table: ", @table_name), concat(", Column: ", @column_name)), " already exists, skipped") AS ''execute result message:'''
+);
+
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+
+SET @table_name = 'reward_info';
+SET @column_name = 'money';
+SET @column_def = 'INT UNSIGNED NOT NULL';
+
+SET @sql = IF(
+    (SELECT COUNT(*) FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = @db_name
+       AND TABLE_NAME = @table_name
+       AND COLUMN_NAME = @column_name) = 0,
+    CONCAT('ALTER TABLE ', @table_name, ' ADD COLUMN ', @column_name, ' ', @column_def),
+    'SELECT concat(concat(concat("Table: ", @table_name), concat(", Column: ", @column_name)), " already exists, skipped") AS ''execute result message:'''
+);
+
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+ALTER TABLE `reward_info` DROP COLUMN IF EXISTS price;
+
+SET @db_name = DATABASE();
+SET @table_name = 'drop_info';
+
+SET @table_name = 'drop_info';
+SET @index_name = 'idx_dropType_endTime';
+SET @index_def = '(`dropType`, `endTime`)';
+
+SET @sql = IF(
+    (SELECT COUNT(*) FROM information_schema.STATISTICS
+     WHERE TABLE_SCHEMA = @db_name
+       AND TABLE_NAME = @table_name
+       AND INDEX_NAME = @index_name) = 0,
+    CONCAT('ALTER TABLE ', @table_name, ' ADD INDEX ', @index_name, ' ', @index_def),
+    'SELECT concat(concat(concat("Table: ", @table_name), concat(", Index: ", @index_name)), " already exists, skipped") AS ''execute result message:'''
+);
+
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @table_name = 'drop_info';
+SET @index_name = 'idx_dropType_redeemWaitTime';
+SET @index_def = '(`dropType`, `redeemWaitTime`)';
+
+SET @sql = IF(
+    (SELECT COUNT(*) FROM information_schema.STATISTICS
+     WHERE TABLE_SCHEMA = @db_name
+       AND TABLE_NAME = @table_name
+       AND INDEX_NAME = @index_name) = 0,
+    CONCAT('ALTER TABLE ', @table_name, ' ADD INDEX ', @index_name, ' ', @index_def),
+    'SELECT concat(concat(concat("Table: ", @table_name), concat(", Index: ", @index_name)), " already exists, skipped") AS ''execute result message:'''
+);
+
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;

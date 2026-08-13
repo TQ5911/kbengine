@@ -5,13 +5,10 @@ import (
 	"centralService/src/common"
 	"centralService/src/crossDataServer/crossDataApp/gameServerService"
 	"centralService/src/trpc"
-	"database/sql"
-	"fmt"
 	"net"
 	"strconv"
 	"sync"
 	"syscall"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
@@ -26,7 +23,6 @@ const (
 
 type CrossDataApp struct {
 	common.App
-	db            *sql.DB
 	serversLock   sync.RWMutex
 	gameServers   map[string]*GameServerService
 	channelToHost map[uuid.UUID]*GameServerService
@@ -71,20 +67,7 @@ func (cda *CrossDataApp) Start() {
 		<-cda.SignalChan
 		cda.Stop()
 	}()
-
-	go func() {
-		timer := time.NewTicker(time.Second * 1)
-		for {
-			<-timer.C
-			cda.tick()
-		}
-	}()
-
 	go cda.StartDebugService(CrossDataConfig.AddressForDebug)
-}
-
-func (cda *CrossDataApp) tick() {
-	cda.guildData.checkAndRemoveExpiredRelation(cda.db, cda)
 }
 
 // Stop implements common.IApp.
@@ -115,28 +98,11 @@ func (cda *CrossDataApp) getServiceKey(serverId uint32) string {
 }
 
 func NewCrossDataApp() *CrossDataApp {
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8",
-		CrossDataConfig.Mysql.User, CrossDataConfig.Mysql.Passwd, CrossDataConfig.Mysql.Addr, CrossDataConfig.Mysql.Db))
-
-	if err != nil {
-		appLog.Error("open msyql error: ", err.Error())
-		return nil
-	}
-
-	db.SetMaxIdleConns(50)
-	db.SetConnMaxLifetime(time.Second * 290)
-	db.SetMaxOpenConns(50)
-	if err = db.Ping(); err != nil {
-		appLog.Error("mysql connect err", err.Error())
-		return nil
-	}
-
 	app := CrossDataApp{common.App{AppName: "CrossDataApp"},
-		db,
 		sync.RWMutex{},
 		make(map[string]*GameServerService),
 		make(map[uuid.UUID]*GameServerService),
-		NewGuildData(db),
+		NewGuildData(),
 	}
 	return &app
 }
@@ -150,10 +116,4 @@ func (cda *CrossDataApp) getGameServer(serverId uint32) *GameServerService {
 		return gs
 	}
 	return nil
-}
-
-func (cda *CrossDataApp) BroadcastRemoveGuildRelation(msg *gameServerService.BroadcastRemoveGuildRelation) {
-	for _, server := range cda.gameServers {
-		server.GetClientEndPoint().(*gameServerService.GameServerClient).OnBroadcastRemoveGuildRelation(msg)
-	}
 }

@@ -48,41 +48,6 @@ func CrossDataServer_RemoveGuildInfo_Handler(endPoint prpc.IEndPoint, dec func(i
     }
     return endPoint.(ICrossDataServerInterface).RemoveGuildInfo(in)
 }
-func CrossDataServer_AddGuildRelation_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(AddGuildRelationRequest)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(ICrossDataServerInterface).AddGuildRelation(in)
-}
-func CrossDataServer_RemoveGuildRelation_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(RemoveGuildRelationRequest)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(ICrossDataServerInterface).RemoveGuildRelation(in)
-}
-func CrossDataServer_ApplyGuildUnion_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(ApplyGuildUnionRequest)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(ICrossDataServerInterface).ApplyGuildUnion(in)
-}
-func CrossDataServer_GetEnemyGuildInfos_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(GetEnemyGuildInfosRequest)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(ICrossDataServerInterface).GetEnemyGuildInfos(in)
-}
-func CrossDataServer_RemoveReceiverGuildApplyUnion_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(RemoveReceiverGuildApplyUnionRequest)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(ICrossDataServerInterface).RemoveReceiverGuildApplyUnion(in)
-}
 func CrossDataServer_GetCrossServerGuildDetail_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
     in := new(GetCrossServerGuildDetailRequest)
     if err := dec(in); err != nil {
@@ -145,48 +110,23 @@ var CrossDataServerServiceDesc = prpc.ServiceDesc{
             Handler:     CrossDataServer_RemoveGuildInfo_Handler,
         },
         {
-            MethodName:  "AddGuildRelation",
-            MethodIndex: 6,
-            Handler:     CrossDataServer_AddGuildRelation_Handler,
-        },
-        {
-            MethodName:  "RemoveGuildRelation",
-            MethodIndex: 7,
-            Handler:     CrossDataServer_RemoveGuildRelation_Handler,
-        },
-        {
-            MethodName:  "ApplyGuildUnion",
-            MethodIndex: 8,
-            Handler:     CrossDataServer_ApplyGuildUnion_Handler,
-        },
-        {
-            MethodName:  "GetEnemyGuildInfos",
-            MethodIndex: 9,
-            Handler:     CrossDataServer_GetEnemyGuildInfos_Handler,
-        },
-        {
-            MethodName:  "RemoveReceiverGuildApplyUnion",
-            MethodIndex: 10,
-            Handler:     CrossDataServer_RemoveReceiverGuildApplyUnion_Handler,
-        },
-        {
             MethodName:  "GetCrossServerGuildDetail",
-            MethodIndex: 11,
+            MethodIndex: 6,
             Handler:     CrossDataServer_GetCrossServerGuildDetail_Handler,
         },
         {
             MethodName:  "GetCrossServerGuildDetailFromOtherServer",
-            MethodIndex: 12,
+            MethodIndex: 7,
             Handler:     CrossDataServer_GetCrossServerGuildDetailFromOtherServer_Handler,
         },
         {
             MethodName:  "DoOnCrossGuildRequest",
-            MethodIndex: 13,
+            MethodIndex: 8,
             Handler:     CrossDataServer_DoOnCrossGuildRequest_Handler,
         },
         {
             MethodName:  "DoOnCrossGuildResultBack",
-            MethodIndex: 14,
+            MethodIndex: 9,
             Handler:     CrossDataServer_DoOnCrossGuildResultBack_Handler,
         },
     },
@@ -227,40 +167,20 @@ func (self *CrossDataServerClient) RemoveGuildInfo(in *RemoveGuildInfoRequest) (
     err := self.Channel.CallMethod(&CrossDataServerServiceDesc.Methods[5], in)
     return &Void{}, err
 }
-func (self *CrossDataServerClient) AddGuildRelation(in *AddGuildRelationRequest) (*Void, error) {
+func (self *CrossDataServerClient) GetCrossServerGuildDetail(in *GetCrossServerGuildDetailRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossDataServerServiceDesc.Methods[6], in)
     return &Void{}, err
 }
-func (self *CrossDataServerClient) RemoveGuildRelation(in *RemoveGuildRelationRequest) (*Void, error) {
+func (self *CrossDataServerClient) GetCrossServerGuildDetailFromOtherServer(in *GetCrossServerGuildDetailFromOtherServer) (*Void, error) {
     err := self.Channel.CallMethod(&CrossDataServerServiceDesc.Methods[7], in)
     return &Void{}, err
 }
-func (self *CrossDataServerClient) ApplyGuildUnion(in *ApplyGuildUnionRequest) (*Void, error) {
+func (self *CrossDataServerClient) DoOnCrossGuildRequest(in *DoOnCrossGuildRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossDataServerServiceDesc.Methods[8], in)
     return &Void{}, err
 }
-func (self *CrossDataServerClient) GetEnemyGuildInfos(in *GetEnemyGuildInfosRequest) (*Void, error) {
-    err := self.Channel.CallMethod(&CrossDataServerServiceDesc.Methods[9], in)
-    return &Void{}, err
-}
-func (self *CrossDataServerClient) RemoveReceiverGuildApplyUnion(in *RemoveReceiverGuildApplyUnionRequest) (*Void, error) {
-    err := self.Channel.CallMethod(&CrossDataServerServiceDesc.Methods[10], in)
-    return &Void{}, err
-}
-func (self *CrossDataServerClient) GetCrossServerGuildDetail(in *GetCrossServerGuildDetailRequest) (*Void, error) {
-    err := self.Channel.CallMethod(&CrossDataServerServiceDesc.Methods[11], in)
-    return &Void{}, err
-}
-func (self *CrossDataServerClient) GetCrossServerGuildDetailFromOtherServer(in *GetCrossServerGuildDetailFromOtherServer) (*Void, error) {
-    err := self.Channel.CallMethod(&CrossDataServerServiceDesc.Methods[12], in)
-    return &Void{}, err
-}
-func (self *CrossDataServerClient) DoOnCrossGuildRequest(in *DoOnCrossGuildRequest) (*Void, error) {
-    err := self.Channel.CallMethod(&CrossDataServerServiceDesc.Methods[13], in)
-    return &Void{}, err
-}
 func (self *CrossDataServerClient) DoOnCrossGuildResultBack(in *DoOnCrossGuildResultBack) (*Void, error) {
-    err := self.Channel.CallMethod(&CrossDataServerServiceDesc.Methods[14], in)
+    err := self.Channel.CallMethod(&CrossDataServerServiceDesc.Methods[9], in)
     return &Void{}, err
 }
 type ICrossDataServerInterface interface {
@@ -270,11 +190,6 @@ type ICrossDataServerInterface interface {
     GetGuildInfos(*GetGuildInfosRequest) (*Void, error)
     GetGuildInfosByGuildUUID(*GetGuildInfosByGuildUUIDRequest) (*Void, error)
     RemoveGuildInfo(*RemoveGuildInfoRequest) (*Void, error)
-    AddGuildRelation(*AddGuildRelationRequest) (*Void, error)
-    RemoveGuildRelation(*RemoveGuildRelationRequest) (*Void, error)
-    ApplyGuildUnion(*ApplyGuildUnionRequest) (*Void, error)
-    GetEnemyGuildInfos(*GetEnemyGuildInfosRequest) (*Void, error)
-    RemoveReceiverGuildApplyUnion(*RemoveReceiverGuildApplyUnionRequest) (*Void, error)
     GetCrossServerGuildDetail(*GetCrossServerGuildDetailRequest) (*Void, error)
     GetCrossServerGuildDetailFromOtherServer(*GetCrossServerGuildDetailFromOtherServer) (*Void, error)
     DoOnCrossGuildRequest(*DoOnCrossGuildRequest) (*Void, error)
@@ -301,83 +216,6 @@ func GameServer_OnGetGuildInfos_Handler(endPoint prpc.IEndPoint, dec func(interf
         return nil, err
     }
     return endPoint.(IGameServerInterface).OnGetGuildInfos(in)
-}
-func GameServer_OnBroadcastGuildRelationSingle_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(BroadcastGuildRelationSingle)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(IGameServerInterface).OnBroadcastGuildRelationSingle(in)
-}
-func GameServer_OnGuildRelationAll_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(GuildRelationAll)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(IGameServerInterface).OnGuildRelationAll(in)
-}
-func GameServer_OnBroadcastRemoveGuildRelation_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(BroadcastRemoveGuildRelation)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(IGameServerInterface).OnBroadcastRemoveGuildRelation(in)
-}
-func GameServer_OnRemoveGuildRelation_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(RemoveGuildRelationResult)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(IGameServerInterface).OnRemoveGuildRelation(in)
-}
-func GameServer_OnAddGuildRelation_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(AddGuildRelationResult)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(IGameServerInterface).OnAddGuildRelation(in)
-}
-func GameServer_OnApplyGuildUnion_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(OnApplyGuildUnionRequest)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(IGameServerInterface).OnApplyGuildUnion(in)
-}
-func GameServer_OnNotifyGuildRelation_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(OnNotifyGuildRelation)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(IGameServerInterface).OnNotifyGuildRelation(in)
-}
-func GameServer_OnNotifyGuildCancelUnion_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(OnNotifyGuildCancelUnion)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(IGameServerInterface).OnNotifyGuildCancelUnion(in)
-}
-func GameServer_OnGetEnemyGuildInfos_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(GetEnemyGuildInfosResult)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(IGameServerInterface).OnGetEnemyGuildInfos(in)
-}
-func GameServer_OnApplyGuildUnionResult_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(ApplyGuildUnionResult)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(IGameServerInterface).OnApplyGuildUnionResult(in)
-}
-func GameServer_OnNotifyRemoveReceiverGuildApplyUnion_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(NotifyRemoveReceiverGuildApplyUnion)
-    if err := dec(in); err != nil {
-        return nil, err
-    }
-    return endPoint.(IGameServerInterface).OnNotifyRemoveReceiverGuildApplyUnion(in)
 }
 func GameServer_OnGetCrossServerGuildDetail_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
     in := new(GetCrossServerGuildDetailResult)
@@ -426,78 +264,23 @@ var GameServerServiceDesc = prpc.ServiceDesc{
             Handler:     GameServer_OnGetGuildInfos_Handler,
         },
         {
-            MethodName:  "OnBroadcastGuildRelationSingle",
-            MethodIndex: 3,
-            Handler:     GameServer_OnBroadcastGuildRelationSingle_Handler,
-        },
-        {
-            MethodName:  "OnGuildRelationAll",
-            MethodIndex: 4,
-            Handler:     GameServer_OnGuildRelationAll_Handler,
-        },
-        {
-            MethodName:  "OnBroadcastRemoveGuildRelation",
-            MethodIndex: 5,
-            Handler:     GameServer_OnBroadcastRemoveGuildRelation_Handler,
-        },
-        {
-            MethodName:  "OnRemoveGuildRelation",
-            MethodIndex: 6,
-            Handler:     GameServer_OnRemoveGuildRelation_Handler,
-        },
-        {
-            MethodName:  "OnAddGuildRelation",
-            MethodIndex: 7,
-            Handler:     GameServer_OnAddGuildRelation_Handler,
-        },
-        {
-            MethodName:  "OnApplyGuildUnion",
-            MethodIndex: 8,
-            Handler:     GameServer_OnApplyGuildUnion_Handler,
-        },
-        {
-            MethodName:  "OnNotifyGuildRelation",
-            MethodIndex: 9,
-            Handler:     GameServer_OnNotifyGuildRelation_Handler,
-        },
-        {
-            MethodName:  "OnNotifyGuildCancelUnion",
-            MethodIndex: 10,
-            Handler:     GameServer_OnNotifyGuildCancelUnion_Handler,
-        },
-        {
-            MethodName:  "OnGetEnemyGuildInfos",
-            MethodIndex: 11,
-            Handler:     GameServer_OnGetEnemyGuildInfos_Handler,
-        },
-        {
-            MethodName:  "OnApplyGuildUnionResult",
-            MethodIndex: 12,
-            Handler:     GameServer_OnApplyGuildUnionResult_Handler,
-        },
-        {
-            MethodName:  "OnNotifyRemoveReceiverGuildApplyUnion",
-            MethodIndex: 13,
-            Handler:     GameServer_OnNotifyRemoveReceiverGuildApplyUnion_Handler,
-        },
-        {
             MethodName:  "OnGetCrossServerGuildDetail",
-            MethodIndex: 14,
+            MethodIndex: 3,
             Handler:     GameServer_OnGetCrossServerGuildDetail_Handler,
         },
         {
             MethodName:  "OnGetCrossServerGuildDetailToOtherServer",
-            MethodIndex: 15,
+            MethodIndex: 4,
             Handler:     GameServer_OnGetCrossServerGuildDetailToOtherServer_Handler,
         },
         {
             MethodName:  "OnDoOnCrossGuildToGameServer",
-            MethodIndex: 16,
+            MethodIndex: 5,
             Handler:     GameServer_OnDoOnCrossGuildToGameServer_Handler,
         },
         {
             MethodName:  "OnDoOnCrossGuildResult",
-            MethodIndex: 17,
+            MethodIndex: 6,
             Handler:     GameServer_OnDoOnCrossGuildResult_Handler,
         },
     },
@@ -526,81 +309,26 @@ func (self *GameServerClient) OnGetGuildInfos(in *GetGuildInfosResult) (*Void, e
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[2], in)
     return &Void{}, err
 }
-func (self *GameServerClient) OnBroadcastGuildRelationSingle(in *BroadcastGuildRelationSingle) (*Void, error) {
+func (self *GameServerClient) OnGetCrossServerGuildDetail(in *GetCrossServerGuildDetailResult) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[3], in)
     return &Void{}, err
 }
-func (self *GameServerClient) OnGuildRelationAll(in *GuildRelationAll) (*Void, error) {
+func (self *GameServerClient) OnGetCrossServerGuildDetailToOtherServer(in *GetCrossServerGuildDetailToOtherServer) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[4], in)
     return &Void{}, err
 }
-func (self *GameServerClient) OnBroadcastRemoveGuildRelation(in *BroadcastRemoveGuildRelation) (*Void, error) {
+func (self *GameServerClient) OnDoOnCrossGuildToGameServer(in *DoOnCrossGuildToGameServer) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[5], in)
     return &Void{}, err
 }
-func (self *GameServerClient) OnRemoveGuildRelation(in *RemoveGuildRelationResult) (*Void, error) {
-    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[6], in)
-    return &Void{}, err
-}
-func (self *GameServerClient) OnAddGuildRelation(in *AddGuildRelationResult) (*Void, error) {
-    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[7], in)
-    return &Void{}, err
-}
-func (self *GameServerClient) OnApplyGuildUnion(in *OnApplyGuildUnionRequest) (*Void, error) {
-    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[8], in)
-    return &Void{}, err
-}
-func (self *GameServerClient) OnNotifyGuildRelation(in *OnNotifyGuildRelation) (*Void, error) {
-    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[9], in)
-    return &Void{}, err
-}
-func (self *GameServerClient) OnNotifyGuildCancelUnion(in *OnNotifyGuildCancelUnion) (*Void, error) {
-    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[10], in)
-    return &Void{}, err
-}
-func (self *GameServerClient) OnGetEnemyGuildInfos(in *GetEnemyGuildInfosResult) (*Void, error) {
-    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[11], in)
-    return &Void{}, err
-}
-func (self *GameServerClient) OnApplyGuildUnionResult(in *ApplyGuildUnionResult) (*Void, error) {
-    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[12], in)
-    return &Void{}, err
-}
-func (self *GameServerClient) OnNotifyRemoveReceiverGuildApplyUnion(in *NotifyRemoveReceiverGuildApplyUnion) (*Void, error) {
-    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[13], in)
-    return &Void{}, err
-}
-func (self *GameServerClient) OnGetCrossServerGuildDetail(in *GetCrossServerGuildDetailResult) (*Void, error) {
-    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[14], in)
-    return &Void{}, err
-}
-func (self *GameServerClient) OnGetCrossServerGuildDetailToOtherServer(in *GetCrossServerGuildDetailToOtherServer) (*Void, error) {
-    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[15], in)
-    return &Void{}, err
-}
-func (self *GameServerClient) OnDoOnCrossGuildToGameServer(in *DoOnCrossGuildToGameServer) (*Void, error) {
-    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[16], in)
-    return &Void{}, err
-}
 func (self *GameServerClient) OnDoOnCrossGuildResult(in *DoOnCrossGuildResult) (*Void, error) {
-    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[17], in)
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[6], in)
     return &Void{}, err
 }
 type IGameServerInterface interface {
     ActiveTickCallback(*Void) (*Void, error)
     OnAddGuildInfo(*AddGuildInfoResult) (*Void, error)
     OnGetGuildInfos(*GetGuildInfosResult) (*Void, error)
-    OnBroadcastGuildRelationSingle(*BroadcastGuildRelationSingle) (*Void, error)
-    OnGuildRelationAll(*GuildRelationAll) (*Void, error)
-    OnBroadcastRemoveGuildRelation(*BroadcastRemoveGuildRelation) (*Void, error)
-    OnRemoveGuildRelation(*RemoveGuildRelationResult) (*Void, error)
-    OnAddGuildRelation(*AddGuildRelationResult) (*Void, error)
-    OnApplyGuildUnion(*OnApplyGuildUnionRequest) (*Void, error)
-    OnNotifyGuildRelation(*OnNotifyGuildRelation) (*Void, error)
-    OnNotifyGuildCancelUnion(*OnNotifyGuildCancelUnion) (*Void, error)
-    OnGetEnemyGuildInfos(*GetEnemyGuildInfosResult) (*Void, error)
-    OnApplyGuildUnionResult(*ApplyGuildUnionResult) (*Void, error)
-    OnNotifyRemoveReceiverGuildApplyUnion(*NotifyRemoveReceiverGuildApplyUnion) (*Void, error)
     OnGetCrossServerGuildDetail(*GetCrossServerGuildDetailResult) (*Void, error)
     OnGetCrossServerGuildDetailToOtherServer(*GetCrossServerGuildDetailToOtherServer) (*Void, error)
     OnDoOnCrossGuildToGameServer(*DoOnCrossGuildToGameServer) (*Void, error)

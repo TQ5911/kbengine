@@ -26,4 +26,7 @@ sh build.sh
 cd ../orderService/
 echo building... $(pwd)
 sh build.sh
+cd ../allianceService/
+echo building... $(pwd)
+sh build.sh
 echo 'All build processes are successfully'

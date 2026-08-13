@@ -70,6 +70,9 @@ func (da *DropApp) Start() {
 	}()
 
 	go da.StartDebugService(DropConfig.AddressForDebug)
+
+	// 全局定时检查掉落过期与赎回过期
+	da.startDropExpireTimer()
 }
 
 func (da *DropApp) Stop() {

@@ -22,5 +22,9 @@
         "r": 50,
         "b": 80
     },
-    "reportAddr": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5"
+    "reportAddr": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5",
+    "PendingStatusTimeout": 60,
+    "CleanIntervalHours": 6,
+    "CleanBatchSize": 100,
+    "CleanGraceDays": 14
 }

@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 )
 
 const (
@@ -23,13 +23,12 @@ const (
 	WaitMapHeartbeatKey      = "waitmap:heartbeat"
 	WaitMapFreeKeyPrefix     = "waitmap:free:"
 	WaitMapOfflineTimeoutSec = 20
-	WaitMapCacheTTL          = 5 * time.Second
+	WaitMapRefreshInterval   = 5 * time.Second
 )
 
 type WaitMapServerMgr struct {
 	app           *QueueApp
 	cachedServers map[string]int
-	lastQueryTime time.Time
 	mu            sync.RWMutex
 }
 
@@ -42,49 +41,52 @@ func NewWaitMapServerMgr(app *QueueApp) *WaitMapServerMgr {
 
 // GetAliveFreeServers 返回当前存活的等待服及其空闲人数
 // 服务发现直接依赖 Redis zset，无需额外配置等待服列表
-// 5 秒内重复查询会返回缓存数据，减少对 Redis 的压力
+// 数据由后台定时器每 5 秒从 Redis 刷新到缓存，此处只读缓存，支持高并发
 // key 为 serverId 字符串，value 为空闲人数
 func (self *WaitMapServerMgr) GetAliveFreeServers() (map[string]int, error) {
 	self.mu.RLock()
-	if len(self.cachedServers) > 0 && time.Since(self.lastQueryTime) < WaitMapCacheTTL {
-		cached := self.copyCachedServersLocked()
-		self.mu.RUnlock()
-		return cached, nil
-	}
-	self.mu.RUnlock()
+	defer self.mu.RUnlock()
 
-	self.mu.Lock()
-	defer self.mu.Unlock()
-
-	// 双重检查，避免并发请求重复查询 Redis
-	if len(self.cachedServers) > 0 && time.Since(self.lastQueryTime) < WaitMapCacheTTL {
-		return self.copyCachedServersLocked(), nil
+	if len(self.cachedServers) == 0 {
+		return nil, errors.New("no alive wait map server")
 	}
 
+	return self.copyCachedServersLocked(), nil
+}
+
+// Start 启动后台刷新定时器，先同步刷新一次，避免启动初期缓存为空
+func (self *WaitMapServerMgr) Start() {
+	self.refreshServers()
+	go func() {
+		ticker := time.NewTicker(WaitMapRefreshInterval)
+		defer ticker.Stop()
+		for range ticker.C {
+			self.refreshServers()
+		}
+	}()
+}
+
+// refreshServers 从 Redis 查询存活等待服并刷新缓存
+// Redis 操作在锁外执行，仅在替换缓存时加写锁；失败时保留旧缓存作为兜底
+func (self *WaitMapServerMgr) refreshServers() {
+	appLog.Debugw("refresh wait servers.")
 	ctx, cancel := context.WithTimeout(context.Background(), common.RedisOpTimeout)
 	conn, err := self.app.redisPool.GetContext(ctx)
 	cancel()
 	if err != nil {
-		appLog.Error("WaitMapServerMgr GetAliveFreeServers get conn failed", err.Error())
-		if len(self.cachedServers) > 0 {
-			return self.copyCachedServersLocked(), nil
-		}
-		return nil, err
+		appLog.Error("WaitMapServerMgr refreshServers get conn failed", err.Error())
+		return
 	}
 	defer conn.Close()
 
 	// 读取所有等待服的心跳
 	members, err := redis.Strings(conn.Do("ZRANGE", WaitMapHeartbeatKey, 0, -1, "WITHSCORES"))
 	if err != nil {
-		appLog.Error("WaitMapServerMgr GetAliveFreeServers zrange failed", err.Error())
-		// Redis 异常时，如果有缓存则返回过期缓存作为兜底
-		if len(self.cachedServers) > 0 {
-			return self.copyCachedServersLocked(), nil
-		}
-		return nil, err
+		appLog.Error("WaitMapServerMgr refreshServers zrange failed", err.Error())
+		return
 	}
 
-	self.cachedServers = make(map[string]int, 4)
+	servers := make(map[string]int, 4)
 	nowTs := time.Now().Unix()
 
 	for i := 0; i+1 < len(members); i += 2 {
@@ -93,12 +95,12 @@ func (self *WaitMapServerMgr) GetAliveFreeServers() (map[string]int, error) {
 
 		_, err := strconv.ParseUint(serverIdStr, 10, 32)
 		if err != nil {
-			appLog.Warnw("WaitMapServerMgr GetAliveFreeServers invalid serverId", "serverId", serverIdStr, "error", err.Error())
+			appLog.Warnw("WaitMapServerMgr refreshServers invalid serverId", "serverId", serverIdStr, "error", err.Error())
 			continue
 		}
 		score, err := strconv.ParseInt(scoreStr, 10, 64)
 		if err != nil {
-			appLog.Warnw("WaitMapServerMgr GetAliveFreeServers invalid score", "serverId", serverIdStr, "score", scoreStr, "error", err.Error())
+			appLog.Warnw("WaitMapServerMgr refreshServers invalid score", "serverId", serverIdStr, "score", scoreStr, "error", err.Error())
 			continue
 		}
 		if nowTs-score > WaitMapOfflineTimeoutSec {
@@ -114,17 +116,13 @@ func (self *WaitMapServerMgr) GetAliveFreeServers() (map[string]int, error) {
 			freeNum = 0
 		}
 
-		self.cachedServers[serverIdStr] = freeNum
-		appLog.Debugw("WaitMapServerMgr GetAliveFreeServers alive server", "serverId", serverIdStr, "freeNum", freeNum)
+		servers[serverIdStr] = freeNum
+		appLog.Debugw("WaitMapServerMgr refreshServers alive server", "serverId", serverIdStr, "freeNum", freeNum)
 	}
 
-	self.lastQueryTime = time.Now()
-
-	if len(self.cachedServers) == 0 {
-		return nil, errors.New("no alive wait map server")
-	}
-
-	return self.copyCachedServersLocked(), nil
+	self.mu.Lock()
+	self.cachedServers = servers
+	self.mu.Unlock()
 }
 
 // copyCachedServersLocked 在已加锁的前提下拷贝缓存数据

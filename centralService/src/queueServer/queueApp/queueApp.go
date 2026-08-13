@@ -12,7 +12,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
@@ -66,7 +66,7 @@ func NewQueueApp() *QueueApp {
 		Password:    QueueConfig.RedisServer.Passwd,
 		Db:          QueueConfig.RedisServer.Db,
 		MaxIdle:     16,
-		MaxActive:   300,
+		MaxActive:   1000,
 		IdleTimeout: 100,
 	})
 	waitMapServerMgr := NewWaitMapServerMgr(nil)
@@ -110,6 +110,7 @@ func (self *QueueApp) Start() {
 
 	self.httpServer = &HttpService{app: self}
 	go self.StartDebugService(QueueConfig.AddressForDebug)
+	self.waitMapServerMgr.Start()
 	self.httpServer.startHttpServer(QueueConfig.HttpServer)
 }
 
@@ -339,6 +340,25 @@ func (self *QueueApp) deQueue(serverId uint32) *Item {
 		return queue.Dequeue()
 	}
 	return nil
+}
+
+// 目标服当前排队人数（普通队列+VIP队列）
+func (self *QueueApp) queueSize(serverId uint32) int {
+	self.queuesLock.RLock()
+	defer self.queuesLock.RUnlock()
+
+	size := 0
+	if queue, ok := self.serverQueues[serverId]; ok {
+		queue.mut.Lock()
+		size += len(queue.Items)
+		queue.mut.Unlock()
+	}
+	if queue, ok := self.serverVIPQueues[serverId]; ok {
+		queue.mut.Lock()
+		size += len(queue.Items)
+		queue.mut.Unlock()
+	}
+	return size
 }
 
 func (self *QueueApp) buildAccountKey(accountType string, accountName string) string {

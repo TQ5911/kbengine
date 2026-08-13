@@ -23,7 +23,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 )
 
 const SERVER_RAND_STR_LEN int = 10
@@ -209,7 +209,7 @@ func (self *LoginClientService) checkAccountType(accountType clientService.Accou
 }
 
 func (self *LoginClientService) GetLoginKey(r *clientService.LoginKeyRequest) (*clientService.Void, error) {
-	appLog.Info("request get login key", r.RStr)
+	appLog.Info("request get login key ", r.RStr, " from ", self.GetRpcChannel().GetRemoteAddr())
 	self.serverRandStr = common.RandString(SERVER_RAND_STR_LEN)
 	loginKey := clientService.LoginKeyResponse{RStr: r.RStr, SStr: self.serverRandStr}
 	_, err := self.GetClientEndPoint().(clientService.IGameClientInterface).OnGetLoginKey(&loginKey)
@@ -279,7 +279,11 @@ func (self *LoginClientService) _replyCheckCaptcha(needCaptcha bool, forbiddenDu
 }
 
 func (self *LoginClientService) CheckLockLogin(r *clientService.PasswordLogin) bool {
-	conn := self.app.redisPool.Get()
+	conn, err := common.GetRedisConn(self.app.redisPool, "login.CheckLockLogin")
+	if err != nil {
+		appLog.Error("CheckLockLogin get redis conn failed", r.AccountName, err.Error())
+		return false
+	}
 	defer conn.Close()
 	key := fmt.Sprintf("lockLogin_%v", r.AccountName)
 	value, err := redis.Int(conn.Do("get", key))
@@ -296,6 +300,7 @@ func (self *LoginClientService) CheckLockLogin(r *clientService.PasswordLogin) b
 }
 
 func (self *LoginClientService) LoginByPassword(r *clientService.PasswordLogin) (*clientService.Void, error) {
+	appLog.Info("LoginByPassword in: ", self.accountType, self.userId, "[", self.accountName, "]")
 	self.isReqLogin = true
 	if !self.checkAccountType(clientService.AccountType_ACCOUNT_PASSWD) {
 		appLog.Error("LoginByPassword: accountType is forbidden")
@@ -492,17 +497,23 @@ func (self *LoginClientService) _getServerListInfo(province string, isAudit bool
 		return bestServerId, gsHost, qsHost
 	}
 
-	conn := self.app.redisPool.Get()
-	defer conn.Close()
-	lastServerId, err := redis.Int(conn.Do("get", common.LAST_SERVER_ID+self.accountName))
+	var lastServerId int
+	conn, err := common.GetRedisConn(self.app.redisPool, "login._getServerListInfo")
 	if err != nil {
-		appLog.Warn("_getServerListInfo get lastServerId failed", self.accountName, err.Error())
+		appLog.Warn("_getServerListInfo get redis conn failed", self.accountName, err.Error())
+		lastServerId = 0
 	} else {
-		if lastServerId != 0 {
-			gsHost := ServerListCfg.GetString(fmt.Sprintf("gameServerList.%s", strconv.Itoa(lastServerId)))
-			qsHost := ServerListCfg.GetString(fmt.Sprintf("queueServerList.%s", strconv.Itoa(lastServerId)))
-			return strconv.Itoa(lastServerId), gsHost, qsHost
+		defer conn.Close()
+		lastServerId, err = redis.Int(conn.Do("get", common.LAST_SERVER_ID+self.accountName))
+		if err != nil {
+			appLog.Warn("_getServerListInfo get lastServerId failed", self.accountName, err.Error())
+			lastServerId = 0
 		}
+	}
+	if lastServerId != 0 {
+		gsHost := ServerListCfg.GetString(fmt.Sprintf("gameServerList.%s", strconv.Itoa(lastServerId)))
+		qsHost := ServerListCfg.GetString(fmt.Sprintf("queueServerList.%s", strconv.Itoa(lastServerId)))
+		return strconv.Itoa(lastServerId), gsHost, qsHost
 	}
 
 	bestServerId := ""
@@ -610,7 +621,11 @@ func (self *LoginClientService) LoginByToken(r *clientService.TokenLogin) (*clie
 		appLog.Warn("LoginByToken: token err", r.Phone, r.Token)
 		return nil, nil
 	} else {
-		conn := self.app.redisPool.Get()
+		conn, err := common.GetRedisConn(self.app.redisPool, "login.LoginByToken")
+		if err != nil {
+			appLog.Error("LoginByToken get redis conn failed", r.Phone, err.Error())
+			return nil, errors.New(fmt.Sprintf("LoginByToken: get redis conn failed: %s", err.Error()))
+		}
 		defer conn.Close()
 		var deviceId = userInfo.DeviceId
 		resMap, err := redis.Int64Map(conn.Do("HGETALL", common.DEVICE_ID+deviceId))
@@ -877,11 +892,15 @@ func (self *LoginClientService) _attemptOfficialRequest(reqURL, token string, lo
 				officialAccessTokenResponse.Success = true
 			}
 
-			conn := self.app.redisPool.Get()
-			defer conn.Close()
-			_, err := conn.Do("set", fmt.Sprintf("officialTagType_%s", self.accountName), officialAccessTokenResponse.Data.TagType)
+			conn, err := common.GetRedisConn(self.app.redisPool, "login._attemptOfficialRequest")
 			if err != nil {
-				appLog.Error(fmt.Sprintf("_loginByOfficial set officialTagType_%s error: %s", self.accountName, err.Error()))
+				appLog.Error(fmt.Sprintf("_loginByOfficial get redis conn failed: %s", self.accountName, err.Error()))
+			} else {
+				defer conn.Close()
+				_, err := conn.Do("set", fmt.Sprintf("officialTagType_%s", self.accountName), officialAccessTokenResponse.Data.TagType)
+				if err != nil {
+					appLog.Error(fmt.Sprintf("_loginByOfficial set officialTagType_%s error: %s", self.accountName, err.Error()))
+				}
 			}
 		}
 	}
@@ -1045,11 +1064,15 @@ func (self *LoginClientService) _loginByThird(body map[string] interface{}, chan
 				generalAccessTokenResponse.Success = true
 			}
 
-			conn := self.app.redisPool.Get()
-			defer conn.Close()
-			_, err := conn.Do("set", fmt.Sprintf("officialTagType_%s", self.accountName), generalAccessTokenResponse.Data.TagType)
+			conn, err := common.GetRedisConn(self.app.redisPool, "login._loginByThird")
 			if err != nil {
-				appLog.Error(fmt.Sprintf("_loginByThird set officialTagType_%s error: %s", self.accountName, err.Error()))
+				appLog.Error(fmt.Sprintf("_loginByThird get redis conn failed: %s", self.accountName, err.Error()))
+			} else {
+				defer conn.Close()
+				_, err := conn.Do("set", fmt.Sprintf("officialTagType_%s", self.accountName), generalAccessTokenResponse.Data.TagType)
+				if err != nil {
+					appLog.Error(fmt.Sprintf("_loginByThird set officialTagType_%s error: %s", self.accountName, err.Error()))
+				}
 			}
 		}
 	}
@@ -1149,7 +1172,11 @@ func (self *LoginClientService) _checkNeedCaptcha() (error, bool) {
 func (self *LoginClientService) _securityCheck() (bool, int64) {
 	//先看下是否有封禁
 	appLog.Info("_securityCheck: check request, account name: ", self.accountName, ", account type: ", self.accountType)
-	conn := self.app.redisPool.Get()
+	conn, err := common.GetRedisConn(self.app.redisPool, "login._securityCheck")
+	if err != nil {
+		appLog.Error("_securityCheck get redis conn failed", self.accountName, err.Error())
+		return false, 0
+	}
 	defer conn.Close()
 	captchaForbidKey := fmt.Sprintf("sclb_%v_%v", self.accountName, int32(self.accountType))
 	value, err := redis.Int(conn.Do("ttl", captchaForbidKey))
@@ -1273,15 +1300,17 @@ func (self *LoginClientService) captchaLoginValidate(verifyResult, isTimeOut, is
 	captchaDataValidKey := fmt.Sprintf("sclv_%v_%v_%v", self.accountName, int32(self.accountType), int32(clientService.CaptchaType_CT_Login))
 	captchaForbidKey := fmt.Sprintf("sclb_%v_%v", self.accountName, int32(self.accountType))
 	recordType := self._calculateRecordType(verifyResult, isTimeOut, isQPSLimit)
-	conn := self.app.redisPool.Get()
+	conn, err := common.GetRedisConn(self.app.redisPool, "login.captchaLoginValidate")
+	if err != nil {
+		appLog.Error("captchaLoginValidate get redis conn failed", self.accountName, err.Error())
+		return
+	}
 	defer conn.Close()
 	if verifyResult {
 		appLog.Infof(fmt.Sprintf("captchaLoginValidate: Success in login captchaValidate, accountName: %v, accountType: %v", self.accountName, self.accountType))
 		//成功了，删除记录
 		dataRecorddKey := fmt.Sprintf("sclr_%v_%v_%v", self.accountName, int32(self.accountType), int32(clientService.CaptchaType_CT_Login))
-		conn := self.app.redisPool.Get()
-		defer conn.Close()
-		_, err := conn.Do("del", dataRecorddKey)
+		_, err = conn.Do("del", dataRecorddKey)
 		if err != nil {
 			appLog.Errorf(fmt.Sprintf("CaptchaValidate: del data record key: %v, accountName: %v, accountType: %v", dataRecorddKey, self.accountName, self.accountType))
 		}
@@ -1321,7 +1350,7 @@ func (self *LoginClientService) captchaLoginValidate(verifyResult, isTimeOut, is
 	}
 
 	//验证失败清理累计成功次数
-	_, err := conn.Do("del", dataSuccessKey)
+	_, err = conn.Do("del", dataSuccessKey)
 	if err != nil {
 		appLog.Errorf(fmt.Sprintf("captchaLoginValidate: Error in captcha login validate 1, del login success count key: %v, accountName: %v, accountType: %v", dataSuccessKey, self.accountName, self.accountType))
 	}

@@ -54,7 +54,7 @@ type OrderData struct {
 	/**
 	* 订单创建时间
 	 */
-	CreateTime string `json:"CreateTime"`
+	CreateTime int64 `json:"CreateTime"`
 
 	/**
 	* 游戏ID，区分不同游戏
@@ -119,7 +119,7 @@ type OrderData struct {
 	/**
 	* 订单支付时间
 	 */
-	PayTime string `json:"PayTime"`
+	PayTime int64 `json:"PayTime"`
 
 	/**
 	* 应付金额

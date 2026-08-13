@@ -17,8 +17,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/garyburd/redigo/redis"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gomodule/redigo/redis"
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
 )
@@ -82,7 +82,7 @@ func NewCentralLoginApp() *CentralLoginApp {
 		Password:    LoginConfig.RedisServer.Passwd,
 		Db:          LoginConfig.RedisServer.Db,
 		MaxIdle:     16,
-		MaxActive:   100,
+		MaxActive:   500,
 		IdleTimeout: 100,
 	})
 
@@ -221,10 +221,10 @@ func (self *CentralLoginApp) checkClientLogin(gs *GameServerService, accountType
 type AccountLoginInfo struct {
 	AccountType   uint32
 	AccountName   string
-	Token         string
-	ChannelId     uint32
-	UserId        string
-	OtherJsonData string
+	Token         string `redis:"token"`
+	ChannelId     uint32 `redis:"channelId"`
+	UserId        string `redis:"userId"`
+	OtherJsonData string `redis:"otherJsonData"`
 }
 
 // accountLoginInfoTTL 是 hash 条目的 TTL（秒），覆盖常见 token 失效窗口。
@@ -238,7 +238,10 @@ func AccountLoginInfoKey(accountType uint32, accountName string) string {
 // SaveAccountLoginInfo 把登录态写入 Redis hash 并设置 TTL。
 func (self *CentralLoginApp) SaveAccountLoginInfo(info *AccountLoginInfo) error {
 	key := AccountLoginInfoKey(info.AccountType, info.AccountName)
-	conn := self.redisPool.Get()
+	conn, err := common.GetRedisConn(self.redisPool, "login.SaveAccountLoginInfo")
+	if err != nil {
+		return err
+	}
 	defer conn.Close()
 	if _, err := conn.Do("HMSET", key,
 		"token", info.Token,
@@ -247,20 +250,26 @@ func (self *CentralLoginApp) SaveAccountLoginInfo(info *AccountLoginInfo) error 
 		"otherJsonData", info.OtherJsonData); err != nil {
 		return err
 	}
-	_, err := conn.Do("EXPIRE", key, accountLoginInfoTTL)
+	_, err = conn.Do("EXPIRE", key, accountLoginInfoTTL)
 	return err
 }
 
 // LoadAccountLoginInfo 从 Redis 读回登录态。key 不存在时返回 (info, nil)，其中 info.Token == ""。
 func (self *CentralLoginApp) LoadAccountLoginInfo(accountType uint32, accountName string) (*AccountLoginInfo, error) {
 	key := AccountLoginInfoKey(accountType, accountName)
-	conn := self.redisPool.Get()
+	conn, err := common.GetRedisConn(self.redisPool, "login.LoadAccountLoginInfo")
+	if err != nil {
+		return nil, err
+	}
 	defer conn.Close()
 	values, err := redis.Values(conn.Do("HGETALL", key))
 	if err != nil {
 		return nil, err
 	}
-	info := &AccountLoginInfo{AccountType: accountType, AccountName: accountName}
+	info := &AccountLoginInfo{
+		AccountType: accountType,
+		AccountName: accountName,
+	}
 	if err := redis.ScanStruct(values, info); err != nil {
 		return nil, err
 	}
@@ -270,9 +279,12 @@ func (self *CentralLoginApp) LoadAccountLoginInfo(accountType uint32, accountNam
 // DeleteAccountLoginInfo 删除某账号的登录态 hash（踢人 / 登出时使用）。
 func (self *CentralLoginApp) DeleteAccountLoginInfo(accountType uint32, accountName string) error {
 	key := AccountLoginInfoKey(accountType, accountName)
-	conn := self.redisPool.Get()
+	conn, err := common.GetRedisConn(self.redisPool, "login.DeleteAccountLoginInfo")
+	if err != nil {
+		return err
+	}
 	defer conn.Close()
-	_, err := conn.Do("del", key)
+	_, err = conn.Do("del", key)
 	return err
 }
 
@@ -284,7 +296,7 @@ func (self *CentralLoginApp) checkClientLoginFromRedis(accountType uint32, accou
 	}
 
 	if info.Token == "" {
-		appLog.Error("checkClientLoginFromRedis failed: cannot get token:", accountType, accountName)
+		appLog.Info("checkClientLoginFromRedis failed: cannot get token:", accountType, accountName)
 		return false, 0, "", "{}"
 	}
 
@@ -297,9 +309,9 @@ func (self *CentralLoginApp) checkClientLoginFromRedis(accountType uint32, accou
 }
 
 // KickAccountClient 把指定账号的客户端踢下线，并让后续 VerifyLogin 的 checkClientLogin 必失败：
-//   1. 断开该客户端的 RPC 连接；
-//   2. 从 gameClients 中移除（让 getClient 返回 nil）；
-//   3. 清理 Redis 中保存的 login token（否则 checkClientLogin 会回退到 checkClientLoginFromRedis 并被旧 token 命中）。
+//  1. 断开该客户端的 RPC 连接；
+//  2. 从 gameClients 中移除（让 getClient 返回 nil）；
+//  3. 清理 Redis 中保存的 login token（否则 checkClientLogin 会回退到 checkClientLoginFromRedis 并被旧 token 命中）。
 func (self *CentralLoginApp) KickAccountClient(accountType uint32, accountName string) {
 	if cs := self.getClient(accountType, accountName); cs != nil {
 		self.removeClient(cs)

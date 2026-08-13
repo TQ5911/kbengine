@@ -6,13 +6,5 @@
     "logPath":"crossData.log",
     "logLevel":0,
     "logRotateSize":500,
-    "mysql": {
-    	"addr": "127.0.0.1",
-        "user": "fengyan",
-        "passwd": "123456",
-        "db": "crossDataDB"
-    },
-    "unionMaxNum": 20,
-    "enemyMaxNum": 20,
     "reportAddr":"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5"
 }

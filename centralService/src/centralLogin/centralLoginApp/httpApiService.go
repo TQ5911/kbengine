@@ -21,7 +21,7 @@ import (
 	//"golang.org/x/sys/unix"
 	"centralService/src/common"
 
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 	"github.com/gogf/greuse"
 )
 
@@ -424,7 +424,11 @@ func (self *HttpService) setRedisOfficialTagType(gameId string, code string) str
 	if codeType == "" {
 		return ""
 	}
-	conn := self.app.redisPool.Get()
+	conn, err := common.GetRedisConn(self.app.redisPool, "login.setRedisOfficialTagType")
+	if err != nil {
+		appLog.Error("setRedisOfficialTagType get redis conn failed", err.Error())
+		return ""
+	}
 	defer conn.Close()
 	officialTagType, err := redis.String(conn.Do("get", "officialTagType_"+gameId))
 	if err != nil {

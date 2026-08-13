@@ -63,6 +63,8 @@ message LeaseItemPrepareReq {
     uint64 uniqueId = 2;
     uint32 buyerServerId = 3;
     uint64 opUUID = 4;         // 透传追踪 ID
+    repeated double rentalProp01 = 5;  // 自有装备租赁费率 [税率, 绑金比例, 流通金比例]，游戏服配置透传（支持热更）
+    repeated double rentalProp02 = 6;  // 爆装装备租赁费率，同上
 }
 
 message LeaseItemPrepareResp {

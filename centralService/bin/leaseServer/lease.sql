@@ -24,5 +24,7 @@ CREATE TABLE IF NOT EXISTS lease_market (
 	update_time INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '记录更新时间',
 	PRIMARY KEY (id),
 	UNIQUE KEY uk_unique (unique_id),
-	KEY idx_status_id (lease_status, id)
+	KEY idx_status_id (lease_status, id),
+	KEY idx_status_updatetime (lease_status, update_time),
+	KEY idx_status_leaseend (lease_status, lease_end_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='租赁市场全局订单表';

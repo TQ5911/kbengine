@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"centralService/src/appLog"
 	cmap "centralService/src/common/concurrent_map"
+	gameServerService "centralService/src/auction/auctionApp/gameServerService"
 	"database/sql"
 	"encoding/json"
 	"errors"
@@ -386,21 +387,58 @@ func NewItemData(srcItemData *ItemData, itemNum uint32) *ItemData {
 	return itemData
 }
 
+type DailyPrice struct {
+    Date  		string  	`json:"date"`
+    TotalPrice 	uint64 		`json:"totalPrice"`
+	Number 		uint64 		`json:"number"`
+	AvgPrice	float32		`json:"avgPrice"`
+}
+
 type AuctionItemAvgRecord struct {
 	itemId     uint32
 	totalPrice uint64
 	number     uint64
 	avgPrice   float32
+
+	recentPrices []DailyPrice
+}
+
+func (a *AuctionItemAvgRecord) GetRecentAvgPrice(days int) float32 {
+	if days <= 0 || len(a.recentPrices) == 0 {
+		return 0
+	}
+	startIdx := len(a.recentPrices) - days
+	if startIdx < 0 {
+		startIdx = 0
+	}
+	var totalAllPrice uint64 = 0
+	var totalAllNum uint64 = 0
+	for i := startIdx; i < len(a.recentPrices); i++ {
+		dp := a.recentPrices[i]
+		totalAllPrice += dp.TotalPrice
+		totalAllNum += dp.Number
+	}
+	if totalAllNum == 0 {
+		return 0
+	}
+	avgPrice := float64(totalAllPrice) / float64(totalAllNum)
+	return float32(avgPrice)
 }
 
 func (a *AuctionItemAvgRecord) Update(db *sql.DB) error {
+	jsonBytes, err := json.Marshal(a.recentPrices)
+	if err != nil {
+		appLog.Error("AuctionItemAvgRecord Update marshal recentPrices error: ", err.Error(), " itemId", a.itemId)
+		return err
+	}
+
 	var buf bytes.Buffer
-	buf.WriteString("UPDATE `auction_priceRecord_avgPrices` SET `totalPrice`=?, `number`=?, `avgPrice`=? WHERE `itemId`=?")
+	buf.WriteString("UPDATE `auction_priceRecord_avgPrices` SET `totalPrice`=?, `number`=?, `avgPrice`=?, recentPrices=? WHERE `itemId`=?")
 	query := buf.String()
 
-	_, err := db.Exec(query, a.totalPrice, a.number, a.avgPrice, a.itemId)
+	_, err = db.Exec(query, a.totalPrice, a.number, a.avgPrice, string(jsonBytes), a.itemId)
 	if err != nil {
-		appLog.Error("AuctionItemAvgRecord Update error: ", err.Error(), " itemId: ", a.itemId)
+		appLog.Error("AuctionItemAvgRecord Update error: ", err.Error(), " itemId", a.itemId)
 		return err
 	}
 
@@ -408,7 +446,13 @@ func (a *AuctionItemAvgRecord) Update(db *sql.DB) error {
 }
 
 func (a *AuctionItemAvgRecord) Insert(db *sql.DB) error {
-	stmt, err := db.Prepare("INSERT INTO `auction_priceRecord_avgPrices` (`itemId`, `totalPrice`, `number`, `avgPrice`) VALUES (?, ?, ?, ?)")
+	jsonBytes, err := json.Marshal(a.recentPrices)
+	if err != nil {
+		appLog.Error("AuctionItemAvgRecord Insert marshal recentPrices error: ", err.Error(), " itemId: ", a.itemId)
+		return err
+	}
+
+	stmt, err := db.Prepare("INSERT INTO `auction_priceRecord_avgPrices` (`itemId`, `totalPrice`, `number`, `avgPrice`, `recentPrices`) VALUES (?, ?, ?, ?, ?)")
 	if err != nil {
 		appLog.Error("AuctionItemAvgRecord Insert error: ", err.Error(), " itemId: ", a.itemId)
 		return err
@@ -416,7 +460,7 @@ func (a *AuctionItemAvgRecord) Insert(db *sql.DB) error {
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(a.itemId, a.totalPrice, a.number, a.avgPrice)
+	_, err = stmt.Exec(a.itemId, a.totalPrice, a.number, a.avgPrice, string(jsonBytes))
 	if err != nil {
 		appLog.Error("AuctionItemAvgRecord Insert error: ", err.Error(), " itemId: ", a.itemId)
 		return err
@@ -425,7 +469,7 @@ func (a *AuctionItemAvgRecord) Insert(db *sql.DB) error {
 	return nil
 }
 
-func (a *AuctionItemAvgRecord) GetAvgPrice() float32 {
+func (a *AuctionItemAvgRecord) GetAvgPrice() (float32, float32) {
 	//cfgData := ItemConfig.GetStringMap(strconv.FormatUint(uint64(a.itemId), 10))
 	//if cfgData == nil || len(cfgData) == 0 {
 	//	appLog.Error("GetAvgPrice: cfgData == nil", a.itemId)
@@ -442,7 +486,7 @@ func (a *AuctionItemAvgRecord) GetAvgPrice() float32 {
 	//	return 0
 	//}
 	//avgPrice = math.Min(math.Max(avgPrice, bottomPrice), topPrice)
-	return a.avgPrice
+	return a.avgPrice, a.GetRecentAvgPrice(7)
 }
 
 type AuctionItemLastRecord struct {
@@ -493,12 +537,12 @@ type AuctionPriceRecords struct {
 	rcdPriceLock        *sync.RWMutex
 }
 
-func (a *AuctionPriceRecords) GetItemAvgPrice(itemId uint32) float32 {
+func (a *AuctionPriceRecords) GetItemAvgPrice(itemId uint32) (float32, float32) {
 	a.avgPriceLock.RLock()
 	defer a.avgPriceLock.RUnlock()
 	itemAvgPriceRecord, ok := a.itemAvgPriceRecords[itemId]
 	if !ok {
-		return 0
+		return 0, 0
 	}
 
 	return itemAvgPriceRecord.GetAvgPrice()
@@ -519,7 +563,13 @@ func (a *AuctionPriceRecords) AddAvgPriceRecord(itemId uint32, price uint64, num
 	itemAvgPriceRecord, ok := a.itemAvgPriceRecords[itemId]
 	totalPrice := price
 	if !ok {
-		itemAvgPriceRecord = &AuctionItemAvgRecord{itemId: itemId, totalPrice: totalPrice, number: uint64(number), avgPrice: 0.0}
+		itemAvgPriceRecord = &AuctionItemAvgRecord{
+			itemId: itemId, 
+			totalPrice: totalPrice, 
+			number: uint64(number), 
+			avgPrice: 0.0,
+			recentPrices: make([]DailyPrice, 0),
+		}
 		a.itemAvgPriceRecords[itemId] = itemAvgPriceRecord
 		a.avgPriceLock.Unlock()
 		err := itemAvgPriceRecord.Insert(app.db)
@@ -733,7 +783,7 @@ func (am *AuctionMgr) loadAuctionBlackListFromDB(offset int) ([]uint64, error) {
 }
 
 func (am *AuctionMgr) loadAuctionItemRecordsFromDB(offset int) ([]*AuctionItemAvgRecord, error) {
-	stmt, err := am.db.Prepare("SELECT `itemId`, `totalPrice`, `number`, `avgPrice` FROM `auction_priceRecord_avgPrices` LIMIT ?, ?")
+	stmt, err := am.db.Prepare("SELECT `itemId`, `totalPrice`, `number`, `avgPrice`, `recentPrices` FROM `auction_priceRecord_avgPrices` LIMIT ?, ?")
 	if err != nil {
 		appLog.Error("loadAuctionItemRecordsFromDB err: ", err)
 		return nil, err
@@ -750,9 +800,19 @@ func (am *AuctionMgr) loadAuctionItemRecordsFromDB(offset int) ([]*AuctionItemAv
 	auctionItemRecords := make([]*AuctionItemAvgRecord, 0)
 	for rows.Next() {
 		auctionItemRecord := &AuctionItemAvgRecord{}
-		err = rows.Scan(&auctionItemRecord.itemId, &auctionItemRecord.totalPrice, &auctionItemRecord.number, &auctionItemRecord.avgPrice)
+		var recentPricesJsonStr string
+		err = rows.Scan(&auctionItemRecord.itemId, &auctionItemRecord.totalPrice, &auctionItemRecord.number, &auctionItemRecord.avgPrice, &recentPricesJsonStr)
 		if err != nil {
 			return nil, err
+		}
+		if recentPricesJsonStr != "" {
+			err = json.Unmarshal([]byte(recentPricesJsonStr), &auctionItemRecord.recentPrices)
+			if err != nil {
+				appLog.Errorw("loadAuctionItemRecordsFromDB unmarshal recentPrices failed", "itemId", auctionItemRecord.itemId, "err", err)
+				auctionItemRecord.recentPrices = make([]DailyPrice, 0)
+			}
+		} else {
+			auctionItemRecord.recentPrices = make([]DailyPrice, 0)
 		}
 		auctionItemRecords = append(auctionItemRecords, auctionItemRecord)
 	}
@@ -938,6 +998,7 @@ func (am *AuctionMgr) refreshDaily() {
 			appLog.Info("refreshDaily start")
 			am.refreshItemPriceData()
 			am.setTLastUpdateTime(tNow.Unix())
+			am.app.broadcastAllItemsPriceInfoList()
 			appLog.Info("refreshDaily end")
 			ticker.Reset(24 * time.Hour)
 		}
@@ -947,10 +1008,21 @@ func (am *AuctionMgr) refreshDaily() {
 func (am *AuctionMgr) refreshItemPriceData() {
 	am.priceRecord.avgPriceLock.Lock()
 	defer am.priceRecord.avgPriceLock.Unlock()
+	today := time.Now().Format("2006-01-02")
 	for _, auctionItemRecord := range am.priceRecord.itemAvgPriceRecords {
 		if auctionItemRecord.number > 0 {
 			auctionItemRecord.avgPrice = float32(auctionItemRecord.totalPrice) / float32(auctionItemRecord.number)
+			daily := DailyPrice{
+				Date:       today,
+				TotalPrice: auctionItemRecord.totalPrice,
+				Number:     auctionItemRecord.number,
+				AvgPrice:	auctionItemRecord.avgPrice,
+			}
 			auctionItemRecord.totalPrice, auctionItemRecord.number = 0, 0
+			auctionItemRecord.recentPrices = append(auctionItemRecord.recentPrices, daily)
+			if len(auctionItemRecord.recentPrices) > 30 {
+				auctionItemRecord.recentPrices = auctionItemRecord.recentPrices[1:]
+			}
 			err := auctionItemRecord.Update(am.db)
 			if err != nil {
 				appLog.Error("refreshItemPriceData: Update err", err)
@@ -959,6 +1031,21 @@ func (am *AuctionMgr) refreshItemPriceData() {
 	}
 }
 
+func (am *AuctionMgr) getAllItemsPriceInfoList() []*gameServerService.ItemPriceInfo {
+	am.priceRecord.avgPriceLock.Lock()
+	defer am.priceRecord.avgPriceLock.Unlock()
+
+	var priceInfoList []*gameServerService.ItemPriceInfo
+	for itemId, auctionItemRecord := range am.priceRecord.itemAvgPriceRecords {
+		price, price7 := auctionItemRecord.GetAvgPrice()
+		priceInfoList = append(priceInfoList, &gameServerService.ItemPriceInfo{
+			ItemId:    itemId,
+			AvgPrice:  price,
+			AvgPrice7: price7,
+		})
+	}
+	return priceInfoList
+}
 func (am *AuctionMgr) refreshAuctionIndexData() {
 	// 当前时间
 	curTime := time.Now().Unix()
@@ -1378,11 +1465,12 @@ func (am *AuctionMgr) GetItemLastPrice(itemId uint32) float32 {
 	return price
 }
 
-func (am *AuctionMgr) GetItemAvgPrice(itemId uint32) float32 {
+func (am *AuctionMgr) GetItemAvgPrice(itemId uint32) (float32, float32) {
 	var price = float32(0)
-	price = am.priceRecord.GetItemAvgPrice(itemId)
+	var price7 = float32(0)
+	price, price7 = am.priceRecord.GetItemAvgPrice(itemId)
 
-	return price
+	return price, price7
 }
 
 func (am *AuctionMgr) CheckBuyItem(auctionItemUUID uint64, buyNumber uint32) (*AuctionItem, int) {

@@ -18,6 +18,8 @@ type GameServerService struct {
 }
 
 func (self *GameServerService) OnLoseConnection() {
+	remoteAddr := self.GetRpcChannel().GetRemoteAddr()
+	appLog.Error("lose connection from:", remoteAddr.String(), "serverId:", self.serverId, "componentId:", self.componentId)
 	self.app.removeGameServer(self)
 }
 

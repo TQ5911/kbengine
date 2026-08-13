@@ -26,6 +26,19 @@ def parse_arguments():
     
     return parser.parse_args()
 
+def find_mysql_block(config):
+    """
+    Case-insensitive lookup for the mysql connection block. JSON keys are case
+    sensitive in Python's json.load, but configs in this repo are inconsistent
+    ("mysql" in most, "Mysql" in leaseConf.json), so we accept any casing.
+    Returns the block dict if found, else None.
+    """
+    for key in ("mysql", "Mysql", "MYSQL"):
+        block = config.get(key)
+        if isinstance(block, dict):
+            return block
+    return None
+
 def get_db_name_from_config(folder_path):
     """
     Scans the folder for .json files and attempts to extract mysql.db.
@@ -45,8 +58,9 @@ def get_db_name_from_config(folder_path):
                     print(f"Warning: Could not parse JSON file {json_file}. Skipping.")
                     continue
                 
-                if "mysql" in config and isinstance(config["mysql"], dict):
-                    db_name = config["mysql"].get("db")
+                block = find_mysql_block(config)
+                if block is not None:
+                    db_name = block.get("db")
                     if db_name:
                         return db_name
         except Exception as e:

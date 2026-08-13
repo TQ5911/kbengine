@@ -1,0 +1,1088 @@
+syntax = "proto3";
+
+package AllianceService;
+option go_package = "../gameServerService";
+option py_generic_services = true;
+
+message Void {}
+
+// ==== Core Data Structures ====
+
+message AllianceInfo {
+    uint64 allianceId = 1;
+    string name = 2;
+    string declaration = 3;
+    uint64 leaderGuildId = 4;
+    uint32 leaderServerId = 5;
+    string leaderGuildName = 6;
+    uint32 approveType = 7;
+    uint64 fund = 9;
+    uint32 memberCount = 10;
+    uint64 totalScore = 11;
+    uint32 serverId = 14;
+    uint32 createdAt = 15;
+    uint64 leaderGbId = 16;
+    string leaderName = 17;
+    uint32 leaderLevel = 18;
+    int32 leaderProfession = 19;       // 盟主职业
+    uint32 leaderGender = 20;          // 盟主性别
+}
+
+// AllianceBasicInfo is a focused, read-only projection of an alliance's
+// public card data: declaration + approval mode + leader identity. It
+// powers the dedicated "get by allianceId" lookup so the caller does
+// not have to fetch the full AllianceInfo + member list.
+message AllianceBasicInfo {
+    uint64 allianceId = 1;
+    string declaration = 2;
+    uint32 approveType = 3;
+    string leaderName = 4;
+    uint32 leaderGender = 5;
+    uint32 leaderLevel = 6;
+    uint32 leaderServerId = 7;
+    int32 leaderProfession = 8;
+    uint64 leaderGbId = 9;
+}
+
+message GetLeagueBasicInfoRequest {
+    uint64 allianceId = 1;
+    uint64 uuid = 2;
+}
+
+message GetLeagueBasicInfoResult {
+    AllianceBasicInfo info = 1;
+    uint32 errCode = 2;
+    uint64 uuid = 3;
+}
+
+message LeagueSimpleMember {
+    uint64 guildId = 1;
+    string guildName = 2;
+    uint32 guildIcon = 3;
+    uint32 dspFlag = 4;
+}
+
+message LeagueSimpleInfo {
+    uint64 allianceId = 1;
+    string name = 2;
+    uint64 totalScore = 3;
+    repeated LeagueSimpleMember members = 4;
+}
+
+message GetLeagueSimpleInfoRequest {
+    uint64 allianceId = 1;
+    uint64 uuid = 2;
+}
+
+message GetLeagueSimpleInfoResult {
+    LeagueSimpleInfo info = 1;
+    uint32 errCode = 2;
+    uint64 uuid = 3;
+}
+
+// ==== ApproveJoin guild-exists check ====
+// allianceService asks the game server that owns the applying guild
+// to verify the guild still exists before completing an ApproveJoin.
+// Async: caller stores pending state keyed by `uuid`, resolves it when
+// onCheckGuildExistsResult arrives.
+message CheckGuildExistsRequest {
+    uint64 guildId = 1;
+    uint64 uuid = 2;
+    bool checkCD = 3;
+}
+
+message CheckGuildExistsResult {
+    uint64 uuid = 1;
+    uint64 guildId = 2;
+    string guildName = 3;
+    bool exists = 4;
+    uint32 guildCD = 5;
+    bool checkCD = 6;
+}
+
+// ==== Cross-server guild simple info lookup ====
+// When a player requests simple info for a guild on another server,
+// the source game server sends GetGuildSimpleInfoRequest to the
+// allianceService. The allianceService forwards it (via checkGuildSimpleInfo)
+// to the target game server, which looks up the guild in GuildStub and
+// responds via onCheckGuildSimpleInfoResult. The allianceService then
+// delivers the result back to the source server via onGetGuildSimpleInfoResult.
+message GuildSimpleInfo {
+    uint64 guildId = 1;
+    string guildName = 2;
+    uint32 guildIcon = 3;
+    uint32 dspFlag = 4;
+    uint64 score = 5;
+    uint32 guildLevel = 6;
+    uint32 memberCnt = 7;
+}
+
+message GetGuildSimpleInfoRequest {
+    uint64 guildId = 1;
+    uint32 serverId = 2;
+    uint64 uuid = 3;
+}
+
+message GetGuildSimpleInfoResult {
+    GuildSimpleInfo info = 1;
+    uint32 errCode = 2;
+    uint64 uuid = 3;
+}
+
+// ==== NewApplyNotify ====
+// Focused 5-field snapshot pushed to the alliance leader when a guild
+// applies to join. Slimmer than AllianceApplyInfo — the leader only
+// needs enough to render the apply card in the inbox (id + name +
+// icon + dspFlag + power).
+message NewApplyNotify {
+    uint64 guildUUID = 1;
+    string guildName = 2;
+    uint32 guildIcon = 3;
+    uint32 dspFlag = 4;
+    uint64 power = 5;     // 帮会战力 (== AllianceApplyInfo.guildScore)
+    uint64 leaderGbId = 6;
+    uint64 applyTime = 7;
+}
+
+// ==== ApplyCancelledReason ====
+// Why a pending apply was cancelled. Used by both apply-cancelled
+// notification paths so the receiving game server can render the
+// right system mail / toast without re-deriving the cause.
+enum ApplyCancelledReason {
+    APPLY_CANCEL_REASON_UNSPECIFIED = 0;
+    // The applying guild was accepted by ANOTHER alliance. Per the
+    // "one guild in one alliance" rule every other pending apply for
+    // that guild is automatically revoked. This is the only cause we
+    // fire today, but the enum is here so future cancel sources
+    // (alliance disbanded, leader veto, etc.) can reuse the wire.
+    APPLY_CANCEL_REASON_GUILD_JOINED_OTHER_ALLIANCE = 1;
+}
+
+// ==== ApplyCancelledNotify (→ alliance leader) ====
+// Pushed to the alliance leader's game server when a pending apply
+// targeting THEIR alliance is cancelled. The leader needs this so the
+// apply row disappears from their inbox without waiting for a manual
+// refresh; the cancellation is durable in MySQL but the leader's
+// on-screen view is what the player actually sees.
+//
+// Routed by allianceId → leaderGuildId → leaderServerId on the
+// allianceService side, so the receiving game server can trust the
+// embedded serverId for which-side context (it will normally be the
+// receiving server, but cross-server applies are valid).
+message ApplyCancelledNotify {
+    uint64 applyId = 1;          // 被取消的申请ID (== alliance_apply.id)
+    uint64 allianceId = 2;       // 该申请对应的联盟ID (接收方 = 当前盟主)
+    uint64 guildId = 3;          // 申请方帮会ID
+    string guildName = 4;        // 申请方帮会名称 (方便直接渲染)
+    uint32 serverId = 5;         // 申请方帮会所在 game serverId (跨服上下文)
+    ApplyCancelledReason reason = 6; // 取消原因
+    uint64 joinedAllianceId = 7; // 当 reason=GUILD_JOINED_OTHER_ALLIANCE 时, 该帮会最终加入了哪个联盟
+}
+
+// ==== SelfAppliesCancelledNotify (→ original applying guild) ====
+// Pushed to the guild whose pending applies were force-cancelled
+// because the guild itself was accepted by a different alliance.
+// One batched message carries every cancelled apply so the guild's
+// "sent applies" view can drop them all atomically.
+//
+// Routed by guildId → the server that hosts the applying guild
+// (looked up from the apply snapshot cached at apply time, since
+// after approval the guild is now a member of a different alliance).
+message SelfAppliesCancelledNotify {
+    uint64 guildId = 1;          // 该帮会 (接收方)
+    uint64 joinedAllianceId = 2; // 该帮会最终加入了哪个联盟 (上下文, 让帮主知道为何被取消)
+    ApplyCancelledReason reason = 3; // 取消原因 (整批共用同一原因)
+    repeated ApplyCancelledItem cancelledApplies = 4; // 被取消的申请列表
+}
+
+// ApplyCancelledItem is the per-apply entry inside SelfAppliesCancelledNotify.
+// Carries enough info to remove the row from the guild leader's sent-applies
+// view AND to render any "you cancelled X" toast without re-querying.
+// The 4 alliance-side fields (allianceId / allianceName / serverId /
+// totalScore) match the data shape of the guild leader's sent-applies
+// list, so the cancel notification and the list view share one row type.
+message ApplyCancelledItem {
+    uint64 applyId = 1;          // 被取消的申请ID
+    uint64 allianceId = 2;       // 该申请对应的联盟ID
+    string allianceName = 3;     // 联盟名称 (snapshot, 方便客户端直接显示)
+    uint32 serverId = 4;         // 联盟所在 game serverId (== AllianceInfo.LeaderServerId, 即盟主所在服)
+    uint64 totalScore = 5;       // 联盟战力 (== AllianceInfo.TotalScore, 所有成员帮会战力之和)
+}
+
+message AllianceMemberInfo {
+    uint64 guildId = 1;
+    string guildName = 2;
+    uint32 serverId = 3;
+    uint64 guildScore = 4;
+    uint32 memberCount = 5;
+    uint32 role = 6;
+    uint32 joinTime = 7;
+    uint32 guildIcon = 8;
+    uint32 guildLevel = 9;
+    // === Guild-level attributes (保留帮会级属性) ===
+    uint32 dspFlag = 10;               // 帮会 dspFlag
+    uint32 maxMemberNum = 11;          // 帮会上限成员数
+    // === Guild leader personal info (帮会会长个人信息) ===
+    uint64 leaderGbId = 12;            // 会长 GB ID
+    string leaderName = 13;            // 会长名称
+    uint32 leaderLevel = 14;           // 会长等级
+    uint32 leaderProfession = 15;      // 会长职业
+    uint32 leaderGender = 16;          // 会长性别
+}
+
+message AllianceApplyInfo {
+    uint64 applyId = 1;
+    uint64 allianceId = 2;
+    uint64 guildId = 3;
+    string guildName = 4;
+    uint64 guildScore = 5;
+    uint32 serverId = 6;
+    uint32 status = 7;
+    uint32 createdAt = 8;
+    uint64 leaderGuildId = 9;
+    // ==== Guild-level cosmetic attributes (snapshot at apply time) ====
+    uint32 guildIcon = 10;       // 帮会 icon
+    uint32 dspFlag = 11;         // 帮会 dspFlag
+    // ==== Guild-level stats (snapshot at apply time) ====
+    // These three are needed by completeApproveJoin so it can INSERT a
+    // full alliance_member row without going back to the source game
+    // server. They mirror ApplyToJoinRequest's guild-level fields.
+    uint32 memberCount = 12;     // 帮会成员数 (== ApplyToJoinRequest.memberCount)
+    uint32 guildLevel = 13;      // 帮会等级 (== ApplyToJoinRequest.guildLevel)
+    uint32 maxMemberNum = 14;    // 帮会上限成员数 (== ApplyToJoinRequest.maxMemberNum)
+    // === Applicant's guild leader personal info (申请人帮会会长个人信息) ===
+    uint64 leaderGbId = 15;            // 会长 GB ID
+    string leaderName = 16;            // 会长名称
+    uint32 leaderLevel = 17;           // 会长等级
+    uint32 leaderProfession = 18;      // 会长职业
+    uint32 leaderGender = 19;          // 会长性别
+}
+
+message AllianceInviteMemberInfo {
+    uint64 guildUUID = 1;
+    string guildName = 2;
+    uint64 guildScore = 3;
+    uint32 guildIcon = 4;
+    uint32 dspFlag = 5;
+    uint32 guildLevel = 6;
+    uint32 memberCount = 7;
+    uint32 maxMemberNum = 8;
+}
+
+message AllianceInviteInfo {
+    uint64 inviteId = 1;
+    uint64 allianceId = 2;
+    string allianceName = 3;
+    uint32 serverId = 4;
+    uint32 createdAt = 5;
+    uint64 power = 6;
+    uint32 status = 7;
+    uint64 guildId = 8;
+    repeated AllianceInviteMemberInfo members = 9; 
+}
+
+message AllianceEventInfo {
+    uint64 eventId = 1;
+    uint32 eventType = 2;
+    repeated string eventArgs = 3;
+    uint32 createdAt = 4;
+}
+
+message AllianceEnemyInfo {
+    uint32 attackType = 1;
+    uint64 attackId = 2;
+    uint32 attackServerId = 3;
+    uint32 targetType = 4;
+    uint64 targetId = 5;
+    uint32 targetServerId = 6;
+    uint32 endTime = 7;
+}
+
+message AllianceChatMessage {
+    uint64 senderGuildId = 1;
+    string senderGuildName = 2;
+    uint32 senderServerId = 3;
+    string content = 4;
+    uint32 sendTime = 5;
+}
+
+message RegisterGameServerRequest {
+    uint32 serverId = 1;
+}
+
+message AllianceListEntry {
+    uint64 allianceId = 1;
+    string name = 2;
+    uint32 serverId = 3;
+    repeated AllianceListMemberInfo members = 4;
+}
+
+// AllianceListMemberInfo is a compact, list-only view of a single member
+// guild inside AllianceListEntry. The full member record (with leader,
+// member count, etc.) still lives on AllianceMemberInfo and is returned
+// by GetLeagueDetail 
+message AllianceListMemberInfo {
+    uint64 guildId = 1;
+    string guildName = 2;
+    uint32 guildIcon = 3;
+    uint32 dspFlag = 4;
+    uint32 serverId = 5;
+    uint64 score = 6;
+}
+
+message CreateLeagueRequest {
+    uint64 guildId = 1;
+    uint32 serverId = 2;
+    string name = 3;
+    string declaration = 4;
+    uint32 approveType = 5;
+    uint64 playerGbId = 6;
+    uint64 uuid = 7;
+    string leaderName = 8;
+    uint32 leaderLevel = 9;
+    uint64 allianceId = 10;
+    // === Leader data (盟主数据) ===
+    uint32 leaderServerId = 11;        // 盟主 serverId
+    int32 leaderProfession = 12;       // 盟主职业 (GuildMemberVal.job)
+    uint32 leaderGender = 13;          // 盟主性别 (GuildMemberVal.sex, 0未知/1男/2女)
+    // === Leader's guild data (盟主所在帮会数据) ===
+    string guildName = 14;             // 帮会名字
+    uint32 dspFlag = 15;               // 帮会 dspFlag
+    uint32 guildIcon = 16;             // 帮会 icon
+    uint64 guildScore = 17;            // 帮会 score
+    uint32 guildLevel = 18;            // 帮会 level
+    uint32 memberCount = 19;           // 帮会当前成员数
+    uint32 maxMemberNum = 20;          // 帮会上限成员数
+}
+message CreateLeagueResult {
+    uint64 allianceId = 1;
+    uint64 uuid = 2;
+    uint32 errCode = 3;
+    AllianceInfo alliance = 4;
+    repeated AllianceMemberInfo members = 5;
+}
+
+message DisbandLeagueRequest {
+    uint64 allianceId = 1;
+    uint64 playerGbId = 2;
+    uint64 uuid = 3;
+}
+message DisbandLeagueResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+}
+
+message ModifyLeagueInfoRequest {
+    uint64 allianceId = 1;
+    uint64 playerGbId = 2;
+    string name = 3;
+    string declaration = 4;
+    uint32 approveType = 5;
+    uint64 uuid = 6;
+}
+message ModifyLeagueInfoResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+}
+
+message GetLeagueListRequest {
+    uint32 serverId = 1;
+    uint32 pageIndex = 2;
+    uint32 pageSize = 3;
+    uint64 uuid = 4;
+}
+message GetLeagueListResult {
+    uint64 uuid = 1;
+    uint32 pageIndex = 2;
+    uint32 totalPage = 3;
+    repeated AllianceListEntry entries = 4;
+}
+
+message SearchLeagueRequest {
+    string keyword = 1;
+    uint32 serverId = 2;
+    uint64 uuid = 3;
+}
+message SearchLeagueResult {
+    repeated AllianceListEntry entries = 1;
+    uint64 uuid = 2;
+}
+
+message GetLeagueDetailRequest {
+    uint64 allianceId = 1;
+    uint64 uuid = 2;
+}
+message GetLeagueDetailResult {
+    AllianceInfo alliance = 1;
+    repeated AllianceMemberInfo members = 2;
+    uint64 uuid = 3;
+    uint32 errCode = 4;
+}
+
+message ApplyToJoinRequest {
+    uint64 allianceId = 1;
+    uint64 guildId = 2;
+    uint32 serverId = 3;
+    uint64 guildScore = 4;
+    string guildName = 5;
+    uint64 playerGbId = 6;
+    uint64 uuid = 7;
+    uint32 memberCount = 8;            // 帮会当前成员数
+    uint32 guildIcon = 9;             // 帮会 icon
+    uint32 guildLevel = 10;            // 帮会 level
+    uint32 dspFlag = 11;               // 帮会 dspFlag
+    uint32 maxMemberNum = 12;          // 帮会上限成员数
+    // === Guild leader personal info (帮会会长个人信息) ===
+    uint64 leaderGbId = 13;            // 会长 GB ID
+    string leaderName = 14;            // 会长名称
+    uint32 leaderLevel = 15;           // 会长等级
+    uint32 leaderProfession = 16;      // 会长职业
+    uint32 leaderGender = 17;          // 会长性别
+}
+message ApplyToJoinResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+    // ==== Alliance card data (returned on success so the game server can
+    //      show "you've joined <X> with power Y" without a follow-up RPC) ====
+    uint64 allianceId = 3;
+    string allianceName = 4;
+    uint64 alliancePower = 5;     // 联盟战力 (== AllianceInfo.TotalScore)
+}
+
+message ApproveJoinRequest {
+    uint64 allianceId = 1;
+    uint64 playerGbId = 2;
+    uint64 uuid = 3;
+    uint64 guildId = 4;
+}
+message ApproveJoinResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+    uint64 joinedGuildId = 3;
+    uint32 guildCD = 4;
+}
+
+message RejectJoinRequest {
+    uint64 guildId = 1;
+    uint64 playerGbId = 2;
+    uint64 uuid = 3;
+}
+message RejectJoinResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+    uint64 rejectedGuildId = 3;
+}
+
+message CancelApplyRequest {
+    uint64 leagueUUID = 1;
+    uint64 guildId = 2;
+    uint64 uuid = 3;
+}
+message CancelApplyResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+    uint64 allianceId = 3;
+}
+
+message InviteGuildRequest {
+    uint64 allianceId = 1;
+    uint64 targetGuildId = 2;
+    uint32 targetServerId = 3;
+    uint64 playerGbId = 4;
+    uint64 uuid = 5;
+}
+message InviteGuildResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+    uint64 targetGuildId = 3;
+    uint32 guildCD = 4;
+}
+
+message AcceptInviteRequest {
+    uint64 allianceId = 1;
+    uint64 guildId = 2;
+    uint32 serverId = 3;
+    uint64 guildScore = 4;
+    string guildName = 5;
+    uint64 playerGbId = 6;
+    uint64 uuid = 7;
+    uint32 memberCount = 8;            // 帮会当前成员数
+    uint32 guildIcon = 9;             // 帮会 icon
+    uint32 guildLevel = 10;            // 帮会 level
+    uint32 dspFlag = 11;               // 帮会 dspFlag
+    uint32 maxMemberNum = 12;          // 帮会上限成员数
+    // === Guild leader personal info (帮会会长个人信息) ===
+    uint64 leaderGbId = 13;            // 会长 GB ID
+    string leaderName = 14;            // 会长名称
+    uint32 leaderLevel = 15;           // 会长等级
+    uint32 leaderProfession = 16;      // 会长职业
+    uint32 leaderGender = 17;          // 会长性别
+}
+message AcceptInviteResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+    uint64 allianceId = 3;
+}
+
+message RejectInviteRequest {
+    uint64 guildId = 1;
+    uint64 playerGbId = 2;
+    uint64 uuid = 3;
+    uint64 allianceId = 4;
+}
+message RejectInviteResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+    uint64 allianceId = 3;
+}
+
+message KickMemberRequest {
+    uint64 allianceId = 1;
+    uint64 targetGuildId = 2;
+    uint64 playerGbId = 3;
+    uint64 uuid = 4;
+}
+message KickMemberResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+}
+
+message LeaveLeagueRequest {
+    uint64 allianceId = 1;
+    uint64 guildId = 2;
+    uint64 playerGbId = 3;
+    uint64 uuid = 4;
+}
+message LeaveLeagueResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+}
+
+message TransferLeaderRequest {
+    uint64 allianceId = 1;
+    uint64 targetGuildId = 2;
+    uint64 playerGbId = 3;
+    uint64 uuid = 4;
+}
+message TransferLeaderResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+    AllianceInfo alliance = 3;
+}
+
+message GetApplyListRequest {
+    uint64 allianceId = 1;
+    uint64 uuid = 2;
+}
+message GetApplyListResult {
+    repeated AllianceApplyInfo applies = 1;
+    uint32 totalCount = 2;
+    uint64 uuid = 3;
+}
+
+message GetInviteListRequest {
+    // The invitee guild's id — used to look up all pending invites
+    // TARGETING this guild (invitee view). Served by the per-guild
+    // `invitesByGuild` index in O(K), where K is the number of
+    // outstanding invites for this guild.
+    uint64 guildId = 1;
+    uint64 uuid = 2;
+}
+message GetInviteListResult {
+    repeated AllianceInviteInfo invites = 1;
+    uint32 totalCount = 2;
+    uint64 uuid = 3;
+}
+
+message GetSentAppliesRequest {
+    uint64 guildId = 1;
+    uint64 uuid = 2;
+}
+message GetSentAppliesResult {
+    repeated SentApplyItem applies = 1;
+    uint32 totalCount = 2;
+    uint64 uuid = 3;
+}
+
+// ==== SentApplyItem ====
+// One row in the guild leader's "sent applies" list. Distinct from
+// AllianceApplyInfo (which is the full apply record used by approve /
+// reject flows); SentApplyItem is the focused projection the leader's
+// inbox actually needs to render a row:
+//
+//   - applyId       : the apply row's primary key, used to cancel it
+//   - allianceId    : which alliance the guild applied to
+//   - allianceName  : display label (snapshot at query time)
+//   - serverId      : alliance's home server (== AllianceInfo.LeaderServerId)
+//   - totalScore    : alliance power (== AllianceInfo.TotalScore, snapshot)
+//   - createdAt     : when the apply was sent, for "X days ago" UI
+//   - status        : the apply state (typically PENDING for sent applies)
+//
+// The 4 alliance-side fields match ApplyCancelledItem so the cancel
+// notification and the live list share one row schema on the client.
+message SentApplyItem {
+    uint64 applyId = 1;
+    uint64 allianceId = 2;
+    string allianceName = 3;
+    uint32 serverId = 4;
+    uint64 totalScore = 5;
+    uint32 createdAt = 6;
+    uint32 status = 7;
+}
+
+message DeclareWarRequest {
+    string guildName = 1;
+    uint32 attackType = 2;
+    uint64 attackId = 3;
+    uint32 targetType = 4;
+    uint64 targetId = 5;
+    uint32 targetServerId = 6;
+    uint64 playerGbId = 7;
+    uint64 amount = 8;
+    uint64 uuid = 9;
+}
+message DeclareWarResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+    uint32 endTime = 3;
+}
+
+message GetEnemyListRequest {
+    uint64 guildId = 1;
+    uint64 uuid = 2;
+}
+
+message GetUnionListRequest {
+    uint64 guildId = 1;
+    uint64 uuid = 2;
+}
+
+message EnemyGuildInfo {
+    uint64 guildId = 1;
+    uint32 endTime = 2;
+}
+
+message GetEnemyListResult {
+    repeated EnemyGuildInfo enemies = 1;
+    uint64 uuid = 2;
+}
+
+message EnemyRowInfo {
+    uint64 attackId = 1;
+    uint32 attackType = 2;    // 1=guild, 2=alliance
+    uint32 attackServerId = 3;
+    uint64 targetId = 4;
+    uint32 targetType = 5;    // 1=guild, 2=alliance
+    uint32 targetServerId = 6;
+    uint32 endTime = 7;
+}
+
+message GetEnemyAllianceListRequest {
+    uint64 allianceId = 1;
+    uint64 guildId = 2;     
+    uint64 uuid = 3;
+}
+
+message GetEnemyAllianceListResult {
+    repeated EnemyRowInfo enemies = 1;
+    uint64 uuid = 2;
+}
+
+message UnionGuildInfo {
+    uint64 guildId = 1;
+}
+
+message GetUnionListResult {
+    repeated UnionGuildInfo unions = 1;
+    uint64 uuid = 2;
+}
+
+message WarStartedBroadcast {
+    EnemyRowInfo enemy = 1;
+}
+
+message WarEndedBroadcast {
+    uint32 attackType = 1;
+    uint64 attackId = 2;
+    uint32 targetType = 3;
+    uint64 targetId = 4;
+}
+
+// ==== Guild Relation Broadcast ====
+
+message GuildRelationInfo {
+    uint64 guildUUID1 = 1;
+    uint64 guildUUID2 = 2;
+    uint32 relationType = 3;    // 0=NONE, 1=UNION, 2=ENEMY
+    uint32 endTime = 4;         // 0=permanent (for UNION), >0=war end time (for ENEMY)
+    uint32 version = 5;
+}
+
+message GuildRelationAllInfo {
+    repeated GuildRelationInfo relations = 1;
+    uint32 version = 2;
+}
+
+message GuildRelationRemoveInfo {
+    uint64 guildUUID1 = 1;
+    uint64 guildUUID2 = 2;
+    uint32 version = 3;
+}
+
+message CheckLeagueRelationRequest {
+    uint64 guildId1 = 1;
+    uint64 guildId2 = 2;
+    uint64 uuid = 3;
+}
+message CheckLeagueRelationResult {
+    bool isSameAlliance = 1;
+    uint64 allianceId = 2;
+    uint64 uuid = 3;
+}
+
+message GetGuildAllianceRequest {
+    uint64 guildId = 1;
+    uint64 uuid = 2;
+}
+message GetGuildAllianceResult {
+    uint64 allianceId = 1;
+    uint32 errCode = 2;
+    uint64 uuid = 3;
+}
+
+message DonateFundRequest {
+    uint64 allianceId = 1;
+    uint64 guildId = 2;
+    uint32 itemId = 3;
+    uint64 amount = 4;
+    uint64 playerGbId = 5;
+    uint64 uuid = 6;
+}
+message DonateFundResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+    uint64 allianceFund = 3;
+    uint64 allianceId = 4;
+}
+message AidResourceRequest {
+    uint64 allianceId = 1;
+    uint64 fromGuildId = 2;
+    uint64 toGuildId = 3;
+    uint32 itemId = 4;
+    uint64 amount = 5;
+    uint64 playerGbId = 6;
+    uint64 uuid = 7;
+}
+message AidResourceResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+}
+
+message GetLeagueFundRequest {
+    uint64 allianceId = 1;
+    uint64 uuid = 2;
+}
+message GetLeagueFundResult {
+    uint64 fund = 1;
+    uint64 uuid = 2;
+}
+
+message GetEventListRequest {
+    uint64 allianceId = 1;
+    uint64 uuid = 2;
+}
+message GetEventListResult {
+    repeated AllianceEventInfo events = 1;
+    uint64 uuid = 2;
+}
+
+message NewEventBroadcast {
+    uint64 allianceId = 1;
+    AllianceEventInfo event = 2;
+    // guildIds lists the member guilds on the receiving game server that
+    // belong to this alliance. The central service groups member guilds by
+    // serverId and sends each game server only the subset of guild IDs it
+    // actually hosts, so the receiver can fan the event out to those guilds
+    // without further filtering.
+    repeated uint64 guildIds = 3;
+}
+
+message SendChatMessageRequest {
+    uint64 allianceId = 1;
+    uint64 senderGuildId = 2;
+    string senderGuildName = 3;
+    uint32 senderServerId = 4;
+    string content = 5;
+    uint64 uuid = 6;
+}
+message SendChatMessageResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+}
+
+message ChatMessageBroadcast {
+    uint64 allianceId = 1;
+    AllianceChatMessage message = 2;
+}
+
+message GetChatHistoryRequest {
+    uint64 allianceId = 1;
+    uint32 limit = 2;
+    uint64 uuid = 3;
+}
+message GetChatHistoryResult {
+    repeated AllianceChatMessage messages = 1;
+    uint64 uuid = 2;
+}
+
+message ReportGuildScoreRequest {
+    uint64 guildId = 1;
+    uint64 guildScore = 2;
+    uint64 uuid = 3;
+}
+message ReportGuildScoreResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+}
+
+message SyncGuildInfoRequest {
+    uint64 guildId = 1;
+    string guildName = 2;
+    uint32 guildIcon = 3;
+    uint32 dspFlag = 4;
+    uint32 guildLevel = 5;
+    uint32 memberCount = 6;
+    uint32 maxMemberCount = 7;
+    uint64 guildScore = 8;
+    uint64 leaderGbId = 9;
+    string leaderName = 10;
+    uint32 leaderLevel = 11;
+    uint32 leaderProfession = 12;
+    uint32 leaderGender = 13;
+    uint64 uuid = 14;
+}
+message SyncGuildInfoResult {
+    uint64 uuid = 1;
+    uint32 errCode = 2;
+}
+
+message DisbandLeagueNotify {
+    uint64 allianceId = 1;
+    repeated uint64 guildIds = 2;
+}
+
+message NewMemberJoinedNotify {
+    uint64 playerGbId = 1;
+    AllianceMemberInfo member = 2;
+}
+
+message JoinToAllianceNotify {
+    uint64 allianceId = 1;
+    uint64 guildUUID = 2;
+}
+
+message ReturnGuildFundNotify {
+    uint64 guildId = 1;
+    uint32 srcType = 2;
+    uint32 itemType = 3;
+    uint64 itemNum = 4;
+}
+
+message GuildAidResourceNotify {
+    uint64 guildId = 1;
+    uint32 srcType = 2;
+    uint32 itemType = 3;
+    uint64 itemNum = 4;
+}
+
+message LeagueGuildLeave {
+    uint64 guildId = 1;
+    repeated uint64 memberGuildIds = 2;
+}
+
+message LeagueDisband {
+    repeated uint64 memberGuildIds = 1;
+}
+
+message LeagueGuildEvent {
+    uint64 guildId = 1;
+    uint32 messageId = 2;
+    repeated string messageArgs = 3;
+}
+
+message LeagueGuildMessage {
+    uint64 guildId = 1;
+    uint32 messageId = 2;
+    repeated string messageArgs = 3;
+}
+
+message LeagueBroadCastMessage {
+    uint32 messageId = 1;
+    repeated string messageArgs = 2;
+}
+
+message RecruitLeagueMemberRequest {
+    uint64 uuid = 1;
+    uint64 leagueUUID = 2;
+}
+
+message RecruitLeagueMemberResult {
+    uint64 uuid = 1;
+    uint64 leagueUUID = 2;
+    uint32 errCode = 3;
+}
+
+message CheckLeaveGuildRequest {
+    uint64 uuid = 1;
+    uint64 leagueUUID = 2;
+    uint64 guildId = 3;
+    uint64 playerGbId =4;
+}
+
+message CheckLeaveGuildResult {
+    uint64 uuid = 1;
+    uint64 guildId = 2;
+    uint64 playerGbId = 3;
+    bool ret = 4;
+}
+
+message QueryLeagueUUIDRequest {
+    uint64 uuid = 1;
+    uint64 guildId = 2;
+}
+
+message QueryLeagueUUIDResult {
+    uint64 uuid = 1;
+    uint64 guildId = 2;
+    uint64 leagueUUID = 3;
+    bool ret = 4;
+}
+
+service AllianceService
+{
+    rpc registerGameServer(RegisterGameServerRequest) returns (Void);
+    rpc activeTick(Void) returns (Void);
+    rpc createLeague(CreateLeagueRequest) returns (Void);
+    rpc disbandLeague(DisbandLeagueRequest) returns (Void);
+    rpc modifyLeagueInfo(ModifyLeagueInfoRequest) returns (Void);
+    rpc getLeagueList(GetLeagueListRequest) returns (Void);
+    rpc searchLeague(SearchLeagueRequest) returns (Void);
+    rpc getLeagueDetail(GetLeagueDetailRequest) returns (Void);
+    rpc getLeagueBasicInfo(GetLeagueBasicInfoRequest) returns (Void);
+    rpc applyToJoin(ApplyToJoinRequest) returns (Void);
+    rpc approveJoin(ApproveJoinRequest) returns (Void);
+    rpc onCheckGuildExistsResult(CheckGuildExistsResult) returns (Void);
+    rpc rejectJoin(RejectJoinRequest) returns (Void);
+    rpc cancelApply(CancelApplyRequest) returns (Void);
+    rpc inviteGuild(InviteGuildRequest) returns (Void);
+    rpc acceptInvite(AcceptInviteRequest) returns (Void);
+    rpc rejectInvite(RejectInviteRequest) returns (Void);
+    rpc kickMember(KickMemberRequest) returns (Void);
+    rpc leaveLeague(LeaveLeagueRequest) returns (Void);
+    rpc transferLeader(TransferLeaderRequest) returns (Void);
+    rpc getApplyList(GetApplyListRequest) returns (Void);
+    rpc getInviteList(GetInviteListRequest) returns (Void);
+    rpc getSentApplies(GetSentAppliesRequest) returns (Void);
+    rpc declareWar(DeclareWarRequest) returns (Void);
+    rpc getEnemyList(GetEnemyListRequest) returns (Void);
+    rpc getEnemyAllianceList(GetEnemyAllianceListRequest) returns (Void);
+    rpc getLeagueSimpleInfo(GetLeagueSimpleInfoRequest) returns (Void);
+    rpc getGuildSimpleInfo(GetGuildSimpleInfoRequest) returns (Void);
+    rpc onCheckGuildSimpleInfoResult(GetGuildSimpleInfoResult) returns (Void);
+    rpc checkLeagueRelation(CheckLeagueRelationRequest) returns (Void);
+    rpc getGuildAlliance(GetGuildAllianceRequest) returns (Void);
+    rpc donateFund(DonateFundRequest) returns (Void);
+    rpc aidResource(AidResourceRequest) returns (Void);
+    rpc getLeagueFund(GetLeagueFundRequest) returns (Void);
+    rpc getEventList(GetEventListRequest) returns (Void);
+    rpc sendChatMessage(SendChatMessageRequest) returns (Void);
+    rpc getChatHistory(GetChatHistoryRequest) returns (Void);
+    rpc reportGuildScore(ReportGuildScoreRequest) returns (Void);
+    rpc syncGuildInfo(SyncGuildInfoRequest) returns (Void);
+    rpc getUnionList(GetUnionListRequest) returns (Void);
+    rpc recruitLeagueMember(RecruitLeagueMemberRequest) returns (Void);
+
+    rpc checkLeaveGuild(CheckLeaveGuildRequest) returns (Void);
+
+    rpc queryLeagueUUID(QueryLeagueUUIDRequest) returns (Void);
+}
+
+service GameClient
+{
+    rpc activeTickCallback(Void) returns (Void);
+    rpc onCreateLeagueResult(CreateLeagueResult) returns (Void);
+    rpc onDisbandLeagueResult(DisbandLeagueResult) returns (Void);
+    rpc onModifyLeagueInfoResult(ModifyLeagueInfoResult) returns (Void);
+    rpc onLeagueListResult(GetLeagueListResult) returns (Void);
+    rpc onSearchLeagueResult(SearchLeagueResult) returns (Void);
+    rpc onLeagueDetailResult(GetLeagueDetailResult) returns (Void);
+    rpc onGetLeagueBasicInfoResult(GetLeagueBasicInfoResult) returns (Void);
+    rpc onApplyToJoinResult(ApplyToJoinResult) returns (Void);
+    rpc onApproveJoinResult(ApproveJoinResult) returns (Void);
+    rpc checkGuildExists(CheckGuildExistsRequest) returns (Void);
+    rpc onRejectJoinResult(RejectJoinResult) returns (Void);
+    rpc onCancelApplyResult(CancelApplyResult) returns (Void);
+    rpc onInviteGuildResult(InviteGuildResult) returns (Void);
+    rpc onAcceptInviteResult(AcceptInviteResult) returns (Void);
+    rpc onRejectInviteResult(RejectInviteResult) returns (Void);
+    rpc onKickMemberResult(KickMemberResult) returns (Void);
+    rpc onLeaveLeagueResult(LeaveLeagueResult) returns (Void);
+    rpc onTransferLeaderResult(TransferLeaderResult) returns (Void);
+    rpc onApplyListResult(GetApplyListResult) returns (Void);
+    rpc onInviteListResult(GetInviteListResult) returns (Void);
+    rpc onSentAppliesResult(GetSentAppliesResult) returns (Void);
+    rpc onDeclareWarResult(DeclareWarResult) returns (Void);
+    rpc onEnemyListResult(GetEnemyListResult) returns (Void);
+    rpc onEnemyAllianceListResult(GetEnemyAllianceListResult) returns (Void);
+    rpc onGetLeagueSimpleInfoResult(GetLeagueSimpleInfoResult) returns (Void);
+    rpc checkGuildSimpleInfo(GetGuildSimpleInfoRequest) returns (Void);
+    rpc onGetGuildSimpleInfoResult(GetGuildSimpleInfoResult) returns (Void);
+    rpc onCheckLeagueRelationResult(CheckLeagueRelationResult) returns (Void);
+    rpc onGetGuildAllianceResult(GetGuildAllianceResult) returns (Void);
+    rpc onDonateFundResult(DonateFundResult) returns (Void);
+    rpc onAidResourceResult(AidResourceResult) returns (Void);
+    rpc onLeagueFundResult(GetLeagueFundResult) returns (Void);
+    rpc onEventListResult(GetEventListResult) returns (Void);
+    rpc onSendChatMessageResult(SendChatMessageResult) returns (Void);
+    rpc onChatHistoryResult(GetChatHistoryResult) returns (Void);
+    rpc onReportGuildScoreResult(ReportGuildScoreResult) returns (Void);
+    rpc onSyncGuildInfoResult(SyncGuildInfoResult) returns (Void);
+    rpc onWarStarted(WarStartedBroadcast) returns (Void);
+    rpc onWarEnded(WarEndedBroadcast) returns (Void);
+    rpc onNewEvent(NewEventBroadcast) returns (Void);
+    rpc onChatMessage(ChatMessageBroadcast) returns (Void);
+    rpc onDisbandLeagueNotify(DisbandLeagueNotify) returns (Void);
+    rpc onNewApplyNotify(NewApplyNotify) returns (Void);
+    rpc onNewInviteNotify(AllianceInviteInfo) returns (Void);
+
+    // Guild relation broadcasts
+    rpc onGuildRelationAll(GuildRelationAllInfo) returns (Void);
+    rpc onBroadcastAddGuildRelation(GuildRelationInfo) returns (Void);
+    rpc onBroadcastRemoveGuildRelation(GuildRelationRemoveInfo) returns (Void);
+
+    rpc onNewMemberJoined(NewMemberJoinedNotify) returns (Void);
+
+    rpc onJoinToAllianceNotify(JoinToAllianceNotify) returns (Void);
+
+    rpc onUnionListResult(GetUnionListResult) returns (Void);
+
+    rpc onReturnGuildFundNotify(ReturnGuildFundNotify) returns (Void);
+
+    rpc onGuildAidResourceNotify(GuildAidResourceNotify) returns (Void);
+
+    rpc onLeagueGuildLeave(LeagueGuildLeave) returns (Void);
+
+    rpc onLeagueDisband(LeagueDisband) returns (Void);
+
+    rpc onLeagueGuildEventNotify(LeagueGuildEvent) returns (Void);
+
+    rpc onLeagueGuildMessageNotify(LeagueGuildMessage) returns (Void);
+    
+    rpc onLeagueBroadCastMessageNotify(LeagueBroadCastMessage) returns (Void);
+    
+    rpc onRecruitLeagueMemberResult(RecruitLeagueMemberResult) returns (Void);
+
+    rpc onCheckLeaveGuildResult(CheckLeaveGuildResult) returns (Void);
+
+    rpc onQueryLeagueUUIDResult(QueryLeagueUUIDResult) returns (Void);
+}

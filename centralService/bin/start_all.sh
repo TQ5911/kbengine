@@ -1,20 +1,18 @@
 #!/bin/bash
 
 # 定义所有服务目录
-SERVICES="login admin router maple dropServer leaseServer auction crossDataServer queueServer orderService"
+SERVICES="login admin router maple dropServer leaseServer auction crossDataServer queueServer orderService allianceService"
 
 # 遍历每个目录
 for dir in $SERVICES; do
     echo "Processing service in $dir..."
     if [ -d "$dir" ]; then
         cd "$dir"
-        # 查找该目录下唯一的 .sh 脚本
-        script=$(ls *.sh 2>/dev/null | head -n 1)
-        if [ -n "$script" ]; then
-            ./"$script" stop
-            ./"$script" start
+        if [ -x "./game.sh" ] || [ -f "./game.sh" ]; then
+            ./game.sh stop
+            ./game.sh start
         else
-            echo "Warning: No .sh script found in $dir"
+            echo "Warning: game.sh not found in $dir"
         fi
         cd ..
     else
@@ -23,4 +21,4 @@ for dir in $SERVICES; do
 done
 
 # 最后检查进程状态
-ps -ef | grep -v grep | grep -E 'centralLogin|admin|auction|router|maple|dropServer|leaseServer|crossDataServer|queueServer|orderService'
+ps -ef | grep -v grep | grep -E 'centralLogin|admin|auction|router|maple|dropServer|leaseServer|crossDataServer|queueServer|orderService|allianceService'

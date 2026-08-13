@@ -5,6 +5,7 @@ import (
 	gsmanager "centralService/src/adminServer/adminProto/gsmanager"
 	webService "centralService/src/adminServer/adminProto/webservice"
 	"centralService/src/appLog"
+	"centralService/src/common"
 	"crypto/md5"
 	"encoding/base64"
 	"encoding/hex"
@@ -19,7 +20,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 	"github.com/google/uuid"
 	"golang.org/x/time/rate"
 )
@@ -834,7 +835,14 @@ func (self *HttpCommandService) handleQueryRoleId(w http.ResponseWriter, req *ht
 		return
 	}
 
-	conn := self.app.redisPool.Get()
+	conn, err := common.GetRedisConn(self.app.redisPool, "admin.handleQueryRoleId")
+	if err != nil {
+		appLog.Errorf("get redis conn failed: %v", err)
+		errMsg := "redis unavailable"
+		responseBytes := self._buildErrResponse(HTTP_CMD_ARGS_ERR, errMsg)
+		self.sendIDIPResponse(w, 200, responseBytes)
+		return
+	}
 	defer conn.Close()
 
 	argsBytes, err := hex.DecodeString(reqData.Args)
@@ -935,7 +943,12 @@ func (self *HttpCommandService) handleHttpAddSkuIdRequest(w http.ResponseWriter,
 		return
 	}
 
-	conn := self.app.redisPool.Get()
+	conn, err := common.GetRedisConn(self.app.redisPool, "admin.handleHttpAddSkuIdRequest")
+	if err != nil {
+		appLog.Errorf("get redis conn failed: %v", err)
+		self.sendErrResponse(HTTP_CMD_ARGS_ERR, "redis unavailable", w)
+		return
+	}
 	defer conn.Close()
 
 	argsBytes, err := hex.DecodeString(reqData.Args)

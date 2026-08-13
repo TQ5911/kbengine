@@ -3,14 +3,13 @@ package Queue
 import (
 	"centralService/src/appLog"
 	"centralService/src/common"
-	"context"
 	gameServerService "centralService/src/queueServer/queueApp/gameServerService"
 	"centralService/src/trpc"
 	"fmt"
 	"strconv"
 	"time"
 
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 	"golang.org/x/time/rate"
 )
 
@@ -38,15 +37,12 @@ func (self *GameServerService) clearQueue() {
 
 func (self *GameServerService) tickQueue() {
 	for {
-		ctx, cancel := context.WithTimeout(context.Background(), common.RedisOpTimeout)
-		conn, err := self.app.redisPool.GetContext(ctx)
-		cancel()
+		<-self.queueTicker.C
+		conn, err := common.GetRedisConn(self.app.redisPool, "queue.tickQueue")
 		if err != nil {
 			appLog.Errorf("tickQueue get redis conn failed, hostId=%d, err=%s", self.hostId, err.Error())
-			<-self.queueTicker.C
 			continue
 		}
-		<-self.queueTicker.C
 		onlineNum, err := redis.Int(conn.Do("get", "g:normal_online_num"+strconv.Itoa(int(self.hostId))))
 		conn.Close()
 		if err != nil {

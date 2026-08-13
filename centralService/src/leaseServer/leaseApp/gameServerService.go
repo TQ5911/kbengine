@@ -123,7 +123,7 @@ func (gs *GameServerService) AddItemPrepare(in *gameServerService.LeaseAddItemPr
 			LessorServerId:      gs.serverId,
 			ItemData:            in.ItemData,
 		}
-		ret := gs.app.leaseMgr.addItemPrepare(item)
+		ret := gs.app.leaseMgr.addItemPrepare(item, in.OpUUID)
 
 		resp := replyAddItemPrepareRespPool.Get().(*gameServerService.LeaseAddItemPrepareResp)
 		resp.UniqueId = in.UniqueId
@@ -133,6 +133,10 @@ func (gs *GameServerService) AddItemPrepare(in *gameServerService.LeaseAddItemPr
 		_, err := gs.GetClientEndPoint().(*gameServerService.GameServerClient).ReplyAddItemPrepare(resp)
 		if err != nil {
 			appLog.Errorw("ReplyAddItemPrepare failed", "err", err, "opUUID", in.OpUUID)
+			if ret == LEASE_OK {
+				// 回包失败，游戏服不会再推进该流程，回滚 prepare，避免 uniqueId 被永久占用
+				gs.app.leaseMgr.addItemRollback(in.UniqueId, in.OpUUID)
+			}
 		}
 
 		resp.Reset()
@@ -145,7 +149,7 @@ func (gs *GameServerService) AddItemCommit(in *gameServerService.LeaseAddItemCom
 	SafeGo(func() {
 		appLog.Infow("AddItemCommit", "uniqueId", in.UniqueId, "opUUID", in.OpUUID)
 
-		ret := gs.app.leaseMgr.addItemCommit(in.UniqueId)
+		ret := gs.app.leaseMgr.addItemCommit(in.UniqueId, in.OpUUID)
 
 		resp := replyAddItemCommitRespPool.Get().(*gameServerService.LeaseAddItemCommitResp)
 		resp.UniqueId = in.UniqueId
@@ -166,7 +170,7 @@ func (gs *GameServerService) AddItemCommit(in *gameServerService.LeaseAddItemCom
 func (gs *GameServerService) AddItemRollback(in *gameServerService.LeaseAddItemRollbackReq) (*gameServerService.Void, error) {
 	SafeGo(func() {
 		appLog.Infow("AddItemRollback", "uniqueId", in.UniqueId, "opUUID", in.OpUUID)
-		gs.app.leaseMgr.addItemRollback(in.UniqueId)
+		gs.app.leaseMgr.addItemRollback(in.UniqueId, in.OpUUID)
 	})
 	return nil, nil
 }
@@ -191,7 +195,7 @@ func (gs *GameServerService) LeaseItemPrepare(in *gameServerService.LeaseItemPre
 	SafeGo(func() {
 		appLog.Infow("LeaseItemPrepare", "buyerGBID", in.BuyerGBID, "uniqueId", in.UniqueId, "opUUID", in.OpUUID)
 
-		totalPrice, ret := gs.app.leaseMgr.leaseItemPrepare(in.UniqueId, in.BuyerGBID, in.BuyerServerId)
+		totalPrice, ret := gs.app.leaseMgr.leaseItemPrepare(in.UniqueId, in.BuyerGBID, in.BuyerServerId, in.OpUUID, in.RentalProp01, in.RentalProp02)
 
 		resp := replyLeaseItemPrepareRespPool.Get().(*gameServerService.LeaseItemPrepareResp)
 		resp.PlayerGBID = in.BuyerGBID
@@ -206,6 +210,10 @@ func (gs *GameServerService) LeaseItemPrepare(in *gameServerService.LeaseItemPre
 		_, err := gs.GetClientEndPoint().(*gameServerService.GameServerClient).ReplyLeaseItemPrepare(resp)
 		if err != nil {
 			appLog.Errorw("ReplyLeaseItemPrepare failed", "err", err, "opUUID", in.OpUUID)
+			if ret == LEASE_OK {
+				// 回包失败，游戏服不会再推进该流程，回滚 PRE_LOCK，避免物品卡死到重启
+				gs.app.leaseMgr.leaseItemRollback(in.UniqueId, in.OpUUID)
+			}
 		}
 		resp.Reset()
 		replyLeaseItemPrepareRespPool.Put(resp)
@@ -217,7 +225,7 @@ func (gs *GameServerService) LeaseItemCommit(in *gameServerService.LeaseItemComm
 	SafeGo(func() {
 		appLog.Infow("LeaseItemCommit", "uniqueId", in.UniqueId, "opUUID", in.OpUUID, "playerGBID", in.PlayerGBID)
 
-		item, ret := gs.app.leaseMgr.leaseItemCommit(in.UniqueId)
+		item, ret := gs.app.leaseMgr.leaseItemCommit(in.UniqueId, in.OpUUID)
 
 		resp := replyLeaseItemCommitRespPool.Get().(*gameServerService.LeaseItemCommitResp)
 		resp.PlayerGBID = in.PlayerGBID
@@ -276,6 +284,9 @@ func (gs *GameServerService) onLeaseSuccess(item *LeaseMarketItem, opUUID uint64
 		}
 		req.Reset()
 		leaseAddIncomeReqPool.Put(req)
+	} else {
+		// 出租方所在服整体断连，收益投递丢失（无重试机制），需人工介入核对
+		appLog.Errorw("addIncomeToOwner no game server, income lost", "serverId", item.LessorServerId, "lessor", item.LessorGbId, "uniqueId", item.UniqueId, "opUUID", opUUID)
 	}
 
 	// 给承租方发放装备
@@ -296,6 +307,9 @@ func (gs *GameServerService) onLeaseSuccess(item *LeaseMarketItem, opUUID uint64
 		}
 		req.Reset()
 		leaseGiveItemReqPool.Put(req)
+	} else {
+		// 承租方所在服整体断连，装备投递丢失（租金已扣、订单已成交），需人工介入补发
+		appLog.Errorw("giveItemToPlayer no game server, item lost", "serverId", item.LesseeServerId, "lessee", item.LesseeGbId, "uniqueId", item.UniqueId, "opUUID", opUUID)
 	}
 
 }
@@ -303,7 +317,7 @@ func (gs *GameServerService) onLeaseSuccess(item *LeaseMarketItem, opUUID uint64
 func (gs *GameServerService) LeaseItemRollback(in *gameServerService.LeaseItemRollbackReq) (*gameServerService.Void, error) {
 	SafeGo(func() {
 		appLog.Infow("LeaseItemRollback", "uniqueId", in.UniqueId, "opUUID", in.OpUUID)
-		gs.app.leaseMgr.leaseItemRollback(in.UniqueId)
+		gs.app.leaseMgr.leaseItemRollback(in.UniqueId, in.OpUUID)
 	})
 	return nil, nil
 }
