@@ -2,6 +2,7 @@ package crossDataApp
 
 import (
 	"centralService/src/appLog"
+	"centralService/src/common"
 	gameServerService "centralService/src/crossDataServer/crossDataApp/gameServerService"
 	"centralService/src/trpc"
 	"errors"
@@ -165,6 +166,41 @@ func (gss *GameServerService) DoOnCrossGuildResultBack(in *gameServerService.DoO
 		Uuid:    in.Uuid,
 		Success: in.Success,
 		Result:  in.Result,
+	})
+	return nil, nil
+}
+
+func (gss *GameServerService) SaveSiegeWarData(in *gameServerService.SaveSiegeWarDataRequest) (*gameServerService.Void, error) {
+	appLog.Info("save siege war data, uuid:", in.Uuid, "size:", len(in.Data))
+	data := make([]byte, len(in.Data))
+	copy(data, in.Data)
+	uuid := in.Uuid
+	common.ExecuteConcurrently(func() {
+		err := gss.app.siegeWarData.Save(data)
+		_, cbErr := gss.GetClientEndPoint().(*gameServerService.GameServerClient).OnSaveSiegeWarData(&gameServerService.SaveSiegeWarDataResult{
+			Uuid:    uuid,
+			Success: err == nil,
+		})
+		if cbErr != nil {
+			appLog.Error("on save siege war data callback error:", cbErr)
+		}
+	})
+	return nil, nil
+}
+
+func (gss *GameServerService) LoadSiegeWarData(in *gameServerService.LoadSiegeWarDataRequest) (*gameServerService.Void, error) {
+	appLog.Info("load siege war data, uuid:", in.Uuid)
+	uuid := in.Uuid
+	common.ExecuteConcurrently(func() {
+		data := gss.app.siegeWarData.Load()
+		_, cbErr := gss.GetClientEndPoint().(*gameServerService.GameServerClient).OnLoadSiegeWarData(&gameServerService.LoadSiegeWarDataResult{
+			Data:    data,
+			Uuid:    uuid,
+			Success: true,
+		})
+		if cbErr != nil {
+			appLog.Error("on load siege war data callback error:", cbErr)
+		}
 	})
 	return nil, nil
 }

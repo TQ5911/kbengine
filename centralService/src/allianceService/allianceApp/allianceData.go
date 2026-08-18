@@ -33,48 +33,50 @@ const (
 )
 
 const (
-	ErrCodeSuccess                             = 0
-	ErrCodeGameServerMissing                   = 1
-	ErrCodeGameClientMissing                   = 2
-	ErrCodeNoGuildConstCfg                     = 3
-	ErrCodeNoMessageGuildLogCfg                = 4
-	ErrCodeNoMessageChatMessageCfg             = 5
-	ErrCodeGuildNotLeader                      = 1001
-	ErrCodeAlreadyInAlliance                   = 1002
-	ErrCodeNotInAlliance                       = 1003
-	ErrCodeAllianceFull                        = 1004
-	ErrCodeAllianceNotFound                    = 1005
-	ErrCodeApplyLimitReached                   = 1006
-	ErrCodeApplyListFull                       = 1007
-	ErrCodeGuildInWar                          = 1008
-	ErrCodeNotAllianceLeader                   = 1009
-	ErrCodeCooldown                            = 1010
-	ErrCodeAidTooSoon                          = 1011
-	ErrCodeInsufficientFund                    = 1012
-	ErrCodeNameInvalid                         = 1013
-	ErrCodeAlreadyApplied                      = 1014
-	ErrCodeApplyNotFound                       = 1015
-	ErrCodeInviteNotFound                      = 1016
-	ErrCodeTargetAllianceMember                = 1017
-	ErrCodeWarAlreadyExists                    = 1018
-	ErrCodeWarNotFound                         = 1019
-	ErrCodeMemberNotFound                      = 1020
-	ErrCodeCannotWarAllianceMember             = 1021
-	ErrCodeGuildJoiningWar                     = 1022
-	ErrCodeDeclarationInvalid                  = 1023
-	ErrCodeCannotWarAllianceGuild              = 1024 // Alliance cannot declare war on guild in another alliance
-	ErrCodeGuildCannotWarAlliance              = 1025 // Guild in alliance cannot declare war on an alliance
-	ErrCodeNameAlreadyExists                   = 1026 // Alliance name already taken
-	ErrCodeCannotWarSameAlliance               = 1027 // Guilds in same alliance cannot declare war on each other
-	ErrCodeGuildNotFound                       = 1028 // 申请加入的帮会在源服务器上不存在
-	ErrCodeGuildSourceServerOffline            = 1029 // 帮会所在源服务器未连接到 allianceService, 无法校验帮会存在
-	ErrCodeInviteTargetServerOffline           = 1030 // 邀请的目标帮会所在服务器未连接到 allianceService, 无法校验目标帮会存在
-	ErrCodeAlreadyInvited                      = 1031
-	ErrCodeYouAreLeader                        = 1032
-	ErrCodeAidResourceFail                     = 1033
-	ErrCodeDeclareWarSameId                    = 1034
-	ErrCodeCannotWarSameGuild                  = 1035
-	ErrCodeCannotWarTargetAllianceIsNotExisted = 1036
+	ErrCodeSuccess                                = 0
+	ErrCodeGameServerMissing                      = 1
+	ErrCodeGameClientMissing                      = 2
+	ErrCodeNoGuildConstCfg                        = 3
+	ErrCodeNoMessageGuildLogCfg                   = 4
+	ErrCodeNoMessageChatMessageCfg                = 5
+	ErrCodeGuildNotLeader                         = 1001
+	ErrCodeAlreadyInAlliance                      = 1002
+	ErrCodeNotInAlliance                          = 1003
+	ErrCodeAllianceFull                           = 1004
+	ErrCodeAllianceNotFound                       = 1005
+	ErrCodeApplyLimitReached                      = 1006
+	ErrCodeApplyListFull                          = 1007
+	ErrCodeGuildInWar                             = 1008
+	ErrCodeNotAllianceLeader                      = 1009
+	ErrCodeCooldown                               = 1010
+	ErrCodeAidTooSoon                             = 1011
+	ErrCodeInsufficientFund                       = 1012
+	ErrCodeNameInvalid                            = 1013
+	ErrCodeAlreadyApplied                         = 1014
+	ErrCodeApplyNotFound                          = 1015
+	ErrCodeInviteNotFound                         = 1016
+	ErrCodeTargetAllianceMember                   = 1017
+	ErrCodeWarAlreadyExists                       = 1018
+	ErrCodeWarNotFound                            = 1019
+	ErrCodeMemberNotFound                         = 1020
+	ErrCodeCannotWarAllianceMember                = 1021
+	ErrCodeGuildJoiningWar                        = 1022
+	ErrCodeDeclarationInvalid                     = 1023
+	ErrCodeCannotWarAllianceGuild                 = 1024 // Alliance cannot declare war on guild in another alliance
+	ErrCodeGuildCannotWarAlliance                 = 1025 // Guild in alliance cannot declare war on an alliance
+	ErrCodeNameAlreadyExists                      = 1026 // Alliance name already taken
+	ErrCodeCannotWarSameAlliance                  = 1027 // Guilds in same alliance cannot declare war on each other
+	ErrCodeGuildNotFound                          = 1028 // 申请加入的帮会在源服务器上不存在
+	ErrCodeGuildSourceServerOffline               = 1029 // 帮会所在源服务器未连接到 allianceService, 无法校验帮会存在
+	ErrCodeInviteTargetServerOffline              = 1030 // 邀请的目标帮会所在服务器未连接到 allianceService, 无法校验目标帮会存在
+	ErrCodeAlreadyInvited                         = 1031
+	ErrCodeYouAreLeader                           = 1032
+	ErrCodeAidResourceFail                        = 1033
+	ErrCodeDeclareWarSameId                       = 1034
+	ErrCodeCannotWarSameGuild                     = 1035
+	ErrCodeCannotWarTargetAllianceIsNotExisted    = 1036
+	ErrCodeDifferentServerInDeclareWarIsForbidden = 1037
+	ErrCodeWrongTargetServerIdInDeclareWar        = 1038
 
 	MemberRoleLeader = 1
 	MemberRoleMember = 2
@@ -3903,6 +3905,11 @@ func (ad *AllianceData) DeclareWar(db *sql.DB, app *AllianceApp, in *gameServerS
 		return ErrCodeNoGuildConstCfg, 0, false
 	}
 
+	// 注意！！！非同个服务器的联盟宣战，暂时禁止
+	if in.TargetServerId != requesterServerId {
+		return ErrCodeDifferentServerInDeclareWarIsForbidden, 0, false
+	}
+
 	if in.AttackId == in.TargetId {
 		return ErrCodeDeclareWarSameId, 0, false
 	}
@@ -3923,9 +3930,13 @@ func (ad *AllianceData) DeclareWar(db *sql.DB, app *AllianceApp, in *gameServerS
 	}
 	// 宣战目标是联盟，判断下联盟是否存在
 	if in.TargetType == WarAttackTypeAlliance {
-		_, ok := ad.alliances.Get(in.TargetId)
+		targetAlliance, ok := ad.alliances.Get(in.TargetId)
 		if !ok {
 			return ErrCodeAllianceNotFound, 0, false
+		}
+		// 注意！！！非同个服务器的联盟宣战，暂时禁止
+		if targetAlliance.info.ServerId != in.TargetServerId {
+			return ErrCodeWrongTargetServerIdInDeclareWar, 0, false
 		}
 	}
 	// 我的联盟宣战帮会，排除对方有联盟，排除联盟内宣战

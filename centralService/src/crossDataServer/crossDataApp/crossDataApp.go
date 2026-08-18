@@ -5,10 +5,13 @@ import (
 	"centralService/src/common"
 	"centralService/src/crossDataServer/crossDataApp/gameServerService"
 	"centralService/src/trpc"
+	"database/sql"
+	"fmt"
 	"net"
 	"strconv"
 	"sync"
 	"syscall"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
@@ -27,6 +30,7 @@ type CrossDataApp struct {
 	gameServers   map[string]*GameServerService
 	channelToHost map[uuid.UUID]*GameServerService
 	guildData     *GuildData
+	siegeWarData  *SiegeWarData
 }
 
 func (cda *CrossDataApp) GetName() string {
@@ -98,11 +102,28 @@ func (cda *CrossDataApp) getServiceKey(serverId uint32) string {
 }
 
 func NewCrossDataApp() *CrossDataApp {
+	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8",
+		CrossDataConfig.Mysql.User, CrossDataConfig.Mysql.Passwd, CrossDataConfig.Mysql.Addr, CrossDataConfig.Mysql.Db))
+
+	if err != nil {
+		appLog.Error("open msyql error: ", err.Error())
+		return nil
+	}
+
+	db.SetMaxIdleConns(50)
+	db.SetConnMaxLifetime(time.Second * 290)
+	db.SetMaxOpenConns(50)
+	if err = db.Ping(); err != nil {
+		appLog.Error("mysql connect err", err.Error())
+		return nil
+	}
+
 	app := CrossDataApp{common.App{AppName: "CrossDataApp"},
 		sync.RWMutex{},
 		make(map[string]*GameServerService),
 		make(map[uuid.UUID]*GameServerService),
 		NewGuildData(),
+		NewSiegeWarData(db),
 	}
 	return &app
 }

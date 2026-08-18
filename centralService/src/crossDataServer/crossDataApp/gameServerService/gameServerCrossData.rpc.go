@@ -76,6 +76,20 @@ func CrossDataServer_DoOnCrossGuildResultBack_Handler(endPoint prpc.IEndPoint, d
     }
     return endPoint.(ICrossDataServerInterface).DoOnCrossGuildResultBack(in)
 }
+func CrossDataServer_SaveSiegeWarData_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(SaveSiegeWarDataRequest)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(ICrossDataServerInterface).SaveSiegeWarData(in)
+}
+func CrossDataServer_LoadSiegeWarData_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(LoadSiegeWarDataRequest)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(ICrossDataServerInterface).LoadSiegeWarData(in)
+}
 var CrossDataServerServiceDesc = prpc.ServiceDesc{
     ServiceName: "CrossDataServer.CrossDataServer",
     Methods: []prpc.MethodDesc{
@@ -128,6 +142,16 @@ var CrossDataServerServiceDesc = prpc.ServiceDesc{
             MethodName:  "DoOnCrossGuildResultBack",
             MethodIndex: 9,
             Handler:     CrossDataServer_DoOnCrossGuildResultBack_Handler,
+        },
+        {
+            MethodName:  "SaveSiegeWarData",
+            MethodIndex: 10,
+            Handler:     CrossDataServer_SaveSiegeWarData_Handler,
+        },
+        {
+            MethodName:  "LoadSiegeWarData",
+            MethodIndex: 11,
+            Handler:     CrossDataServer_LoadSiegeWarData_Handler,
         },
     },
 }
@@ -183,6 +207,14 @@ func (self *CrossDataServerClient) DoOnCrossGuildResultBack(in *DoOnCrossGuildRe
     err := self.Channel.CallMethod(&CrossDataServerServiceDesc.Methods[9], in)
     return &Void{}, err
 }
+func (self *CrossDataServerClient) SaveSiegeWarData(in *SaveSiegeWarDataRequest) (*Void, error) {
+    err := self.Channel.CallMethod(&CrossDataServerServiceDesc.Methods[10], in)
+    return &Void{}, err
+}
+func (self *CrossDataServerClient) LoadSiegeWarData(in *LoadSiegeWarDataRequest) (*Void, error) {
+    err := self.Channel.CallMethod(&CrossDataServerServiceDesc.Methods[11], in)
+    return &Void{}, err
+}
 type ICrossDataServerInterface interface {
     RegisterGameServer(*RegisterGameServerRequest) (*Void, error)
     ActiveTick(*Void) (*Void, error)
@@ -194,6 +226,8 @@ type ICrossDataServerInterface interface {
     GetCrossServerGuildDetailFromOtherServer(*GetCrossServerGuildDetailFromOtherServer) (*Void, error)
     DoOnCrossGuildRequest(*DoOnCrossGuildRequest) (*Void, error)
     DoOnCrossGuildResultBack(*DoOnCrossGuildResultBack) (*Void, error)
+    SaveSiegeWarData(*SaveSiegeWarDataRequest) (*Void, error)
+    LoadSiegeWarData(*LoadSiegeWarDataRequest) (*Void, error)
 }
 
 func GameServer_ActiveTickCallback_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
@@ -245,6 +279,20 @@ func GameServer_OnDoOnCrossGuildResult_Handler(endPoint prpc.IEndPoint, dec func
     }
     return endPoint.(IGameServerInterface).OnDoOnCrossGuildResult(in)
 }
+func GameServer_OnSaveSiegeWarData_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(SaveSiegeWarDataResult)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameServerInterface).OnSaveSiegeWarData(in)
+}
+func GameServer_OnLoadSiegeWarData_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(LoadSiegeWarDataResult)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameServerInterface).OnLoadSiegeWarData(in)
+}
 var GameServerServiceDesc = prpc.ServiceDesc{
     ServiceName: "CrossDataServer.GameServer",
     Methods: []prpc.MethodDesc{
@@ -282,6 +330,16 @@ var GameServerServiceDesc = prpc.ServiceDesc{
             MethodName:  "OnDoOnCrossGuildResult",
             MethodIndex: 6,
             Handler:     GameServer_OnDoOnCrossGuildResult_Handler,
+        },
+        {
+            MethodName:  "OnSaveSiegeWarData",
+            MethodIndex: 7,
+            Handler:     GameServer_OnSaveSiegeWarData_Handler,
+        },
+        {
+            MethodName:  "OnLoadSiegeWarData",
+            MethodIndex: 8,
+            Handler:     GameServer_OnLoadSiegeWarData_Handler,
         },
     },
 }
@@ -325,6 +383,14 @@ func (self *GameServerClient) OnDoOnCrossGuildResult(in *DoOnCrossGuildResult) (
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[6], in)
     return &Void{}, err
 }
+func (self *GameServerClient) OnSaveSiegeWarData(in *SaveSiegeWarDataResult) (*Void, error) {
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[7], in)
+    return &Void{}, err
+}
+func (self *GameServerClient) OnLoadSiegeWarData(in *LoadSiegeWarDataResult) (*Void, error) {
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[8], in)
+    return &Void{}, err
+}
 type IGameServerInterface interface {
     ActiveTickCallback(*Void) (*Void, error)
     OnAddGuildInfo(*AddGuildInfoResult) (*Void, error)
@@ -333,5 +399,7 @@ type IGameServerInterface interface {
     OnGetCrossServerGuildDetailToOtherServer(*GetCrossServerGuildDetailToOtherServer) (*Void, error)
     OnDoOnCrossGuildToGameServer(*DoOnCrossGuildToGameServer) (*Void, error)
     OnDoOnCrossGuildResult(*DoOnCrossGuildResult) (*Void, error)
+    OnSaveSiegeWarData(*SaveSiegeWarDataResult) (*Void, error)
+    OnLoadSiegeWarData(*LoadSiegeWarDataResult) (*Void, error)
 }
 

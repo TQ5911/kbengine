@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='CrossDataServer',
   syntax='proto3',
   serialized_options=_b('Z\024../gameServerService\220\001\001'),
-  serialized_pb=_b('\n\x19gameServerCrossData.proto\x12\x0f\x43rossDataServer\"\x06\n\x04Void\"-\n\x19RegisterGameServerRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\"\x9f\x01\n\tGuildInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x0c\n\x04\x66lag\x18\x04 \x01(\r\x12\x12\n\nguildScore\x18\x05 \x01(\r\x12\x12\n\nguildLevel\x18\x06 \x01(\r\x12\x11\n\tguildIcon\x18\x07 \x01(\r\x12\x11\n\tmemberCnt\x18\x08 \x01(\r\"R\n\x13\x41\x64\x64GuildInfoRequest\x12-\n\tguildInfo\x18\x01 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\"\n\x12\x41\x64\x64GuildInfoResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\"6\n\x14GetGuildInfosRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"C\n\x1fGetGuildInfosByGuildUUIDRequest\x12\x12\n\nguildUUIDs\x18\x01 \x03(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"S\n\x13GetGuildInfosResult\x12.\n\nguildInfos\x18\x01 \x03(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"+\n\x16RemoveGuildInfoRequest\x12\x11\n\tguildUUID\x18\x02 \x01(\x04\"[\n GetCrossServerGuildDetailRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"a\n&GetCrossServerGuildDetailToOtherServer\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\xac\x01\n\x0fGuildDetailInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x64\x65sc\x18\x02 \x01(\t\x12\x12\n\nleaderName\x18\x03 \x01(\t\x12\x11\n\tleaderSex\x18\x04 \x01(\r\x12\x14\n\x0cleaderSchool\x18\x05 \x01(\r\x12\x13\n\x0bleaderLevel\x18\x06 \x01(\r\x12\x12\n\nleaderGbId\x18\x07 \x01(\x04\x12\x12\n\nleagueUUID\x18\x08 \x01(\x04\"\x8b\x01\n(GetCrossServerGuildDetailFromOtherServer\x12\x39\n\x0fguildDetailInfo\x18\x01 \x01(\x0b\x32 .CrossDataServer.GuildDetailInfo\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"j\n\x1fGetCrossServerGuildDetailResult\x12\x39\n\x0fguildDetailInfo\x18\x01 \x01(\x0b\x32 .CrossDataServer.GuildDetailInfo\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"T\n\x15\x44oOnCrossGuildRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x66unc\x18\x02 \x01(\t\x12\x0c\n\x04\x61rgs\x18\x03 \x01(\x0c\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"q\n\x1a\x44oOnCrossGuildToGameServer\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x66unc\x18\x02 \x01(\t\x12\x0c\n\x04\x61rgs\x18\x03 \x01(\x0c\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x05 \x01(\r\"E\n\x14\x44oOnCrossGuildResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12\x0e\n\x06result\x18\x03 \x01(\x0c\"[\n\x18\x44oOnCrossGuildResultBack\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0f\n\x07success\x18\x03 \x01(\x08\x12\x0e\n\x06result\x18\x04 \x01(\x0c\x32\x95\x07\n\x0f\x43rossDataServer\x12W\n\x12registerGameServer\x12*.CrossDataServer.RegisterGameServerRequest\x1a\x15.CrossDataServer.Void\x12:\n\nactiveTick\x12\x15.CrossDataServer.Void\x1a\x15.CrossDataServer.Void\x12K\n\x0c\x61\x64\x64GuildInfo\x12$.CrossDataServer.AddGuildInfoRequest\x1a\x15.CrossDataServer.Void\x12M\n\rgetGuildInfos\x12%.CrossDataServer.GetGuildInfosRequest\x1a\x15.CrossDataServer.Void\x12\x63\n\x18getGuildInfosByGuildUUID\x12\x30.CrossDataServer.GetGuildInfosByGuildUUIDRequest\x1a\x15.CrossDataServer.Void\x12Q\n\x0fremoveGuildInfo\x12\'.CrossDataServer.RemoveGuildInfoRequest\x1a\x15.CrossDataServer.Void\x12\x65\n\x19getCrossServerGuildDetail\x12\x31.CrossDataServer.GetCrossServerGuildDetailRequest\x1a\x15.CrossDataServer.Void\x12|\n(getCrossServerGuildDetailFromOtherServer\x12\x39.CrossDataServer.GetCrossServerGuildDetailFromOtherServer\x1a\x15.CrossDataServer.Void\x12V\n\x15\x64oOnCrossGuildRequest\x12&.CrossDataServer.DoOnCrossGuildRequest\x1a\x15.CrossDataServer.Void\x12\\\n\x18\x64oOnCrossGuildResultBack\x12).CrossDataServer.DoOnCrossGuildResultBack\x1a\x15.CrossDataServer.Void2\x8e\x05\n\nGameServer\x12\x42\n\x12\x61\x63tiveTickCallback\x12\x15.CrossDataServer.Void\x1a\x15.CrossDataServer.Void\x12L\n\x0eonAddGuildInfo\x12#.CrossDataServer.AddGuildInfoResult\x1a\x15.CrossDataServer.Void\x12N\n\x0fonGetGuildInfos\x12$.CrossDataServer.GetGuildInfosResult\x1a\x15.CrossDataServer.Void\x12\x66\n\x1bonGetCrossServerGuildDetail\x12\x30.CrossDataServer.GetCrossServerGuildDetailResult\x1a\x15.CrossDataServer.Void\x12z\n(onGetCrossServerGuildDetailToOtherServer\x12\x37.CrossDataServer.GetCrossServerGuildDetailToOtherServer\x1a\x15.CrossDataServer.Void\x12\x62\n\x1conDoOnCrossGuildToGameServer\x12+.CrossDataServer.DoOnCrossGuildToGameServer\x1a\x15.CrossDataServer.Void\x12V\n\x16onDoOnCrossGuildResult\x12%.CrossDataServer.DoOnCrossGuildResult\x1a\x15.CrossDataServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x19gameServerCrossData.proto\x12\x0f\x43rossDataServer\"\x06\n\x04Void\"-\n\x19RegisterGameServerRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\"\x9f\x01\n\tGuildInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x0c\n\x04\x66lag\x18\x04 \x01(\r\x12\x12\n\nguildScore\x18\x05 \x01(\r\x12\x12\n\nguildLevel\x18\x06 \x01(\r\x12\x11\n\tguildIcon\x18\x07 \x01(\r\x12\x11\n\tmemberCnt\x18\x08 \x01(\r\"R\n\x13\x41\x64\x64GuildInfoRequest\x12-\n\tguildInfo\x18\x01 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\"\n\x12\x41\x64\x64GuildInfoResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\"6\n\x14GetGuildInfosRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"C\n\x1fGetGuildInfosByGuildUUIDRequest\x12\x12\n\nguildUUIDs\x18\x01 \x03(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"S\n\x13GetGuildInfosResult\x12.\n\nguildInfos\x18\x01 \x03(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"+\n\x16RemoveGuildInfoRequest\x12\x11\n\tguildUUID\x18\x02 \x01(\x04\"[\n GetCrossServerGuildDetailRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"a\n&GetCrossServerGuildDetailToOtherServer\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\xac\x01\n\x0fGuildDetailInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x64\x65sc\x18\x02 \x01(\t\x12\x12\n\nleaderName\x18\x03 \x01(\t\x12\x11\n\tleaderSex\x18\x04 \x01(\r\x12\x14\n\x0cleaderSchool\x18\x05 \x01(\r\x12\x13\n\x0bleaderLevel\x18\x06 \x01(\r\x12\x12\n\nleaderGbId\x18\x07 \x01(\x04\x12\x12\n\nleagueUUID\x18\x08 \x01(\x04\"\x8b\x01\n(GetCrossServerGuildDetailFromOtherServer\x12\x39\n\x0fguildDetailInfo\x18\x01 \x01(\x0b\x32 .CrossDataServer.GuildDetailInfo\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"j\n\x1fGetCrossServerGuildDetailResult\x12\x39\n\x0fguildDetailInfo\x18\x01 \x01(\x0b\x32 .CrossDataServer.GuildDetailInfo\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"T\n\x15\x44oOnCrossGuildRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x66unc\x18\x02 \x01(\t\x12\x0c\n\x04\x61rgs\x18\x03 \x01(\x0c\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"q\n\x1a\x44oOnCrossGuildToGameServer\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x66unc\x18\x02 \x01(\t\x12\x0c\n\x04\x61rgs\x18\x03 \x01(\x0c\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x05 \x01(\r\"E\n\x14\x44oOnCrossGuildResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12\x0e\n\x06result\x18\x03 \x01(\x0c\"[\n\x18\x44oOnCrossGuildResultBack\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0f\n\x07success\x18\x03 \x01(\x08\x12\x0e\n\x06result\x18\x04 \x01(\x0c\"5\n\x17SaveSiegeWarDataRequest\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"7\n\x16SaveSiegeWarDataResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\"\'\n\x17LoadSiegeWarDataRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\"E\n\x16LoadSiegeWarDataResult\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\x12\x0f\n\x07success\x18\x03 \x01(\x08\x32\xbf\x08\n\x0f\x43rossDataServer\x12W\n\x12registerGameServer\x12*.CrossDataServer.RegisterGameServerRequest\x1a\x15.CrossDataServer.Void\x12:\n\nactiveTick\x12\x15.CrossDataServer.Void\x1a\x15.CrossDataServer.Void\x12K\n\x0c\x61\x64\x64GuildInfo\x12$.CrossDataServer.AddGuildInfoRequest\x1a\x15.CrossDataServer.Void\x12M\n\rgetGuildInfos\x12%.CrossDataServer.GetGuildInfosRequest\x1a\x15.CrossDataServer.Void\x12\x63\n\x18getGuildInfosByGuildUUID\x12\x30.CrossDataServer.GetGuildInfosByGuildUUIDRequest\x1a\x15.CrossDataServer.Void\x12Q\n\x0fremoveGuildInfo\x12\'.CrossDataServer.RemoveGuildInfoRequest\x1a\x15.CrossDataServer.Void\x12\x65\n\x19getCrossServerGuildDetail\x12\x31.CrossDataServer.GetCrossServerGuildDetailRequest\x1a\x15.CrossDataServer.Void\x12|\n(getCrossServerGuildDetailFromOtherServer\x12\x39.CrossDataServer.GetCrossServerGuildDetailFromOtherServer\x1a\x15.CrossDataServer.Void\x12V\n\x15\x64oOnCrossGuildRequest\x12&.CrossDataServer.DoOnCrossGuildRequest\x1a\x15.CrossDataServer.Void\x12\\\n\x18\x64oOnCrossGuildResultBack\x12).CrossDataServer.DoOnCrossGuildResultBack\x1a\x15.CrossDataServer.Void\x12S\n\x10saveSiegeWarData\x12(.CrossDataServer.SaveSiegeWarDataRequest\x1a\x15.CrossDataServer.Void\x12S\n\x10loadSiegeWarData\x12(.CrossDataServer.LoadSiegeWarDataRequest\x1a\x15.CrossDataServer.Void2\xba\x06\n\nGameServer\x12\x42\n\x12\x61\x63tiveTickCallback\x12\x15.CrossDataServer.Void\x1a\x15.CrossDataServer.Void\x12L\n\x0eonAddGuildInfo\x12#.CrossDataServer.AddGuildInfoResult\x1a\x15.CrossDataServer.Void\x12N\n\x0fonGetGuildInfos\x12$.CrossDataServer.GetGuildInfosResult\x1a\x15.CrossDataServer.Void\x12\x66\n\x1bonGetCrossServerGuildDetail\x12\x30.CrossDataServer.GetCrossServerGuildDetailResult\x1a\x15.CrossDataServer.Void\x12z\n(onGetCrossServerGuildDetailToOtherServer\x12\x37.CrossDataServer.GetCrossServerGuildDetailToOtherServer\x1a\x15.CrossDataServer.Void\x12\x62\n\x1conDoOnCrossGuildToGameServer\x12+.CrossDataServer.DoOnCrossGuildToGameServer\x1a\x15.CrossDataServer.Void\x12V\n\x16onDoOnCrossGuildResult\x12%.CrossDataServer.DoOnCrossGuildResult\x1a\x15.CrossDataServer.Void\x12T\n\x12onSaveSiegeWarData\x12\'.CrossDataServer.SaveSiegeWarDataResult\x1a\x15.CrossDataServer.Void\x12T\n\x12onLoadSiegeWarData\x12\'.CrossDataServer.LoadSiegeWarDataResult\x1a\x15.CrossDataServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
 )
 
 
@@ -836,6 +836,158 @@ _DOONCROSSGUILDRESULTBACK = _descriptor.Descriptor(
   serialized_end=1618,
 )
 
+
+_SAVESIEGEWARDATAREQUEST = _descriptor.Descriptor(
+  name='SaveSiegeWarDataRequest',
+  full_name='CrossDataServer.SaveSiegeWarDataRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='data', full_name='CrossDataServer.SaveSiegeWarDataRequest.data', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='CrossDataServer.SaveSiegeWarDataRequest.uuid', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1620,
+  serialized_end=1673,
+)
+
+
+_SAVESIEGEWARDATARESULT = _descriptor.Descriptor(
+  name='SaveSiegeWarDataResult',
+  full_name='CrossDataServer.SaveSiegeWarDataResult',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='CrossDataServer.SaveSiegeWarDataResult.uuid', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='success', full_name='CrossDataServer.SaveSiegeWarDataResult.success', index=1,
+      number=2, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1675,
+  serialized_end=1730,
+)
+
+
+_LOADSIEGEWARDATAREQUEST = _descriptor.Descriptor(
+  name='LoadSiegeWarDataRequest',
+  full_name='CrossDataServer.LoadSiegeWarDataRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='CrossDataServer.LoadSiegeWarDataRequest.uuid', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1732,
+  serialized_end=1771,
+)
+
+
+_LOADSIEGEWARDATARESULT = _descriptor.Descriptor(
+  name='LoadSiegeWarDataResult',
+  full_name='CrossDataServer.LoadSiegeWarDataResult',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='data', full_name='CrossDataServer.LoadSiegeWarDataResult.data', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='CrossDataServer.LoadSiegeWarDataResult.uuid', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='success', full_name='CrossDataServer.LoadSiegeWarDataResult.success', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1773,
+  serialized_end=1842,
+)
+
 _ADDGUILDINFOREQUEST.fields_by_name['guildInfo'].message_type = _GUILDINFO
 _GETGUILDINFOSRESULT.fields_by_name['guildInfos'].message_type = _GUILDINFO
 _GETCROSSSERVERGUILDDETAILFROMOTHERSERVER.fields_by_name['guildDetailInfo'].message_type = _GUILDDETAILINFO
@@ -858,6 +1010,10 @@ DESCRIPTOR.message_types_by_name['DoOnCrossGuildRequest'] = _DOONCROSSGUILDREQUE
 DESCRIPTOR.message_types_by_name['DoOnCrossGuildToGameServer'] = _DOONCROSSGUILDTOGAMESERVER
 DESCRIPTOR.message_types_by_name['DoOnCrossGuildResult'] = _DOONCROSSGUILDRESULT
 DESCRIPTOR.message_types_by_name['DoOnCrossGuildResultBack'] = _DOONCROSSGUILDRESULTBACK
+DESCRIPTOR.message_types_by_name['SaveSiegeWarDataRequest'] = _SAVESIEGEWARDATAREQUEST
+DESCRIPTOR.message_types_by_name['SaveSiegeWarDataResult'] = _SAVESIEGEWARDATARESULT
+DESCRIPTOR.message_types_by_name['LoadSiegeWarDataRequest'] = _LOADSIEGEWARDATAREQUEST
+DESCRIPTOR.message_types_by_name['LoadSiegeWarDataResult'] = _LOADSIEGEWARDATARESULT
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Void = _reflection.GeneratedProtocolMessageType('Void', (_message.Message,), dict(
@@ -986,6 +1142,34 @@ DoOnCrossGuildResultBack = _reflection.GeneratedProtocolMessageType('DoOnCrossGu
   ))
 _sym_db.RegisterMessage(DoOnCrossGuildResultBack)
 
+SaveSiegeWarDataRequest = _reflection.GeneratedProtocolMessageType('SaveSiegeWarDataRequest', (_message.Message,), dict(
+  DESCRIPTOR = _SAVESIEGEWARDATAREQUEST,
+  __module__ = 'gameServerCrossData_pb2'
+  # @@protoc_insertion_point(class_scope:CrossDataServer.SaveSiegeWarDataRequest)
+  ))
+_sym_db.RegisterMessage(SaveSiegeWarDataRequest)
+
+SaveSiegeWarDataResult = _reflection.GeneratedProtocolMessageType('SaveSiegeWarDataResult', (_message.Message,), dict(
+  DESCRIPTOR = _SAVESIEGEWARDATARESULT,
+  __module__ = 'gameServerCrossData_pb2'
+  # @@protoc_insertion_point(class_scope:CrossDataServer.SaveSiegeWarDataResult)
+  ))
+_sym_db.RegisterMessage(SaveSiegeWarDataResult)
+
+LoadSiegeWarDataRequest = _reflection.GeneratedProtocolMessageType('LoadSiegeWarDataRequest', (_message.Message,), dict(
+  DESCRIPTOR = _LOADSIEGEWARDATAREQUEST,
+  __module__ = 'gameServerCrossData_pb2'
+  # @@protoc_insertion_point(class_scope:CrossDataServer.LoadSiegeWarDataRequest)
+  ))
+_sym_db.RegisterMessage(LoadSiegeWarDataRequest)
+
+LoadSiegeWarDataResult = _reflection.GeneratedProtocolMessageType('LoadSiegeWarDataResult', (_message.Message,), dict(
+  DESCRIPTOR = _LOADSIEGEWARDATARESULT,
+  __module__ = 'gameServerCrossData_pb2'
+  # @@protoc_insertion_point(class_scope:CrossDataServer.LoadSiegeWarDataResult)
+  ))
+_sym_db.RegisterMessage(LoadSiegeWarDataResult)
+
 
 DESCRIPTOR._options = None
 
@@ -995,8 +1179,8 @@ _CROSSDATASERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=1621,
-  serialized_end=2538,
+  serialized_start=1845,
+  serialized_end=2932,
   methods=[
   _descriptor.MethodDescriptor(
     name='registerGameServer',
@@ -1088,6 +1272,24 @@ _CROSSDATASERVER = _descriptor.ServiceDescriptor(
     output_type=_VOID,
     serialized_options=None,
   ),
+  _descriptor.MethodDescriptor(
+    name='saveSiegeWarData',
+    full_name='CrossDataServer.CrossDataServer.saveSiegeWarData',
+    index=10,
+    containing_service=None,
+    input_type=_SAVESIEGEWARDATAREQUEST,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='loadSiegeWarData',
+    full_name='CrossDataServer.CrossDataServer.loadSiegeWarData',
+    index=11,
+    containing_service=None,
+    input_type=_LOADSIEGEWARDATAREQUEST,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
 ])
 _sym_db.RegisterServiceDescriptor(_CROSSDATASERVER)
 
@@ -1100,8 +1302,8 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=2541,
-  serialized_end=3195,
+  serialized_start=2935,
+  serialized_end=3761,
   methods=[
   _descriptor.MethodDescriptor(
     name='activeTickCallback',
@@ -1163,6 +1365,24 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
     index=6,
     containing_service=None,
     input_type=_DOONCROSSGUILDRESULT,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='onSaveSiegeWarData',
+    full_name='CrossDataServer.GameServer.onSaveSiegeWarData',
+    index=7,
+    containing_service=None,
+    input_type=_SAVESIEGEWARDATARESULT,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='onLoadSiegeWarData',
+    full_name='CrossDataServer.GameServer.onLoadSiegeWarData',
+    index=8,
+    containing_service=None,
+    input_type=_LOADSIEGEWARDATARESULT,
     output_type=_VOID,
     serialized_options=None,
   ),

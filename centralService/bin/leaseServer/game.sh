@@ -19,26 +19,31 @@ function stop_gameapp(){
 
 function start_gameapp(){
     if [ -f $pidFileName ]; then
-        pid=`cat ${pidFileName}`
-        pl=`ps -A | grep $pid`
-
-        if [ "$pl" == "" ]; then
-            pc=0
-        else
-            pc=`echo $pl | wc -l`
-        fi
-
-        pn=`echo $pl | awk -F ' ' '{print $4}'`
-
-        if (("$pc" == "0")); then
-            echo "$binName - delete untracked pid file $pidFileName $pid"
+        pid=`cat ${pidFileName} 2>/dev/null`
+        if ! [[ "$pid" =~ ^[0-9]+$ ]]; then
+            echo "$binName - delete invalid pid file $pidFileName $pid"
             rm -f $pidFileName
-        elif [ "$pn" == "$binName" ]; then
-            echo "$binName - start server failed, process running, pid=$pid"
-            exit 255
         else
-            echo "$binName - delete outdate pid file $pidFileName $pid $pn"
-            rm -f $pidFileName
+            pl=`ps -A | grep -w "$pid"`
+
+            if [ "$pl" == "" ]; then
+                pc=0
+            else
+                pc=`echo $pl | wc -l`
+            fi
+
+            pn=`echo $pl | awk -F ' ' '{print $4}'`
+
+            if (("$pc" == "0")); then
+                echo "$binName - delete untracked pid file $pidFileName $pid"
+                rm -f $pidFileName
+            elif [ "$pn" == "$binName" ]; then
+                echo "$binName - start server failed, process running, pid=$pid"
+                exit 255
+            else
+                echo "$binName - delete outdate pid file $pidFileName $pid $pn"
+                rm -f $pidFileName
+            fi
         fi
     fi
 

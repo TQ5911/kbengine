@@ -114,6 +114,26 @@ message DoOnCrossGuildResultBack {
     bytes result = 4;
 }
 
+message SaveSiegeWarDataRequest {
+    bytes data = 1;
+    uint64 uuid = 2;
+}
+
+message SaveSiegeWarDataResult {
+    uint64 uuid = 1;
+    bool success = 2;
+}
+
+message LoadSiegeWarDataRequest {
+    uint64 uuid = 1;
+}
+
+message LoadSiegeWarDataResult {
+    bytes data = 1;
+    uint64 uuid = 2;
+    bool success = 3;
+}
+
 
 service CrossDataServer
 {
@@ -127,6 +147,8 @@ service CrossDataServer
     rpc getCrossServerGuildDetailFromOtherServer(GetCrossServerGuildDetailFromOtherServer) returns(Void);
     rpc doOnCrossGuildRequest(DoOnCrossGuildRequest) returns(Void);
     rpc doOnCrossGuildResultBack(DoOnCrossGuildResultBack) returns(Void);
+    rpc saveSiegeWarData(SaveSiegeWarDataRequest) returns(Void);
+    rpc loadSiegeWarData(LoadSiegeWarDataRequest) returns(Void);
 }
 
 service GameServer
@@ -138,5 +160,7 @@ service GameServer
     rpc onGetCrossServerGuildDetailToOtherServer(GetCrossServerGuildDetailToOtherServer) returns(Void);
     rpc onDoOnCrossGuildToGameServer(DoOnCrossGuildToGameServer) returns(Void);
     rpc onDoOnCrossGuildResult(DoOnCrossGuildResult) returns(Void);
+    rpc onSaveSiegeWarData(SaveSiegeWarDataResult) returns(Void);
+    rpc onLoadSiegeWarData(LoadSiegeWarDataResult) returns(Void);
 }
 
