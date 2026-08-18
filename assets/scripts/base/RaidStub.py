@@ -572,14 +572,14 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
     def createRaidLonely(self, srcPlayerBox, srcPlayerGbId, raidUUID, capacity, memberPropsList, extraProps, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         LOG_INFO('createRaidLonely::', srcPlayerBox, srcPlayerGbId, raidUUID, capacity, memberPropsList, extraProps, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
-        _, err = self._createRaid(srcPlayerBox, srcPlayerGbId, raidUUID, capacity, memberPropsList, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
+        _, err = self._createRaid(srcPlayerBox, srcPlayerGbId, raidUUID, capacity, memberPropsList, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition, extraProps)
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             LOG_ERR('createRaid:: failed, {}'.format(err))
             return
 
     def createRaid(self, srcPlayerBox, srcPlayerGbId, raidUUID, capacity, memberPropsList, extraProps):
         LOG_INFO('createRaid::', srcPlayerBox, srcPlayerGbId, raidUUID, capacity, memberPropsList, extraProps)
-        _, err = self._createRaid(srcPlayerBox, srcPlayerGbId, raidUUID, capacity, memberPropsList, 1, 0, 0, TMMCD.datas["raidTeamTitleDes"]["value"], '', False)
+        _, err = self._createRaid(srcPlayerBox, srcPlayerGbId, raidUUID, capacity, memberPropsList, 1, 0, 0, TMMCD.datas["raidTeamTitleDes"]["value"], '', False, extraProps)
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             LOG_ERR('createRaid:: failed, {}'.format(err))
             return
@@ -601,7 +601,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                     return
             _raidVal.autoStartTimer = self.addTimerCB(5, 'checkAutoStart', (raidUUID,), gametimer.TIMER_TAG_RAID_AUTO_START)
 
-    def _createRaid(self, srcPlayerBox, srcPlayerGbId, raidUUID, capacity, memberPropsList, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition):
+    def _createRaid(self, srcPlayerBox, srcPlayerGbId, raidUUID, capacity, memberPropsList, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition, extraProps):
         raidLeaderGBID = srcPlayerGbId
 
         if not dataUtils.isRaidCapacityValidate(capacity):
@@ -629,7 +629,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             if err != gameconst.RaidErrno.ENUM_RAID_OK:
                 LOG_ERR('_createRaid:: add team member failed, {}'.format(err))
                 return None, err
-            _raidVal.broadcastToAllRaidMembersCell('onRaidAddNewMember', (memberProps['playerBox'].id,), (memberProps['playerGbId'],))
+            _raidVal.broadcastToAllRaidMembersCell('onRaidAddNewMember', (memberProps['playerBox'].id, extraProps.get('joinType', gameconst.TeamJoinType.DEFAULT)), ())
             
         _, err = _raidVal.setRaidLeader(raidLeaderGBID, teamIDX)
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
@@ -1595,7 +1595,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         raidVal = self.raidDict[raidUUID]
         raidMemberVal, err = self._raidMemberLeaveRaid(raidUUID, leavePlayerGBID)
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
-            LOG_ERR('leaveRaid:: failed, {}'.format(err))
+            LOG_WARN('leaveRaid:: failed, {}'.format(err))
             return
         # 通知客户端，谁走了
         raidVal.broadcastAllRaidMembersBase('onMessagePre', (M_M_DD.datas.raid_playerLeft, [raidMemberVal.playerName, str(raidMemberVal.playerGbId)]))
@@ -2701,7 +2701,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             raidVal = self.raidDict[raidUUID]
             raidVal.setRaidDungeonInfo(dungeonNo, spaceNo, spaceUUID,
                                        spaceBox, spaceMgrBox, toClient=True, toCell=True)
-
+            self.setInDungeon(raidUUID, True)
             raidVal.broadcastAllRaidMembersBase(
                 'doEnterRaidDungeonSelfCheck',
                 (dungeonNo, spaceNo, spaceUUID, spaceBox, spaceMgrBox, src, extraProps))
@@ -2822,6 +2822,14 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         raidVal = self.getRaidByRaidUUID(raidUUID)
         if not raidVal:
             return
+        
+        if raidVal.isEmpty():
+            self.doDisbandRaid(raidVal.raidUUID, {})
+            return
+        
+        if raidVal.isRaidFull():
+            return
+        
         if not raidVal.checkRaidTarget(raidVal.raidMinLevel, raidVal.raidMinScore):
             return
         if raidVal.isRaidFull():
@@ -3018,6 +3026,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         return raidVal, err
 
     def setInDungeon(self, raidId, status):
+        LOG_INFO('raidStub::setInDungeon, ', raidId, status)
         raidVal = self.raidDict.get(raidId, None)
         if not raidVal:
             LOG_WARN('setInDungeon, not found raid:', raidId)

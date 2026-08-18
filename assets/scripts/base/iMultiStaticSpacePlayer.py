@@ -64,7 +64,7 @@ class IMultiStaticSpacePlayer(object):
             _linePlayers = linePlayers.LinePlayers(formula.parseLineNo(spaceNo))
             self.allLines[spaceNo] = _linePlayers
 
-        _linePlayers.addPendingEnterPlayer(None, gbId)
+        _linePlayers.doAddPendingEnterPlayer(None, gbId)
 
     def addEnterPlayer(self, box, gbId, teamUUID, areaId, status, curSpaceNo, extraInfo):
         if gbId in self.allPlayers:
@@ -79,6 +79,18 @@ class IMultiStaticSpacePlayer(object):
         _linePlayers.doAddLinePlayer(None, box, gbId, teamUUID, areaId, status, curSpaceNo, extraInfo)
         self.allPlayers[gbId] = _linePlayers[gbId]
 
+    def enterSpaceFailed(self, gbId, spaceNo):
+        LOG_WARN('enterSpaceFailed', gbId, spaceNo)
+        _linePlayers = self.allLines.get(spaceNo)
+        if not _linePlayers:
+            return
+
+        if not _linePlayers.doEnterSpaceFailed(gbId):
+            # 可能只是pending中pop掉了，没必要pop全局的
+            return
+        
+        self.allPlayers.pop(gbId, None)
+
     def removePlayer(self, gbId):
         _playerVal = self.allPlayers.pop(gbId, None)
         if not _playerVal:
@@ -89,7 +101,7 @@ class IMultiStaticSpacePlayer(object):
             LOG_ERR('removePlayer:linePlayers not found', _playerVal.curSpaceNo)
             return
 
-        _linePlayers.doRemoveLinePlayer(None, gbId)
+        _linePlayers.doRemoveLinePlayer(gbId)
 
     def switchStaticSpace(self, gbId, toSpaceNo):
         _playerVal = self.allPlayers.get(gbId)
@@ -106,7 +118,7 @@ class IMultiStaticSpacePlayer(object):
         if _playerVal.teamUUID:
             _isLeader = _linePlayers.teamPlayersDic.get(_playerVal.teamUUID, {}).get(gbId, False)
 
-        _linePlayers.doRemoveLinePlayer(None, gbId)
+        _linePlayers.doRemoveLinePlayer(gbId)
 
         _playerVal.curSpaceNo = toSpaceNo
         _linePlayers = self.allLines.get(toSpaceNo)

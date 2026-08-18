@@ -135,6 +135,7 @@ class DungeonStubMixin(object):
         dungeonStub.applyCreateDungeon(playerBox, gbId, teamUUID, extraInfo)
 
     def afterCreateTeamDungeon(self, teamUUID, dungeonNo, spaceNo, spaceUUID, playerBox, extra):
+        self.setInDungeon(teamUUID, True)
         self._addTeamDungeonSpaceByUUID(teamUUID, dungeonNo, spaceNo, spaceUUID)
         if 'createAndEnter' in extra and extra['createAndEnter']:
             LOG_INFO('afterCreateTeamDungeon::auto enter space', dungeonNo, spaceNo)
@@ -352,7 +353,9 @@ class DungeonStubMixin(object):
 
     def destroyTeamDungeonDelay(self, teamUUID, dungeonNo, spaceNo, reason, extra):
         LOG_INFO("destroyTeamDungeonDelay ", teamUUID, dungeonNo, spaceNo, reason, extra)
+        dungeonStub = gameengine.getDungeonStubByDungeonNo(dungeonNo, gameconst.DungeonEnterTypeEnum.TEAM)
         if teamUUID not in self.teamDict:
+            dungeonStub.destoryDungeonSpace(spaceNo, 0, 'noPlayer')
             LOG_WARN("destroyTeamDungeonDelay:: team is not found", teamUUID, dungeonNo, spaceNo, reason, extra)
             return
 
@@ -368,9 +371,6 @@ class DungeonStubMixin(object):
             LOG_ERR('destroyTeamDungeonDelay::spaceNo not match, this: {}, got: {}'.format(
                 _teamDungeonSpaceVal.spaceNo, spaceNo))
             return
-
-        dungeonStub = gameengine.getDungeonStubByDungeonNo(
-            dungeonNo, gameconst.DungeonEnterTypeEnum.TEAM)
 
         dungeonTimeout = self._getParamBydungeonNo(dungeonNo, 'timeOut')
         extra.update({'tTimeout': dungeonTimeout})
@@ -400,6 +400,7 @@ class DungeonStubMixin(object):
         for _gbId, _fVal in founders.items():
             base = _fVal.playerBox
             if _fVal.hasAvatar() and base and not utils.checkBoxOffline(base) and base.cell:
+                _src._extra['spaceNo'] = _team.teamDungeonDict.getDungeonCache(dungeonNo).spaceNo
                 base.cell.selfLeaveTeamDungeon(_src)
             else:
                 _needDestoryGBIDs.append(_gbId)
@@ -409,8 +410,10 @@ class DungeonStubMixin(object):
 
     def onDestroyTeamDungeon(self, teamUUID, dungeonNo, spaceNo, spaceUUID):
         LOG_INFO('onDestroyTeamDungeon:: {} {}'.format(teamUUID, dungeonNo), spaceNo, spaceUUID)
-        _team = self.teamDict[teamUUID]
-        _team.removeDungeonSpaceCache(dungeonNo, spaceNo, spaceUUID)
+        
+        _team = self.teamDict.get(teamUUID)
+        if _team:
+            _team.removeDungeonSpaceCache(dungeonNo, spaceNo, spaceUUID)
         #self.teamDungeonFinished(teamUUID)
 
     def _addTeamDungeonSpaceByUUID(self, teamUUID, dungeonNo, spaceNo, spaceUUID):
@@ -1038,10 +1041,14 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
             if needMsg:
                 box.onMessagePre(TM_MCD.datas['teamFullMsg']['value'], [])
             return False
-        
+        # 我邀请人, 我不在队伍了
+        if not teamVal.teamPlayerDict.get(srcPlayerGbId):
+            LOG_WARN('isCanInviteTeam not in team ', srcTeamId,srcPlayerGbId, invitedPlayerGbId)
+            return False
         return True
 
     def _applyInviteTeam(self, srcTeamId, srcPlayerGbId, srcLevel, srcSchool, invitedPlayerGbId, name, inviteType):
+        LOG_INFO('_applyInviteTeam ', srcTeamId, srcPlayerGbId, srcLevel, srcSchool, invitedPlayerGbId, name, inviteType)
         needMsg = inviteType != gameconst.InviteType.GUILD
         teamVal = self.getTeamByTeamId(srcTeamId)
         captainGbId = teamVal.getCaptainGbId()
@@ -1116,8 +1123,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
         LOG_INFO('_leaveTeam', leaveBox, teamId, gbId, notifySelf)
         _teamVal = self.getTeamByTeamId(teamId)
         if len(_teamVal.teamPlayerDict) < 1:
-            if not _teamVal.isInDungeon:
-                self._disbandTeam(teamId)
+            self._disbandTeam(teamId)
         if not _teamVal.isInTeam(gbId):
             LOG_WARN("_leaveTeam:: player not found in team", teamId, gbId)
             return
@@ -1135,8 +1141,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
                 if box and not utils.checkBoxOffline(box) and box.client:
                     box.onMessagePre(TM_MCD.datas['beCaptainMsg']['value'], [])
             elif len(_teamVal.teamPlayerDict) < 1:
-                if not _teamVal.isInDungeon:
-                    self._disbandTeam(teamId)
+                self._disbandTeam(teamId)
 
     def leaveTeam(self, spaceNo, box, teamId, gbId, notifySelf=True):
         LOG_INFO('leaveTeam', spaceNo, teamId, gbId, notifySelf)
@@ -1418,10 +1423,18 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
             )
 
     def teamPrepareAutoMatch(self, teamId):
-        LOG_INFO('in teamPrepareAutoMatch:', teamId)
+        LOG_INFO('in teamPrepareAutoMatch: 1', teamId)
         _teamVal = self.getTeamByTeamId(teamId)
         if not _teamVal:
             return
+        
+        if _teamVal.getTeamMemberNum() <= 0:
+            self._disbandTeam(teamId)
+            return
+        
+        if _teamVal.isTeamFull():
+            return
+        
         if not _teamVal.checkTeamTarget(_teamVal.teamMinLv, _teamVal.teamMinScore):
             return
         if _teamVal.isTeamFull():
@@ -1429,6 +1442,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
             _teamVal.fetchCaptainBox().onMessagePre(TM_MCD.datas['teamMatch_fullMsg']['value'], [])
             return
         _teamVal.startAutoMatch()
+        LOG_INFO('in teamPrepareAutoMatch: 2', _teamVal)
 
     def doTeamPrepareStopAutoMatch(self, teamId):
         LOG_INFO('in doTeamPrepareStopAutoMatch:', teamId)
@@ -1772,6 +1786,7 @@ class TeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,\
         return err
 
     def setInDungeon(self, teamId, status):
+        LOG_INFO('teamStub::setInDungeon, ', teamId, status)
         teamVal = self.teamDict.get(teamId, None)
         if not teamVal:
             LOG_WARN('setInDungeon, not found team:', teamId)

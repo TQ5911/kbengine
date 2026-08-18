@@ -78,13 +78,45 @@ class ImpLine(object):
                 LOG_WARN('dungeon enter line without toLine')
                 return
 
+        # BOSS 互斥组检查
+        extra = extra or {}
+        if not extra.get('isLogin'):
+            if lineNo is not None and lineNo >= 0:
+                # 明确分线：同地图同分线放行，其余拦截
+                isBlocked, leftSec = self.checkBossMutexBlock(lineType, lineNo)
+                if isBlocked:
+                    self.showMsg(MMD.datas.mutexSceneMsg, [str(leftSec)])
+                    return
+            else:
+                # 自动选线：源地图带上优先分线由 LineStub 选线，同组其他地图直接拦截
+                isBlocked, leftSec, bossMutexLine = self.checkBossMutexBlockAutoEnter(lineType)
+                if isBlocked:
+                    self.showMsg(MMD.datas.mutexSceneMsg, [str(leftSec)])
+                    return
+                if bossMutexLine is not None:
+                    extra['bossMutexLine'] = bossMutexLine
+
         position = position or self.position
         direction = direction or self.direction
         extra = self._buildEnterLineExtra(position, extra)
+        extra['enterLineFrom'] = self.spaceNo
 
         gameengine.getLineStub(lineType).enterLine(lineNo, self.base, self.gbId, position, direction, extra)
 
     # 已经在LineStub占了人数坑位，如果进入失败需要释放坑位
+    def _enterLineCheckFromNo(self, enterLineFrom):
+        if not formula.inDungeonScene(self.spaceNo):
+            # 如果当前不在副本直接让玩家进
+            return True
+
+        if not enterLineFrom:
+            return True
+        
+        if enterLineFrom != self.spaceNo:
+            return False
+
+        return True
+
     def beginEnterLine(self, lineType, lineNo, spaceBox, position, direction, extraData):
         LOG_INFO('zt: beginEnterLine', lineType, lineNo, spaceBox.id)
         _cmpLineType = gameconst.TeleportLockEnum.ENTER_LINE
@@ -92,6 +124,20 @@ class ImpLine(object):
         if extraData.get('isLogin'):
             self._onEnterLine(0, lineType, lineNo, extraData)
         else:
+            # BOSS 互斥兜底校验：自动选线落到非源分线时拦下并释放坑位
+            _isBlocked, _leftSec = self.checkBossMutexBlock(lineType, lineNo)
+            if _isBlocked:
+                self.showMsg(MMD.datas.mutexSceneMsg, [str(_leftSec)])
+                gameengine.getLineStub(lineType).enterLineFailed(
+                    lineNo, self.base, self.gbId, {'reason': 'bossMutex'})
+                return
+
+            if not self._enterLineCheckFromNo(extraData.get('enterLineFrom', 0)):
+                _failReason = 'from check failed: {}'.format(extraData.get('enterLineFrom', 0))
+                gameengine.getLineStub(lineType).enterLineFailed(
+                    lineNo, self.base, self.gbId, {'reason':_failReason})
+                return
+
             if self.teleportLock and self.teleportLock != _cmpLineType:
                 _failReason = 'locked:%s'%self.teleportLock
                 gameengine.getLineStub(lineType).enterLineFailed(
@@ -142,7 +188,6 @@ class ImpLine(object):
             fromSpaceMgrBox.onPlayerLeave(self.gbId, self.id, self.base)
 
         if formula.inMineWarScene(fromSpaceNo):
-            self.mineWarCamp = 0
             self.onLeaveMineWarSpace()
 
     def _checkSwitchLine(self, toLineNo):
@@ -168,16 +213,26 @@ class ImpLine(object):
     def applySwitchLine(self, exposed, toLineNo):
         _src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
 
+        # BOSS 互斥组检查（按目标分线判定，允许切回触发冷却的源分线）
+        if formula.inLineScene(self.spaceNo) or formula.inWonderLandScene(self.spaceNo):
+            mapId = formula.fetchMapId(self.spaceNo)
+            isBlocked, leftSec = self.checkBossMutexBlock(mapId, toLineNo)
+            if isBlocked:
+                self.showMsg(MMD.datas.mutexSceneMsg, [str(leftSec)])
+                return
+
+        extra = self._buildEnterLineExtra(None, {})
+
         if formula.inCubeScene(self.spaceNo):
             self.switchCubeLine(exposed, toLineNo)
             return
         
         if formula.inWonderLandScene(self.spaceNo):
-            gameengine.getWonderLandStub(formula.fetchMapId(self.spaceNo)).doSwitchWonderLandLine(toLineNo, self.base, self.gbId, {})
+            gameengine.getWonderLandStub(formula.fetchMapId(self.spaceNo)).doSwitchWonderLandLine(toLineNo, self.base, self.gbId, extra)
             return
 
         if formula.inAbyssScene(self.spaceNo):
-            gameengine.getAbyssStub(formula.fetchMapId(self.spaceNo)).doSwitchAbyssLine(toLineNo, self.base, self.gbId, {})
+            gameengine.getAbyssStub(formula.fetchMapId(self.spaceNo)).doSwitchAbyssLine(toLineNo, self.base, self.gbId, extra)
             return
 
         self.switchLineAndPosition(toLineNo, None, src=_src, needPending=False)
@@ -260,7 +315,7 @@ class ImpLine(object):
     def onMergeLine(self, toLineNo):
         LOG_DBG("onMergeLine", self.spaceNo, toLineNo)
         self.client.beginMergeLine()
-        extra = {'isMerge': True, 'isAutoFight': self.hasState(gameconst.StateEnum.autoFight)}
+        extra = {'isMerge': True, 'isAutoFight': self.hasState(gameconst.StateEnum.autoFight), 'oriPos': self.position}
         #合线要跳过读条
         if formula.inCubeScene(self.spaceNo):
             self._switchCubeLine(toLineNo, extra)
@@ -292,6 +347,13 @@ class ImpLine(object):
     # 已经在目标分线占了人数坑位，如果进入失败需要释放坑位
     def beginSwitchLine(self, lineType, fromLineNo, toLineNo, toSpaceBox, extra):
         LOG_INFO('beginSwitchLine', lineType, self.spaceNo, fromLineNo, toLineNo, toSpaceBox.id)
+        if formula.fetchMapId(self.spaceNo) != lineType:
+            # 都已经不在那个场景了，直接清除
+            _failReason = 'spaceNo invalid:{}'.format(self.spaceNo)
+            gameengine.getLineStub(lineType).removeLinePlayerWhenExist(
+                self.gbId,
+                _failReason)
+            return
 
         if self.teleportLock and self.teleportLock!=gameconst.TeleportLockEnum.SWITCH_LINE:
             _failReason = 'locked:{}'.format(self.teleportLock)

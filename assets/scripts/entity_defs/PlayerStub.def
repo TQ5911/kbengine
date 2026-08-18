@@ -175,6 +175,7 @@
         <onGetMemberJobAndGuildCache>
             <Arg>   PY_TUPLE       </Arg>
             <Arg>   PYTHON         </Arg>
+            <Arg>   BOOL           </Arg>
         </onGetMemberJobAndGuildCache>
 
         <recordOfflineCallback>
@@ -183,5 +184,17 @@
             <Arg>           METHOD_NAME </Arg>
             <Arg>           METHOD_ARGS </Arg>
         </recordOfflineCallback>
+
+        <onGetPlayerInfoOfflineFromCrossServer>
+            <Arg>          GUILD_UUID      </Arg>
+            <Arg>          PLAYER_GBID     </Arg>
+            <Arg>          PYTHON          </Arg>
+            <Arg>          ENTITYCALL      </Arg>
+        </onGetPlayerInfoOfflineFromCrossServer>
+
+        <onGetMemberJobAndGuildCacheContinue>
+            <Arg>          PY_DICT         </Arg>
+            <Arg>          PYTHON          </Arg>
+        </onGetMemberJobAndGuildCacheContinue>
     </BaseMethods>
 </root>

@@ -20,6 +20,7 @@ import json
 import gzip
 import guildAuthorization_authorization_def as GA_A_DD
 import collections
+import iRouter
 
 
 class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
@@ -296,16 +297,42 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         guildUUID = data.get('guildUUID')
         guildName = data.get('guildName')
         gbId = data.get('gbId')
+
+        if gameconfig.isCrossServer():
+            tarServerID = data.get('serverID')
+            LOG_INFO("start onGetPlayerInfoOfflineFromCrossServer", tarServerID)
+            _stub = iRouter.RemoteServerStubEntityCall(tarServerID, 'PlayerStub')
+            _stub.onGetPlayerInfoOfflineFromCrossServer(guildUUID, gbId, data, srcBase)
+            return
+
         gameengine.getGlobalBase('GuildStub').callOnGuild(
             guildUUID,
             'getMemberJobAndGuildCache',
-            (gbId, self, (data, srcBase)),
+            (gbId, self, (data, srcBase), False),
             self,
             'onGetMemberJobAndGuildCache',
-            ((GA_A_DD.datas.BONUS_SRC_UNKNOWN, 0, 0, 0), (data, srcBase)),
+            ((GA_A_DD.datas.BONUS_SRC_UNKNOWN, 0, 0, 0), (data, srcBase), False),
         )
 
-    def onGetMemberJobAndGuildCache(self, guildData, args):
+    def onGetPlayerInfoOfflineFromCrossServer(self, guildUUID, gbId, data, srcBase):
+        LOG_INFO('onGetPlayerInfoOfflineFromCrossServer', guildUUID, gbId, data, srcBase)
+        gameengine.getGlobalBase('GuildStub').callOnGuild(
+            guildUUID,
+            'getMemberJobAndGuildCache',
+            (gbId, self, (data, srcBase), True),
+            self,
+            'onGetMemberJobAndGuildCache',
+            ((GA_A_DD.datas.BONUS_SRC_UNKNOWN, 0, 0, 0), (data, srcBase), True),
+        )
+
+    def onGetMemberJobAndGuildCache(self, guildData, args, isCross):
+        if not isCross:
+            self.onGetMemberJobAndGuildCacheContinue(guildData, args)
+        else:
+            _stub = iRouter.RemoteServerStubEntityCall(gameconfig.getCrossServerId(), 'PlayerStub')
+            _stub.onGetMemberJobAndGuildCacheContinue(guildData, args)
+
+    def onGetMemberJobAndGuildCacheContinue(self, guildData, args):
         data, srcBase = args
 
         data['guildJob'] = guildData[0]

@@ -65,11 +65,6 @@ class AchievementsVal(userType.UserSingleType):
             avatar.client.onUpdateAchieveDatas(_updateList)
 
     def triggerAchieveByType(self, avatar, targetType, ctx):
-        #玩家在跨服，本服却触发了成就直接跳过
-        if avatar.isCrossServerInLocalServer:
-            if (isinstance(ctx, dict) and not ctx.get('fromCrossServer')) or (not isinstance(ctx, dict) and not hasattr(ctx, 'fromCrossServer')):
-                LOG_WARN('triggerAchieveByType isCrossServerInLocalServer and skip', targetType, ctx)
-                return
         LOG_DBG('triggerAchieveByType', targetType, ctx)
         _waitList = self.typeDic.get(targetType, [])
         _updateList = self._updateByWaitList(avatar, _waitList, ctx)
@@ -212,6 +207,8 @@ class AchievementsVal(userType.UserSingleType):
         _takeIds = []
         _src = AAC_AAC_DD.datas.BONUS_SRC_ACHIEVEMENT
         popRewardUUID = KBEngine.genUUID64()
+
+        crossServerPack = []
         for _achieveId in achievementIds:
             _achieveVal = self.achieveDic.get(_achieveId)
             if not _achieveVal:
@@ -220,12 +217,14 @@ class AchievementsVal(userType.UserSingleType):
             if not _achieveVal.isFinished():
                 continue
 
-            _rewardId = _achieveVal.configData()['reward']
-            _ctx = avatar.getAvatarAwardCtx(_rewardId, None)
-            _awardVal = dropAward.getAwardOne(_rewardId, _ctx)
-            _opUUID = KBEngine.genUUID64()
-            _detail = gameclass.AwardDetailCls(achievementId=[_achieveId], popRewardUUID=popRewardUUID)
-            avatar.addWealth(_src, _awardVal, _opUUID, _detail, directly=False)
+            if not gameconfig.isCrossServer():
+                _rewardId = _achieveVal.configData()['reward']
+                _ctx = avatar.getAvatarAwardCtx(_rewardId, None)
+                _awardVal = dropAward.getAwardOne(_rewardId, _ctx)
+                _opUUID = KBEngine.genUUID64()
+                _detail = gameclass.AwardDetailCls(achievementId=[_achieveId], popRewardUUID=popRewardUUID)
+                avatar.addWealth(_src, _awardVal, _opUUID, _detail, directly=False)
+                crossServerPack.append((_awardVal, _opUUID, _detail))
 
             self.popAchieveVal(_achieveId)
             if _achieveId in self.finishedIds:
@@ -250,8 +249,11 @@ class AchievementsVal(userType.UserSingleType):
                 self.sumPoint
             )
 
-        avatar._showPopReward(_src, popRewardUUID, gameclass.AwardDetailCls(achievementId=_takeIds))
-        avatar.client.onTakeAchievementRewards(_takeIds, self.sumPoint)
+        if not gameconfig.isCrossServer():
+            avatar._showPopReward(_src, popRewardUUID, gameclass.AwardDetailCls(achievementId=_takeIds))
+            avatar.client.onTakeAchievementRewards(_takeIds, self.sumPoint)
+
+        avatar.syncMethodCallToCrossServerBase('_onLocalServerTakeAllAchievementRewards', (crossServerPack, popRewardUUID, _takeIds, self.sumPoint))
 
     def sendInitDataToClient(self, avatar):
         jsonStr = json.dumps([[obj.toAchievementValSavedDict() for obj in self.achieveDic.values()], self.finishedIds, self.sumPoint]).encode('ascii')

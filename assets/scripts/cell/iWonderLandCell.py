@@ -21,6 +21,7 @@ import creep_base as CBD
 import activityControl_config as AC_CD
 import const_const as CONST
 import conflict_conflict_def as C_C_DD
+import message_Message_def as MMD
 
 class WonderLandSwitch(object):
     def __init__(self, coinSwitch=False, itemSwitch=False, times=0):
@@ -73,6 +74,12 @@ class IWonderLandCell(object):
         mapId = WL_FD.datas[floor]['ID']
         _targetSpaceNo = formula.combineLineSpaceNo(mapId, 0)
 
+        # BOSS 互斥组检查
+        isBlocked, leftSec, bossMutexLine = self.checkBossMutexBlockAutoEnter(mapId)
+        if isBlocked:
+            self.showMsg(MMD.datas.mutexSceneMsg, [str(leftSec)])
+            return
+
         if not utils.checkCanChangeSceneAndShowMsg(self, self.spaceNo, _targetSpaceNo):
             return
 
@@ -81,10 +88,12 @@ class IWonderLandCell(object):
             return
 
         if self.wonderLandQuota.leftTime <= 0:
-            self.base.checkAndEnterWonderLand(floor)
+            self.base.checkAndEnterWonderLand(floor, bossMutexLine if bossMutexLine is not None else 0xFFFF)
             return
 
         extra = {'enterWonderLandType': gameconst.WONDER_LAND_ENTER_TYPE_LEFT_TIME, 'floor': floor}
+        if bossMutexLine is not None:
+            extra['bossMutexLine'] = bossMutexLine
         gameengine.getWonderLandStub(mapId).doEnterWonderLand(self.base, self.gbId, extra)
     
     def doSwitchWonderLandLine(self, spaceBox, spaceMgrBoxCellId, spaceNo, extra):
@@ -101,6 +110,18 @@ class IWonderLandCell(object):
         )
 
     def beginEnterWonderLand(self, spaceBox, spaceMgrBoxCellId, spaceNo, extra):
+        # BOSS 互斥兜底校验：自动选线落到非源分线时拦下并释放坑位（合线为系统行为不拦）
+        if not extra.get('isMerge'):
+            _isBlocked, _leftSec = self.checkBossMutexBlock(
+                formula.fetchMapId(spaceNo),
+                formula.parseLineNo(spaceNo)
+            )
+            if _isBlocked:
+                LOG_WARN('beginEnterWonderLand boss mutex locked.')
+                self.showMsg(MMD.datas.mutexSceneMsg, [str(_leftSec)])
+                self.enterWonderLandFailed(spaceNo)
+                return
+
         _lContext = {}
         _src = dungeonSrc.BasicDungeonSrc()
         _context = {
@@ -164,7 +185,7 @@ class IWonderLandCell(object):
             return
 
         self._cancelWonderLandTimer()
-        self.wonderLandQuota.reset()
+        self.wonderLandQuota.reset(WL_CD.datas['WonderLand_exitJugeTime']['value'])
 
     def _dealWithWonderLandTimer(self, oldSpaceNo, newSpaceNo):
         _oldNeedTimer = formula.inWonderLandScene(oldSpaceNo)
@@ -180,8 +201,7 @@ class IWonderLandCell(object):
 
         else:
             self._cancelWonderLandTimer()
-            #self.wonderLandQuota.checkout()
-            self.wonderLandQuota.reset()
+            self.wonderLandQuota.reset(WL_CD.datas['WonderLand_exitJugeTime']['value'])
 
     def _startWonderLandTimer(self, durStatus):
         self._cancelWonderLandTimer()
@@ -326,6 +346,8 @@ class IWonderLandCell(object):
 
     def deadChangeWonderLandSwitch(self):
         if gameconfig.isCrossServer():
+            return
+        if not formula.inWonderLandScene(self.spaceNo):
             return
 
         self.reqChangeWonderLandSwitch(self.id, False, WonderLandSwitch().toClientData())

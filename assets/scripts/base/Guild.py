@@ -55,6 +55,8 @@ import LogTrackingMgr
 import dropAward
 import mineBattle_config as MBC
 import itemData_itemData as IDID
+import guildTrain_guildTrain as GT_GTD
+
 
 class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
     # type hint
@@ -63,13 +65,14 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
     def __init__(self):
         LOG_INFO('Guild::__init__:', self.guildUUID)
         iCycleEvent.ICycleEventMixin.__init__(self)
-        self._initMaxGuildUnionNum()
         self._initBuilding()
         self._initGuildChallenge()
         self._initPermissions()
         self._loadGuildAvatars()
         self._initMics()
         self.guildSyncDataToCrossDataCache = None
+        self._pendingWarCost = 0
+        self._pendingWarOpUUID = 0
 
         # 检查帮会成员是否有变化
         _dur = 60
@@ -104,13 +107,13 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         _dur = 5
         self.pyAddTimer(_dur, _dur, gametimer.GUILD_SYNC_DATA_TO_CROSS_DATA)
 
-        # 清除帮会申请过期数据
-        _dur = 59
-        self.pyAddTimer(_dur, _dur, gametimer.CLEAR_GUILD_UNION_APPLY_EXPIRE)
-
         # 任期时间更新
         _dur = 60
         self.pyAddTimer(_dur, _dur, gametimer.UPDATE_COMMISSION_TENURE)
+
+        # 查询联盟ID
+        _dur = 5
+        self.initLeagueUUIDTimer = self.pyAddTimer(_dur, _dur, gametimer.QUERY_LEAGUE_UUID)
 
         # 帮会佣金每日元宝回收上限重置
         self.registerDailyEvent('_resetCommissionGoldDaily')
@@ -144,10 +147,10 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             self._checkGuildMemberDirty()
         elif userArg == gametimer.GUILD_SYNC_DATA_TO_CROSS_DATA:
             self._syncDataToCrossData()
-        elif userArg == gametimer.CLEAR_GUILD_UNION_APPLY_EXPIRE:
-            self._clearGuildUnionApplyExpire()
         elif userArg == gametimer.UPDATE_COMMISSION_TENURE:
             self._updateCommissionTenure()
+        elif userArg == gametimer.QUERY_LEAGUE_UUID:
+            self._queryLeagueUUID()
         else:
             self._onTimerTrigger(tid, userArg)
 
@@ -333,10 +336,40 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         _newScore = 0
         for _gmVal in self.members.values():
             _newScore += _gmVal.score
-
+        oldScore = self.guildScore
         self.guildScore = _newScore
 
         self._updateDataToLeaderBoard()
+        if self.leagueUUID:
+                if oldScore != self.guildScore:
+                    gameengine.getGlobalBase('AllianceStub').reportGuildScore(self.guildUUID, self.guildScore)
+
+    def _syncGuildInfoToAlliance(self):
+        if utils.bhas(self.guildFlag, gameconst.GuildFlags.DISSOLVE):
+            return
+        if not self.leagueUUID:
+            return
+
+        _gmVal = self.members.get(self.leaderGbId)
+        if not _gmVal:
+            LOG_ERR('Guild::_syncGuildInfoToAlliance: leader not in guild:', self.leaderGbId)
+            return
+
+        gameengine.getGlobalBase('AllianceStub').syncGuildInfo(
+            self.guildUUID,
+            self.guildName,
+            self.guildIcon,
+            self.dspFlag,
+            self.guildLevel,
+            len(self.members),
+            self.maxMemberNum(),
+            self.guildScore,
+            self.leaderGbId,
+            _gmVal.name,
+            _gmVal.level,
+            _gmVal.school,
+            _gmVal.sex,
+        )
 
     def toLeaderBoardGuildVal(self):
         _gmVal = self.members.get(self.leaderGbId)
@@ -409,12 +442,24 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             func(_gmVal.box)
             yield lambda : None
 
-    def broadcastMemberClient(self, func, args):
+    def broadcastMemberClient(self, func, args, exclude=None):
         for _gmVal in self.members.values():
+            if exclude and _gmVal.gbId in exclude:
+                continue
             if utils.checkBoxOffline(_gmVal.box):
                 continue
 
             getattr(_gmVal.box.client, func)(*args)
+
+    def broadcastMemberCell(self, func, args, exclude=None):
+        for _gmVal in self.members.values():
+            if exclude and _gmVal.gbId in exclude:
+                continue
+            if utils.checkBoxOffline(_gmVal.box):
+                continue
+
+            getattr(_gmVal.box.cell, func)(*args)
+
 
     def broadcastMsg(self, msgId, args):
         for _gmVal in self.members.values():
@@ -489,10 +534,12 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             return
 
         _isOk = True
+        _failGbId = 0
 
         for _gbId, in ret:
             _gbId = int(_gbId)
             if _gbId not in self.members:
+                _failGbId = _gbId
                 _isOk = False
                 break
 
@@ -500,7 +547,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             _isOk = False
 
         if not _isOk:
-            LOG_ERR('Guild::_checkGuildMember: member not in guild:', self.guildUUID, num, len(self.members))
+            LOG_ERR('Guild::_checkGuildMember: member not in guild:', self.guildUUID, num, len(self.members), _failGbId)
 
     def _loadGuildAvatars(self):
         gamesql.loadAvatarFromGuildUUID(self.guildUUID, self._onLoadGuildAvatars)
@@ -536,13 +583,6 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
                 continue
 
             _gmVal.updateFromFcVal(_fcVal)
-
-    def _initMaxGuildUnionNum(self):
-        if self.maxGuildUnionNum != 0:
-            LOG_INFO('Guild::_initMaxGuildUnionNum: maxGuildUnionNum already set:', self.maxGuildUnionNum)
-            return
-
-        self.maxGuildUnionNum = G_GCD.datas['guild_unionNum']['value']
 
     def _initBuilding(self):
         if self.guildBuilding.juYing.level != 0:
@@ -617,6 +657,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             if utils.bhas(_gmVal.tmpFlag, gameconst.GuildTmpFlag.DIRTY):
                 _gmVal.tmpFlag = utils.breset(_gmVal.tmpFlag, gameconst.GuildTmpFlag.DIRTY)
                 _sendDatas.append(_gmVal)
+                if _gmVal.gbId == self.leaderGbId:
+                    if self.leagueUUID > 0:
+                        self._syncGuildInfoToAlliance()
 
         if _sendDatas:
             self._braodcastAsync(
@@ -690,17 +733,19 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         }
 
     def doSendGuildClientData(self, gbId, box, gamePlayerScoreLimit):
-        box.client.onGetGuildData(self._toClientGuildInfo(gamePlayerScoreLimit))
+        _gmVal = self.members.get(gbId)
+        if not _gmVal:
+            LOG_ERR('doSendGuildClientData: gbId not in guild:', gbId)
+            return
 
+        box.onGetClientGuildInfoToCrossServer(self._toClientGuildInfo(gamePlayerScoreLimit), _gmVal)
+
+        box.client.onGetGuildData(self._toClientGuildInfo(gamePlayerScoreLimit))
         if self._checkHasPermission(gbId, GA_AI_DD.datas.allowApplication):
             box.client.onGuildApplyJoinList(list(self.applyJoins.values()))
-
         box.onGetGuildMemberDatas(self._getMembersData())
         box.client.onGuildEventLogs(self.guildEvent.eventList)
         box.client.onGuildJobData(self.permissions)
-
-        if self._checkHasPermission(gbId, GA_AI_DD.datas.guildUnion):
-            box.client.onAllApplyGuildUnion(list(self.guildUnionApplyMgr.applyUnionDic.values()))
         
         box.client.onGetChagllengeDataInfo(self.guildChallengeData.toClientInfo())
 
@@ -753,8 +798,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         _gmVal = self.addGuildMember(fcVal.gbId, GA_A_DD.datas.leader)
         _gmVal.updateFromFcVal(fcVal)
         _gmVal.setProperty('box', leaderBox)
-
-        leaderBox.onJoinGuild(self.guildUUID, self, gameconst.JoinGuildReason.CREATE_GUILD, self.toJoinGuildData())
+        # 帮会创建的时候，主动同步一下战力
+        self._updateGuildScore()
+        leaderBox.onJoinGuild(self.leagueUUID, self.guildUUID, self, gameconst.JoinGuildReason.CREATE_GUILD, self.toJoinGuildData())
         self.writeToDB(self._onFirstSaveGuild)
         self._doOnAfterJoin(fcVal, gameconst.JoinGuildReason.CREATE_GUILD)
 
@@ -814,6 +860,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             _eId = M_GL_DD.datas.guildLog_memberJoined
             _args = [fcVal.name, self.guildName]
             self.addGuildEvent(_eId, _args)
+        # 成员加入后同步 guild 信息到 allianceService
+        self._syncGuildInfoToAlliance()
 
     def onMemberOffline(self, gbId):
         _gmVal = self.members.get(gbId)
@@ -834,7 +882,26 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             return
 
         _gmVal.setProperty('box', box)
-        box.onJoinGuild(self.guildUUID, self, gameconst.JoinGuildReason.ONLINE, self.toJoinGuildData())
+        box.onJoinGuild(self.leagueUUID, self.guildUUID, self, gameconst.JoinGuildReason.ONLINE, self.toJoinGuildData())
+        self.doLeagueSteps(gbId, box)
+    
+    def doLeagueSteps(self, gbId, box):
+        if utils.checkBoxOffline(box):
+            LOG_WARN('Guild::doLeagueSteps: player box is offline:', gbId)
+            return
+        # 帮会成员上线
+        if self.leagueUUID == 0:
+            # 其他盟主邀请我的列表
+            self.onGetInviteList(gbId, box)
+        else:
+            # 我的联盟收到的申请
+            self.onGetLeagueApplyList(gbId, box)
+            # 获取敌对信息
+            self.onGetEnemyList(gbId, self.guildUUID, box)
+            # 获取联盟信息
+            self.onGetUnionList(gbId, self.guildUUID, box)
+        # 获取敌对信息
+        self.onGetEnemyAllianceList(gbId, box)
 
     def doExitGuild(self, gbId, box):
         _gmVal = self.members.get(gbId)
@@ -856,19 +923,29 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             box.onMessagePre(G_CBD.datas['cityBattle_prohibitExit']['value'], [])
             return
         
-        self.doExitDungeon(gbId, box)
-        _reason = gameconst.ExitGuildReason.LEAVE
+        # 如果是帮主退出帮会，且在联盟内，又是盟主，需要检查联盟内是否还有其他帮会，如果有，则需要先转移盟主之位
+        if gbId == self.leaderGbId:
+            if self.leagueUUID > 0:
+                gameengine.getGlobalBase('AllianceStub').onCheckLeaveGuild(self.leagueUUID, self.guildUUID, gbId, box)
+                return
+        self.exitGuildDone(True, gbId, box)
 
-        _gmVal = self.members.get(gbId)
-        if _gmVal:
-            _eId = M_GL_DD.datas.guildLog_memberLeave
-            _args = [_gmVal.name, self.guildName]
-            self.addGuildEvent(_eId, _args)
+    def exitGuildDone(self, ret, gbId, box):
+        LOG_INFO("exitGuildDone:", ret, gbId, box)
+        if ret:
+            self.doExitDungeon(gbId, box)
+            _reason = gameconst.ExitGuildReason.LEAVE
 
-        gamesql.delGuildAvatar(
-            self.guildUUID,
-            gbId,
-            lambda *args: self._onExitGuildAfterClearDB(gbId, _reason, *args))
+            _gmVal = self.members.get(gbId)
+            if _gmVal:
+                _eId = M_GL_DD.datas.guildLog_memberLeave
+                _args = [_gmVal.name, self.guildName]
+                self.addGuildEvent(_eId, _args)
+
+            gamesql.delGuildAvatar(
+                self.guildUUID,
+                gbId,
+                lambda *args: self._onExitGuildAfterClearDB(gbId, _reason, *args))
 
     def _onExitGuildAfterClearDB(self, gbId, reason, ret, num, insertId, err):
         if err:
@@ -906,7 +983,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
                 self.guildLevel,
                 gameconst.GUILD_OPR_EXIT
             )
-        
+            # 成员离开后同步 guild 信息到 allianceService
+            self._syncGuildInfoToAlliance()
+
         if gbId in self.guildVoiceStatusDict:
             self.onAvatarLeaveMics(gbId)
 
@@ -1011,7 +1090,10 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         if _hasPermission and self._isMemberFull():
             box.onMessagePre(G_GCD.datas['guild_memberFull_msg']['value'], [])
 
-        if not (self.joinCond.isEligible(applyData) or _hasPermission):
+        if gbId in self.members:
+            box.joinGuildCB(gameconst.JoinGuildEvent.HAS_IN, self.toGuildApplyedVal())
+
+        elif not (self.joinCond.isEligible(applyData) or _hasPermission):
             if _inviterGbId:
                 if applyData['level'] < self.joinCond.level:
                     box.onMessagePre(G_GCD.datas['guild_applyFail_levelNotEnough_msg']['value'], [])
@@ -1092,8 +1174,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         _gmVal.updateFromFcVal(fcVal)
         _gmVal.setProperty('box', box)
         box.joinGuildCB(gameconst.JoinGuildEvent.JOIN, self.toGuildApplyedVal())
-        box.onJoinGuild(self.guildUUID, self, gameconst.JoinGuildReason.APPLY_JOIN, self.toJoinGuildData())
+        box.onJoinGuild(self.leagueUUID, self.guildUUID, self, gameconst.JoinGuildReason.APPLY_JOIN, self.toJoinGuildData())
         self._doOnAfterJoin(fcVal, gameconst.JoinGuildReason.APPLY_JOIN)
+        self.doLeagueSteps(_gmVal.gbId, _gmVal.box)
 
     def doDealGuildApply(self, oprGbId, oprBox, gbId, isAgree):
         LOG_INFO('doDealGuildApply', oprGbId, gbId, isAgree)
@@ -1179,12 +1262,13 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
             [fcVal.gbId],
             'onJoinGuild',
-            (self.guildUUID, self, gameconst.JoinGuildReason.DEAL_APPLY, self.toJoinGuildData()),
+            (self.leagueUUID, self.guildUUID, self, gameconst.JoinGuildReason.DEAL_APPLY, self.toJoinGuildData()),
             self,
             'joinGuildButOffline',
             ()
         )
         self._doOnAfterJoin(fcVal, gameconst.JoinGuildReason.DEAL_APPLY)
+        self.doLeagueSteps(_gmVal.gbId, _gmVal.box)
 
     def joinGuildButOffline(self, gbIds):
         redisUtils.RedisUtils.onModifyAttr(gbIds[0], {
@@ -1214,6 +1298,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             'school': _gmVal.school,
             'level': _gmVal.level,
             'gbId': _gmVal.gbId,
+            'leagueUUID': self.leagueUUID,
         }
 
     def onJoinClearApply(self, gbId):
@@ -1272,6 +1357,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
                 lambda box: box.onGuildLevelChangedBase(self.guildLevel),
                 0
             )
+            self._syncGuildInfoToAlliance()
 
         LogTrackingMgr.LogTrackingMgr.Guild_Info(
             'Guild',
@@ -1380,7 +1466,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
                     return
             _oprGmVal.setProperty('job', GA_A_DD.datas.member)
             self.leaderGbId = gbId
-
+            self._syncGuildInfoToAlliance()
         elif _cnt >= _needCnt:
             oprBox.onMessagePre(G_GCD.datas['guildAuth_positionFull_msg']['value'], [])
             return
@@ -1551,6 +1637,12 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         self.doExitDungeon(gbId, _gmVal.box)
     # ------------------------------------ iGuildTrain start ------------------------------------
     def doCheckUpgradeTrainLevel(self, needLv, ctx, box):
+        _traindId = ctx['trainId']
+        if self.guildBuilding.yanWu.level < GT_GTD.datas[_traindId]['unlockYanWuGeLevel']:
+            box.onMessagePre(G_GCD.datas['guildTrain_buildLevelLimited_msg']['value'], [])
+            box.onCheckUpgradeTrainLevelResult(False, ctx)
+            return
+
         if self.guildBuilding.yanWu.level < needLv:
             box.onMessagePre(G_GCD.datas['guildTrain_buildLevelLimited_msg']['value'], [])
             box.onCheckUpgradeTrainLevelResult(False, ctx)
@@ -1741,7 +1833,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         _stub.onGuildRename(self.guildUUID, self.guildName)
 
         self.syncMineWarSpaceMgrForChange()
-
+        self._syncGuildInfoToAlliance()
+        
     def onGuildMemberPropUpdate(self, gbId, prop, val):
         _gmVal = self.members.get(gbId)
         if not _gmVal:
@@ -1847,6 +1940,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         )
 
         self.syncMineWarSpaceMgrForChange()
+        self._syncGuildInfoToAlliance()
 
     def doGuildRecruit(self, oprGbId, oprBox):
         if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.allowApplication):
@@ -1893,6 +1987,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         )
         LOG_INFO('doModifyGuildDisp: dspFlag changed', self.guildUUID, self.dspFlag)
         self.syncMineWarSpaceMgrForChange()
+        self._syncGuildInfoToAlliance()
 
     def doInviteJoinGuild(self, oprGbId, oprBox, beInvitedGbId, oprName):
         # INVITE_DATA
@@ -1990,12 +2085,6 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             self.haveYuXi = False
             self.broadcastMemberClient('onYuxiFlagChange', (self.haveYuXi, ))
 
-        _curRelationType = utils.getGuildRelation(self.guildUUID, guildUUID)
-        LOG_INFO('[lj]onSiegeWarDeclareWarOfficial', self.guildName, self.guildUUID, guildUUID, _curRelationType)
-        if _curRelationType == gameconst.GuildRelationType.UNION:
-            gameengine.getGlobalBase('CrossDataStub').removeGuildRelation(
-                self.guildUUID, guildUUID, gameconst.GuildRelationType.UNION, None, self)
-
         self.syncJunXuQiXieLevel()
 
     def syncJunXuQiXieLevel(self):
@@ -2055,13 +2144,13 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
 
         box.onGetSiegeWarGuildCacheData(cache)
 
-    def getMemberJobAndGuildCache(self, gbId, box, args):
+    def getMemberJobAndGuildCache(self, gbId, box, args, isCross):
         _gmVal = self.members.get(gbId)
         if not _gmVal:
-            box.onGetMemberJobAndGuildCache((GA_A_DD.datas.BONUS_SRC_UNKNOWN, self.dspFlag, self.guildIcon, self.guildRankIdx), args)
+            box.onGetMemberJobAndGuildCache((GA_A_DD.datas.BONUS_SRC_UNKNOWN, self.dspFlag, self.guildIcon, self.guildRankIdx), args, isCross)
             return
 
-        box.onGetMemberJobAndGuildCache((_gmVal.job, self.dspFlag, self.guildIcon, self.guildRankIdx), args)
+        box.onGetMemberJobAndGuildCache((_gmVal.job, self.dspFlag, self.guildIcon, self.guildRankIdx), args, isCross)
 
     def reqShareBonusFromMineWar(self, mapId, srcGbId, shareList, box):
         if srcGbId != self.leaderGbId:
@@ -2103,7 +2192,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         # 同步数据
         self.doGetGuildIronMine(0, box)
 
-        LogTrackingMgr.LogTrackingMgr.MineBattle_Shared('Guild', '', srcGbId, self.guildUUID, self.guildIronMine, playerList, bonusNumList, opUUID)
+        # LogTrackingMgr.LogTrackingMgr.MineBattle_Shared('Guild', '', srcGbId, self.guildUUID, self.guildIronMine, playerList, bonusNumList, opUUID)
+        LogTrackingMgr.LogTrackingMgr.mineBattle_dividendedCurrency('Guild', '', srcGbId, self.guildUUID, self.guildIronMine, playerList, bonusNumList, opUUID)
 
     def addCommissionGold(self, gbId, amount):
         LOG_INFO('addCommissionGold:', gbId, amount)
@@ -2289,7 +2379,6 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             'guildLevel': self.guildLevel,
             'guildIcon': self.guildIcon,
             'memberCnt': len(self.members),
-            'maxGuildUnionNum': self.maxGuildUnionNum,
         }
         return _data
 
@@ -2317,9 +2406,6 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         if crossData['guildIcon'] != gsdtcdc['guildIcon']:
             return True
 
-        if crossData['maxGuildUnionNum'] != gsdtcdc['maxGuildUnionNum']:
-            return True
-
         return False
 
     def _syncDataToCrossData(self):
@@ -2343,157 +2429,6 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         #     return
 
         gameengine.getGlobalBase('CrossDataStub').getGuildInfos(box)
-
-    def doApplyGuildUnion(self, oprGbId, box, guildUUID):
-        if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildUnion):
-            box.onMessagePre(G_CBD.datas['cityBattle_noPermission1']['value'], [])
-            return
-
-        if self.guildUnionApplyMgr.isSenderFull():
-            box.onMessagePre(G_GCD.datas['guild_unionApplicationDes']['value'], [])
-            return
-
-        if self.guildUnionApplyMgr.isInSender(guildUUID):
-            box.onMessagePre(G_GCD.datas['guild_unionAppliedFor']['value'], [])
-            return
-
-        if guildUUID == self.guildUUID:
-            LOG_WARN('doApplyGuildUnion: same guild', oprGbId)
-            return
-
-        if self.siegeWarDeclared:
-            if self.siegeWarDeclareTarget == guildUUID:
-                box.onMessagePre(G_CBD.datas['cityBattle_prohibitAlliance']['value'], [])
-                return
-
-        gameengine.getGlobalBase('CrossDataStub').doOnCrossGuild(
-            guildUUID,
-            'onApplyGuildUnion',
-            ({
-                'guildUUID': self.guildUUID,
-                'guildName': self.guildName,
-                'guildIcon': self.guildIcon,
-                'flag': self.guildFlag,
-                'guildScore': self.guildScore,
-                'guildLevel': self.guildLevel,
-            },),
-            self,
-            'onApplyGuildUnionResult',
-            (box,)
-        )
-
-    def onApplyGuildUnionResult(self, success, result, box):
-        if not success:
-            box.onMessagePre(G_GCD.datas['guild_dismissed']['value'], [])
-            return
-
-        guildData = cPickle.loads(result)
-        if guildData['full']:
-            box.onMessagePre(G_GCD.datas['guild_failUnionFull_msg']['value'], [])
-            return
-
-        _senderVal = self.guildUnionApplyMgr.addSender(
-            guildData['guildUUID'],
-            guildData['guildName'],
-            guildData['guildIcon'],
-            guildData['flag'],
-            guildData['guildScore'],
-        )
-
-        box.client.onNewGuildUnionApplySender(_senderVal)
-
-    def onApplyGuildUnion(self, uuid, senderServerId, guildData):
-        if self.guildUnionApplyMgr.isApplyUnionFull():
-            gameengine.getGlobalBase('CrossDataStub').doOnCrossGuildBack(
-                        uuid,
-                        senderServerId,
-                        True,
-                        {
-                            'full': True,
-                        },
-                    )
-            return
-
-        _auVal = self.guildUnionApplyMgr.addApplyUnion(
-            guildData['guildUUID'],
-            guildData['guildName'],
-            guildData['guildIcon'],
-            guildData['flag'],
-            guildData['guildScore'],
-            guildData['guildLevel'])
-
-        self.broadcastByPermission(
-            GA_AI_DD.datas.guildUnion,
-            lambda box: box.client.onNewApplyGuildUnion(_auVal)
-        )
-
-        gameengine.getGlobalBase('CrossDataStub').doOnCrossGuildBack(
-            uuid,
-            senderServerId,
-            True,
-            {
-                'full': False,
-                'guildUUID': self.guildUUID,
-                'guildName': self.guildName,
-                'guildIcon': self.guildIcon,
-                'flag': self.guildFlag,
-                'guildScore': self.guildScore,
-            },
-        )
-
-    def doGetGuildUnionApplySender(self, oprGbId, box):
-        if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildUnion):
-            box.onMessagePre(G_CBD.datas['cityBattle_noPermission1']['value'], [])
-            return
-
-        box.client.onGetGuildUnionApplySender(list(self.guildUnionApplyMgr.senderDict.values()))
-
-    def doDealGuildUnionApply(self, oprGbId, box, guildUUID, agree):
-        if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildUnion):
-            box.onMessagePre(G_CBD.datas['cityBattle_noPermission1']['value'], [])
-            return
-
-        if not self.guildUnionApplyMgr.isInApplyUnion(guildUUID):
-            LOG_WARN('Guild::doDealGuildUnionApply: guildUUID not in apply union', guildUUID)
-            return
-
-
-        if self.siegeWarDeclared:
-            if agree and self.siegeWarDeclareTarget == guildUUID:
-                box.onMessagePre(G_CBD.datas['cityBattle_prohibitAlliance']['value'], [])
-                return
-
-        if agree:
-            gameengine.getGlobalBase('CrossDataStub').addGuildRelation(
-                self.guildUUID,
-                guildUUID,
-                gameconst.GuildRelationType.UNION,
-                0,
-                box,
-                self,
-                0
-            )
-        else:
-            self.guildUnionApplyMgr.removeApplyUnion(guildUUID, self)
-            gameengine.getGlobalBase('CrossDataStub').doOnCrossGuild(
-                guildUUID,
-                'disagreeRemoveOtherSender',
-                (self.guildUUID,),
-                None,
-                '',
-                ()
-            )
-
-    def disagreeRemoveOtherSender(self, uuid, senderServerId, guildUUID):
-        self.guildUnionApplyMgr.removeSender(guildUUID)
-
-    def doCancelGuildUnion(self, oprGbId, box, guildUUID):
-        if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildUnion):
-            box.onMessagePre(G_CBD.datas['cityBattle_noPermission1']['value'], [])
-            return
-
-        gameengine.getGlobalBase('CrossDataStub').removeGuildRelation(
-            self.guildUUID, guildUUID, gameconst.GuildRelationType.UNION, box, self)
 
     def doQixieAssistFetchCostCoin(self, oprGbId, box, qixieType):
         if self.isForbidNewMember(oprGbId):
@@ -2586,46 +2521,6 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             opUUID
         )
 
-    def onAddGuildUnionToGuild(self, otherGuildUUID, otherGuildName):
-        _eId = M_GL_DD.datas.guild_unionDesc
-        _args = [otherGuildName]
-        self.addGuildEvent(_eId, _args)
-        self.guildUnionApplyMgr.removeApplyUnion(otherGuildUUID, self)
-        self.guildUnionApplyMgr.removeSender(otherGuildUUID)
-
-    def doDeclareEnemy(self, oprGbId, box, guildUUID):
-        if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildEnmity):
-            box.onMessagePre(G_CBD.datas['cityBattle_noPermission1']['value'], [])
-            return
-
-        if guildUUID == self.guildUUID:
-            LOG_WARN('Guild::doDeclareEnemy: same guild', oprGbId)
-            return
-
-        _, _cost = G_GCD.datas['guild_enmityCost']['value']
-
-        if self.guildFund < _cost:
-            LOG_WARN('Guild::doDeclareEnemy: not enough fund', oprGbId, self.guildFund, _cost)
-            return
-
-        _opUUID = KBEngine.genUUID64()
-
-        self.modifyGuildFund(-_cost, AAC_AACDD.datas.BONUS_SRC_GUILD_ENEMY, _opUUID, None)
-
-        gameengine.getGlobalBase('CrossDataStub').addGuildRelation(
-            self.guildUUID,
-            guildUUID,
-            gameconst.GuildRelationType.ENEMY,
-            utils.curTS() + G_GCD.datas['guild_enmityTime']['value'],
-            box,
-            self,
-            _opUUID
-        )
-
-    def onDeclareEnemyFailed(self, opUUID):
-        _, _cost = G_GCD.datas['guild_enmityCost']['value']
-        self.modifyGuildFund(_cost, AAC_AACDD.datas.BONUS_SRC_GUILD_ENEMY, opUUID, None)
-
     def doDonateCityBattleToken(self, oprGbId, box, num, opUUID):
         _gmVal = self.members.get(oprGbId)
         if not _gmVal:
@@ -2705,38 +2600,6 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
 
             _gmVal.box.client.biddingFailRedPointSync(self.biddingFailRedPointUnchecked)
 
-    def _clearGuildUnionApplyExpire(self):
-        _now = utils.curTS()
-        _deleteList = []
-        for _auVal in self.guildUnionApplyMgr.applyUnionDic.values():
-            if _auVal.endTime < _now:
-                _deleteList.append(_auVal.guildUUID)
-
-        for _guildUUID in _deleteList:
-            self.guildUnionApplyMgr.removeApplyUnion(_guildUUID, self)
-
-        _deleteList.clear()
-        for _senderVal in self.guildUnionApplyMgr.senderDict.values():
-            if _senderVal.endTime < _now:
-                _deleteList.append(_senderVal.guildUUID)
-
-        for _guildUUID in _deleteList:
-            self.guildUnionApplyMgr.removeSender(_guildUUID)
-
-    def doCancelApplyGuildUnion(self, oprGbId, box, guildUUID):
-        if not self._checkHasPermission(oprGbId, GA_AI_DD.datas.guildUnion):
-            box.onMessagePre(G_CBD.datas['cityBattle_noPermission1']['value'], [])
-            return
-
-        self.guildUnionApplyMgr.removeSender(guildUUID)
-        gameengine.getGlobalBase('CrossDataStub').removeReceiverGuildApplyUnion(
-            self.guildUUID,
-            guildUUID
-        )
-
-    def onRemoveReceiverGuildApplyUnion(self, senderGuildUUID):
-        self.guildUnionApplyMgr.removeApplyUnion(senderGuildUUID, self)
-
     def getGuildDetailFromOtherServer(self, uuid, serverId):
         _detailInfo = self.toGuildDetailInfo()
         if not _detailInfo:
@@ -2747,34 +2610,10 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
     def clearCrossDataCache(self):
         self.guildSyncDataToCrossDataCache = None
 
-    def onAddGuildEnemyToGuild(self, otherGuildUUID, enemyGuildName):
-        _eId = M_GL_DD.datas.guild_enmityDesc1
-        _args = [enemyGuildName]
-        self.addGuildEvent(_eId, _args)
-
-        _msgId = G_GCD.datas['guild_declareWar']['value']
-        _args = [self.guildName, enemyGuildName]
-        self.broadcastMsg(_msgId, _args)
-
-        self.guildUnionApplyMgr.removeApplyUnion(otherGuildUUID, self)
-        self.guildUnionApplyMgr.removeSender(otherGuildUUID)
-
-    def onAddGuildEnemyToOtherGuild(self, otherGuildUUID, enemyGuildName):
-        _eId = M_GL_DD.datas.guild_enmityDesc2
-        _args = [enemyGuildName]
-        self.addGuildEvent(_eId, _args)
-
-        _msgId = G_GCD.datas['guild_declareWar']['value']
-        _args = [enemyGuildName, self.guildName]
-        self.broadcastMsg(_msgId, _args)
-
-        self.guildUnionApplyMgr.removeApplyUnion(otherGuildUUID, self)
-        self.guildUnionApplyMgr.removeSender(otherGuildUUID)
-
     # ------------------------------------- cross data end -------------------------------------
 
-    def openGuildChallenge(self, gbID, box, openType, openID, openedTime):
-        LOG_INFO('openGuildChallenge', gbID, openType, openID, openedTime)
+    def openGuildChallenge(self, gbID, box, openType, openID, openedTime, srcName):
+        LOG_INFO('openGuildChallenge', gbID, openType, openID, openedTime, srcName)
         if self.isForbidNewMember(gbID):
             self.showForbidNewMemberMsg(box, GA_ACT.guildChallengeEnter)
             return
@@ -2848,10 +2687,6 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         self.guildChallengeData.openedType = openType
         self.guildChallengeData.openedDungeonId = dungeonID
         self.guildChallengeData.openedTime = openedTime
-
-        srcName = ''
-        if box.id in gameglobal.roleCache:
-            srcName = gameglobal.roleCache[box.id]["name"]
 
         LogTrackingMgr.LogTrackingMgr.Guild_BossChallenge_Open(
             'Guild',
@@ -3272,53 +3107,15 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         self.batchlyCall(_iter, 10, 0.1)
 
     def onMineWarWin(self, isWin):
+        LOG_INFO('onMineWarWin:', self.guildUUID, isWin)
         # 占领了矿区, 累计积分
         if isWin:
             self.statGuildData(gameconst.GuildGamePlayType.MIN_WAR_AERA_OCCUPY)
             self.logAfterMineWarWin()
 
-        oldMaxGuildUnionNum = self.maxGuildUnionNum
-        if not isWin:
-            self.maxGuildUnionNum = G_GCD.datas['guild_unionNum']['value']
-        else:
-            #上次已经赢了
-            if self.maxGuildUnionNum == G_GCD.datas['guild_unionNum2']['value'] or self.maxGuildUnionNum == G_GCD.datas['guild_unionNum3']['value']:
-                self.maxGuildUnionNum = G_GCD.datas['guild_unionNum3']['value']
-            else:
-                self.maxGuildUnionNum = G_GCD.datas['guild_unionNum2']['value']
-            _guildUUIDs = utils.getGuildUUIDsByRelationType(self.guildUUID, gameconst.GuildRelationType.UNION)
-            #解散所有同盟
-            if len(_guildUUIDs) > self.maxGuildUnionNum:
-                for _guildUUID in _guildUUIDs:
-                    gameengine.getGlobalBase('CrossDataStub').removeGuildRelation(
-                        self.guildUUID, _guildUUID, gameconst.GuildRelationType.UNION, None, self)
-                _opUUID = KBEngine.genUUID64()
-                _mailId = G_GCD.datas['guild_relieveUnionMail']['value']
-                mailAssistor.sendMailToPlayers(
-                    [self.leaderGbId],
-                    _mailId,
-                    opUUID=_opUUID)
-                LOG_INFO("onMineWarWin: removeGuildRelation", self.guildUUID, _guildUUIDs)
-        LOG_INFO('onMineWarWin: maxGuildUnionNum:', oldMaxGuildUnionNum, self.maxGuildUnionNum)
-        if oldMaxGuildUnionNum != self.maxGuildUnionNum:
-            self.broadcastAllMaxGuildUnionNum()
-
     def onLeaderBoardRank(self, leaderBoardType, rank):
         self.guildRankIdx = rank
         LOG_INFO('onLeaderBoardRank: guildRankIdx:', self.guildRankIdx)
-
-    def onGetGuildRelationAll(self, datas, box):
-        box.client.onGuildRelationAll(self.maxGuildUnionNum, datas)
-
-    def broadcastAllMaxGuildUnionNum(self):
-        _datas = []
-        for _guildUUID, _relationType in utils.iterGuildAndRelation(self.guildUUID):
-            _datas.append({
-                'guildUUID': _guildUUID,
-                'relationType': _relationType,
-            })
-        LOG_INFO('broadcastAllMaxGuildUnionNum', self.guildUUID, self.maxGuildUnionNum, _datas)
-        self.broadcastMemberClient('onGuildRelationAll', (self.maxGuildUnionNum, _datas))
 
     def tryApplyInviteGuild(self, gbId, inviteType, teamType):
         LOG_INFO('guild: tryApplyInviteGuild:', gbId, inviteType, teamType)
@@ -3439,15 +3236,29 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         self.guildVoiceStatusDict[gbID] = gameconst.GuildVoiceFlag.SPEAKER_ON
         self.doSyncAllGuildVoiceStatus()
 
+        if len(self.guildVoiceStatusDict) == 1:
+            _gmVal = self.members.get(gbID)
+            if _gmVal:
+                _pgVal = self.permissions[_gmVal.job]
+                _msgId = utils.getTranslatedMsgId(M_M_DD.datas.guildChat_switchOn)
+                _args = [_gmVal.name, utils.getTranslatedArg(GA_AD.datas[_gmVal.job]['name'])]
+                self.broadcastMsg(_msgId, _args)
+
         LogTrackingMgr.LogTrackingMgr.guild_voice_member_change(gbID, '', 1)
 
     def onAvatarLeaveMics(self, gbID):
         if gbID not in self.guildVoiceStatusDict:
-            LOG_ERR("onAvatarLeaveMics: gbID not in guildVoiceStatusDict", self.guildUUID, gbID)
+            LOG_INFO("onAvatarLeaveMics: gbID not in guildVoiceStatusDict", self.guildUUID, gbID)
             return
         self.guildVoiceStatusDict.pop(gbID)
-        self.guildVoiceBlockSet.discard(gbID)
+        #self.guildVoiceBlockSet.discard(gbID)
         self.doSyncAllGuildVoiceStatus()
+        if len(self.guildVoiceStatusDict) == 0:
+            _msgId = M_M_DD.datas.guildChat_switchOff
+            _args = []
+            self.broadcastMsg(_msgId, _args)
+
+            self.onSetGuildMicsSwitch(gbID, gameconst.GuildMicsSwitch.OFF)
 
         LogTrackingMgr.LogTrackingMgr.guild_voice_member_change(gbID, '', 0)
 
@@ -3465,7 +3276,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             return
         _oldMicOn = self._hasMicOn(gbID)
         if isOn == _oldMicOn:
-            LOG_ERR("onAvatarChangeGuildMics: gbID is same as current", self.guildUUID, gbID, isOn)
+            LOG_INFO("onAvatarChangeGuildMics: gbID is same as current", self.guildUUID, gbID, isOn)
             return
 
         if isOn:
@@ -3486,7 +3297,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             return
         _oldSpeakerOn = self._hasSpeakerOn(gbID)
         if isOn == _oldSpeakerOn:
-            LOG_ERR("onAvatarChangeGuildSpeaker: gbID is same as current", self.guildUUID, gbID, isOn)
+            LOG_INFO("onAvatarChangeGuildSpeaker: gbID is same as current", self.guildUUID, gbID, isOn)
             return
         self._setVoiceFlag(gbID, gameconst.GuildVoiceFlag.SPEAKER_ON, isOn)
         self.broadcastMemberVoiceUpdate(gbID)
@@ -3547,3 +3358,518 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             return
         
         _gmVal.box.client.onInviteGuildMics(gbID)
+
+    # ---- League entry methods (iLeague → guild) ----
+    def onCreateLeague(self, oprGbId, name, declaration, approveType, avatarBox):
+        if oprGbId != self.leaderGbId:
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NEED_GUILD_LEADER)
+            LOG_ERR("Guild:: onCreateLeague, 只有帮主才可以创建联盟", oprGbId, self.leaderGbId)
+            return
+        if self.leagueUUID > 0:
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.ALREADY_IN_LEAGUE)
+            LOG_ERR("Guild:: onCreateLeague, 已有联盟", oprGbId, self.leaderGbId, self.leagueUUID)
+            return
+        _gmVal = self.members.get(self.leaderGbId)
+        if not _gmVal:
+            gameengine.panicStack("Guild:: onCreateLeague, 帮主不存在", oprGbId, self.leaderGbId, self.guildUUID, gameconfig.serverId())
+            return
+        _allianceId = KBEngine.genUUID64()
+        gameengine.getGlobalBase('AllianceStub').createLeague(
+            self.guildUUID, gameconfig.serverId(), _allianceId, name, declaration, approveType, oprGbId, self, avatarBox,
+            _gmVal.name,
+            _gmVal.level,
+            gameconfig.serverId(),
+            getattr(_gmVal, 'school', 0),
+            getattr(_gmVal, 'sex', 0),
+            self.guildName,
+            self.dspFlag,
+            self.guildIcon,
+            self.guildScore,
+            self.guildLevel,
+            len(self.members),
+            self.maxMemberNum()
+        )
+
+    def onCreateLeagueResult(self, errCode, detail, members, avatarBox):
+        LOG_INFO("Guild:: onCreateLeagueResult, 创建联盟回调 1", errCode, self.leaderGbId)
+        if errCode == 0:
+            self.leagueUUID = detail['allianceId']
+            self.syncLeagueInfoToMembers()
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.CREATE_LEAGUE_SUCCESS)
+            avatarBox.client.onCreateLeagueSuccess(detail, members)
+        elif errCode == gameconst.LeagueErrCode.ErrCodeNameAlreadyExists:
+            avatarBox.onMessagePre(G_GCD.datas['guild_unionNameRepeat']['value'], [])
+        else:
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.CREATE_LEAGUE_FAIL)
+        LOG_INFO("Guild:: onCreateLeagueResult, 创建联盟回调 2", errCode, self.leaderGbId, self.leagueUUID)
+
+    def onDisbandLeague(self, oprGbId, avatarBox):
+        if oprGbId != self.leaderGbId:
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NEED_GUILD_LEADER)
+            LOG_ERR("Guild:: onDisbandLeague, 只有帮主才可以解散联盟", oprGbId, self.leaderGbId)
+            return
+        if self.leagueUUID == 0:
+            LOG_ERR("Guild:: onDisbandLeague, 不在联盟", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NOT_IN_LEAGUE)
+            return
+        gameengine.getGlobalBase('AllianceStub').disbandLeague(self.leagueUUID, oprGbId, self, avatarBox)
+
+    def onDisbandLeagueResult(self, errCode, avatarBox):
+        if errCode == 0:
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.DISBAND_LEAGUE_SUCCESS)
+        else:
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.DISBAND_LEAGUE_FAIL)
+
+    def onLeagueDisbanded(self, allianceId):
+        self.broadcastMemberCell('syncModifyGuildInfo', ({'leagueUUID': 0,},))
+        self.broadcastMemberClient('onLeagueChangeNotify', (0, []))
+
+    def onModifyLeagueInfo(self, oprGbId, name, declaration, approveType, avatarBox):
+        if self.leagueUUID == 0:
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NOT_IN_LEAGUE)
+            return
+        gameengine.getGlobalBase('AllianceStub').modifyLeagueInfo(self.leagueUUID, oprGbId, name, declaration, approveType, avatarBox)
+
+    def onGetLeagueList(self, oprGbId, pageIndex, pageSize, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').getLeagueList(gameconfig.serverId(), pageIndex, pageSize, avatarBox)
+
+    def onSearchLeague(self, oprGbId, keyword, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').searchLeague(keyword, gameconfig.serverId(), avatarBox)
+
+    def onGetLeagueBasicInfo(self, oprGbId, allianceId, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').getLeagueBasicInfo(allianceId, avatarBox)
+
+    def onGetLeagueSimpleInfo(self, oprGbId, allianceId, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').getLeagueSimpleInfo(allianceId, avatarBox)
+
+    def getGuildSimpleInfo(self, box, func, args):
+        data = {
+            'guildId': self.guildUUID,
+            'guildName': self.guildName,
+            'guildIcon': self.guildIcon,
+            'dspFlag': self.dspFlag,
+            'score': self.guildScore,
+            'guildLevel': self.guildLevel,
+            'memberCnt': len(self.members),
+        }
+        getattr(box, func)(data, *args)
+
+    def onGetLeagueDetail(self, oprGbId, allianceId, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').getLeagueDetail(allianceId, avatarBox)
+
+    def onGetLeagueDetailByGuild(self, oprGbId, guildId, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').getGuildAlliance(guildId, avatarBox)
+
+    def onApplyLeagueToJoin(self, oprGbId, allianceId, avatarBox):
+        if self.leagueUUID != 0:
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.ALREADY_IN_LEAGUE)
+            return
+        if not self.checkLeaveLeagueTs():
+            return
+        _gmVal = self.members.get(self.leaderGbId)
+        if not _gmVal:
+            LOG_WARN('Guild::onApplyLeagueToJoin: leader not in guild', self.guildUUID, self.leaderGbId)
+            return
+        gameengine.getGlobalBase('AllianceStub').applyToJoin(allianceId, self.guildUUID, gameconfig.serverId(), self.guildScore, self.guildName, 
+                                                             len(self.members),
+                                                             self.guildIcon,
+                                                             self.guildLevel,
+                                                             self.dspFlag,
+                                                             self.maxMemberNum(),
+                                                             _gmVal.gbId,
+                                                             _gmVal.name,
+                                                             _gmVal.level,
+                                                             _gmVal.school,
+                                                             _gmVal.sex,
+                                                             oprGbId, avatarBox)
+
+    def onApproveLeagueJoin(self, oprGbId, guildId, avatarBox):
+        if oprGbId != self.leaderGbId:
+            LOG_ERR("Guild:: onApproveLeagueJoin, 不是帮主", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NEED_GUILD_LEADER)
+            return
+        if self.leagueUUID == 0:
+            LOG_ERR("Guild:: onApproveLeagueJoin, 不在联盟", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NOT_IN_LEAGUE)
+            return
+        
+        gameengine.getGlobalBase('AllianceStub').approveJoin(oprGbId, avatarBox, guildId, self.leagueUUID)
+
+    def onCancelLeagueApply(self, oprGbId, leagueUUID, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').cancelApply(leagueUUID, self.guildUUID, avatarBox)
+
+    def onInviteGuild(self, oprGbId, targetGuildId, targetServerId, avatarBox):
+        if oprGbId != self.leaderGbId:
+            LOG_ERR("Guild:: onInviteGuild, 不是帮主", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NEED_GUILD_LEADER)
+            return
+        if self.leagueUUID == 0:
+            LOG_ERR("Guild:: onInviteGuild, 不在联盟", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NOT_IN_LEAGUE)
+            return
+        if self.guildUUID == targetGuildId:
+            LOG_ERR("Guild:: onInviteGuild, 帮会id不对", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.INVALID_GUILD_UUID)
+            return
+        gameengine.getGlobalBase('AllianceStub').inviteGuild(self.leagueUUID, targetGuildId, targetServerId, oprGbId, avatarBox)
+
+    def onRejectJoin(self, gbId, guildId, avatarBox):
+        if self.leagueUUID == 0:
+            LOG_ERR("Guild:: onInviteGuild, 不在联盟", gbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NOT_IN_LEAGUE)
+            return
+        gameengine.getGlobalBase('AllianceStub').rejectJoin(guildId, gbId, avatarBox)
+        
+    def onAcceptInvite(self, oprGbId, allianceId, avatarBox):
+        if oprGbId != self.leaderGbId:
+            LOG_ERR("Guild:: onAcceptInvite, 不是帮主", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NEED_GUILD_LEADER)
+            return
+        if self.leagueUUID != 0:
+            LOG_ERR("Guild:: onGetLeagueSentApplies, 已在联盟", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.ALREADY_IN_LEAGUE)
+            return
+        if not self.checkLeaveLeagueTs():
+            return
+        _gmVal = self.members.get(self.leaderGbId)
+        if not _gmVal:
+            LOG_ERR('Guild::onGetLeagueSentApplies: leader not in guild:', self.leaderGbId)
+            return
+        
+        gameengine.getGlobalBase('AllianceStub').acceptInvite(allianceId, self.guildUUID, gameconfig.serverId(), self.guildScore,
+                                                              len(self.members), self.guildIcon, self.guildLevel, self.guildName,
+                                                              self.dspFlag, self.maxMemberNum(), self.leaderGbId, _gmVal.name, _gmVal.level, 
+                                                              _gmVal.school, _gmVal.sex, oprGbId, avatarBox)
+
+    def onRejectInvite(self, oprGbId, allianceId, avatarBox):
+
+        gameengine.getGlobalBase('AllianceStub').rejectInvite(allianceId, self.guildUUID, oprGbId, avatarBox)
+
+    def onKickMember(self, oprGbId, allianceId, targetGuildId, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').kickMember(allianceId, targetGuildId, oprGbId, avatarBox)
+
+    def onLeaveLeague(self, oprGbId, avatarBox):
+        if oprGbId != self.leaderGbId:
+            LOG_ERR("Guild:: onLeaveLeague, 不是帮主", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NEED_GUILD_LEADER)
+            return
+        if self.leagueUUID == 0:
+            LOG_ERR("Guild:: onLeaveLeague, 不在联盟", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NOT_IN_LEAGUE)
+            return
+        gameengine.getGlobalBase('AllianceStub').leaveLeague(self.leagueUUID, self.guildUUID, oprGbId, avatarBox)
+
+    def onTransferLeader(self, oprGbId, targetGuildId, avatarBox):
+        if oprGbId != self.leaderGbId:
+            LOG_ERR("Guild:: onTransferLeader, 不是帮主", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NEED_GUILD_LEADER)
+            return
+        if self.leagueUUID == 0:
+            LOG_ERR("Guild:: onTransferLeader, 不在联盟", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NOT_IN_LEAGUE)
+            return
+        if self.guildUUID == targetGuildId:
+            LOG_ERR("Guild:: onTransferLeader, 同个帮会", oprGbId, self.leaderGbId, self.leagueUUID, targetGuildId)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.TRANSFER_LEAGUE_IN_SAME_GUILD)
+            return
+        gameengine.getGlobalBase('AllianceStub').transferLeader(self.leagueUUID, targetGuildId, oprGbId, avatarBox)
+
+    def onGetLeagueApplyList(self, oprGbId, avatarBox):
+        if self.leagueUUID == 0:
+            LOG_ERR("Guild:: onGetLeagueApplyList, 不在联盟", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NOT_IN_LEAGUE)
+            return
+        gameengine.getGlobalBase('AllianceStub').getApplyList(self.leagueUUID, avatarBox)
+
+    def onGetInviteList(self, oprGbId, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').getInviteList(self.guildUUID, avatarBox)
+
+    def onGetLeagueSentApplies(self, oprGbId, avatarBox):
+        if self.leagueUUID != 0:
+            LOG_ERR("Guild:: onGetLeagueSentApplies, 已在联盟", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.ALREADY_IN_LEAGUE)
+            return
+        gameengine.getGlobalBase('AllianceStub').getSentApplies(self.guildUUID, avatarBox)
+
+    def onDeclareLeagueWar(self, oprGbId, attackType, targetType, targetId, targetServerId, avatarBox):
+        if oprGbId != self.leaderGbId:
+            LOG_ERR("Guild:: onDeclareLeagueWar, 不是帮主", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NEED_GUILD_LEADER)
+            return
+        attackId = 0
+        amount = 0
+        if attackType == gameconst.EnemyActionType.ALLIANCE:
+            attackId = self.leagueUUID
+            if self.leagueUUID == 0:
+                LOG_ERR("Guild:: onDeclareLeagueWar, 不在联盟", oprGbId, self.leaderGbId, self.leagueUUID)
+                avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NOT_IN_LEAGUE)
+                return
+        elif attackType == gameconst.EnemyActionType.GUILD:
+            attackId = self.guildUUID
+            itemCount = G_GCD.datas['guild_enmityCost']['value']
+            if self.guildFund < itemCount:
+                LOG_ERR("Guild:: onDeclareLeagueWar, 帮会敌对金不足", oprGbId, self.leaderGbId, self.leagueUUID)
+                avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.DONATE_LEAGUE_FUND_NOT_ENOUGH)
+                return
+            amount = itemCount
+            _opUUID = KBEngine.genUUID64()
+            _detail = gameclass.AwardDetailCls()
+            _src = AAC_AACDD.datas.BONUS_SRC_LEAGUE_ENEMY_COST
+            self.modifyGuildFund(-itemCount, _src, _opUUID, _detail)
+            avatarBox.client.onGuildFundChanged(self.guildFund)
+        else:
+            LOG_ERR("Guild:: onDeclareLeagueWar, 未知敌对类型", oprGbId, self.leaderGbId, self.leagueUUID)
+            return
+        gameengine.getGlobalBase('AllianceStub').declareWar(self.guildName, oprGbId, attackType, attackId, targetType, targetId, targetServerId, amount, avatarBox)
+        
+    def onGetEnemyList(self, oprGbId, guildId, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').getEnemyList(guildId, avatarBox)
+
+    def onGetEnemyAllianceList(self, oprGbId, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').getEnemyAllianceList(self.leagueUUID, self.guildUUID, avatarBox)
+
+    def onGetUnionList(self, oprGbId, guildId, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').getUnionList(guildId, avatarBox)
+
+    def onCheckLeagueRelation(self, oprGbId, guildId1, guildId2, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').checkLeagueRelation(guildId1, guildId2, avatarBox)
+
+    def onGetGuildAllianceId(self, oprGbId, guildId, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').getGuildAlliance(guildId, avatarBox)
+
+    def onDonateFund(self, oprGbId, amount, avatarBox):
+        if oprGbId != self.leaderGbId:
+            LOG_ERR("Guild:: onDonateFund, 不是帮主", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NEED_GUILD_LEADER)
+            return
+        if self.leagueUUID == 0:
+            LOG_ERR("Guild:: onDonateFund, 不在联盟", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NOT_IN_LEAGUE)
+            return
+        if self.guildFund < amount:
+            LOG_ERR("Guild:: onDonateFund, 帮会捐赠联盟资金不足", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.DONATE_LEAGUE_FUND_NOT_ENOUGH)
+            return
+        
+        _opUUID = KBEngine.genUUID64()
+        _detail = gameclass.AwardDetailCls()
+        _src = AAC_AACDD.datas.BONUS_SRC_LEAGUE_FUND_DONATE
+        self.modifyGuildFund(-amount, _src, _opUUID, _detail)
+        avatarBox.client.onGuildFundChanged(self.guildFund)
+        gameengine.getGlobalBase('AllianceStub').donateFund(self.leagueUUID, self.guildUUID, gameconst.ItemIdEnum.GUILD_FUND, amount, oprGbId, avatarBox)
+
+    def onAidResource(self, oprGbId, toGuildId, amount, avatarBox):
+        if oprGbId != self.leaderGbId:
+            LOG_ERR("Guild:: onAidResource, 不是帮主", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NEED_GUILD_LEADER)
+            return
+        if self.leagueUUID == 0:
+            LOG_ERR("Guild:: onAidResource, 不在联盟", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NOT_IN_LEAGUE)
+            return
+        if self.guildIronMine < amount:
+            LOG_ERR("Guild:: onDonateFund, 帮会援助玄铁不足", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.DONATE_LEAGUE_FUND_NOT_ENOUGH)
+            return
+        
+        _opUUID = KBEngine.genUUID64()
+        _detail = gameclass.AwardDetailCls()
+        _src = AAC_AACDD.datas.BONUS_SRC_LEAGUE_IRON_AID
+        self.modifyGuildIronMine(-amount, _src, _opUUID, _detail)
+        avatarBox.client.onGuildIronChanged(self.guildIronMine)
+
+        gameengine.getGlobalBase('AllianceStub').aidResource(self.leagueUUID, self.guildUUID, toGuildId, gameconst.ItemIdEnum.DARK_IRON, amount, oprGbId, avatarBox)
+
+    def onGetLeagueFund(self, oprGbId, allianceId, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').getLeagueFund(allianceId, avatarBox)
+
+    def onGetEventList(self, oprGbId, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').getEventList(self.leagueUUID, avatarBox)
+
+    def onSendChatMessage(self, oprGbId, allianceId, content, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').sendChatMessage(allianceId, self.guildUUID, self.guildName, gameconfig.serverId(), content, avatarBox)
+
+    def onGetChatHistory(self, oprGbId, allianceId, limit, avatarBox):
+        gameengine.getGlobalBase('AllianceStub').getChatHistory(allianceId, limit, avatarBox)
+
+    def onAllianceWarStarted(self, data):
+        LOG_INFO("Guild:: onAllianceWarStarted", self.leaderGbId, self.leagueUUID, data)
+        self.broadcastMemberClient('onAllianceWarStarted', (data,))
+
+    def onAllianceWarEnded(self, data):
+        LOG_INFO("Guild:: onAllianceWarEnded", self.leaderGbId, self.leagueUUID, data)
+        self.broadcastMemberClient('onAllianceWarEnded', (data,))
+
+    def onAllianceNewEvent(self, event):
+        self.broadcastMemberClient('onLeagueNewEvent', (event,))
+
+    def onAllianceChatMessage(self, reply):
+        self.broadcastMemberClient('onAllianceChatMessage', (reply,))
+
+    def onNewApplyNotify(self, data):
+        """联盟新申请通知:只有当前帮会是盟主帮会时才会被调用,
+        这里把通知转给盟主本人的客户端(数据格式与 getApplyList 单条 AllianceApplyInfo 一致)。
+        """
+        if not data or not isinstance(data, dict):
+            return
+        _apply = data.get('apply')
+        if not _apply:
+            return
+
+        _gmVal = self.members.get(self.leaderGbId)
+        if not _gmVal:
+            LOG_WARN('Guild::onNewApplyNotify: leader not in guild', self.guildUUID, self.leaderGbId)
+            return
+
+        if utils.checkBoxOffline(_gmVal.box):
+            # 盟主离线,记一条红点/未读即可;此处先只通知在线盟主
+            return
+
+        _gmVal.box.client.onNewApplyNotify(_apply)
+
+    def onNewInviteNotify(self, data):
+        LOG_WARN('Guild::onNewInviteNotify 1')
+        """联盟新邀请通知:转发给帮主客户端(数据格式与 getInviteList 单条 AllianceInviteInfo 一致)。"""
+        _gmVal = self.members.get(self.leaderGbId)
+        if not _gmVal:
+            LOG_WARN('Guild::onNewInviteNotify: leader not in guild', self.guildUUID, self.leaderGbId)
+            return
+
+        if utils.checkBoxOffline(_gmVal.box):
+            return
+
+        _gmVal.box.client.onLeagueNewInviteNotify(data)
+
+    def onCheckGuild(self, uniqueId, ret, checkCD):
+        LOG_INFO('Guild::onCheckGuild: 1', self.guildUUID, uniqueId, ret, checkCD)
+        cd = 0
+        if ret and checkCD:
+            cd = self.calcLeaveLeagueCD()
+            if cd > 0:
+                ret = False
+        LOG_INFO('Guild::onCheckGuild: 2', self.guildUUID, uniqueId, ret, cd, checkCD)
+        gameengine.getGlobalBase('AllianceStub').onCheckGuildResult(self.guildUUID, self.guildName, uniqueId, ret, cd, checkCD)
+
+    def onSetLeagueUUID(self, leagueUUID):
+        LOG_INFO('Guild::onSetLeagueUUID:', self.guildUUID, leagueUUID)
+        self.leagueUUID = leagueUUID
+        self.syncLeagueInfoToMembers()
+        if self.leagueUUID > 0:
+            _gmVal = self.members.get(self.leaderGbId)
+            if not _gmVal:
+                LOG_WARN('Guild::onSetLeagueUUID: leader not in guild:', self.leaderGbId)
+                return
+            if utils.checkBoxOffline(_gmVal.box):
+                return
+            # 获取敌对信息
+            self.onGetEnemyList(_gmVal.gbId, self.guildUUID, _gmVal.box)
+            # 获取联盟信息
+            self.onGetUnionList(_gmVal.gbId, self.guildUUID, _gmVal.box)
+            # 获取敌对信息
+            self.onGetEnemyAllianceList(_gmVal.gbId, _gmVal.box)
+
+    def onQueryLeagueUUID(self, leagueUUID, ret):
+        LOG_INFO('Guild::onQueryLeagueUUID:', self.guildUUID, leagueUUID, ret)
+        if ret:
+            self.initLeagueUUID = True
+            self.pyDelTimer(self.initLeagueUUIDTimer, gametimer.QUERY_LEAGUE_UUID)
+            self.onSetLeagueUUID(leagueUUID)
+
+    def onLeagueGuildLeave(self, leaveGuildId, targetGuildId):
+        LOG_INFO('Guild::onLeagueGuildLeave:', self.guildUUID, leaveGuildId, targetGuildId)
+        if leaveGuildId == self.guildUUID:
+            self.onSetLeagueUUID(0)
+            self.updateLeaveLeagueTs()
+        else:
+            self.broadcastMemberClient('onLeagueGuildLeave', (leaveGuildId, ))
+
+    def syncLeagueInfoToMembers(self):
+        self.broadcastMemberCell('syncModifyGuildInfo', ({'leagueUUID': self.leagueUUID,},))
+
+    def onReturnBackFund(self, srcType, itemType, itemNum):
+        LOG_INFO('Guild::onReturnBackFund: ', self.guildUUID, srcType, itemType, itemNum)
+        _opUUID = KBEngine.genUUID64()
+        _detail = gameclass.AwardDetailCls()
+        if srcType == gameconst.LeagueItemOpType.ENEMY_COST:
+            _src = AAC_AACDD.datas.BONUS_SRC_LEAGUE_ENEMY_COST_BACK
+        elif srcType == gameconst.LeagueItemOpType.DONATE_COST:
+            _src = AAC_AACDD.datas.BONUS_SRC_LEAGUE_FUND_DONATE_BACK
+        elif srcType == gameconst.LeagueItemOpType.AID_COST:
+            _src = AAC_AACDD.datas.BONUS_SRC_LEAGUE_IRON_AID_BACK
+        else:
+            LOG_ERR('Guild::onReturnBackFund: unknow srcType', self.guildUUID, srcType, itemType, itemNum)
+            return
+        
+        if itemType == gameconst.LeagueReturnFundType.FUND:
+            self.modifyGuildFund(itemNum, _src, _opUUID, _detail)
+            gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
+                                    [self.leaderGbId, ], 'onGuildFundChanged', (self.guildFund,),
+                                    None, '', ())
+        elif itemType == gameconst.LeagueReturnFundType.IRON:
+            self.modifyGuildIronMine(itemNum, _src, _opUUID, _detail)
+            gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
+                                    [self.leaderGbId, ], 'onGuildIronChanged', (self.guildIronMine,),
+                                    None, '', ())
+            
+        else:
+            LOG_ERR('Guild::onReturnBackFund: unknow itemType', self.guildUUID, srcType, itemType, itemNum)
+
+    def onGuildAidResource(self, srcType, itemType, itemNum):
+        LOG_INFO('Guild::onGuildAidResource: ', self.guildUUID, srcType, itemType, itemNum)
+        _opUUID = KBEngine.genUUID64()
+        _detail = gameclass.AwardDetailCls()
+        if srcType == gameconst.LeagueItemOpType.AID_COST:
+            _src = AAC_AACDD.datas.BONUS_SRC_LEAGUE_IRON_AID_BY_GUILD
+        else:
+            LOG_ERR('Guild::onGuildAidResource: unknow srcType', self.guildUUID, srcType, itemType, itemNum)
+            return
+        
+        if itemType == gameconst.LeagueReturnFundType.IRON:
+            self.modifyGuildIronMine(itemNum, _src, _opUUID, _detail)
+            gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
+                                    [self.leaderGbId, ], 'onGuildIronChanged', (self.guildIronMine,),
+                                    None, '', ())
+            
+        else:
+            LOG_ERR('Guild::onGuildAidResource: unknow itemType', self.guildUUID, srcType, itemType, itemNum)
+
+
+    def onRecruitLeagueMember(self, oprGbId, avatarBox):
+        LOG_INFO('Guild::onRecruitLeagueMember: ', self.leagueUUID, self.guildUUID, oprGbId)
+        if oprGbId != self.leaderGbId:
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NEED_GUILD_LEADER)
+            LOG_ERR("Guild:: onRecruitLeagueMember, 只有帮主才可以招募", oprGbId, self.leaderGbId)
+            return
+        if self.leagueUUID == 0:
+            LOG_ERR("Guild:: onRecruitLeagueMember, 不在联盟", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.client.onLeagueOpResult(gameconst.LeagueOpResult.NOT_IN_LEAGUE)
+            return
+        gameengine.getGlobalBase('AllianceStub').recruitLeagueMember(self.leagueUUID, avatarBox)
+
+    def _queryLeagueUUID(self):
+        LOG_INFO('Guild::_queryLeagueUUID: ', self.leagueUUID, self.guildUUID)
+        if self.initLeagueUUID:
+            return
+        gameengine.getGlobalBase('AllianceStub').queryLeagueUUID(self.guildUUID)
+
+    def updateLeaveLeagueTs(self):
+        self.leaveLeagueCD = utils.curTS() + int(G_GCD.datas['guild_exitUnionCd']['value']) * 60
+
+    def calcLeaveLeagueCD(self):
+        curTime = utils.curTS()
+        if curTime >= self.leaveLeagueCD:
+            return 0
+        ret = (self.leaveLeagueCD - curTime) // 60
+        if self.leaveLeagueCD - ret * 60 > 0:
+            ret += 1
+        return ret
+    
+    def checkLeaveLeagueTs(self):
+        cd = self.calcLeaveLeagueCD()
+        if cd > 0:
+            gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
+                [self.leaderGbId, ], 'onMessage',
+                (G_GCD.datas['guild_unionExitLimit2']['value'], [str(cd)]),
+                    None, '', ())
+            return False
+        return True

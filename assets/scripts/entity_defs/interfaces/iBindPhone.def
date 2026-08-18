@@ -1,5 +1,10 @@
 <root>
     <Properties>
+        <secondaryPwdVerityInfo>
+            <Type>          SECONDARY_PWD_VERITY_INFO       </Type>
+            <Flags>         BASE                            </Flags>
+            <Persistent>    true                            </Persistent>
+        </secondaryPwdVerityInfo>
     </Properties>
 
     <BaseMethods>
@@ -22,6 +27,29 @@
             <Arg>   UINT8           </Arg>
             <Arg>   UINT32          </Arg>
         </reqGetRechargeStageReward>
+
+        <smsServiceSendCode> <Exposed/>
+            <Arg>   UINT16          </Arg>
+        </smsServiceSendCode>
+
+        <smsServiceVerifyCode> <Exposed/>
+            <Arg>   UNICODE         </Arg>
+            <Arg>   UINT16          </Arg>
+        </smsServiceVerifyCode>
+
+        <reqSecondaryPasswordSMSOperation> <Exposed/>
+            <Arg>   UINT16          </Arg>
+            <Arg>   UNICODE         </Arg>
+        </reqSecondaryPasswordSMSOperation>
+
+        <reqSecondaryPasswordVerity> <Exposed/>
+            <Arg>   UNICODE         </Arg>
+        </reqSecondaryPasswordVerity>
+
+        <reqModifySecondaryPwdVerityInfo> <Exposed/>
+            <Arg>   UNICODE         </Arg>
+            <Arg>   SECONDARY_PWD_VERITY_INFO_CLIENT         </Arg>
+        </reqModifySecondaryPwdVerityInfo>
     </BaseMethods>
 
     <ClientMethods>
@@ -42,5 +70,21 @@
         <rechargeStageRewardInfo>
             <Arg>   ARRAY   <of>    UINT32  </of>   </Arg>
         </rechargeStageRewardInfo>
+
+        <reqSMSServiceResReplay>
+            <Arg>   UINT8           </Arg>
+        </reqSMSServiceResReplay>
+
+        <notifyPopupSecondaryPassword>
+            <Arg>   UINT8           </Arg>
+        </notifyPopupSecondaryPassword>
+
+        <sendSecondaryPasswordInfo>
+            <Arg>   SECONDARY_PWD_INFO_CLIENT         </Arg>
+        </sendSecondaryPasswordInfo>
+
+        <sendSecondaryPasswordVerityInfo>
+            <Arg>   SECONDARY_PWD_VERITY_INFO_CLIENT         </Arg>
+        </sendSecondaryPasswordVerityInfo>
     </ClientMethods>
 </root>

@@ -78,7 +78,12 @@
         <remodelingPet> <Exposed/>
             <Arg>   GRIDID      </Arg>
         </remodelingPet>
-    
+
+        <checkPkStatusResult>
+            <Arg>   UINT8   </Arg>
+            <Arg>   BOOL    </Arg>
+        </checkPkStatusResult>
+
     </BaseMethods>
 
     <CellMethods>
@@ -111,6 +116,9 @@
             <Arg>   UINT16   </Arg>
         </updateLevelProps>
         
+        <checkPkStatus>
+            <Arg>   UINT8   </Arg>
+        </checkPkStatus>
     </CellMethods>
 
     <ClientMethods>
@@ -151,5 +159,6 @@
             <Arg>   ITEMID       </Arg>
             <Arg>   UINT8        </Arg>
         </onRemodelingPet>
+
     </ClientMethods>
 </root>

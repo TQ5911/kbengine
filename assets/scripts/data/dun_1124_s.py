@@ -12591,18 +12591,18 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 17112302,
           "ID": 11248001,
-          "PosX": 567.4,
-          "PosY": 191.0434,
-          "PosZ": 516.75,
+          "PosX": 567.1656,
+          "PosY": 191.4431,
+          "PosZ": 519.8658,
           "Props": {
             "CameraId": 33010001,
             "GateType": 0,
             "Remark": "",
             "ShowInSceneMap": 1,
             "TelDir": 262.1156,
-            "TelX": 564.6145,
-            "TelY": 191.7135,
-            "TelZ": 540.9956
+            "TelX": 564.3801,
+            "TelY": 192.1132,
+            "TelZ": 544.1115
           }
         },
         "11248002": {

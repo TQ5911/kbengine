@@ -113,12 +113,16 @@ namespace KBEngine
 
 			switch(method.methodUtype)
 			{
+				case 936:
+					CHECK_TEXT_SECURITY_RESP checkTextSecurityResp_arg1 = ((DATATYPE_CHECK_TEXT_SECURITY_RESP)method.args[0]).createFromStreamEx(stream);
+					checkTextSecurityResp(checkTextSecurityResp_arg1);
+					break;
 				case 1225:
 					UInt64 minorAccountConstraintTip_arg1 = stream.readUint64();
 					minorAccountConstraintTip(minorAccountConstraintTip_arg1);
 					break;
 				case 1172:
-					List<WAITMAP_CHARACTER> onGetAvataringCharacter_arg1 = ((DATATYPE_AnonymousArray_10115)method.args[0]).createFromStreamEx(stream);
+					List<WAITMAP_CHARACTER> onGetAvataringCharacter_arg1 = ((DATATYPE_AnonymousArray_10121)method.args[0]).createFromStreamEx(stream);
 					onGetAvataringCharacter(onGetAvataringCharacter_arg1);
 					break;
 				case 1167:

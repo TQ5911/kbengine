@@ -17,7 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     "reportLevelLimit": _tools.RODict({
         "ID": "reportLevelLimit",
-        "value": 30,
+        "value": 20,
     }),
     "reportWordLimit": _tools.RODict({
         "ID": "reportWordLimit",
@@ -86,5 +86,37 @@ datas = _tools.RODict({
     "reportDoubleCheck": _tools.RODict({
         "ID": "reportDoubleCheck",
         "value": 54001829,
+    }),
+    "forcedOfflineVM": _tools.RODict({
+        "ID": "forcedOfflineVM",
+        "value": 54003505,
+    }),
+    "forcedOfflineCloud": _tools.RODict({
+        "ID": "forcedOfflineCloud",
+        "value": 54003506,
+    }),
+    "forcedOfflineCE": _tools.RODict({
+        "ID": "forcedOfflineCE",
+        "value": 54003507,
+    }),
+    "forcedOfflineMulti": _tools.RODict({
+        "ID": "forcedOfflineMulti",
+        "value": 54003508,
+    }),
+    "forcedOfflineBan": _tools.RODict({
+        "ID": "forcedOfflineBan",
+        "value": 54003509,
+    }),
+    "forcedOfflineFreeze": _tools.RODict({
+        "ID": "forcedOfflineFreeze",
+        "value": 54003510,
+    }),
+    "forcedOfflineSimulator": _tools.RODict({
+        "ID": "forcedOfflineSimulator",
+        "value": 54003512,
+    }),
+    "forcedOfflineBooster‌": _tools.RODict({
+        "ID": "forcedOfflineBooster‌",
+        "value": 54003513,
     })
 })

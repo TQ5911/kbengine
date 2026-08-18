@@ -246,17 +246,6 @@ datas = _tools.RODict({
         "event": "",
         "parm": ""
     }),
-    37000022: _tools.RODict({
-        "ID": 37000022,
-        "type": 2,
-        "title": "巢穴挑战成功",
-        "content": "巢穴副本<color=#beab67>{0}</color>挑战圆满告捷！恭喜闯关成功，一身武艺果真名不虚传～",
-        "isOpen": 1,
-        "rewardId": 0,
-        "period": "360",
-        "event": "",
-        "parm": ""
-    }),
     37000023: _tools.RODict({
         "ID": 37000023,
         "type": 2,
@@ -773,10 +762,43 @@ datas = _tools.RODict({
         "period": "360",
         "event": "",
         "parm": ""
+    }),
+    37002019: _tools.RODict({
+        "ID": 37002019,
+        "type": 2,
+        "title": "失物返还",
+        "content": "上架过程中出现异常,现返还损失物品",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37002020: _tools.RODict({
+        "ID": 37002020,
+        "type": 2,
+        "title": "失物返还",
+        "content": "租借过程中出现异常,先返还损失物品",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37002021: _tools.RODict({
+        "ID": 37002021,
+        "type": 2,
+        "title": "失物返还",
+        "content": "下架过程中出现异常,现返还损失物品",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
     })
 })
 minKey = 37000001
-maxKey = 37002018
+maxKey = 37002021
 
 MailArgsNumMap = _tools.RODict({ 
         37000001:0,
@@ -800,7 +822,6 @@ MailArgsNumMap = _tools.RODict({
         37000019:1,
         37000020:0,
         37000021:0,
-        37000022:1,
         37000023:1,
         37000024:2,
         37000030:1,
@@ -848,4 +869,7 @@ MailArgsNumMap = _tools.RODict({
         37002016:1,
         37002017:0,
         37002018:2,
+        37002019:0,
+        37002020:0,
+        37002021:0,
 })

@@ -192,7 +192,7 @@ class ICubeCell(object):
 
         elif _cubeType == gameconst.CubeRoomType.TIDE:
             self.showMsg(cube_config.datas['cube_crazyRoomTimeMsg']['value'], [])
-            gameengine.getCubeStub(1).doEnterCubeReady(self.base, self.gbId, {})
+            gameengine.getCubeStub(1).doEnterCubeReady(self.base, self.spaceNo, self.gbId, {})
 
     def _cancelRoomKickTimer(self):
         if self.cubeRoomKickTimerId:
@@ -299,12 +299,12 @@ class ICubeCell(object):
             return
 
         if self.cubeQuota.leftTime <= 0:
-            self.base.beforeEnterCubeDecrementCnt({'floor': _floor})
+            self.base.beforeEnterCubeDecrementCnt({'floor': _floor}, self.spaceNo)
             return
 
         extra = {'enterCubeType': gameconst.ENTER_CUBE_HAS_LEFT_TIME, 'hasCast': False, 'floor': _floor}
         gameengine.getCubeStub(_floor).doEnterCubeReady(
-            self.base, self.gbId, extra)
+            self.base, self.spaceNo, self.gbId, extra)
 
     @gamedecorator.checkGameconfigEnable('square')
     @utils.isMyself
@@ -326,6 +326,7 @@ class ICubeCell(object):
 
         gameengine.getCubeStub(self.cubeEnterFloor).enterRandomRoom(
             self.base, 
+            self.spaceNo,
             self.gbId, 
             {}, 
             self.spaceNo,
@@ -347,33 +348,6 @@ class ICubeCell(object):
 
     def enterCubeByMapIds(self, mapIds, extra={}):
         LOG_INFO('ICubeCell::enterCubeByMapIds: {}, {}'.format(mapIds, extra))
-        _mapIds = []
-        _someScore = 0
-        _someLv = 0
-        for _mapId in mapIds:
-            if _mapId not in cube_room.datas:
-                LOG_ERR('ICubeCell::enterCubeByMapIds: map not found: {}'.format(_mapId))
-                continue
-
-            _floor = cube_room.datas[_mapId]['floor']
-            _needScore = cube_floor.datas[_floor]['needScore']
-            _needLv = cube_floor.datas[_floor]['needLv']
-            if self.getTotalScore() < _needScore:
-                _someScore = _needScore
-                continue
-            if self.level < _needLv:
-                _someLv = _needLv
-                continue
-
-            _mapIds.append(_mapId)
-
-        if not _mapIds:
-            if _someScore:
-                self.showMsg(cube_config.datas['cube_floorJudge']['value'], [str(_someScore)])
-            elif _someLv:
-                self.showMsg(cube_config.datas['cube_floorJudge2']['value'], [str(_someLv)])
-            return
-
         _mapId = random.choice(mapIds)
 
         if dataUtils.isCubeCow(_mapId) and self._isCubeMapFullByMapId(_mapId):
@@ -382,34 +356,18 @@ class ICubeCell(object):
 
         _floor = cube_room.datas[_mapId]['floor']
         gameengine.getCubeStub(_floor).doEnterCube(
-            self.base, _mapId, self.gbId, extra)
+            self.base, self.spaceNo, _mapId, self.gbId, extra)
 
     @gamedecorator.checkGameconfigEnable('square')
     @utils.isMyself
     def followCaptainInCube(self, exposed):
-        LOG_INFO('ICubeCell::followCaptainInCube: {}'.format(self.spaceNo))
+        LOG_ERR('ICubeCell::followCaptainInCube: {} just for fish'.format(self.spaceNo))
         return
-        if not formula.inCubeScene(self.spaceNo):
-            LOG_ERR('ICubeCell::followCaptainInCube: not cube space: {}'.format(self.spaceNo))
-            return
-
-        _spaceNo = self.getCaptainSpaceNo()
-        _pos = self.getCaptainPosition()
-        if not (_spaceNo and _pos):
-            LOG_WARN('ICubeCell::followCaptainInCube: captain not found', _spaceNo, _pos)
-            return
-
-        if not formula.inCubeScene(_spaceNo):
-            LOG_WARN('ICubeCell::followCaptainInCube: captain not in cube space', _spaceNo, _pos)
-            return
-
-        _mapId = formula.fetchMapId(_spaceNo)
-        gameengine.getCubeStubBySpaceNo(_spaceNo).doEnterCube(
-            self.base, _mapId, self.gbId, {'followPos': _pos, 'hasCast': False})
 
     def gmEnterCubeRoom(self, mapId):
         _targetFloor = dataUtils.getCubeFloor(mapId)
-        gameengine.getCubeStub(_targetFloor).doEnterCube(self.base, mapId, self.gbId, {})
+        gameengine.getCubeStub(_targetFloor).doEnterCube(
+            self.base, self.spaceNo, mapId, self.gbId, {})
         return True
 
     @utils.isMyself
@@ -441,7 +399,15 @@ class ICubeCell(object):
         _options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.LEAVE)
         self.doLeaveFromSapceToSpace(self.spaceNo, _spaceNo, _options, _context)
 
-    def beginEnterCubeRoom(self, spaceBox, spaceMgrCellId, spaceNo, extra):
+    def beginEnterCubeRoom(self, spaceBox, spaceMgrCellId, fromSpaceNo, spaceNo, extra):
+        if fromSpaceNo != self.spaceNo:
+            LOG_WARN('beginEnterCubeRoom but in dungeon', self.spaceNo)
+            gameengine.getCubeStubBySpaceNo(spaceNo).enterSpaceFailed(
+                self.gbId,
+                spaceNo,
+            )
+            return
+
         _lContext = {}
         _src = dungeonSrc.BasicDungeonSrc()
         hasCast = extra.get('hasCast', True)
@@ -683,23 +649,9 @@ class ICubeCell(object):
             LOG_ERR('ICubeCell::switchCubeLine: same line: {}'.format(self.spaceNo))
             return
 
-        #大厅支持选择分线，在房间中切换分线策划需求回到大厅
         _mapId = formula.fetchMapId(self.spaceNo)
-        if _mapId == cube_config.datas['cube_hall']['value']:
-            _floor = cube_room.datas[_mapId]['floor']
-            gameengine.getCubeStub(_floor).checkSwitchCubeLine(self.base, lineNo, _mapId)
-        else:
-            self._commonNeedCast(
-                C_C_DD.datas.teleportCast,
-                gameconst.StateEnum.Teleporting,
-                gameconst.CastEnum.teleportAnchor,
-                '_switchCubeHall',
-                (),
-                castTime=CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR)
-            )
-
-    def _switchCubeHall(self):
-        gameengine.getCubeStub(1).doEnterCubeReady(self.base, self.gbId, {})
+        _floor = cube_room.datas[_mapId]['floor']
+        gameengine.getCubeStub(_floor).checkSwitchCubeLine(self.base, lineNo, _mapId)
 
     def onCheckSwitchCubeLineResult(self, lineNo, canEnter):
         LOG_INFO('ICubeCell::onCheckSwitchCubeLineResult: {}'.format(canEnter))
@@ -723,7 +675,7 @@ class ICubeCell(object):
         _mapId = formula.fetchMapId(self.spaceNo)
         _floor = cube_room.datas[_mapId]['floor']
         gameengine.getCubeStub(_floor).doSwitchCubeLine(
-            self.base, self.gbId, lineNo, extra, _mapId)
+            self.base, self.spaceNo, self.gbId, lineNo, extra, _mapId)
 
     @utils.isMyself
     def getArenaKingPos(self, exposed):

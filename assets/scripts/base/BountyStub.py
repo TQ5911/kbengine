@@ -104,7 +104,7 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
                 self.allRankInfoDataList[brType] = self.hunterRankInfoData
                 self.showPublicRankDataList[brType] = hunterRankData(brType)
                 for hunterGbId, rankItem in self.allRankInfoDataList[brType].items():
-                    self.showPublicRankDataList[brType].append(rankItem)
+                    self.showPublicRankDataList[brType].initAppend(rankItem)
 ################################################################################
     def onResetPublicRankWeekly(self, *args):
         LOG_INFO('BountyStub::onResetPublicRankWeekly:', args)
@@ -437,10 +437,14 @@ class BountyStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycle
         prePublishItem = self.onDelPrePublishBounty(prePublishItem)
         playerbox.publishBountyRes(prePublishItem.toSyncDict(), gameconst.PublishBountyResType.HUNTER_NOT_ONLINE)
         
-    def onWaitForPrePublishBounty(self, playerbox, prePublishDict):
-        LOG_INFO("BountyStub::onWaitForPrePublishBounty", prePublishDict)
+    def onWaitForPrePublishBounty(self, playerbox, prePublishDict, unlocked):
+        LOG_INFO("BountyStub::onWaitForPrePublishBounty", prePublishDict, unlocked)
         prePublishItem = bountyItem()
         prePublishItem.initFromSyncDict(prePublishDict)
+        if not unlocked:
+            prePublishItem = self.onDelPrePublishBounty(prePublishItem)
+            playerbox.publishBountyRes(prePublishItem.toSyncDict(), gameconst.PublishBountyResType.HUNTER_NOT_UNLOCKED)
+            return
         prePublishItem = self.hunterBountyDict[prePublishItem.hunterGbId]
         self.bountyInfoData[prePublishItem.uuid] = prePublishItem
         prePublishItem.waitForCheckTimerId = self.addTimerCB(60, 'onWaitForPrePublishBountyCallBack', (prePublishItem, ), gametimer.TIMER_TAG_WAIT_FOR_PRE_PUBLISH_BOUNTY_TIMER)

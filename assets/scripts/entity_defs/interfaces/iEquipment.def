@@ -142,6 +142,7 @@
             <Arg>      UINT8                        </Arg>
             <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
             <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+            <Arg>      BOOL                         </Arg>
         </bagEquipSpiritWashing>
 
         <bagEquipSpiritWashingPreviewCB>
@@ -151,6 +152,7 @@
             <Arg>      UUID         </Arg>
             <Arg>      GRIDID       </Arg>
             <Arg>      UINT8        </Arg>
+            <Arg>      BOOL         </Arg>
         </bagEquipSpiritWashingPreviewCB>
 
         <bagEquipSpiritWashingConfirm>
@@ -188,6 +190,7 @@
             <Arg>      INT8                         </Arg>
             <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
             <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+            <Arg>      BOOL                         </Arg>
         </bagEquipGlyphWashing>
 
         <bagEquipGlyphWashingDeductItemsCB>
@@ -196,6 +199,7 @@
             <Arg>       UUID        </Arg>
             <Arg>       GRIDID      </Arg>
             <Arg>       UINT8       </Arg>
+            <Arg>       BOOL        </Arg>
         </bagEquipGlyphWashingDeductItemsCB>
 
         <bagEquipBless>
@@ -203,6 +207,7 @@
             <Arg>      UUID                         </Arg>
             <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
             <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+            <Arg>      BOOL                         </Arg>
         </bagEquipBless>
 
         <bagEquipBlessDeductItemsCB>
@@ -210,6 +215,7 @@
             <Arg>       UINT16      </Arg>
             <Arg>       UUID        </Arg>
             <Arg>       GRIDID      </Arg>
+            <Arg>       BOOL        </Arg>
         </bagEquipBlessDeductItemsCB>
 
         <bagEquipBackBless>
@@ -314,8 +320,15 @@
             <Arg>      ARRAY <of> ARRAY <of> INT64 </of> </of>  </Arg>
         </onDropTypeChangeToAvatar>
 
+        <onDropTypeChangeToAvatarInCross>
+            <Arg>      ARRAY <of> UNIQUE_ID </of>  </Arg>
+            <Arg>      ARRAY <of> INT32     </of>  </Arg>
+            <Arg>      ARRAY <of> ARRAY <of> INT64 </of> </of>  </Arg>
+        </onDropTypeChangeToAvatarInCross>
+
         <onGetDropTakeReward>
             <Arg>       UNIQUE_ID           </Arg>
+            <Arg>       UINT32              </Arg>
             <Arg>       UINT32              </Arg>
             <Arg>       UINT32              </Arg>
         </onGetDropTakeReward>
@@ -348,11 +361,6 @@
             <Arg>      UINT8               </Arg>
         </onTakeDropEquipFailed>
 
-        <onDropEquipExpire>
-            <Arg>      UNIQUE_ID           </Arg>
-            <Arg>      UINT8               </Arg>
-        </onDropEquipExpire>
-
         <gmGlyphWashingEquips>
             <Arg>   UINT32     </Arg>
             <Arg>   UINT8      </Arg>
@@ -378,6 +386,7 @@
         <checkDropEquip>
             <Arg>   PYTHON          </Arg>
             <Arg>   PYTHON          </Arg>
+            <Arg>   BOOL            </Arg>
         </checkDropEquip>
 
         <setTakeEquipRedeemPrice> <Exposed/>
@@ -422,6 +431,11 @@
         <onNotifyRemoveEquip>
             <Arg>      ARRAY <of> UNIQUE_ID </of>  </Arg>   
         </onNotifyRemoveEquip>
+
+        <onDropEquipExpire>
+            <Arg>   UNIQUE_ID   </Arg>
+            <Arg>   ITEM_ID     </Arg>
+        </onDropEquipExpire>
     </BaseMethods>
 
     <CellMethods>
@@ -452,6 +466,7 @@
             <Arg>      UINT64                       </Arg>
             <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
             <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+            <Arg>      BOOL                         </Arg>
         </reqEquipSpiritWashing>
 
         <reqEquipSpiritWashingConfirm> <Exposed/>
@@ -476,6 +491,7 @@
             <Arg>   UINT32      </Arg>
             <Arg>   UINT64      </Arg>
             <Arg>   UINT8       </Arg>
+            <Arg>   BOOL        </Arg>
         </cellEquipSpiritWashingPreview>
 
         <cellEquipSoulSocket>
@@ -505,6 +521,7 @@
             <Arg>      UINT64                       </Arg>
             <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
             <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+            <Arg>      BOOL                         </Arg>
         </reqEquipGlyphWashing>
 
         <cellEquipGlyphWashing>
@@ -514,6 +531,7 @@
             <Arg>   UINT32      </Arg>
             <Arg>   UINT64      </Arg>
             <Arg>   UINT8       </Arg>
+            <Arg>   BOOL        </Arg>
         </cellEquipGlyphWashing>
 
         <reqEquipWash> <Exposed/>
@@ -539,6 +557,7 @@
             <Arg>      UINT64                       </Arg>
             <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
             <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+            <Arg>      BOOL                         </Arg>
         </reqEquipBless>
 
         <cellEquipBless>
@@ -547,6 +566,7 @@
             <Arg>   UUID        </Arg>
             <Arg>   UINT32      </Arg>
             <Arg>   UINT64      </Arg>
+            <Arg>   BOOL        </Arg>
         </cellEquipBless>
 
         <reqEquipBackBless> <Exposed/>
@@ -632,12 +652,24 @@
         <doDropEquipByItem>
             <Arg>   PYTHON  </Arg>
             <Arg>   PYTHON  </Arg>
+            <Arg>   BOOL    </Arg>
         </doDropEquipByItem>
 
         <onRemoveEquipNotifyCell>
             <Arg>   UNIQUE_ID   </Arg>
         </onRemoveEquipNotifyCell>
         
+        <cellGmDeductEquip>
+            <Arg>   PYTHON  </Arg>
+            <Arg>   ITEM_ID  </Arg>
+            <Arg>   UNIQUE_ID   </Arg>
+        </cellGmDeductEquip>
+
+        <cellGmQueryEquip>
+            <Arg>   PYTHON  </Arg>
+            <Arg>   ITEM_ID  </Arg>
+            <Arg>   UNIQUE_ID   </Arg>
+        </cellGmQueryEquip>
     </CellMethods>
 
     <ClientMethods>
@@ -842,8 +874,9 @@
             <Arg>   INT64               </Arg>
         </onSetEquipReturnTime>
         <onSetEquipPrice>
-            <Arg>   UNIQUE_ID           </Arg>
-            <Arg>   INT64               </Arg>
+            <Arg>   UNIQUE_ID            </Arg>
+            <Arg>   UINT32               </Arg>
+            <Arg>   UINT32               </Arg>
         </onSetEquipPrice>
 
         <onEquipGlyphStatusChange>

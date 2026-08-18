@@ -16,6 +16,7 @@ import dropAward
 import itemFactory
 import utils
 import _pickle as cPickle
+import itemData_itemData as IDID
 
 BASE, CELL, ALL, INSIDE, ALLSIDE = gameconst.BASE, gameconst.CELL,\
     gameconst.ALL, gmAdmin.INSIDE, gmAdmin.ALLSIDE
@@ -307,8 +308,8 @@ def _onBeginBanLogin(su, gbId, endTime, isAuto, ret, num, insertId, err):
     if isAuto:
         #当前封禁中并且是手动的，自动ban不能覆盖，且要报错
         if banLogin >= utils.curTS() and autoBanFlag == gameconst.AutoBanType.MANUAL:
-            LOG_ERR('gmBanAvatar but autoBanLoginFlag is MANUAL')
-            su.onCommandResult(1, 'gmBanAvatar but autoBanLoginFlag is MANUAL', {})
+            LOG_WARN('gmBanAvatar but autoBanLoginFlag is MANUAL')
+            su.onCommandResult(0, 'gmBanAvatar but autoBanLoginFlag is MANUAL', {"effective": 0, "banExpireTime": banLogin, "isAuto": 1, "banType": 1})
             return
         #自动ban时间更久，才覆盖
         if endTime > banLogin:
@@ -572,3 +573,60 @@ def modifyMulCurrency(su, player, modifyInfoStr):
         LOG_INFO('modifyMulCurrency: resp:', resp)
         return su.onCommandResult(0, f'command success', resp)
 
+
+# ------------------------- 排行榜 ---------------------------
+@gm_cmd('$finalScoreRushRank', (Int('force'),), RONE, BASE, '冲刺战力榜定榜', ALLSIDE, GOD_GROUPS, minArgs=0)
+def finalScoreRushRank(su, force=0):
+    force = force or 0
+    LOG_INFO('finalScoreRushRank', force)
+    gameengine.getGlobalBase(
+        'LeaderBoardStub' + str(gameconst.LeaderBoardType.AVATAR_SCORE)
+    ).gmFinalizeScoreRank(force)
+
+    su.onCommandResult(0, '', {})
+    return True, 'command success'
+
+@gm_cmd('$gmDeductItem', (Player("gbId or Id", raw=True), Int("itemId"), Int("bindNum"), Int("unbindNum"), Int("ignoreBindNum"), Int("debtBindNum"), Int("debtUnbindNum")), RARG(0), BASE, '扣除道具，不够的可以欠债', ALLSIDE,
+        GOD_GROUPS)
+def gmDeductItem(superUser, playerEnt, itemId, bindNum, unbindNum, ignoreBindNum, debtBindNum, debtUnbindNum):
+    if itemId not in IDID.datas:
+        return False, '执行失败, 道具不存在'
+
+    if gmCommand.isRawPlayer(playerEnt):
+        gbId, name, accountName, dbId = playerEnt
+        gamesql.recordAvatarOfflineCallback(gbId, 'gmDeductItem', (itemId, bindNum, unbindNum, ignoreBindNum, debtBindNum, debtUnbindNum))
+    else:
+        playerEnt.gmDeductItem(itemId, bindNum, unbindNum, ignoreBindNum, debtBindNum, debtUnbindNum)
+
+    return True, 'command success'
+
+@gm_cmd('$gmDeductEquip', (Player("gbId or Id", raw=True), Int("itemId"), Int("EquipID"), ), RARG(0), BASE, '扣除装备，装身上的会卸下', ALLSIDE,
+        GOD_GROUPS)
+def gmDeductEquip(superUser, playerEnt, itemId, equipId):
+    if gmCommand.isRawPlayer(playerEnt):
+        superUser.onCommandResult(-1, '执行失败, 玩家不在线', {"ec": -2})
+    else:
+        playerEnt.gmDeductEquip(superUser, itemId, equipId)
+
+@gm_cmd('$gmGetItemNum', (Player("gbId or Id", raw=True), Int("itemId"), ), RARG(0), BASE, '获取玩家道具数量（包括仓库）', ALLSIDE,
+        GOD_GROUPS)
+def gmGetItemNum(su, playerEnt, itemId):
+    if gmCommand.isRawPlayer(playerEnt):
+        su.onCommandResult(-1, '执行失败, 玩家不在线', {"ec": -2, "itemId": itemId, "bagBindNum": 0, "bagUnbindNum": 0, "warehouseBindNum": 0, "warehouseUnbindNum": 0})
+    else:
+        playerEnt.gmGetItemNum(su, itemId)
+
+@gm_cmd('$gmQueryEquip', (Player("gbId or Id", raw=True), Int("itemId"), Int("EquipID"), ), RARG(0), BASE, '查询装备', ALLSIDE,
+        GOD_GROUPS)
+def gmQueryEquip(superUser, playerEnt, itemId, equipId):
+    if gmCommand.isRawPlayer(playerEnt):
+        superUser.onCommandResult(-1, '执行失败, 玩家不在线', {"ec": -2})
+    else:
+        playerEnt.gmQueryEquip(superUser, itemId, equipId)
+
+@gm_cmd('$gmRestoreEquip', (Player("gbId or Id", raw=True), Str("equipData"), Str("events"), ), RARG(0), BASE, '恢复装备', ALLSIDE, GOD_GROUPS)
+def gmRestoreEquip(su, playerEnt, equipData, events):
+    if gmCommand.isRawPlayer(playerEnt):
+        su.onCommandResult(-1, '执行失败, 玩家不在线', {"ec": -2})
+    else:
+        playerEnt.gmRestoreEquip(su, equipData, events)

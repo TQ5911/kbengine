@@ -8761,7 +8761,8 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 1,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10304002": {
@@ -8825,9 +8826,9 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 18000723,
           "ID": 10304005,
-          "PosX": 177.07,
+          "PosX": 176.56,
           "PosY": 170.78,
-          "PosZ": 461.02,
+          "PosZ": 461.78,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": "11",
@@ -8835,7 +8836,8 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 1,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10304006": {
@@ -8859,7 +8861,8 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 1,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10304007": {
@@ -8883,7 +8886,8 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 1,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10304008": {
@@ -8907,7 +8911,8 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 1,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10304009": {
@@ -8931,7 +8936,8 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 1,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10304010": {
@@ -8980,7 +8986,8 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 1,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10304012": {
@@ -9004,7 +9011,8 @@ datas ={
             "RefreshNum": 1,
             "RefreshTime": 1,
             "RefreshTimedID": 0,
-            "Remark": ""
+            "Remark": "",
+            "ShowInSceneMap": 1
           }
         },
         "10304013": {
@@ -9098,7 +9106,7 @@ datas ={
           "PosZ": 435.2138,
           "Props": {
             "IsOpen": 1,
-            "MapEntityType": 0,
+            "MapEntityType": "11",
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
@@ -9118,9 +9126,9 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 18000741,
           "ID": 10304019,
-          "PosX": 236.4629,
+          "PosX": 236.55,
           "PosY": 105.2157,
-          "PosZ": 208.7977,
+          "PosZ": 209.56,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,

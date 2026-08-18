@@ -6,7 +6,7 @@ from KBEDebug import *
 class IEventBase(object):
     def createTempEvent(self, eventKey):
         if self.getTempMiscProp(eventKey):
-            LOG_ERR("IEventBase::createTempEvent tempMiscProp is not empty", _eventKey)
+            LOG_ERR("IEventBase::createTempEvent tempMiscProp is not empty", eventKey)
             return
 
         self.setTempMiscProp(eventKey, [])

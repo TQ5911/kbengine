@@ -47,10 +47,11 @@ def _13080004(self, target, context):
         buffSrc.attackByPct(target, context, *context.args.ActionParam)
 
 def _13080005(self, target, context):
-    #self.healByPct(target, context, *context.args.ActionParam)
-    buffSrc = context.getSrcEntity()
-    if buffSrc:
-        buffSrc.healByPct(target, context, *context.args.ActionParam)
+    if not self.hasBuff(64004520):
+        #self.healByPct(target, context, *context.args.ActionParam)
+        buffSrc = context.getSrcEntity()
+        if buffSrc:
+            buffSrc.healByPct(target, context, *context.args.ActionParam)
 
 def _13080006(self, target, context):
     if not self.hasBuff(64004520):
@@ -407,22 +408,22 @@ def _13080069(self, target, context):
         buffSrc.addMpByPct(target, context, *context.args.ActionParam)
 
 def _13080070(self, target, context):
-   self.addExpAction(int(125*math.pow(1.052, min( self.level,30)-20)))
+   self.addExpAction(int(1.3*180*math.pow(1.058, min( self.level,30)-20)))
 
 def _13080071(self, target, context):
-       self.addExpAction(int(209*math.pow(1.052, min( self.level,40)-30)))
+       self.addExpAction(int(1.3*333*math.pow(1.058, min( self.level,40)-30)))
 
 def _13080072(self, target, context):
-       self.addExpAction(int(348*math.pow(1.052, min( self.level,50)-40)))
+       self.addExpAction(int(1.3*620*math.pow(1.058, min( self.level,50)-40)))
 
 def _13080073(self, target, context):
-       self.addExpAction(int(580*math.pow(1.052, min( self.level,60)-50)))
+       self.addExpAction(int(1.3*1235*math.pow(1.058, min( self.level,60)-50)))
 
 def _13080074(self, target, context):
-       self.addExpAction(int(965*math.pow(1.052, min( self.level,70)-60)))
+       self.addExpAction(int(1.3*965*math.pow(1.052, min( self.level,70)-60)))
 
 def _13080075(self, target, context):
-       self.addExpAction(int(1608*math.pow(1.052, min( self.level,80)-70)))
+       self.addExpAction(int(1.3*1608*math.pow(1.052, min( self.level,80)-70)))
 
 def _13080076(self, target, context):
     buffSrc = context.getSrcEntity()
@@ -446,55 +447,55 @@ def _13080079(self, target, context):
         buffSrc.addMpByPct(target, context, *context.args.ActionParam)
 
 def _13080080(self, target, context):
-    self.addExpAction(int(0.4*125*math.pow(1.052, min( self.level,30)-20)))
+    self.addExpAction(int(1.2*0.4*180*math.pow(1.058, min( self.level,30)-20)))
 
 def _13080081(self, target, context):
-    self.addExpAction(int(0.4*209*math.pow(1.052, min( self.level,40)-30)))
+    self.addExpAction(int(1.2*0.4*333*math.pow(1.058, min( self.level,40)-30)))
 
 def _13080082(self, target, context):
-    self.addExpAction(int(0.4*348*math.pow(1.052, min( self.level,50)-40)))
+    self.addExpAction(int(1.2*0.4*620*math.pow(1.058, min( self.level,50)-40)))
 
 def _13080083(self, target, context):
-    self.addExpAction(int(0.9*125*math.pow(1.052, min( self.level,30)-20)))
+    self.addExpAction(int(1.3*0.9*180*math.pow(1.058, min( self.level,30)-20)))
 
 def _13080084(self, target, context):
-    self.addExpAction(int(1*125*math.pow(1.052, min( self.level,30)-20)))
+    self.addExpAction(int(1.3*1.05*180*math.pow(1.058, min( self.level,30)-20)))
 
 def _13080085(self, target, context):
-    self.addExpAction(int(1.1*125*math.pow(1.052, min( self.level,30)-20)))
+    self.addExpAction(int(1.4*1.2*180*math.pow(1.058, min( self.level,30)-20)))
 
 def _13080086(self, target, context):
-     self.addExpAction(int(0.9*209*math.pow(1.052, min( self.level,40)-30)))
+     self.addExpAction(int(1.3*0.9*333*math.pow(1.058, min( self.level,40)-30)))
 
 def _13080087(self, target, context):
-     self.addExpAction(int(1*209*math.pow(1.052, min( self.level,40)-30)))
+     self.addExpAction(int(1.3*1.05*333*math.pow(1.058, min( self.level,40)-30)))
 
 def _13080088(self, target, context):
-     self.addExpAction(int(1.1*209*math.pow(1.052, min( self.level,40)-30)))
+     self.addExpAction(int(1.4*1.2*333*math.pow(1.058, min( self.level,40)-30)))
 
 def _13080089(self, target, context):
-    self.addExpAction(int(0.9*348*math.pow(1.052, min( self.level,50)-40)))
+    self.addExpAction(int(1.3*0.9*620*math.pow(1.058, min( self.level,50)-40)))
 
 def _13080090(self, target, context):
-    self.addExpAction(int(1*348*math.pow(1.052, min( self.level,50)-40)))
+    self.addExpAction(int(1.3*1.05*620*math.pow(1.058, min( self.level,50)-40)))
 
 def _13080091(self, target, context):
-    self.addExpAction(int(1.1*348*math.pow(1.052, min( self.level,50)-40)))
+    self.addExpAction(int(1.4*1.2*620*math.pow(1.058, min( self.level,50)-40)))
 
 def _13080092(self, target, context):
     self.lockMinHpTime(self, context, context.args.ActionParam[0], context.args.ActionParam[1])
 
 def _13080093(self, target, context):
-    self.addExpAction(int(0.4*580*math.pow(1.052, min( self.level,60)-50)))
+    self.addExpAction(int(1.2*0.4*1235*math.pow(1.058, min( self.level,60)-50)))
 
 def _13080094(self, target, context):
-    self.addExpAction(int(0.9*580*math.pow(1.052, min( self.level,60)-50)))
+    self.addExpAction(int(1.3*0.9*1235*math.pow(1.058, min( self.level,60)-50)))
 
 def _13080095(self, target, context):
-    self.addExpAction(int(1*580*math.pow(1.052, min( self.level,60)-50)))
+    self.addExpAction(int(1.3*1.05*1235*math.pow(1.058, min( self.level,60)-50)))
 
 def _13080096(self, target, context):
-    self.addExpAction(int(1.1*580*math.pow(1.052, min( self.level,60)-50)))
+    self.addExpAction(int(1.4*1.2*1235*math.pow(1.058, min( self.level,60)-50)))
 
 def _13080097(self, target, context):
     buffSrc = context.getSrcEntity()

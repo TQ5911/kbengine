@@ -25,8 +25,9 @@
         </mallItemLastUpdateTime>
 
         <auctionSnatchRecords>
-            <Type>          PY_DICT  </Type>
-            <Flags>         BASE     </Flags>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
         </auctionSnatchRecords>
     </Properties>
 

@@ -237,6 +237,9 @@ class BaseItem(userType.UserSingleType, metaclass=abc.ABCMeta):
             'lockStatus': self.lockStatus,
         }
 
+    def getRestoreData(self):
+        return ''
+
     def getItemLevel(self):
         return 1
 

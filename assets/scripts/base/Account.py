@@ -44,6 +44,9 @@ import agent_agentConfig as A_ACD
 import login_set as L_SD
 import antiAddictionSystem_config as AASC
 import const_const as C_CD
+import secondpwd_secondPwdConfig as SP_SPC
+import copy
+import CloudServicesUtils
 
 
 class AccountStatus(object):
@@ -63,6 +66,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
     def __init__(self):
         KBEngine.Proxy.__init__(self)
         iCycleEvent.ICycleEventMixin.__init__(self)
+        self.initDatetimeTimerTick()
+        self.bindEvents()
         self.avatarID = 0
         self.shouldAutoBackup = False
 
@@ -71,6 +76,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         self.accountType, self.accountName = utils.fetchAccountTypeAndName(self.__ACCOUNT_NAME__)
         self.onDailyEvent()
         self._hasLoadData = False # 先加载角色数据，再加载appearance数据
+        self.loginTime = utils.curTS()
 
         if not self.phone:
             self.phone = self.otherData.get('phone', 0)
@@ -101,6 +107,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
 
         self.pyAddTimer(10, 10, gametimer.CHECK_CHAR_EXPIRE)
         self._loadAccountOfflineFunc()
+
+        self.secondaryPwdInfo.setDefault(True)
+        self.checkSecondaryPwdLockedExpired(len(SP_SPC.datas.get('continuousWrong', {}).get('value', [])))
 
     def loadSwitchServerRecrod(self):
         LOG_INFO('loadSwitchServerRecrod:', self.accountFullName())
@@ -181,6 +190,61 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             self.checkAuthCharExpire()
         elif userArg == gametimer.ACCOUNT_WRITE_CHAR:
             self._writeCharacters(True)
+        elif userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
+            self._onDatetimeTimerTick()
+
+    def checkSecondaryPwdLockedExpired(self, maxStep):
+        LOG_INFO("Account::checkSecondaryPwdLockedExpired")
+        LOG_DBG("Account::checkSecondaryPwdLockedExpired", self.secondaryPwdInfo)
+        if not self.secondaryPwdInfo.hasSecondaryPassword():
+            LOG_DBG("Account::checkSecondaryPwdLockedExpired no pwdHash")
+            return
+        if self.secondaryPwdInfo.getLockedStep() != maxStep:
+            LOG_DBG("Account::checkSecondaryPwdLockedExpired no max step")
+            return
+        now = utils.curTS()
+        if self.secondaryPwdInfo.checkBeVerityLocked(now):
+            LOG_INFO("Account::checkSecondaryPwdLockedExpired checkBeVerityLocked")
+            timerId = self._datetimeCallback(self.secondaryPwdInfo.getLockedTimestamp(), 'onSecondaryPwdLockedExpiredCB', (), gametimer.TIMER_TAG_CHECK_SECONDARY_PWD_LOCKED_EXPIRED)
+            self.secondaryPwdInfo.setCheckLockedExpiredTimerId(timerId)
+        else:
+            LOG_INFO("Account::checkSecondaryPwdLockedExpired beVerityLockedExpired")
+            self.secondaryPwdInfo.beVerityLockedExpired()
+            if self.avatar:
+                self.avatar.onSecondaryPwdLockedExpired()
+
+    def cannelSecondaryPwdLockedExpired(self):
+        LOG_INFO("Account::cannelSecondaryPwdLockedExpired")
+        LOG_DBG("Account::cannelSecondaryPwdLockedExpired", self.secondaryPwdInfo)
+        timerId = self.secondaryPwdInfo.getCheckLockedExpiredTimerId()
+        if not timerId:
+            return
+        self._cancelDatetimeCallback(timerId, gametimer.TIMER_TAG_CHECK_SECONDARY_PWD_LOCKED_EXPIRED)
+        self.secondaryPwdInfo.setCheckLockedExpiredTimerId(0)
+
+    def onSecondaryPwdLockedExpiredCB(self):
+        LOG_INFO("Account::onSecondaryPwdLockedExpiredCB")
+        self.secondaryPwdInfo.setCheckLockedExpiredTimerId(0)
+        self.secondaryPwdInfo.beVerityLockedExpired()
+        if self.avatar:
+            self.avatar.onSecondaryPwdLockedExpired()
+
+    def clearSecondaryPwdPunishmentInfo(self, *args):
+        LOG_INFO("Account::clearSecondaryPwdPunishmentInfo")
+        LOG_DBG("Account::clearSecondaryPwdPunishmentInfo", self.secondaryPwdInfo)
+        now = utils.curTS()
+        if not self.secondaryPwdInfo.hasSecondaryPassword():
+            LOG_DBG("Account::clearSecondaryPwdPunishmentInfo no pwdHash")
+            return
+        if self.secondaryPwdInfo.checkBeVerityLocked(now):
+            LOG_DBG("Account::clearSecondaryPwdPunishmentInfo checkBeVerityLocked")
+            return
+    
+        LOG_INFO("Account::dailyResetPunishmentInfo")
+        self.secondaryPwdInfo.dailyResetPunishmentInfo()
+        self.cannelSecondaryPwdLockedExpired()
+        if self.avatar:
+            self.avatar.onDailyClearPunishmentInfo()
 
     @property
     def avatar(self):
@@ -256,6 +320,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         direction = (0.0, 0.0, bornDirection * math.pi / 180)
         bornGamePlayID = utils.getPlayerBornMapId()
         _now = utils.curTS()
+        creationOrder = self.getPersistentMiscProp(gameconst.EntityPropsEnum.creationOrder, 0)
+        creationOrder += 1
         props = {
             'gbID': avatarProps["gbId"],
             "name": avatarProps["name"],
@@ -280,15 +346,14 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             'warehouse': warehouse,
             'chiefInfo': chiefInfo,
             'newbieStep': TC_NSD.minKey,
-            'birthIp': self.getClientIp()
+            'birthIp': self.getClientIp(),
+            'creationOrder': creationOrder,
         }
 
         avatar = KBEngine.createEntityLocally('Avatar', props)
         if avatar:
             LOG_INFO('create avatar success', avatar.id)
             avatar.pyWriteToDB(functools.partial(self._onAvatarSaved, props))
-            creationOrder = self.getPersistentMiscProp(gameconst.EntityPropsEnum.creationOrder, 0)
-            creationOrder += 1
             self.setPersistentMiscProp(gameconst.EntityPropsEnum.creationOrder, creationOrder)
             LogTrackingMgr.LogTrackingMgr.Server_Create_Role(
                 avatar.gbID,
@@ -308,6 +373,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
                 creationOrder,
                 avatarProps["sex"],
                 avatar.obId,
+                self.operatingSystem,
             )
         else:
             LOG_ERR('failed to create avatar', self.accountName)
@@ -757,7 +823,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         if otherChn == gameconst.ClientCallChannel.SUB_CHANNEL:
             if not self.isAuthHost(avatar.gbID):
                 # 代理尝试登录，但是号主已经在当前进程登录了
-                LOG_DBG('_onAvatarLoaded not host could not observe')
+                LOG_INFO('_onAvatarLoaded not host could not observe')
                 self.client.onMessage(A_ACD.datas['loginDailiMsg']['value'], [])
                 self.accountStatus = AccountStatus.normal
                 return
@@ -791,6 +857,15 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         该entity被正式激活为可使用， 此时entity已经建立了client对应实体， 可以在此创建它的
         cell部分。
         """
+
+        if not self.changeDinghaoLock(True):
+            LOG_WARN('onClientEnabled set dinghao lock failed')
+            return
+
+        self._onClientEnabled(chn)
+        self.changeDinghaoLock(False)
+
+    def _onClientEnabled(self, chn):
         LOG_INFO(
             "Account[%i]::onClientEnabled:entities enable. entityCall:%s, clientType(%i), clientDatas=(%s), hasAvatar=%s, accountName=%s" % \
             (self.id, self.client, self.getClientType(chn), self.getClientDatas(chn), self.avatarID, self.accountName),
@@ -989,10 +1064,12 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             if _cVal.authExpire >= _now:
                 continue
 
+            _dbid = _cVal.authDbId
             _cVal.setAuthDbId(0, 0)
             _changeList.append(_cVal)
             if self.isAuthHost(_cVal.gbId):
                 gamesql.resetExpireAuth(self.databaseID, _now, self._onClearAfterReset)
+                self.logStopAuth(_cVal.gbId, _dbid, gameconst.AUTH_STOP_AUTO)
                 continue
 
             self.characters.removeCharacter(_cVal.gbId)
@@ -1057,7 +1134,34 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         return self.deviceUniqueIdentifier and loginDataDic.get('deviceUniqueIdentifier',
                                                                  None) != self.deviceUniqueIdentifier
 
+    def isDinghaoLock(self):
+        return utils.curTS() < self.dinghaoLockTimeout
+
+    def changeDinghaoLock(self, isLock):
+        if isLock and self.isDinghaoLock():
+            LOG_WARN('dinghao lock already set')
+            return False
+        
+        if not isLock and not self.isDinghaoLock():
+            LOG_WARN('dinghao lock already removed')
+            return False
+
+        if isLock:
+            self.dinghaoLockTimeout = utils.curTS() + 10
+        else:
+            self.dinghaoLockTimeout = 0
+        return True
+
     def onLogOnAttempt(self, ip, port, password):
+        if not self.changeDinghaoLock(True):
+            LOG_WARN('onLogOnAttempt set dinghao lock failed')
+            return KBEngine.LOG_ON_REJECT
+
+        ret = self._onLogOnAttempt(ip, port, password)
+        self.changeDinghaoLock(False)
+        return ret
+
+    def _onLogOnAttempt(self, ip, port, password):
         # 杀进程时有时不能立即识别出客户端断开了，因而没走onClientDeath，所以这里无论如何都accept，顶号的话也让登
         LOG_INFO('onLogOnAttempt', ip, port, self.client, self.avatar)
         if not gameconfig.interfaceEnableLogin():
@@ -1151,10 +1255,12 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             self.operatingSystem,
             self.accountType,
             self.packageSource,
+            utils.curTS() - self.loginTime,
         )
         self.destroyAccountReason(reason)
 
-    def destroyAccountReason(self, reason, msgContent=''):
+    def destroyAccountReason(self, reason, subReason=0):
+        LOG_DBG('destroyAccountReason:', reason, subReason)
         if self.isDestroyed:
             return
 
@@ -1168,8 +1274,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
                 self.addTimerCB(0.2, 'destroyActiveAvatar', (reason,), gametimer.TIMER_TAG_KICK_ACCOUNT_BY_ANIT_ADDICTION)
                 return
             elif reason == gameconst.OFFLINE_REASON_GMKICK:
-                self.avatar.client.onMessage(LGSD.datas['forceLogout']['value'], [msgContent])
-                self.avatar.client.onAvatarOfflineClient(reason)
+                self.avatar.client.onAvatarOfflineClient(gameconst.OFFLINE_REASON_GMKICK_SUB_FROM+subReason)
                 self.addTimerCB(0.2, 'destroyActiveAvatar', (reason,), gametimer.TIMER_TAG_GM_KICK_ACCOUNT)
                 return
             else:
@@ -1188,8 +1293,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
                 self.addTimerCB(0.2, 'destroy', (), gametimer.TIMER_TAG_KICK_ACCOUNT_BY_ANIT_ADDICTION)
                 return
             elif reason == gameconst.OFFLINE_REASON_GMKICK:
-                self.client.onMessage(LGSD.datas['forceLogout']['value'], [msgContent])
-                self.client.onAccountOfflineClient(reason)
+                self.client.onAccountOfflineClient(gameconst.OFFLINE_REASON_GMKICK_SUB_FROM+subReason)
                 self.addTimerCB(0.2, 'destroy', (), gametimer.TIMER_TAG_KICK_ACCOUNT_BY_ANIT_ADDICTION)
                 return
 
@@ -1273,6 +1377,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         return cVal.charAppearance.clone()
 
     def setCharAppearance(self, gbId, appearance):
+        if gameconfig.isCrossServer():
+            return
+
         cVal = self.characters.get(gbId)
         if not cVal:
             LOG_ERR('setCharAppearance', gbId)
@@ -1384,8 +1491,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         if accountName == self.accountName and accountType == self.accountType:
             self.destroyAccountReason(reason)
 
-    def kickAccountSingleGm(self, msgContent):
-        self.destroyAccountReason(gameconst.OFFLINE_REASON_GMKICK, msgContent)
+    def kickAccountSingleGm(self, subReason):
+        self.destroyAccountReason(gameconst.OFFLINE_REASON_GMKICK, subReason)
 
     def pyWriteToDB(self, callBackFunc=None):
         if callBackFunc:
@@ -1436,6 +1543,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             avatar.money,
             avatar.coin,
             avatar.getTempMiscProp(gameconst.EntityPropsEnum.cellMapId, 0),
+            self.operatingSystem,
         )
         avatar.logUserSetInit(10)
 
@@ -1570,6 +1678,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
 
             if _authExpire <= _now and _authDbId:
                 _needResetAuth.append(_authDbId)
+                self.logStopAuth(_gbId, _authDbId, gameconst.AUTH_STOP_AUTO)
                 _authExpire = 0
                 _authDbId = 0
 
@@ -1899,8 +2008,34 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             LOG_ERR('_onStopCharacterAuth not find character', gbId)
             return
 
+        _dbid = _cVal.authDbId
         _cVal.setAuthDbId(0, 0)
         self.client.onCharInfoChange(_cVal)
+        self.logStopAuth(_cVal.gbId, _dbid, gameconst.AUTH_STOP_MANUAL)
+
+    def logStopAuth(self, gbId, subDbId, stopType):
+        gamesql.getAccountNameById(
+            subDbId,
+            functools.partial(self._logStopAuth, gbId, stopType)
+        )
+
+    def _logStopAuth(self, gbId, stopType, ret, num, insertId, err):
+        if err:
+            LOG_ERR('_logStopAuth', gbId, err)
+            return
+
+        if not ret:
+            LOG_ERR('_logStopAuth no ret', gbId)
+            return
+
+        _accountName = utils.bytesToString(ret[0][0])
+        LogTrackingMgr.LogTrackingMgr.agent_stop(
+            gbId,
+            '',
+            self.accountName,
+            _accountName,
+            stopType,
+        )
 
     def getCharVal(self, gbId):
         return self.characters.get(gbId)
@@ -2074,3 +2209,22 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             'doGetAuthOfflineTime',
             (self,), self, 'getAuthOfflineTimeButOffline', ())
 
+    def bindEvents(self):
+        self.registerDailyEvent('clearSecondaryPwdPunishmentInfo')
+
+    def checkTextSecurityCallback(self, req, httpCode, jsonData, headers, success, *args):
+        LOG_INFO("checkTextSecurityCallback", req, httpCode, jsonData, headers, success)
+        self.client.checkTextSecurityResp({'res': True, 'id': req['id'], 'resp': jsonData})
+
+    @gamedecorator.crossServer
+    def checkTextSecurityReq(self, exposed, req):
+        LOG_INFO('checkTextSecurityReq req', req)
+        datas = {
+            'text'      : str(req['text']),
+            'id'        : str(self.accountName),
+            'bizType'   : str(req['bizType']),
+        }
+        res = CloudServicesUtils.checkTextSecurity(datas, functools.partial(self.checkTextSecurityCallback, copy.deepcopy(req)))
+        LOG_DBG('checkTextSecurityReq res', res)
+        if not res:
+            self.client.checkTextSecurityResp({'res': False, 'id': req['id'], 'resp': "{}"})

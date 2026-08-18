@@ -268,7 +268,7 @@ class Avataring(KBEngine.Entity, iTimer.ITimer):
 
         _load = KBEngine.getAverageLoad()
         if _load > 0.8:
-            if KBEngine.time() - self.lastResortTimes < 30:
+            if KBEngine.time() - self.lastResortTimes < gameconfig.highLoadDelay():
                 return
         elif _load > 0.7:
             if KBEngine.time() - self.lastResortTimes < 20:

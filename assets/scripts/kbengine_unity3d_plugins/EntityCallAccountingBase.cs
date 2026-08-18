@@ -30,6 +30,16 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void checkTextSecurityReq(CHECK_TEXT_SECURITY_REQ arg1)
+		{
+			Bundle pBundle = newCall("checkTextSecurityReq", 0);
+			if(pBundle == null)
+				return;
+
+			((DATATYPE_CHECK_TEXT_SECURITY_REQ)EntityDef.id2datatypes[488]).addToStreamEx(bundle, arg1);
+			sendCall(null);
+		}
+
 		public void createAvataring(UInt64 arg1, string arg2, UInt16 arg3, Byte arg4, Byte arg5, Byte arg6, OUTFIT_DATA arg7, FACE_DATA arg8)
 		{
 			Bundle pBundle = newCall("createAvataring", 0);

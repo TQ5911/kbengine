@@ -186,8 +186,9 @@ class ICollectible(object):
                 return False
 
         # 扣除物品（要求物品必须一次扣除，不存在扣除一部分的情况）
-        if not self.canDeductWealth(deductWealthVal):
-            LOG_WARN('     in _completeCollect, canDeductWealth fail')
+        res = self.canDeductWealth(deductWealthVal)
+        if not res:
+            LOG_WARN('     in _completeCollect, canDeductWealth fail', res())
             return False
         srcType = AAC_AACDD.datas.BONUS_SRC_COLLECTIBLE
         detail = gameclass.AwardDetailCls(costItemId=itemID, costItemNum=itemCount)

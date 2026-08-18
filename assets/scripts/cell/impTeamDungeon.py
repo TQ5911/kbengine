@@ -586,11 +586,11 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
 
     def leaveTeamDungeonCell(self):
         src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
+        src._extra['teamUUID'] = self.teamId
         self._leaveTeamDun(src)
 
     def _leaveTeamDun(self, src):
         LOG_INFO('_leaveTeamDun ', src)
-        teamStub = gameengine.getTeamStub(self.teamId)
         dungeonNo = formula.fetchMapId(self.spaceNo)
 
         if not formula.inDungeonScene(self.spaceNo):
@@ -611,7 +611,10 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
 
         _mMapId, _mOutsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=spaceType)
         spaceNo = _mOutsideRecord.spaceNo if _mOutsideRecord else formula.combineLineSpaceNo(gameconst.MapIdDef.mapXinYuanCheng)
-        lCtx = {'teamUUID': self.teamId,
+        teamUUID = self.teamId 
+        if teamUUID <= 0:
+            teamUUID = src._extra.get('teamUUID', 0)
+        lCtx = {'teamUUID': teamUUID,
                     'spaceMgrBox': self.spaceMgr.base,
                     'extra': {}}
         eCtx = {}
@@ -625,6 +628,10 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
 
     def selfLeaveTeamDungeon(self, src):
         LOG_INFO('selfLeaveTeamDungeon::', src)
+        spaceNo = src._extra.get('spaceNo')
+        if spaceNo and spaceNo != self.spaceNo:
+            LOG_INFO('selfLeaveTeamDungeon, not in same space no', src, self.spaceNo)
+            return
         _now = utils.curTS()
         if self.isGlobalTeleportLocked(_now):
             LOG_WARN("selfLeaveTeamDungeon:: teleport locked", src, self.teleportGlobalLockRlsT)
@@ -663,7 +670,7 @@ class ImpTeamDungeon(impDungeonCommon.ImpDungeonCommon, DungeonItemCheckMixin):
         if self.gbId not in _teamEnterCheckDic:
             LOG_WARN('doEnterTeamDungeon:: not in check list', self.gbId, _teamEnterCheckDic)
             return
-
+        extra['clientDistinctIdCell'] = self.clientDistinctIdCell
         # enter directly
         self.readyUseItemAndEnterTeamDungeon(0, spaceNo, spaceUUID, spaceBox, spaceMgrBox, extra)
 

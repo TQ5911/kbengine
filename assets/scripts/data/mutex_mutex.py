@@ -17,12 +17,37 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "type": 10
+        "scene": _tools.ROList([5204, 5205, 1036]),
+        "time": 600,
+        "ifBranch": 0
     }),
     2: _tools.RODict({
         "ID": 2,
-        "type": 11
+        "scene": _tools.ROList([5100]),
+        "time": 300,
+        "ifBranch": 1
+    }),
+    3: _tools.RODict({
+        "ID": 3,
+        "scene": _tools.ROList([5101]),
+        "time": 300,
+        "ifBranch": 1
+    }),
+    4: _tools.RODict({
+        "ID": 4,
+        "scene": _tools.ROList([5102]),
+        "time": 300,
+        "ifBranch": 1
+    }),
+    5: _tools.RODict({
+        "ID": 5,
+        "scene": _tools.ROList([5103]),
+        "time": 300,
+        "ifBranch": 1
     })
 })
 minKey = 1
-maxKey = 2
+maxKey = 5
+
+type2group = _tools.RODict({ 
+})

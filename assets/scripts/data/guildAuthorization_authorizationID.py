@@ -17,7 +17,7 @@ import crontab
 datas = _tools.RODict({ 
     0: _tools.RODict({
         "ID": 0,
-        "authorization": "guildChannelCD",
+        "authorization": "appointPresident",
         "hidden": 0
     }),
     1: _tools.RODict({

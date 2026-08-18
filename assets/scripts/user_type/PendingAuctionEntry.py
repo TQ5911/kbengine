@@ -4,16 +4,18 @@ import userType
 
 class PendingAuctionEntry(userType.UserSingleType):
     '''PENDING_AUCTION_ENTRY'''
-    def __init__(self, auctionItemUUID=0, amount=0, dealTime=0, isSettled=False):
+    def __init__(self, auctionItemUUID=0, bindMoney=0, money=0, dealTime=0, isSettled=False):
         self.auctionItemUUID = auctionItemUUID
-        self.amount = amount
+        self.bindMoney = bindMoney
+        self.money = money
         self.dealTime = dealTime
         self.isSettled = isSettled
 
     def toStreamSavedDic(self):
         return {
             'auctionItemUUID': self.auctionItemUUID,
-            'amount': self.amount,
+            'bindMoney': self.bindMoney,
+            'money': self.money,
             'dealTime': self.dealTime,
             'isSettled': self.isSettled
         }

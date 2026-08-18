@@ -33,6 +33,13 @@ class IMineWarBase(object):
         """
         玩家登录时调用
         """
+        if not self.guildInitStatus:
+            self.registerTempEvent(
+                gameconst.EntityPropsEnum.guildInitEvent, 
+                'onMineWarLogin', 
+                ())
+            return
+
         LOG_INFO('IMineWarBase.onMineWarLogin called for player:', self.id)
         self.reqSyncGuildData()
 
@@ -230,7 +237,7 @@ class IMineWarBase(object):
             self.onMessagePre(utils.getTranslatedMsgId(guildMsgId), [utils.getTranslatedArg(mapName), str(damageCfg[0]), str(damageCfg[0])])
             # 减掉收益
             if mapId in self.MineRevenueDict:
-                del self.MineRevenueDict[mapId]
+                self.MineRevenueDict[mapId] -= damageCfg[1]
 
         # 跑马灯
         msgId = MBC.datas['mineBatte_chatChannelMsg7']['value']

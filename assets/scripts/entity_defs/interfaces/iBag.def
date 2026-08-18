@@ -134,6 +134,36 @@
             <Flags>   BASE              </Flags>
             <Default> 0                 </Default>
         </titleTimerId>
+        
+        <fbAOITimerId>
+            <Type>    TIMER_ID          </Type>
+            <Flags>   CELL              </Flags>
+            <Default> 0                 </Default>
+        </fbAOITimerId>
+        
+        <fbAOICacheList>
+            <Type>    PY_LIST           </Type>
+            <Flags>   CELL              </Flags>
+            <Default> []                </Default>
+        </fbAOICacheList>
+
+        <fnvCheckFailTimesDict>
+            <Type>    PY_DICT           </Type>
+            <Flags>   BASE              </Flags>
+            <Default> {}                </Default>
+        </fnvCheckFailTimesDict>
+
+        <fnvFirstOverDict>
+            <Type>    PY_DICT           </Type>
+            <Flags>   BASE              </Flags>
+            <Default> {}                </Default>
+        </fnvFirstOverDict>
+
+        <debtItemDict>
+            <Type>    PY_DICT          </Type>
+            <Flags>   BASE              </Flags>
+            <Persistent>    true        </Persistent>
+        </debtItemDict>
     </Properties>
 
     <BaseMethods>
@@ -450,6 +480,29 @@
         <setTitle><Exposed/>
             <Arg>       UINT32         </Arg>
         </setTitle>
+
+        <gmDeductItem>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>        UINT32     </Arg>
+            <Arg>        UINT32     </Arg>
+            <Arg>        UINT32     </Arg>
+            <Arg>        UINT32     </Arg>
+            <Arg>        UINT32     </Arg>
+        </gmDeductItem>
+
+        <gmGetItemNum>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+        </gmGetItemNum>
+
+        <gmDeductEquip>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       ITEM_ID     </Arg>
+            <Arg>       UNIQUE_ID   </Arg>
+        </gmDeductEquip>
+
+        <reqDebtItemData> <Exposed/>
+        </reqDebtItemData>
     </BaseMethods>
 
     <CellMethods>
@@ -679,5 +732,11 @@
         <onAddTitles>
             <Arg>       ARRAY <of> TITLE_VAL_INFO </of>     </Arg>
         </onAddTitles>
+
+        <onDebtItemData>
+            <Arg>       ARRAY <of> ITEM_ID </of>     </Arg>
+            <Arg>       ARRAY <of> UINT32 </of>     </Arg>
+            <Arg>       ARRAY <of> UINT8 </of>     </Arg>
+        </onDebtItemData>
     </ClientMethods>
 </root>

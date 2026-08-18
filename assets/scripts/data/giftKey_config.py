@@ -58,5 +58,29 @@ datas = _tools.RODict({
     "CDK_access": _tools.RODict({
         "ID": "CDK_access",
         "value": 54000356,
+    }),
+    "bind_channel_code_invalid": _tools.RODict({
+        "ID": "bind_channel_code_invalid",
+        "value": 54000357,
+    }),
+    "bind_promoter_not_activated": _tools.RODict({
+        "ID": "bind_promoter_not_activated",
+        "value": 54000358,
+    }),
+    "bind_role_not_exist": _tools.RODict({
+        "ID": "bind_role_not_exist",
+        "value": 54000359,
+    }),
+    "bind_role_not_belong": _tools.RODict({
+        "ID": "bind_role_not_belong",
+        "value": 54000360,
+    }),
+    "bind_self_not_allowed": _tools.RODict({
+        "ID": "bind_self_not_allowed",
+        "value": 54000364,
+    }),
+    "bind_role_already_bound": _tools.RODict({
+        "ID": "bind_role_already_bound",
+        "value": 54000365,
     })
 })

@@ -149,9 +149,10 @@ class IMeridian(object):
         for itemId, itemNum in needItems.items():
             deductVal.addWealthByItemId(itemId, itemNum)
             
-        if not self.canDeductWealth(deductVal):
-            LOG_WARN("IMeridian.reqLevelUpMeridianPoint: cost not enough {}, {}, {}, {}".format(
-                slotIdx, pointIdx, bagType, needItems))
+        res = self.canDeductWealth(deductVal)
+        if not res:
+            LOG_WARN("IMeridian.reqLevelUpMeridianPoint: cost not enough {}, {}, {}, {}, {}".format(
+                slotIdx, pointIdx, bagType, needItems, res()))
             return
 
         self.deductWealth(srcType, deductVal, opUUID, detail)
@@ -210,9 +211,10 @@ class IMeridian(object):
         for itemId, itemNum in needItems.items():
             deductVal.addWealthByItemId(itemId, itemNum)
             
-        if not self.canDeductWealth(deductVal):
-            LOG_WARN("IMeridian.reqEnhanceMeridianSlot: cost not enough {}, {}, {}".format(
-                slotIdx, bagType, needItems))
+        res = self.canDeductWealth(deductVal)
+        if not res:
+            LOG_WARN("IMeridian.reqEnhanceMeridianSlot: cost not enough {}, {}, {}, {}".format(
+                slotIdx, bagType, needItems, res()))
             return
             
         self.deductWealth(srcType, deductVal, opUUID, detail)

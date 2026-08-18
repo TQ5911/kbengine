@@ -44,7 +44,7 @@ datas = _tools.RODict({
         "currencyTo": 30000013,
         "exchangeType": 0,
         "exchangeRate": 100,
-        "timeLimit": 100000,
+        "timeLimit": 10000,
         "dailyLimit": -1,
         "isMonthCard": 0
     }),
@@ -55,7 +55,7 @@ datas = _tools.RODict({
         "currencyTo": 30000013,
         "exchangeType": 0,
         "exchangeRate": 100,
-        "timeLimit": 100000,
+        "timeLimit": 10000,
         "dailyLimit": -1,
         "isMonthCard": 0
     }),

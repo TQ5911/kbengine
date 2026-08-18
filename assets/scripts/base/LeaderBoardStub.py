@@ -12,6 +12,7 @@ import time
 import iTimer
 import iGlobal
 import iBaseNoCell
+import iScoreRushRank
 import rank_rankConfig as R_RCD
 import rank_Rank as R_RD
 import character_charData as C_CDD
@@ -24,20 +25,24 @@ import gameconfig
 import experience_config as E_CDD
 
 class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
-                            iTimer.ITimer, iCycleEvent.ICycleEventMixin):
+                            iTimer.ITimer, iCycleEvent.ICycleEventMixin,
+                            iScoreRushRank.IScoreRushRank):
     def __init__(self):
         LOG_INFO('LeaderBoardAvatarStub init')
 
         iCycleEvent.ICycleEventMixin.__init__(self)
+        iScoreRushRank.IScoreRushRank.__init__(self)
+
         self.leaderBoardList.leaderBoardType = self.leaderBoardType
         self.leaderBoardCache = {}
         _dur = R_RCD.datas['refreshCD']['value']
-        self.pyAddTimer(_dur, _dur, gametimer.LEADER_BOARD_REFRESH)
+        self.leaderBoardRefreshTimerId = self.pyAddTimer(_dur, _dur, gametimer.LEADER_BOARD_REFRESH)
 
         _globalName = '{}{}'.format(self.__class__.__name__, self.leaderBoardType)
         gameengine.setGlobalData(_globalName, self)
         self.leaderBoardIdx = 1
         
+        self.initDatetimeTimerTick()
         self.registerDailyEvent('_recalDynamicWorldLevel')
         self.onDailyEvent()
 
@@ -46,6 +51,9 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             self.pyAddTimer(3600 - delta, 3600, gametimer.GEN_RUSH_RANK_DATA)
             self._genRushRankData()
             self._checkRushRankRefresh()
+
+        if self.leaderBoardType == gameconst.LeaderBoardType.AVATAR_SCORE:
+            self._checkScoreRankFinalize()
 
     def doNext(self):
         LOG_INFO('LeaderBoardAvatarStub doNext')
@@ -290,6 +298,7 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             _list.append(_lbcVal)
 
         getattr(box.client, _func)(self.leaderBoardIdx, _list, school, page, _isEnd, _rank)
+        box.onGetLeaderBoardList(_func, self.leaderBoardIdx, _list, school, page, _isEnd, _rank)
 
     def _recalDynamicWorldLevel(self, *args):
         if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL:

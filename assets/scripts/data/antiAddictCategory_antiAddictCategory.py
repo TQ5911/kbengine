@@ -1984,7 +1984,97 @@ datas = _tools.RODict({
         "messageId": 0,
         "rewardMessage": None,
         "group": None
+    }),
+    198: _tools.RODict({
+        "ID": 198,
+        "name": "BONUS_SRC_LEAGUE_ENEMY_COST",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    199: _tools.RODict({
+        "ID": 199,
+        "name": "BONUS_SRC_LEAGUE_ENEMY_COST_BACK",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    200: _tools.RODict({
+        "ID": 200,
+        "name": "BONUS_SRC_LEAGUE_FUND_DONATE",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    201: _tools.RODict({
+        "ID": 201,
+        "name": "BONUS_SRC_LEAGUE_FUND_DONATE_BACK",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    202: _tools.RODict({
+        "ID": 202,
+        "name": "BONUS_SRC_LEAGUE_IRON_AID",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    203: _tools.RODict({
+        "ID": 203,
+        "name": "BONUS_SRC_LEAGUE_IRON_AID_BACK",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    204: _tools.RODict({
+        "ID": 204,
+        "name": "BONUS_SRC_LEAGUE_IRON_AID_BY_GUILD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    205: _tools.RODict({
+        "ID": 205,
+        "name": "BONUS_SRC_GM_DEDUCT_ITEM",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    206: _tools.RODict({
+        "ID": 206,
+        "name": "BONUS_SRC_GM_DEDUCT_SPEC_ITEM",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
     })
 })
 minKey = 1
-maxKey = 197
+maxKey = 206

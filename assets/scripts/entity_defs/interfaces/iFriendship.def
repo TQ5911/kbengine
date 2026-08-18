@@ -175,6 +175,7 @@
         <onAgreeAuthRoleSuccess>
             <Arg>           PLAYER_GBID             </Arg>
             <Arg>           CHARACTER_VAL           </Arg>
+            <Arg>           UNICODE                 </Arg>
         </onAgreeAuthRoleSuccess>
 
         <authorizeRole> <Exposed/>

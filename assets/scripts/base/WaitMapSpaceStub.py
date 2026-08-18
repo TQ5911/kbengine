@@ -98,11 +98,14 @@ class WaitMapSpaceStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iGlobal.IGlobal):
         self.loginAccount.pop(accountName, None)
 
     def _reportWaitMapStatus(self):
+        if not gameconfig.waitmapReportEnable():
+            return
+
         serverId = gameconfig.serverId()
         actual = len(self.loginAccount)
         freeNum = max(0, utils.getWaitmapMaxOnline() - actual)
         nowTs = utils.curTS()
-        LOG_DBG('WaitMapSpaceStub::_reportWaitMapStatus', serverId, actual, freeNum, nowTs)
+        LOG_INFO('WaitMapSpaceStub::_reportWaitMapStatus', serverId, actual, freeNum, nowTs)
 
         # 心跳保活：zset member=serverId, score=当前时间戳
         gameglobal.localBaseApp.getRedisClient().add(

@@ -145,6 +145,10 @@ class ILease(object):
                 A_ACD.datas['restrictedPromptMsg1']['value']):
             return
 
+        if self.checkPopupSecondaryPassword([(gameconst.SecondaryPasswordCheckType.RENTAL_ITEM,)]):
+            LOG_WARN("reqSaleItemInLease failed, need popup sp")
+            return
+        
         if not self.leaseStub:
             LOG_INFO("reqSaleItemInLease leaseStub not found")
             self.onMessagePre(MMD.datas.rent01, [])
@@ -188,7 +192,7 @@ class ILease(object):
         # 冷却校验
         if self._isLeaseCoolDown(uniqueId):
             LOG_INFO("reqSaleItemInLease cooldown", uniqueId)
-            self.onMessagePre(MMD.datas.rent01, [])
+            self.onMessagePre(MMD.datas.rent09, [])
             return
 
         if not self._canEquipItemLease(item):
@@ -252,6 +256,12 @@ class ILease(object):
 
         # 再检查一下
         grid, item = extra['grid'], extra['item']
+        nowItem = self.bagData.getItemObjByGridId(grid)
+        if not nowItem or nowItem.uniqueId != item.uniqueId:
+            LOG_WARN('onReplyAddItemPrepare item change:', item.uniqueId, nowItem and nowItem.uniqueId)
+            self.leaseStub.addItemRollback(uniqueId, opUUID)
+            self.onMessagePre(MMD.datas.rent01, [])
+            return
         if not self._canEquipItemLease(item):
             LOG_INFO("onReplyAddItemPrepare item cannot be leased", uniqueId)
             self.leaseStub.addItemRollback(uniqueId, opUUID)
@@ -267,8 +277,9 @@ class ILease(object):
         feeType, feeAmount = self._getLeaseCost(item.itemId)
         deductVal = dropAward.DeductWealthVal()
         deductVal.addWealthByItemId(feeType, feeAmount)
-        if not self.canDeductWealth(deductVal):
-            LOG_INFO("onReplyAddItemPrepare not enough wealth", uniqueId)
+        res = self.canDeductWealth(deductVal)
+        if not res:
+            LOG_INFO("onReplyAddItemPrepare not enough wealth", uniqueId, res())
             self.leaseStub.addItemRollback(uniqueId, opUUID)
             self.onMessagePre(MMD.datas.rent01, [])
             return
@@ -282,13 +293,37 @@ class ILease(object):
         detail = gameclass.AwardDetailCls(bagType=bagType, gridId=grid, itemId=item.itemId, uniqueId=uniqueId)
         self.getBagByType(bagType).cleanGridByGridId(self, grid, item.itemId, opUUID, srcType, detail)
 
+        # 暂存返还信息，commit 失败时通过邮件返还装备与手续费
+        self._leasePending[uniqueId] = {
+            'item': item,
+            'feeType': feeType,
+            'feeAmount': feeAmount,
+        }
+
         self.leaseStub.addItemCommit(uniqueId, self.gbID, opUUID)
 
 
     def onReplyAddItemCommit(self, uniqueId, result, opUUID):
         LOG_DBG("onReplyAddItemCommit result: ", opUUID, uniqueId, result)
+        refund = self._leasePending.pop(uniqueId, None)
         if result:
             LOG_WARN('ILease::onReplyAddItemCommit failed:', uniqueId, result)
+            # 装备与手续费已扣除，通过邮件返还
+            if refund:
+                item = refund['item']
+                mailVal = dropAward.MailAttachVal(itemObjs=[item])
+                mailVal.addWealthByItemId(refund['feeType'], refund['feeAmount'])
+                mailAssistor.sendMailToPlayers(
+                    [self.gbID],
+                    GBGC.datas['equipReturnItem1']['value'],
+                    extraAttach=mailVal,
+                    opUUID=opUUID,
+                    srcType=ACACD.datas.BONUS_SRC_LEASE_ADD_ITEM,
+                )
+                self.onMessagePre(MMD.datas.rent01, [])
+            else:
+                LOG_ERR("_refundLeaseAddItem no refund data", uniqueId, opUUID)
+                self.onMessagePre(MMD.datas.rent01, [])
             return
 
         self.client.onSaleItemInLeaseSucc(uniqueId)
@@ -311,7 +346,10 @@ class ILease(object):
             return
 
         opUUID = KBEngine.genUUID64()
-        self.leaseStub.leaseItemPrepare(uniqueId, gameconfig.serverId(), self.gbID, opUUID)
+        # 费率配置在调用时读取并透传给租赁中心服，保证热更后立即生效
+        prop01 = AUC_CONST.datas['rentalProp01']['value']
+        prop02 = AUC_CONST.datas['rentalProp02']['value']
+        self.leaseStub.leaseItemPrepare(uniqueId, gameconfig.serverId(), self.gbID, opUUID, prop01, prop02)
 
     def onReplyLeaseItemPrepare(self, uniqueId, totalPrice, result, opUUID):
         LOG_DBG("onReplyLeaseItemPrepare", uniqueId, totalPrice, result, opUUID)
@@ -322,6 +360,10 @@ class ILease(object):
                 return
             if result == LEASE_TIMEOUT:
                 self.onMessagePre(MMD.datas.redeem08, [])
+                return
+            if result in (LEASE_STATUS_ERROR, LEASE_NOT_FOUND):
+                self.onMessagePre(MMD.datas.rent12, [])
+                self.client.onLeaseItemSucc(uniqueId)
                 return
 
             self.onMessagePre(MMD.datas.rent02, [])
@@ -337,8 +379,9 @@ class ILease(object):
         feeType, feeAmount = gameconst.ItemIdEnum.MONEY, totalPrice
         deductVal = dropAward.DeductWealthVal()
         deductVal.addWealthByItemId(feeType, feeAmount)
-        if not self.canDeductWealth(deductVal):
-            LOG_INFO("onReplyLeaseItemPrepare not enough gold", uniqueId)
+        res = self.canDeductWealth(deductVal)
+        if not res:
+            LOG_INFO("onReplyLeaseItemPrepare not enough gold", uniqueId, res())
             self.leaseStub.leaseItemRollback(uniqueId, opUUID)
             self.onMessagePre(MMD.datas.rent02, [])
             return
@@ -347,14 +390,37 @@ class ILease(object):
         detail = gameclass.AwardDetailCls(costId=feeType, costNum=feeAmount)
         self.deductWealth(srcType, deductVal, opUUID, detail)
 
+        # 暂存费用信息，commit 失败时通过邮件返还
+        self._leasePending[uniqueId] = {
+            'feeType': feeType,
+            'feeAmount': feeAmount,
+        }
+
         self.leaseStub.leaseItemCommit(uniqueId, self.gbID, opUUID)
 
     def onReplyLeaseItemCommit(self, opUUID, uniqueId, result, startLeaseTime, endLeaseTime, lessorGBID, ownerGBID, gold, bindGold, cost, itemData):
         LOG_DBG("onReplyLeaseItemCommit", uniqueId, result, opUUID)
+        refund = self._leasePending.pop(uniqueId, None)
         if result != 0:
-            LOG_ERR("onReplyLeaseItemCommit failed", uniqueId, result)
-            self.onMessagePre(MMD.datas.rent02, [])
+            LOG_WARN("onReplyLeaseItemCommit failed", uniqueId, result)
+            # 租金已扣除，通过邮件返还
+            if refund:
+                mailVal = dropAward.MailAttachVal()
+                mailVal.addWealthByItemId(refund['feeType'], refund['feeAmount'])
+                mailAssistor.sendMailToPlayers(
+                    [self.gbID],
+                    GBGC.datas['equipReturnItem2']['value'],
+                    extraAttach=mailVal,
+                    opUUID=opUUID,
+                    srcType=ACACD.datas.BONUS_SRC_LEASE,
+                )
+                self.onMessagePre(MMD.datas.rent02, [])
+            else:
+                LOG_ERR("onReplyLeaseItemCommit no refund data", uniqueId, opUUID)
+                self.onMessagePre(MMD.datas.rent02, [])
             return
+
+        self.client.onLeaseItemSucc(uniqueId)
 
         # 添加交易记录
         redisUtils.PlayerLeaseRecord.recordMessage(
@@ -390,6 +456,7 @@ class ILease(object):
             lessorGBID,
             0,
         )
+        self.onMessagePre(MMD.datas.rent11, [str(gameconst.ItemIdEnum.MONEY), str(cost), str(item.itemId), str(1)])
 
     @gamedecorator.offlineCallback
     def onGiveLeaseItem(self, opUUID, uniqueId, itemData, returnOwnerServerId, returnOwnerGbId, returnEndTime):
@@ -398,7 +465,7 @@ class ILease(object):
         itemDict = json.loads(itemData)
         item = itemFactory.ItemFactory.createItemWithSavedDict(itemDict)
         if not item:
-            LOG_ERR("onGiveLeaseItem createItem failed", uniqueId)
+            LOG_ERR("onGiveLeaseItem createItem failed", uniqueId, opUUID)
             return
 
         # 设置归还属性
@@ -406,13 +473,23 @@ class ILease(object):
 
         bag = self.bagData
         srcType = ACACD.datas.BONUS_SRC_LEASE
-        detail = gameclass.AwardDetailCls(bagType=gameconst.BagTypeEnum.BAG_TYPE_NORMAL, itemId=item.itemId, uniqueId=uniqueId)
-        opStat, _ = bag.addItemsToNewGrid(self, item, opUUID, srcType, detail)
-        if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
-            # 这里一般是不会触发的，因为前置流程中会检查背包格子
-            LOG_ERR("onGiveLeaseItem add bag failed", uniqueId, opStat)
+        if self.getBagLeftGridCount(gameconst.BagTypeEnum.BAG_TYPE_NORMAL) <= 0:
+            # 背包满（极少触发，前置流程中会检查格子），通过邮件发送装备，避免玩家损失
+            # 邮件有效期设为租期截止时刻，过期后附件不可领取，防止超期领取造成装备复制
+            LOG_WARN("onGiveLeaseItem bag full, send by mail", uniqueId)
+            mailVal = dropAward.MailAttachVal(itemObjs=[item])
+            mailAssistor.sendMailToPlayers(
+                [self.gbID],
+                GBGC.datas['equipReturnItem2']['value'],
+                extraAttach=mailVal,
+                expiredTime=returnEndTime,
+                opUUID=opUUID,
+                srcType=srcType,
+            )
+            self.onMessagePre(MMD.datas.rent02, [])
         else:
-            self.client.onLeaseItemSucc(uniqueId)
+            detail = gameclass.AwardDetailCls(bagType=gameconst.BagTypeEnum.BAG_TYPE_NORMAL, itemId=item.itemId, uniqueId=uniqueId)
+            bag.addItemsToNewGrid(self, item, opUUID, srcType, detail)
 
         # 写入承租方冷却列表
         self._addLeaseCoolDown(uniqueId, returnEndTime)
@@ -458,6 +535,9 @@ class ILease(object):
             LEASE_INCOME_KEY_TIMETS: arriveTime,
         }
         self._setupLeaseIncomeTimer(opUUID, arriveTime)
+
+        #
+        self.onMessagePre(MMD.datas.rent10, [str(itemId), str(1)])
 
     # -------------------------------------------------------------
     # 下架流程（跨服）
@@ -509,23 +589,33 @@ class ILease(object):
                 self.client.onCancelSaleItemInLeaseSucc(uniqueId)
             return
 
-        if self.getBagLeftGridCount(gameconst.BagTypeEnum.BAG_TYPE_NORMAL) <= 0:
-            LOG_ERR("onReplyCancelItemInLease bag full", uniqueId, itemDataStr)
-            # 这里并发格子满了，需要兜底
-            self.onMessagePre(MMD.datas.rent05, [])
-            return
-
         itemDict = json.loads(itemDataStr)
         item = itemFactory.ItemFactory.createItemWithSavedDict(itemDict)
         if not item:
             LOG_ERR("onReplyCancelItemInLease createItem failed", uniqueId)
             return
-        
+
         returnTime = item.getReturnTime()
         if returnTime and returnTime < utils.curTS():
             LOG_INFO("onReplyCancelItemInLease item already expired", uniqueId, returnTime)
             self.onMessagePre(MMD.datas.redeem07, [])
             self.client.onCancelSaleItemInLeaseSucc(uniqueId)
+            return
+
+        if self.getBagLeftGridCount(gameconst.BagTypeEnum.BAG_TYPE_NORMAL) <= 0:
+            # 背包被并发操作占满，通过邮件返还装备
+            # 爆装邮件有效期设为归还截止时刻，过期后附件不可领取，防止超期领取
+            LOG_ERR("onReplyCancelItemInLease bag full, send by mail", uniqueId, itemDataStr)
+            mailVal = dropAward.MailAttachVal(itemObjs=[item])
+            mailAssistor.sendMailToPlayers(
+                [self.gbID],
+                GBGC.datas['equipReturnItem3']['value'],
+                extraAttach=mailVal,
+                expiredTime=returnTime,
+                opUUID=KBEngine.genUUID64(),
+                srcType=ACACD.datas.BONUS_SRC_LEASE_CANCEL,
+            )
+            self.onMessagePre(MMD.datas.rent05, [])
             return
 
         srcType = ACACD.datas.BONUS_SRC_LEASE_CANCEL
@@ -750,6 +840,14 @@ class ILease(object):
             LOG_ERR("lease expire no pending data when remove from bag", uniqueId)
             return
 
+        # 这里再判断一下
+        # 如果 returntime 大于当前时间，存在异常不能移除
+        _, item = self._findLeaseEquipInBag(uniqueId)
+        if item and (not item.equipAttr.returnTime or item.equipAttr.returnTime > utils.curTS()):
+            LOG_WARN(f"ILease::_doLeaseExpireRemoveFromBag returntime err, uniqueId: {uniqueId}")
+            self.leasePendingRemoveItems.pop(uniqueId, None)
+            return
+
         srcType = ACACD.datas.BONUS_SRC_LEASE_RETURN
         opUUID = pending[LEASE_RETURN_KEY_UUID]
         detail = gameclass.AwardDetailCls(bagType=gameconst.BagTypeEnum.BAG_TYPE_NORMAL, gridId=gridId, itemId=itemId, uniqueId=uniqueId)
@@ -844,19 +942,23 @@ class ILease(object):
             self.client.onUpdateLeaseIncome(self.leaseIncomeBindGold, self.leaseIncomeGold, delayBindGold, delayGold)
 
     def onLeaseLoginInit(self):
+        # 时间小于等于当前时间时 _datetimeCallback 会立即触发，
+        # 此时 avatar init 还没完成，回调依赖的 accountEntity 尚未准备好，故延迟 0.5s 再触发
+        nowTS = utils.curTS()
+
         # 承租方：遍历待移除列表，重建租赁到期定时器
         for uniqueId, pending in list(self.leasePendingRemoveItems.items()):
-            returnEndTime = pending.get(LEASE_RETURN_KEY_END_TIME, 0)
+            returnEndTime = max(pending.get(LEASE_RETURN_KEY_END_TIME, 0), nowTS + 1)
             self._setupLeaseExpireTimer(uniqueId, returnEndTime)
 
         # 出租方：遍历待归还列表，重建归还定时器
         for uniqueId, pending in list(self.leasePendingReturnItems.items()):
-            returnEndTime = pending.get(LEASE_RETURN_KEY_END_TIME, 0)
+            returnEndTime = max(pending.get(LEASE_RETURN_KEY_END_TIME, 0), nowTS + 1)
             self._setupLeaseReturnTimer(uniqueId, returnEndTime)
 
         # 出租方：遍历延迟收益列表，重建到账定时器
         for opUUID, pending in list(self.leasePendingIncome.items()):
-            arriveTime = pending.get(LEASE_INCOME_KEY_TIMETS, 0)
+            arriveTime = max(pending.get(LEASE_INCOME_KEY_TIMETS, 0), nowTS + 1)
             self._setupLeaseIncomeTimer(opUUID, arriveTime)
 
     # -------------------------------------------------------------

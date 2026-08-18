@@ -16,6 +16,7 @@ import gameclass
 import dataUtils
 import actionContext    
 import gamedecorator
+import gameconfig
 
 
 class IMount(object):
@@ -54,7 +55,8 @@ class IMount(object):
 
         self.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetMountActivated'])
 
-        self.cell.onPendingUseItemFinished(pid, gameconst.UseItemEnum.TRUE)
+        if not gameconfig.isCrossServer():
+            self.cell.onPendingUseItemFinished(pid, gameconst.UseItemEnum.TRUE)
         self.onMessagePre(MMD.datas.useMountsItemSuccess, [MOUNTS.datas[mountId]['name']])
 
         if not hasUnlock and not durationDays:

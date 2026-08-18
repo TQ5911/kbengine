@@ -82,8 +82,9 @@ class IDrawCard(object):
 		return False
 
 	@gamedecorator.checkGameconfigEnable('drawPet')
-	def reqRandomSummonPet(self, exposed, pool, summonNum, cType):
-		LOG_INFO('call reqRandomSummonPet', pool, summonNum, cType)
+	@gamedecorator.limitcall(1)
+	def reqRandomSummonPet(self, exposed, pool, summonNum, cType, stageRnd):
+		LOG_INFO('call reqRandomSummonPet', pool, summonNum, cType, stageRnd)
 		if cType not in gameconst.DrawCardCostType.VAILD_COST_TYPE:
 			LOG_WARN('call reqRandomSummonPet cType')
 			return
@@ -132,8 +133,9 @@ class IDrawCard(object):
 		for itemId, costNum in petRollTicket:
 			deductWealthVal.addWealthByItemId(itemId, costNum)
 
-		if not self.canDeductWealth(deductWealthVal):
-			LOG_ERR('reqRandomSummonPet items not enough:', deductWealthVal)
+		res = self.canDeductWealth(deductWealthVal)
+		if not res:
+			LOG_WARN('reqRandomSummonPet items not enough:', deductWealthVal, res())
 			return
 
 		detail = gameclass.AwardDetailCls(summonNum=summonNum)
@@ -143,7 +145,7 @@ class IDrawCard(object):
 		rewardId = rollReward
 		awardCtx = self.getAvatarAwardCtx(rewardId, None)
 		awardCtx.addContextVar(dataUtils.addAwardsCallBackKey(), 'onRandomSummonPetResult')
-		awardCtx.addContextVar('poolData', {'pool': pool, 'summonNum': summonNum, 'realRollNum': realRollNum, 'opUUID': opUUID , 'cType': cType})
+		awardCtx.addContextVar('poolData', {'pool': pool, 'summonNum': summonNum, 'realRollNum': realRollNum, 'opUUID': opUUID , 'cType': cType, 'stageRnd': stageRnd})
 		detail = gameclass.AwardDetailCls(rewardId=rewardId)
 		self.addAwards(AAC_AACDD.datas.BONUS_SRC_PETROLL_REWARD, rewardId, 1, opUUID, detail, awardCtx, False)
 
@@ -161,6 +163,7 @@ class IDrawCard(object):
 		realRollNum = poolData.get('realRollNum', 1)
 		opUUID = poolData.get('opUUID', 0)
 		cType = poolData.get('cType', 0)
+		stageRnd = poolData.get('stageRnd', 0)
 		poolData = GGP.datas[pool]
 		curPoolInfo = self.drawCardInfo.setdefault(poolData.get('poolGroupId', pool), GGS.datas['dailyCoinRollTime']['value'])
 		curPoolInfo.updateLeftTimes(gameconst.DRAW_CARD_COST_TYPE_2_PROP_TYPE[cType], -int(summonNum))
@@ -244,6 +247,8 @@ class IDrawCard(object):
 			guaranteedType,
 			opUUID,
 			cType,
+			stageRnd // 100,
+			stageRnd % 100,
 		)
 
 	@gamedecorator.checkGameconfigEnable('drawPet')

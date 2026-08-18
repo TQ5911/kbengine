@@ -21,6 +21,7 @@ avataringCache = {}
 
 mallItemPriceCache = {}
 mallItemLastUpdateTime = {}
+mallItemPriceInfoDict = {}
 
 # 记录role gbId到entityId的映射
 roleGBIDToEntId = {}

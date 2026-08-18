@@ -342,325 +342,325 @@ datas = _tools.RODict({
     30003201: _tools.RODict({
         "ID": 30003201,
         "passiveSkill": 87010201,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 1
     }),
     30003202: _tools.RODict({
         "ID": 30003202,
         "passiveSkill": 87010202,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 2
     }),
     30003203: _tools.RODict({
         "ID": 30003203,
         "passiveSkill": 87010203,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 1
     }),
     30003204: _tools.RODict({
         "ID": 30003204,
         "passiveSkill": 87010204,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 2
     }),
     30003205: _tools.RODict({
         "ID": 30003205,
         "passiveSkill": 87010205,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 1
     }),
     30003206: _tools.RODict({
         "ID": 30003206,
         "passiveSkill": 87010206,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 2
     }),
     30003207: _tools.RODict({
         "ID": 30003207,
         "passiveSkill": 87010207,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 1
     }),
     30003208: _tools.RODict({
         "ID": 30003208,
         "passiveSkill": 87010208,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 2
     }),
     30003209: _tools.RODict({
         "ID": 30003209,
         "passiveSkill": 87010209,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 1
     }),
     30003210: _tools.RODict({
         "ID": 30003210,
         "passiveSkill": 87010210,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 2
     }),
     30003211: _tools.RODict({
         "ID": 30003211,
         "passiveSkill": 87010211,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 1
     }),
     30003212: _tools.RODict({
         "ID": 30003212,
         "passiveSkill": 87010212,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 2
     }),
     30003213: _tools.RODict({
         "ID": 30003213,
         "passiveSkill": 87010213,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 1
     }),
     30003214: _tools.RODict({
         "ID": 30003214,
         "passiveSkill": 87010214,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 2
     }),
     30003215: _tools.RODict({
         "ID": 30003215,
         "passiveSkill": 87010215,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 1
     }),
     30003216: _tools.RODict({
         "ID": 30003216,
         "passiveSkill": 87010216,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 2
     }),
     30003217: _tools.RODict({
         "ID": 30003217,
         "passiveSkill": 87010217,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 1
     }),
     30003218: _tools.RODict({
         "ID": 30003218,
         "passiveSkill": 87010218,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 2
     }),
     30003219: _tools.RODict({
         "ID": 30003219,
         "passiveSkill": 87010219,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 1
     }),
     30003220: _tools.RODict({
         "ID": 30003220,
         "passiveSkill": 87010220,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 2
     }),
     30003221: _tools.RODict({
         "ID": 30003221,
         "passiveSkill": 87010221,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 1
     }),
     30003222: _tools.RODict({
         "ID": 30003222,
         "passiveSkill": 87010222,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 2
     }),
     30003223: _tools.RODict({
         "ID": 30003223,
         "passiveSkill": 87010223,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 1
     }),
     30003224: _tools.RODict({
         "ID": 30003224,
         "passiveSkill": 87010224,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 2
     }),
     30003225: _tools.RODict({
         "ID": 30003225,
         "passiveSkill": 87010225,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 3
     }),
     30003226: _tools.RODict({
         "ID": 30003226,
         "passiveSkill": 87010226,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 3
     }),
     30003227: _tools.RODict({
         "ID": 30003227,
         "passiveSkill": 87010227,
-        "claimExp": 5000,
+        "claimExp": 4000,
         "type": 3
     }),
     30003301: _tools.RODict({
         "ID": 30003301,
         "passiveSkill": 87010301,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 1
     }),
     30003302: _tools.RODict({
         "ID": 30003302,
         "passiveSkill": 87010302,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 2
     }),
     30003303: _tools.RODict({
         "ID": 30003303,
         "passiveSkill": 87010303,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 1
     }),
     30003304: _tools.RODict({
         "ID": 30003304,
         "passiveSkill": 87010304,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 2
     }),
     30003305: _tools.RODict({
         "ID": 30003305,
         "passiveSkill": 87010305,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 1
     }),
     30003306: _tools.RODict({
         "ID": 30003306,
         "passiveSkill": 87010306,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 2
     }),
     30003307: _tools.RODict({
         "ID": 30003307,
         "passiveSkill": 87010307,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 1
     }),
     30003308: _tools.RODict({
         "ID": 30003308,
         "passiveSkill": 87010308,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 2
     }),
     30003309: _tools.RODict({
         "ID": 30003309,
         "passiveSkill": 87010309,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 1
     }),
     30003310: _tools.RODict({
         "ID": 30003310,
         "passiveSkill": 87010310,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 2
     }),
     30003311: _tools.RODict({
         "ID": 30003311,
         "passiveSkill": 87010311,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 1
     }),
     30003312: _tools.RODict({
         "ID": 30003312,
         "passiveSkill": 87010312,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 2
     }),
     30003313: _tools.RODict({
         "ID": 30003313,
         "passiveSkill": 87010313,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 1
     }),
     30003314: _tools.RODict({
         "ID": 30003314,
         "passiveSkill": 87010314,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 2
     }),
     30003315: _tools.RODict({
         "ID": 30003315,
         "passiveSkill": 87010315,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 1
     }),
     30003316: _tools.RODict({
         "ID": 30003316,
         "passiveSkill": 87010316,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 2
     }),
     30003317: _tools.RODict({
         "ID": 30003317,
         "passiveSkill": 87010317,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 1
     }),
     30003318: _tools.RODict({
         "ID": 30003318,
         "passiveSkill": 87010318,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 2
     }),
     30003319: _tools.RODict({
         "ID": 30003319,
         "passiveSkill": 87010319,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 1
     }),
     30003320: _tools.RODict({
         "ID": 30003320,
         "passiveSkill": 87010320,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 2
     }),
     30003321: _tools.RODict({
         "ID": 30003321,
         "passiveSkill": 87010321,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 1
     }),
     30003322: _tools.RODict({
         "ID": 30003322,
         "passiveSkill": 87010322,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 2
     }),
     30003323: _tools.RODict({
         "ID": 30003323,
         "passiveSkill": 87010323,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 1
     }),
     30003324: _tools.RODict({
         "ID": 30003324,
         "passiveSkill": 87010324,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 2
     }),
     30003325: _tools.RODict({
         "ID": 30003325,
         "passiveSkill": 87010325,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 3
     }),
     30003326: _tools.RODict({
         "ID": 30003326,
         "passiveSkill": 87010326,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 3
     }),
     30003327: _tools.RODict({
         "ID": 30003327,
         "passiveSkill": 87010327,
-        "claimExp": 180000,
+        "claimExp": 120000,
         "type": 3
     })
 })

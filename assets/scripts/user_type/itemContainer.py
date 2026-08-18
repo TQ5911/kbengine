@@ -127,20 +127,21 @@ class ItemContainer(userType.UserSingleType):
             # 从背包移除了，清理下待过期的装备列表
             self.waitExpireEquipList.pop(gridObj.uniqueId, None)
 
-    def getItemCount(self, gbId, itemId, bindType):
+    def getItemCount(self, gbId, itemId, bindType, ignoreCheck = False):
         _itemCount = 0
         _grids = self.getGridIdsByItemId(itemId)
         for gridId in _grids:
             gridObj = self.getItemObjByGridId(gridId)
-            # 过期
-            if gridObj.isExpired():
-                continue
-            # 上锁
-            if gridObj.isLocked():
-                continue
-            # 如果是装备，检查是否损坏了
-            if gridObj.isEquipmentItem() and not gridObj.isGood(gbId):
-                continue
+            if not ignoreCheck:
+                # 过期
+                if gridObj.isExpired():
+                    continue
+                # 上锁
+                if gridObj.isLocked():
+                    continue
+                # 如果是装备，检查是否损坏了
+                if gridObj.isEquipmentItem() and not gridObj.isGood(gbId):
+                    continue
             if bindType == gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED or bindType == gridObj.bindType:
                 _itemCount += gridObj.itemNum
         return _itemCount
@@ -246,8 +247,7 @@ class ItemContainer(userType.UserSingleType):
 
         for gridId, _planItems in planDic['new'].items():
             sumNum = sum([num for _, num in _planItems])
-            _it = _planItems[0][0]
-            _it.setItemNum(sumNum)
+            _it = itemFactory.ItemFactory.forkItemObject(_planItems[0][0], itemNum=sumNum)
             # addItemsWithPlan已经通知客户端一次，在addItemsWithPlan里调用addItemsToNewGrid，syncToClient为False
             self.addItemsToNewGrid(owner, _it, opUUID, src, detail, gridId, False)
 

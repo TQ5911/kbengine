@@ -41,7 +41,15 @@ datas = _tools.RODict({
     }),
     "auctionTaxRate": _tools.RODict({
         "key": "auctionTaxRate",
-        "value": 10,
+        "value": 5,
+    }),
+    "auctionRevenueRate": _tools.RODict({
+        "key": "auctionRevenueRate",
+        "value": (0.05, 0.15, 0.8),
+    }),
+    "auctionRevenueClientRate": _tools.RODict({
+        "key": "auctionRevenueClientRate",
+        "value": (500, 1500, 8000),
     }),
     "auctionServiceFee": _tools.RODict({
         "key": "auctionServiceFee",
@@ -245,11 +253,19 @@ datas = _tools.RODict({
     }),
     "rentalProp01": _tools.RODict({
         "key": "rentalProp01",
-        "value": (0.1, 0.2, 0.7),
+        "value": (0.05, 0.15, 0.8),
     }),
     "rentalProp02": _tools.RODict({
         "key": "rentalProp02",
-        "value": (0.3, 0.7, 0),
+        "value": (0.2, 0.8, 0),
+    }),
+    "rentalProp01ClientRate01": _tools.RODict({
+        "key": "rentalProp01ClientRate01",
+        "value": (500, 1500, 8000),
+    }),
+    "rentalProp01ClientRate02": _tools.RODict({
+        "key": "rentalProp01ClientRate02",
+        "value": (2000, 8000, 0),
     }),
     "rentalTime": _tools.RODict({
         "key": "rentalTime",
@@ -282,5 +298,9 @@ datas = _tools.RODict({
     "redeemC": _tools.RODict({
         "key": "redeemC",
         "value": 54482018,
+    }),
+    "auctionLuckyBuyDuplicate": _tools.RODict({
+        "key": "auctionLuckyBuyDuplicate",
+        "value": 54000313,
     })
 })

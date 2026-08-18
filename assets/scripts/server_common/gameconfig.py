@@ -405,6 +405,14 @@ def giftCodeUrl():
     return url
 
 @cache_wraper
+def greenPassUrl():
+    try:
+        url = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/greenPassUrl')
+    except:
+        url = ''
+    return url
+
+@cache_wraper
 def tapTapBindPhoneReqUrl():
     try:
         url = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/tapTapBindPhoneReqUrl')
@@ -437,12 +445,31 @@ def queryRechargeUrl():
     return url
 
 @cache_wraper
+def smsServiceReqUrl():
+    try:
+        url = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/smsServiceReqUrl')
+    except:
+        url = ''
+    url = '127.0.0.1:23456/SendCode'
+    return url
+
+@cache_wraper
+def smsServiceVerifyUrl():
+    try:
+        url = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/smsServiceVerifyUrl')
+    except:
+        url = ''
+    url = '127.0.0.1:23456/VerifyCode'
+    return url
+
+@cache_wraper
 def patchVersion():
     try:
         versionStr = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/patchVersion')
     except:
         versionStr = '0.0.0.0'
     return versionStr
+
 
 @cache_wraper
 def appVersion():
@@ -584,9 +611,10 @@ def redisPort():
 @cache_wraper
 def elasticServer():
     try:
-        url = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/elasticServer')
-        res = socket.getaddrinfo(url, None)
-        _address = res[0][4][0]
+        return ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/elasticServer')
+        # url = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/elasticServer')
+        # res = socket.getaddrinfo(url, None)
+        # _address = res[0][4][0]
     except:
         _address = ''
     return _address
@@ -645,6 +673,50 @@ def permitLogin():
     except:
         permit = 1
     return permit
+
+
+@cache_wraper
+def waitmapReportEnable():
+    try:
+        enable = int(ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/waitmapReportEnable'))
+    except:
+        enable = 1
+    return enable
+
+
+@cache_wraper
+def getHomeDis():
+    return 0.5
+
+
+@cache_wraper
+def stubTickCreateEntNum():
+    return 400
+
+
+@cache_wraper
+def highLoadDelay():
+    return 30
+
+
+@cache_wraper
+def highLoadGeneral1():
+    return 0.85
+
+
+@cache_wraper
+def highLoadGeneral2():
+    return 0.70
+
+
+@cache_wraper
+def highLoadGeneral3():
+    return 0.55
+
+
+@cache_wraper
+def highLoadAutoCombatReturn():
+    return 0
 
 
 @cache_wraper
@@ -911,6 +983,14 @@ def getYidunEnable():
         ret = 1
     return ret
 
+
+def getCloudServicesData(provider, business, tail):
+    try:
+        ret = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), provider + '/' + business + '/' + tail)
+    except:
+        ret = ''
+    return ret
+
 @cache_wraper
 def gameId():
     try:
@@ -1011,7 +1091,8 @@ def enableAuction():
 @cache_wraper
 def auctionServerHost():
     try:
-        host = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/auctionServerHost')
+        #host = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/auctionServerHost')
+        host = '192.168.10.172:2010'
     except:
         host = '192.168.10.31:2010'
     return host
@@ -1133,6 +1214,10 @@ def orderServerHost():
 def enableOrderService():
     return 1
 
+@config(Bool, None, '是否开启微信支付', (ConfigFlag.FLAG_CLIENT, ConfigFlag.CACHE_CONFIG, ConfigFlag.ALWAYS_SEND_CLIENT))
+def enableWechatPayment():
+    return 1
+
 @cache_wraper
 def overSpeedCheckSwitch():
     return 1
@@ -1145,3 +1230,18 @@ def isWaitMapServer():
         return Bool(val)
     except:
         return False
+
+@cache_wraper
+def allianceServiceInfo():
+    try:
+        allianceServers = ResMgr.getStringContentListForPath(ResMgr.kbengineConfig(), 'game/allianceServiceInfo')
+        allianceServersInfo = []
+        for ds in allianceServers:
+            res = socket.getaddrinfo(ds['ip'], None)
+            address = res[0][4][0]
+            info = {'allianceServiceId': ds['allianceServiceId'], 'ip': address, 'port': int(ds['port'])}
+            allianceServersInfo.append(info)
+    except:
+        allianceServersInfo = []
+
+    return allianceServersInfo

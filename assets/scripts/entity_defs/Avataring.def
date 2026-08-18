@@ -194,6 +194,10 @@
         <startOffline>
             <Arg>         UINT8                 </Arg>
         </startOffline>
+
+        <checkTextSecurityReq> <Exposed/>
+            <Arg>        CHECK_TEXT_SECURITY_REQ      </Arg>
+        </checkTextSecurityReq>
     </BaseMethods>
 
     <CellMethods>
@@ -268,5 +272,9 @@
             <Arg>        INT32                        </Arg>
             <Arg>        ARRAY <of> UNICODE </of>     </Arg>
         </onMessage>
+
+        <checkTextSecurityResp>
+            <Arg>           CHECK_TEXT_SECURITY_RESP     </Arg>
+        </checkTextSecurityResp>
     </ClientMethods>
 </root>

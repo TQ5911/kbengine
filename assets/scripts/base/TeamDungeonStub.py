@@ -169,6 +169,7 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
 
     def _onTeamDungeonCompleted(self, spaceNo, teamUUID, win, delay, reasonType):
         LOG_INFO('in completeTeamDungeon:', spaceNo, teamUUID, win, delay, reasonType)
+        
         if spaceNo not in self.spaces:
             if teamUUID:
                 LOG_WARN('completeTeamDungeon:: cannot get space', spaceNo, teamUUID)
@@ -196,6 +197,8 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             LOG_WARN("_onTeamDungeonCompleted:: taemUUID not match", spaceNo, _sVal.teamUUID, teamUUID)
             return
 
+        gameengine.getTeamStub(teamUUID).setInDungeon(teamUUID, False)
+        
         _sVal.spaceMgr.cell.destroyAllEntities()
         _sVal.completedReasonType = reasonType
         _sVal.spaceMgr.cell.onTeamDungeonCompleted(spaceNo, teamUUID, win, delay, _sVal.getElapsedTime(), 0, _sVal.completedReasonType)

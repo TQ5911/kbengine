@@ -431,6 +431,10 @@ class RedisUtils(object):
     @classmethod
     def getTagTypeFlag(cls, accountName, cb):
         gameglobal.localBaseApp.getRedisClient().get(gameconst.PrivilegeRedisKey.SVIP + accountName, cb)
+
+    @classmethod
+    def getLoginCnt(cls, accountName, cb):
+        gameglobal.localBaseApp.getRedisClient().get(gameconst.PrivilegeRedisKey.LOGIN_CNT, cb)
     
     @classmethod
     def getFullPlayerInfo(cls, gbId, cb):
@@ -1101,7 +1105,7 @@ class PlayerCoinAuctionRecord(object):
             gkey='_p_cau_data_', gbId=gbId)
 
     @staticmethod
-    def _encodeMessage(timestamp, playerGBID, itemId, number, totalPrice, itemData, reviewUUID,
+    def _encodeMessage(timestamp, playerGBID, itemId, number, bindMoney, money, itemData, reviewUUID,
                        auctionItemUUID=0, status=0):
         """
         Args:
@@ -1109,7 +1113,8 @@ class PlayerCoinAuctionRecord(object):
             playerGBID: 玩家GBID
             itemId: 物品ID
             number: 物品数量
-            totalPrice: 物品总价
+            bindMoeny: 绑金
+            money: 流通金
             itemData: 物品Data(压缩)
             reviewUUID: 对应审核UUID
             auctionItemUUID: 交易行item唯一标识
@@ -1117,7 +1122,7 @@ class PlayerCoinAuctionRecord(object):
         """
         mDumpedItemData = json.dumps(itemData).encode('ascii')
         mGzippedItemData = gzip.compress(mDumpedItemData)
-        _message = (timestamp, playerGBID, itemId, number, totalPrice, mGzippedItemData, reviewUUID,
+        _message = (timestamp, playerGBID, itemId, number, bindMoney, money, mGzippedItemData, reviewUUID,
                     auctionItemUUID, status)
         _ret = cPickle.dumps(_message)
         return gzip.compress(_ret)
@@ -1145,13 +1150,13 @@ class PlayerCoinAuctionRecord(object):
         return cPickle.loads(_message)
 
     @classmethod
-    def recordMessage(cls, timestamp, playerGBID, itemId, number, totalPrice, itemData=None, reviewUUID=0,
+    def recordMessage(cls, timestamp, playerGBID, itemId, number, bindMoney, money, itemData=None, reviewUUID=0,
                       auctionItemUUID=0, status=0):
         LOG_DBG(f'{cls.__name__}.recordMessage::',
-                  timestamp, playerGBID, itemId, number, totalPrice, itemData, reviewUUID,
+                  timestamp, playerGBID, itemId, number, bindMoney, money, itemData, reviewUUID,
                   auctionItemUUID, status)
         m_itemData = itemData if itemData is not None else {}
-        msg = cls._encodeMessage(timestamp, playerGBID, itemId, number, totalPrice, m_itemData, reviewUUID,
+        msg = cls._encodeMessage(timestamp, playerGBID, itemId, number, bindMoney, money, m_itemData, reviewUUID,
                                  auctionItemUUID, status)
 
         uidKey = cls._getUidListKey(playerGBID)
@@ -1178,18 +1183,19 @@ class PlayerCoinAuctionRecord(object):
                 for uuidStr, encodedMsg in zip(result, records):
                     if encodedMsg is None:
                         continue
-                    timestamp, playerGBID, itemId, number, eachPrice, *_extras = cls._decodeMessage(encodedMsg)
+                    timestamp, playerGBID, itemId, number, bindMoney, money, *_extras = cls._decodeMessage(encodedMsg)
                     itemData, reviewUUID, _, status = cls._decodeExtras(_extras)
                     _data = {
                         "timestamp": timestamp,
                         "playerGBID": playerGBID,
                         "number": number,
                         "itemId": itemId,
-                        "price": eachPrice,
-                        'itemData': json.loads(itemData),
-                        'reviewUUID': reviewUUID,
-                        'auctionItemUUID': uuidStr,
-                        'status': status,}
+                        "bindMoney": bindMoney,
+                        "money": money,
+                        "itemData": json.loads(itemData),
+                        "reviewUUID": reviewUUID,
+                        "auctionItemUUID": uuidStr,
+                        "status": status,}
                     lastRecords.append(_data)
                 LOG_DBG(f'{cls.__name__}.getMessageRecord:: count --> ', len(lastRecords))
                 box.streamStringProxy(gzip.compress(json.dumps(lastRecords).encode('ascii')),
@@ -1249,20 +1255,20 @@ class PlayerCoinAuctionRecord(object):
     def updateRecordStatus(cls, gbId, auctionItemUUID, newStatus, callback):
         dataKey = cls._getDataHashKey(gbId)
 
-        def _onGetRecord(cid, error, result):
+        def _onGetRecord(auctionItemUUID, cid, error, result):
             if error or not result:
                 callback(cid, error, result)
                 LOG_WARN(f"{cls.__name__}.updateRecordStatus:: not found", auctionItemUUID)
                 return
-            timestamp, playerGBID, itemId, number, totalPrice, *_extras = cls._decodeMessage(result)
+            timestamp, playerGBID, itemId, number, bindMoney, money, *_extras = cls._decodeMessage(result)
             itemData, reviewUUID, auctionItemUUID, _ = cls._decodeExtras(_extras)
             
-            newMsg = cls._encodeMessage(timestamp, playerGBID, itemId, number, totalPrice,
+            newMsg = cls._encodeMessage(timestamp, playerGBID, itemId, number, bindMoney, money,
                                         json.loads(itemData), reviewUUID, auctionItemUUID, newStatus)
             gameglobal.localBaseApp.getRedisClient().hset(dataKey, auctionItemUUID, newMsg, resultCallback=callback)
             LOG_DBG(f"{cls.__name__}.updateRecordStatus:: updated", auctionItemUUID, newStatus)
 
-        gameglobal.localBaseApp.getRedisClient().hget(dataKey, auctionItemUUID, _onGetRecord)
+        gameglobal.localBaseApp.getRedisClient().hget(dataKey, auctionItemUUID, functools.partial(_onGetRecord, auctionItemUUID))
 
 class PlayerBuyAuctionItemRecord(object):
 

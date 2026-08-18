@@ -563,7 +563,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         if len(allResult) == allCount:
             allResult_dict = {"allResult": allResult}
             box.replyHttpCommand(tag, cmdUUID, result, retErrMsg, allResult_dict)
-            self.gmCmdDic.pop(cmdUUID)
+            self.gmCmdDic.pop(cmdUUID, None)
         else:
             self.gmCmdDic[cmdUUID] = allResult
 
@@ -652,7 +652,7 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
             if client and client.channel.dispatcher:
                 client.interfaceStub.updatePatchVersionData(None, _req, None)
 
-    def doUpdateFreeTicketNumConfig(self, subType, expandInfoList):
+    def doUpdateFreeTicketNumConfig(self, subTypeList):
         now = utils.curTS()
-        LOG_INFO("doUpdateFreeTicketNumConfig", now, subType, expandInfoList)
-        self.broadcastToAllAvatar(gameconst.BASE, 'onUpdateFreeTicketNumConfig', (subType,))
+        LOG_INFO("doUpdateFreeTicketNumConfig", now, subTypeList)
+        self.broadcastToAllAvatar(gameconst.BASE, 'onUpdateFreeTicketNumConfig', (subTypeList,))

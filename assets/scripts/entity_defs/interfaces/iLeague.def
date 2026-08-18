@@ -1,0 +1,447 @@
+<root>
+    <Properties>
+        <leagueUUID>
+            <Type>          LEAGUE_UUID                 </Type>
+            <Flags>         ALL_CLIENTS                 </Flags>
+            <Default>       0                           </Default>
+            <WitnessName>   true                        </WitnessName>
+        </leagueUUID>
+    </Properties>
+
+    <BaseMethods>
+        <createLeague> <Exposed/>
+            <Arg>       UNICODE             </Arg>
+            <Arg>       UNICODE             </Arg>
+            <Arg>       UINT32              </Arg>
+        </createLeague>
+
+        <disbandLeague> <Exposed/>
+        </disbandLeague>
+
+        <modifyLeagueInfo> <Exposed/>
+            <Arg>       UNICODE             </Arg>
+            <Arg>       UNICODE             </Arg>
+            <Arg>       UINT32              </Arg>
+        </modifyLeagueInfo>
+
+        <getLeagueList> <Exposed/>
+            <Arg>       UINT8              </Arg>
+        </getLeagueList>
+
+        <searchLeague> <Exposed/>
+            <Arg>       UNICODE             </Arg>
+        </searchLeague>
+
+        <getLeagueDetail> <Exposed/>
+            <Arg>       UINT64              </Arg>
+        </getLeagueDetail>
+
+        <getLeagueDetailByGuild> <Exposed/>
+            <Arg>       UINT64              </Arg>
+        </getLeagueDetailByGuild>
+
+        <applyLeagueToJoin> <Exposed/>
+            <Arg>       UINT64              </Arg>
+        </applyLeagueToJoin>
+
+        <approveLeagueJoin> <Exposed/>
+            <Arg>       GUILD_UUID              </Arg>
+        </approveLeagueJoin>
+
+        <rejectLeagueJoin> <Exposed/>
+            <Arg>       GUILD_UUID              </Arg>
+        </rejectLeagueJoin>
+
+        <cancelLeagueApply> <Exposed/>
+            <Arg>       LEAGUE_UUID             </Arg>
+        </cancelLeagueApply>
+
+        <inviteLeagueGuild> <Exposed/>
+            <Arg>       UINT64              </Arg>
+            <Arg>       UINT32              </Arg>
+        </inviteLeagueGuild>
+
+        <acceptLeagueInvite> <Exposed/>
+            <Arg>       UINT64              </Arg>
+        </acceptLeagueInvite>
+
+        <rejectLeagueInvite> <Exposed/>
+            <Arg>       LEAGUE_UUID              </Arg>
+        </rejectLeagueInvite>
+
+        <kickLeagueMember> <Exposed/>
+            <Arg>       UINT64              </Arg>
+            <Arg>       UINT64              </Arg>
+        </kickLeagueMember>
+
+        <leaveLeague> <Exposed/>
+        </leaveLeague>
+
+        <transferLeagueLeader> <Exposed/>
+            <Arg>       GUILD_UUID              </Arg>
+        </transferLeagueLeader>
+
+        <getLeagueApplyList> <Exposed/>
+        </getLeagueApplyList>
+
+        <getLeagueInviteList> <Exposed/>
+        </getLeagueInviteList>
+
+        <getLeagueSentApplies> <Exposed/>
+        </getLeagueSentApplies>
+
+        <declareLeagueWar> <Exposed/>
+            <Arg>       UINT8               </Arg>
+            <Arg>       UINT8               </Arg>
+            <Arg>       UINT64              </Arg>
+            <Arg>       SERVER_ID           </Arg>
+        </declareLeagueWar>
+
+        <getLeagueEnemyList> <Exposed/>
+
+        </getLeagueEnemyList>
+
+        <getLeagueEnemyAllianceList> <Exposed/>
+        </getLeagueEnemyAllianceList>
+
+        <getLeagueUnionList> <Exposed/>
+        </getLeagueUnionList>
+
+        <donateLeagueFund> <Exposed/>
+            <Arg>       UINT64              </Arg>
+        </donateLeagueFund>
+
+        <aidLeagueResource> <Exposed/>
+            <Arg>       UINT64              </Arg>
+            <Arg>       UINT64              </Arg>
+        </aidLeagueResource>
+
+        <getLeagueFund> <Exposed/>
+            <Arg>       UINT64              </Arg>
+        </getLeagueFund>
+
+        <getLeagueEventList> <Exposed/>
+        </getLeagueEventList>
+
+        <checkLeagueRelation> <Exposed/>
+            <Arg>       UINT64              </Arg>
+            <Arg>       UINT64              </Arg>
+        </checkLeagueRelation>
+
+        <getGuildAllianceId> <Exposed/>
+            <Arg>       UINT64              </Arg>
+        </getGuildAllianceId>
+
+        <getLeagueBasicInfo> <Exposed/>
+            <Arg>       UINT64              </Arg>
+        </getLeagueBasicInfo>
+
+        <getLeagueSimpleInfo> <Exposed/>
+            <Arg>       UINT64              </Arg>
+        </getLeagueSimpleInfo>
+
+        <getGuildSimpleInfo> <Exposed/>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       SERVER_ID               </Arg>
+        </getGuildSimpleInfo>
+
+        <onGetGuildSimpleInfoResult>
+            <Arg>       GUILD_SIMPLE_ENTRY      </Arg>
+            <Arg>       UINT32                  </Arg>
+        </onGetGuildSimpleInfoResult>
+
+        <onModifyLeagueInfoResult>
+            <Arg>       UINT32              </Arg>
+        </onModifyLeagueInfoResult>
+
+        <onApplyLeagueToJoinResult>
+            <Arg>       UINT32              </Arg>
+            <Arg>       LEAGUE_UUID         </Arg>
+            <Arg>       UNICODE             </Arg>
+            <Arg>       UINT64              </Arg>
+        </onApplyLeagueToJoinResult>
+
+        <onApproveLeagueJoinResult>
+            <Arg>       UINT32              </Arg>
+            <Arg>       UINT64              </Arg>
+            <Arg>       UINT32              </Arg>
+        </onApproveLeagueJoinResult>
+
+        <onRejectLeagueJoinResult>
+            <Arg>       UINT32              </Arg>
+            <Arg>       GUILD_UUID          </Arg>
+        </onRejectLeagueJoinResult>
+
+        <onCancelLeagueApplyResult>
+            <Arg>       UINT32              </Arg>
+            <Arg>       LEAGUE_UUID         </Arg>
+        </onCancelLeagueApplyResult>
+
+        <onInviteGuildResult>
+            <Arg>       UINT32              </Arg>
+            <Arg>       UINT64              </Arg>
+            <Arg>       UINT32              </Arg>
+        </onInviteGuildResult>
+
+        <onAcceptLeagueInviteResult>
+            <Arg>       UINT32              </Arg>
+            <Arg>       LEAGUE_UUID         </Arg>
+        </onAcceptLeagueInviteResult>
+
+        <onRejectLeagueInviteResult>
+            <Arg>       UINT32              </Arg>
+            <Arg>       LEAGUE_UUID         </Arg>
+        </onRejectLeagueInviteResult>
+
+        <onKickMemberResult>
+            <Arg>       UINT32              </Arg>
+        </onKickMemberResult>
+
+        <onLeaveLeagueResult>
+            <Arg>       UINT32              </Arg>
+        </onLeaveLeagueResult>
+
+        <onTransferLeagueLeaderResult>
+            <Arg>       UINT32                          </Arg>
+            <Arg>       LEAGUE_DETAIL_INFO              </Arg>
+        </onTransferLeagueLeaderResult>
+
+        <onDeclareWarResult>
+            <Arg>       UINT32              </Arg>
+            <Arg>       LONGTIME            </Arg>
+        </onDeclareWarResult>
+
+        <onLeagueDonateFundResult>
+            <Arg>       UINT32              </Arg>
+            <Arg>       UINT64              </Arg>
+            <Arg>       UINT64              </Arg>
+        </onLeagueDonateFundResult>
+
+        <onAidResourceResult>
+            <Arg>       UINT32              </Arg>
+        </onAidResourceResult>
+
+        <onLeagueFundResult>
+            <Arg>       INT64              </Arg>
+        </onLeagueFundResult>
+
+        <onSendChatMessageResult>
+            <Arg>       UINT32              </Arg>
+        </onSendChatMessageResult>
+
+        <onLeagueDetailResult>
+            <Arg>       LEAGUE_DETAIL_INFO                      </Arg>
+            <Arg>       ARRAY <of> LEAGUE_MEMBER_INFO </of>     </Arg>
+            <Arg>       UINT32                                  </Arg>
+        </onLeagueDetailResult>
+        <onLeagueListResult>
+            <Arg>       ARRAY <of> LEAGUE_LIST_ENTRY </of>   </Arg>
+            <Arg>       UINT32                               </Arg>
+            <Arg>       UINT32                               </Arg>
+        </onLeagueListResult>
+
+        <onGetLeagueBasicInfoResult>
+            <Arg>       LEAGUE_BASIC_ENTRY </Arg>
+            <Arg>       UINT32             </Arg>
+        </onGetLeagueBasicInfoResult>
+
+        <onGetLeagueSimpleInfoResult>
+            <Arg>       LEAGUE_SIMPLE_LIST_ENTRY </Arg>
+            <Arg>       UINT32                   </Arg>
+        </onGetLeagueSimpleInfoResult>
+
+        <onLeagueApplyListResult>
+            <Arg>       ARRAY <of> LEAGUE_APPLY_INFO </of>   </Arg>
+        </onLeagueApplyListResult>
+
+        <onLeagueSentAppliesResult>
+            <Arg>       ARRAY <of> LEAGUE_SENT_INFO </of>   </Arg>
+        </onLeagueSentAppliesResult>
+
+        <onLeagueNewApplyNotify>
+            <Arg>   LEAGUE_APPLY_INFO   </Arg>
+        </onLeagueNewApplyNotify>
+        <onInviteListResult>
+            <Arg>       ARRAY <of> LEAGUE_INVITE_INFO </of>  </Arg>
+        </onInviteListResult>
+        <onLeagueEnemyList>
+            <Arg>       ARRAY <of> LEAGUE_ENEMY_INFO </of>   </Arg>
+        </onLeagueEnemyList>
+        <onLeagueUnionList>
+            <Arg>       ARRAY <of> GUILD_UUID </of>   </Arg>
+        </onLeagueUnionList>
+        <onLeagueEnemyAllianceList>
+            <Arg>       ARRAY <of> LEAGUE_ENEMY_ROW_INFO </of>   </Arg>
+        </onLeagueEnemyAllianceList>
+        <onEventListResult>
+            <Arg>       ARRAY <of> LEAGUE_EVENT_INFO </of>   </Arg>
+        </onEventListResult>
+
+        <recruitLeagueMember> <Exposed/>
+        </recruitLeagueMember>
+
+        <onRecruitLeagueMemberResult>
+            <Arg>   UINT32      </Arg>
+            <Arg>   LEAGUE_UUID </Arg>
+        </onRecruitLeagueMemberResult>
+
+        <onSearchLeagueResult>
+            <Arg>       ARRAY <of> LEAGUE_LIST_ENTRY </of>   </Arg>
+        </onSearchLeagueResult>
+
+        <onGetGuildAllianceResult>
+            <Arg>       UINT64                      </Arg>
+            <Arg>       UINT32                      </Arg>
+        </onGetGuildAllianceResult>
+    </BaseMethods>
+
+    <ClientMethods>
+        <onGetLeagueBasicInfoResult>
+            <Arg>       LEAGUE_BASIC_ENTRY </Arg>
+        </onGetLeagueBasicInfoResult>
+        <onGetLeagueSimpleInfoResult>
+            <Arg>       LEAGUE_SIMPLE_LIST_ENTRY </Arg>
+        </onGetLeagueSimpleInfoResult>
+        <onGetGuildSimpleInfoResult>
+            <Arg>       GUILD_SIMPLE_ENTRY   </Arg>
+        </onGetGuildSimpleInfoResult>
+        <onCreateLeagueSuccess>
+            <Arg>       LEAGUE_DETAIL_INFO          </Arg>
+            <Arg>       ARRAY <of> LEAGUE_MEMBER_INFO </of>  </Arg>
+        </onCreateLeagueSuccess>
+
+        <onLeagueChangeNotify>
+            <Arg>       UINT64                      </Arg>
+            <Arg>       ARRAY <of> UINT64 </of>      </Arg>
+        </onLeagueChangeNotify>
+
+        <onLeagueListResult>
+            <Arg>       ARRAY <of> LEAGUE_LIST_ENTRY </of>   </Arg>
+            <Arg>       UINT32                               </Arg>
+            <Arg>       UINT32                               </Arg>
+        </onLeagueListResult>
+
+        <onSearchLeagueResult>
+            <Arg>       ARRAY <of> LEAGUE_LIST_ENTRY </of>   </Arg>
+        </onSearchLeagueResult>
+
+        <onLeagueDetailResult>
+            <Arg>       LEAGUE_DETAIL_INFO          </Arg>
+            <Arg>       ARRAY <of> LEAGUE_MEMBER_INFO </of>  </Arg>
+        </onLeagueDetailResult>
+
+        <onLeagueApplyListResult>
+            <Arg>       ARRAY <of> LEAGUE_APPLY_INFO </of>   </Arg>
+        </onLeagueApplyListResult>
+
+        <onLeagueSentAppliesResult>
+            <Arg>       ARRAY <of> LEAGUE_SENT_INFO </of>   </Arg>
+        </onLeagueSentAppliesResult>
+
+        
+
+        <onDonateFundSuccess>
+            <Arg>       UINT64                      </Arg>
+        </onDonateFundSuccess>
+
+        <onLeagueFundResult>
+            <Arg>       UINT64                      </Arg>
+        </onLeagueFundResult>
+
+        <onEventListResult>
+            <Arg>       ARRAY <of> LEAGUE_EVENT_INFO </of>   </Arg>
+        </onEventListResult>
+
+        <onChatHistoryResult>
+            <Arg>       ARRAY <of> LEAGUE_CHAT_MESSAGE </of> </Arg>
+        </onChatHistoryResult>
+
+        <onApproveJoinSuccess>
+            <Arg>       UINT64                      </Arg>
+        </onApproveJoinSuccess>
+
+        <onCheckLeagueRelationResult>
+            <Arg>       UINT8                       </Arg>
+            <Arg>       UINT64                      </Arg>
+        </onCheckLeagueRelationResult>
+
+        <onGetGuildAllianceResult>
+            <Arg>       UINT64                      </Arg>
+        </onGetGuildAllianceResult>
+
+        <onLeagueOpResult>
+            <Arg>   UINT32  </Arg>
+        </onLeagueOpResult>
+
+        <onLeagueNewApplyNotify>
+            <Arg>   LEAGUE_APPLY_INFO   </Arg>
+        </onLeagueNewApplyNotify>
+
+        <onLeagueNewInviteNotify>
+            <Arg>   LEAGUE_INVITE_INFO  </Arg>
+        </onLeagueNewInviteNotify>
+
+        <onLeagueNewEvent>
+            <Arg> LEAGUE_EVENT_INFO  </Arg>
+        </onLeagueNewEvent>
+
+        <onApplyLeagueSuccess>
+            <Arg>   LEAGUE_UUID </Arg>
+            <Arg>   UNICODE     </Arg>
+            <Arg>   UINT32      </Arg>
+        </onApplyLeagueSuccess>
+
+        <onNewMemberJoined>
+            <Arg>   LEAGUE_MEMBER_INFO      </Arg>
+        </onNewMemberJoined>
+        <onModifyLeagueInfoSuccess>
+        </onModifyLeagueInfoSuccess>
+        <onRejectLeagueJoinResult>
+            <Arg>   GUILD_UUID  </Arg>
+        </onRejectLeagueJoinResult>
+        <onCancelLeagueApplyResult>
+            <Arg>       LEAGUE_UUID         </Arg>
+        </onCancelLeagueApplyResult>
+        <onLeagueInviteListResult>
+            <Arg>       ARRAY <of> LEAGUE_INVITE_INFO </of>  </Arg>
+        </onLeagueInviteListResult>
+        <onInviteGuildResult>
+            <Arg>       GUILD_UUID         </Arg>
+        </onInviteGuildResult>
+        <onRejectLeagueInviteResult>
+            <Arg>       LEAGUE_UUID         </Arg>
+        </onRejectLeagueInviteResult>
+        <onAcceptLeagueInviteResult>
+            <Arg>       LEAGUE_UUID         </Arg>
+        </onAcceptLeagueInviteResult>
+        <onLeagueEnemyList>
+            <Arg>       ARRAY <of> LEAGUE_ENEMY_INFO </of>   </Arg>
+        </onLeagueEnemyList>
+
+        <onLeagueUnionList>
+            <Arg>       ARRAY <of> GUILD_UUID </of>   </Arg>
+        </onLeagueUnionList>
+        <onLeagueEnemyAllianceList>
+            <Arg>       ARRAY <of> LEAGUE_ENEMY_ROW_INFO </of>   </Arg>
+        </onLeagueEnemyAllianceList>
+        <onAllianceWarStarted>
+            <Arg>       LEAGUE_ENEMY_ROW_INFO                  </Arg>
+        </onAllianceWarStarted>
+        <onTransferLeagueLeaderResult>
+            <Arg>       LEAGUE_DETAIL_INFO              </Arg>
+        </onTransferLeagueLeaderResult>
+        <onAllianceWarEnded>
+            <Arg>       LEAGUE_ENEMY_END_INFO                  </Arg>
+        </onAllianceWarEnded>
+        <onLeagueGuildLeave>
+            <Arg>   LEAGUE_UUID </Arg>
+        </onLeagueGuildLeave>
+        <onLeagueDonateFundResult>
+            <Arg>       UINT64              </Arg>
+            <Arg>       UINT64              </Arg>
+        </onLeagueDonateFundResult>
+        <onApproveLeagueJoinResult>
+            <Arg>   GUILD_UUID  </Arg>
+        </onApproveLeagueJoinResult>
+    </ClientMethods>
+</root>

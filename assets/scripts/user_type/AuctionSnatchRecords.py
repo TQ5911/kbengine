@@ -6,13 +6,13 @@ import gameconst
 
 class AuctionSnatchRecords(userType.UserSingleType):
     '''AUCTION_SNATCH_RECORDS'''
-    def __init__(self, auctionUUID=0, itemId = 0, price=0, number=0, publicityEndTime=0, records=[], status=gameconst.AuctionSnatchStatus.DEFAULT):
+    def __init__(self, auctionUUID=0, itemId = 0, price=0, number=0, publicityEndTime=0, records=None, status=gameconst.AuctionSnatchStatus.DEFAULT):
         self.auctionUUID = auctionUUID
         self.itemId = itemId
         self.price = price
         self.number = number
         self.publicityEndTime = publicityEndTime
-        self.records = records
+        self.records = records if records is not None else []
         self.status = status
 
     def toStreamSavedDic(self):
@@ -35,6 +35,9 @@ class AuctionSnatchRecords(userType.UserSingleType):
     
     def setFinished(self):
         self.status = gameconst.AuctionSnatchStatus.DONE
+
+    def clearRecords(self):
+        self.records.clear()
 
 class AuctionSnatchRecordsMgr(object):
     def createObjFromDict(self, dataDict):

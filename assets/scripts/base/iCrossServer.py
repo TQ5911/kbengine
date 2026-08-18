@@ -4,6 +4,7 @@ import KBEngine
 
 import collections
 
+import LogTrackingMgr
 import gameengine
 import gameconfig
 import gameconst
@@ -14,6 +15,8 @@ import iRouter
 
 import AvatarScores
 import cityBattle_config as CBC
+import abyss_floor as AB_FD
+import formula
 
 class ICrossServer(object):
     CROSSSERVER_TIMEOUT = 10
@@ -121,6 +124,7 @@ class ICrossServer(object):
 
     def startBagFnvHashCheck(self):
         self.stopBagFnvHashCheck()
+        self.fnvFirstOverDict = {}
         self.bagFnvHashCheckTimer = self.pyAddTimer(5, 5, gametimer.TIMER_BAG_FNV_HASH_CHECK)
 
     def stopBagFnvHashCheck(self):
@@ -156,7 +160,10 @@ class ICrossServer(object):
         self.crossServerTickBackTime = utils.curTS()
         LOG_DBG('[lj]onCrossServerHeartbeatBack', self.crossServerTickBackTime)
 
-    def reqCrossServer(self, toServerId, reasonNo, callbackComponent, callbackName, args, crossServerToSpaceNo, goBackTime=0):
+    def _beforeReqCrossServer(self):
+        self.leaveGuildMics(self.id)
+
+    def reqCrossServer(self, toServerId, reasonNo, callbackComponent, callbackName, args, crossServerToSpaceNo, goBackTime=0, extra=None):
         LOG_INFO("reqGotoServer",toServerId, reasonNo, callbackComponent, callbackName, args, goBackTime, self.crossServerState, crossServerToSpaceNo)
         if self.crossServerState != gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER:
             LOG_ERR("reqCrossServer repeat", self.crossServerState)
@@ -174,6 +181,10 @@ class ICrossServer(object):
             'goBackTime': goBackTime,
         }
         self.crossServerToSpaceNo = crossServerToSpaceNo
+        self.crossServerFromSpaceNo = self.baseSpaceNo
+
+        if extra:
+            self.setPersistentMiscProp(gameconst.EntityPropsEnum.crossServerExtra, extra)
 
         _r = iRouter.RemoteServerStubEntityCall(toServerId, "CrossServerStub")
         _r.onReqCrossServer(self.accountEntity.accountName, reasonNo, self.crossServerEntityCall)
@@ -193,14 +204,19 @@ class ICrossServer(object):
     def onCrossServerResp(self, ret, token, reasonNo):
         LOG_INFO("onCrossServerResp", ret, token, reasonNo)
         if ret:
-            spaceNo = 0
-            if reasonNo == gameconst.CrossServerReasonNo.ENTER_CROSS_SIEGE_WAR:
-                spaceNo = CBC.datas['cityBattle_MapID']['value']
+            mapId = formula.parseLineType(self.crossServerToSpaceNo)
             crossServerId = self.crossServerDict['crossServerId']
             self.crossServerDict['token'] = token
-            self.crossServerDict['spaceNo'] = spaceNo
-            self.client.onCrossServerTokenResp(token, spaceNo, crossServerId)
-            LOG_DBG('[lj]onCrossServerResp', token, spaceNo, crossServerId)
+            self.crossServerDict['spaceNo'] = mapId
+            self.client.onCrossServerTokenResp(token, mapId, crossServerId)
+            LOG_DBG('[lj]onCrossServerResp', token, mapId, crossServerId)
+
+            LogTrackingMgr.LogTrackingMgr.teleport(
+                self.gbID,
+                self.accountEntity.clientDistinctId,
+                formula.parseLineType(self.baseSpaceNo),
+                mapId,
+            )
 
     def onReqGetAvatarPorperties(self, token, otherServerAccountBox):
         LOG_INFO("onReqGetAvatarPorperties", token, otherServerAccountBox)
@@ -244,6 +260,8 @@ class ICrossServer(object):
         self.disconnect(gameconst.ClientCallChannel.MAIN_CHANNEL)
         self.cell.onCrossServerSuc(self.crossServerDict["reasonNo"])
 
+        self.accountEntity.changeDinghaoLock(False)
+
     def crossServerCallBack(self, callbackComponent, callbackName, args, extra):
         LOG_INFO("crossServerCallBack", callbackComponent, callbackName, args, extra)
         _crossData = extra.get('crossData')
@@ -280,10 +298,18 @@ class ICrossServer(object):
         self.otherServerAvatarBox.onCrossServerEnd(callbackComponent, callbackName, args)
 
         #TODO未来如果有多个跨服玩法，需要再配表设计每个玩法goback的场景
-        self.client.onGobackServer(gameconst.SIEGEWAR_GO_BACK_LINENO)
+        LOG_INFO("gobackServer", self.crossServerFromSpaceNo)
+        self.client.onGobackServer(formula.parseLineType(self.crossServerFromSpaceNo))
         gameengine.getGlobalBase('CrossServerStub').onGobackServer(self.accountEntity.accountName)
 
         self.cell.offline(gameconst.OFFLINE_REASON_END_CROSS_SERVER)
+
+        LogTrackingMgr.LogTrackingMgr.teleport(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            formula.parseLineType(self.crossServerToSpaceNo),
+            formula.parseLineType(self.crossServerFromSpaceNo),
+        )
 
     def onCrossServerEnd(self, callbackComponent, callbackName, args):
         LOG_INFO("onCrossServerEnd", callbackComponent, callbackName, args)
@@ -299,6 +325,9 @@ class ICrossServer(object):
             getattr(self, callbackName)(*args)
         elif callbackComponent == gameconst.CrossServerCBComponent.ENUM_CELL:
             self.cell and getattr(self.cell, callbackName)(*args)
+        
+        self.startDestroyCountDown()
+        self.accountEntity.changeDinghaoLock(False)
 
     def onReloginInCrossServerState(self):
         LOG_INFO("onReloginInCrossServerState", self.crossServerDict['crossServerId'], self.crossServerDict['token'])

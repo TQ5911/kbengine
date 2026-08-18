@@ -42,6 +42,7 @@
         </onUseItemToIncreaseCrusadeRewardNumber>
 
         <onEnterCrusadeDungeon>
+            <Arg>           UUID                </Arg>
             <Arg>           SPACE_NO            </Arg>
             <Arg>           DUNGEON_NO          </Arg>
             <Arg>           MAILBOX             </Arg>

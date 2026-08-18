@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='CrossDataServer',
   syntax='proto3',
   serialized_options=_b('Z\024../gameServerService\220\001\001'),
-  serialized_pb=_b('\n\x19gameServerCrossData.proto\x12\x0f\x43rossDataServer\"\x06\n\x04Void\"-\n\x19RegisterGameServerRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\"\xb9\x01\n\tGuildInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x0c\n\x04\x66lag\x18\x04 \x01(\r\x12\x12\n\nguildScore\x18\x05 \x01(\r\x12\x12\n\nguildLevel\x18\x06 \x01(\r\x12\x11\n\tguildIcon\x18\x07 \x01(\r\x12\x11\n\tmemberCnt\x18\x08 \x01(\r\x12\x18\n\x10maxGuildUnionNum\x18\t \x01(\r\"<\n\x19GetEnemyGuildInfosRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\xcf\x01\n\x0e\x45nemyGuildInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x0c\n\x04\x66lag\x18\x04 \x01(\r\x12\x12\n\nguildScore\x18\x05 \x01(\r\x12\x12\n\nguildLevel\x18\x06 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x07 \x01(\r\x12\x11\n\tmemberCnt\x18\x08 \x01(\r\x12\x11\n\tguildIcon\x18\t \x01(\r\x12\x18\n\x10maxGuildUnionNum\x18\n \x01(\r\"b\n\x18GetEnemyGuildInfosResult\x12\x38\n\x0f\x65nemyGuildInfos\x18\x01 \x03(\x0b\x32\x1f.CrossDataServer.EnemyGuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"R\n\x13\x41\x64\x64GuildInfoRequest\x12-\n\tguildInfo\x18\x01 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\"\n\x12\x41\x64\x64GuildInfoResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\"6\n\x14GetGuildInfosRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"C\n\x1fGetGuildInfosByGuildUUIDRequest\x12\x12\n\nguildUUIDs\x18\x01 \x03(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"S\n\x13GetGuildInfosResult\x12.\n\nguildInfos\x18\x01 \x03(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"+\n\x16RemoveGuildInfoRequest\x12\x11\n\tguildUUID\x18\x02 \x01(\x04\"v\n\x17\x41\x64\x64GuildRelationRequest\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x14\n\x0crelationType\x18\x03 \x01(\x05\x12\x0f\n\x07\x65ndTime\x18\x04 \x01(\x03\x12\x0c\n\x04uuid\x18\x05 \x01(\x04\"w\n\x16\x41\x64\x64GuildRelationResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12-\n\tguildInfo\x18\x03 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0f\n\x07\x65rrCode\x18\x04 \x01(\r\"M\n\rGuildRelation\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x14\n\x0crelationType\x18\x03 \x01(\x05\"w\n\x1c\x42roadcastGuildRelationSingle\x12\x35\n\rguildRelation\x18\x01 \x01(\x0b\x32\x1e.CrossDataServer.GuildRelation\x12\x0f\n\x07version\x18\x02 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x03 \x01(\x03\"[\n\x10GuildRelationAll\x12\x36\n\x0eguildRelations\x18\x01 \x03(\x0b\x32\x1e.CrossDataServer.GuildRelation\x12\x0f\n\x07version\x18\x02 \x01(\r\"h\n\x1aRemoveGuildRelationRequest\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x14\n\x0crelationType\x18\x03 \x01(\x05\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"i\n\x19RemoveGuildRelationResult\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\x12-\n\tguildInfo\x18\x03 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\"W\n\x1c\x42roadcastRemoveGuildRelation\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x0f\n\x07version\x18\x03 \x01(\r\"Z\n\x16\x41pplyGuildUnionRequest\x12\x17\n\x0fsenderGuildUUID\x18\x01 \x01(\x04\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\\\n\x15\x41pplyGuildUnionResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x35\n\x11receiverGuildInfo\x18\x02 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\"\x83\x01\n\x18OnApplyGuildUnionRequest\x12\x17\n\x0fsenderGuildUUID\x18\x01 \x01(\x04\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\x12\x33\n\x0fsenderGuildInfo\x18\x03 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\"w\n\x15OnNotifyGuildRelation\x12-\n\tguildInfo\x18\x01 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x14\n\x0crelationType\x18\x02 \x01(\x05\x12\x19\n\x11receiverGuildUUID\x18\x03 \x01(\x04\"d\n\x18OnNotifyGuildCancelUnion\x12-\n\tguildInfo\x18\x01 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\"Z\n$RemoveReceiverGuildApplyUnionRequest\x12\x17\n\x0fsenderGuildUUID\x18\x01 \x01(\x04\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\"Y\n#NotifyRemoveReceiverGuildApplyUnion\x12\x17\n\x0fsenderGuildUUID\x18\x01 \x01(\x04\x12\x19\n\x11receiverGuildUUID\x18\x02 \x01(\x04\"[\n GetCrossServerGuildDetailRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"a\n&GetCrossServerGuildDetailToOtherServer\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\x98\x01\n\x0fGuildDetailInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x64\x65sc\x18\x02 \x01(\t\x12\x12\n\nleaderName\x18\x03 \x01(\t\x12\x11\n\tleaderSex\x18\x04 \x01(\r\x12\x14\n\x0cleaderSchool\x18\x05 \x01(\r\x12\x13\n\x0bleaderLevel\x18\x06 \x01(\r\x12\x12\n\nleaderGbId\x18\x07 \x01(\x04\"\x8b\x01\n(GetCrossServerGuildDetailFromOtherServer\x12\x39\n\x0fguildDetailInfo\x18\x01 \x01(\x0b\x32 .CrossDataServer.GuildDetailInfo\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"j\n\x1fGetCrossServerGuildDetailResult\x12\x39\n\x0fguildDetailInfo\x18\x01 \x01(\x0b\x32 .CrossDataServer.GuildDetailInfo\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"T\n\x15\x44oOnCrossGuildRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x66unc\x18\x02 \x01(\t\x12\x0c\n\x04\x61rgs\x18\x03 \x01(\x0c\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"q\n\x1a\x44oOnCrossGuildToGameServer\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x66unc\x18\x02 \x01(\t\x12\x0c\n\x04\x61rgs\x18\x03 \x01(\x0c\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x05 \x01(\r\"E\n\x14\x44oOnCrossGuildResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12\x0e\n\x06result\x18\x03 \x01(\x0c\"[\n\x18\x44oOnCrossGuildResultBack\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0f\n\x07success\x18\x03 \x01(\x08\x12\x0e\n\x06result\x18\x04 \x01(\x0c\x32\xe0\n\n\x0f\x43rossDataServer\x12W\n\x12registerGameServer\x12*.CrossDataServer.RegisterGameServerRequest\x1a\x15.CrossDataServer.Void\x12:\n\nactiveTick\x12\x15.CrossDataServer.Void\x1a\x15.CrossDataServer.Void\x12K\n\x0c\x61\x64\x64GuildInfo\x12$.CrossDataServer.AddGuildInfoRequest\x1a\x15.CrossDataServer.Void\x12M\n\rgetGuildInfos\x12%.CrossDataServer.GetGuildInfosRequest\x1a\x15.CrossDataServer.Void\x12\x63\n\x18getGuildInfosByGuildUUID\x12\x30.CrossDataServer.GetGuildInfosByGuildUUIDRequest\x1a\x15.CrossDataServer.Void\x12Q\n\x0fremoveGuildInfo\x12\'.CrossDataServer.RemoveGuildInfoRequest\x1a\x15.CrossDataServer.Void\x12S\n\x10\x61\x64\x64GuildRelation\x12(.CrossDataServer.AddGuildRelationRequest\x1a\x15.CrossDataServer.Void\x12Y\n\x13removeGuildRelation\x12+.CrossDataServer.RemoveGuildRelationRequest\x1a\x15.CrossDataServer.Void\x12Q\n\x0f\x61pplyGuildUnion\x12\'.CrossDataServer.ApplyGuildUnionRequest\x1a\x15.CrossDataServer.Void\x12W\n\x12getEnemyGuildInfos\x12*.CrossDataServer.GetEnemyGuildInfosRequest\x1a\x15.CrossDataServer.Void\x12m\n\x1dremoveReceiverGuildApplyUnion\x12\x35.CrossDataServer.RemoveReceiverGuildApplyUnionRequest\x1a\x15.CrossDataServer.Void\x12\x65\n\x19getCrossServerGuildDetail\x12\x31.CrossDataServer.GetCrossServerGuildDetailRequest\x1a\x15.CrossDataServer.Void\x12|\n(getCrossServerGuildDetailFromOtherServer\x12\x39.CrossDataServer.GetCrossServerGuildDetailFromOtherServer\x1a\x15.CrossDataServer.Void\x12V\n\x15\x64oOnCrossGuildRequest\x12&.CrossDataServer.DoOnCrossGuildRequest\x1a\x15.CrossDataServer.Void\x12\\\n\x18\x64oOnCrossGuildResultBack\x12).CrossDataServer.DoOnCrossGuildResultBack\x1a\x15.CrossDataServer.Void2\x97\r\n\nGameServer\x12\x42\n\x12\x61\x63tiveTickCallback\x12\x15.CrossDataServer.Void\x1a\x15.CrossDataServer.Void\x12L\n\x0eonAddGuildInfo\x12#.CrossDataServer.AddGuildInfoResult\x1a\x15.CrossDataServer.Void\x12N\n\x0fonGetGuildInfos\x12$.CrossDataServer.GetGuildInfosResult\x1a\x15.CrossDataServer.Void\x12\x66\n\x1eonBroadcastGuildRelationSingle\x12-.CrossDataServer.BroadcastGuildRelationSingle\x1a\x15.CrossDataServer.Void\x12N\n\x12onGuildRelationAll\x12!.CrossDataServer.GuildRelationAll\x1a\x15.CrossDataServer.Void\x12\x66\n\x1eonBroadcastRemoveGuildRelation\x12-.CrossDataServer.BroadcastRemoveGuildRelation\x1a\x15.CrossDataServer.Void\x12Z\n\x15onRemoveGuildRelation\x12*.CrossDataServer.RemoveGuildRelationResult\x1a\x15.CrossDataServer.Void\x12T\n\x12onAddGuildRelation\x12\'.CrossDataServer.AddGuildRelationResult\x1a\x15.CrossDataServer.Void\x12U\n\x11onApplyGuildUnion\x12).CrossDataServer.OnApplyGuildUnionRequest\x1a\x15.CrossDataServer.Void\x12V\n\x15onNotifyGuildRelation\x12&.CrossDataServer.OnNotifyGuildRelation\x1a\x15.CrossDataServer.Void\x12\\\n\x18onNotifyGuildCancelUnion\x12).CrossDataServer.OnNotifyGuildCancelUnion\x1a\x15.CrossDataServer.Void\x12X\n\x14onGetEnemyGuildInfos\x12).CrossDataServer.GetEnemyGuildInfosResult\x1a\x15.CrossDataServer.Void\x12X\n\x17onApplyGuildUnionResult\x12&.CrossDataServer.ApplyGuildUnionResult\x1a\x15.CrossDataServer.Void\x12t\n%onNotifyRemoveReceiverGuildApplyUnion\x12\x34.CrossDataServer.NotifyRemoveReceiverGuildApplyUnion\x1a\x15.CrossDataServer.Void\x12\x66\n\x1bonGetCrossServerGuildDetail\x12\x30.CrossDataServer.GetCrossServerGuildDetailResult\x1a\x15.CrossDataServer.Void\x12z\n(onGetCrossServerGuildDetailToOtherServer\x12\x37.CrossDataServer.GetCrossServerGuildDetailToOtherServer\x1a\x15.CrossDataServer.Void\x12\x62\n\x1conDoOnCrossGuildToGameServer\x12+.CrossDataServer.DoOnCrossGuildToGameServer\x1a\x15.CrossDataServer.Void\x12V\n\x16onDoOnCrossGuildResult\x12%.CrossDataServer.DoOnCrossGuildResult\x1a\x15.CrossDataServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x19gameServerCrossData.proto\x12\x0f\x43rossDataServer\"\x06\n\x04Void\"-\n\x19RegisterGameServerRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\"\x9f\x01\n\tGuildInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x0c\n\x04\x66lag\x18\x04 \x01(\r\x12\x12\n\nguildScore\x18\x05 \x01(\r\x12\x12\n\nguildLevel\x18\x06 \x01(\r\x12\x11\n\tguildIcon\x18\x07 \x01(\r\x12\x11\n\tmemberCnt\x18\x08 \x01(\r\"R\n\x13\x41\x64\x64GuildInfoRequest\x12-\n\tguildInfo\x18\x01 \x01(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\"\n\x12\x41\x64\x64GuildInfoResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\"6\n\x14GetGuildInfosRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"C\n\x1fGetGuildInfosByGuildUUIDRequest\x12\x12\n\nguildUUIDs\x18\x01 \x03(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"S\n\x13GetGuildInfosResult\x12.\n\nguildInfos\x18\x01 \x03(\x0b\x32\x1a.CrossDataServer.GuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"+\n\x16RemoveGuildInfoRequest\x12\x11\n\tguildUUID\x18\x02 \x01(\x04\"[\n GetCrossServerGuildDetailRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"a\n&GetCrossServerGuildDetailToOtherServer\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\xac\x01\n\x0fGuildDetailInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x64\x65sc\x18\x02 \x01(\t\x12\x12\n\nleaderName\x18\x03 \x01(\t\x12\x11\n\tleaderSex\x18\x04 \x01(\r\x12\x14\n\x0cleaderSchool\x18\x05 \x01(\r\x12\x13\n\x0bleaderLevel\x18\x06 \x01(\r\x12\x12\n\nleaderGbId\x18\x07 \x01(\x04\x12\x12\n\nleagueUUID\x18\x08 \x01(\x04\"\x8b\x01\n(GetCrossServerGuildDetailFromOtherServer\x12\x39\n\x0fguildDetailInfo\x18\x01 \x01(\x0b\x32 .CrossDataServer.GuildDetailInfo\x12\x16\n\x0esenderServerId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"j\n\x1fGetCrossServerGuildDetailResult\x12\x39\n\x0fguildDetailInfo\x18\x01 \x01(\x0b\x32 .CrossDataServer.GuildDetailInfo\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"T\n\x15\x44oOnCrossGuildRequest\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x66unc\x18\x02 \x01(\t\x12\x0c\n\x04\x61rgs\x18\x03 \x01(\x0c\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"q\n\x1a\x44oOnCrossGuildToGameServer\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x0c\n\x04\x66unc\x18\x02 \x01(\t\x12\x0c\n\x04\x61rgs\x18\x03 \x01(\x0c\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\x12\x16\n\x0esenderServerId\x18\x05 \x01(\r\"E\n\x14\x44oOnCrossGuildResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12\x0e\n\x06result\x18\x03 \x01(\x0c\"[\n\x18\x44oOnCrossGuildResultBack\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0f\n\x07success\x18\x03 \x01(\x08\x12\x0e\n\x06result\x18\x04 \x01(\x0c\"5\n\x17SaveSiegeWarDataRequest\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"7\n\x16SaveSiegeWarDataResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\"\'\n\x17LoadSiegeWarDataRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\"E\n\x16LoadSiegeWarDataResult\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\x12\x0f\n\x07success\x18\x03 \x01(\x08\x32\xbf\x08\n\x0f\x43rossDataServer\x12W\n\x12registerGameServer\x12*.CrossDataServer.RegisterGameServerRequest\x1a\x15.CrossDataServer.Void\x12:\n\nactiveTick\x12\x15.CrossDataServer.Void\x1a\x15.CrossDataServer.Void\x12K\n\x0c\x61\x64\x64GuildInfo\x12$.CrossDataServer.AddGuildInfoRequest\x1a\x15.CrossDataServer.Void\x12M\n\rgetGuildInfos\x12%.CrossDataServer.GetGuildInfosRequest\x1a\x15.CrossDataServer.Void\x12\x63\n\x18getGuildInfosByGuildUUID\x12\x30.CrossDataServer.GetGuildInfosByGuildUUIDRequest\x1a\x15.CrossDataServer.Void\x12Q\n\x0fremoveGuildInfo\x12\'.CrossDataServer.RemoveGuildInfoRequest\x1a\x15.CrossDataServer.Void\x12\x65\n\x19getCrossServerGuildDetail\x12\x31.CrossDataServer.GetCrossServerGuildDetailRequest\x1a\x15.CrossDataServer.Void\x12|\n(getCrossServerGuildDetailFromOtherServer\x12\x39.CrossDataServer.GetCrossServerGuildDetailFromOtherServer\x1a\x15.CrossDataServer.Void\x12V\n\x15\x64oOnCrossGuildRequest\x12&.CrossDataServer.DoOnCrossGuildRequest\x1a\x15.CrossDataServer.Void\x12\\\n\x18\x64oOnCrossGuildResultBack\x12).CrossDataServer.DoOnCrossGuildResultBack\x1a\x15.CrossDataServer.Void\x12S\n\x10saveSiegeWarData\x12(.CrossDataServer.SaveSiegeWarDataRequest\x1a\x15.CrossDataServer.Void\x12S\n\x10loadSiegeWarData\x12(.CrossDataServer.LoadSiegeWarDataRequest\x1a\x15.CrossDataServer.Void2\xba\x06\n\nGameServer\x12\x42\n\x12\x61\x63tiveTickCallback\x12\x15.CrossDataServer.Void\x1a\x15.CrossDataServer.Void\x12L\n\x0eonAddGuildInfo\x12#.CrossDataServer.AddGuildInfoResult\x1a\x15.CrossDataServer.Void\x12N\n\x0fonGetGuildInfos\x12$.CrossDataServer.GetGuildInfosResult\x1a\x15.CrossDataServer.Void\x12\x66\n\x1bonGetCrossServerGuildDetail\x12\x30.CrossDataServer.GetCrossServerGuildDetailResult\x1a\x15.CrossDataServer.Void\x12z\n(onGetCrossServerGuildDetailToOtherServer\x12\x37.CrossDataServer.GetCrossServerGuildDetailToOtherServer\x1a\x15.CrossDataServer.Void\x12\x62\n\x1conDoOnCrossGuildToGameServer\x12+.CrossDataServer.DoOnCrossGuildToGameServer\x1a\x15.CrossDataServer.Void\x12V\n\x16onDoOnCrossGuildResult\x12%.CrossDataServer.DoOnCrossGuildResult\x1a\x15.CrossDataServer.Void\x12T\n\x12onSaveSiegeWarData\x12\'.CrossDataServer.SaveSiegeWarDataResult\x1a\x15.CrossDataServer.Void\x12T\n\x12onLoadSiegeWarData\x12\'.CrossDataServer.LoadSiegeWarDataResult\x1a\x15.CrossDataServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
 )
 
 
@@ -145,13 +145,6 @@ _GUILDINFO = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='maxGuildUnionNum', full_name='CrossDataServer.GuildInfo.maxGuildUnionNum', index=8,
-      number=9, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -165,177 +158,7 @@ _GUILDINFO = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=102,
-  serialized_end=287,
-)
-
-
-_GETENEMYGUILDINFOSREQUEST = _descriptor.Descriptor(
-  name='GetEnemyGuildInfosRequest',
-  full_name='CrossDataServer.GetEnemyGuildInfosRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='guildUUID', full_name='CrossDataServer.GetEnemyGuildInfosRequest.guildUUID', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uuid', full_name='CrossDataServer.GetEnemyGuildInfosRequest.uuid', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=289,
-  serialized_end=349,
-)
-
-
-_ENEMYGUILDINFO = _descriptor.Descriptor(
-  name='EnemyGuildInfo',
-  full_name='CrossDataServer.EnemyGuildInfo',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='guildUUID', full_name='CrossDataServer.EnemyGuildInfo.guildUUID', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='guildName', full_name='CrossDataServer.EnemyGuildInfo.guildName', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='serverId', full_name='CrossDataServer.EnemyGuildInfo.serverId', index=2,
-      number=3, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='flag', full_name='CrossDataServer.EnemyGuildInfo.flag', index=3,
-      number=4, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='guildScore', full_name='CrossDataServer.EnemyGuildInfo.guildScore', index=4,
-      number=5, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='guildLevel', full_name='CrossDataServer.EnemyGuildInfo.guildLevel', index=5,
-      number=6, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='endTime', full_name='CrossDataServer.EnemyGuildInfo.endTime', index=6,
-      number=7, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='memberCnt', full_name='CrossDataServer.EnemyGuildInfo.memberCnt', index=7,
-      number=8, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='guildIcon', full_name='CrossDataServer.EnemyGuildInfo.guildIcon', index=8,
-      number=9, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='maxGuildUnionNum', full_name='CrossDataServer.EnemyGuildInfo.maxGuildUnionNum', index=9,
-      number=10, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=352,
-  serialized_end=559,
-)
-
-
-_GETENEMYGUILDINFOSRESULT = _descriptor.Descriptor(
-  name='GetEnemyGuildInfosResult',
-  full_name='CrossDataServer.GetEnemyGuildInfosResult',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='enemyGuildInfos', full_name='CrossDataServer.GetEnemyGuildInfosResult.enemyGuildInfos', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uuid', full_name='CrossDataServer.GetEnemyGuildInfosResult.uuid', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=561,
-  serialized_end=659,
+  serialized_end=261,
 )
 
 
@@ -372,8 +195,8 @@ _ADDGUILDINFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=661,
-  serialized_end=743,
+  serialized_start=263,
+  serialized_end=345,
 )
 
 
@@ -403,8 +226,8 @@ _ADDGUILDINFORESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=745,
-  serialized_end=779,
+  serialized_start=347,
+  serialized_end=381,
 )
 
 
@@ -441,8 +264,8 @@ _GETGUILDINFOSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=781,
-  serialized_end=835,
+  serialized_start=383,
+  serialized_end=437,
 )
 
 
@@ -479,8 +302,8 @@ _GETGUILDINFOSBYGUILDUUIDREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=837,
-  serialized_end=904,
+  serialized_start=439,
+  serialized_end=506,
 )
 
 
@@ -517,8 +340,8 @@ _GETGUILDINFOSRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=906,
-  serialized_end=989,
+  serialized_start=508,
+  serialized_end=591,
 )
 
 
@@ -548,676 +371,8 @@ _REMOVEGUILDINFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=991,
-  serialized_end=1034,
-)
-
-
-_ADDGUILDRELATIONREQUEST = _descriptor.Descriptor(
-  name='AddGuildRelationRequest',
-  full_name='CrossDataServer.AddGuildRelationRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='guildUUID1', full_name='CrossDataServer.AddGuildRelationRequest.guildUUID1', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='guildUUID2', full_name='CrossDataServer.AddGuildRelationRequest.guildUUID2', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='relationType', full_name='CrossDataServer.AddGuildRelationRequest.relationType', index=2,
-      number=3, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='endTime', full_name='CrossDataServer.AddGuildRelationRequest.endTime', index=3,
-      number=4, type=3, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uuid', full_name='CrossDataServer.AddGuildRelationRequest.uuid', index=4,
-      number=5, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1036,
-  serialized_end=1154,
-)
-
-
-_ADDGUILDRELATIONRESULT = _descriptor.Descriptor(
-  name='AddGuildRelationResult',
-  full_name='CrossDataServer.AddGuildRelationResult',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='uuid', full_name='CrossDataServer.AddGuildRelationResult.uuid', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='success', full_name='CrossDataServer.AddGuildRelationResult.success', index=1,
-      number=2, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='guildInfo', full_name='CrossDataServer.AddGuildRelationResult.guildInfo', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='errCode', full_name='CrossDataServer.AddGuildRelationResult.errCode', index=3,
-      number=4, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1156,
-  serialized_end=1275,
-)
-
-
-_GUILDRELATION = _descriptor.Descriptor(
-  name='GuildRelation',
-  full_name='CrossDataServer.GuildRelation',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='guildUUID1', full_name='CrossDataServer.GuildRelation.guildUUID1', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='guildUUID2', full_name='CrossDataServer.GuildRelation.guildUUID2', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='relationType', full_name='CrossDataServer.GuildRelation.relationType', index=2,
-      number=3, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1277,
-  serialized_end=1354,
-)
-
-
-_BROADCASTGUILDRELATIONSINGLE = _descriptor.Descriptor(
-  name='BroadcastGuildRelationSingle',
-  full_name='CrossDataServer.BroadcastGuildRelationSingle',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='guildRelation', full_name='CrossDataServer.BroadcastGuildRelationSingle.guildRelation', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='version', full_name='CrossDataServer.BroadcastGuildRelationSingle.version', index=1,
-      number=2, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='endTime', full_name='CrossDataServer.BroadcastGuildRelationSingle.endTime', index=2,
-      number=3, type=3, cpp_type=2, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1356,
-  serialized_end=1475,
-)
-
-
-_GUILDRELATIONALL = _descriptor.Descriptor(
-  name='GuildRelationAll',
-  full_name='CrossDataServer.GuildRelationAll',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='guildRelations', full_name='CrossDataServer.GuildRelationAll.guildRelations', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='version', full_name='CrossDataServer.GuildRelationAll.version', index=1,
-      number=2, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1477,
-  serialized_end=1568,
-)
-
-
-_REMOVEGUILDRELATIONREQUEST = _descriptor.Descriptor(
-  name='RemoveGuildRelationRequest',
-  full_name='CrossDataServer.RemoveGuildRelationRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='guildUUID1', full_name='CrossDataServer.RemoveGuildRelationRequest.guildUUID1', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='guildUUID2', full_name='CrossDataServer.RemoveGuildRelationRequest.guildUUID2', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='relationType', full_name='CrossDataServer.RemoveGuildRelationRequest.relationType', index=2,
-      number=3, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uuid', full_name='CrossDataServer.RemoveGuildRelationRequest.uuid', index=3,
-      number=4, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1570,
-  serialized_end=1674,
-)
-
-
-_REMOVEGUILDRELATIONRESULT = _descriptor.Descriptor(
-  name='RemoveGuildRelationResult',
-  full_name='CrossDataServer.RemoveGuildRelationResult',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='success', full_name='CrossDataServer.RemoveGuildRelationResult.success', index=0,
-      number=1, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uuid', full_name='CrossDataServer.RemoveGuildRelationResult.uuid', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='guildInfo', full_name='CrossDataServer.RemoveGuildRelationResult.guildInfo', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1676,
-  serialized_end=1781,
-)
-
-
-_BROADCASTREMOVEGUILDRELATION = _descriptor.Descriptor(
-  name='BroadcastRemoveGuildRelation',
-  full_name='CrossDataServer.BroadcastRemoveGuildRelation',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='guildUUID1', full_name='CrossDataServer.BroadcastRemoveGuildRelation.guildUUID1', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='guildUUID2', full_name='CrossDataServer.BroadcastRemoveGuildRelation.guildUUID2', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='version', full_name='CrossDataServer.BroadcastRemoveGuildRelation.version', index=2,
-      number=3, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1783,
-  serialized_end=1870,
-)
-
-
-_APPLYGUILDUNIONREQUEST = _descriptor.Descriptor(
-  name='ApplyGuildUnionRequest',
-  full_name='CrossDataServer.ApplyGuildUnionRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='senderGuildUUID', full_name='CrossDataServer.ApplyGuildUnionRequest.senderGuildUUID', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='receiverGuildUUID', full_name='CrossDataServer.ApplyGuildUnionRequest.receiverGuildUUID', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uuid', full_name='CrossDataServer.ApplyGuildUnionRequest.uuid', index=2,
-      number=3, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1872,
-  serialized_end=1962,
-)
-
-
-_APPLYGUILDUNIONRESULT = _descriptor.Descriptor(
-  name='ApplyGuildUnionResult',
-  full_name='CrossDataServer.ApplyGuildUnionResult',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='uuid', full_name='CrossDataServer.ApplyGuildUnionResult.uuid', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='receiverGuildInfo', full_name='CrossDataServer.ApplyGuildUnionResult.receiverGuildInfo', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1964,
-  serialized_end=2056,
-)
-
-
-_ONAPPLYGUILDUNIONREQUEST = _descriptor.Descriptor(
-  name='OnApplyGuildUnionRequest',
-  full_name='CrossDataServer.OnApplyGuildUnionRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='senderGuildUUID', full_name='CrossDataServer.OnApplyGuildUnionRequest.senderGuildUUID', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='receiverGuildUUID', full_name='CrossDataServer.OnApplyGuildUnionRequest.receiverGuildUUID', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='senderGuildInfo', full_name='CrossDataServer.OnApplyGuildUnionRequest.senderGuildInfo', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2059,
-  serialized_end=2190,
-)
-
-
-_ONNOTIFYGUILDRELATION = _descriptor.Descriptor(
-  name='OnNotifyGuildRelation',
-  full_name='CrossDataServer.OnNotifyGuildRelation',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='guildInfo', full_name='CrossDataServer.OnNotifyGuildRelation.guildInfo', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='relationType', full_name='CrossDataServer.OnNotifyGuildRelation.relationType', index=1,
-      number=2, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='receiverGuildUUID', full_name='CrossDataServer.OnNotifyGuildRelation.receiverGuildUUID', index=2,
-      number=3, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2192,
-  serialized_end=2311,
-)
-
-
-_ONNOTIFYGUILDCANCELUNION = _descriptor.Descriptor(
-  name='OnNotifyGuildCancelUnion',
-  full_name='CrossDataServer.OnNotifyGuildCancelUnion',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='guildInfo', full_name='CrossDataServer.OnNotifyGuildCancelUnion.guildInfo', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='receiverGuildUUID', full_name='CrossDataServer.OnNotifyGuildCancelUnion.receiverGuildUUID', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2313,
-  serialized_end=2413,
-)
-
-
-_REMOVERECEIVERGUILDAPPLYUNIONREQUEST = _descriptor.Descriptor(
-  name='RemoveReceiverGuildApplyUnionRequest',
-  full_name='CrossDataServer.RemoveReceiverGuildApplyUnionRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='senderGuildUUID', full_name='CrossDataServer.RemoveReceiverGuildApplyUnionRequest.senderGuildUUID', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='receiverGuildUUID', full_name='CrossDataServer.RemoveReceiverGuildApplyUnionRequest.receiverGuildUUID', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2415,
-  serialized_end=2505,
-)
-
-
-_NOTIFYREMOVERECEIVERGUILDAPPLYUNION = _descriptor.Descriptor(
-  name='NotifyRemoveReceiverGuildApplyUnion',
-  full_name='CrossDataServer.NotifyRemoveReceiverGuildApplyUnion',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='senderGuildUUID', full_name='CrossDataServer.NotifyRemoveReceiverGuildApplyUnion.senderGuildUUID', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='receiverGuildUUID', full_name='CrossDataServer.NotifyRemoveReceiverGuildApplyUnion.receiverGuildUUID', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2507,
-  serialized_end=2596,
+  serialized_start=593,
+  serialized_end=636,
 )
 
 
@@ -1261,8 +416,8 @@ _GETCROSSSERVERGUILDDETAILREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2598,
-  serialized_end=2689,
+  serialized_start=638,
+  serialized_end=729,
 )
 
 
@@ -1306,8 +461,8 @@ _GETCROSSSERVERGUILDDETAILTOOTHERSERVER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2691,
-  serialized_end=2788,
+  serialized_start=731,
+  serialized_end=828,
 )
 
 
@@ -1367,6 +522,13 @@ _GUILDDETAILINFO = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='leagueUUID', full_name='CrossDataServer.GuildDetailInfo.leagueUUID', index=7,
+      number=8, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -1379,8 +541,8 @@ _GUILDDETAILINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2791,
-  serialized_end=2943,
+  serialized_start=831,
+  serialized_end=1003,
 )
 
 
@@ -1424,8 +586,8 @@ _GETCROSSSERVERGUILDDETAILFROMOTHERSERVER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2946,
-  serialized_end=3085,
+  serialized_start=1006,
+  serialized_end=1145,
 )
 
 
@@ -1462,8 +624,8 @@ _GETCROSSSERVERGUILDDETAILRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3087,
-  serialized_end=3193,
+  serialized_start=1147,
+  serialized_end=1253,
 )
 
 
@@ -1514,8 +676,8 @@ _DOONCROSSGUILDREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3195,
-  serialized_end=3279,
+  serialized_start=1255,
+  serialized_end=1339,
 )
 
 
@@ -1573,8 +735,8 @@ _DOONCROSSGUILDTOGAMESERVER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3281,
-  serialized_end=3394,
+  serialized_start=1341,
+  serialized_end=1454,
 )
 
 
@@ -1618,8 +780,8 @@ _DOONCROSSGUILDRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3396,
-  serialized_end=3465,
+  serialized_start=1456,
+  serialized_end=1525,
 )
 
 
@@ -1670,50 +832,175 @@ _DOONCROSSGUILDRESULTBACK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3467,
-  serialized_end=3558,
+  serialized_start=1527,
+  serialized_end=1618,
 )
 
-_GETENEMYGUILDINFOSRESULT.fields_by_name['enemyGuildInfos'].message_type = _ENEMYGUILDINFO
+
+_SAVESIEGEWARDATAREQUEST = _descriptor.Descriptor(
+  name='SaveSiegeWarDataRequest',
+  full_name='CrossDataServer.SaveSiegeWarDataRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='data', full_name='CrossDataServer.SaveSiegeWarDataRequest.data', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='CrossDataServer.SaveSiegeWarDataRequest.uuid', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1620,
+  serialized_end=1673,
+)
+
+
+_SAVESIEGEWARDATARESULT = _descriptor.Descriptor(
+  name='SaveSiegeWarDataResult',
+  full_name='CrossDataServer.SaveSiegeWarDataResult',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='CrossDataServer.SaveSiegeWarDataResult.uuid', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='success', full_name='CrossDataServer.SaveSiegeWarDataResult.success', index=1,
+      number=2, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1675,
+  serialized_end=1730,
+)
+
+
+_LOADSIEGEWARDATAREQUEST = _descriptor.Descriptor(
+  name='LoadSiegeWarDataRequest',
+  full_name='CrossDataServer.LoadSiegeWarDataRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='CrossDataServer.LoadSiegeWarDataRequest.uuid', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1732,
+  serialized_end=1771,
+)
+
+
+_LOADSIEGEWARDATARESULT = _descriptor.Descriptor(
+  name='LoadSiegeWarDataResult',
+  full_name='CrossDataServer.LoadSiegeWarDataResult',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='data', full_name='CrossDataServer.LoadSiegeWarDataResult.data', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='CrossDataServer.LoadSiegeWarDataResult.uuid', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='success', full_name='CrossDataServer.LoadSiegeWarDataResult.success', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1773,
+  serialized_end=1842,
+)
+
 _ADDGUILDINFOREQUEST.fields_by_name['guildInfo'].message_type = _GUILDINFO
 _GETGUILDINFOSRESULT.fields_by_name['guildInfos'].message_type = _GUILDINFO
-_ADDGUILDRELATIONRESULT.fields_by_name['guildInfo'].message_type = _GUILDINFO
-_BROADCASTGUILDRELATIONSINGLE.fields_by_name['guildRelation'].message_type = _GUILDRELATION
-_GUILDRELATIONALL.fields_by_name['guildRelations'].message_type = _GUILDRELATION
-_REMOVEGUILDRELATIONRESULT.fields_by_name['guildInfo'].message_type = _GUILDINFO
-_APPLYGUILDUNIONRESULT.fields_by_name['receiverGuildInfo'].message_type = _GUILDINFO
-_ONAPPLYGUILDUNIONREQUEST.fields_by_name['senderGuildInfo'].message_type = _GUILDINFO
-_ONNOTIFYGUILDRELATION.fields_by_name['guildInfo'].message_type = _GUILDINFO
-_ONNOTIFYGUILDCANCELUNION.fields_by_name['guildInfo'].message_type = _GUILDINFO
 _GETCROSSSERVERGUILDDETAILFROMOTHERSERVER.fields_by_name['guildDetailInfo'].message_type = _GUILDDETAILINFO
 _GETCROSSSERVERGUILDDETAILRESULT.fields_by_name['guildDetailInfo'].message_type = _GUILDDETAILINFO
 DESCRIPTOR.message_types_by_name['Void'] = _VOID
 DESCRIPTOR.message_types_by_name['RegisterGameServerRequest'] = _REGISTERGAMESERVERREQUEST
 DESCRIPTOR.message_types_by_name['GuildInfo'] = _GUILDINFO
-DESCRIPTOR.message_types_by_name['GetEnemyGuildInfosRequest'] = _GETENEMYGUILDINFOSREQUEST
-DESCRIPTOR.message_types_by_name['EnemyGuildInfo'] = _ENEMYGUILDINFO
-DESCRIPTOR.message_types_by_name['GetEnemyGuildInfosResult'] = _GETENEMYGUILDINFOSRESULT
 DESCRIPTOR.message_types_by_name['AddGuildInfoRequest'] = _ADDGUILDINFOREQUEST
 DESCRIPTOR.message_types_by_name['AddGuildInfoResult'] = _ADDGUILDINFORESULT
 DESCRIPTOR.message_types_by_name['GetGuildInfosRequest'] = _GETGUILDINFOSREQUEST
 DESCRIPTOR.message_types_by_name['GetGuildInfosByGuildUUIDRequest'] = _GETGUILDINFOSBYGUILDUUIDREQUEST
 DESCRIPTOR.message_types_by_name['GetGuildInfosResult'] = _GETGUILDINFOSRESULT
 DESCRIPTOR.message_types_by_name['RemoveGuildInfoRequest'] = _REMOVEGUILDINFOREQUEST
-DESCRIPTOR.message_types_by_name['AddGuildRelationRequest'] = _ADDGUILDRELATIONREQUEST
-DESCRIPTOR.message_types_by_name['AddGuildRelationResult'] = _ADDGUILDRELATIONRESULT
-DESCRIPTOR.message_types_by_name['GuildRelation'] = _GUILDRELATION
-DESCRIPTOR.message_types_by_name['BroadcastGuildRelationSingle'] = _BROADCASTGUILDRELATIONSINGLE
-DESCRIPTOR.message_types_by_name['GuildRelationAll'] = _GUILDRELATIONALL
-DESCRIPTOR.message_types_by_name['RemoveGuildRelationRequest'] = _REMOVEGUILDRELATIONREQUEST
-DESCRIPTOR.message_types_by_name['RemoveGuildRelationResult'] = _REMOVEGUILDRELATIONRESULT
-DESCRIPTOR.message_types_by_name['BroadcastRemoveGuildRelation'] = _BROADCASTREMOVEGUILDRELATION
-DESCRIPTOR.message_types_by_name['ApplyGuildUnionRequest'] = _APPLYGUILDUNIONREQUEST
-DESCRIPTOR.message_types_by_name['ApplyGuildUnionResult'] = _APPLYGUILDUNIONRESULT
-DESCRIPTOR.message_types_by_name['OnApplyGuildUnionRequest'] = _ONAPPLYGUILDUNIONREQUEST
-DESCRIPTOR.message_types_by_name['OnNotifyGuildRelation'] = _ONNOTIFYGUILDRELATION
-DESCRIPTOR.message_types_by_name['OnNotifyGuildCancelUnion'] = _ONNOTIFYGUILDCANCELUNION
-DESCRIPTOR.message_types_by_name['RemoveReceiverGuildApplyUnionRequest'] = _REMOVERECEIVERGUILDAPPLYUNIONREQUEST
-DESCRIPTOR.message_types_by_name['NotifyRemoveReceiverGuildApplyUnion'] = _NOTIFYREMOVERECEIVERGUILDAPPLYUNION
 DESCRIPTOR.message_types_by_name['GetCrossServerGuildDetailRequest'] = _GETCROSSSERVERGUILDDETAILREQUEST
 DESCRIPTOR.message_types_by_name['GetCrossServerGuildDetailToOtherServer'] = _GETCROSSSERVERGUILDDETAILTOOTHERSERVER
 DESCRIPTOR.message_types_by_name['GuildDetailInfo'] = _GUILDDETAILINFO
@@ -1723,6 +1010,10 @@ DESCRIPTOR.message_types_by_name['DoOnCrossGuildRequest'] = _DOONCROSSGUILDREQUE
 DESCRIPTOR.message_types_by_name['DoOnCrossGuildToGameServer'] = _DOONCROSSGUILDTOGAMESERVER
 DESCRIPTOR.message_types_by_name['DoOnCrossGuildResult'] = _DOONCROSSGUILDRESULT
 DESCRIPTOR.message_types_by_name['DoOnCrossGuildResultBack'] = _DOONCROSSGUILDRESULTBACK
+DESCRIPTOR.message_types_by_name['SaveSiegeWarDataRequest'] = _SAVESIEGEWARDATAREQUEST
+DESCRIPTOR.message_types_by_name['SaveSiegeWarDataResult'] = _SAVESIEGEWARDATARESULT
+DESCRIPTOR.message_types_by_name['LoadSiegeWarDataRequest'] = _LOADSIEGEWARDATAREQUEST
+DESCRIPTOR.message_types_by_name['LoadSiegeWarDataResult'] = _LOADSIEGEWARDATARESULT
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Void = _reflection.GeneratedProtocolMessageType('Void', (_message.Message,), dict(
@@ -1745,27 +1036,6 @@ GuildInfo = _reflection.GeneratedProtocolMessageType('GuildInfo', (_message.Mess
   # @@protoc_insertion_point(class_scope:CrossDataServer.GuildInfo)
   ))
 _sym_db.RegisterMessage(GuildInfo)
-
-GetEnemyGuildInfosRequest = _reflection.GeneratedProtocolMessageType('GetEnemyGuildInfosRequest', (_message.Message,), dict(
-  DESCRIPTOR = _GETENEMYGUILDINFOSREQUEST,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.GetEnemyGuildInfosRequest)
-  ))
-_sym_db.RegisterMessage(GetEnemyGuildInfosRequest)
-
-EnemyGuildInfo = _reflection.GeneratedProtocolMessageType('EnemyGuildInfo', (_message.Message,), dict(
-  DESCRIPTOR = _ENEMYGUILDINFO,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.EnemyGuildInfo)
-  ))
-_sym_db.RegisterMessage(EnemyGuildInfo)
-
-GetEnemyGuildInfosResult = _reflection.GeneratedProtocolMessageType('GetEnemyGuildInfosResult', (_message.Message,), dict(
-  DESCRIPTOR = _GETENEMYGUILDINFOSRESULT,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.GetEnemyGuildInfosResult)
-  ))
-_sym_db.RegisterMessage(GetEnemyGuildInfosResult)
 
 AddGuildInfoRequest = _reflection.GeneratedProtocolMessageType('AddGuildInfoRequest', (_message.Message,), dict(
   DESCRIPTOR = _ADDGUILDINFOREQUEST,
@@ -1808,111 +1078,6 @@ RemoveGuildInfoRequest = _reflection.GeneratedProtocolMessageType('RemoveGuildIn
   # @@protoc_insertion_point(class_scope:CrossDataServer.RemoveGuildInfoRequest)
   ))
 _sym_db.RegisterMessage(RemoveGuildInfoRequest)
-
-AddGuildRelationRequest = _reflection.GeneratedProtocolMessageType('AddGuildRelationRequest', (_message.Message,), dict(
-  DESCRIPTOR = _ADDGUILDRELATIONREQUEST,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.AddGuildRelationRequest)
-  ))
-_sym_db.RegisterMessage(AddGuildRelationRequest)
-
-AddGuildRelationResult = _reflection.GeneratedProtocolMessageType('AddGuildRelationResult', (_message.Message,), dict(
-  DESCRIPTOR = _ADDGUILDRELATIONRESULT,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.AddGuildRelationResult)
-  ))
-_sym_db.RegisterMessage(AddGuildRelationResult)
-
-GuildRelation = _reflection.GeneratedProtocolMessageType('GuildRelation', (_message.Message,), dict(
-  DESCRIPTOR = _GUILDRELATION,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.GuildRelation)
-  ))
-_sym_db.RegisterMessage(GuildRelation)
-
-BroadcastGuildRelationSingle = _reflection.GeneratedProtocolMessageType('BroadcastGuildRelationSingle', (_message.Message,), dict(
-  DESCRIPTOR = _BROADCASTGUILDRELATIONSINGLE,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.BroadcastGuildRelationSingle)
-  ))
-_sym_db.RegisterMessage(BroadcastGuildRelationSingle)
-
-GuildRelationAll = _reflection.GeneratedProtocolMessageType('GuildRelationAll', (_message.Message,), dict(
-  DESCRIPTOR = _GUILDRELATIONALL,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.GuildRelationAll)
-  ))
-_sym_db.RegisterMessage(GuildRelationAll)
-
-RemoveGuildRelationRequest = _reflection.GeneratedProtocolMessageType('RemoveGuildRelationRequest', (_message.Message,), dict(
-  DESCRIPTOR = _REMOVEGUILDRELATIONREQUEST,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.RemoveGuildRelationRequest)
-  ))
-_sym_db.RegisterMessage(RemoveGuildRelationRequest)
-
-RemoveGuildRelationResult = _reflection.GeneratedProtocolMessageType('RemoveGuildRelationResult', (_message.Message,), dict(
-  DESCRIPTOR = _REMOVEGUILDRELATIONRESULT,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.RemoveGuildRelationResult)
-  ))
-_sym_db.RegisterMessage(RemoveGuildRelationResult)
-
-BroadcastRemoveGuildRelation = _reflection.GeneratedProtocolMessageType('BroadcastRemoveGuildRelation', (_message.Message,), dict(
-  DESCRIPTOR = _BROADCASTREMOVEGUILDRELATION,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.BroadcastRemoveGuildRelation)
-  ))
-_sym_db.RegisterMessage(BroadcastRemoveGuildRelation)
-
-ApplyGuildUnionRequest = _reflection.GeneratedProtocolMessageType('ApplyGuildUnionRequest', (_message.Message,), dict(
-  DESCRIPTOR = _APPLYGUILDUNIONREQUEST,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.ApplyGuildUnionRequest)
-  ))
-_sym_db.RegisterMessage(ApplyGuildUnionRequest)
-
-ApplyGuildUnionResult = _reflection.GeneratedProtocolMessageType('ApplyGuildUnionResult', (_message.Message,), dict(
-  DESCRIPTOR = _APPLYGUILDUNIONRESULT,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.ApplyGuildUnionResult)
-  ))
-_sym_db.RegisterMessage(ApplyGuildUnionResult)
-
-OnApplyGuildUnionRequest = _reflection.GeneratedProtocolMessageType('OnApplyGuildUnionRequest', (_message.Message,), dict(
-  DESCRIPTOR = _ONAPPLYGUILDUNIONREQUEST,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.OnApplyGuildUnionRequest)
-  ))
-_sym_db.RegisterMessage(OnApplyGuildUnionRequest)
-
-OnNotifyGuildRelation = _reflection.GeneratedProtocolMessageType('OnNotifyGuildRelation', (_message.Message,), dict(
-  DESCRIPTOR = _ONNOTIFYGUILDRELATION,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.OnNotifyGuildRelation)
-  ))
-_sym_db.RegisterMessage(OnNotifyGuildRelation)
-
-OnNotifyGuildCancelUnion = _reflection.GeneratedProtocolMessageType('OnNotifyGuildCancelUnion', (_message.Message,), dict(
-  DESCRIPTOR = _ONNOTIFYGUILDCANCELUNION,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.OnNotifyGuildCancelUnion)
-  ))
-_sym_db.RegisterMessage(OnNotifyGuildCancelUnion)
-
-RemoveReceiverGuildApplyUnionRequest = _reflection.GeneratedProtocolMessageType('RemoveReceiverGuildApplyUnionRequest', (_message.Message,), dict(
-  DESCRIPTOR = _REMOVERECEIVERGUILDAPPLYUNIONREQUEST,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.RemoveReceiverGuildApplyUnionRequest)
-  ))
-_sym_db.RegisterMessage(RemoveReceiverGuildApplyUnionRequest)
-
-NotifyRemoveReceiverGuildApplyUnion = _reflection.GeneratedProtocolMessageType('NotifyRemoveReceiverGuildApplyUnion', (_message.Message,), dict(
-  DESCRIPTOR = _NOTIFYREMOVERECEIVERGUILDAPPLYUNION,
-  __module__ = 'gameServerCrossData_pb2'
-  # @@protoc_insertion_point(class_scope:CrossDataServer.NotifyRemoveReceiverGuildApplyUnion)
-  ))
-_sym_db.RegisterMessage(NotifyRemoveReceiverGuildApplyUnion)
 
 GetCrossServerGuildDetailRequest = _reflection.GeneratedProtocolMessageType('GetCrossServerGuildDetailRequest', (_message.Message,), dict(
   DESCRIPTOR = _GETCROSSSERVERGUILDDETAILREQUEST,
@@ -1977,6 +1142,34 @@ DoOnCrossGuildResultBack = _reflection.GeneratedProtocolMessageType('DoOnCrossGu
   ))
 _sym_db.RegisterMessage(DoOnCrossGuildResultBack)
 
+SaveSiegeWarDataRequest = _reflection.GeneratedProtocolMessageType('SaveSiegeWarDataRequest', (_message.Message,), dict(
+  DESCRIPTOR = _SAVESIEGEWARDATAREQUEST,
+  __module__ = 'gameServerCrossData_pb2'
+  # @@protoc_insertion_point(class_scope:CrossDataServer.SaveSiegeWarDataRequest)
+  ))
+_sym_db.RegisterMessage(SaveSiegeWarDataRequest)
+
+SaveSiegeWarDataResult = _reflection.GeneratedProtocolMessageType('SaveSiegeWarDataResult', (_message.Message,), dict(
+  DESCRIPTOR = _SAVESIEGEWARDATARESULT,
+  __module__ = 'gameServerCrossData_pb2'
+  # @@protoc_insertion_point(class_scope:CrossDataServer.SaveSiegeWarDataResult)
+  ))
+_sym_db.RegisterMessage(SaveSiegeWarDataResult)
+
+LoadSiegeWarDataRequest = _reflection.GeneratedProtocolMessageType('LoadSiegeWarDataRequest', (_message.Message,), dict(
+  DESCRIPTOR = _LOADSIEGEWARDATAREQUEST,
+  __module__ = 'gameServerCrossData_pb2'
+  # @@protoc_insertion_point(class_scope:CrossDataServer.LoadSiegeWarDataRequest)
+  ))
+_sym_db.RegisterMessage(LoadSiegeWarDataRequest)
+
+LoadSiegeWarDataResult = _reflection.GeneratedProtocolMessageType('LoadSiegeWarDataResult', (_message.Message,), dict(
+  DESCRIPTOR = _LOADSIEGEWARDATARESULT,
+  __module__ = 'gameServerCrossData_pb2'
+  # @@protoc_insertion_point(class_scope:CrossDataServer.LoadSiegeWarDataResult)
+  ))
+_sym_db.RegisterMessage(LoadSiegeWarDataResult)
+
 
 DESCRIPTOR._options = None
 
@@ -1986,8 +1179,8 @@ _CROSSDATASERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=3561,
-  serialized_end=4937,
+  serialized_start=1845,
+  serialized_end=2932,
   methods=[
   _descriptor.MethodDescriptor(
     name='registerGameServer',
@@ -2044,54 +1237,9 @@ _CROSSDATASERVER = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
-    name='addGuildRelation',
-    full_name='CrossDataServer.CrossDataServer.addGuildRelation',
-    index=6,
-    containing_service=None,
-    input_type=_ADDGUILDRELATIONREQUEST,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='removeGuildRelation',
-    full_name='CrossDataServer.CrossDataServer.removeGuildRelation',
-    index=7,
-    containing_service=None,
-    input_type=_REMOVEGUILDRELATIONREQUEST,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='applyGuildUnion',
-    full_name='CrossDataServer.CrossDataServer.applyGuildUnion',
-    index=8,
-    containing_service=None,
-    input_type=_APPLYGUILDUNIONREQUEST,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='getEnemyGuildInfos',
-    full_name='CrossDataServer.CrossDataServer.getEnemyGuildInfos',
-    index=9,
-    containing_service=None,
-    input_type=_GETENEMYGUILDINFOSREQUEST,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='removeReceiverGuildApplyUnion',
-    full_name='CrossDataServer.CrossDataServer.removeReceiverGuildApplyUnion',
-    index=10,
-    containing_service=None,
-    input_type=_REMOVERECEIVERGUILDAPPLYUNIONREQUEST,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
     name='getCrossServerGuildDetail',
     full_name='CrossDataServer.CrossDataServer.getCrossServerGuildDetail',
-    index=11,
+    index=6,
     containing_service=None,
     input_type=_GETCROSSSERVERGUILDDETAILREQUEST,
     output_type=_VOID,
@@ -2100,7 +1248,7 @@ _CROSSDATASERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='getCrossServerGuildDetailFromOtherServer',
     full_name='CrossDataServer.CrossDataServer.getCrossServerGuildDetailFromOtherServer',
-    index=12,
+    index=7,
     containing_service=None,
     input_type=_GETCROSSSERVERGUILDDETAILFROMOTHERSERVER,
     output_type=_VOID,
@@ -2109,7 +1257,7 @@ _CROSSDATASERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='doOnCrossGuildRequest',
     full_name='CrossDataServer.CrossDataServer.doOnCrossGuildRequest',
-    index=13,
+    index=8,
     containing_service=None,
     input_type=_DOONCROSSGUILDREQUEST,
     output_type=_VOID,
@@ -2118,9 +1266,27 @@ _CROSSDATASERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='doOnCrossGuildResultBack',
     full_name='CrossDataServer.CrossDataServer.doOnCrossGuildResultBack',
-    index=14,
+    index=9,
     containing_service=None,
     input_type=_DOONCROSSGUILDRESULTBACK,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='saveSiegeWarData',
+    full_name='CrossDataServer.CrossDataServer.saveSiegeWarData',
+    index=10,
+    containing_service=None,
+    input_type=_SAVESIEGEWARDATAREQUEST,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='loadSiegeWarData',
+    full_name='CrossDataServer.CrossDataServer.loadSiegeWarData',
+    index=11,
+    containing_service=None,
+    input_type=_LOADSIEGEWARDATAREQUEST,
     output_type=_VOID,
     serialized_options=None,
   ),
@@ -2136,8 +1302,8 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=4940,
-  serialized_end=6627,
+  serialized_start=2935,
+  serialized_end=3761,
   methods=[
   _descriptor.MethodDescriptor(
     name='activeTickCallback',
@@ -2167,108 +1333,9 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
-    name='onBroadcastGuildRelationSingle',
-    full_name='CrossDataServer.GameServer.onBroadcastGuildRelationSingle',
-    index=3,
-    containing_service=None,
-    input_type=_BROADCASTGUILDRELATIONSINGLE,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='onGuildRelationAll',
-    full_name='CrossDataServer.GameServer.onGuildRelationAll',
-    index=4,
-    containing_service=None,
-    input_type=_GUILDRELATIONALL,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='onBroadcastRemoveGuildRelation',
-    full_name='CrossDataServer.GameServer.onBroadcastRemoveGuildRelation',
-    index=5,
-    containing_service=None,
-    input_type=_BROADCASTREMOVEGUILDRELATION,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='onRemoveGuildRelation',
-    full_name='CrossDataServer.GameServer.onRemoveGuildRelation',
-    index=6,
-    containing_service=None,
-    input_type=_REMOVEGUILDRELATIONRESULT,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='onAddGuildRelation',
-    full_name='CrossDataServer.GameServer.onAddGuildRelation',
-    index=7,
-    containing_service=None,
-    input_type=_ADDGUILDRELATIONRESULT,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='onApplyGuildUnion',
-    full_name='CrossDataServer.GameServer.onApplyGuildUnion',
-    index=8,
-    containing_service=None,
-    input_type=_ONAPPLYGUILDUNIONREQUEST,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='onNotifyGuildRelation',
-    full_name='CrossDataServer.GameServer.onNotifyGuildRelation',
-    index=9,
-    containing_service=None,
-    input_type=_ONNOTIFYGUILDRELATION,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='onNotifyGuildCancelUnion',
-    full_name='CrossDataServer.GameServer.onNotifyGuildCancelUnion',
-    index=10,
-    containing_service=None,
-    input_type=_ONNOTIFYGUILDCANCELUNION,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='onGetEnemyGuildInfos',
-    full_name='CrossDataServer.GameServer.onGetEnemyGuildInfos',
-    index=11,
-    containing_service=None,
-    input_type=_GETENEMYGUILDINFOSRESULT,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='onApplyGuildUnionResult',
-    full_name='CrossDataServer.GameServer.onApplyGuildUnionResult',
-    index=12,
-    containing_service=None,
-    input_type=_APPLYGUILDUNIONRESULT,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
-    name='onNotifyRemoveReceiverGuildApplyUnion',
-    full_name='CrossDataServer.GameServer.onNotifyRemoveReceiverGuildApplyUnion',
-    index=13,
-    containing_service=None,
-    input_type=_NOTIFYREMOVERECEIVERGUILDAPPLYUNION,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
     name='onGetCrossServerGuildDetail',
     full_name='CrossDataServer.GameServer.onGetCrossServerGuildDetail',
-    index=14,
+    index=3,
     containing_service=None,
     input_type=_GETCROSSSERVERGUILDDETAILRESULT,
     output_type=_VOID,
@@ -2277,7 +1344,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onGetCrossServerGuildDetailToOtherServer',
     full_name='CrossDataServer.GameServer.onGetCrossServerGuildDetailToOtherServer',
-    index=15,
+    index=4,
     containing_service=None,
     input_type=_GETCROSSSERVERGUILDDETAILTOOTHERSERVER,
     output_type=_VOID,
@@ -2286,7 +1353,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onDoOnCrossGuildToGameServer',
     full_name='CrossDataServer.GameServer.onDoOnCrossGuildToGameServer',
-    index=16,
+    index=5,
     containing_service=None,
     input_type=_DOONCROSSGUILDTOGAMESERVER,
     output_type=_VOID,
@@ -2295,9 +1362,27 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onDoOnCrossGuildResult',
     full_name='CrossDataServer.GameServer.onDoOnCrossGuildResult',
-    index=17,
+    index=6,
     containing_service=None,
     input_type=_DOONCROSSGUILDRESULT,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='onSaveSiegeWarData',
+    full_name='CrossDataServer.GameServer.onSaveSiegeWarData',
+    index=7,
+    containing_service=None,
+    input_type=_SAVESIEGEWARDATARESULT,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='onLoadSiegeWarData',
+    full_name='CrossDataServer.GameServer.onLoadSiegeWarData',
+    index=8,
+    containing_service=None,
+    input_type=_LOADSIEGEWARDATARESULT,
     output_type=_VOID,
     serialized_options=None,
   ),

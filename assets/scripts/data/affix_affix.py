@@ -244,8 +244,8 @@ def _78004021(self, target, context, *args):
     self.addPropByGear(target, context, ['adjMaxMagicArmor'])
 
 def _78004022(self, target, context, *args):
-    context.props = ['adjEvasion']
-    self.addPropByGear(target, context, ['adjEvasion'])
+    context.props = ['adjDodge']
+    self.addPropByGear(target, context, ['adjDodge'])
 
 def _78004023(self, target, context, *args):
     context.props = ['adjMinPhysicalArmor']
@@ -284,8 +284,8 @@ def _78004031(self, target, context, *args):
     self.addPropByGear(target, context, ['adjMaxMagicAtk'])
 
 def _78004032(self, target, context, *args):
-    context.props = ['adjAccuracy']
-    self.addPropByGear(target, context, ['adjAccuracy'])
+    context.props = ['adjHit']
+    self.addPropByGear(target, context, ['adjHit'])
 
 def _78004033(self, target, context, *args):
     context.props = ['adjMinPhysicalAtk']
@@ -3605,7 +3605,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((3, 3), (10, 15), (20, 25), (32, 40)),
+        "qualityValue": ((1, 2), (3, 5), (6, 9), (10, 14)),
         "score": 0
     }),
     78004001: _tools.RODict({
@@ -3623,7 +3623,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((2, 8), (9, 24), (25, 40), (41, 64)),
+        "qualityValue": ((1, 2), (3, 5), (6, 9), (10, 14)),
         "score": 0
     }),
     78004002: _tools.RODict({
@@ -3641,7 +3641,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((3, 12), (13, 36), (37, 60), (61, 96)),
+        "qualityValue": ((1, 2), (3, 5), (6, 9), (10, 14)),
         "score": 0
     }),
     78004003: _tools.RODict({
@@ -3659,7 +3659,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((2, 8), (9, 24), (25, 40), (41, 64)),
+        "qualityValue": ((1, 2), (3, 5), (6, 9), (10, 14)),
         "score": 0
     }),
     78004004: _tools.RODict({
@@ -3677,14 +3677,14 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((3, 12), (13, 36), (37, 60), (61, 96)),
+        "qualityValue": ((1, 2), (3, 5), (6, 9), (10, 14)),
         "score": 0
     }),
     78004005: _tools.RODict({
         "ID": 78004005,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004005,
@@ -3695,14 +3695,14 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
+        "qualityValue": ((1, 2), (3, 6), (7, 13), (14, 20)),
         "score": 0
     }),
     78004006: _tools.RODict({
         "ID": 78004006,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004006,
@@ -3713,7 +3713,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004007: _tools.RODict({
@@ -3731,7 +3731,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
+        "qualityValue": ((1, 2), (3, 6), (7, 13), (14, 20)),
         "score": 0
     }),
     78004008: _tools.RODict({
@@ -3749,7 +3749,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((2, 8), (9, 24), (25, 40), (41, 64)),
+        "qualityValue": ((1, 2), (3, 6), (7, 13), (14, 20)),
         "score": 0
     }),
     78004009: _tools.RODict({
@@ -3767,7 +3767,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
+        "qualityValue": ((1, 2), (3, 6), (7, 13), (14, 20)),
         "score": 0
     }),
     78004010: _tools.RODict({
@@ -3785,14 +3785,14 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((2, 8), (9, 24), (25, 40), (41, 64)),
+        "qualityValue": ((1, 2), (3, 6), (7, 13), (14, 20)),
         "score": 0
     }),
     78004011: _tools.RODict({
         "ID": 78004011,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004011,
@@ -3803,14 +3803,14 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004012: _tools.RODict({
         "ID": 78004012,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004012,
@@ -3821,7 +3821,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 10)),
         "score": 0
     }),
     78004013: _tools.RODict({
@@ -3839,7 +3839,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004014: _tools.RODict({
@@ -3857,7 +3857,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((2, 6), (7, 18), (19, 30), (31, 48)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004015: _tools.RODict({
@@ -3875,7 +3875,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004016: _tools.RODict({
@@ -3893,14 +3893,14 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((2, 6), (7, 18), (19, 30), (31, 48)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004017: _tools.RODict({
         "ID": 78004017,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004017,
@@ -3911,7 +3911,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 5), (6, 8)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004018: _tools.RODict({
@@ -3929,7 +3929,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004019: _tools.RODict({
@@ -3947,7 +3947,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((2, 6), (7, 18), (19, 30), (31, 48)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004020: _tools.RODict({
@@ -3965,7 +3965,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004021: _tools.RODict({
@@ -3983,25 +3983,25 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((2, 6), (7, 18), (19, 30), (31, 48)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004022: _tools.RODict({
         "ID": 78004022,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004022,
         "inscription": 0,
-        "prop": "adjEvasion",
+        "prop": "adjDodge",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 5), (6, 8)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004023: _tools.RODict({
@@ -4019,7 +4019,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004024: _tools.RODict({
@@ -4037,7 +4037,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((2, 6), (7, 18), (19, 30), (31, 48)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004025: _tools.RODict({
@@ -4055,7 +4055,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004026: _tools.RODict({
@@ -4073,14 +4073,14 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((2, 6), (7, 18), (19, 30), (31, 48)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004027: _tools.RODict({
         "ID": 78004027,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004027,
@@ -4091,7 +4091,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 5), (6, 8)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004028: _tools.RODict({
@@ -4109,7 +4109,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004029: _tools.RODict({
@@ -4127,7 +4127,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004030: _tools.RODict({
@@ -4145,7 +4145,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004031: _tools.RODict({
@@ -4163,25 +4163,25 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004032: _tools.RODict({
         "ID": 78004032,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004032,
         "inscription": 0,
-        "prop": "adjAccuracy",
+        "prop": "adjHit",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 5), (6, 8)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004033: _tools.RODict({
@@ -4199,7 +4199,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004034: _tools.RODict({
@@ -4217,7 +4217,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004035: _tools.RODict({
@@ -4235,7 +4235,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004036: _tools.RODict({
@@ -4253,14 +4253,14 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004037: _tools.RODict({
         "ID": 78004037,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004037,
@@ -4271,14 +4271,14 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 5), (6, 8)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     }),
     78004038: _tools.RODict({
         "ID": 78004038,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004038,
@@ -4307,7 +4307,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004040: _tools.RODict({
@@ -4325,7 +4325,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004041: _tools.RODict({
@@ -4343,7 +4343,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 10), (11, 16)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004042: _tools.RODict({
@@ -4361,14 +4361,14 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 4), (5, 12), (13, 20), (21, 32)),
+        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
         "score": 0
     }),
     78004043: _tools.RODict({
         "ID": 78004043,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004043,
@@ -4379,7 +4379,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 5), (6, 8)),
+        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
         "score": 0
     })
 })

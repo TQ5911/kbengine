@@ -264,9 +264,9 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 18000741,
           "ID": 40394002,
-          "PosX": 509.6058,
+          "PosX": 508.18,
           "PosY": 240.465,
-          "PosZ": 114.4311,
+          "PosZ": 113.64,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": 0,

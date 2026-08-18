@@ -6404,9 +6404,9 @@ datas ={
     "EntityID": 11236115,
     "ID": 19100344,
     "Name": "\u5ca9\u5288\u725b\u5f13\u624b",
-    "PosX": 475.500061,
+    "PosX": 475.5001,
     "PosY": 54.05485,
-    "PosZ": 184.119278,
+    "PosZ": 184.1193,
     "Props": {
       "ChestGroupID": "",
       "GroupID": "",
@@ -7424,9 +7424,9 @@ datas ={
     "EntityID": 11236124,
     "ID": 19100394,
     "Name": "\u82cd\u725b\u536b\u58eb",
-    "PosX": 451.074982,
-    "PosY": 48.1874275,
-    "PosZ": 220.859314,
+    "PosX": 451.075,
+    "PosY": 48.18743,
+    "PosZ": 220.8593,
     "Props": {
       "ChestGroupID": "",
       "GroupID": "",
@@ -7764,7 +7764,7 @@ datas ={
     "EntityID": 11236123,
     "ID": 19100409,
     "Name": "\u7384\u725b\u76fe\u624b",
-    "PosX": 226.939209,
+    "PosX": 226.9392,
     "PosY": 56.02137,
     "PosZ": 347.2042,
     "Props": {
@@ -8750,9 +8750,9 @@ datas ={
     "EntityID": 11236120,
     "ID": 19100448,
     "Name": "\u9752\u77db\u6218\u517d",
-    "PosX": 214.919357,
-    "PosY": 56.094944,
-    "PosZ": 212.95813,
+    "PosX": 214.9194,
+    "PosY": 56.09494,
+    "PosZ": 212.9581,
     "Props": {
       "ChestGroupID": "",
       "GroupID": "",
@@ -9498,9 +9498,9 @@ datas ={
     "EntityID": 11236119,
     "ID": 19100485,
     "Name": "\u708e\u9b03\u6218\u517d",
-    "PosX": 265.470062,
+    "PosX": 265.4701,
     "PosY": 58.07088,
-    "PosZ": 289.75174,
+    "PosZ": 289.7517,
     "Props": {
       "ChestGroupID": "",
       "GroupID": "",
@@ -11232,8 +11232,8 @@ datas ={
     "EntityID": 11236128,
     "ID": 19100546,
     "Name": "\u5c01\u5370\u7684\u88c2\u5730\u86ee\u725b",
-    "PosX": 472.929016,
-    "PosY": 95.8492661,
+    "PosX": 472.929,
+    "PosY": 95.84927,
     "PosZ": 387.5809,
     "Props": {
       "ChestGroupID": "",
@@ -11402,9 +11402,9 @@ datas ={
     "EntityID": 11236128,
     "ID": 19100551,
     "Name": "\u5c01\u5370\u7684\u88c2\u5730\u86ee\u725b",
-    "PosX": 590.904541,
-    "PosY": 111.861015,
-    "PosZ": 302.37912,
+    "PosX": 590.9045,
+    "PosY": 111.861,
+    "PosZ": 302.3791,
     "Props": {
       "ChestGroupID": "",
       "GroupID": "",
@@ -11539,8 +11539,8 @@ datas ={
     "ID": 19100555,
     "Name": "\u5c18\u5c01\u7684\u82cd\u725b\u536b\u58eb",
     "PosX": 591.1018,
-    "PosY": 111.870995,
-    "PosZ": 294.060425,
+    "PosY": 111.871,
+    "PosZ": 294.0604,
     "Props": {
       "ChestGroupID": "",
       "GroupID": "",
@@ -11810,8 +11810,8 @@ datas ={
     "EntityID": 11236127,
     "ID": 19100563,
     "Name": "\u82cd\u5f71\u8760",
-    "PosX": 222.872559,
-    "PosY": 67.8538361,
+    "PosX": 222.8726,
+    "PosY": 67.85384,
     "PosZ": 400.5481,
     "Props": {
       "ChestGroupID": "",
@@ -11844,9 +11844,9 @@ datas ={
     "EntityID": 11236127,
     "ID": 19100564,
     "Name": "\u82cd\u5f71\u8760",
-    "PosX": 227.79895,
+    "PosX": 227.799,
     "PosY": 68.7464,
-    "PosZ": 396.891571,
+    "PosZ": 396.8916,
     "Props": {
       "ChestGroupID": "",
       "GroupID": "",
@@ -11863,6 +11863,149 @@ datas ={
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u5de1\u903b\u602a"
+    }
+  },
+  "19100565": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Monster",
+    "ClassNameType": 0,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 11236035,
+    "ID": 19100565,
+    "Name": "\u725b\u5f13\u961f\u957f",
+    "PosX": 391.4882,
+    "PosY": 98.69015,
+    "PosZ": 405.3746,
+    "Props": {
+      "ChestGroupID": "",
+      "GroupID": 1,
+      "Level": 47,
+      "LightPillar": "",
+      "MapEntityScale": 0,
+      "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": 57102701,
+      "Radius": 0.0,
+      "RandomRegion": [
+        [
+          392.2632,
+          98.58233,
+          404.289246,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          386.483337,
+          76.7715759,
+          374.9813,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          430.144836,
+          104.731071,
+          491.945435,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          333.607117,
+          75.85293,
+          517.7566,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          249.438751,
+          69.77714,
+          399.40036,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          247.688614,
+          59.1959877,
+          350.79425,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          325.95813,
+          103.786263,
+          330.78717,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          381.3482,
+          98.27729,
+          279.936035,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          323.692383,
+          80.33959,
+          197.134323,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          286.0856,
+          57.1116524,
+          266.860382,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          504.995728,
+          48.9641342,
+          223.283875,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          598.6538,
+          103.261848,
+          229.985931,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          495.288483,
+          68.9467545,
+          248.841248,
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "RefreshNum": 1,
+      "RefreshTime": [
+        1600.0,
+        2000.0
+      ],
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1,
+      "ShowMonsterGroupID": ""
     }
   },
   "19108001": {
@@ -11957,37 +12100,10 @@ datas ={
       "GateType": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
-      "TelDir": 97.36372,
+      "TelDir": 97.36373,
       "TelX": 168.8314,
       "TelY": 76.37806,
       "TelZ": 546.4999
-    }
-  },
-  "19108007": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Teleporter",
-    "ClassNameType": 2,
-    "CustomID": "",
-    "Dir": 359.4169,
-    "DisplayName": "",
-    "EliteCustomID": "10268002",
-    "EntityID": 17102502,
-    "ID": 19108007,
-    "Name": "\u7956\u73c2\u5730\u5821\u4e94\u5c42\u00b7\u7cbe\u82f1",
-    "PosX": 235.46,
-    "PosY": 86.98374,
-    "PosZ": 147.09,
-    "Props": {
-      "CameraId": 33010001,
-      "GateType": 0,
-      "Remark": "",
-      "ShowInSceneMap": 1,
-      "TelDir": 0.2762845,
-      "TelX": 235.5962,
-      "TelY": 85.23374,
-      "TelZ": 161.2221
     }
   },
   "19108008": {

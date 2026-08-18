@@ -159,7 +159,7 @@ class GlyphData(userType.UserSingleType):
         return True, effectDatas[1:]
     
     def getInscriptionSrcSkillId(self, skillId):
-        LOG_INFO("GlyphData-->getInscriptionSrcSkillId~", skillId, self.sourceSkillIdx, self.replacedSkillIdx)
+        LOG_DBG("GlyphData-->getInscriptionSrcSkillId~", skillId, self.sourceSkillIdx, self.replacedSkillIdx)
         newSkillId = self.replacedSkillIdx.get(skillId, None)
         if newSkillId:
             return skillId, newSkillId

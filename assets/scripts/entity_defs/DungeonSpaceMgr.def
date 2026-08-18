@@ -87,6 +87,12 @@
             <Flags>     CELL_PRIVATE    </Flags>
             <Default>   {}              </Default>
         </dungeonAutoBattleTimes>
+
+        <dungeonStartWaitTime>
+            <Type>      INT64               </Type>
+            <Flags>     CELL_PRIVATE        </Flags>
+            <Default>   0                   </Default>
+        </dungeonStartWaitTime>
     </Properties>
 
     <BaseMethods>

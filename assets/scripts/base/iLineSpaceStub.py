@@ -60,24 +60,6 @@ class ILineSpaceStub(object):
                                       self._onCreateLineSpace(spaceBox, spaceNo)
                                       )
 
-    def _createLineSpaceLocal(self, lineNo, spaceWeight=10):
-        spaceNo = formula.combineLineSpaceNo(self.lineType, lineNo)
-        LOG_INFO('zt: create line locally', lineNo, spaceNo, spaceWeight)
-
-        self.lineSpaces[lineNo] = self.newLineSpaceVal(self.lineType, lineNo)
-
-        cellappIndx = lineNo + 1
-        s = KBEngine.createEntityLocally('Space',
-                                         {
-                                             'spaceno': spaceNo,
-                                             'spaceNo': spaceNo,
-                                             'lineStubIdx': self.lineStubIdx,
-                                             'position': gameconst.SPACE_FIX_POS,
-                                             'spaceWeight': spaceWeight,
-                                             'cellappIndex': cellappIndx
-                                         })
-        self._onCreateLineSpace(s, spaceNo)
-
     def _onCreateLineSpace(self, spaceBox, spaceNo):
         lineNo = formula.parseLineNo(spaceNo)
         sVal = self.getLineSpaceVal(lineNo)

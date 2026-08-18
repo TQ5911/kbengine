@@ -18,6 +18,7 @@ import dataUtils
 import gamemove
 import actionContext
 import gameengine
+import gameconfig
 
 # import speel_set as SPEEL
 import skill_skill as S_SD
@@ -230,7 +231,7 @@ class BehaveCtrl(object):
 
     def getHome(self):
         _owner = self.owner
-        if sMath.distance2D(_owner.position, _owner.bornPosition) <= 0.01:
+        if sMath.distance2D(_owner.position, _owner.bornPosition) <= gameconfig.getHomeDis():
             return True
         return False
 
@@ -737,7 +738,6 @@ class AuxFunc(object):
             _needNavTime = True
             if self.stateMachine.moveable:
                 mDis = max(0.5, skillRange * 0.9)
-                #if self.moveToPosition(target.position,mDis):
                 if self.moveToPosWithAngleDis(target.position, mDis, target):
                     _needNavTime = False
                     # 可以寻路时，清除计时
@@ -804,18 +804,29 @@ class AuxFunc(object):
             )
             ret = owner.doUseSkill(skill, actionCtx)
 
+            LOG_DBG('attackTarget ret', ret)
             if ret is not None and ret != gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK:
-                LOG_DBG('casting skill failed, set invalid tag', owner.id, skill.skillId, targetId, owner.aiVariables, self.hateDic._hateDict.keys())
+                LOG_DBG('casting skill failed, set invalid tag', ret, owner.id, skill.skillId, targetId, owner.aiVariables, self.hateDic._hateDict.keys())
                 invaildTag = self.InvalidTargetTagWithTarget(targetId)
                 if not owner.actGetVar(invaildTag, None):
                     LOG_DBG('casting skill failed, set invalid tag', owner.id, skill.skillId, targetId)
                     owner.actDefineVar(invaildTag, utils.curTS())
                 if ret in gameconst.UseSkillCheck.RESET_USED_SKILLID_TYPE:
                     self.skillId = 0
+                if ret in gameconst.UseSkillCheck.RESET_TARGET_ID_TYPE:
+                    self.targetId = 0
             else:
                 self.clearInvalidTargetTimes()
 
+            owner.setTempMiscProp(gameconst.EntityPropsEnum.lastUseSkillTime, utils.curTS())
+
         self.stateMachine.transform(self, StateEnum.ANGRY)
+
+    def isAiAfk(self):
+        _last = self.owner.getTempMiscProp(gameconst.EntityPropsEnum.lastUseSkillTime, 0)
+        _last = max(_last, self.stateMachine.changeStateTime)
+        _dur = CONST.datas['monsterCannotAttackResetTimer']['value']
+        return utils.curTS() - _last > _dur
 
     def getGoodPos(self, target, distance):
         owner = self.owner
@@ -1350,6 +1361,7 @@ class HateCtrl(object):
     def luckyGroupStand(self):
         self.stand(False)
         self.owner.selfSync("luckyGroupStandCB", (self.owner.id, ))
+        self.clearHate()
     
     def luckyGroupStandCB(self, *args, **kwargs):
         self.stand(False)
@@ -1808,7 +1820,7 @@ class AIControllerCls(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         return self.stateMachine.elapsedTime() > CONST.datas['monsterBornPosResetTime']['value']
 
     def stuckBackHomeErr(self):
-        LOG_ERR('stuckBackHomeErr', self.owner.position)
+        LOG_ERR('stuckBackHomeErr', self.owner.position, getattr(self.owner, 'gameEntityId'))
         self.owner.position = self.owner.bornPosition
 
     def isFinishResetAnim(self):

@@ -12228,7 +12228,7 @@ datas ={
     "Props": {
       "ChestGroupID": "",
       "GroupID": 1,
-      "Level": 46,
+      "Level": 45,
       "LightPillar": "",
       "MapEntityScale": 0,
       "MapEntityType": 0,

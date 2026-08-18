@@ -26,11 +26,14 @@
         <serverOpenTime> 1764709200 </serverOpenTime>
         <enableAdminServer> 0 </enableAdminServer>
         <enableRouterServer> 1 </enableRouterServer>
+        <greenPassUrl> https://test.api.hzyunxingu.cn/user/api/v1/access-code/green-pass </greenPassUrl>
         <giftCodeUrl> https://test.api.hzyunxingu.cn/user/api/v1/redeem-code/use </giftCodeUrl>
         <tapTapBindPhoneReqUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/third/send-code </tapTapBindPhoneReqUrl>
         <tapTapBindPhoneVerifyUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/third/bind-phone/verify-code </tapTapBindPhoneVerifyUrl>
         <reportUrl> https://test.api.hzyunxingu.cn/user/api/v1/role-report/submit </reportUrl>
         <queryRechargeUrl> https://test.api.hzyunxingu.cn/user/api/order/v1/cumulative_recharge </queryRechargeUrl>
+        <smsServiceReqUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/common/send-code </smsServiceReqUrl>
+        <smsServiceVerifyUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/common/verify-code </smsServiceVerifyUrl>
 
         <appVersion> 0.0.0.0 </appVersion>
         <patchVersion> 0.0.0.0 </patchVersion>
@@ -62,6 +65,10 @@
         <crossServerInfo>
             <item crossServerId='10003'></item>
         </crossServerInfo>
+
+        <allianceServiceInfo>
+            <item allianceServiceId='1' ip='192.168.10.13' port='2150'></item>
+        </allianceServiceInfo>
 
         <auctionServerHost> 192.168.10.13:2010 </auctionServerHost>
         <orderServerHost> 192.168.10.13:2011</orderServerHost>
@@ -115,7 +122,19 @@
         <secretKey> 4c1beb30a3c11ab667708b4c3d77252a </secretKey>
         <checkTimeout> 900 </checkTimeout>
     </yidun>
-    
+
+    <tencent>
+        <text_security>
+            <enable> 1 </enable>
+            <secretId>  </secretId>
+            <secretKey>  </secretKey>
+            <service> tms </service>
+            <host> tms.tencentcloudapi.com </host>
+            <region> ap-guangzhou </region>
+            <algorithm> TC3-HMAC-SHA256 </algorithm>
+        </text_security>
+    </tencent>
+
     <platform>
         
     </platform>
@@ -262,6 +281,7 @@
         <externalTcpPorts_max> 20099 </externalTcpPorts_max>            <!-- Type: Integer -->
         <externalUdpPorts_min> 30015 </externalUdpPorts_min>            <!-- Type: Integer -->
         <externalUdpPorts_max> 30099 </externalUdpPorts_max>            <!-- Type: Integer -->
+        <externalPortMapping> 30015~30099:30015~30099 </externalPortMapping>            <!-- Type: Integer -->
     </baseapp>
 
     <cellappmgr>

@@ -25,7 +25,7 @@ class IMultiStaticSpace(iGlobal.IGlobal):
             lineNo)
 
         self.staticSpaces[_spaceNo] = _spaceVal
-        _cellappIndx = random.randint(1, gameconfig.cellAppCount())
+        _cellappIndx = lineNo + 1
         _spaceBox = KBEngine.createEntityLocally('Space',
             {
                 'spaceno': _spaceNo,

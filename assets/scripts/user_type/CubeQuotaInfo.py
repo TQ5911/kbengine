@@ -13,21 +13,23 @@ import cube_room
 class CubeQuotaVal(userType.UserSingleType):
     '''CUBE_QUOTA_DATA_INFO'''
     # 混沌回廊试炼峰共用同一个数据结构
-    def __init__(self, leftTime=0, enterTime=0, quotaDurState=gameconst.QuotaDurStatus.NORMAL):
+    def __init__(self, leftTime=0, enterTime=0, quotaDurState=gameconst.QuotaDurStatus.NORMAL, costTime=0):
         self.leftTime = leftTime
         self.enterTime = enterTime 
         # 这个时间可不是进入房间的时间，因为算经过多少时间需要靠于enterTime和leftTime的差值来计算
         # 但是如果enterTime一直不变的话，假设出现非法关服，会出现累计时间非常大的情况 
         self.quotaDurState = quotaDurState
+        self.costTime = costTime
 
     def __str__(self):
-        return 'CubeQuotaVal(leftTime=%d, enterTime=%d, quotaDurState=%d)' % (self.leftTime, self.enterTime, self.quotaDurState)
+        return 'CubeQuotaVal(leftTime=%d, enterTime=%d, quotaDurState=%d, costTime=%d)' % (self.leftTime, self.enterTime, self.quotaDurState, self.costTime)
 
     def toCubeQuotaSavedDict(self):
         return {
             'leftTime': self.leftTime,
             'enterTime': self.enterTime,
-            'quotaDurState': self.quotaDurState
+            'quotaDurState': self.quotaDurState,
+            'costTime': self.costTime
         }
 
     def calcLeftTime(self):
@@ -44,8 +46,11 @@ class CubeQuotaVal(userType.UserSingleType):
 
         _now = utils.curTS()
         _cost = _now - self.enterTime
+        befLeftTime = self.leftTime
         self.leftTime = max(0, self.leftTime - _cost)
         self.enterTime = _now
+        realCost = befLeftTime - self.leftTime
+        self.costTime += realCost
 
     def setCubeEnterTime(self, avatar, enterTime):
         """cube"""
@@ -53,6 +58,7 @@ class CubeQuotaVal(userType.UserSingleType):
         if self.quotaDurState != gameconst.QuotaDurStatus.PROTECT:
             LOG_ERR('setCubeEnterTime error, quotaDurState is enter')
 
+        self.costTime = 0
         self.enterTime = enterTime
         self.quotaDurState = gameconst.QuotaDurStatus.ENTER
         avatar.client.onCubeRoomEndTime(self.calcLeftTime() + utils.curTS(), gameconst.CubeRoomEndTimeReason.ENTER)
@@ -62,6 +68,7 @@ class CubeQuotaVal(userType.UserSingleType):
         if self.quotaDurState == gameconst.QuotaDurStatus.ENTER:
             LOG_ERR('setCubeEnterTime error, quotaDurState is enter')
 
+        self.costTime = 0
         self.enterTime = enterTime
         self.quotaDurState = gameconst.QuotaDurStatus.ENTER
         avatar.client.onWonderLandLeftTime(self.calcLeftTime() + utils.curTS())
@@ -71,6 +78,7 @@ class CubeQuotaVal(userType.UserSingleType):
         if self.quotaDurState == gameconst.QuotaDurStatus.ENTER:
             LOG_ERR('setCubeEnterTime error, quotaDurState is enter')
 
+        self.costTime = 0
         self.enterTime = enterTime
         self.quotaDurState = gameconst.QuotaDurStatus.ENTER
         avatar.client.onAbyssLeftTime(self.calcLeftTime() + utils.curTS())
@@ -156,19 +164,40 @@ class CubeQuotaVal(userType.UserSingleType):
         LOG_DBG('checkout from ', self.quotaDurState)
         if self.quotaDurState == gameconst.QuotaDurStatus.PROTECT:
             self.quotaDurState = gameconst.QuotaDurStatus.NORMAL
-            return
+            return False
 
         elif self.quotaDurState == gameconst.QuotaDurStatus.NORMAL:
-            return
+            return False
 
         _cost = utils.curTS() - self.enterTime
+        befLeftTime = self.leftTime
         self.leftTime = max(0, self.leftTime - _cost)
         self.enterTime = 0
         self.quotaDurState = gameconst.QuotaDurStatus.NORMAL
+        realCost = befLeftTime - self.leftTime
+        self.costTime += realCost
+        return True
 
-    def reset(self):
-        self.checkout()
-        self.leftTime = 0
+    def reCheckout(self, costSeconds):
+        LOG_DBG('reCheckout from ', self.quotaDurState, costSeconds)
+
+        _cost = costSeconds
+        befLeftTime = self.leftTime
+        self.leftTime = max(0, self.leftTime - _cost)
+        self.enterTime = 0
+        self.quotaDurState = gameconst.QuotaDurStatus.NORMAL
+        realCost = befLeftTime - self.leftTime
+        self.costTime += realCost
+
+    def reset(self, minCostMinutes):
+        if not self.checkout():
+            return
+
+        minCostSeconds = minCostMinutes * 60
+        if self.costTime < minCostSeconds:
+            self.reCheckout(minCostSeconds - self.costTime)
+
+        self.costTime = 0
         self.enterTime = 0
         self.quotaDurState = gameconst.QuotaDurStatus.NORMAL
 

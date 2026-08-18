@@ -728,9 +728,12 @@ class TaskTargetCounter(BaseTarget):
             TCTTD.couterTargetDic['MakeEquipmentOnce'],
             TCTTD.couterTargetDic['CompleteACertainInstance']
         }
-        if tgtId in ids and int(self.param) == param[0]:
-            cnt = param[1] if len(param) > 1 else 1
-            self.stepCnt = min(self.dstCnt, self.stepCnt + cnt)
+        if tgtId in ids:
+            if int(self.param) == param[0]:
+                cnt = param[1] if len(param) > 1 else 1
+                self.stepCnt = min(self.dstCnt, self.stepCnt + cnt)
+            else:
+                return False
         else:
             if param is tuple:
                 self.stepCnt += param[0]

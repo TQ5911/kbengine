@@ -6,13 +6,6 @@
             <Default>       0               </Default>
         </mineWarCanAttack>
 
-        <mineWarCamp>
-            <Type>          UINT8           </Type>
-            <Flags>         ALL_CLIENTS     </Flags>
-            <Default>       0               </Default>
-            <WitnessName>   true            </WitnessName>
-        </mineWarCamp>
-
         <myGuildInfo>
             <Type>      PYTHON         </Type>
             <Flags>     CELL_PRIVATE           </Flags>

@@ -922,5 +922,21 @@ datas = _tools.RODict({
     "loginFailDialogMsg": _tools.RODict({
         "ID": "loginFailDialogMsg",
         "value": 54482024,
+    }),
+    "login_greenGateActivateRecharge": _tools.RODict({
+        "ID": "login_greenGateActivateRecharge",
+        "value": 3000,
+    }),
+    "unregisterLoginFailMsg": _tools.RODict({
+        "ID": "unregisterLoginFailMsg",
+        "value": 54003514,
+    }),
+    "unregisterLoginConfirmMsg": _tools.RODict({
+        "ID": "unregisterLoginConfirmMsg",
+        "value": 54003515,
+    }),
+    "unregisterLogOutMsg": _tools.RODict({
+        "ID": "unregisterLogOutMsg",
+        "value": 54003516,
     })
 })

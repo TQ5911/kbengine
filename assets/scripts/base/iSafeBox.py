@@ -22,43 +22,49 @@ class ISafeBox(object):
         self.safeBoxCache = {}          # dict[boxId, rec]
         self._cachedItems = []          # sorted visible list (unclaimed orderTime DESC + claimed claimTime DESC)
         self._safeBoxReady = False
+        self._unClaimedCount = 0
+        self._totalCount = 0
         self._pendingPageRequest = None
-        self._loadingMore = False
+
+    def sendSafeBoxData(self):
+        LOG_INFO('sendSafeBoxData')
+        if self._safeBoxReady:
+            self.client.onSafeBoxUnclaimedCount(self._unClaimedCount, self._totalCount)
 
     def safeBoxOnLogin(self):
         LOG_INFO('safeBoxOnLogin')
-        self.safeBoxCache = {}
-        self._cachedItems = []
-        self._safeBoxReady = False
-        self._loadingMore = False
-        gamesql.loadSafeBoxUnclaimed(self.gbID, gameconst.SAFE_BOX_PAGE_SIZE * 3, self._onUnclaimedLoaded)
+        self._loadSafeBoxBatch(0, 0)
 
-    def _onUnclaimedLoaded(self, ret, num, insertId, err):
-        LOG_INFO('_onUnclaimedLoaded ', num, insertId, err)
-        if err:
-            LOG_ERR('_onUnclaimedLoaded:: failed, {}'.format(err))
-            self._safeBoxReady = True
-            self._sendPendingPage()
-            return
-        for row in ret:
-            rec = self._rowToRec(row)
-            self.safeBoxCache[rec['boxId']] = rec
-        gamesql.loadSafeBoxRecentClaimed(self.gbID, gameconst.SAFE_BOX_MAX_VISIBLE_CLAIMED, self._onClaimedLoaded)
+    def _loadSafeBoxBatch(self, cursorOrderTime, cursorId):
+        LOG_INFO('_loadSafeBoxBatch ', cursorOrderTime, cursorId)
+        gamesql.loadSafeBoxBatch(
+            self.gbID, cursorOrderTime, cursorId,
+            gameconst.SAFE_BOX_LOGIN_BATCH_SIZE,
+            lambda ret, num, insertId, err, cot=cursorOrderTime, cid=cursorId:
+                self._onSafeBoxBatchLoaded(ret, num, insertId, err, cot, cid))
 
-    def _onClaimedLoaded(self, ret, num, insertId, err):
-        LOG_INFO('_onClaimedLoaded ', num, insertId, err)
+    def _onSafeBoxBatchLoaded(self, ret, num, insertId, err, cursorOrderTime, cursorId):
+        LOG_INFO('_onSafeBoxBatchLoaded ', num, cursorOrderTime, cursorId, err)
         if err:
-            LOG_ERR('_onClaimedLoaded:: failed, {}'.format(err))
-            self._safeBoxReady = True
+            LOG_ERR('_onSafeBoxBatchLoaded:: failed, {}'.format(err))
             self._buildSortedList()
-            self._sendPendingPage()
+            self._safeBoxReady = True
+            if self._pendingPageRequest:
+                self._sendPage(self._pendingPageRequest[0], self._pendingPageRequest[1])
             return
         for row in ret:
             rec = self._rowToRec(row)
             self.safeBoxCache[rec['boxId']] = rec
-        self._buildSortedList()
-        self._safeBoxReady = True
-        self._sendPendingPage()
+        if len(ret) >= gameconst.SAFE_BOX_LOGIN_BATCH_SIZE:
+            lastRow = ret[-1]
+            nextCursorOrderTime = int(lastRow[7])
+            nextCursorId = int(lastRow[0])
+            self._loadSafeBoxBatch(nextCursorOrderTime, nextCursorId)
+        else:
+            self._buildSortedList()
+            self._safeBoxReady = True
+            if self._pendingPageRequest:
+                self._sendPage(self._pendingPageRequest[0], self._pendingPageRequest[1])
 
     def _rowToRec(self, row):
         return {
@@ -83,33 +89,9 @@ class ISafeBox(object):
         unclaimed.sort(key=lambda r: (-r['orderTime'], -r['boxId']))
         claimed.sort(key=lambda r: (-r['claimTime'], -r['boxId']))
         self._cachedItems = unclaimed + claimed
-
-    def _loadMoreUnclaimed(self):
-        LOG_INFO('_loadMoreUnclaimed ')
-        lastUnclaimed = None
-        for rec in reversed(self._cachedItems):
-            if not rec['claimed']:
-                lastUnclaimed = rec
-                break
-        if not lastUnclaimed:
-            self._sendPendingPage()
-            return
-        self._loadingMore = True
-        gamesql.loadMoreUnclaimedSafeBox(
-            self.gbID, lastUnclaimed['orderTime'], lastUnclaimed['boxId'],
-            gameconst.SAFE_BOX_PAGE_SIZE * 2, self._onMoreUnclaimedLoaded)
-
-    def _onMoreUnclaimedLoaded(self, ret, num, insertId, err):
-        LOG_INFO('_onMoreUnclaimedLoaded ', num, insertId, err)
-        self._loadingMore = False
-        if err or not ret:
-            self._sendPendingPage()
-            return
-        for row in ret:
-            rec = self._rowToRec(row)
-            self.safeBoxCache[rec['boxId']] = rec
-        self._buildSortedList()
-        self._sendPendingPage()
+        self._unClaimedCount = len(unclaimed)
+        self._totalCount = len(self._cachedItems)
+        self.client.onSafeBoxUnclaimedCount(self._unClaimedCount, self._totalCount)
 
     def _formatItem(self, rec):
         return {
@@ -123,45 +105,49 @@ class ISafeBox(object):
             'orderId': rec['orderId'],
         }
 
-    def _sendPendingPage(self):
-        if self._pendingPageRequest is not None:
-            self._sendPage(self._pendingPageRequest)
-            self._pendingPageRequest = None
-
-    def reqSafeBoxPage(self, exposed, pageIndex):
-        LOG_INFO('reqSafeBoxPage ', pageIndex)
+    def reqSafeBoxPage(self, exposed, startIndex, endIndex):
+        LOG_INFO('reqSafeBoxPage ', startIndex, endIndex)
+        # 如果数据量大，还在加载中，客户端上来请求，先进pending
+        if self._pendingPageRequest:
+            LOG_WARN('reqSafeBoxPage has running page request', startIndex, endIndex)
+            return
         if not self._safeBoxReady:
-            self._pendingPageRequest = pageIndex
+            self._pendingPageRequest = [startIndex, endIndex]
             return
-        self._sendPage(pageIndex)
+        self._sendPage(startIndex, endIndex)
 
-    def _sendPage(self, pageIndex):
-        LOG_INFO('_sendPage ', pageIndex)
-        pageIndex = max(0, pageIndex)
-        start = pageIndex * gameconst.SAFE_BOX_PAGE_SIZE
-        end = start + gameconst.SAFE_BOX_PAGE_SIZE
-        if start < len(self._cachedItems):
-            pageItems = self._cachedItems[start:end]
-            hasMore = end < len(self._cachedItems)
-            self.client.onSafeBoxPage(
-                pageIndex,
-                [self._formatItem(r) for r in pageItems],
-                1 if hasMore else 0)
+    def _sendPage(self, startIndex, endIndex):
+        LOG_INFO('_sendPage ', startIndex, endIndex)
+        if startIndex > endIndex:
+            LOG_WARN('_sendPage invalid arg 1', startIndex, endIndex)
+            self.client.onSafeBoxPage([], startIndex, endIndex, self._totalCount)
             return
-        if not self._loadingMore and self._pendingPageRequest:
-            self._pendingPageRequest = pageIndex
-            self._loadMoreUnclaimed()
+        if startIndex > self._totalCount - 1:
+            LOG_WARN('_sendPage invalid arg 2', startIndex, endIndex, self._totalCount)
+            self.client.onSafeBoxPage([], startIndex, endIndex, self._totalCount)
             return
-        self.client.onSafeBoxPage(0, [], 0)
+        if endIndex - startIndex + 1 > gameconst.SafeBoxDatas.GET_PAGE_MAX:
+            endIndex = startIndex + gameconst.SafeBoxDatas.GET_PAGE_MAX - 1
+
+        if self._totalCount > 0 and endIndex > self._totalCount - 1:
+            endIndex = self._totalCount - 1
+        self._pendingPageRequest = None
+        cachedItems = self._cachedItems[startIndex:endIndex + 1]
+        self.client.onSafeBoxPage(
+                [self._formatItem(r) for r in cachedItems],
+                startIndex, endIndex, self._totalCount)
 
     @gamedecorator.limitcall(1)
     def reqClaimSafeBoxItem(self, exposed, safeBoxId):
         LOG_INFO('reqClaimSafeBoxItem ', safeBoxId)
         rec = self.safeBoxCache.get(safeBoxId)
-        if not rec or rec['claimed']:
+        if not rec:
             LOG_WARN('reqClaimSafeBoxItem no record', safeBoxId)
             return
-        
+        if rec['claimed']:
+            LOG_WARN('reqClaimSafeBoxItem is claimed', safeBoxId)
+            self.client.onSafeBoxItemClaimed(safeBoxId)
+            return
         itemId = rec['itemId']
         itemCount = rec['itemCount']
 
@@ -221,23 +207,21 @@ class ISafeBox(object):
         self._rebuildAndTrim()
 
     def _rebuildAndTrim(self):
-        self._buildSortedList()
         claimed = [rec for rec in self.safeBoxCache.values() if rec['claimed']]
-        if len(claimed) <= gameconst.SAFE_BOX_MAX_VISIBLE_CLAIMED:
-            return
-        claimed.sort(key=lambda r: (-r['claimTime'], -r['boxId']))
-        excess = claimed[gameconst.SAFE_BOX_MAX_VISIBLE_CLAIMED:]
-        for rec in excess:
-            gamesql.deleteSafeBoxItem(rec['boxId'])
-            self.safeBoxCache.pop(rec['boxId'], None)
-            LogTrackingMgr.LogTrackingMgr.delete_stash(self.gbID,
-            self.accountEntity.clientDistinctId if self.accountEntity else '',
-            rec['orderId'],
-            self.gbID,
-            rec['itemId'],
-            1,
-            utils.curTS())
-            self.client.onSafeBoxItemDeleted(rec['boxId'])
+        if len(claimed) > gameconst.SAFE_BOX_MAX_VISIBLE_CLAIMED:
+            claimed.sort(key=lambda r: (-r['claimTime'], -r['boxId']))
+            excess = claimed[gameconst.SAFE_BOX_MAX_VISIBLE_CLAIMED:]
+            for rec in excess:
+                gamesql.deleteSafeBoxItem(rec['boxId'])
+                self.safeBoxCache.pop(rec['boxId'], None)
+                LogTrackingMgr.LogTrackingMgr.delete_stash(self.gbID,
+                self.accountEntity.clientDistinctId if self.accountEntity else '',
+                rec['orderId'],
+                self.gbID,
+                rec['itemId'],
+                1,
+                utils.curTS())
+                self.client.onSafeBoxItemDeleted(rec['boxId'])
         self._buildSortedList()
 
     @gamedecorator.limitcall(1)
@@ -302,12 +286,7 @@ class ISafeBox(object):
             'orderId': orderId,
         }
         self.safeBoxCache[safeBoxId] = rec
-        idx = 0
-        for existing in self._cachedItems:
-            if existing['claimed'] or existing['orderTime'] > orderTime or (existing['orderTime'] == orderTime and existing['boxId'] > safeBoxId):
-                break
-            idx += 1
-        self._cachedItems.insert(idx, rec)
+        self._buildSortedList()
 
         LogTrackingMgr.LogTrackingMgr.deposit_stash(self.gbID,
             self.accountEntity.clientDistinctId if self.accountEntity else '',

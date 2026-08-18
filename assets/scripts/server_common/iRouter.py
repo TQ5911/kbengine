@@ -255,7 +255,7 @@ class IRouter(object):
             return
 
         entityCallType, stubNameOrBox, compoentType, funcName, args = pickle.loads(memoryStream)
-        LOG_INFO("onRemoteCallFromOthersBase", entityCallType, stubNameOrBox, compoentType, funcName, args)
+        LOG_DBG("onRemoteCallFromOthersBase", entityCallType, stubNameOrBox, compoentType, funcName, args)
         try:
             if entityCallType == gameconst.RemoteSrvEntCallType.STUB_NAME:
                 _func = getattr(gameengine.getGlobalBase(stubNameOrBox), funcName)

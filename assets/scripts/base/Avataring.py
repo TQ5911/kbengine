@@ -15,6 +15,9 @@ import chatConfig_channel as CCCH
 
 import iClient
 import iTimer
+import functools
+import copy
+import CloudServicesUtils
 
 
 class Avataring(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
@@ -216,3 +219,20 @@ class Avataring(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
 
     def startOffline(self, reason):
         LOG_DBG('Avataring::startOffline~', reason)
+
+
+    def checkTextSecurityCallback(self, req, httpCode, jsonData, headers, success, *args):
+        LOG_INFO("checkTextSecurityCallback", req, httpCode, jsonData, headers, success)
+        self.client.checkTextSecurityResp({'res': True, 'id': req['id'], 'resp': jsonData})
+
+    def checkTextSecurityReq(self, exposed, req):
+        LOG_INFO('checkTextSecurityReq req', req)
+        datas = {
+            'text'      : str(req['text']),
+            'id'        : str(self.gbID),
+            'bizType'   : str(req['bizType']),
+        }
+        res = CloudServicesUtils.checkTextSecurity(datas, functools.partial(self.checkTextSecurityCallback, copy.deepcopy(req)))
+        LOG_DBG('checkTextSecurityReq res', res)
+        if not res:
+            self.client.checkTextSecurityResp({'res': False, 'id': req['id'], 'resp': "{}"})

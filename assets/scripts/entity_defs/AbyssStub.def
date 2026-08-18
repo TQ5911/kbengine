@@ -59,6 +59,7 @@
 
         <checkCanEnterCrossAbyss>
             <Arg>          PYTHON                   </Arg>
+            <Arg>          PY_DICT                  </Arg>
         </checkCanEnterCrossAbyss>
     </BaseMethods>
 </root>

@@ -711,7 +711,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         self.modifyHP(-self.hp, self.id, sourceType, 0)
 
     def goDie(self, killer, srcType, srcId, forceDead=False, context=None):
-        LOG_WARN('goDie', killer.id, srcType, srcId, forceDead, context)
+        LOG_WARN('goDie', killer.id, srcType, srcId, forceDead)
         if self.isDie():
             LOG_WARN("goDie:: already dead", killer, srcType, srcId)
             return
@@ -870,8 +870,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             self.skillDic.doRemoveSkill(skillID)
         return skill
     
-    def doActionOnChangeSlot(self, skillId, skillLv, bActive, bTakeSkill, fromSkillNextCastTime):
-        LOG_DBG('doActionOnChangeSlot ', skillId, skillLv, bActive, bTakeSkill, fromSkillNextCastTime)
+    def doActionOnChangeSlot(self, skillId, skillLv, bActive, bTakeSkill, fromSkillNextCastTime, reason):
+        LOG_DBG('doActionOnChangeSlot ', skillId, skillLv, bActive, bTakeSkill, fromSkillNextCastTime, reason)
         if bTakeSkill:
             skill = self.takeSkill(skillId, skillLv, tNextCast = fromSkillNextCastTime)
         else:
@@ -879,7 +879,18 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         if not skill:
             return
-        skill.doActionOnChangeSlot(self, bActive)
+        skill.skillDoActionOnChangeSlot(self, bActive)
+
+        if reason != gameconst.CHANGE_SKILL_REASON_UNLOCK:
+            return
+
+        # 解锁技能走到了这里,解锁技能需要解锁被铭文升级后的技能
+        newSkillId, oldSkillId = self.glyphEquipData.getInscriptionSrcSkillId(skillId)
+        if newSkillId == skillId:
+            return
+
+        # 这里走eventactions的接口来替换
+        self.changeSkill(None, None, skillId, newSkillId)
 
     @utils.isMyself
     def cancelChargeSkill(self, exposed, skillId):
@@ -916,6 +927,22 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             _isSetState = True
         if _isSetState:
             self.stateList = formula.getInt64ListOnIndexes(stateVec)
+
+    def setStateByCounter(self, state):
+        _cnt = self.stateCounters.get(state, 0)
+        self.stateCounters[state] = _cnt  + 1
+        LOG_DBG('setStateByCounter', _cnt)
+        if _cnt == 0:
+            self.setState(state)
+    
+    def removeStateByCounter(self, state):
+        _cnt = self.stateCounters.get(state, 0)
+        LOG_DBG('removeStateByCounter', _cnt)
+        if _cnt <= 1:
+            self.stateCounters.pop(state, None)
+            self.removeState(state)
+        else:
+            self.stateCounters[state] = _cnt - 1
 
     def onOverlayStatus(self, state):
         if state == CCDD.datas.Down:
@@ -1200,7 +1227,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         LOG_DBG("doUseSkill ", skill.skillId, actionCtx.useTargetId, actionCtx.skillArgs, actionCtx.isClient, compensateTime)
         if skill.hasSkillTag(gameconst.SkillTagEnum.changeCDStatusSkill) \
             and skill.getTempData(gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, gameconst.SkillCDStatus.DEFAULT) == gameconst.SkillCDStatus.DISABLED:
-            return False
+            return gameconst.UseSkillCheck.USC_ENUM_IN_CD_STATUS
 
         if skill.hasSkillTag(gameconst.SkillTagEnum.Casting):
             return self._castingSkillObjInternal(skill, actionCtx)
@@ -1254,7 +1281,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         # 多段技能check时按当前段check，但是replaceSkill是false，表示使用时还调用第一段的使用
         # 因为后面段是第一段的子技能，子技能只能通过父技能使用
         if actionCtx.isClient and not realSkill.checkSkillArgs(self, actionCtx.skillArgs):
-            LOG_ERR("doUseSkill: invalid skill args", realSkill.skillId, actionCtx.useTargetId, actionCtx.skillArgs)
+            LOG_WARN("doUseSkill: invalid skill args", realSkill.skillId, actionCtx.useTargetId, actionCtx.skillArgs)
             if realSkill.isChangePosSkill(realSkill.skillId):
                 self.client.onUseSkill(False, skillId, actionCtx.useTargetId, [], [], [])
             return None
@@ -2371,7 +2398,12 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 buff = self.getBuffByBuffId(buffId, buffSrcKey)
                 if buff:
                     remainTime = buff.getBuffRemainTime()
-                    duration = remainTime * (1 - absorbedVal/shieldVal.getShieldMaxValue())
+                    # 增加除0保护
+                    if shieldVal.getShieldMaxValue() < 1e-6:
+                        _rate = 1
+                    else:
+                        _rate = (1 - absorbedVal/shieldVal.getShieldMaxValue())
+                    duration = remainTime * _rate
                     self.changeBuffDuration(buffId, duration, self.id)
                     LOG_DBG('absorbShieldWithDetails 4', useShieldType, nHpModify, remainHp, absorbedVal, shieldVal.shieldValue, duration)
         return remainHp
@@ -2383,10 +2415,11 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
     def destoryAllCreation(self):
         for _creationId in list(self.creationList):
             creation = KBEngine.entities.get(_creationId)
-            if creation:
+            if not creation:
+                LOG_WARN('destoryAllCreation: cannot find creation', _creationId)
+                continue
+            if not creation.isDestroyed:
                 creation.safeDestroy()
-            else:
-                LOG_ERR('destoryAllCreation: cannot find creation', _creationId)
         self.creationList.clear()
 
     def removeSummonById(self, summonId):
@@ -2633,8 +2666,11 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         targetId = _context.useTargetId
         self.onEndLunge(skill, targetId, _context.skillArgs)
-        if skill.checkUseSkill(self, targetId,
-                               ignoreReasons=gameconst.UseSkillCheck.USC_DELAY_CHECK_IGNORES) != gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK:
+        _ignore = gameconst.UseSkillCheck.USC_DELAY_CHECK_IGNORES
+        _ignore |= gameconst.UseSkillCheck.USC_ENUM_TARGET_NOT_FOUND
+
+        if  skill.checkUseSkill(self, targetId,
+                               ignoreReasons=_ignore) != gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK:
             skill.useSkillDone(self, targetId, _context.skillArgs, False)
             return
 

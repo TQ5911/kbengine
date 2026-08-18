@@ -476,6 +476,7 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
 
     def leaveRaidDungeonCell(self):
         _src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
+        _src._extra['raidUUID'] = self.raidUUID
         self._leaveRaidDungeon(_src)
 
     def _leaveRaidDungeon(self, src):
@@ -504,8 +505,8 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
         context = {'e': eCtx, 'l': lCtx, 'src': src}
 
         spaceType = self._getParamBydungeonNo(formula.parseDungeonNoBySpaceNo(self.spaceNo), 'type')
-        _mMapId, _ = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=spaceType)
-        spaceNo = formula.combineLineSpaceNo(_mMapId)
+        _, _mOutsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=spaceType)
+        spaceNo = _mOutsideRecord.spaceNo if _mOutsideRecord else formula.combineLineSpaceNo(gameconst.MapIdDef.mapXinYuanCheng)
         self.doLeaveFromSapceToSpace(self.spaceNo, spaceNo, options, context, spaceType=spaceType)
 
     def _leaveRaidDungeonCheck(self):

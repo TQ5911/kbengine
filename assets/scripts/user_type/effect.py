@@ -206,7 +206,7 @@ class BasicEffect(EffectBase):
     def setStatus(self, owner, callerInfo):
         status = self.getStatus(owner, callerInfo)
         if owner.checkConflictState(dataUtils.getStateEventId(status)):
-            owner.setState(status)
+            owner.setStateByCounter(status)
 
     def checkEvent(self, owner, callerInfo):
         effectDict = self.getEffectDict(owner, callerInfo)
@@ -217,7 +217,7 @@ class BasicEffect(EffectBase):
         if not isOverleap:
             effectDict = self.getEffectDict(owner, callerData)
             status = effectDict.get('Status')
-            owner.removeState(status)
+            owner.removeStateByCounter(status)
         return 0
 
     def onAddSkill(self, owner, callerData, event, skillId):

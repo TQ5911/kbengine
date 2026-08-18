@@ -211,7 +211,12 @@ class ImpAvatarPet(object):
 
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
+    @gamedecorator.crossServer
     def modifyPetBattleListName(self, exposed, battleIndex, name):
+        self._modifyPetBattleListName(battleIndex, name)
+        self.syncMethodCallToLocalServerBase('_modifyPetBattleListName', (battleIndex, name))
+
+    def _modifyPetBattleListName(self, battleIndex, name):
         if not self.lingShouInfo.isBattleIndexValid(battleIndex):
             LOG_ERR("modifyPetBattleListName battleIndex invalid", battleIndex)
             return
@@ -236,8 +241,13 @@ class ImpAvatarPet(object):
     @gamedecorator.limitcall(PDSD.datas['petTeamSwitchCD']['value'])
     @gamedecorator.crossServer
     def setBattleIndex(self, exposed, battleIndex):
-        self._setBattleIndex(battleIndex)
-        self.syncMethodCallToLocalServerBase('onCrossServerSetBattleIndex', (battleIndex,))
+        LOG_INFO("setBattleIndex ", battleIndex)
+        self.cell.checkPkStatus(battleIndex)
+
+    def checkPkStatusResult(self, battleIndex, result):
+        if result:
+            self._setBattleIndex(battleIndex)
+            self.syncMethodCallToLocalServerBase('onCrossServerSetBattleIndex', (battleIndex,))
 
     def _setBattleIndex(self, battleIndex):
         if not self.lingShouInfo.isBattleIndexValid(battleIndex):
@@ -260,7 +270,7 @@ class ImpAvatarPet(object):
                 battleListInfo.append((0, []))
         self.cell.onSetLingShouBattleList(battleListInfo, self.battleIndex, battleData, False)
         self.updatePetScore()
-
+        
     def onCrossServerSetBattleIndex(self, battleIndex):
         LOG_INFO('onCrossServerSetBattleIndex', battleIndex)
         self._setBattleIndex(battleIndex)
@@ -449,8 +459,9 @@ class ImpAvatarPet(object):
             deductItems.append(itemObj)
         # 扣除材料    
         deductWealthVal = dropAward.DeductWealthVal().addWealthByObjList(deductItems)
-        if not self.canDeductWealth(deductWealthVal, sendMsg=True):
-            LOG_ERR('levelUpPet can not deduct items', deductItems, petId)
+        res = self.canDeductWealth(deductWealthVal, sendMsg=True)
+        if not res:
+            LOG_WARN('levelUpPet can not deduct items', deductItems, petId, res())
             return False
 
         opUUID = KBEngine.genUUID64()
@@ -541,9 +552,13 @@ class ImpAvatarPet(object):
             costItemId, itemNum = val
             deductWealthVal.addWealthByItemId(costItemId, itemNum)
 
-        if not self.canDeductWealth(deductWealthVal):
-            LOG_WARN('remodelingPet cost items is not enough', gridId, itemObj.itemId, itemObj.quality, costItems)
-            self.client.onRemodelingPet(gameconst.RemodelingPetResult.ITEM_NOT_ENOUGH, 0, 0)
+        res = self.canDeductWealth(deductWealthVal)
+        if not res:
+            LOG_WARN('remodelingPet cost items is not enough', res(), gridId, itemObj.itemId, itemObj.quality, costItems)
+            code = gameconst.RemodelingPetResult.ITEM_NOT_ENOUGH
+            if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
+                code = gameconst.RemodelingPetResult.FAIL
+            self.client.onRemodelingPet(code, 0, 0)
             return
         
         rerollList = list(remodelingData['rerollList'])

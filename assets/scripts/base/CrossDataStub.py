@@ -25,12 +25,7 @@ from proto.gameServerCrossData_pb2 import GameServer,\
     AddGuildInfoRequest,\
     GetGuildInfosRequest,\
     RemoveGuildInfoRequest,\
-    AddGuildRelationRequest,\
-    RemoveGuildRelationRequest,\
-    ApplyGuildUnionRequest,\
     GetGuildInfosByGuildUUIDRequest,\
-    GetEnemyGuildInfosRequest,\
-    RemoveReceiverGuildApplyUnionRequest,\
     GetCrossServerGuildDetailRequest,\
     GetCrossServerGuildDetailFromOtherServer,\
     DoOnCrossGuildRequest,\
@@ -61,39 +56,6 @@ class CrossDataService(GameServer):
 
     def onGetGuildInfos(self, rpc_controller, reply, done):
         self.mgr.onGetGuildInfos(reply)
-
-    def onBroadcastGuildRelationSingle(self, rpc_controller, reply, done):
-        self.mgr.onBroadcastGuildRelationSingle(reply)
-
-    def onGuildRelationAll(self, rpc_controller, reply, done):
-        self.mgr.onGuildRelationAll(reply)
-
-    def onBroadcastRemoveGuildRelation(self, rpc_controller, reply, done):
-        self.mgr.onBroadcastRemoveGuildRelation(reply)
-
-    def onRemoveGuildRelation(self, rpc_controller, reply, done):
-        self.mgr.onRemoveGuildRelation(reply)
-
-    def onAddGuildRelation(self, rpc_controller, reply, done):
-        self.mgr.onAddGuildRelation(reply)
-
-    def onApplyGuildUnion(self, rpc_controller, reply, done):
-        self.mgr.onApplyGuildUnion(reply)
-
-    def onNotifyGuildRelation(self, rpc_controller, reply, done):
-        self.mgr.onNotifyGuildRelation(reply)
-
-    def onNotifyGuildCancelUnion(self, rpc_controller, reply, done):
-        self.mgr.onNotifyGuildCancelUnion(reply)
-
-    def onGetEnemyGuildInfos(self, rpc_controller, reply, done):
-        self.mgr.onGetEnemyGuildInfos(reply)
-
-    def onApplyGuildUnionResult(self, rpc_controller, reply, done):
-        self.mgr.onApplyGuildUnionResult(reply)
-
-    def onNotifyRemoveReceiverGuildApplyUnion(self, rpc_controller, reply, done):
-        self.mgr.onNotifyRemoveReceiverGuildApplyUnion(reply)
 
     def onGetCrossServerGuildDetailToOtherServer(self, rpc_controller, reply, done):
         self.mgr.onGetCrossServerGuildDetailToOtherServer(reply)
@@ -188,7 +150,6 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
         _req.guildInfo.serverId = gameconfig.serverId()
         _req.guildInfo.memberCnt = guildData['memberCnt']
         _req.guildInfo.guildIcon = guildData['guildIcon']
-        _req.guildInfo.maxGuildUnionNum = guildData['maxGuildUnionNum']
         _req.uuid = KBEngine.genUUID64()
 
         _client = self.getRandomClient()
@@ -263,205 +224,6 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
 
         _client.csStub.removeGuildInfo(None, _req, None)
 
-    def addGuildRelation(self, guildUUID1, guildUUID2, relationType, endTime, box, guildBox, opUUID):
-        _req = AddGuildRelationRequest()
-        _req.guildUUID1 = guildUUID1
-        _req.guildUUID2 = guildUUID2
-        _req.relationType = relationType
-        _req.endTime = endTime
-        _req.uuid = KBEngine.genUUID64()
-
-        _client = self.getRandomClient()
-        if not _client:
-            LOG_WARN('CrossDataStub addGuildRelation no client')
-            return
-
-        self.remoteCallCache[_req.uuid] = {
-            'box': box,
-            'guildBox': guildBox,
-            'relationType': relationType,
-            'ts': utils.curTS(),
-            'opUUID': opUUID,
-        }
-
-        _client.csStub.addGuildRelation(None, _req, None)
-
-    def onAddGuildRelation(self, reply):
-        _cache = self.remoteCallCache.pop(reply.uuid, None)
-        if not _cache:
-            LOG_ERR('CrossDataStub onAddGuildRelation no cache', reply.uuid)
-            return
-
-        if not reply.success:
-            if reply.errCode == gameconst.CROSS_ERR_CODE_GUILD_NOT_FOUND:
-                _cache['box'].onMessagePre(G_GCD.datas['guild_dismissed']['value'], [])
-
-            elif reply.errCode == gameconst.CROSS_ERR_CODE_RELATION_MAX_NUM_GUILD1:
-                _cache['box'].onMessagePre(G_GCD.datas['guild_unionNumDes']['value'], [])
-
-            elif reply.errCode == gameconst.CROSS_ERR_CODE_RELATION_MAX_NUM_GUILD2:
-                _cache['box'].onMessagePre(G_GCD.datas['guild_enmityNumDes']['value'], [])
-
-            if _cache['relationType'] == gameconst.GuildRelationType.ENEMY:
-                if reply.errCode == gameconst.CROSS_ERR_CODE_RELATION_EXISTS:
-                    _cache['box'].onMessagePre(G_GCD.datas['guild_alreadyEnmity']['value'], [])
-
-                _guildBox = _cache.get('guildBox')
-                _guildBox.onDeclareEnemyFailed(_cache['opUUID'])
-            return
-
-        _box = _cache.get('box')
-        _guildBox = _cache.get('guildBox')
-        _relationType = _cache.get('relationType')
-
-        if _relationType == gameconst.GuildRelationType.ENEMY:
-            _guildBox.onAddGuildEnemyToGuild(reply.guildInfo.guildUUID, reply.guildInfo.guildName)
-
-        else:
-            _guildBox.onAddGuildUnionToGuild(reply.guildInfo.guildUUID, reply.guildInfo.guildName)
-
-    def removeGuildRelation(self, guildUUID1, guildUUID2, relationType, box, guildBox):
-        # selfguild 和 guildUUID1 是同一个
-        # otherGuild 和 guildUUID2 是同一个
-        _req = RemoveGuildRelationRequest()
-        _req.guildUUID1 = guildUUID1
-        _req.guildUUID2 = guildUUID2
-        _req.relationType = relationType
-        _req.uuid = KBEngine.genUUID64()
-
-        _client = self.getRandomClient()
-        if not _client:
-            LOG_WARN('CrossDataStub removeGuildRelation no client')
-            return
-
-        self.remoteCallCache[_req.uuid] = {
-            'box': box,
-            'guildUUID': guildUUID2,
-            'guildBox': guildBox,
-            'relationType': relationType,
-            'ts': utils.curTS(),
-        }
-
-        _client.csStub.removeGuildRelation(None, _req, None)
-
-    def onRemoveGuildRelation(self, reply):
-        _cache = self.remoteCallCache.pop(reply.uuid, None)
-        if not _cache:
-            LOG_ERR('CrossDataStub onRemoveGuildRelation no cache', reply.uuid)
-            return
-
-        #城战准备阶段会自动解除攻守方帮会同盟，此时此处box会是None
-        _box = _cache.get('box')
-        _relationType = _cache.get('relationType')
-        _guildBox = _cache.get('guildBox')
-
-        if _relationType == gameconst.GuildRelationType.UNION:
-            _eId = message_guildLog_def.datas.guild_relieveUnionDes
-            _args = [reply.guildInfo.guildName]
-            _guildBox.addGuildEvent(_eId, _args)
-
-    def onBroadcastRemoveGuildRelation(self, reply):
-        LOG_INFO('CrossDataStub onBroadcastRemoveGuildRelation', reply)
-        _relationType = utils.getGuildRelation(reply.guildUUID1, reply.guildUUID2)
-        gameengine.callAllApps(
-            'gameengine.removeGuildRelation',
-            (
-                reply.guildUUID1,
-                reply.guildUUID2,
-                reply.version))
-
-        gameengine.getGlobalBase('GuildStub').broadcastGuildMemberClient(
-            [reply.guildUUID1],
-            'onRemoveGuildRelationClient',
-            (reply.guildUUID2,),
-        )
-
-        gameengine.getGlobalBase('GuildStub').broadcastGuildMemberClient(
-            [reply.guildUUID2],
-            'onRemoveGuildRelationClient',
-            (reply.guildUUID1,),
-        )
-        
-        utils.distribute(
-            gameconst.UserEventTag.EVENT_ON_GUILD_UNION_CHANGE, 
-            'remove', 
-            reply.guildUUID1, 
-            reply.guildUUID2, 
-            _relationType,
-            0,
-        )
-
-    def onBroadcastGuildRelationSingle(self, reply):
-        LOG_INFO('CrossDataStub onBroadcastGuildRelationSingle', reply)
-
-        gameengine.callAllApps(
-            'gameengine.addGuildRelation',
-            (
-                reply.guildRelation.guildUUID1,
-                reply.guildRelation.guildUUID2,
-                reply.guildRelation.relationType,
-                reply.version))
-
-        gameengine.getGlobalBase('GuildStub').broadcastGuildMemberClient(
-            [reply.guildRelation.guildUUID1],
-            'onAddGuildRelationClient',
-            (reply.guildRelation.guildUUID2, reply.guildRelation.relationType),
-        )
-
-        gameengine.getGlobalBase('GuildStub').broadcastGuildMemberClient(
-            [reply.guildRelation.guildUUID2],
-            'onAddGuildRelationClient',
-            (reply.guildRelation.guildUUID1, reply.guildRelation.relationType),
-        )
-        
-        utils.distribute(
-            gameconst.UserEventTag.EVENT_ON_GUILD_UNION_CHANGE, 
-            'add', 
-            reply.guildRelation.guildUUID1, 
-            reply.guildRelation.guildUUID2, 
-            reply.guildRelation.relationType, 
-            reply.endTime
-        )
-
-    def onGuildRelationAll(self, reply):
-        LOG_INFO('CrossDataStub onGuildRelationAll', reply)
-        _relationDic = {}
-        for _relationData in reply.guildRelations:
-            _pair = utils.getGuildUUIDPair(_relationData.guildUUID1, _relationData.guildUUID2)
-            _relationDic[_pair] = _relationData.relationType
-
-        gameengine.callAllApps('gameengine.resetGuildRelation', (_relationDic, reply.version))
-
-    def applyGuildUnionInCross(self, senderGuildUUID, receiverGuildUUID, box, guildBox):
-        _req = ApplyGuildUnionRequest()
-        _req.senderGuildUUID = senderGuildUUID
-        _req.receiverGuildUUID = receiverGuildUUID
-        _req.uuid = KBEngine.genUUID64()
-
-        _client = self.getRandomClient()
-        if not _client:
-            LOG_WARN('CrossDataStub applyGuildUnionInCross no client')
-            return
-
-        self.remoteCallCache[_req.uuid] = {
-            'box': box,
-            'guildBox': guildBox,
-            'ts': utils.curTS(),
-        }
-
-        _client.csStub.applyGuildUnion(None, _req, None)
-
-    def onApplyGuildUnionResult(self, reply):
-        # 自己申请完之后返回对方的帮会信息
-        _cache = self.remoteCallCache.pop(reply.uuid, None)
-        if not _cache:
-            LOG_ERR('CrossDataStub onApplyGuildUnionResult no cache', reply.uuid)
-            return
-
-        _box = _cache.get('box')
-        _guildBox = _cache.get('guildBox')
-        _guildBox.onApplyGuildUnionResult(self._guildInfoToFixedDict(reply.receiverGuildInfo), _box)
-
     def _guildInfoToFixedDict(self, guildInfo):
         return {
             'guildUUID': guildInfo.guildUUID,
@@ -473,17 +235,6 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
             'memberCnt': guildInfo.memberCnt,
             'guildIcon': guildInfo.guildIcon,
         }
-
-    def onApplyGuildUnion(self, reply):
-        LOG_INFO('CrossDataStub onApplyGuildUnion', reply)
-        gameengine.getGlobalBase('GuildStub').callOnGuild(
-            reply.receiverGuildUUID,
-            'onApplyGuildUnion',
-            (reply.senderGuildUUID, self._guildInfoToFixedDict(reply.senderGuildInfo)),
-            None,
-            '',
-            (),
-        )
 
     def getGuildInfosByGuildUUID(self, guildUUIDs, box, func, args):
         _req = GetGuildInfosByGuildUUIDRequest()
@@ -503,104 +254,6 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
         }
 
         _client.csStub.getGuildInfosByGuildUUID(None, _req, None)
-
-    def onNotifyGuildRelation(self, reply):
-        LOG_INFO('CrossDataStub onNotifyGuildRelation', reply)
-        if reply.relationType == gameconst.GuildRelationType.ENEMY:
-            _func = 'onAddGuildEnemyToOtherGuild'
-            _args = (reply.guildInfo.guildUUID, reply.guildInfo.guildName)
-
-        else:
-            _func = 'onAddGuildUnionToGuild'
-            _args = (reply.guildInfo.guildUUID, reply.guildInfo.guildName)
-
-        gameengine.getGlobalBase('GuildStub').callOnGuild(
-            reply.receiverGuildUUID,
-            _func,
-            _args,
-            None,
-            '',
-            (),
-        )
-
-    def onNotifyGuildCancelUnion(self, reply):
-        LOG_INFO('CrossDataStub onNotifyGuildCancelUnion', reply)
-        _eId = message_guildLog_def.datas.guild_relieveUnionDes
-        _args = [reply.guildInfo.guildName]
-
-        gameengine.getGlobalBase('GuildStub').callOnGuild(
-            reply.receiverGuildUUID,
-            'addGuildEvent',
-            (_eId, _args),
-            None,
-            '',
-            (),
-        )
-
-    def getEnemyGuildInfos(self, box, guildUUID):
-        _req = GetEnemyGuildInfosRequest()
-        _req.guildUUID = guildUUID
-        _req.uuid = KBEngine.genUUID64()
-
-        _client = self.getRandomClient()
-        if not _client:
-            LOG_WARN('CrossDataStub getEnemyGuildInfos no client')
-            return
-
-        self.remoteCallCache[_req.uuid] = {
-            'box': box,
-            'ts': utils.curTS(),
-        }
-
-        _client.csStub.getEnemyGuildInfos(None, _req, None)
-
-    def onGetEnemyGuildInfos(self, reply):
-        LOG_INFO('CrossDataStub onGetEnemyGuildInfos', reply)
-        _cache = self.remoteCallCache.pop(reply.uuid, None)
-        if not _cache:
-            LOG_ERR('CrossDataStub onGetEnemyGuildInfos no cache', reply.uuid)
-            return
-
-        _box = _cache.get('box')
-
-        _sendDatas = []
-        for guildInfo in reply.enemyGuildInfos:
-            _sendDatas.append({
-                'guildUUID': guildInfo.guildUUID,
-                'guildName': guildInfo.guildName,
-                'flag': guildInfo.flag,
-                'guildScore': guildInfo.guildScore,
-                'guildLevel': guildInfo.guildLevel,
-                'serverId': guildInfo.serverId,
-                'endTime': guildInfo.endTime,
-                'memberCnt': guildInfo.memberCnt,
-                'guildIcon': guildInfo.guildIcon,
-            })
-
-        _box.client.onGetEnemyGuildInfosClient(_sendDatas)
-
-    def removeReceiverGuildApplyUnion(self, senderGuildUUID, receiverGuildUUID):
-        _req = RemoveReceiverGuildApplyUnionRequest()
-        _req.senderGuildUUID = senderGuildUUID
-        _req.receiverGuildUUID = receiverGuildUUID
-
-        _client = self.getRandomClient()
-        if not _client:
-            LOG_WARN('CrossDataStub removeReceiverGuildApplyUnion no client')
-            return
-
-        _client.csStub.removeReceiverGuildApplyUnion(None, _req, None)
-
-    def onNotifyRemoveReceiverGuildApplyUnion(self, reply):
-        LOG_INFO('CrossDataStub onNotifyRemoveReceiverGuildApplyUnion', reply)
-        gameengine.getGlobalBase('GuildStub').callOnGuild(
-            reply.receiverGuildUUID,
-            'onRemoveReceiverGuildApplyUnion',
-            (reply.senderGuildUUID,),
-            None,
-            '',
-            (),
-        )
 
     def getCrossServerGuildDetail(self, guildUUID, box):
         _req = GetCrossServerGuildDetailRequest()
@@ -641,6 +294,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
         _req.guildDetailInfo.leaderSchool = detailInfo['school']
         _req.guildDetailInfo.leaderLevel = detailInfo['level']
         _req.guildDetailInfo.leaderGbId = detailInfo['gbId']
+        _req.guildDetailInfo.leagueUUID = detailInfo['leagueUUID']
 
         _client = self.getRandomClient()
         if not _client:
@@ -666,6 +320,7 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
                 'school': reply.guildDetailInfo.leaderSchool,
                 'level': reply.guildDetailInfo.leaderLevel,
                 'gbId': reply.guildDetailInfo.leaderGbId,
+                'leagueUUID': reply.guildDetailInfo.leagueUUID,
             }
         )
 

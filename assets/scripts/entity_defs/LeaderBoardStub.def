@@ -66,5 +66,20 @@
         <gmSetDynamicWorldLevel>
             <Arg>          LEVEL                       </Arg>
         </gmSetDynamicWorldLevel>
+
+        <getScoreRushRankSelf>
+            <Arg>          ENTITYCALL                  </Arg>
+            <Arg>          PLAYER_GBID                 </Arg>
+        </getScoreRushRankSelf>
+
+        <getScoreRushRankList>
+            <Arg>          ENTITYCALL                  </Arg>
+            <Arg>          PLAYER_GBID                 </Arg>
+            <Arg>          LEADER_BOARD_PAGE           </Arg>
+        </getScoreRushRankList>
+
+        <gmFinalizeScoreRank>
+            <Arg>          UINT8                       </Arg>
+        </gmFinalizeScoreRank>
     </BaseMethods>
 </root>

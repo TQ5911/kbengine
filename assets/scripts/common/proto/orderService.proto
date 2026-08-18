@@ -28,12 +28,15 @@ message OrderRequest
   string outTradeNo = 2;
   int64 createTime = 3;
   int64 gbId = 4;
-  int32 itemId = 5;
-  int32 itemCount = 6;
-  double price = 7;
-  bool addToSafe = 8;
-  string roleName = 9;
-  int64 payTime = 10;
+  string accountId = 5;
+  int32 itemId = 6;
+  int32 itemCount = 7;
+  double price = 8;
+  bool addToSafe = 9;
+  string roleName = 10;
+  int64 payTime = 11;
+  double payAmount = 12;
+  double actualAmount = 13;
 }
 
 message OrderResponse

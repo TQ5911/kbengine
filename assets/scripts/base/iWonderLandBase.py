@@ -30,10 +30,9 @@ class IWonderLandBase(object):
     def _wonderLandRefreshDaily(self, *args):
         tType = args[0] if len(args) >= 1 else 0
         LOG_INFO("IWonderLandBase::_wonderLandRefreshDaily", tType)
-        if tType == gameconst.CycleEventTriggerType.TIMED:
-            return
         if tType == gameconst.CycleEventTriggerType.UPDATE:
-            self.updateFreeTicketInfo(gameconst.FreeTicketSubType.WONDER_LAND, self.wonderLandTicket, gameconst.FreeTicketUpdateType.UPDATE)
+            self.updateFreeTicketInfo(gameconst.RecoveryTicketType.FREE_TICKET, gameconst.RecoveryTicketSubType.WONDER_LAND, self.wonderLandTicket, gameconst.FreeTicketUpdateType.UPDATE)
+            self.updateFreeTicketInfo(gameconst.RecoveryTicketType.PAID_TICKET, gameconst.RecoveryTicketSubType.WONDER_LAND, self.wonderLandAddTimes, gameconst.FreeTicketUpdateType.UPDATE)
 
         self.wonderLandTicket = WL_CD.datas['dailyWonderLandNum']['value']
         self.wonderLandAddTimes = WL_CD.datas['wonderLandNumCoinDailyLimit']['value']
@@ -41,7 +40,7 @@ class IWonderLandBase(object):
     def sumWonderLandTicket(self):
         return self.wonderLandTicket + self.paidWonderLandTicket
 
-    def checkAndEnterWonderLand(self, floor):
+    def checkAndEnterWonderLand(self, floor, bossMutexLine=0xFFFF):
         if self.sumWonderLandTicket() <= 0:
             LOG_WARN('IWonderLandBase::checkAndEnterWonderLand: self.sumWonderLandTicket <= 0')
             return
@@ -51,6 +50,9 @@ class IWonderLandBase(object):
             'enterWonderLandType': gameconst.WONDER_LAND_ENTER_TYPE_TICKET,
             'floor': floor,
         }
+        # 0xFFFF 表示无优先分线
+        if bossMutexLine != 0xFFFF:
+            extra['bossMutexLine'] = bossMutexLine
         gameengine.getWonderLandStub(mapId).doEnterWonderLand(self, self.gbID, extra)
 
     def afterEnterWonderLandDeductTimes(self, extra):
@@ -103,9 +105,12 @@ class IWonderLandBase(object):
         self.doAddWonderLandTicket(addType, itemId, itemNum, num, isAddDuration, False, gameconst.WonderAddTicketReason.FROM_CLIENT, _opUUID)
 
     def modifyWonderLandTicket(self, delta, src, opUUID):
+        befPaidWonderLandTicket = self.paidWonderLandTicket
+        befWonderLandTicket = self.wonderLandTicket
         ticketType = 0
         if delta > 0:
             self.paidWonderLandTicket += delta
+            self.paidWonderLandTicket = min(1000000000, self.paidWonderLandTicket)
             ticketType = gameconst.WONDER_LAND_ENTER_TICKET_PAID
 
         else:
@@ -115,7 +120,6 @@ class IWonderLandBase(object):
 
             else:
                 self.paidWonderLandTicket = max(0, self.paidWonderLandTicket + self.wonderLandTicket + delta)
-                self.paidWonderLandTicket = min(255, self.paidWonderLandTicket)
                 self.wonderLandTicket = 0
                 ticketType = gameconst.WONDER_LAND_ENTER_TICKET_PAID
 
@@ -129,6 +133,7 @@ class IWonderLandBase(object):
             self.paidWonderLandTicket,
             opUUID,
         )
+        LOG_INFO('modifyWonderLandTicket:', delta, src, ticketType, befPaidWonderLandTicket, self.paidWonderLandTicket, befWonderLandTicket, self.wonderLandTicket)
         return ticketType
 
     def doAddWonderLandTicket(self, addType, itemId, itemNum, num, isAddDuration, hasCheckCell, reason, opUUID):
@@ -156,8 +161,9 @@ class IWonderLandBase(object):
             LOG_ERR('IWonderLandBase::addWonderLandTicket: invalid itemId: {}'.format(itemId))
             return
 
-        if not self.canDeductWealth(_award):
-            LOG_ERR('IWonderLandBase::addWonderLandTicket: can not deduct wealth')
+        res = self.canDeductWealth(_award)
+        if not res:
+            LOG_WARN('IWonderLandBase::addWonderLandTicket: can not deduct wealth', res())
             return
 
         if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
@@ -196,7 +202,10 @@ class IWonderLandBase(object):
         _deductAward = dropAward.DeductWealthVal()
         _deductAward.addWealthByItemId(itemId, itemNum)
 
-        if not self.canDeductWealth(_deductAward):
+        res = self.canDeductWealth(_deductAward)
+        if not res:
+            if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
+                return False
             _msgId = WL_CD.datas['wonderLand_summoningFailed2']['value']
             _bossName = CBD.datas[bossId]['name']
             _args = [str(itemId), str(itemNum)]
@@ -209,8 +218,9 @@ class IWonderLandBase(object):
         _deductAward = dropAward.DeductWealthVal()
         _deductAward.addWealthByItemId(itemId, itemNum)
 
-        if not self.canDeductWealth(_deductAward):
-            LOG_ERR('IWonderLandBase::summonWonderLandBossBase: can not deduct wealth')
+        res = self.canDeductWealth(_deductAward)
+        if not res:
+            LOG_WARN('IWonderLandBase::summonWonderLandBossBase: can not deduct wealth', res())
             return False
 
         _src = AAC_AACDD.datas.BONUS_SRC_SUMMON_BOOSS
@@ -250,7 +260,8 @@ class IWonderLandBase(object):
                     return  
                 _deductVal = dropAward.DeductWealthVal()
                 _deductVal.addWealthByItemId(coinType, coinNum)
-                if self.canDeductWealth(_deductVal):
+                res = self.canDeductWealth(_deductVal)
+                if res:
                     self.doAddWonderLandTicket(
                         gameconst.CUBE_ADD_TIMES_TYPE_COIN,
                         coinType,
@@ -261,6 +272,8 @@ class IWonderLandBase(object):
                         gameconst.WonderAddTicketReason.RENEW_USE_COIN,
                         _opUUID,
                     )
+                    return
+                elif res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
                     return
 
         if not switchData['itemSwitch']:

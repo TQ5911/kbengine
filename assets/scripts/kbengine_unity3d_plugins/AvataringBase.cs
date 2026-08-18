@@ -121,6 +121,10 @@ namespace KBEngine
 
 			switch(method.methodUtype)
 			{
+				case 937:
+					CHECK_TEXT_SECURITY_RESP checkTextSecurityResp_arg1 = ((DATATYPE_CHECK_TEXT_SECURITY_RESP)method.args[0]).createFromStreamEx(stream);
+					checkTextSecurityResp(checkTextSecurityResp_arg1);
+					break;
 				case 1236:
 					onAnotherClientLogin();
 					break;

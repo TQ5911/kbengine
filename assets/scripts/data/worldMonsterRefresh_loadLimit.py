@@ -816,7 +816,7 @@ datas = _tools.RODict({
     10304020: _tools.RODict({
         "mission": 0,
     }),
-    10304029: _tools.RODict({
+    10304019: _tools.RODict({
         "mission": 0,
     }),
     10314004: _tools.RODict({
@@ -853,6 +853,9 @@ datas = _tools.RODict({
         "mission": 0,
     }),
     10324011: _tools.RODict({
+        "mission": 0,
+    }),
+    40318003: _tools.RODict({
         "mission": 0,
     })
 })

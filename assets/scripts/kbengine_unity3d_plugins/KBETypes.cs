@@ -427,6 +427,33 @@ namespace KBEngine
 		}
 	}
 
+	public struct PYTHON
+	{
+		byte[] value;
+
+		PYTHON(byte[] value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator byte[](PYTHON value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator PYTHON(byte[] value)
+		{
+			byte[] tvalue = (byte[])value;
+			return new PYTHON(tvalue);
+		}
+
+		public Byte this[int ID]
+		{
+			get { return value[ID]; }
+			set { this.value[ID] = value; }
+		}
+	}
+
 	public struct BLOB
 	{
 		byte[] value;
@@ -565,6 +592,33 @@ namespace KBEngine
 			{
 				return UInt64.MinValue;
 			}
+		}
+	}
+
+	public struct UID1
+	{
+		byte[] value;
+
+		UID1(byte[] value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator byte[](UID1 value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator UID1(byte[] value)
+		{
+			byte[] tvalue = (byte[])value;
+			return new UID1(tvalue);
+		}
+
+		public Byte this[int ID]
+		{
+			get { return value[ID]; }
+			set { this.value[ID] = value; }
 		}
 	}
 
@@ -903,6 +957,33 @@ namespace KBEngine
 		{
 			string tvalue = (string)value;
 			return new METHOD_NAME(tvalue);
+		}
+	}
+
+	public struct METHOD_ARGS
+	{
+		byte[] value;
+
+		METHOD_ARGS(byte[] value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator byte[](METHOD_ARGS value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator METHOD_ARGS(byte[] value)
+		{
+			byte[] tvalue = (byte[])value;
+			return new METHOD_ARGS(tvalue);
+		}
+
+		public Byte this[int ID]
+		{
+			get { return value[ID]; }
+			set { this.value[ID] = value; }
 		}
 	}
 
@@ -1374,6 +1455,33 @@ namespace KBEngine
 		{
 			string tvalue = (string)value;
 			return new PATH(tvalue);
+		}
+	}
+
+	public struct PY_SET
+	{
+		byte[] value;
+
+		PY_SET(byte[] value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator byte[](PY_SET value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator PY_SET(byte[] value)
+		{
+			byte[] tvalue = (byte[])value;
+			return new PY_SET(tvalue);
+		}
+
+		public Byte this[int ID]
+		{
+			get { return value[ID]; }
+			set { this.value[ID] = value; }
 		}
 	}
 
@@ -2712,6 +2820,33 @@ namespace KBEngine
 		}
 	}
 
+	public struct ERROR
+	{
+		byte[] value;
+
+		ERROR(byte[] value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator byte[](ERROR value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator ERROR(byte[] value)
+		{
+			byte[] tvalue = (byte[])value;
+			return new ERROR(tvalue);
+		}
+
+		public Byte this[int ID]
+		{
+			get { return value[ID]; }
+			set { this.value[ID] = value; }
+		}
+	}
+
 	public struct ERRNO
 	{
 		UInt32 value;
@@ -2746,6 +2881,33 @@ namespace KBEngine
 			{
 				return UInt32.MinValue;
 			}
+		}
+	}
+
+	public struct DUNGEON_SRC
+	{
+		byte[] value;
+
+		DUNGEON_SRC(byte[] value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator byte[](DUNGEON_SRC value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator DUNGEON_SRC(byte[] value)
+		{
+			byte[] tvalue = (byte[])value;
+			return new DUNGEON_SRC(tvalue);
+		}
+
+		public Byte this[int ID]
+		{
+			get { return value[ID]; }
+			set { this.value[ID] = value; }
 		}
 	}
 
@@ -3264,6 +3426,33 @@ namespace KBEngine
 			{
 				return Int32.MinValue;
 			}
+		}
+	}
+
+	public struct CROSS_ENTITYCALL
+	{
+		byte[] value;
+
+		CROSS_ENTITYCALL(byte[] value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator byte[](CROSS_ENTITYCALL value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator CROSS_ENTITYCALL(byte[] value)
+		{
+			byte[] tvalue = (byte[])value;
+			return new CROSS_ENTITYCALL(tvalue);
+		}
+
+		public Byte this[int ID]
+		{
+			get { return value[ID]; }
+			set { this.value[ID] = value; }
 		}
 	}
 
@@ -5488,6 +5677,43 @@ namespace KBEngine
 		}
 	}
 
+	public struct LEAGUE_UUID
+	{
+		UInt64 value;
+
+		LEAGUE_UUID(UInt64 value)
+		{
+			this.value = value;
+		}
+
+		public static implicit operator UInt64(LEAGUE_UUID value)
+		{
+			return value.value;
+		}
+
+		public static implicit operator LEAGUE_UUID(UInt64 value)
+		{
+			UInt64 tvalue = (UInt64)value;
+			return new LEAGUE_UUID(tvalue);
+		}
+
+		public static UInt64 MaxValue
+		{
+			get
+			{
+				return UInt64.MaxValue;
+			}
+		}
+
+		public static UInt64 MinValue
+		{
+			get
+			{
+				return UInt64.MinValue;
+			}
+		}
+	}
+
 	public class FACE_DATA
 	{
 		public UInt16 suitId = 0;
@@ -6489,6 +6715,7 @@ namespace KBEngine
 		public Byte sex = 0;
 		public UInt16 school = 0;
 		public UInt32 level = 0;
+		public UInt32 leagueUUID = 0;
 
 	}
 
@@ -6639,6 +6866,7 @@ namespace KBEngine
 		public List<Int32> areaTask = new List<Int32>();
 		public List<Int32> rewardData = new List<Int32>();
 		public Int32 rewardSlot = 0;
+		public Int32 version = 0;
 
 	}
 
@@ -6670,6 +6898,8 @@ namespace KBEngine
 		public UInt32 redeemWaitTime = 0;
 		public Byte hasPrice = 0;
 		public UInt32 returnTime = 0;
+		public UInt32 bindMoney = 0;
+		public UInt32 money = 0;
 
 	}
 
@@ -6761,50 +6991,6 @@ namespace KBEngine
 		public UInt32 serverId = 0;
 		public UInt32 memberCnt = 0;
 		public Byte guildIcon = 0;
-
-	}
-
-	public class ENEMY_GUILD_CROSS_DATA_INFO
-	{
-		public UInt64 guildUUID = 0;
-		public string guildName = "";
-		public Byte flag = 0;
-		public UInt32 guildScore = 0;
-		public Byte guildLevel = 0;
-		public UInt32 serverId = 0;
-		public UInt32 endTime = 0;
-		public UInt32 memberCnt = 0;
-		public Byte guildIcon = 0;
-
-	}
-
-	public class GUILD_APPLY_UNION_DATA_INFO
-	{
-		public UInt64 guildUUID = 0;
-		public UInt32 endTime = 0;
-		public string guildName = "";
-		public Byte guildIcon = 0;
-		public Byte flag = 0;
-		public UInt32 guildScore = 0;
-		public Byte guildLevel = 0;
-
-	}
-
-	public class GUILD_APPLY_UNION_SENDER_DATA_INFO
-	{
-		public UInt64 guildUUID = 0;
-		public string guildName = "";
-		public Byte guildIcon = 0;
-		public Byte flag = 0;
-		public UInt32 guildScore = 0;
-		public UInt32 endTime = 0;
-
-	}
-
-	public class GUILD_AND_RELATION
-	{
-		public UInt64 guildUUID = 0;
-		public Byte relationType = 0;
 
 	}
 
@@ -7160,6 +7346,7 @@ namespace KBEngine
 	{
 		public UInt16 subType = 0;
 		public UInt16 num = 0;
+		public UInt16 mainType = 0;
 
 	}
 
@@ -7189,6 +7376,241 @@ namespace KBEngine
 		public UInt64 uniqueId = 0;
 		public Byte groupId = 0;
 		public List<Byte> status = new List<Byte>();
+
+	}
+
+	public class BOSS_MUTEX_COOL_DOWN_INFO
+	{
+		public Byte groupId = 0;
+		public UInt32 endTs = 0;
+		public UInt32 srcMapId = 0;
+		public UInt16 srcLineNo = 0;
+
+	}
+
+	public class SECONDARY_PWD_INFO_CLIENT
+	{
+		public Byte hasSecondaryPassword = 0;
+		public Byte verityFailedCnt = 0;
+		public UInt32 lockedTimestamp = 0;
+		public Byte beEnable = 0;
+
+	}
+
+	public class SECONDARY_PWD_VERITY_INFO_CLIENT
+	{
+		public Byte beEnable = 0;
+		public UInt32 money = 0;
+		public UInt32 bindMoney = 0;
+		public Byte itemWash = 0;
+		public Byte itemDisassemble = 0;
+		public Byte saleItem = 0;
+		public Byte rentalItem = 0;
+		public Byte accessIdx = 0;
+
+	}
+
+	public class LEAGUE_LIST_MEMBER_ENTRY
+	{
+		public UInt64 guildId = 0;
+		public string guildName = "";
+		public Byte guildIcon = 0;
+		public Byte dspFlag = 0;
+		public Int32 serverId = 0;
+		public UInt64 score = 0;
+
+	}
+
+	public class LEAGUE_LIST_ENTRY
+	{
+		public UInt64 allianceId = 0;
+		public string name = "";
+		public UInt32 serverId = 0;
+		public List<LEAGUE_LIST_MEMBER_ENTRY> members = new List<LEAGUE_LIST_MEMBER_ENTRY>();
+
+	}
+
+	public class LEAGUE_APPLY_INFO
+	{
+		public UInt64 guildUUID = 0;
+		public string guildName = "";
+		public UInt16 guildIcon = 0;
+		public UInt16 dspFlag = 0;
+		public UInt64 power = 0;
+		public UInt32 applyTime = 0;
+
+	}
+
+	public class LEAGUE_INVITE_MEMBER_INFO
+	{
+		public UInt64 guildUUID = 0;
+		public string guildName = "";
+		public Byte guildIcon = 0;
+		public Byte dspFlag = 0;
+
+	}
+
+	public class LEAGUE_INVITE_INFO
+	{
+		public UInt64 leagueUUID = 0;
+		public string leagueName = "";
+		public UInt64 power = 0;
+		public List<LEAGUE_INVITE_MEMBER_INFO> members = new List<LEAGUE_INVITE_MEMBER_INFO>();
+
+	}
+
+	public class LEAGUE_ENEMY_INFO
+	{
+		public UInt64 guilId = 0;
+		public UInt32 endTime = 0;
+
+	}
+
+	public class LEAGUE_ENEMY_ROW_INFO
+	{
+		public UInt64 attackId = 0;
+		public UInt32 attackType = 0;
+		public UInt32 attackServerId = 0;
+		public UInt64 targetId = 0;
+		public UInt32 targetType = 0;
+		public UInt32 targetServerId = 0;
+		public UInt32 endTime = 0;
+
+	}
+
+	public class LEAGUE_ENEMY_END_INFO
+	{
+		public UInt64 attackId = 0;
+		public UInt32 attackType = 0;
+		public UInt64 targetId = 0;
+		public UInt32 targetType = 0;
+
+	}
+
+	public class LEAGUE_EVENT_INFO
+	{
+		public UInt64 eventId = 0;
+		public UInt32 eventType = 0;
+		public List<string> eventArgs = new List<string>();
+		public UInt32 createdAt = 0;
+
+	}
+
+	public class LEAGUE_CHAT_MESSAGE
+	{
+		public UInt64 senderGuildId = 0;
+		public string senderGuildName = "";
+		public UInt32 senderServerId = 0;
+		public string content = "";
+		public UInt32 sendTime = 0;
+
+	}
+
+	public class LEAGUE_MEMBER_INFO
+	{
+		public UInt64 guildId = 0;
+		public string guildName = "";
+		public UInt64 guildScore = 0;
+		public UInt32 serverId = 0;
+		public UInt32 joinTime = 0;
+		public UInt16 memberCount = 0;
+		public UInt16 maxMemberNum = 0;
+		public Byte dspFlag = 0;
+		public Byte guildIcon = 0;
+		public Byte guildLevel = 0;
+		public Byte role = 0;
+
+	}
+
+	public class LEAGUE_DETAIL_INFO
+	{
+		public UInt64 allianceId = 0;
+		public string name = "";
+		public string declaration = "";
+		public UInt32 approveType = 0;
+		public UInt64 leaderGuildId = 0;
+		public string leaderGuildName = "";
+		public UInt32 leaderServerId = 0;
+		public UInt64 totalScore = 0;
+		public UInt32 memberCount = 0;
+		public UInt64 fund = 0;
+		public UInt64 leaderGbId = 0;
+		public string leaderName = "";
+		public UInt32 leaderLevel = 0;
+		public UInt32 leaderProfession = 0;
+		public UInt32 leaderGender = 0;
+		public UInt32 createdAt = 0;
+		public UInt32 serverId = 0;
+
+	}
+
+	public class LEAGUE_BASIC_ENTRY
+	{
+		public UInt64 allianceId = 0;
+		public string declaration = "";
+		public Byte approveType = 0;
+		public string leaderName = "";
+		public Byte leaderGender = 0;
+		public UInt32 leaderLevel = 0;
+		public Int32 leaderServerId = 0;
+		public UInt16 leaderProfession = 0;
+		public UInt64 leaderGbId = 0;
+
+	}
+
+	public class LEAGUE_SENT_INFO
+	{
+		public UInt64 leagueUUID = 0;
+		public string leagueName = "";
+		public Int32 serverId = 0;
+		public UInt64 power = 0;
+		public UInt32 sendTime = 0;
+
+	}
+
+	public class LEAGUE_SIMPLE_LIST_MEMBER_ENTRY
+	{
+		public UInt64 guildId = 0;
+		public string guildName = "";
+		public Byte guildIcon = 0;
+		public Byte dspFlag = 0;
+
+	}
+
+	public class LEAGUE_SIMPLE_LIST_ENTRY
+	{
+		public UInt64 allianceId = 0;
+		public string name = "";
+		public UInt32 power = 0;
+		public List<LEAGUE_SIMPLE_LIST_MEMBER_ENTRY> members = new List<LEAGUE_SIMPLE_LIST_MEMBER_ENTRY>();
+
+	}
+
+	public class GUILD_SIMPLE_ENTRY
+	{
+		public UInt64 guildId = 0;
+		public string guildName = "";
+		public Byte guildIcon = 0;
+		public Byte dspFlag = 0;
+		public UInt64 score = 0;
+		public Byte guildLevel = 0;
+		public Byte memberCnt = 0;
+
+	}
+
+	public class CHECK_TEXT_SECURITY_REQ
+	{
+		public UInt16 id = 0;
+		public string text = "";
+		public string bizType = "";
+
+	}
+
+	public class CHECK_TEXT_SECURITY_RESP
+	{
+		public Byte res = 0;
+		public UInt16 id = 0;
+		public string resp = "";
 
 	}
 

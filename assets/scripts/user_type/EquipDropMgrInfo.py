@@ -144,8 +144,8 @@ class EquipDropMgrVal(userType.UserSingleType):
     def getTakerVal(self, uniqueId):
         return self.takerDict.get(uniqueId, None)
 
-    def addTaker(self, avatar, uniqueId, equip, endTime, state, price, isNotify, redeemWaitTime, hasPrice, returnTime):
-        _takerVal = EquipDropTakerInfo.EquipDropTakerVal(uniqueId, equip, endTime, state, price, redeemWaitTime, hasPrice, returnTime)
+    def addTaker(self, avatar, uniqueId, equip, endTime, state, price, isNotify, redeemWaitTime, hasPrice, returnTime, bindMoney, money):
+        _takerVal = EquipDropTakerInfo.EquipDropTakerVal(uniqueId, equip, endTime, state, price, redeemWaitTime, hasPrice, returnTime, bindMoney, money)
         self.takerDict[uniqueId] = _takerVal
         if isNotify:
             avatar.client.onPickNewEquipDrop(_takerVal)
@@ -156,22 +156,6 @@ class EquipDropMgrVal(userType.UserSingleType):
             avatar.client.onRemovePickEquipDrop(uniqueId)
         return _takerVal
     
-    def doDealDropEquipExpire(self, avatar):
-        _endTime = utils.curTS() + 5
-        # 掉落时间结束
-        for _dropVal in self.dropDic.values():
-            if _dropVal.state != gameconst.DropNotifyType.NOTIFY_TYPE_DROP:
-                continue
-            if _dropVal.endTime < _endTime:
-                gameengine.getGlobalBase('DropStub').doCheckDropExpire(_dropVal.uniqueId, avatar.gbID, avatar)
-
-        # 赎回倒计时结束
-        for _takerVal in self.takerDict.values():
-            if _takerVal.state != gameconst.DropNotifyType.NOTIFY_TYPE_TAKE:
-                continue
-            if _takerVal.redeemWaitTime < _endTime:
-                gameengine.getGlobalBase('DropStub').doCheckRedeemExpire(_takerVal.uniqueId, avatar.gbID, avatar)
-
     def checkCouldTakeDrop(self, uniqueId):
         if uniqueId in self.dropDic:
             return True

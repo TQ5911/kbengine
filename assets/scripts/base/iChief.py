@@ -17,10 +17,9 @@ class IChief(object):
     def onChiefDailyRewardNumUpdate(self, *args):
         LOG_INFO('onChiefDailyRewardNumUpdate::')
         tType = args[0] if len(args) >= 1 else 0
-        if tType == gameconst.CycleEventTriggerType.TIMED:
-            return
         if tType == gameconst.CycleEventTriggerType.UPDATE:
-            self.updateFreeTicketInfo(gameconst.FreeTicketSubType.CHIEF, self.chiefInfo.leftDailyRewardNum, gameconst.FreeTicketUpdateType.UPDATE)
+            self.updateFreeTicketInfo(gameconst.RecoveryTicketType.FREE_TICKET, gameconst.RecoveryTicketSubType.CHIEF, self.chiefInfo.leftDailyRewardNum, gameconst.FreeTicketUpdateType.UPDATE)
+            self.updateFreeTicketInfo(gameconst.RecoveryTicketType.PAID_TICKET, gameconst.RecoveryTicketSubType.CHIEF, self.chiefInfo.useCoinAddRewardNum, gameconst.FreeTicketUpdateType.UPDATE)
 
         self.chiefInfo.dailyResetRewardNum()
         self.chiefInfo.rewardDailyCount = 0
@@ -62,8 +61,9 @@ class IChief(object):
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(itemId, itemNum, dataUtils.getItemDefaultBindType())
 
-        if not self.canDeductWealth(deductWealthVal):
-            LOG_ERR('_useItemToIncreaseChiefRewardNumber::check failed')
+        res = self.canDeductWealth(deductWealthVal)
+        if not res:
+            LOG_WARN('_useItemToIncreaseChiefRewardNumber::check failed', res())
             return False
 
         opUUID = KBEngine.genUUID64()
@@ -105,9 +105,10 @@ class IChief(object):
             deductWealthVal = dropAward.DeductWealthVal()
             deductWealthVal.addWealthByItemId(itemId, itemNum)
 
-            if not self.canDeductWealth(deductWealthVal):
-                LOG_ERR('_useCoinToIncreaseChiefRewardNumber::check failed')
-                return False
+            res = self.canDeductWealth(deductWealthVal)
+            if not res:
+                LOG_WARN('_useCoinToIncreaseChiefRewardNumber::check failed', res())
+                return False, 0
 
             opUUID = KBEngine.genUUID64()
             srcType = AAC_AACDD.datas.BONUS_SRC_CRUSADE_ADD_REWARD
@@ -126,10 +127,8 @@ class IChief(object):
         if needMsg:
             self.onMessagePre(int(RBC_CFG.datas["useShanglingdingMsg"]["value"]), [str(addRewardNum)])
 
-    def onEnterChiefDungeon(self, spaceNo, dungeonNo, spaceMgrBox, extra):
-        chiefInfo = self.chiefInfo
-        chiefInfo.deductRewardNum()
-        self.chiefInfo = chiefInfo
+    def onEnterChiefDungeon(self, spaceUUID, spaceNo, dungeonNo, spaceMgrBox, extra):
+        LOG_INFO('onEnterChiefDungeon::', spaceUUID, spaceNo, dungeonNo, spaceMgrBox, extra)
         self.onEnterDungeon(spaceNo, spaceMgrBox, extra)
         self.activityComplete(RBC_CFG.datas['raidBossChallengeActID']['value'])
 
@@ -139,7 +138,9 @@ class IChief(object):
             extra.get('raidId'),
             gameconst.DungeonPlayModeEnum.CHIEF,
             dungeonNo,
-            chiefInfo.getUsedTicketType(),
+            spaceNo, 
+            spaceUUID,
+            self.chiefInfo.getUsedTicketType(),
             extra.get('joinType'),
             extra.get('totalNum'),
             self.gbID,
@@ -147,4 +148,20 @@ class IChief(object):
             self.getRoleCacheAttr('level')
         )
 
+        LogTrackingMgr.LogTrackingMgr.Dungeon_Entrance(
+                self.gbID,
+                self.accountEntity.clientDistinctId,
+                extra.get('raidId'),
+                gameconst.DungeonPlayModeEnum.CHIEF,
+                dungeonNo,
+                spaceUUID,
+                spaceNo,
+                self.gbID,
+                self.chiefInfo.getUsedTicketType(),
+                extra.get('joinType'),
+                self.getTotalScore(),
+                self.getRoleCacheAttr('level'),
+                self.getRoleCacheAttr('name'),
+            )
+        
         LOG_INFO('in onEnterChiefDungeon::', spaceNo, dungeonNo, spaceMgrBox, extra)

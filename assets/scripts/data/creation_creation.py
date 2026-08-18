@@ -6356,7 +6356,7 @@ datas = _tools.RODict({
         "targetNum": 0,
         "flySpeed": 0.0,
         "selectType": 1,
-        "selectPar": 15,
+        "selectPar": 7,
         "delayTime": 0.0,
     }),
     66000144: _tools.RODict({

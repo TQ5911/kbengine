@@ -13373,19 +13373,19 @@ datas ={
     "EliteCustomID": "",
     "EntityID": 17112302,
     "ID": 11248001,
-    "Name": "\u4e94\u6bd2\u77f3\u7a9f\u4e94\u5c42\u00b7\u77ff\u6218",
-    "PosX": 567.4,
-    "PosY": 191.0434,
-    "PosZ": 516.75,
+    "Name": "\u4e94\u6bd2\u77f3\u7a9f\u4e94\u5c42",
+    "PosX": 567.1656,
+    "PosY": 191.4431,
+    "PosZ": 519.8658,
     "Props": {
       "CameraId": 33010001,
       "GateType": 0,
       "Remark": "",
       "ShowInSceneMap": 1,
       "TelDir": 262.1156,
-      "TelX": 564.6145,
-      "TelY": 191.7135,
-      "TelZ": 540.9956
+      "TelX": 564.3801,
+      "TelY": 192.1132,
+      "TelZ": 544.1115
     }
   },
   "11248002": {
@@ -13400,7 +13400,7 @@ datas ={
     "EliteCustomID": "",
     "EntityID": 17112401,
     "ID": 11248002,
-    "Name": "\u4e94\u6bd2\u77f3\u7a9f\u4e94\u5c42\u00b7\u77ff\u6218",
+    "Name": "\u4e94\u6bd2\u77f3\u7a9f\u4e94\u5c42",
     "PosX": 107.97,
     "PosY": 171.2717,
     "PosZ": 161.97,

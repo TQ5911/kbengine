@@ -618,7 +618,7 @@ class TaskInfo(userType.UserSingleType):
                 continue
 
             _deductVal.addWealthByItemId(oneInfo['ItemId'], oneInfo['Count'], dataUtils.getItemDefaultBindType())
-            if owner.getItemNum(oneInfo['ItemId']) >= oneInfo['Count']:
+            if owner.getItemNum(oneInfo['ItemId'], ignoreCheck=True) >= oneInfo['Count']:
                 hasAtLeastOneEnoughItem = True
             else:
                 _lackItemInfo['itemId'] = oneInfo['ItemId']
@@ -1119,7 +1119,7 @@ class TaskInfo(userType.UserSingleType):
             tgtList = task.getTgtsByType(gameconst.TaskTargetEnum.TASK_TARGET_ITEMS)
             for _tgt in tgtList:
                 LOG_DBG('     in doAddTgtItemByRelateAction, _taskIds:', _tgt.srcIdList, _tgt.srcRatio)
-                _itemCount = owner.getItemNum(_tgt.tgtId)
+                _itemCount = owner.getItemNum(_tgt.tgtId, ignoreCheck=True)
                 if _itemCount >= _tgt.dstCnt:
                     continue
                 if srcId not in _tgt.srcIdList:

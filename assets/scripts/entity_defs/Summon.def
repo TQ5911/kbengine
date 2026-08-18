@@ -54,13 +54,7 @@
             <Flags>     CELL_PRIVATE    </Flags>
             <Default>       0.0          </Default>
         </inheritPropRatio>
-
-        <mineWarCamp>
-            <Type>          UINT8           </Type>
-            <Flags>         ALL_CLIENTS     </Flags>
-            <Default>       0               </Default>
-            <WitnessName>   true            </WitnessName>
-        </mineWarCamp>
+        
         <createContext>
             <Type>      PYTHON        </Type>
             <Flags>     CELL_PRIVATE    </Flags>

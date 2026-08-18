@@ -40,6 +40,7 @@ import fightProp_define as FP_DD
 import visible_visible as V_VD
 import tutorConst_triggerReleat as TTRD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import gameconfig
 
 # 判断当前进程类型
 IS_BASE = (KBEngine.component == 'baseapp')
@@ -97,7 +98,7 @@ def remoteCall(su, player, component, method, args='', times=1):
     else:
         return _do_remoteCall(su, player, method, args, times)
     
-@gm_cmd('$_remoteCall-cell', (Player("gbId or Id"), Str("method"), Str("args")), RARG(0), CELL, '指定用户执行方法-cell', ALLSIDE, GOD_GROUPS)
+@gm_cmd('$_remoteCall-cell', (Player("gbId or Id"), Str("method"), Str("args"), Int("times")), RARG(0), CELL, '指定用户执行方法-cell', ALLSIDE, GOD_GROUPS)
 def remoteCall_cell(su, player, method, args, times):
     if KBEngine.publish():
         su.onCommandResult(0, 'can not run in publish server', {})
@@ -376,6 +377,9 @@ def _getItems(school, quality, awardCtx, qualityLimit=None):
 
 @gm_cmd('$dropEquip', (Player("gbId or Id"), Int("int slotId")), RARG(0), CELL, '丢装备', ALLSIDE, GOD_GROUPS)
 def dropEquip(su, player, slotId):
+    if gameconfig.isCrossServer():
+        return False, '跨服禁止执行'
+
     player.dropEquip(slotId, player.gbId, player.name)
     return True, 'command success'
 
@@ -798,6 +802,18 @@ def unlockAllFunc(su, player, onlyTask=0):
 
     return True, 'command success'
 
+# 统计掉落 路由那边需要随便选一个stub来固定所在base，不然第二次来取cache的话可能会串
+@gm_cmd('$equipBlessTest', (Int("int rewardId"), Int("int count")), RSTUB('PlayerStub'), BASE, 
+    '根据装备ID测试祝福期望', ALLSIDE, GOD_GROUPS)
+def equipBlessTest(su, playerStub, equipId, count):
+    from test import equipTest
+    equipUnit = equipTest.EquipBlessUnit(su, count)
+    ret, content, process_info = equipUnit.calcBlessExpectation(equipId)
+    if ret:
+        su.onCommandResult(0, 'ok', {'data': {f"{equipId}_{count}": content}})
+    else:
+        su.onCommandResult(0, 'wait', {'msg': content, 'process_info': process_info})
+
 
 # 统计掉落 路由那边需要随便选一个stub来固定所在base，不然第二次来取cache的话可能会串
 @gm_cmd('$statDropByDropId', (Int("int rewardId"), Int("int count"), Int("int Level"), Int("int school"), Int("int sex"), Int("int isMonthCardExpired"), Int("int isBigMonthCardExpired"), Int("int avatarScoreRank"), Int("int isCrossServer")), RSTUB('PlayerStub'), BASE, 
@@ -1063,6 +1079,8 @@ def getMemoryData(su, moduleName, key, attrName=None):
 def reqWorkshopSetAutoMF(su, player, autoMF):
     LOG_INFO("GM: reqWorkshopSetAutoMF ~ ", autoMF)
     return player.reqWorkshopSetAutoMF(autoMF)
+
+
 
 @gm_cmd('$reqWorkshopMF', (Player("gbId or Id"), Int('itemID'), Int('batchCount')), RARG(0), gameconst.BASE, '测试合成制作', ALLSIDE, GOD_GROUPS)
 def reqWorkshopMF(su, player, itemID, batchCount):
@@ -1791,5 +1809,17 @@ def getLineCellDist(su):
 
     LOG_INFO('$getLineCellDist %s: %s', process_name, json.dumps(result_data, ensure_ascii=False))
     return su.onCommandResult(0, f'{process_name}分线分布统计完成', result_data)
+
+@gm_cmd('$testeventtips', (Player("gbId or Id"), Int('eventTipId'), Int('srcType'), Int('itemId'), Int('itemCount') ), RARG(0), gameconst.BASE, '测试事件提示', ALLSIDE, GOD_GROUPS)
+def testeventtips(su, player, eventTipId, srcType, itemId, itemCount):
+    if player is None:
+        return False, '执行失败'
+    wealthVal = dropAward.AwardVal()
+    wealthVal.addWealthByItemId(itemId, itemCount)
+    awardCtx = awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID, eventTipId=eventTipId)
+    _opUUID = KBEngine.genUUID64()
+    detail = gameclass.AwardDetailCls()
+    player.addWealth(srcType, wealthVal, _opUUID, detail, awardCtx)
+    return True, 'command success'
 
 # --------------------------dev test only cmd segment-----------------------------------------------------------------------------------------------------------------------------------------

@@ -205,10 +205,14 @@ class IBounty(object):
         if realMoney < 0:
             LOG_ERR("IBounty::reqPublishBounty money cfg error")
             return
-        curMoney = self.getItemNum(gameconst.ItemIdEnum.MONEY)
-        if curMoney < realMoney:
+        deductVal = dropAward.DeductWealthVal()
+        deductVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, realMoney)
+        res = self.canDeductWealth(deductVal)
+        if not res:
+            LOG_WARN("IBounty::reqPublishBounty no enough money", res(), self.getItemNum(gameconst.ItemIdEnum.MONEY), realMoney, publishMoney, depositMoney)
+            if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
+                return
             self.onMessagePre(MMD.datas.LackingMoneyMsg, [])
-            LOG_WARN("IBounty::reqPublishBounty no enough money", curMoney, realMoney, publishMoney, depositMoney)
             return
 
         checkNameList = []
@@ -329,6 +333,9 @@ class IBounty(object):
             elif resCode == gameconst.PublishBountyResType.HUNTER_REFUSE:
                 self.onMessagePre(MMD.datas.KillerConceptMsg, [])
                 return
+            elif resCode == gameconst.PublishBountyResType.HUNTER_NOT_UNLOCKED:
+                self.onMessagePre(MMD.datas.KillerLowLevel, [])
+                return
             return
         # SUCCESS
         publishItem = bountyItem()
@@ -351,9 +358,10 @@ class IBounty(object):
         elif prePublishItem.bountyType == gameconst.BountyType.ASSIGN:
             realMoney = prePublishItem.publishMoney + prePublishItem.depositMoney
         deductWealthVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, realMoney)
-        if not self.canDeductWealth(deductWealthVal):
+        res = self.canDeductWealth(deductWealthVal, isCheck=False)
+        if not res:
             gameengine.getGlobalBase('BountyStub').onPublisherPrePublishBountyRes(self, bountyDict, gameconst.PublishBountyResType.PUBLISHER_NOT_ENOUGH_MONEY)
-            LOG_WARN("IBounty::onPublisherPrePublishBounty no enough money")
+            LOG_WARN("IBounty::onPublisherPrePublishBounty no enough money", res())
             return
 
         srcType = AAC_AACDD.datas.BONUS_SRC_BOUNTY_COST
@@ -417,7 +425,11 @@ class IBounty(object):
 
     def onNoticeAssignedHunter(self, prePublishDict, playerbox, stubBox):
         LOG_INFO("IBounty::onNoticeAssignedHunter", prePublishDict)
-        stubBox.onWaitForPrePublishBounty(playerbox, prePublishDict)
+        if not self._isUIVisibleStr('UIBountyPanel'):
+            LOG_WARN("IBounty::onNoticeAssignedHunter not lock")
+            stubBox.onWaitForPrePublishBounty(playerbox, prePublishDict, False)
+            return
+        stubBox.onWaitForPrePublishBounty(playerbox, prePublishDict, True)
         self.client.onNoticeAssignedHunter(prePublishDict)
 
     @gamedecorator.checkGameconfigEnable('order')
@@ -463,10 +475,14 @@ class IBounty(object):
             LOG_ERR("IBounty::reqAcceptBounty depositMoney error", depositMoneyCfg)
             return
         realMoney = depositMoneyCfg
-        curMoney = self.getItemNum(gameconst.ItemIdEnum.MONEY)
-        if curMoney < realMoney:
+        deductVal = dropAward.DeductWealthVal()
+        deductVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, realMoney)
+        res = self.canDeductWealth(deductVal)
+        if not res:
+            LOG_WARN("IBounty::reqAcceptBounty no enough money", res(), self.getItemNum(gameconst.ItemIdEnum.MONEY), realMoney)
+            if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
+                return
             self.onMessagePre(MMD.datas.LessMoneyMsg, [])
-            LOG_WARN("IBounty::reqAcceptBounty no enough money", curMoney, realMoney)
             return
 
         acceptItem = bountyItem()
@@ -543,9 +559,10 @@ class IBounty(object):
         deductWealthVal = dropAward.DeductWealthVal()
         realMoney = preAcceptItem.depositMoney
         deductWealthVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, realMoney)
-        if not self.canDeductWealth(deductWealthVal):
+        res = self.canDeductWealth(deductWealthVal, isCheck=False)
+        if not res:
             gameengine.getGlobalBase('BountyStub').onHunterPreAcceptBountyRes(self, bountyDict, gameconst.AcceptBountyResType.HUNTER_NOT_ENOUGH_MONEY)
-            LOG_WARN("IBounty::onHunterPreAcceptBounty no enough money")
+            LOG_WARN("IBounty::onHunterPreAcceptBounty no enough money", res())
             return
 
         srcType = AAC_AACDD.datas.BONUS_SRC_KILLER_COST

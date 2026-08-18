@@ -14,6 +14,8 @@ class TeamDungeonInfo(object):
         return _teamObj
 
     def getDictFromObj(self, obj):
+        if isinstance(obj, dict):
+            return obj
         return obj.toStreamSavedDic()
 
     def _Type(self):

@@ -88,6 +88,12 @@
             <Flags>         CELL_PRIVATE            </Flags>
             <Default>       {}                      </Default>
         </lightPillarDict>
+
+        <createSpaceMgrTime>
+            <Type>          LONGTIME                </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       0                       </Default>
+        </createSpaceMgrTime>
     </Properties>
 
     <CellMethods>

@@ -68,6 +68,7 @@ GLOBAL_BASE_STUB_UNARCHIVE = [
     'CrossDataStub',
     'WorldRefreshEntityStub',
     'AntiAddictionStub',
+    'AllianceStub',
     ]
 GLOBAL_BASE_STUB_TEAMSTUB = 'TeamStub'
 
@@ -84,6 +85,9 @@ COPIED_SPACE_NO_START = 1*SPACE_NO_HOME_INTERVAL  #spaceNo in [1,1000] [1000*SPA
 SPACE_NO_HOME_SINGLE_DUNGEON = 6000
 SPACE_NO_HOME_TEAM_DUNNGEON  = 4000
 assert SPACE_NO_HOME_SINGLE_DUNGEON + SPACE_NO_HOME_TEAM_DUNNGEON == SPACE_NO_HOME_INTERVAL
+
+CHANGE_SKILL_REASON_NORMAL = 1
+CHANGE_SKILL_REASON_UNLOCK = 2
 
 INT32_MAX = 0x7FFFFFF
 
@@ -128,6 +132,9 @@ OFFLINE_REASON_NEWBIE_KICKOUT = 20
 OFFLINE_REASON_AUTH_NEED_RECONNECT = 22
 OFFLINE_REASON_AUTH_LOW_MORAL = 23 # 善恶值太低，并且是代理状态
 OFFLINE_REASON_ANIT_ADDICTION = 24
+OFFLINE_REASON_CLIENT_LOGOUT = 25 #客户端主动下线
+OFFLINE_REASON_GMKICK_SUB_FROM = OFFLINE_REASON_GMKICK * 100
+OFFLINE_REASON_GMKICK_SUB_TO = OFFLINE_REASON_GMKICK * 100 + 99
 
 CENTRAL_SERVICE_HEARTBEAT_INTERVAL = 10
 
@@ -370,18 +377,20 @@ INIT_CLIENT_SEND = (
         ('sendSiegeWarLoginData', True),
         ('sendAllWelfareSignInInfo', False),
         ('avatarLogin', True),
-        ('_sendAllGuildRelation', True),
         ('redbagOnLogin', True),
         ('checkOfflineHangup', True),
         ('onMineWarLogin', True),
         ('updateRedisVIPFlag', True),
-        ('sendClaimPcLoginRewardInfo', True),
+        ('updateRedisSVIPFlag', True),
+        ('doAllBindPhoneInfo', True),
         ('sendAvatarBountyInfo', True),
         ('getAnnouncement', True),
         ('sendMineWarState', True),
         ('sendAllTitle', True),
         ('sendAllMapExploreData', True),
         ('sendAllRecoveryInfo', True),
+        ('_sendGuildVoiceMembers', True),
+        ('sendSafeBoxData', True),
 )
 
 class ItemEnum(object):
@@ -603,6 +612,14 @@ class EntityPropsEnum(metaclass=UniqueIntEnum):
     rechargeStageReward = 421
     cellNovice = 422
     preCubePKModel = 423
+    clientInitEvent = 424
+    reqSMSServiceTimestamp = 425
+    verifySMSServiceTimestamp = 426
+    smsServiceValidTimestamp = 427
+    breakAutoCombatTime = 428
+    lastUseSkillTime = 429
+    crossServerExtra = 430
+
 
 class TopSpeedType(object):
     NormalTopSpeed = 100.0
@@ -755,6 +772,7 @@ class BagOPStat(object):
     OPERATE_BAG_ITEM_DISABLED = 20
     OPERATE_BAG_ITEM_LOCKED = 21
     OPERATE_BAG_ARG_ERR = 22
+    OPERATE_BAG_FAIL = 23
 
 class BagOpPlan(object):
     OPERATE_BAG_NO_PLAN = 1
@@ -1167,6 +1185,7 @@ class RedisKey(object):
     GIFT_CODE_TBL = 'global:gift_codes'
     PRIVILEGE_TBL = 'g:vip'
     LEVEL_RUSH_RANK_DATA_KEY = 'g:alrr'
+    SCORE_RANK_FINAL_DATA_KEY = 'g:asrf:'
     NORMAL_ONLINE_NUM = 'g:normal_online_num'
     SERVER_OPEN_TIME = 'g:server_open_time'
     SERVER_OPEN_STATE = 'g:server_open_state'
@@ -1482,12 +1501,15 @@ class UseSkillCheck(object):
     USC_ENUM_FORBID = 1<<14
     USC_ENUM_STAGE_INVALID = 1 << 15 # 阶段技能阶段不合法
     USC_ENUM_CHECK_USE_ACTION = 1 << 16
+    USC_ENUM_IN_CD_STATUS = 1 << 17
+    USC_ENUM_STATE_INVALID = 1 << 18
 
     #起手延迟结算时检查需要忽略的条件
-    USC_DELAY_CHECK_IGNORES = USC_ENUM_IN_CD | USC_ENUM_LACK_OF_MP | USC_ENUM_OUT_OF_RANGE | USC_ENUM_STATE_CONFLICT | USC_ENUM_INVALID_TARGET | USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH | USC_ENUM_CHECK_USE_ACTION
+    USC_DELAY_CHECK_IGNORES = USC_ENUM_IN_CD | USC_ENUM_LACK_OF_MP | USC_ENUM_OUT_OF_RANGE | USC_ENUM_STATE_CONFLICT | USC_ENUM_INVALID_TARGET | USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH | USC_ENUM_CHECK_USE_ACTION | USC_ENUM_IN_CD_STATUS
     #连击技能（例如风入松放一次可以砍出4刀，每刀单独结算）分阶段结算时，每个阶段的检查
-    USC_MUL_ATTACK_CHECK_IGNORES = USC_ENUM_IN_CD | USC_ENUM_LACK_OF_MP | USC_ENUM_STATE_CONFLICT | USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH | USC_ENUM_CHECK_USE_ACTION
-    RESET_USED_SKILLID_TYPE = (USC_ENUM_IN_CD, USC_ENUM_LACK_OF_MP, USC_ENUM_SHOOTER_SKILL_CANNOT_USE, USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH, USC_ENUM_FORBID, USC_ENUM_CHECK_USE_ACTION)
+    USC_MUL_ATTACK_CHECK_IGNORES = USC_ENUM_IN_CD | USC_ENUM_LACK_OF_MP | USC_ENUM_STATE_CONFLICT | USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH | USC_ENUM_CHECK_USE_ACTION | USC_ENUM_IN_CD_STATUS
+    RESET_USED_SKILLID_TYPE = (USC_ENUM_IN_CD, USC_ENUM_LACK_OF_MP, USC_ENUM_SHOOTER_SKILL_CANNOT_USE, USC_ENUM_ULTRA_SKILL_POWER_NOT_ENOUGH, USC_ENUM_FORBID, USC_ENUM_CHECK_USE_ACTION, USC_ENUM_IN_CD_STATUS)
+    RESET_TARGET_ID_TYPE = (USC_ENUM_INVALID_TARGET, USC_ENUM_INVISIBLE_TARGET, USC_ENUM_OUT_OF_RANGE, USC_ENUM_TARGET_NOT_FOUND, USC_ENUM_SINGLE_HEAL_OUT_OF_RANGE)
 
 class ResetSkillReason(object):
     ReasonDefault = 0
@@ -2862,6 +2884,12 @@ class LeaderBoardType(object):
     ALL_KEYS = (AVATAR_LEVEL, AVATAR_SCORE, GUILD, AVATAR_LEVEL_RUSH_RANK, ACHIEVEMENT)
 
 
+class ScoreRushRankState(object):
+    NOT_FINAL = 0   # 未定榜
+    FINALIZED = 1   # 已定榜
+    FINALIZING = 2  # 已过定榜时间，快照未生成
+
+
 class DissolveGuildReason(object):
     NO_MEMBER = 1
     IN_ACTIVE = 2
@@ -2972,6 +3000,8 @@ class JoinGuildEvent(object):
     FULL = 5
     NOT_ELIGIBLE = 6
     HAS_APPLY = 7
+    HAS_IN = 8 # 已经添加进members了,可能是因为并发
+
 
 class CrossServerState(object):
     ENUM_IN_CURRENT_SERVER = 1
@@ -3026,7 +3056,7 @@ class AvatarFlagCell(object):
 
 
 DEATH_PENALTY_INVALID_REC_TIMES = 255
-CUBE_MAX_ENTER_NUM = 300 # 混沌回廊分线最大承载量
+CUBE_MAX_ENTER_NUM = 400 # 混沌回廊分线最大承载量
 CUBE_NEW_LINE_THRESHOLD = 200 # 超过这个值之后，混沌回廊的一层会创建新分线
 SIEGEWAR_MAX_ENTER_NUM = 500
 ABYSS_MAX_ENTER_NUM = 400
@@ -3090,6 +3120,8 @@ TABLE_NAME_GAME_SAFE_BOX = 'game_safe_box'
 TABLE_NAME_GAME_SAFE_BOX_IDEMPOTENT = 'game_safe_box_idempotent'
 SAFE_BOX_MAX_VISIBLE_CLAIMED = 10
 SAFE_BOX_PAGE_SIZE = 10
+SAFE_BOX_MAX_VISIBLE_UNCLAIMED = 100
+SAFE_BOX_LOGIN_BATCH_SIZE = 100
 
 
 class WriteToDBResult(object):
@@ -3200,6 +3232,7 @@ class _AuctionErrno(object):
     AUCTION_ITEM_IS_NOT_IN_SNATCH               = _errno(20046)     # 交易行物品正不在抢购期
     ERR_AUCTION_SOUL_WITH_EMPTY_ROLL_PROPS      = _errno(20047)     # 没有词条魂魄不允许上交易行
     ERR_AUCTION_IDIP_GM_BAN                     = _errno(20100)     # IDIP禁止
+    ERR_AUCTION_FAIL                            = _errno(20101)     # 通用失败
 
 AuctionErrno = _AuctionErrno()
 
@@ -3279,6 +3312,7 @@ class DropNotifyType(object):
     NOTIFY_TYPE_RETURN_WAIT                 = 7  #// 等待返还
     NOTIFY_TYPE_RETURN_GET                  = 8  #// 待原主人领取
     NOTIFY_TYPE_REWARD                      = 9  #// 领取奖励
+    NOTIFY_TYPE_DROP_EXPIRE                 = 10 #// 掉落过期
     
 class DropWayType(object):
     DROP_WAY_TYPE_1 = 1 # 一个库内，不放回，随出若干件道具，不重复
@@ -3460,7 +3494,7 @@ class GuildRelationType(object):
 # WONDERLAND start
 MYSTIC_SUMMIT_FLOORS = [1, 2, 3]
 WONDERLAND_LINE_NO = 0
-WONDERLAND_MAX_ENTER_NUM = 300
+WONDERLAND_MAX_ENTER_NUM = 400
 WONDERLAND_COIN_ITEM_ID = ItemIdEnum.MONEY
 
 WONDER_LAND_DUR_RENEW = 1 # 试炼峰续期
@@ -3637,6 +3671,8 @@ class GuildTaskType(object):
 LIGHTNINGAREABUFF = 64004952
 
 ANCHOR_CAST_DUR = 1
+
+DEFAULT_SCENE = 1002 # 默认场景  同心村
 
 # 铭文效果类型
 class InscriptionEffectType(object):
@@ -3860,6 +3896,9 @@ class AccountHostType(object):
     NONE = 0
     HOST = 1 # 主人的号
     AUTH = 2 # 代理的号
+
+AUTH_STOP_MANUAL = 1
+AUTH_STOP_AUTO = 2
 
 # 授权建立过程中的状态
 class AuthState(object):
@@ -4168,6 +4207,7 @@ class TimerEntityRefreshType(object):
 class PrivilegeRedisKey(object):
     VIP = RedisKey.PRIVILEGE_TBL + ":v:"         #特权用户    (排队优先)
     SVIP = "officialTagType_"                    #超级特权    (排队直达)
+    LOGIN_CNT = "g:svip_cnt"
 
 INVINCIBLE_BUFF_ID = 64000070  # 无敌buffId
 
@@ -4189,15 +4229,6 @@ class AntiAddictionDateType(object):
 class AntiAddictionTimeType(object):
     PERMIT = 0
     PROHIBIT = 1
-
-GiftCodeResultMsg = {
-    40001: 54000343,
-    40002: 54000346,
-    40003: 54000352,
-    40004: 54000353,
-    40005: 54000354,
-    40006: 54000356,
-}
 
 class ShieldType(metaclass=UniqueIntEnum):
     # 生命盾
@@ -4430,6 +4461,8 @@ class EquipWashResult(object):
     WASH_COUNT_ERR = 9
     # 背包锁定
     BAG_LOCKED = 10
+    # 通用失败
+    FAIL = 11
 
 SERVER_LOG_TYPE_LOGIN = 1
 SERVER_LOG_TYPE_DAILY = 2
@@ -4462,6 +4495,7 @@ class PublishBountyResType(object):
     PUBLISHER_CHECK_TIME_OUT = 6
     HUNTER_CHECK_TIME_OUT = 7
     HUNTER_REFUSE = 8
+    HUNTER_NOT_UNLOCKED = 9
 
 class AcceptBountyResType(object):
     SUCCESS = 0
@@ -4693,8 +4727,16 @@ class FullPlayerInfoUnlockType:
 class ResourceRecoveryType(object):
     NULL = 0
     FREE_TICKET = 1
+    PAID_TICKET = 2
 
-class FreeTicketSubType(object):
+class RecoveryTicketType(object):
+    FREE_TICKET = 0
+    PAID_TICKET = 1
+
+    VALID_TYPE = (FREE_TICKET, PAID_TICKET)
+    MAX_CNT = PAID_TICKET + 1
+
+class RecoveryTicketSubType(object):
     CUBE = 0
     WONDER_LAND = 1
     ABYSS = 2
@@ -4749,6 +4791,7 @@ class MallStoreResult(object):
     COUNT_LIMIT = 2
     ITEM_IS_NOT_ENOUGH = 3
     BAG_IS_FULL = 4
+    FAIL = 5
 
 class MallLimitType:
     FOREVER = 1
@@ -4810,13 +4853,15 @@ AutoForbidData = {
 CrossServerExpWhitelist = {
     AAC_AACDD.datas.BONUS_SRC_RECOVER_DEAD_PENALTY,
     AAC_AACDD.datas.BONUS_SRC_DEAD_PENALTY,
-    AAC_AACDD.datas.BONUS_SRC_KILL_MONSTER
+    AAC_AACDD.datas.BONUS_SRC_KILL_MONSTER,
+    AAC_AACDD.datas.BONUS_SRC_MAP_HANG_UP_INCOME
 }
 
 #加经验同步单独处理的类型
 CrossServerExpIgnorelist = {
     AAC_AACDD.datas.BONUS_SRC_RECOVER_DEAD_PENALTY,
-    AAC_AACDD.datas.BONUS_SRC_DEAD_PENALTY
+    AAC_AACDD.datas.BONUS_SRC_DEAD_PENALTY,
+    AAC_AACDD.datas.BONUS_SRC_MAP_HANG_UP_INCOME
 }
 
 class EquipReturnType(object):
@@ -4890,3 +4935,232 @@ class SpecialVisibleType:
 class SpecialVisibleCheckType:
     CONDITION_CHECK = 1
     OPEN = 2
+
+class SafeBoxDatas(object):
+    # 单页最大数量
+    GET_PAGE_MAX = 20
+
+class SwitchPropertyType(object):
+    # 装备
+    EQUIP = 1
+    # 精灵编队
+    PET = 2
+
+    VALID_TYPES = (EQUIP, PET)
+
+class AFKStateType(object):
+    BEGIN = 0
+    END = 1
+    VALID_STATE = (BEGIN, END)
+
+class RestoreEquipEvent(object):
+    RESET_RETURN_INFO = 'resetReturnInfo'
+
+class ReqSMSServiceRes(object):
+    CHECK_CAPTCHA_VERIFY = 0
+    ALERADY_SENT = 1
+    VERIFY_SUCCESSED = 2
+
+class SMSOperationType(object):
+    SECONDARY_PWD_SET = 0
+    SECONDARY_PWD_UPDATE = 1
+    SECONDARY_PWD_DELETE = 2
+    SECONDARY_PWD_ENABLE = 3
+
+    SECONDARY_PWD_VAILD_TYPE = (SECONDARY_PWD_SET, SECONDARY_PWD_UPDATE, SECONDARY_PWD_DELETE)
+    ALL_VAILD_TYPE = (SECONDARY_PWD_SET, SECONDARY_PWD_UPDATE, SECONDARY_PWD_DELETE)
+
+class SMSOperationTypeStr(object):
+    SECONDARY_PWD = 'second_password'
+
+class SecondaryPasswordCheckType(object):
+    USE_MONEY = 1
+    USE_BIND_MONEY = 2
+    SALE_ITEM = 3
+    RENTAL_ITEM = 4
+    ITEM_WASH = 5
+    ITEM_DISASSEMBLE = 6
+
+    VAILD_TYPE = (USE_MONEY, USE_BIND_MONEY, SALE_ITEM, RENTAL_ITEM, ITEM_WASH, ITEM_DISASSEMBLE, )
+
+class NotifyPopupSecondaryPasswordType(object):
+    TO_SET = 0
+    TO_VERITY = 1
+
+class SecondaryPasswordVerityType(object):
+    VERITY = 0
+    MODIFY = 1
+
+class AuctionSnatchData(object):
+    SNATCH_PARTICIPATE_PREFIX = 'auction:snatch:participate:{}:{}'
+
+# 联盟操作结果
+class LeagueOpResult(object):
+    # 创建联盟成功
+    CREATE_LEAGUE_SUCCESS = 1
+    # 创建联盟失败
+    CREATE_LEAGUE_FAIL = 2
+    # 不在公会
+    NOT_IN_GUILD = 3
+    # 联盟名字太长
+    LEAGUE_NAME_TOO_LONG = 4
+    # 联盟宣言太长
+    LEAGUE_DECALATION_TOO_LONG = 5
+    # 需要帮主
+    NEED_GUILD_LEADER = 6
+    # 联盟ID对不上
+    INVALID_LEAGUE_UUID = 7
+    # 联盟解散成功
+    DISBAND_LEAGUE_SUCCESS = 8
+    # 联盟解散失败
+    DISBAND_LEAGUE_FAIL = 9
+    # 已经在联盟了
+    ALREADY_IN_LEAGUE = 10
+    # 申请联盟成功
+    APPLY_LEAGUE_SUCCESS = 11
+    # 申请联盟失败
+    APPLY_LEAGUE_FAIL = 12
+    # 不在联盟里
+    NOT_IN_LEAGUE = 13
+    # 帮会ID对不上
+    INVALID_GUILD_UUID = 14
+    # 不能对联盟成员帮会宣战
+    CANNOT_WAR_ALLIANCE_MEMBER = 15
+    # 联盟不能对已加入联盟的帮会宣战
+    CANNOT_WAR_ALLIANCE_GUILD = 16
+    # 联盟帮会不能对联盟宣战
+    GUILD_CANNOT_WAR_ALLIANCE = 17
+    # 同联盟帮会不能互相宣战
+    CANNOT_WAR_SAME_ALLIANCE = 18
+    # 无效的操作类型
+    INVALID_OP_TYPE = 19
+    # 通过申请操作成功
+    APPROVE_LEAGURE_SUCCESS = 20
+    # 通过申请操作失败
+    APPROVE_LEAGURE_FAIL = 21
+    # 拒绝申请操作成功
+    REJECT_LEAGURE_SUCCESS = 22
+    # 拒绝申请操作失败
+    REJECT_LEAGURE_FAIL = 23
+    # 取消申请操作成功
+    CANCEL_LEAGURE_SUCCESS = 24
+    # 取消申请操作失败
+    CANCEL_LEAGURE_FAIL = 25
+    # 修改联盟信息失败
+    MODIFY_LEAGUE_INFO_FAIL = 26
+    # 联盟邀请失败
+    LEAGUE_INVITE_FAIL = 27
+    # 拒绝联盟邀请失败
+    REJECT_LEAGUE_INVITE_FAIL = 28
+    # 接受联盟邀请失败
+    ACCEPT_LEAGUE_INVITE_FAIL = 29
+    # 帮会敌对资金不足
+    DECLARE_WAR_GUILD_FUND_NOT_ENOUGH = 30
+    # 捐赠帮会资金失败
+    DONATE_LEAGUE_FUND_FAIL = 31
+    # 捐赠帮会资金不足
+    DONATE_LEAGUE_FUND_NOT_ENOUGH = 32
+    # 捐赠帮会玄铁不足
+    DONATE_LEAGUE_IRON_NOT_ENOUGH = 33
+    # 宣战失败
+    DECLARE_WAR_FAIL = 34
+    # 转移盟主同个帮会
+    TRANSFER_LEAGUE_IN_SAME_GUILD = 35
+
+class LeagueOpType(object):
+    # 自动
+    AUTO = 0
+    # 手动
+    MANUAL = 1
+    VALID_TYPES = (AUTO, MANUAL)
+
+class EnemyActionType(object):
+    # 联盟
+    ALLIANCE = 1
+    # 帮会
+    GUILD = 2
+    VALID_TYPES = (ALLIANCE, GUILD)
+
+class LeagueReturnFundType(object):
+    # 资金
+    FUND = 1
+    # 玄铁
+    IRON = 2
+
+class LeagueItemOpType(object):
+    # 敌对消耗
+    ENEMY_COST = 1
+    # 捐赠消耗
+    DONATE_COST = 2
+    # 援助消耗
+    AID_COST = 3
+
+class LeagueErrCode(object):
+    ErrCodeSuccess                   = 0
+    ErrCodeGameServerMissing         = 1
+    ErrCodeGameClientMissing         = 2
+    ErrCodeNoGuildConstCfg           = 3
+    ErrCodeNoMessageGuildLogCfg      = 4
+    ErrCodeNoMessageChatMessageCfg   = 5
+    ErrCodeGuildNotLeader            = 1001
+    ErrCodeAlreadyInAlliance         = 1002
+    ErrCodeNotInAlliance             = 1003
+    ErrCodeAllianceFull              = 1004
+    ErrCodeAllianceNotFound          = 1005
+    ErrCodeApplyLimitReached         = 1006
+    ErrCodeApplyListFull             = 1007
+    ErrCodeGuildInWar                = 1008
+    ErrCodeNotAllianceLeader         = 1009
+    ErrCodeCooldown                  = 1010
+    ErrCodeAidTooSoon                = 1011
+    ErrCodeInsufficientFund          = 1012
+    ErrCodeNameInvalid               = 1013
+    ErrCodeAlreadyApplied            = 1014
+    ErrCodeApplyNotFound             = 1015
+    ErrCodeInviteNotFound            = 1016
+    ErrCodeTargetAllianceMember      = 1017
+    ErrCodeWarAlreadyExists          = 1018
+    ErrCodeWarNotFound               = 1019
+    ErrCodeMemberNotFound            = 1020
+    ErrCodeCannotWarAllianceMember   = 1021
+    ErrCodeGuildJoiningWar           = 1022
+    ErrCodeDeclarationInvalid        = 1023
+    ErrCodeCannotWarAllianceGuild    = 1024 
+    ErrCodeGuildCannotWarAlliance    = 1025
+    ErrCodeNameAlreadyExists         = 1026
+    ErrCodeCannotWarSameAlliance     = 1027
+    ErrCodeGuildNotFound             = 1028
+    ErrCodeGuildSourceServerOffline  = 1029
+    ErrCodeInviteTargetServerOffline = 1030
+    ErrCodeAlreadyInvited            = 1031
+    ErrCodeYouAreLeader              = 1032
+    ErrCodeAidResourceFail           = 1033
+    ErrCodeDeclareWarSameId          = 1034
+    ErrCodeCannotWarSameGuild        = 1035
+    ErrCodeCannotWarTargetAllianceIsNotExisted = 1036
+    ErrCodeDifferentServerInDeclareWarIsForbidden = 1037
+
+class SpeedCheckData(object):
+    # check gap time
+    CHECK_GAP_TIME = 3600
+    # continious_drag_back_count
+    CONTINIOUS_DRAG_BACK_COUNT = 5
+
+class GamePlayModeType(object):
+    Dungeon = 4
+
+class CanDeductWealthRes(object):
+    TRUE = 0
+    FALSE = 1
+    FALSE_BAG_LOCKED = 2
+    FALSE_PET_BAG_LOCKED = 3
+    FALSE_NOT_ENOUGH_ITEM = 4
+    FALSE_ITEM_DAILY_LIMIT = 5
+    FALSE_POPUP_SECOND_PWD = 6
+
+class EventTipCrossServerType(object):
+    Default = 0
+    # 跨服和玩家触发源服
+    CrossAndSourceServer = 1
+    # 跨服和所有服
+    CrossAllServer = 2

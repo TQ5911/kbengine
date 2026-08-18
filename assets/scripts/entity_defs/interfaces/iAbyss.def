@@ -8,7 +8,7 @@
         </abyssTicket>
 
         <paidAbyssTicket>
-            <Type>          UINT8                       </Type>
+            <Type>          UINT32                       </Type>
             <Flags>         BASE_AND_CLIENT             </Flags>
             <Persistent>    True                        </Persistent>
             <Default>       0                           </Default>
@@ -94,8 +94,14 @@
             <Arg>           UINT8                       </Arg>
         </enterCrossServerAbyss>
 
+        <enterCrossServerAbyssBoss> <Exposed/>
+            <Arg>           UINT8                       </Arg>
+            <Arg>           UINT32                       </Arg>
+        </enterCrossServerAbyssBoss>
+
         <doEnterCrossServerAbyss>
             <Arg>           UINT8                       </Arg>
+            <Arg>           PY_DICT                      </Arg>
         </doEnterCrossServerAbyss>
 
         <syncAbyssDataContinue>
@@ -111,7 +117,14 @@
             <Arg>           UINT32                       </Arg>
             <Arg>           BOOL                         </Arg>
             <Arg>           UINT8                        </Arg>
+            <Arg>           PY_DICT                      </Arg>
         </onCrossServerCheckCanEnterAbyss>
+
+        <onCrossServerAbyssLeave>
+        </onCrossServerAbyssLeave>
+
+        <onAbyssUnlock>
+        </onAbyssUnlock>
     </BaseMethods>
 
     <CellMethods>
@@ -166,6 +179,7 @@
         <checkAndEnterCrossServerAbyss>
             <Arg>           UINT8                       </Arg>
             <Arg>           BOOL                        </Arg>
+            <Arg>           PY_DICT                        </Arg>
         </checkAndEnterCrossServerAbyss>
 
         <onCrossServerSyncAbyssData>

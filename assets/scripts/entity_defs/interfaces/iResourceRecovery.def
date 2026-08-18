@@ -16,15 +16,24 @@
             <Flags>         BASE                        </Flags>
             <Default>       {}                          </Default>
         </subType2FreeTicketInfo>
+
+        <tRecoveryLastUpdateTime>
+            <Type>          LONGTIME             </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                 </Default>
+            <Persistent>    true           </Persistent>
+        </tRecoveryLastUpdateTime>
     </Properties>
 
     <BaseMethods>
         <reqFreeTicketRecovery> <Exposed/>
             <Arg>   UINT16       </Arg>
             <Arg>   UINT32       </Arg>
+            <Arg>   UINT16       </Arg>
         </reqFreeTicketRecovery>
 
         <reqFreeTicketOneClickRecovery> <Exposed/>
+            <Arg>   UINT16       </Arg>
             <Arg>   UINT16       </Arg>
         </reqFreeTicketOneClickRecovery>
         
@@ -40,6 +49,7 @@
         <onFreeTicketRecoveryInfo>
             <Arg>   UINT16       </Arg>
             <Arg>   ARRAY   <of>    FREE_TICKET_RECOVERY_CLIENT_VAL     </of>   </Arg>
+            <Arg>   UINT16       </Arg>
         </onFreeTicketRecoveryInfo>
 
         <onFreeTicketOneClickRecoveryInfo>

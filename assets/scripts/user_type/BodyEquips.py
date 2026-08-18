@@ -37,7 +37,7 @@ class BodyEquips(userType.UserSingleType):
 
     @classmethod
     def _checkIgnores_(cls):
-        return 'lockedTime', 'lockedDesp'
+        return 'lockedTime', 'lockedDesp', 'waitExpireEquipList'
     
     def onBodyEquipsDailyUpdate(self, owner):
         _updateSlotIds = []

@@ -172,6 +172,7 @@
         <onWaitForPrePublishBounty>
             <Arg>           MAILBOX                     </Arg>
             <Arg>           BOUNTY_ITEM_SYNC_VAL        </Arg>
+            <Arg>           BOOL                        </Arg>
         </onWaitForPrePublishBounty>
 
         <onHunterPrePublishBountyRes>

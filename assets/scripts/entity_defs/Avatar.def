@@ -50,6 +50,7 @@
         <Interface>         iLeaderBoard                </Interface>
         <Interface>         iAvatarCoinAuction          </Interface>
         <Interface>         iAvatarLease                </Interface>
+        <Interface>         iBossMutexCell              </Interface>
         <Interface>         iAchievement                </Interface>
         <Interface>         iEnemy                      </Interface>
         <Interface>         iWonderLand                 </Interface>
@@ -79,9 +80,16 @@
         <Interface>         iSafeBox                    </Interface>
         <Interface>         iMallStore                  </Interface>
         <Interface>         iReplicaAvatar              </Interface>
+        <Interface>         iLeague                     </Interface>
     </Interfaces>
 
     <Properties>
+        <clientFinishInit>
+            <Type>          BOOL                 </Type>
+            <Flags>         BASE                 </Flags>
+            <Default>       false                </Default>
+        </clientFinishInit>
+
         <name>
             <Type>     UNICODE                      </Type>
             <Flags>    ALL_CLIENTS                  </Flags>
@@ -450,7 +458,14 @@
             <Type>          UINT16                  </Type>
             <Flags>    ALL_CLIENTS                  </Flags>
             <WitnessName>   true                    </WitnessName>
+            <Persistent>    true                </Persistent>
         </fromServerId>
+
+        <baseFromServerId>
+            <Type>          UINT16                  </Type>
+            <Flags>         BASE                  </Flags>
+            <Persistent>    true                </Persistent>
+        </baseFromServerId>
 
         <enterViewList>
             <Type>          PYTHON                  </Type>
@@ -648,6 +663,24 @@
             <Default>       0                   </Default>
             <Persistent>    true                </Persistent>
         </totalOnlineTime>
+
+        <afkTime>
+            <Type>          LONGTIME             </Type>
+            <Flags>         BASE                 </Flags>
+            <Default>       0                    </Default>
+        </afkTime>
+
+        <totalAFKTime>
+            <Type>          LONGTIME             </Type>
+            <Flags>         BASE                 </Flags>
+            <Default>       0                    </Default>
+        </totalAFKTime>
+
+        <creationOrder>
+            <Type>          UINT16              </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+        </creationOrder>
     </Properties>
 
     <BaseMethods>
@@ -860,12 +893,21 @@
         <onGetFullPlayerInfo>
             <Arg>       PY_DICT         </Arg>
             <Arg>       ENTITYCALL      </Arg>
+            <Arg>       BOOL            </Arg>
         </onGetFullPlayerInfo>
 
         <onIllegalEvent> <Exposed/>
             <Arg>        UINT8      </Arg>
             <Arg>   STRING  </Arg>
         </onIllegalEvent>
+
+        <updateAFKState> <Exposed/>
+            <Arg>        UINT8      </Arg>
+        </updateAFKState>
+
+        <checkTextSecurityReq> <Exposed/>
+            <Arg>        CHECK_TEXT_SECURITY_REQ      </Arg>
+        </checkTextSecurityReq>
     </BaseMethods>
 
     <CellMethods>
@@ -998,6 +1040,7 @@
         <onGetMemberJobAndGuildCache>
             <Arg>   PY_TUPLE       </Arg>
             <Arg>   ENTITYCALL     </Arg>
+            <Arg>   BOOL           </Arg>
         </onGetMemberJobAndGuildCache>
 
         <syncVisible>
@@ -1169,12 +1212,19 @@
         </onRefreshLastDungeonFinishedTime>
 
         <onAvatarOfflineClient>
-            <Arg>       UINT8       </Arg>
+            <Arg>       UINT16       </Arg>
         </onAvatarOfflineClient>
         
         <onUpdateMemberVoiceState>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           UINT8           </Arg>
         </onUpdateMemberVoiceState>
+
+        <checkTextSecurityResp>
+            <Arg>           CHECK_TEXT_SECURITY_RESP     </Arg>
+        </checkTextSecurityResp>
+
+        <onBackLogin>
+        </onBackLogin>
     </ClientMethods>
 </root>

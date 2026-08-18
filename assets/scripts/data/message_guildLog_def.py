@@ -27,8 +27,8 @@ class datas(object, metaclass=_tools.VarNameDefinedMeta):
     guildLog_guildLeaderChanged = 38000009
     guildLog_guildNameChanged = 38000010
     guildLog_guildMoneyUsed = 38000011
-    guild_unionDesc = 38000012
-    guild_relieveUnionDes = 38000013
+    guild_enmityDesc3 = 38000012
+    guild_enmityDesc4 = 38000013
     guild_enmityDesc1 = 38000014
     guild_enmityDesc2 = 38000015
     guild_siegeOrderExpire = 38000016
@@ -43,4 +43,6 @@ class datas(object, metaclass=_tools.VarNameDefinedMeta):
     guild_unionSupport1 = 38000025
     guild_unionSupport2 = 38000026
     guild_unionSupport3 = 38000027
+    guild_unionDonate = 38000028
+    guild_unionDonate2 = 38000029
 

@@ -26,6 +26,7 @@ import gamedecorator
 import gameconfig
 import gameengine
 import login_set
+import json
 
 class IMonthCard(object):
     def __init__(self):
@@ -91,6 +92,7 @@ class IMonthCard(object):
             self.monthCardExpireTime = max(self.monthCardExpireTime, utils.curTS()) + seconds
         else:
             self.bigMonthCardExpireTime = max(self.bigMonthCardExpireTime, utils.curTS()) + seconds
+        monthCardExpireTime = self.monthCardExpireTime if monthCardId == gameconst.PremiumType.SMALL_MONTH_CARD else self.bigMonthCardExpireTime
         LOG_INFO("after add month card", monthCardId, monthCardExpireTime, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(monthCardExpireTime)))
 
         if not self.monthCardTimer:
@@ -133,7 +135,12 @@ class IMonthCard(object):
         return opUUID
     
 
+    @gamedecorator.limitcall(5, keyFun=lambda x: '{1}'.format(*x))
     def tryGetMonthCardDailyReward(self, exposed, cardType):
+        if cardType not in [gameconst.PremiumType.SMALL_MONTH_CARD, gameconst.PremiumType.BIG_MONTH_CARD]:
+            LOG_ERR("tryGetMonthCardDailyReward", "invalid cardType", cardType)
+            return
+        
         self.checkMonthCardAward(cardType)
 
     #检查并发放月卡每日奖励
@@ -523,6 +530,54 @@ class IMonthCard(object):
             LOG_ERR("_onUpdateMonthCardExpireTime", "ok", ok)
             return
 
+    #绿通
+    def updateRedisSVIPFlag(self):
+        if gameconfig.isCrossServer():
+            return
+        redisUtils.RedisUtils.getTagTypeFlag(self.accountName, self._onSVIPGetTagType)
+        
+    def _onSVIPGetTagType(self, cid, err, res):
+        LOG_INFO("_onSVIPGetTagType", "cid", cid, "err", err, "res", res)
+        if err:
+            LOG_ERR("_onSVIPGetTagType", "err", err)
+            return
+
+        if res:
+            resData = set(res.decode().split(','))
+            if str(gameconst.UserTagType.GREEN_CODE) in resData:
+                return
+        
+        redisUtils.RedisUtils.getLoginCnt(self.accountName, self._onGetLoginCnt)
+
+    def _onGetLoginCnt(self, cid, err, res):
+        LOG_INFO("_onGetLoginCnt", "cid", cid, "err", err, "res", res)
+        if err:
+            LOG_ERR("_onGetLoginCnt", "err", err)
+            return
+        loginCnt = int(res.decode('utf-8')) if res else 0
+        if loginCnt <= login_set.datas['queuingWhiteList']['value']:
+            redisUtils.RedisUtils.cmdSet(gameconst.PrivilegeRedisKey.LOGIN_CNT, loginCnt + 1, self._onUpdateLoginCnt)
+
+    def _onUpdateLoginCnt(self, ok, data):
+        LOG_INFO("_onUpdateLoginCnt", "ok", ok, "data", data)
+        if not ok:
+            LOG_ERR("_onUpdateLoginCnt", "ok", ok)
+            return
+
+        url = gameconfig.greenPassUrl()
+        message = json.dumps({"userGameId": self.accountEntity.accountName})
+        LOG_INFO("start set GreenCode", url, message, self.gbID)
+        KBEngine.urlopenv2(url, self._onSetGreenCode, method='POST',
+                postData=message.encode('utf-8'),
+                headers={"Content-Type": "application/json", "satoken": self.accountEntity.webToken},
+                timeoutSec=3)
+        
+    def _onSetGreenCode(self, httpCode, data, headers, success, *args):
+        LOG_INFO("onSetGreenCode", httpCode, data, headers, success)
+        if httpCode != 200:
+            LOG_ERR("set GreenCode failed", httpCode, data)
+            return
+
     @gamedecorator.checkGameconfigEnable('monthCard')
     def clientBuyPremiumGoods(self, exposed, premiumId):
         LOG_INFO("clientBuyPremiumGoods", premiumId)
@@ -551,8 +606,9 @@ class IMonthCard(object):
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(costItem[0], costItem[1])
 
-        if not self.canDeductWealth(deductWealthVal):
-            LOG_WARN('buyMonthCard: items not enough:', deductWealthVal)
+        res = self.canDeductWealth(deductWealthVal)
+        if not res:
+            LOG_WARN('buyMonthCard: items not enough:', deductWealthVal, res())
             return
 
         detail = gameclass.AwardDetailCls(buyCreditId=premiumId)
@@ -573,6 +629,9 @@ class IMonthCard(object):
             self.accountEntity.clientDistinctId, 
             self.gbID,
             premiumId,
-            opUUID
+            opUUID,
+            0,
+            0,
+            0
         )
         return True

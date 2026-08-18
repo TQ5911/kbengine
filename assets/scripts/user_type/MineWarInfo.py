@@ -257,19 +257,16 @@ class MineWarMapVal():
     
     def onMineWarEnd(self):
         #
-        self.flagDestroyedNum = 0
-        self.flagDestroyedTime = 0
-        
         self.calcOwnerTime()    # 先结算，再置0
 
         # 暂存帮派排名清除
         self.ownerRankList = []
         #
         if self.tempGuildGbId > 0:
-            # 重置归属帮派收益
-            self.currGuildInfo.revenue = int((MBC.datas['mineBattle_incomeCoefficient']['value'] - 1.0) * 100)
-
             if self.guildGbId != self.tempGuildGbId:
+                # 新公会占领：清旗帜摧毁次数（原公会连任则保留，待每周一5点统一重置）
+                self.flagDestroyedNum = 0
+                self.flagDestroyedTime = 0
                 self.guildGbId = self.tempGuildGbId
                 # 归属帮派不需要该记录了 == todo=
                 # if self.guildGbId in self.guildOwnerDict:
@@ -284,6 +281,20 @@ class MineWarMapVal():
                 return True
         
         return False
+
+    def onWeeklyReset(self):
+        """
+        每周重置（周一5点）：旗帜摧毁次数清零，归属公会收益惩罚一并恢复
+        :return: 是否有实际变化（用于决定是否广播同步归属公会成员）
+        """
+        if self.flagDestroyedNum == 0:
+            return False
+
+        self.flagDestroyedNum = 0
+        if self.guildGbId > 0:
+            # 恢复归属帮派收益（去掉旗帜全毁的惩罚）
+            self.currGuildInfo.revenue = int((MBC.datas['mineBattle_incomeCoefficient']['value'] - 1.0) * 100)
+        return True
     
     def onFlagAllDestroyed(self):
         destroyCfg = MBC.datas['mineBattle_flagDamageEffect']['value']

@@ -46,5 +46,9 @@ datas = _tools.RODict({
     "collectMismatch": _tools.RODict({
         "ID": "collectMismatch",
         "value": 200,
+    }),
+    "isTopAttr": _tools.RODict({
+        "ID": "isTopAttr",
+        "value": ('expGrow', 'copper'),
     })
 })

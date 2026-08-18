@@ -346,13 +346,20 @@ class Task(userType.UserSingleType):
             killMonstersTotalCount = dataUtils.getTaskFieldVal(_taskData, 'FinCondKillMonsterNum')
 
             monsterIDs = set()
+            _tgts = []
 
             for oneData in tgtKillMonsters:
                 monsterId = oneData['MonsterId']
                 if monsterId > 0:
+                    if monsterId in monsterIDs:
+                        LOG_ERR('策划一个任务配置了两个相同的monsterId', monsterId, oneData)
+                        continue
+
                     monsterIDs.add(monsterId)
 
-            for oneData in tgtKillMonsters:
+                _tgts.append(oneData)
+
+            for oneData in _tgts:
                 monsterId = oneData['MonsterId']
                 dstCnt = oneData['Count']
                 mapId = oneData['MapId']
@@ -388,7 +395,7 @@ class Task(userType.UserSingleType):
                 if srcIdStr:
                     srcIdList.extend(srcIdStr.split('|'))
                 srcRatio = _oneData.get("Ratio", 0)
-                itemCurNum = owner.getItemNum(itemId)
+                itemCurNum = owner.getItemNum(itemId, ignoreCheck=True)
                 tgt = TaskTargetInfo.TaskTgtFactory.createTarget(gameconst.TaskTargetEnum.TASK_TARGET_ITEMS,
                                                                  itemId, dstCnt, srcIdList, srcRatio,
                                                                  _oneData.get("MapId", 0), itemCurNum)
@@ -536,7 +543,7 @@ class Task(userType.UserSingleType):
         update = False
         _tgtList = self.getTgtsByType(gameconst.TaskTargetEnum.TASK_TARGET_ITEMS)
         for _tgt in _tgtList:
-            itemCnt = owner.getItemNum(_tgt.tgtId)
+            itemCnt = owner.getItemNum(_tgt.tgtId, ignoreCheck=True)
             if _tgt.stepCnt == itemCnt:
                 continue
             update = True

@@ -6,6 +6,7 @@ import math
 import gameengine
 import gameconst
 import gametimer
+import gameglobal
 import utils
 
 
@@ -14,6 +15,7 @@ import formula_generalFormula as FML_G
 import skillRelevant_skillScore as SKILL_PP
 import character_charData as CHAR_CD
 import actionContext
+import rank_Rank as R_RD
 
 
 
@@ -64,6 +66,25 @@ class IScore(object):
 
         self.guildBox and self.guildBox.onGuildMemberPropUpdate(self.gbID, 'score', totalScore)
         self.propChangedTimes[gameconst.LeaderBoardType.AVATAR_SCORE] = utils.curTS()
+        self._schedulePushScoreToLeaderBoard()
+
+    def _schedulePushScoreToLeaderBoard(self):
+        """战力变动即推送战力榜，0.1s 防抖合并，任意时刻至多一个待执行推送"""
+        if getattr(self, '_scoreLBPushTimerId', 0):
+            return
+        self._scoreLBPushTimerId = self.addTimerCB(
+            0.1, '_pushScoreToLeaderBoard', (),
+            gametimer.TIMER_TAG_PUSH_SCORE_TO_LEADERBOARD,
+            varTimerID='_scoreLBPushTimerId'
+        )
+
+    def _pushScoreToLeaderBoard(self):
+        LOG_DBG('_pushScoreToLeaderBoard')
+        if not gameglobal.roleCache.get(self.id, None):
+            return
+        _level = self.getRoleCacheAttr('level')
+        if _level >= R_RD.datas[gameconst.LeaderBoardType.AVATAR_SCORE]['minLevel']:
+            gameengine.getLeaderStub(gameconst.LeaderBoardType.AVATAR_SCORE).onGetLeaderBoardCache(self.toLeaderBoardAvatarScore())
 
     def onAllScoreInitFinished(self):
         self.commonFlagBase = utils.bset(self.commonFlagBase, gameconst.BASE_COMMON_FLAG_INIT_SCORE)

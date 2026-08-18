@@ -310,6 +310,9 @@ class hunterRankItem(userType.UserSingleType):
         self.failedCnt[subType] = 0
         self.isInList[subType] = False
 
+    def needInitAppend(self, subType):
+        return self.successedCnt[subType] != 0 or self.failedCnt[subType] != 0
+
 class hunterRankInfo(userType.UserDictType):
     def __init__(self):
         LOG_DBG('hunterRankInfo::__init__')
@@ -378,6 +381,18 @@ class rankData(object):
             self.beUpdate[subType] = True
             self.versionId[subType] += 1
             if rankItem.isInList[subType]:
+                continue
+
+            rankItem.isInList[subType] = True
+            self.rankList[subType].append(rankItem)
+
+    def initAppend(self, rankItem):
+        for subType in gameconst.BountyRankSubType.ALL_VALID_RANK_TYPE:
+            self.beUpdate[subType] = True
+            self.versionId[subType] += 1
+            if rankItem.isInList[subType]:
+                continue
+            if not rankItem.needInitAppend(subType):
                 continue
 
             rankItem.isInList[subType] = True

@@ -174,8 +174,9 @@ message GetTakeRewardRequest {
 message GetTakeRewardResponse {
     uint64 uniqueId = 1;
     DropResult result = 2;
-    uint32 price = 3;
-    uint64 uuid = 4;
+    uint32 bindMoney = 3;
+    uint32 money = 4;
+    uint64 uuid = 5;
 }
 
 message GetDropInfoRequest {
@@ -218,8 +219,9 @@ message ReturnInfo {
 
 message RewardInfo {
     uint64 uniqueId = 1;
-    uint64 price = 2;
-    bytes equipInfo = 3;
+    uint64 bindMoney = 2;
+    uint64 money = 3;
+    bytes equipInfo = 4;
 }
 
 message GetDropInfoResponse {
@@ -246,18 +248,6 @@ message UpdateCollEndTimeRequest {
     int64 collEndTime = 2;
 }
 
-message CheckDropExpireRequest {
-    uint64 uniqueId = 1;
-    uint64 uuid = 2;
-    uint64 gbId = 3;
-}
-
-message CheckDropExpireResponse {
-    uint64 uuid = 1;
-    uint64 uniqueId = 2;
-    DropResult result = 3;
-}
-
 message SetTakeEquipRedeemPriceRequest {
     uint64 uuid = 1;
     uint64 gbId = 2;
@@ -271,18 +261,6 @@ message SetTakeEquipRedeemPriceResponse {
     uint64 uniqueId = 3;
     uint32 price = 4;
     DropResult result = 5;
-}
-
-message CheckRedeemExpireRequest {
-    uint64 uniqueId = 1;
-    uint64 uuid = 2;
-    uint64 gbId = 3;
-}
-
-message CheckRedeemExpireResponse {
-    uint64 uuid = 1;
-    uint64 uniqueId = 2;
-    DropResult result = 3;
 }
 
 // 托管
@@ -318,7 +296,8 @@ message SetDropEquipPayPriceRequest {
     uint64 gbId = 2;
     uint64 uniqueId = 3;
     uint32 price = 4;
-    double rewardRatio = 5;
+    uint32 bindMoney = 5;
+    uint32 money = 6;
 }
 
 message SetDropEquipPayPriceResponse {
@@ -348,6 +327,11 @@ message NotifyRemoveEquip {
     repeated uint64 uniqueIds = 2;
 }
 
+message NotifyEquipExpired {
+    uint64 gbId = 1;
+    bytes equip = 2;
+}
+
 service DropServer {
     rpc registerGameServer(RegisterGameServerRequest) returns(Void);
     rpc drop(DropRequest) returns (Void);
@@ -359,9 +343,7 @@ service DropServer {
     rpc getDropInfo(GetDropInfoRequest) returns(Void);
     rpc sendRepairDropMail(SendRepairDropMailRequest) returns(Void);
     rpc updateCollEndTime(UpdateCollEndTimeRequest) returns(Void);
-    rpc checkDropExpire(CheckDropExpireRequest) returns(Void);
     rpc setTakeEquipRedeemPrice(SetTakeEquipRedeemPriceRequest) returns(Void);
-    rpc checkRedeemExpire(CheckRedeemExpireRequest) returns(Void);
     rpc getBackEquip(GetBackEquipRequest) returns(Void);
     rpc custody(CustodyRequest) returns(Void);
     rpc checkDropReturnExpire(CheckDropReturnExpireRequest) returns(Void);
@@ -379,13 +361,12 @@ service GameServer {
     rpc onGetTakeReward(GetTakeRewardResponse) returns(Void);
     rpc onGetDropInfo(GetDropInfoResponse) returns(Void);
     rpc onSendRepairDropMail(SendRepairDropMailResponse) returns(Void);
-    rpc onCheckDropExpire(CheckDropExpireResponse) returns(Void);
     rpc onSetTakeEquipRedeemPrice(SetTakeEquipRedeemPriceResponse) returns(Void);
-    rpc onCheckRedeemExpire(CheckRedeemExpireResponse) returns(Void);
     rpc onCustody(CustodyResponse) returns(Void);
     rpc onCheckDropReturnExpire(CheckDropReturnExpireResponse) returns(Void);
     rpc onSetDropEquipPayPrice(SetDropEquipPayPriceResponse) returns(Void);
     rpc onNotifyCleanCollection(NotifyCleanCollections) returns(Void);
     rpc onNotifyCustodyEquip(NotifyCustodyEquip) returns(Void);
     rpc onNotifyRemoveEquip(NotifyRemoveEquip) returns(Void);
+    rpc onNotifyEquipExpired(NotifyEquipExpired) returns(Void);
 }

@@ -72,23 +72,23 @@ datas = _tools.RODict({
     }),
     38000012: _tools.RODict({
         "ID": 38000012,
-        "name": "guild_unionDesc",
-        "log": "我帮与帮会<color=#98cf48>{0}</color>结为同盟",
+        "name": "guild_enmityDesc3",
+        "log": "我帮向联盟<color=#98cf48>{0}</color>宣战",
     }),
     38000013: _tools.RODict({
         "ID": 38000013,
-        "name": "guild_relieveUnionDes",
-        "log": "我帮与帮会<color=#98cf48>{0}</color>解除同盟",
+        "name": "guild_enmityDesc4",
+        "log": "联盟<color=#98cf48>{0}</color>向我帮宣战",
     }),
     38000014: _tools.RODict({
         "ID": 38000014,
         "name": "guild_enmityDesc1",
-        "log": "我帮向帮会<color=#d35a66>{0}</color>宣战",
+        "log": "我帮向帮会<color=#98cf48>{0}</color>宣战",
     }),
     38000015: _tools.RODict({
         "ID": 38000015,
         "name": "guild_enmityDesc2",
-        "log": "帮会<color=#d35a66>{0}</color>向我帮宣战",
+        "log": "帮会<color=#98cf48>{0}</color>向我帮宣战",
     }),
     38000016: _tools.RODict({
         "ID": 38000016,
@@ -103,53 +103,63 @@ datas = _tools.RODict({
     38000018: _tools.RODict({
         "ID": 38000018,
         "name": "guild_unionCreate",
-        "log": "{0}创建了帮会联盟{1}，开创了联盟的历史",
+        "log": "<color=#beab67>{0}</color>创建了帮会联盟<color=#98cf48>{1}</color>，开创了联盟的历史！",
     }),
     38000019: _tools.RODict({
         "ID": 38000019,
         "name": "guild_unionJoin",
-        "log": "帮会{0}加入了{1}，大家热烈欢迎！",
+        "log": "帮会<color=#98cf48>{0}</color>加入了<color=#98cf48>{1}</color>，大家热烈欢迎！",
     }),
     38000020: _tools.RODict({
         "ID": 38000020,
         "name": "guild_unionExit",
-        "log": "帮会{0}退出了{1}，江湖路远有缘再见！",
+        "log": "帮会<color=#98cf48>{0}</color>退出了<color=#98cf48>{1}</color>，江湖路远有缘再见！",
     }),
     38000021: _tools.RODict({
         "ID": 38000021,
         "name": "guild_enmityDeclare",
-        "log": "{0}对帮会{1}进行宣战，热血争锋，舍我其谁！",
+        "log": "我方联盟<color=#98cf48>{0}</color>对帮会<color=#98cf48>{1}</color>进行宣战，热血争锋，舍我其谁！",
     }),
     38000022: _tools.RODict({
         "ID": 38000022,
         "name": "guild_unionDeclare",
-        "log": "{0}对联盟{1}进行宣战，热血争锋，舍我其谁！",
+        "log": "我方联盟<color=#98cf48>{0}</color>对联盟<color=#98cf48>{1}</color>进行宣战，热血争锋，舍我其谁！",
     }),
     38000023: _tools.RODict({
         "ID": 38000023,
         "name": "guild_enmityDeclare2",
-        "log": "帮会{0}对我方联盟{1}进行宣战！",
+        "log": "帮会<color=#98cf48>{0}</color>对我方联盟<color=#98cf48>{1}</color>进行宣战！",
     }),
     38000024: _tools.RODict({
         "ID": 38000024,
         "name": "guild_unionDeclare2",
-        "log": "联盟{0}对我方联盟{1}进行宣战！",
+        "log": "联盟<color=#98cf48>{0}</color>对我方联盟<color=#98cf48>{1}</color>进行宣战！",
     }),
     38000025: _tools.RODict({
         "ID": 38000025,
         "name": "guild_unionSupport1",
-        "log": "我帮向帮会{0}援助{1}",
+        "log": "我帮向帮会<color=#98cf48>{0}</color>援助<#itemId={1}>*<color=#038304>{2}</color>",
     }),
     38000026: _tools.RODict({
         "ID": 38000026,
         "name": "guild_unionSupport2",
-        "log": "帮会{0}向我帮援助{1}",
+        "log": "帮会<color=#98cf48>{0}</color>向我帮援助<#itemId={1}>*<color=#038304>{2}</color>",
     }),
     38000027: _tools.RODict({
         "ID": 38000027,
         "name": "guild_unionSupport3",
-        "log": "帮会{0}向帮会{1}援助{2}",
+        "log": "帮会<color=#98cf48>{0}</color>向帮会<color=#98cf48>{1}</color>援助<#itemId={2}>*<color=#038304>{3}</color>",
+    }),
+    38000028: _tools.RODict({
+        "ID": 38000028,
+        "name": "guild_unionDonate",
+        "log": "我帮向联盟<color=#98cf48>{0}</color>捐赠<#itemId={1}>*<color=#038304>{2}</color>",
+    }),
+    38000029: _tools.RODict({
+        "ID": 38000029,
+        "name": "guild_unionDonate2",
+        "log": "帮会<color=#98cf48>{0}</color>向联盟捐赠<#itemId={1}>*<color=#038304>{2}</color>",
     })
 })
 minKey = 38000001
-maxKey = 38000027
+maxKey = 38000029

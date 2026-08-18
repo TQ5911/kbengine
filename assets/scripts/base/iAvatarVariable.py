@@ -158,7 +158,7 @@ class ImpAvatarVariable(object):
             self.onAvatarVarValueChanged(
                 [V_VD.AvatarDataVarPropDic['amountFistPetEgg']],
                 [self.bagData.getItemCount(self.gbID, _checkItemId,
-                gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED)])
+                gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED, ignoreCheck=True)])
 
     def updateFengLingZhouSpHelpCountAvatarVar(self, fengLingZhouSpHelpCount, src, opUUID=None, desc=None):
         LOG_INFO("updateFengLingZhouSpHelpCountAvatarVar::", fengLingZhouSpHelpCount)

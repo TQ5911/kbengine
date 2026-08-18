@@ -471,6 +471,10 @@ datas = _tools.RODict({
         "key": "guildRecruitChatMsg",
         "value": 58000008,
     }),
+    "guildUnionRecruitChatMsg": _tools.RODict({
+        "key": "guildUnionRecruitChatMsg",
+        "value": 58000015,
+    }),
     "guildRecruitChatSent": _tools.RODict({
         "key": "guildRecruitChatSent",
         "value": 54001773,
@@ -631,6 +635,18 @@ datas = _tools.RODict({
         "key": "guild_declareWar",
         "value": 58000032,
     }),
+    "guild_declareWar2": _tools.RODict({
+        "key": "guild_declareWar2",
+        "value": 58000036,
+    }),
+    "guild_declareWar3": _tools.RODict({
+        "key": "guild_declareWar3",
+        "value": 58000037,
+    }),
+    "guild_declareWar4": _tools.RODict({
+        "key": "guild_declareWar4",
+        "value": 58000038,
+    }),
     "guild_guildLvNotEnough_msg": _tools.RODict({
         "key": "guild_guildLvNotEnough_msg",
         "value": 54990063,
@@ -699,10 +715,6 @@ datas = _tools.RODict({
         "key": "guild_dividendConversionGoldMail",
         "value": 37002018,
     }),
-    "guild_commissionGoldLimit": _tools.RODict({
-        "key": "guild_commissionGoldLimit",
-        "value": 999999999,
-    }),
     "guild_unionApplicationTimeLimit": _tools.RODict({
         "key": "guild_unionApplicationTimeLimit",
         "value": 3,
@@ -761,11 +773,11 @@ datas = _tools.RODict({
     }),
     "guild_enmityCost": _tools.RODict({
         "key": "guild_enmityCost",
-        "value": (30000007, 50000),
+        "value": 50000,
     }),
     "guild_enmityUnionCost": _tools.RODict({
         "key": "guild_enmityUnionCost",
-        "value": (30000022, 50000),
+        "value": 50000,
     }),
     "guild_relieveUnion": _tools.RODict({
         "key": "guild_relieveUnion",
@@ -879,6 +891,62 @@ datas = _tools.RODict({
         "key": "guild_unionSupportMsg",
         "value": 54003177,
     }),
+    "guild_unionSupportLimit": _tools.RODict({
+        "key": "guild_unionSupportLimit",
+        "value": 54003178,
+    }),
+    "guild_unionSupportLimit2": _tools.RODict({
+        "key": "guild_unionSupportLimit2",
+        "value": 54003179,
+    }),
+    "guild_presidentLeave2": _tools.RODict({
+        "key": "guild_presidentLeave2",
+        "value": 54003180,
+    }),
+    "guild_unionJoinLimit1": _tools.RODict({
+        "key": "guild_unionJoinLimit1",
+        "value": 54003181,
+    }),
+    "guild_unionJoinLimit2": _tools.RODict({
+        "key": "guild_unionJoinLimit2",
+        "value": 54003182,
+    }),
+    "guild_unionDeclareLimit": _tools.RODict({
+        "key": "guild_unionDeclareLimit",
+        "value": 54003183,
+    }),
+    "guild_unionDonateFund": _tools.RODict({
+        "key": "guild_unionDonateFund",
+        "value": 54003184,
+    }),
+    "guild_unionNameRepeat": _tools.RODict({
+        "key": "guild_unionNameRepeat",
+        "value": 54003185,
+    }),
+    "guild_unionJoinLimit3": _tools.RODict({
+        "key": "guild_unionJoinLimit3",
+        "value": 54003186,
+    }),
+    "guild_unionExitLimit2": _tools.RODict({
+        "key": "guild_unionExitLimit2",
+        "value": 54003187,
+    }),
+    "guild_unionDeclareLimit2": _tools.RODict({
+        "key": "guild_unionDeclareLimit2",
+        "value": 54003188,
+    }),
+    "guild_unionDismissed": _tools.RODict({
+        "key": "guild_unionDismissed",
+        "value": 54003189,
+    }),
+    "guild_unionDeclareLimit3": _tools.RODict({
+        "key": "guild_unionDeclareLimit3",
+        "value": 54003190,
+    }),
+    "guild_crossServerDeclareLimit": _tools.RODict({
+        "key": "guild_crossServerDeclareLimit",
+        "value": 54003191,
+    }),
     "guild_commissionHelpinfoID": _tools.RODict({
         "key": "guild_commissionHelpinfoID",
         "value": 74,
@@ -898,5 +966,9 @@ datas = _tools.RODict({
     "guild_unionCreedMaxLength": _tools.RODict({
         "key": "guild_unionCreedMaxLength",
         "value": 45,
+    }),
+    "guild_commissionGoldLimit": _tools.RODict({
+        "key": "guild_commissionGoldLimit",
+        "value": 9999999,
     })
 })

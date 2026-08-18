@@ -40,6 +40,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         iShowMapEntityType.IShowMapEntityType.__init__(self)
         self.beNotifiedSpaceEvent(0, gameconst.AI_EVENT_BEFORE_LOADING_ENTITIES, ())
         self.addEntity(self.id, ('_spaceMgr_',))
+        self.createSpaceMgrTime = utils.curTS()
 
         self._startNotifyTick()
 

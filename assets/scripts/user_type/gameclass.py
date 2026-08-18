@@ -76,3 +76,17 @@ class LockMinHpInfo(userType.UserSingleType):
             return True
         return self.effectTimes < self.totalTimes
 
+
+class CanDeductResultBool(userType.UserSingleType):
+    def __init__(self, intVal, extra=-1):
+        self.extra = extra
+        self.intVal = intVal
+
+    def __str__(self):
+        return '%s, %s' % (self.intVal, self.extra)
+
+    def __bool__(self):
+        return self.intVal == gameconst.CanDeductWealthRes.TRUE
+
+    def __call__(self):
+        return self.intVal

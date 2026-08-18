@@ -22,29 +22,6 @@ message GuildInfo {
     uint32 guildLevel = 6;
     uint32 guildIcon = 7;
     uint32 memberCnt = 8;
-    uint32 maxGuildUnionNum = 9;
-}
-
-message GetEnemyGuildInfosRequest {
-    uint64 guildUUID = 1;
-    uint64 uuid = 2;
-}
-
-message EnemyGuildInfo {
-    uint64 guildUUID = 1;
-    string guildName = 2;
-    uint32 serverId = 3;
-    uint32 flag = 4;
-    uint32 guildScore = 5;
-    uint32 guildLevel = 6;
-    uint32 endTime = 7;
-    uint32 memberCnt = 8;
-    uint32 guildIcon = 9;
-    uint32 maxGuildUnionNum = 10;
-}
-message GetEnemyGuildInfosResult {
-    repeated EnemyGuildInfo enemyGuildInfos = 1;
-    uint64 uuid = 2;
 }
 
 message AddGuildInfoRequest {
@@ -75,95 +52,6 @@ message RemoveGuildInfoRequest {
     uint64 guildUUID = 2;
 }
 
-message AddGuildRelationRequest {
-    uint64 guildUUID1 = 1;
-    uint64 guildUUID2 = 2;
-    int32 relationType = 3;
-    int64 endTime = 4;
-    uint64 uuid = 5;
-}
-
-message AddGuildRelationResult {
-    uint64 uuid = 1;
-    bool success = 2;
-    GuildInfo guildInfo = 3;
-    uint32 errCode = 4;
-}
-
-message GuildRelation {
-    uint64 guildUUID1 = 1;
-    uint64 guildUUID2 = 2;
-    int32 relationType = 3;
-}
-
-message BroadcastGuildRelationSingle {
-    GuildRelation guildRelation = 1;
-    uint32 version = 2;
-    int64 endTime = 3;
-}
-
-message GuildRelationAll {
-    repeated GuildRelation guildRelations = 1;
-    uint32 version = 2;
-}
-
-message RemoveGuildRelationRequest {
-    uint64 guildUUID1 = 1;
-    uint64 guildUUID2 = 2;
-    int32 relationType = 3;
-    uint64 uuid = 4;
-}
-
-message RemoveGuildRelationResult {
-    bool success = 1;
-    uint64 uuid = 2;
-    GuildInfo guildInfo = 3;
-}
-
-message BroadcastRemoveGuildRelation {
-    uint64 guildUUID1 = 1;
-    uint64 guildUUID2 = 2;
-    uint32 version = 3;
-}
-
-message ApplyGuildUnionRequest {
-    uint64 senderGuildUUID = 1;
-    uint64 receiverGuildUUID = 2;
-    uint64 uuid = 3;
-}
-
-message ApplyGuildUnionResult {
-    uint64 uuid = 1;
-    GuildInfo receiverGuildInfo = 2;
-}
-
-message OnApplyGuildUnionRequest {
-    uint64 senderGuildUUID = 1;
-    uint64 receiverGuildUUID = 2;
-    GuildInfo senderGuildInfo = 3;
-}
-
-message OnNotifyGuildRelation {
-    GuildInfo guildInfo = 1;
-    int32 relationType = 2;
-    uint64 receiverGuildUUID = 3;
-}
-
-message OnNotifyGuildCancelUnion {
-    GuildInfo guildInfo = 1;
-    uint64 receiverGuildUUID = 2;
-}
-
-message RemoveReceiverGuildApplyUnionRequest {
-    uint64 senderGuildUUID = 1;
-    uint64 receiverGuildUUID = 2;
-}
-
-message NotifyRemoveReceiverGuildApplyUnion {
-    uint64 senderGuildUUID = 1;
-    uint64 receiverGuildUUID = 2;
-}
-
 message GetCrossServerGuildDetailRequest {
     uint64 guildUUID = 1;
     uint32 senderServerId = 2;
@@ -184,6 +72,7 @@ message GuildDetailInfo {
     uint32 leaderSchool = 5;
     uint32 leaderLevel = 6;
     uint64 leaderGbId = 7;
+    uint64 leagueUUID = 8;
 }
 
 message GetCrossServerGuildDetailFromOtherServer {
@@ -225,6 +114,26 @@ message DoOnCrossGuildResultBack {
     bytes result = 4;
 }
 
+message SaveSiegeWarDataRequest {
+    bytes data = 1;
+    uint64 uuid = 2;
+}
+
+message SaveSiegeWarDataResult {
+    uint64 uuid = 1;
+    bool success = 2;
+}
+
+message LoadSiegeWarDataRequest {
+    uint64 uuid = 1;
+}
+
+message LoadSiegeWarDataResult {
+    bytes data = 1;
+    uint64 uuid = 2;
+    bool success = 3;
+}
+
 
 service CrossDataServer
 {
@@ -234,15 +143,12 @@ service CrossDataServer
     rpc getGuildInfos(GetGuildInfosRequest) returns(Void);
     rpc getGuildInfosByGuildUUID(GetGuildInfosByGuildUUIDRequest) returns(Void);
     rpc removeGuildInfo(RemoveGuildInfoRequest) returns(Void);
-    rpc addGuildRelation(AddGuildRelationRequest) returns(Void);
-    rpc removeGuildRelation(RemoveGuildRelationRequest) returns(Void);
-    rpc applyGuildUnion(ApplyGuildUnionRequest) returns(Void);
-    rpc getEnemyGuildInfos(GetEnemyGuildInfosRequest) returns(Void);
-    rpc removeReceiverGuildApplyUnion(RemoveReceiverGuildApplyUnionRequest) returns(Void);
     rpc getCrossServerGuildDetail(GetCrossServerGuildDetailRequest) returns(Void);
     rpc getCrossServerGuildDetailFromOtherServer(GetCrossServerGuildDetailFromOtherServer) returns(Void);
     rpc doOnCrossGuildRequest(DoOnCrossGuildRequest) returns(Void);
     rpc doOnCrossGuildResultBack(DoOnCrossGuildResultBack) returns(Void);
+    rpc saveSiegeWarData(SaveSiegeWarDataRequest) returns(Void);
+    rpc loadSiegeWarData(LoadSiegeWarDataRequest) returns(Void);
 }
 
 service GameServer
@@ -250,20 +156,11 @@ service GameServer
     rpc activeTickCallback(Void) returns(Void);
     rpc onAddGuildInfo(AddGuildInfoResult) returns(Void);
     rpc onGetGuildInfos(GetGuildInfosResult) returns(Void);
-    rpc onBroadcastGuildRelationSingle(BroadcastGuildRelationSingle) returns(Void);
-    rpc onGuildRelationAll(GuildRelationAll) returns(Void);
-    rpc onBroadcastRemoveGuildRelation(BroadcastRemoveGuildRelation) returns(Void);
-    rpc onRemoveGuildRelation(RemoveGuildRelationResult) returns(Void);
-    rpc onAddGuildRelation(AddGuildRelationResult) returns(Void);
-    rpc onApplyGuildUnion(OnApplyGuildUnionRequest) returns(Void);
-    rpc onNotifyGuildRelation(OnNotifyGuildRelation) returns(Void);
-    rpc onNotifyGuildCancelUnion(OnNotifyGuildCancelUnion) returns(Void);
-    rpc onGetEnemyGuildInfos(GetEnemyGuildInfosResult) returns(Void);
-    rpc onApplyGuildUnionResult(ApplyGuildUnionResult) returns(Void);
-    rpc onNotifyRemoveReceiverGuildApplyUnion(NotifyRemoveReceiverGuildApplyUnion) returns(Void);
     rpc onGetCrossServerGuildDetail(GetCrossServerGuildDetailResult) returns(Void);
     rpc onGetCrossServerGuildDetailToOtherServer(GetCrossServerGuildDetailToOtherServer) returns(Void);
     rpc onDoOnCrossGuildToGameServer(DoOnCrossGuildToGameServer) returns(Void);
     rpc onDoOnCrossGuildResult(DoOnCrossGuildResult) returns(Void);
+    rpc onSaveSiegeWarData(SaveSiegeWarDataResult) returns(Void);
+    rpc onLoadSiegeWarData(LoadSiegeWarDataResult) returns(Void);
 }
 

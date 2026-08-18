@@ -1,0 +1,124 @@
+datas ={
+  "SpaceConfig": {
+    "InitEntities": {
+      "Monster": {
+        "52050002": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Monster",
+          "ClassNameType": 0,
+          "CustomID": "",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 11326001,
+          "ID": 52050002,
+          "PosX": 337.81,
+          "PosY": -101.9789,
+          "PosZ": 278.63,
+          "Props": {
+            "ChestGroupID": "",
+            "GroupID": "",
+            "InitLoad": 0,
+            "Level": 62,
+            "LightPillar": "",
+            "MapEntityScale": 0,
+            "MapEntityType": "22",
+            "MonsterGroupID": "",
+            "PathID": "",
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 0.0,
+            "RefreshTimedID": 1,
+            "Remark": "",
+            "ShowInSceneMap": 1,
+            "ShowMonsterGroupID": ""
+          }
+        }
+      },
+      "AirWall": {
+        "52058006": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "AirWall",
+          "ClassNameType": 5,
+          "CustomID": "",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 10,
+          "ID": 52058006,
+          "PosX": 337.81,
+          "PosY": -101.77,
+          "PosZ": 277.63,
+          "Props": {
+            "AreaType": 1,
+            "Height": 50.0,
+            "MPosX": 317.0,
+            "MPosY": -101.77,
+            "MPosZ": 257.0,
+            "Radius": 18.0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
+        }
+      }
+    },
+    "TimerEntities": {
+      "52050002": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "Monster",
+        "ClassNameType": 0,
+        "CustomID": "",
+        "Dir": 0.0,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 11326001,
+        "ID": 52050002,
+        "PosX": 337.81,
+        "PosY": -101.9789,
+        "PosZ": 278.63,
+        "Props": {
+          "ChestGroupID": "",
+          "GroupID": "",
+          "InitLoad": 0,
+          "Level": 62,
+          "LightPillar": "",
+          "MapEntityScale": 0,
+          "MapEntityType": "22",
+          "MonsterGroupID": "",
+          "PathID": "",
+          "Radius": 0.0,
+          "RefreshNum": 1,
+          "RefreshTime": 0.0,
+          "RefreshTimedID": 1,
+          "Remark": "",
+          "ShowInSceneMap": 1,
+          "ShowMonsterGroupID": ""
+        }
+      }
+    },
+    "BreakAwayStuckPos": {
+      "52058007": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "BreakAwayStuckPos",
+        "ClassNameType": 22,
+        "CustomID": "",
+        "Dir": 173.1123,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 0,
+        "ID": 52058007,
+        "PosX": 250.5275,
+        "PosY": -127.975,
+        "PosZ": 478.8725,
+        "Props": {
+          "Remark": "",
+          "ShowInSceneMap": 1
+        }
+      }
+    }
+  }
+}

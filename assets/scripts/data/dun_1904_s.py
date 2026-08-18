@@ -559,7 +559,7 @@ datas ={
           "ID": 19040018,
           "PosX": 416.1714,
           "PosY": 311.2555,
-          "PosZ": 116.271706,
+          "PosZ": 116.2717,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
@@ -9487,7 +9487,7 @@ datas ={
           "ID": 19040422,
           "PosX": 540.5107,
           "PosY": 332.5963,
-          "PosZ": 355.153442,
+          "PosZ": 355.1534,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
@@ -9549,9 +9549,9 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 11222118,
           "ID": 19040424,
-          "PosX": 541.886353,
-          "PosY": 332.596344,
-          "PosZ": 351.423828,
+          "PosX": 541.8864,
+          "PosY": 332.5963,
+          "PosZ": 351.4238,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
@@ -9614,8 +9614,8 @@ datas ={
           "EntityID": 11222120,
           "ID": 19040426,
           "PosX": 523.6463,
-          "PosY": 332.60556,
-          "PosZ": 324.174835,
+          "PosY": 332.6056,
+          "PosZ": 324.1748,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
@@ -9901,9 +9901,9 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 11222120,
           "ID": 19040440,
-          "PosX": 537.009766,
+          "PosX": 537.0098,
           "PosY": 332.6095,
-          "PosZ": 334.674957,
+          "PosZ": 334.675,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
@@ -10030,8 +10030,8 @@ datas ={
           "EntityID": 11222118,
           "ID": 19040444,
           "PosX": 541.901,
-          "PosY": 332.606781,
-          "PosZ": 337.308716,
+          "PosY": 332.6068,
+          "PosZ": 337.3087,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
@@ -10048,6 +10048,83 @@ datas ={
             "Remark": "",
             "ShowInSceneMap": 1,
             "ShowMonsterGroupID": "\u4e94\u4eba\u7ec4"
+          }
+        },
+        "19040445": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Monster",
+          "ClassNameType": 0,
+          "CustomID": "",
+          "Dir": 0.0,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 11222031,
+          "ID": 19040445,
+          "PosX": 592.9982,
+          "PosY": 311.6006,
+          "PosZ": 194.5642,
+          "Props": {
+            "ChestGroupID": "",
+            "GroupID": 1,
+            "Level": 24,
+            "LightPillar": "",
+            "MapEntityScale": 0,
+            "MapEntityType": 0,
+            "MonsterGroupID": "",
+            "PathID": 57103102,
+            "Radius": 0.0,
+            "RandomRegion": [
+              [
+                522.2193,
+                338.2231,
+                157.974655,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                258.372925,
+                304.270752,
+                236.096954,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                431.9417,
+                321.993439,
+                565.17804,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                513.1311,
+                317.952972,
+                403.768433,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                603.5878,
+                320.967,
+                383.525146,
+                0.0,
+                1.0,
+                0.0
+              ]
+            ],
+            "RefreshNum": 1,
+            "RefreshTime": [
+              1600.0,
+              2000.0
+            ],
+            "RefreshTimedID": 0,
+            "Remark": "\u5e78\u8fd0\u602a5\u533a\u57df",
+            "ShowInSceneMap": 1,
+            "ShowMonsterGroupID": ""
           }
         }
       },

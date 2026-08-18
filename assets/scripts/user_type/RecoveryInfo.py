@@ -12,15 +12,14 @@ import math
 import welfare_resourceRecovery as W_RR
 
 
-class freeTicketRecoveryItem(userType.UserSingleType):
-    def __init__(self):
-        LOG_DBG("freeTicketRecoveryItem::__init__")
-        self.rType = gameconst.ResourceRecoveryType.FREE_TICKET
-        self.dateNumDeques = [deque() for _ in range(gameconst.FreeTicketSubType.MAX_CNT)]
+class ticketRecoveryItem(userType.UserSingleType):
+    def __init__(self, rType):
+        LOG_DBG("ticketRecoveryItem::__init__", rType)
+        self.rType = rType
+        self.dateNumDeques = [deque() for _ in range(gameconst.RecoveryTicketSubType.MAX_CNT)]
 
     def initFromDict(self, dataDict):
-        LOG_DBG("freeTicketRecoveryItem::initFromDict", dataDict)
-        self.rType = dataDict['rType']
+        LOG_DBG("ticketRecoveryItem::initFromDict", dataDict)
 
         dateNumInfoStr = dataDict['dateNumInfo']
         if not dateNumInfoStr:
@@ -33,7 +32,6 @@ class freeTicketRecoveryItem(userType.UserSingleType):
 
     def toStreamSavedDic(self):
         dataDict = {}
-        dataDict['rType'] = self.rType
         dateNumInfo = {}
         
         for subType, dateNumQueue in enumerate(self.dateNumDeques):
@@ -50,106 +48,105 @@ class freeTicketRecoveryItem(userType.UserSingleType):
     def update(self, now, subType, nowDateTime, curNum):
         cfgData = W_RR.datas.get(subType + 1, {})
         if not cfgData:
-            LOG_ERR("freeTicketRecoveryItem::update no cfg", subType + 1)
-            return
+            LOG_ERR("ticketRecoveryItem::update no cfg", subType + 1)
+            return False
         N = cfgData['time']
-        LOG_INFO("freeTicketRecoveryItem::update", self.dateNumDeques[subType], now, subType, nowDateTime, curNum, N)
+        LOG_INFO("ticketRecoveryItem::update", self.dateNumDeques[subType], now, subType, nowDateTime, curNum, N)
         if not self.dateNumDeques[subType]:
-            LOG_DBG("freeTicketRecoveryItem::no data1")
+            LOG_DBG("ticketRecoveryItem::no data1")
             serverOpenTimestamp = gameconfig.serverOpenTime()
             serverOpenDateTime = utils.getIntDateTime(serverOpenTimestamp)
             diffDays = math.floor((now - serverOpenTimestamp) / 86400)
-            LOG_INFO("freeTicketRecoveryItem::update no data2", utils.getSvrOpenDayFiveTS(), serverOpenTimestamp, serverOpenDateTime, nowDateTime, diffDays)
+            LOG_INFO("ticketRecoveryItem::update no data2", utils.getSvrOpenDayFiveTS(), serverOpenTimestamp, serverOpenDateTime, nowDateTime, diffDays)
             if diffDays <= N:
                 if serverOpenDateTime == nowDateTime:
                     self.dateNumDeques[subType].append([serverOpenDateTime, curNum])
-                    LOG_DBG("freeTicketRecoveryItem::update no data3 1", (serverOpenDateTime, curNum))
+                    LOG_DBG("ticketRecoveryItem::update no data3 1", (serverOpenDateTime, curNum))
                 else:
                     self.dateNumDeques[subType].append([serverOpenDateTime, curNum])
                     self.dateNumDeques[subType].append([nowDateTime, curNum])
-                    LOG_DBG("freeTicketRecoveryItem::update no data4 2", [serverOpenDateTime, curNum], [nowDateTime, curNum])
+                    LOG_DBG("ticketRecoveryItem::update no data4 2", [serverOpenDateTime, curNum], [nowDateTime, curNum])
             else:
                 offsetSeconds = 86400 * N
                 firstDataTimestamp = now - offsetSeconds
                 firstDateTime = utils.getIntDateTime(firstDataTimestamp)
                 self.dateNumDeques[subType].append([firstDateTime, curNum])
                 self.dateNumDeques[subType].append([nowDateTime, curNum])
-                LOG_DBG("freeTicketRecoveryItem::update no data5 2", [firstDateTime, curNum], [nowDateTime, curNum])
+                LOG_DBG("ticketRecoveryItem::update no data5 2", [firstDateTime, curNum], [nowDateTime, curNum])
             return True
-        LOG_DBG("freeTicketRecoveryItem::update has data", self.dateNumDeques[subType])
+        LOG_DBG("ticketRecoveryItem::update has data", self.dateNumDeques[subType])
 
         lastData = self.dateNumDeques[subType][-1]
-        LOG_INFO("freeTicketRecoveryItem::update has data1", lastData, nowDateTime, curNum)
+        LOG_INFO("ticketRecoveryItem::update has data1", lastData, nowDateTime, curNum)
         if nowDateTime < lastData[0]:
-            LOG_WARN("freeTicketRecoveryItem::update has data2")
+            LOG_WARN("ticketRecoveryItem::update has data2")
             return False
 
         if lastData[0] == nowDateTime:
-            LOG_DBG("freeTicketRecoveryItem::update has data3")
+            LOG_DBG("ticketRecoveryItem::update has data3")
             if lastData[1] == curNum:
                 pass
             else:
                 lastData[1] = curNum
             return False
         elif len(self.dateNumDeques[subType]) < 2:
-            LOG_DBG("freeTicketRecoveryItem::update has data7")
+            LOG_DBG("ticketRecoveryItem::update has data7")
             self.dateNumDeques[subType].append([nowDateTime, curNum])
             self._update(subType, nowDateTime, curNum, N)
             return True
         else:
-            LOG_DBG("freeTicketRecoveryItem::update has data4", nowDateTime, curNum)
+            LOG_DBG("ticketRecoveryItem::update has data4", nowDateTime, curNum)
             preLastData = self.dateNumDeques[subType][-2]
             if lastData[1] == curNum and preLastData[1] == curNum:
-                LOG_DBG("freeTicketRecoveryItem::update has data5")
+                LOG_DBG("ticketRecoveryItem::update has data5")
                 lastData[0] = nowDateTime
             else:
-                LOG_DBG("freeTicketRecoveryItem::update has data6")
+                LOG_DBG("ticketRecoveryItem::update has data6")
                 self.dateNumDeques[subType].append([nowDateTime, curNum])
             self._update(subType, nowDateTime, curNum, N)
             return True
 
     def _update(self, subType, nowDateTime, curNum, N):
-        LOG_INFO("freeTicketRecoveryItem::_update", subType, self.dateNumDeques[subType], nowDateTime, curNum)
+        LOG_INFO("ticketRecoveryItem::_update", subType, self.dateNumDeques[subType], nowDateTime, curNum)
         if not self.dateNumDeques[subType]:
-            LOG_ERR("freeTicketRecoveryItem::_update1")
+            LOG_ERR("ticketRecoveryItem::_update1")
             return
 
         lastData = self.dateNumDeques[subType][-1]
         lastDataTimestamp = utils.getIntTimestamp(str(lastData[0]) + gameconst.RESOURCE_RECOVER_TIME_POINT_STR)
         lastFirstData = None
-        LOG_DBG("freeTicketRecoveryItem::_update2", lastData, lastDataTimestamp, lastFirstData, self.dateNumDeques[subType])
+        LOG_DBG("ticketRecoveryItem::_update2", lastData, lastDataTimestamp, lastFirstData, self.dateNumDeques[subType])
         while self.dateNumDeques[subType]:
             firstData = self.dateNumDeques[subType][0]
             firstDataTimestamp = utils.getIntTimestamp(str(firstData[0]) + gameconst.RESOURCE_RECOVER_TIME_POINT_STR)
             diffDays = math.floor((lastDataTimestamp - firstDataTimestamp) / 86400)
-            LOG_DBG("freeTicketRecoveryItem::_update3 diffDays", firstData, diffDays)
+            LOG_DBG("ticketRecoveryItem::_update3 diffDays", firstData, diffDays)
             if diffDays <= N:
-                LOG_DBG("freeTicketRecoveryItem::_update3 N")
+                LOG_DBG("ticketRecoveryItem::_update3 N")
                 break
             lastFirstData = self.dateNumDeques[subType].popleft()
 
-        LOG_DBG("freeTicketRecoveryItem::_update4", lastFirstData, self.dateNumDeques[subType])
+        LOG_DBG("ticketRecoveryItem::_update4", lastFirstData, self.dateNumDeques[subType])
         if not lastFirstData:
             return
         if not self.dateNumDeques[subType]:
-            LOG_ERR("freeTicketRecoveryItem::_update5")
+            LOG_ERR("ticketRecoveryItem::_update5")
             return
         curFirstData = self.dateNumDeques[subType][0]
         curFirstDataTimestamp = utils.getIntTimestamp(str(curFirstData[0]) + gameconst.RESOURCE_RECOVER_TIME_POINT_STR)
         diffDays = math.floor((lastDataTimestamp - curFirstDataTimestamp) / 86400)
-        LOG_DBG("freeTicketRecoveryItem::_update5", curFirstData, curFirstDataTimestamp, diffDays)
+        LOG_DBG("ticketRecoveryItem::_update5", curFirstData, curFirstDataTimestamp, diffDays)
         if diffDays == N:
-            LOG_DBG("freeTicketRecoveryItem::_update5 N")
+            LOG_DBG("ticketRecoveryItem::_update5 N")
             return
         offsetSecondsN = 86400 * N
         newFirstDataTimestamp = lastDataTimestamp - offsetSecondsN
         newFirstDateTime = utils.getIntDateTime(newFirstDataTimestamp)
         newFirstNum = lastFirstData[1]
         newFirstData = [newFirstDateTime, newFirstNum]
-        LOG_DBG("freeTicketRecoveryItem::_update6", lastDataTimestamp, newFirstDataTimestamp, newFirstDateTime, newFirstNum, lastFirstData, newFirstData)
+        LOG_DBG("ticketRecoveryItem::_update6", lastDataTimestamp, newFirstDataTimestamp, newFirstDateTime, newFirstNum, lastFirstData, newFirstData)
         self.dateNumDeques[subType].appendleft(newFirstData)
-        LOG_DBG("freeTicketRecoveryItem::_update7", self.dateNumDeques[subType])
-
+        LOG_DBG("ticketRecoveryItem::_update7", self.dateNumDeques[subType])
 
     def getData(self, subType):
         return list(self.dateNumDeques[subType])
@@ -157,17 +154,21 @@ class freeTicketRecoveryItem(userType.UserSingleType):
 class resourceRecoveryInfo(userType.UserSingleType):
     def __init__(self):
         LOG_DBG('resourceRecoveryInfo::__init__')
-        self.ftRecoveryItem = freeTicketRecoveryItem()
+        self.ftRecoveryItem = ticketRecoveryItem(gameconst.ResourceRecoveryType.FREE_TICKET)
+        self.ptRecoveryItem = ticketRecoveryItem(gameconst.ResourceRecoveryType.PAID_TICKET)
 
     def initFromDict(self, dataDict):
         LOG_DBG('resourceRecoveryInfo::initFromDict', dataDict)
         self.ftRecoveryItem.initFromDict(dataDict['freeTicket'])
+        self.ptRecoveryItem.initFromDict(dataDict['paidTicket'])
         return self
 
     def toStreamSavedDic(self):
         dataDict = {}
         freeTicket = self.ftRecoveryItem.toStreamSavedDic()
         dataDict['freeTicket'] = freeTicket
+        paidTicket = self.ptRecoveryItem.toStreamSavedDic()
+        dataDict['paidTicket'] = paidTicket
         LOG_DBG("toStreamSavedDic", dataDict)
         return dataDict
 

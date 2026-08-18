@@ -46,8 +46,9 @@ datas ={
           "PosY": 525.2142,
           "PosZ": 63.19786,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
-            "Level": 28,
+            "Level": 24,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
@@ -77,8 +78,10 @@ datas ={
           "PosY": 525.4185,
           "PosZ": 53.08836,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
-            "Level": 28,
+            "Level": 24,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -86,7 +89,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 600.0,
+            "RefreshTimedID": 0,
             "Remark": "\u7cbe\u82f1",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -105,8 +110,10 @@ datas ={
           "PosY": 525.4185,
           "PosZ": 50.36635,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
-            "Level": 28,
+            "Level": 24,
+            "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
             "MonsterGroupID": 1,
@@ -114,7 +121,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 600.0,
+            "RefreshTimedID": 0,
             "Remark": "\u7cbe\u82f1",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         },
@@ -133,8 +142,9 @@ datas ={
           "PosY": 525.2142,
           "PosZ": 65.58234,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
-            "Level": 28,
+            "Level": 24,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
@@ -164,8 +174,9 @@ datas ={
           "PosY": 525.1471,
           "PosZ": 57.71935,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
-            "Level": 28,
+            "Level": 24,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,

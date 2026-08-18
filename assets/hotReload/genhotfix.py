@@ -115,14 +115,21 @@ def getImportInfo(methodInfo:MI.MethodInfo):
 
             continue
 
-        _matchImport = IMPORT_AS_PT.search(strLine) or IMPORT_PT.search(strLine)
-        if _matchImport:
-            moduleName = _matchImport.groups()[0].strip()
-            if moduleName in funcGlobals:
+        matchAs = IMPORT_AS_PT.search(strLine)
+        if matchAs:
+            moduleName = matchAs.group(1).strip()
+            if moduleName in funcGlobals or moduleName in methodInfo.decratorMods:
+                _importLines.append(strLine.replace('\r\n', '\n'))
+                if moduleName not in importedMods:
+                    importedMods.append(moduleName)
+            continue
+
+        matchImport = IMPORT_PT.search(strLine)
+        if matchImport:
+            moduleName = matchImport.group(1).strip()
+            if moduleName in funcGlobals or moduleName in methodInfo.decratorMods:
                 _importLines.append(strLine.replace('\r\n', '\n'))
                 importedMods.append(moduleName)
-
-            continue
 
 
     #dealing @utils.isMySelf

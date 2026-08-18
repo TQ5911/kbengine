@@ -32,13 +32,27 @@ datas = _tools.RODict({
         "ID": 5203,
         "needScore": 35000,
         "needLv": 47,
+    }),
+    4: _tools.RODict({
+        "floor": 4,
+        "ID": 5204,
+        "needScore": 0,
+        "needLv": 40,
+    }),
+    5: _tools.RODict({
+        "floor": 5,
+        "ID": 5205,
+        "needScore": 0,
+        "needLv": 51,
     })
 })
 minKey = 1
-maxKey = 3
+maxKey = 5
 
 id2floor = _tools.RODict({
     5201: 1,
     5202: 2,
     5203: 3,
+    5204: 4,
+    5205: 5,
 })

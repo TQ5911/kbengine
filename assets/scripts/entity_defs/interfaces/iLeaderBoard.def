@@ -43,6 +43,13 @@
             <Arg>       LEADER_BOARD_PAGE                              </Arg>
         </getLevelRushRankList>
 
+        <getScoreRushRankSelf> <Exposed/>
+        </getScoreRushRankSelf>
+
+        <getScoreRushRankList> <Exposed/>
+            <Arg>       LEADER_BOARD_PAGE                   </Arg>
+        </getScoreRushRankList>
+
         <onLeaderBoardRank>
             <Arg>       UINT8                               </Arg>
             <Arg>       LEADER_BOARD_IDX                    </Arg>
@@ -51,6 +58,16 @@
         <onLocalServerScoreRankSync>
             <Arg>       UINT32                              </Arg>
         </onLocalServerScoreRankSync>
+
+        <onGetLeaderBoardList>
+            <Arg>       STRING                              </Arg>
+            <Arg>       LEADER_BOARD_IDX                    </Arg>
+            <Arg>       ARRAY   <of>        LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO            </of>   </Arg>
+            <Arg>       SCHOOL                              </Arg>
+            <Arg>       LEADER_BOARD_PAGE                              </Arg>
+            <Arg>       BOOL                                </Arg>
+            <Arg>       RANK                                </Arg>
+        </onGetLeaderBoardList>
     </BaseMethods>
 
     <CellMethods>
@@ -109,5 +126,20 @@
             <Arg>       BOOL                                </Arg>
             <Arg>       RANK                                </Arg>
         </onLeaderBoardAvatarAchievement>
+
+        <onScoreRushRankSelf>
+            <Arg>       UINT8                               </Arg>
+            <Arg>       RANK                                </Arg>
+            <Arg>       UINT64                              </Arg>
+        </onScoreRushRankSelf>
+
+        <onScoreRushRankList>
+            <Arg>       ARRAY   <of>        LEADER_BOARD_AVATAR_SCORE_DATA_INFO     </of>   </Arg>
+            <Arg>       LEADER_BOARD_PAGE                   </Arg>
+            <Arg>       BOOL                                </Arg>
+        </onScoreRushRankList>
+
+        <onScoreRushRankFinalized>
+        </onScoreRushRankFinalized>
     </ClientMethods>
 </root>

@@ -13,6 +13,7 @@ import mounts_mounts as MOUNTS
 import conflict_conflict_def as C_C_DD
 import gamePlay_gamePlay as GPGPD
 import mounts_set as MSD
+import gamedecorator
 
 
 class IMount(object):
@@ -57,6 +58,7 @@ class IMount(object):
         self._enterRidingWithCast(False, False)
 
     @utils.isMyself
+    @gamedecorator.crossServer
     def enterRiding(self, exposed, isCast):
         LOG_DBG('enter riding')
         if not self._checkCanRide(True):
@@ -101,6 +103,7 @@ class IMount(object):
             getattr(self, finishFunc)(*finishArgs)
 
     @utils.isMyself
+    @gamedecorator.crossServer
     def exitRiding(self, exposed):
         LOG_DBG('exit riding')
         self._exitRiding()

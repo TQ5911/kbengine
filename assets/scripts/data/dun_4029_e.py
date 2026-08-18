@@ -98,15 +98,5 @@ datas ={
     "aiName": 0,
     "hpPercent": 0.0,
     "transition": {}
-  },
-  "1069": {
-    "type": "createNPC",
-    "entityID": [
-      40294001
-    ],
-    "num": 0,
-    "lv": "1",
-    "ifSetBoss": 0,
-    "transition": {}
   }
 }

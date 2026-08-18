@@ -51,6 +51,12 @@
             <Flags>         BASE                    </Flags>
         </deviceUniqueIdentifier>
 
+        <dinghaoLockTimeout>
+            <Type>          LONGTIME            </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+        </dinghaoLockTimeout>
+
         <devicePlatId>
             <Type>          UINT8                   </Type>
             <Flags>         BASE                    </Flags>
@@ -231,6 +237,19 @@
             <Type>     STRING                       </Type>
             <Flags>    BASE                         </Flags>
         </deviceId>
+
+        <loginTime>
+            <Type>          LONGTIME             </Type>
+            <Flags>         BASE                 </Flags>
+            <Default>       0                    </Default>
+            <Persistent>    true                 </Persistent>
+        </loginTime>
+
+        <secondaryPwdInfo>
+            <Type>          SECONDARY_PWD_INFO       </Type>
+            <Flags>         BASE                     </Flags>
+            <Persistent>    true                     </Persistent>
+        </secondaryPwdInfo>
     </Properties>
 
     <ClientMethods>
@@ -317,8 +336,12 @@
         </onPatchVersion>
 
         <onAccountOfflineClient>
-            <Arg>       UINT8       </Arg>
+            <Arg>       UINT16       </Arg>
         </onAccountOfflineClient>
+
+        <checkTextSecurityResp>
+            <Arg>           CHECK_TEXT_SECURITY_RESP     </Arg>
+        </checkTextSecurityResp>
     </ClientMethods>
 
     <BaseMethods>
@@ -412,9 +435,12 @@
         </getAuthOfflineTimeButOffline>
 
         <kickAccountSingleGm>
-            <Arg>    UNICODE        </Arg>
+            <Arg>    INT32        </Arg>
         </kickAccountSingleGm>
 
+        <checkTextSecurityReq> <Exposed/>
+            <Arg>        CHECK_TEXT_SECURITY_REQ      </Arg>
+        </checkTextSecurityReq>
     </BaseMethods>
 
     <CellMethods>

@@ -278,7 +278,6 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
 
     def _onRaidDungeonCompleted(self, spaceNo, raidUUID, win, delay, reasonType):
         LOG_INFO('_onRaidDungeonCompleted:', spaceNo, raidUUID, win, delay, reasonType)
-
         def _check():
             if spaceNo not in self.spaces:
                 return None, gameconst.RaidDunErrno.ENUM_RAIDDUN_DUNGEON_VAL_NOT_FOUND
@@ -304,7 +303,9 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         elif _sVal.raidUUID != raidUUID:
             LOG_WARN("_onRaidDungeonCompleted:: raidUUID not match", spaceNo, _sVal.raidUUID, raidUUID)
             return
-
+        
+        gameengine.getRaidStub(raidUUID).setInDungeon(raidUUID, False)
+        
         _sVal.spaceMgr.cell.destroyAllEntities()
         _sVal.completedReasonType = reasonType
         _sVal.spaceMgr.cell.onRaidDungeonCompleted(
@@ -318,6 +319,7 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             0, 
             _sVal.completedReasonType)
 
+        
         # 副本完成后倒计时
         if delay > 0:
             lastDungeonFinishedTime = utils.curTS() + delay

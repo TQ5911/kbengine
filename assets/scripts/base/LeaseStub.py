@@ -121,7 +121,7 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         self.leaseService.serviceStub.addItemRollback(None, request, None)
 
-    def leaseItemPrepare(self, uniqueId, buyerServerId, buyerGBID, opUUID):
+    def leaseItemPrepare(self, uniqueId, buyerServerId, buyerGBID, opUUID, rentalProp01, rentalProp02):
         if not self.isLeaseCenterActive():
             LOG_ERR("leaseItemPrepare leaseCenter is not active")
             return
@@ -131,6 +131,8 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         request.buyerGBID = buyerGBID
         request.uniqueId = uniqueId
         request.opUUID = opUUID
+        request.rentalProp01.extend(rentalProp01)
+        request.rentalProp02.extend(rentalProp02)
 
         self.leaseService.serviceStub.leaseItemPrepare(None, request, None)
 

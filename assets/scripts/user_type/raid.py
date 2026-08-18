@@ -164,6 +164,7 @@ class RaidVal(userType.UserSTSoleType):
             'raidMinScore': self.raidMinScore,
             'raidMicsSwitch': self.raidMicsSwitch,
             'raidMicsBlocked': self.raidMicsBlocked,
+            'raidBlockedMembers': list(self.raidBlockedMembers),
             'raidDungeonRecords': [_i.toStreamSavedDic() for _i in self.raidDungeonRecords.values()],
             'raidApplyJoinList': [_i.toStreamSavedDic() for _i in self.raidApplyJoinDic.values()],
             'raidTeamList': [_i.toStreamSavedDic() for _i in self.raidTeamDic.values()],
@@ -189,6 +190,7 @@ class RaidVal(userType.UserSTSoleType):
         self.raidMicsSwitch = dataDic['raidMicsSwitch']
         self.raidMinScore = dataDic['raidMinScore']
         self.raidMicsBlocked = dataDic['raidMicsBlocked']
+        self.raidBlockedMembers = set(dataDic.get('raidBlockedMembers', []))
         self.raidDungeonRecords = {_i['dungeonNo']: RaidDungeonCacheVal().initFromDict(_i)
                                    for _i in dataDic['raidDungeonRecords']}
         self.raidTeamDic = {_i['teamIDX']: RaidTeamVal().initFromDict(_i)
@@ -432,19 +434,23 @@ class RaidVal(userType.UserSTSoleType):
                                                                           raidUUID=self.raidUUID)
 
         avatarProps.update({'raidUUID': self.raidUUID})
-        avatarProps.update(self.getNewRaidMemberMiscStatus())
+        avatarProps.update(self.getNewRaidMemberMiscStatus(playerGBID))
         if specialTeamIDX:
             raidMemberVal, err = self._addNewMemberSpecially(playerGBID, avatarProps, specialTeamIDX, toClient)
         else:
             raidMemberVal, err = self._addNewMemberAutomatic(playerGBID, avatarProps, toClient)
 
         if err == gameconst.RaidErrno.ENUM_RAID_OK:
-            # 检查该成员是否在禁麦列表中
+            # 新成员默认不在语音房，等客户端真正进入 GME 后再同步
+            raidMemberVal.inVoiceRoom = False
+            raidMemberVal.enableSpeaker = False
+            raidMemberVal.enableMics = False
+            # isBlockMics 只保留团长手动禁麦状态；Leader 模式下的“无发言权”不再写入该字段
             if playerGBID in self.raidBlockedMembers:
                 raidMemberVal.isBlockMics = True
             # 新来的，应该刷一下团队信息缓存
             self.refreshRaidCacheValToAllPlayers()
-            self.broadcastToAllRaidMembersCell('onRaidAddNewMember', (raidMemberVal.playerBox.id,), (playerGBID,))
+            self.broadcastToAllRaidMembersCell('onRaidAddNewMember', (raidMemberVal.playerBox.id, avatarProps.get('joinType', gameconst.TeamJoinType.DEFAULT)), ())
             if toClient:
                 _raidLeaderVal = self.getRaidLeader()
                 raidMemberVal.playerBox and raidMemberVal.playerBox.onMessagePre(RAID_CONST.datas["raid_join_msg"]["value"], [_raidLeaderVal.playerName])
@@ -547,7 +553,7 @@ class RaidVal(userType.UserSTSoleType):
             if teamIdx:
                 LOG_WARN('_validateAddTeamMemberList:: player already In raid, auto pop', _memberData['playerGbId'])
                 continue
-            _memberData.update(self.getNewRaidMemberMiscStatus())
+            _memberData.update(self.getNewRaidMemberMiscStatus(_memberData['playerGbId']))
             _validateTeamMemberList.append(_memberData)
         return _validateTeamMemberList
 
@@ -672,7 +678,7 @@ class RaidVal(userType.UserSTSoleType):
         if raidTeamVal.isEmpty():
             LOG_INFO('popMember:: pop team when it empty')
             self.raidTeamDic.pop(teamIdx)
-        self.raidBlockedMembers.discard(playerGBID)
+        # 保留 raidBlockedMembers，玩家退出再进入同一团队时仍保持禁言状态
         self.raidFilterPlayers[playerGBID] = utils.curTS()
         return _raidMemberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
@@ -890,30 +896,49 @@ class RaidVal(userType.UserSTSoleType):
     def _onRaidMiscModeSwitchToFree(self, extraProps):
         for _raidTeamVal in self.raidTeamDic.values():
             for _raidMemberVal in _raidTeamVal.teamPlayerDict.values():
+                _inRoom = _raidMemberVal.inVoiceRoom
                 if _raidMemberVal.playerGbId == self.raidLeaderGBID:
                     if 'isForbidVoice' in extraProps:
-                        _raidMemberVal.enableMics, _raidMemberVal.isBlockMics = False, False
-                    else:
-                        _raidMemberVal.enableMics, _raidMemberVal.isBlockMics = True, False
+                        _raidMemberVal.enableMics = False
+                    elif _inRoom:
+                        _raidMemberVal.enableMics = True
+                    _raidMemberVal.isBlockMics = False
                 else:
-                    _raidMemberVal.enableMics = _raidMemberVal.isBlockMics = False
-                _raidMemberVal.enableSpeaker = True
-                _raidMemberVal.inVoiceRoom = True
+                    _raidMemberVal.enableMics = False
+                    # 切到自由麦时只清团长的禁言标记；非团长的手动禁言状态保留
+                    _raidMemberVal.isBlockMics = _raidMemberVal.playerGbId in self.raidBlockedMembers
+
+                if _inRoom:
+                    _raidMemberVal.enableSpeaker = True
+                else:
+                    _raidMemberVal.enableSpeaker = False
+                    _raidMemberVal.enableMics = False
+                # inVoiceRoom 保持原值：只有真正在 GME 房间里的成员才显示在房中
         for gbId in self._allMemberGbIds():
             self.broadcastMemberVoiceState(gbId)
 
     def _onRaidMiscModeSwitchToLeader(self, extraProps):
         for _raidTeamVal in self.raidTeamDic.values():
             for _raidMemberVal in _raidTeamVal.teamPlayerDict.values():
+                _inRoom = _raidMemberVal.inVoiceRoom
                 if _raidMemberVal.playerGbId == self.raidLeaderGBID:
                     if 'isForbidVoice' in extraProps:
-                        _raidMemberVal.enableMics, _raidMemberVal.isBlockMics = False, False
-                    else:
-                        _raidMemberVal.enableMics, _raidMemberVal.isBlockMics = True, False
+                        _raidMemberVal.enableMics = False
+                    elif _inRoom:
+                        _raidMemberVal.enableMics = True
+                    _raidMemberVal.isBlockMics = False
                 else:
-                    _raidMemberVal.enableMics, _raidMemberVal.isBlockMics = False, True
-            _raidMemberVal.enableSpeaker = True
-            _raidMemberVal.inVoiceRoom = True
+                    _raidMemberVal.enableMics = False
+                    # 权限麦模式下的“无发言权”不再用 isBlockMics 表示；
+                    # isBlockMics 只保留团长手动禁麦状态。
+                    _raidMemberVal.isBlockMics = _raidMemberVal.playerGbId in self.raidBlockedMembers
+
+                if _inRoom:
+                    _raidMemberVal.enableSpeaker = True
+                else:
+                    _raidMemberVal.enableSpeaker = False
+                    _raidMemberVal.enableMics = False
+                # inVoiceRoom 保持原值：只有真正在 GME 房间里的成员才显示在房中
         for gbId in self._allMemberGbIds():
             self.broadcastMemberVoiceState(gbId)
 
@@ -957,6 +982,12 @@ class RaidVal(userType.UserSTSoleType):
 
         if self.raidMicsSwitch == gameconst.RaidMicsModeEnum.LEADER:
             if (not _isSrcPlayerRaidLeader):
+                return None, gameconst.RaidErrno.ENUM_RAID_MISC_LEADER_MODE_LIMIT.initkvbody(source='turnOnRaidMemberMics',
+                                                                                        srcPlayerGbId=srcAvatarGbId,
+                                                                                        raidUUID=self.raidUUID,
+                                                                                        teamIDX=teamIDX)
+            # 权限麦模式下只有团长能开麦
+            if playerGBID != self.raidLeaderGBID:
                 return None, gameconst.RaidErrno.ENUM_RAID_MISC_LEADER_MODE_LIMIT.initkvbody(source='turnOnRaidMemberMics',
                                                                                         srcPlayerGbId=srcAvatarGbId,
                                                                                         raidUUID=self.raidUUID,
@@ -1048,9 +1079,8 @@ class RaidVal(userType.UserSTSoleType):
         if _memberVal.enableMics:
             _memberVal.enableMics = False
 
-        if blockMics or self.raidMicsSwitch == gameconst.RaidMicsModeEnum.LEADER:
-            _memberVal.isBlockMics = True
         if blockMics:
+            _memberVal.isBlockMics = True
             self.raidBlockedMembers.add(playerGBID)
 
         if toClient:
@@ -1086,14 +1116,12 @@ class RaidVal(userType.UserSTSoleType):
 
         return _memberVal, gameconst.RaidErrno.ENUM_RAID_OK
 
-    def getNewRaidMemberMiscStatus(self):
+    def getNewRaidMemberMiscStatus(self, playerGBID=None):
+        """新成员默认不在语音房，等客户端真正进入 GME 后再同步"""
+        status = {'inVoiceRoom': False, 'enableSpeaker': False, 'enableMics': False}
         if self.raidMicsBlocked:
-            return dict(isBlockMics=True)
-        if self.raidMicsSwitch == gameconst.RaidMicsModeEnum.FREE:
-            return dict(inVoiceRoom=True, enableSpeaker=True)
-        elif self.raidMicsSwitch == gameconst.RaidMicsModeEnum.LEADER:
-            return dict(isBlockMics=True, inVoiceRoom=True, enableSpeaker=True)
-        return dict(inVoiceRoom=True, enableSpeaker=True)
+            status['isBlockMics'] = True
+        return status
 
     # --------------------------------------------------------------------
 

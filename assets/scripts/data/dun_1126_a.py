@@ -3,4 +3,4 @@
 # sceneRes: field_wudushiku_07
 # sceneId: 1126
 
-datas = {11268005: 1}
+datas = {11268005: 1, 52058006: 1}

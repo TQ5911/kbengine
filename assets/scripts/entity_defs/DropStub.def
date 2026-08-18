@@ -70,12 +70,6 @@
             <Arg>       UNIQUE_ID           </Arg>
             <Arg>       LONGTIME            </Arg>
         </updateCollEndTime>
-
-        <doCheckDropExpire>
-            <Arg>       UNIQUE_ID           </Arg>
-            <Arg>       PLAYER_GBID         </Arg>
-            <Arg>       ENTITYCALL          </Arg>
-        </doCheckDropExpire>
         
         <setTakeEquipRedeemPrice>
             <Arg>       PLAYER_GBID         </Arg>
@@ -83,12 +77,6 @@
             <Arg>       ENTITYCALL          </Arg>
             <Arg>       UINT32              </Arg>
         </setTakeEquipRedeemPrice>
-
-        <doCheckRedeemExpire>
-            <Arg>       UNIQUE_ID           </Arg>
-            <Arg>       PLAYER_GBID         </Arg>
-            <Arg>       ENTITYCALL          </Arg>
-        </doCheckRedeemExpire>
 
         <doGetBackEquip>
             <Arg>       PLAYER_GBID         </Arg>
@@ -118,7 +106,8 @@
             <Arg>       UNIQUE_ID           </Arg>
             <Arg>       ENTITYCALL          </Arg>
             <Arg>       UINT32              </Arg>
-            <Arg>       DOUBLE              </Arg>
+            <Arg>       UINT32              </Arg>
+            <Arg>       UINT32              </Arg>
         </setDropEquipPayPrice>
    </BaseMethods>
 </root>

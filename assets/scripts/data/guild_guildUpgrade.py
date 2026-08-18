@@ -17,197 +17,197 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "upgradeExp": 2500,
+        "upgradeExp": 1200,
         "juYingGeLv": 1
     }),
     2: _tools.RODict({
         "ID": 2,
-        "upgradeExp": 4000,
+        "upgradeExp": 1900,
         "juYingGeLv": 1
     }),
     3: _tools.RODict({
         "ID": 3,
-        "upgradeExp": 6500,
+        "upgradeExp": 3200,
         "juYingGeLv": 1
     }),
     4: _tools.RODict({
         "ID": 4,
-        "upgradeExp": 10000,
+        "upgradeExp": 5000,
         "juYingGeLv": 1
     }),
     5: _tools.RODict({
         "ID": 5,
-        "upgradeExp": 14000,
+        "upgradeExp": 6900,
         "juYingGeLv": 1
     }),
     6: _tools.RODict({
         "ID": 6,
-        "upgradeExp": 17500,
+        "upgradeExp": 8800,
         "juYingGeLv": 1
     }),
     7: _tools.RODict({
         "ID": 7,
-        "upgradeExp": 21000,
+        "upgradeExp": 10700,
         "juYingGeLv": 1
     }),
     8: _tools.RODict({
         "ID": 8,
-        "upgradeExp": 25000,
+        "upgradeExp": 12600,
         "juYingGeLv": 1
     }),
     9: _tools.RODict({
         "ID": 9,
-        "upgradeExp": 38000,
+        "upgradeExp": 19100,
         "juYingGeLv": 1
     }),
     10: _tools.RODict({
         "ID": 10,
-        "upgradeExp": 47000,
+        "upgradeExp": 23500,
         "juYingGeLv": 2
     }),
     11: _tools.RODict({
         "ID": 11,
-        "upgradeExp": 56000,
+        "upgradeExp": 27900,
         "juYingGeLv": 2
     }),
     12: _tools.RODict({
         "ID": 12,
-        "upgradeExp": 65000,
+        "upgradeExp": 32300,
         "juYingGeLv": 2
     }),
     13: _tools.RODict({
         "ID": 13,
-        "upgradeExp": 74000,
+        "upgradeExp": 36800,
         "juYingGeLv": 2
     }),
     14: _tools.RODict({
         "ID": 14,
-        "upgradeExp": 82000,
+        "upgradeExp": 41200,
         "juYingGeLv": 2
     }),
     15: _tools.RODict({
         "ID": 15,
-        "upgradeExp": 91000,
+        "upgradeExp": 45600,
         "juYingGeLv": 2
     }),
     16: _tools.RODict({
         "ID": 16,
-        "upgradeExp": 100000,
+        "upgradeExp": 50000,
         "juYingGeLv": 2
     }),
     17: _tools.RODict({
         "ID": 17,
-        "upgradeExp": 109000,
+        "upgradeExp": 54400,
         "juYingGeLv": 2
     }),
     18: _tools.RODict({
         "ID": 18,
-        "upgradeExp": 120000,
+        "upgradeExp": 58800,
         "juYingGeLv": 2
     }),
     19: _tools.RODict({
         "ID": 19,
-        "upgradeExp": 170000,
+        "upgradeExp": 85000,
         "juYingGeLv": 2
     }),
     20: _tools.RODict({
         "ID": 20,
-        "upgradeExp": 190000,
+        "upgradeExp": 94500,
         "juYingGeLv": 3
     }),
     21: _tools.RODict({
         "ID": 21,
-        "upgradeExp": 210000,
+        "upgradeExp": 103900,
         "juYingGeLv": 3
     }),
     22: _tools.RODict({
         "ID": 22,
-        "upgradeExp": 225000,
+        "upgradeExp": 113400,
         "juYingGeLv": 3
     }),
     23: _tools.RODict({
         "ID": 23,
-        "upgradeExp": 245000,
+        "upgradeExp": 122800,
         "juYingGeLv": 3
     }),
     24: _tools.RODict({
         "ID": 24,
-        "upgradeExp": 265000,
+        "upgradeExp": 132300,
         "juYingGeLv": 3
     }),
     25: _tools.RODict({
         "ID": 25,
-        "upgradeExp": 295000,
+        "upgradeExp": 146500,
         "juYingGeLv": 3
     }),
     26: _tools.RODict({
         "ID": 26,
-        "upgradeExp": 320000,
+        "upgradeExp": 160700,
         "juYingGeLv": 3
     }),
     27: _tools.RODict({
         "ID": 27,
-        "upgradeExp": 350000,
+        "upgradeExp": 174800,
         "juYingGeLv": 3
     }),
     28: _tools.RODict({
         "ID": 28,
-        "upgradeExp": 380000,
+        "upgradeExp": 189000,
         "juYingGeLv": 3
     }),
     29: _tools.RODict({
         "ID": 29,
-        "upgradeExp": 510000,
+        "upgradeExp": 254100,
         "juYingGeLv": 3
     }),
     30: _tools.RODict({
         "ID": 30,
-        "upgradeExp": 555000,
+        "upgradeExp": 277200,
         "juYingGeLv": 4
     }),
     31: _tools.RODict({
         "ID": 31,
-        "upgradeExp": 600000,
+        "upgradeExp": 300300,
         "juYingGeLv": 4
     }),
     32: _tools.RODict({
         "ID": 32,
-        "upgradeExp": 650000,
+        "upgradeExp": 323400,
         "juYingGeLv": 4
     }),
     33: _tools.RODict({
         "ID": 33,
-        "upgradeExp": 690000,
+        "upgradeExp": 346500,
         "juYingGeLv": 4
     }),
     34: _tools.RODict({
         "ID": 34,
-        "upgradeExp": 740000,
+        "upgradeExp": 369600,
         "juYingGeLv": 4
     }),
     35: _tools.RODict({
         "ID": 35,
-        "upgradeExp": 800000,
+        "upgradeExp": 398500,
         "juYingGeLv": 4
     }),
     36: _tools.RODict({
         "ID": 36,
-        "upgradeExp": 850000,
+        "upgradeExp": 427400,
         "juYingGeLv": 4
     }),
     37: _tools.RODict({
         "ID": 37,
-        "upgradeExp": 910000,
+        "upgradeExp": 456200,
         "juYingGeLv": 4
     }),
     38: _tools.RODict({
         "ID": 38,
-        "upgradeExp": 970000,
+        "upgradeExp": 485100,
         "juYingGeLv": 4
     }),
     39: _tools.RODict({
         "ID": 39,
-        "upgradeExp": 1230000,
+        "upgradeExp": 614300,
         "juYingGeLv": 4
     }),
     40: _tools.RODict({

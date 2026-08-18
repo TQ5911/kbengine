@@ -67,6 +67,7 @@ class ImpEquipment(object):
 
     def __init__(self):
         super(ImpEquipment, self).__init__()
+        self.createTempEvent(gameconst.EntityPropsEnum.clientInitEvent)
 
     def calculateUpgradeConditions(self, opUUID, box, methodName, args, upgradeType, consumeGridIds, targetLv, itemId, grade):
         totalBindValue = 0
@@ -99,6 +100,12 @@ class ImpEquipment(object):
             if consumeBagEquipItem.isLocked():
                 self.equipMethodCallback(opUUID, box, methodName, args, gameconst.BagOPStat.OPERATE_BAG_ARG_ERR, 0, 0)
                 LOG_ERR('   in calculateUpgradeConditions, invalid comsume grid item lock status', consumeGridId, consumeBagEquipItem.getGrade(), grade, consumeBagEquipItem.isLocked())
+                return False, None, None
+            # 检查下特殊装备消耗
+            isGood = consumeBagEquipItem.isGood(self.gbID)
+            if not isGood:
+                self.equipMethodCallback(opUUID, box, methodName, args, gameconst.BagOPStat.OPERATE_BAG_ARG_ERR, 0, 0)
+                LOG_ERR('   in calculateUpgradeConditions, invalid comsume grid item is not good', consumeGridId, consumeBagEquipItem.getGrade(), grade, isGood)
                 return False, None, None
             
             totalBindValue += consumeBagEquipItem.getOriginalBindValue()
@@ -220,7 +227,8 @@ class ImpEquipment(object):
             deductWealthVal.addWealthByItemId(itemId, itemNum)
 
         #非自动购买情况下，才需要发送物品不足message
-        if self.canDeductWealth(deductWealthVal, not autoBuy):
+        res = self.canDeductWealth(deductWealthVal, not autoBuy)
+        if res:
             # 额外的格子消耗
             if needGridIdList:
                 # 二次校验格子是否上锁了
@@ -241,7 +249,7 @@ class ImpEquipment(object):
             return
         else:
             self.equipMethodCallback(opUUID, box, methodName, args, gameconst.BagOPStat.OPERATE_BAG_ARG_ERR, 0, 0)
-            LOG_ERR('   in baseEquipDeductItems, canDeductWealth fail:', opUUID)
+            LOG_WARN('   in baseEquipDeductItems, canDeductWealth fail:', opUUID, res())
 
         if not autoBuy:
             #不需要自动购买
@@ -262,14 +270,22 @@ class ImpEquipment(object):
             LOG_WARN('in baseEquipWashDeductItems, bagData locked!')
             hasattr(box, methodName) and getattr(box, methodName)(gameconst.BagOPStat.OPERATE_BAG_BAG_LOCKED, *args)
             return
+        if self.checkPopupSecondaryPassword([(gameconst.SecondaryPasswordCheckType.ITEM_WASH,)]):
+            LOG_WARN('in reqSaleItemInLease, need popup sp!')
+            hasattr(box, methodName) and getattr(box, methodName)(gameconst.BagOPStat.OPERATE_BAG_FAIL, *args)
+            return
 
         deductWealthVal = dropAward.DeductWealthVal()
         for itemId, itemNum in costItemDic.items():
             deductWealthVal.addWealthByItemId(itemId, itemNum, gameconst.ItemBindType.NORMAL)
 
-        if not self.canDeductWealth(deductWealthVal):
-            LOG_WARN('in baseEquipWashDeductItems, item is not enough')
-            hasattr(box, methodName) and getattr(box, methodName)(gameconst.BagOPStat.OPERATE_BAG_ITEMS_NOT_ENOUGH, *args)
+        res = self.canDeductWealth(deductWealthVal)
+        if not res:
+            LOG_WARN('in baseEquipWashDeductItems, item is not enough', res())
+            opStat = gameconst.BagOPStat.OPERATE_BAG_ITEMS_NOT_ENOUGH
+            if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
+                opStat = gameconst.BagOPStat.OPERATE_BAG_FAIL
+            hasattr(box, methodName) and getattr(box, methodName)(opStat, *args)
             return
 
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
@@ -304,9 +320,13 @@ class ImpEquipment(object):
         for itemId, itemNum in costItems.items():
             deductWealthVal.addWealthByItemId(itemId, itemNum)
 
-        if not self.canDeductWealth(deductWealthVal):
-            LOG_WARN('in baseEquipDeductItemsWithBindTypes, item is not enough')
-            self.equipMethodCallback(opUUID, box, methodName, args, gameconst.BagOPStat.OPERATE_BAG_ITEMS_NOT_ENOUGH, 0, 0)
+        res = self.canDeductWealth(deductWealthVal)
+        if not res:
+            LOG_WARN('in baseEquipDeductItemsWithBindTypes, item is not enough', res())
+            opStat = gameconst.BagOPStat.OPERATE_BAG_ITEMS_NOT_ENOUGH
+            if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
+                opStat = gameconst.BagOPStat.OPERATE_BAG_FAIL
+            self.equipMethodCallback(opUUID, box, methodName, args, opStat, 0, 0)
             return
         
         itemBindInfos = {}
@@ -402,7 +422,8 @@ class ImpEquipment(object):
     def cellBrokenEquipment(self, srcType, uniqueId, bodyEquipDic):
         LOG_INFO("cellBrokenEquipment::", srcType, uniqueId, bodyEquipDic)
         detail = gameclass.AwardDetailCls(uniqueid=uniqueId, itemid=bodyEquipDic['itemId'])
-        remainCount = self.getItemNum(bodyEquipDic['itemId'])
+        remainCount = self.getItemNum(bodyEquipDic['itemId'], ignoreCheck=True)
+        detailStr = str(detail) + ":isCross:" + str(self.isCrossServerInLocalServer)
         LogTrackingMgr.LogTrackingMgr.item_flow(
             self.gbID,
             self.accountEntity.clientDistinctId, 
@@ -418,7 +439,7 @@ class ImpEquipment(object):
             remainCount,
             srcType,
             uniqueId,
-            str(detail),
+            detailStr,
         )
 
     def bagEquipUpgrade(self, upgradeType, gridId, uniqueId, consumeGridIds, targetLv, autoBuy):
@@ -474,12 +495,12 @@ class ImpEquipment(object):
         enhanceAttrsBefore = bagEquipItem.getEnhanceAttrs()
         upgradeAttrsBefore = bagEquipItem.getUpgradeAttrs()
         gradeBefore = bagEquipItem.getGrade()
-        bindValueBefore = bagEquipItem.getBindValue()
+        bindValueBefore = bagEquipItem.getBindValueByType(gameconst.EquipWashType.UPGRADE)
         bagEquipItem.doUpgradeEquip(self, opUUID, upgradeType, targetLv)
         # 记录升阶消耗的绑定装备件数（用于装备洗涤）
         if bindValue > 0:
             bagEquipItem.addBindValue(bindValue)
-        bindValueAfter = bagEquipItem.getBindValue()
+        bindValueAfter = bagEquipItem.getBindValueByType(gameconst.EquipWashType.UPGRADE)
 
         equipAttrsBefore = {
                 'baseAttrs':baseAttrsBefore,
@@ -502,8 +523,8 @@ class ImpEquipment(object):
         self.client.onEquipUpgradeSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, bagEquipItem.getGrade(), bagEquipItem.getEquipScore(), bagEquipItem.getOriginalBindValue(), bagEquipItem.equipAttr.bindValue, bagEquipItem.bindType)
         return
 
-    def bagEquipGlyphWashing(self, gridId, uniqueId, glyphPos, itemIds, bindTypes):
-        LOG_INFO('in bagEquipGlyphWashing:', gridId, uniqueId, glyphPos, itemIds, bindTypes)
+    def bagEquipGlyphWashing(self, gridId, uniqueId, glyphPos, itemIds, bindTypes, isAuto):
+        LOG_INFO('in bagEquipGlyphWashing:', gridId, uniqueId, glyphPos, itemIds, bindTypes, isAuto)
         if not self.checkAuthDisassembleAndMsg(A_AFD.UIEquipRunePage, 
                                                A_ACD.datas['restrictedPromptMsg1']['value']):
             return
@@ -539,12 +560,12 @@ class ImpEquipment(object):
         
         detail = gameclass.AwardDetailCls(uniqueId=bagEquipItem.uniqueId, costCurrencyDic=costCurrencyDic, costItemDic=costItemDic)
         self.baseEquipDeductItemsWithBindTypes(costCurrencyDic, costItemDic, itemIds, bindTypes, opUUID, srcType, detail, self,
-                                                    'bagEquipGlyphWashingDeductItemsCB', (opUUID, gridId, glyphPos))
+                                                    'bagEquipGlyphWashingDeductItemsCB', (opUUID, gridId, glyphPos, isAuto))
         
         return
 
-    def bagEquipGlyphWashingDeductItemsCB(self, opStat, bindValue, opUUID, gridId, glyphPos):
-        LOG_INFO('in bagEquipGlyphWashingDeductItemsCB:', opStat, bindValue, opUUID, gridId, glyphPos)
+    def bagEquipGlyphWashingDeductItemsCB(self, opStat, bindValue, opUUID, gridId, glyphPos, isAuto):
+        LOG_INFO('in bagEquipGlyphWashingDeductItemsCB:', opStat, bindValue, opUUID, gridId, glyphPos, isAuto)
         if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
             LOG_WARN('   in bagEquipGlyphWashingDeductItemsCB, deduct items error')
             return
@@ -552,19 +573,19 @@ class ImpEquipment(object):
         bagEquipItem = self.bagData.getItemObjByGridId(gridId)
 
         glyphDataBefore = bagEquipItem.getGlyphDatas()
-        bindValueBefore = bagEquipItem.getBindValue()
+        bindValueBefore = bagEquipItem.getBindValueByType(gameconst.EquipWashType.GLYPH, glyphPos)
         ret, _, _ = bagEquipItem.doEquipGlyphWashing(self, glyphPos)
-        bindValueAfter = bagEquipItem.getBindValue()
         if ret:
             # 记录铭文绑定状态
             glyphBindType = gameconst.ItemBindType.BIND if bindValue > 0 else gameconst.ItemBindType.NORMAL
             bagEquipItem.setGlyphBindType(glyphPos, glyphBindType)
+            bindValueAfter = bagEquipItem.getBindValueByType(gameconst.EquipWashType.GLYPH, glyphPos)
 
             glyphData = bagEquipItem.equipAttr.getGlyphData(glyphPos)
 
             LogTrackingMgr.LogTrackingMgr.equip_glyph(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, bagEquipItem.uniqueId, bagEquipItem.itemId, bagEquipItem.getItemName(), bagEquipItem.getEquipType(), \
                                                         bagEquipItem.getGrade(), bagEquipItem.getQuality(), gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, glyphDataBefore,\
-                                                        bagEquipItem.getGlyphDatas(), 0, 0, bindValue, bagEquipItem.getEquipScore(), glyphPos // 2, glyphPos, bindValueBefore, bindValueAfter)
+                                                        bagEquipItem.getGlyphDatas(), bindValue, bagEquipItem.getEquipScore(), bagEquipItem.getGlyphGroupId(), glyphPos, bindValueBefore, bindValueAfter, isAuto)
             self.client.onEquipGlyphWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, glyphPos, glyphData.toClientData(),
                                                 bagEquipItem.getEquipScore(), glyphBindType, bagEquipItem.bindType)
             self.triggerAchievement(gameconst.AchieveType.INSCRIPTION)
@@ -624,8 +645,8 @@ class ImpEquipment(object):
         self.client.onEquipSpiritApplySucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, groupId, bagEquipItem.getEquipScore())
         return
 
-    def bagEquipBless(self, gridId, uniqueId, itemIds, bindTypes):
-        LOG_INFO('in bagEquipBless:', gridId, uniqueId, itemIds, bindTypes)
+    def bagEquipBless(self, gridId, uniqueId, itemIds, bindTypes, isAuto):
+        LOG_INFO('in bagEquipBless:', gridId, uniqueId, itemIds, bindTypes, isAuto)
         if not self.checkAuthDisassembleAndMsg(A_AFD.UIEquipBlessPage, 
                                                A_ACD.datas['restrictedPromptMsg1']['value']):
             return
@@ -657,12 +678,12 @@ class ImpEquipment(object):
         
         detail = gameclass.AwardDetailCls(uniqueId=bagEquipItem.uniqueId, costCurrencyDic=costCurrencyDic, costItemDic=costItemDic)
         self.baseEquipDeductItemsWithBindTypes(costCurrencyDic, costItemDic, itemIds, bindTypes, opUUID, srcType, detail, self,
-                                                    'bagEquipBlessDeductItemsCB', (opUUID, gridId))
+                                                    'bagEquipBlessDeductItemsCB', (opUUID, gridId, isAuto))
         
         return
 
-    def bagEquipBlessDeductItemsCB(self, opStat, bindValue, opUUID, gridId):
-        LOG_INFO('in bagEquipBlessDeductItemsCB:', opStat, bindValue, opUUID, gridId)
+    def bagEquipBlessDeductItemsCB(self, opStat, bindValue, opUUID, gridId, isAuto):
+        LOG_INFO('in bagEquipBlessDeductItemsCB:', opStat, bindValue, opUUID, gridId, isAuto)
         if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
             LOG_WARN('   in bagEquipBlessDeductItemsCB, deduct items error')
             return
@@ -672,18 +693,18 @@ class ImpEquipment(object):
         blessDataBefore = bagEquipItem.getBlessDatas()
         blessLvRateBefore = bagEquipItem.getBlessLvRate()
         maxBlessLvBefore = bagEquipItem.getBlessMaxLv()
-        bindValueBefore = bagEquipItem.getBindValue()
+        bindValueBefore = bagEquipItem.getBindValueByType(gameconst.EquipWashType.BLESS)
 
         if bindValue > 0:
             # 记录祝福消耗的绑定祝福石数量（用于装备洗涤）
             bagEquipItem.addBindBlessCost(bindValue)
         if bagEquipItem.doEquipBlessing(self):
 
-            bindValueAfter = bagEquipItem.getBindValue()
-            LogTrackingMgr.LogTrackingMgr.equip_bless(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, bagEquipItem.uniqueId, bagEquipItem.getItemName(), bagEquipItem.getEquipType(), \
-                                                        bagEquipItem.getGrade(), bagEquipItem.getQuality(), bagEquipItem.itemId, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, blessDataBefore, \
-                                                        bagEquipItem.getBlessDatas(), 0, 0, bindValue, blessLvRateBefore, \
-                                                        bagEquipItem.getBlessLvRate(), maxBlessLvBefore, bagEquipItem.getBlessMaxLv(), bagEquipItem.getEquipScore(), bindValueBefore, bindValueAfter)
+            bindValueAfter = bagEquipItem.getBindValueByType(gameconst.EquipWashType.BLESS)
+            LogTrackingMgr.LogTrackingMgr.equip_bless(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, bagEquipItem.uniqueId, bagEquipItem.itemId, bagEquipItem.getItemName(), bagEquipItem.getEquipType(), \
+                                                        bagEquipItem.getGrade(), bagEquipItem.getQuality(), gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, blessDataBefore, \
+                                                        bagEquipItem.getBlessDatas(), bindValue, blessLvRateBefore, \
+                                                        bagEquipItem.getBlessLvRate(), maxBlessLvBefore, bagEquipItem.getBlessMaxLv(), bagEquipItem.getEquipScore(), bindValueBefore, bindValueAfter, isAuto)
 
             blessAffixes = []
             for oneAffix in bagEquipItem.equipAttr.blessAffixes:
@@ -716,16 +737,22 @@ class ImpEquipment(object):
             LOG_ERR('bagEquipBackBless not can backBless')
             return
 
-        if bagEquipItem.doEquipBackBless():
-            blessAffixes = []
-            for oneAffix in bagEquipItem.equipAttr.blessAffixes:
-                blessAffixes.append(oneAffix.toAfxClientDic())
-            self.client.onEquipBackBlessSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, blessAffixes,
-                                             bagEquipItem.equipAttr.maxBlessLv, bagEquipItem.equipAttr.blessLvRate,
-                                             bagEquipItem.getEquipScore())
+        oldBlessLvRate = bagEquipItem.getBlessLvRate()
+        oldBlessData = bagEquipItem.getBlessDatas()
+        oldMaxBlessLv = bagEquipItem.getBlessMaxLv()
+        
+        bagEquipItem.doEquipBackBless()
 
-    def bagEquipSpiritWashing(self, gridId, uniqueId, spiritPos, itemIds, bindTypes):
-        LOG_INFO('in bagEquipSpiritWashing:', gridId, uniqueId, spiritPos, itemIds, bindTypes)
+        LogTrackingMgr.LogTrackingMgr.equip_bless_back(self.gbID, self.accountEntity.clientDistinctId, self.gbID, bagEquipItem.uniqueId, bagEquipItem.itemId, bagEquipItem.getItemName(), 
+                                                       bagEquipItem.getEquipType(), bagEquipItem.getGrade(), bagEquipItem.getQuality(), gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, 
+                                                       oldBlessData, bagEquipItem.getBlessDatas(), oldBlessLvRate, bagEquipItem.getBlessLvRate(), oldMaxBlessLv, bagEquipItem.getBlessMaxLv(), 
+                                                       bagEquipItem.getEquipScore())
+
+        self.client.onEquipBackBlessSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, bagEquipItem.getBlessDatas(),
+                                         bagEquipItem.getBlessMaxLv(), bagEquipItem.getBlessLvRate(), bagEquipItem.getEquipScore())
+
+    def bagEquipSpiritWashing(self, gridId, uniqueId, spiritPos, itemIds, bindTypes, isAuto):
+        LOG_INFO('in bagEquipSpiritWashing:', gridId, uniqueId, spiritPos, itemIds, bindTypes, isAuto)
         if not self.checkAuthDisassembleAndMsg(A_AFD.UIEquipEnchantingPanel, 
                                             A_ACD.datas['restrictedPromptMsg1']['value']):
             return
@@ -761,12 +788,12 @@ class ImpEquipment(object):
             
         detail = gameclass.AwardDetailCls(uniqueId=bagEquipItem.uniqueId, costCurrencyDic=costCurrencyDic, costItemDic=costItemDic)
         self.baseEquipDeductItemsWithBindTypes(costCurrencyDic, costItemDic, itemIds, bindTypes, opUUID, srcType, detail, self,
-                                                    'bagEquipSpiritWashingPreviewCB', (opUUID, gridId, spiritPos))
+                                                    'bagEquipSpiritWashingPreviewCB', (opUUID, gridId, spiritPos, isAuto))
         
         return
 
-    def bagEquipSpiritWashingPreviewCB(self, opStat, bindValue, unbindValue, opUUID, gridId, spiritPos):
-        LOG_INFO('in bagEquipSpiritWashingPreviewCB:', opStat, bindValue, unbindValue, opUUID, gridId, spiritPos)
+    def bagEquipSpiritWashingPreviewCB(self, opStat, bindValue, unbindValue, opUUID, gridId, spiritPos, isAuto):
+        LOG_INFO('in bagEquipSpiritWashingPreviewCB:', opStat, bindValue, unbindValue, opUUID, gridId, spiritPos, isAuto)
         if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
             LOG_WARN('   in bagEquipSpiritWashingPreviewCB, deduct items error')
             return
@@ -777,7 +804,6 @@ class ImpEquipment(object):
             return
 
         spiritDataBefore = bagEquipItem.getSpiritDatas()
-        spiritBindTypeBefore = gameconst.ItemBindType.BIND if bagEquipItem.isSpiritBindType(spiritPos) else gameconst.ItemBindType.NORMAL
 
         ret, _, _ = bagEquipItem.doEquipSpiritWashingPreview(self, spiritPos, unbindValue)
         if not ret:
@@ -791,6 +817,8 @@ class ImpEquipment(object):
         self.client.onEquipSpiritWashingPreview(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, spiritPos,
                                                 previewSpiritData.toClientData(), previewScore,
                                                 spiritBindType, bagEquipItem.bindType, opUUID)
+
+        self.triggerAchievement(gameconst.AchieveType.EQUIPMENT_WITH_SPIRIT)
 
         LogTrackingMgr.LogTrackingMgr.equip_spirit(
             self.gbID,
@@ -806,10 +834,11 @@ class ImpEquipment(object):
             gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG,
             spiritDataBefore,
             bagEquipItem.getPreviewSpiritDatas(),
-            spiritBindTypeBefore,
-            spiritBindType,
+            bagEquipItem.getBindValueByType(gameconst.EquipWashType.SPIRIT, spiritPos),
+            gameconst.ItemBindType.BIND if bagEquipItem.isPreviewSpiritBindType(spiritPos) else gameconst.ItemBindType.NORMAL,
             bagEquipItem.getEquipScore(),
             spiritPos,
+            isAuto,
         )
         return
 
@@ -833,7 +862,7 @@ class ImpEquipment(object):
             return
 
         spiritDataBefore = bagEquipItem.getSpiritDatas()
-        spiritBindTypeBefore = gameconst.ItemBindType.BIND if bagEquipItem.isSpiritBindType(spiritPos) else gameconst.ItemBindType.NORMAL
+        spiritBindValueBefore = bagEquipItem.getBindValueByType(gameconst.EquipWashType.SPIRIT, spiritPos)
 
         ret = bagEquipItem.doEquipSpiritWashingConfirm(self, spiritPos, onBody=False)
         if not ret:
@@ -843,6 +872,7 @@ class ImpEquipment(object):
 
         # confirm 后读取实际绑定状态
         spiritBindType = gameconst.ItemBindType.BIND if bagEquipItem.isSpiritBindType(spiritPos) else gameconst.ItemBindType.NORMAL
+        spiritBindValueAfter = bagEquipItem.getBindValueByType(gameconst.EquipWashType.SPIRIT, spiritPos)
         spiritData = bagEquipItem.equipAttr.spiritDatas[spiritPos]
         self.achievementInfo.triggerAchieveByType(self, gameconst.AchieveType.EQUIPMENT_WITH_SPIRIT, actionContext.AchievementCtx())
 
@@ -869,10 +899,11 @@ class ImpEquipment(object):
             gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG,
             spiritDataBefore,
             bagEquipItem.getSpiritDatas(),
-            spiritBindTypeBefore,
-            spiritBindType,
+            spiritBindValueBefore,
+            spiritBindValueAfter,
             bagEquipItem.getEquipScore(),
             spiritPos,
+            0,
         )
         return
 
@@ -999,6 +1030,7 @@ class ImpEquipment(object):
 
         bagEquipItem = self.bagData.getItemObjByGridId(gridId)
         # 记录魂魄绑定状态
+        beforeSoulAffixes = bagEquipItem.getSoulAffixesLogStr()
         bagEquipItem.setSoulBindType(soulBindType)
 
         ret = bagEquipItem.doEquipSoulSocket(self, rollProps, soulItemId)
@@ -1015,8 +1047,8 @@ class ImpEquipment(object):
             'enhanceAttrs':bagEquipItem.getEnhanceAttrs(),
         }
         LogTrackingMgr.LogTrackingMgr.equip_soul(self.gbID, self.accountEntity.clientDistinctId, bagEquipItem.uniqueId, \
-                                                    bagEquipItem.itemId, bagEquipItem.getItemName(), bagEquipItem.itemType, bagEquipItem.getGrade(), \
-                                                        bagEquipItem.getQuality(), bagEquipItem.getEquipScore(), equipAttrs, soulAffixes, bagEquipItem.soulSocketNeedItems())
+                                                    bagEquipItem.itemId, bagEquipItem.getItemName(), bagEquipItem.getEquipType(), bagEquipItem.getGrade(), \
+                                                        bagEquipItem.getQuality(), bagEquipItem.getEquipScore(), equipAttrs, beforeSoulAffixes, soulAffixes, bagEquipItem.soulSocketNeedItems())
 
     def bagEquipWash(self, gridId, uniqueId, washType, count):
         LOG_INFO('in bagEquipWash:', gridId, uniqueId, washType, count)
@@ -1042,15 +1074,18 @@ class ImpEquipment(object):
             detail, 
             self,
             'bagEquipWashDeductItemsCB', 
-            [gridId, uniqueId, washType, actualCount]
+            [opUUID, gridId, uniqueId, washType, actualCount]
         )
         return
 
-    def bagEquipWashDeductItemsCB(self, opStat, gridId, uniqueId, washType, actualCount):
+    def bagEquipWashDeductItemsCB(self, opStat, opUUID, gridId, uniqueId, washType, actualCount):
         LOG_INFO('in bagEquipWashDeductItemsCB:', opStat, gridId, uniqueId, washType, actualCount)
         if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
-            LOG_WARN('   in bagEquipWashDeductItemsCB, deduct items error')
-            self.client.onEquipWashReply(gameconst.EquipWashResult.ITEM_NOT_ENOUGH, '', gridId, uniqueId, washType, 0)
+            LOG_WARN('   in bagEquipWashDeductItemsCB, deduct items error', opStat)
+            code = gameconst.EquipWashResult.ITEM_NOT_ENOUGH
+            if opStat == gameconst.BagOPStat.OPERATE_BAG_FAIL:
+                code = gameconst.EquipWashResult.FAIL
+            self.client.onEquipWashReply(code, '', gridId, uniqueId, washType, 0)
             return
 
         bagEquipItem = self.bagData.getItemObjByGridId(gridId)
@@ -1059,8 +1094,45 @@ class ImpEquipment(object):
             self.client.onEquipWashReply(gameconst.EquipWashResult.EQUIP_NOT_FOUND, '', gridId, uniqueId, washType, 0)
             return
 
+        if washType == gameconst.EquipWashType.ENHANCE:
+            bindBefore = bagEquipItem.equipAttr.bindEnhanceCost
+        elif washType == gameconst.EquipWashType.BLESS:
+            bindBefore = bagEquipItem.equipAttr.bindBlessCost
+        else:
+            bindBefore = bagEquipItem.getBindValue()
+
         # 执行洗涤
         bagEquipItem.doEquipWash(washType, actualCount)
+
+        if washType == gameconst.EquipWashType.ENHANCE:
+            bindAfter = bagEquipItem.equipAttr.bindEnhanceCost
+        elif washType == gameconst.EquipWashType.BLESS:
+            bindAfter = bagEquipItem.equipAttr.bindBlessCost
+        else:
+            bindAfter = bagEquipItem.getBindValue()
+
+        equipAttrs = {
+            'baseAttrs': bagEquipItem.getBaseAttrs(),
+            'upgradeAttrs': bagEquipItem.getUpgradeAttrs(),
+            'enhanceAttrs': bagEquipItem.getEnhanceAttrs(),
+        }
+        LogTrackingMgr.LogTrackingMgr.equip_wash(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            opUUID,
+            bagEquipItem.uniqueId,
+            bagEquipItem.itemId,
+            bagEquipItem.getItemName(),
+            bagEquipItem.equipAttr.equipType,
+            bagEquipItem.getGrade(),
+            bagEquipItem.getQuality(),
+            bagEquipItem.getEquipScore(),
+            equipAttrs,
+            washType,
+            bindBefore,
+            bindAfter
+        )
+
         self.client.onEquipWashReply(gameconst.EquipWashResult.OK, '', gridId, uniqueId, washType, actualCount)
         return
 
@@ -1091,19 +1163,10 @@ class ImpEquipment(object):
             gameengine.panicStack("reqMultiEquipDisassemble, lack of materials, unique id list is not equal to grid id list ", uniqueIdList, gridIdList)
             return
         
-        checkData = self.bagData.doBagEquipDisassemble(self, gridIdList, uniqueIdList) or []
-        self.syncMethodCallToCrossServerBase('onLocalServerReqMultiEquipDisassemble', (gridIdList, uniqueIdList, checkData))
+        self.bagData.doBagEquipDisassemble(self, gridIdList, uniqueIdList) or []
 
-    def onLocalServerReqMultiEquipDisassemble(self, gridIdList, uniqueIdList, checkData):
-        LOG_INFO('onLocalServerReqMultiEquipDisassemble:', gridIdList, uniqueIdList, checkData)
-        __checkData = self.bagData.doBagEquipDisassemble(self, gridIdList, uniqueIdList) or []
-        if len(__checkData) != len(checkData):
-            gameengine.panicStack('onLocalServerReqMultiEquipDisassemble, check data is not equal, checkData:', checkData, __checkData)
-            return
-        for i in range(len(checkData)):
-            if checkData[i] != __checkData[i]:
-                gameengine.panicStack('onLocalServerReqMultiEquipDisassemble, check data is not equal, checkData:', checkData, __checkData)
-                return
+    def _doBagEquipDisassemble(self, srcType, _totalWealthVal, opUUID, detail, awardCtx, _succGridIdList, succUniqueIdList):
+        self.bagData._doBagEquipDisassemble(self, srcType, _totalWealthVal, opUUID, detail, awardCtx, _succGridIdList, succUniqueIdList)
 
     def bagEquipSell(self, gridId, uniqueId):
         self.bagData.doBagEquipSell(self, gridId, uniqueId)
@@ -1227,9 +1290,10 @@ class ImpEquipment(object):
             self.client.onEquipMakeFailed()
             return
 
-        if not self.canDeductWealth(deductVal, sendMsg=True):
-            LOG_ERR('in reqMakeEquipment, canDeductWealth fail:', itemId)
+        res = self.canDeductWealth(deductVal, sendMsg=True)
+        if not res:
             self.client.onEquipMakeFailed()
+            LOG_WARN('in reqMakeEquipment, canDeductWealth fail:', itemId, res())
             return
 
         opUUID = KBEngine.genUUID64()
@@ -1347,7 +1411,7 @@ class ImpEquipment(object):
 ################################## gm cmd end ###################################
 
     ################################### drop equip start ##############################
-    def checkDropEquip(self, equipInfo, baseDropInfo):
+    def checkDropEquip(self, equipInfo, baseDropInfo, isCross):
         # 掉落列表满了
         if self.equipDropInfo.dropNum() >= GBGCD.datas['equipRepairListMaxNum']['value']:
             # 如果是自己掉的，直接破碎
@@ -1368,7 +1432,7 @@ class ImpEquipment(object):
                 srcType=AAC_AACDD.datas.BONUS_SRC_EQUIPMENT_DROP_REMOVE
             )
         else:
-            self.cell.doDropEquipByItem(baseDropInfo, equipInfo)
+            self.cell.doDropEquipByItem(baseDropInfo, equipInfo, isCross)
 
     def onDropEquipBase(self, ownerId, returnTime, ownerServerId, uniqueId, price, mapId, pos, equipInfo, collEndTime, killerName, endTime, extraBlob, collectionId, dropTime, isFirst):
         _blob = cPickle.dumps(equipInfo)
@@ -1408,6 +1472,28 @@ class ImpEquipment(object):
             0
         )
 
+        if self.isCrossServerInLocalServer:
+            self.syncMethodCallToCrossServerBase('_syncOnDropEquipBase', (ownerId, returnTime, ownerServerId, uniqueId, price, mapId, pos, equipInfo, collEndTime, killerName, endTime, extraBlob, collectionId, dropTime, isFirst))
+
+    def _syncOnDropEquipBase(self, ownerId, returnTime, ownerServerId, uniqueId, price, mapId, pos, equipInfo, collEndTime, killerName, endTime, extraBlob, collectionId, dropTime, isFirst):
+        self.equipDropInfo.addNewDrop(
+            self,
+            uniqueId,
+            price,
+            mapId,
+            pos,
+            equipInfo,
+            collEndTime,
+            killerName,
+            endTime,
+            gameconst.DropType.TYPE_DROP,
+            True,
+            dropTime,
+            False,
+            returnTime,
+            0,
+            0
+        )
 
     def addNotifyDropFixTimer(self, uniqueId, endTime):
         self.equipDropInfo.addNotifyDropFixTimer(uniqueId, endTime)
@@ -1466,6 +1552,35 @@ class ImpEquipment(object):
         # 通知客户端领取结果
         self.client.onGetBackEquipSuccess(uniqueId, dropType)
 
+        if self.isCrossServerInLocalServer:
+            self.syncMethodCallToCrossServerBase('_syncOnGetBackDropEquip', (dropType, uniqueId, equipItem.uniqueId, _src, _awardVal, _opUUID, _detail))
+
+    #cross
+    def _syncOnGetBackDropEquip(self, dropType, uniqueId, equipItemUniqueId, _src, _awardVal, _opUUID, _detail):
+        # 对方返还或者自己捡起来或者自己赎回，需要倒计时
+        if dropType == gameconst.DropType.TYPE_TAKE_WAIT_DROP_GET \
+            or dropType == gameconst.DropType.TYPE_GIVEUP_WAIT_DROP_GET \
+            or dropType == gameconst.DropType.TYPE_REDEEM_WAIT_DROP_GET:
+            self.equipDropInfo.removeDrop(self, uniqueId)
+            _fixEndTime = utils.curTS() + GBGCD.datas['equipRepairTime']['value']
+            self.addNotifyDropFixTimer(equipItemUniqueId, _fixEndTime)
+        # 赎回到期或者自动返还，不需要倒计时
+        elif dropType == gameconst.DropType.TYPE_REDEEM_EXPIRE_WAIT_TAKE_GET:
+            self.equipDropInfo.removeTaker(self, uniqueId)
+        elif dropType == gameconst.DropType.TYPE_RETURN_GET:
+            self.equipDropInfo.removeDrop(self, uniqueId)
+
+        
+        self.addWealth(
+            _src,
+            _awardVal,
+            _opUUID,
+            _detail,
+            awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID),
+        )
+        
+        self.client.onGetBackEquipSuccess(uniqueId, dropType)
+
     def _sendDestroyMail(self, itemId):
         _mailId = GBGCD.datas['equipDestroyedMailID']['value']
         _args = [
@@ -1482,19 +1597,25 @@ class ImpEquipment(object):
     def onTakeDropEquipFailed(self, uniqueId, result):
         LOG_INFO('onTakeDropEquipFailed:', uniqueId, result)
         self.pickDropEquipLockTime = 0
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('onTakeDropEquipFailed', (uniqueId, result))
 
     # 捡别人的装备成功的回调
     def onTakeDropEquipSuccess(self, dropGbId, uniqueId, equipInfo, endTime, price, redeemWaitTime, returnTime):
-        LOG_INFO('onTakeDropEquipSuccess:', dropGbId, uniqueId, equipInfo, endTime, price, redeemWaitTime, returnTime)
-        self.pickDropEquipLockTime = 0
-
-        equipInfo = cPickle.loads(equipInfo)
-        equipItem = itemFactory.ItemFactory.createItemWithSavedDict(equipInfo)
-
         _posInfo = self.popTempMiscProp(gameconst.EntityPropsEnum.takeDropInfo, None)
         if _posInfo is None:
             LOG_ERR('onGetBackDropEquip not found temp misc prop:', uniqueId)
             return
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_onTakeDropEquipSuccess', (dropGbId, uniqueId, equipInfo, endTime, price, redeemWaitTime, returnTime, _posInfo))
+        self._onTakeDropEquipSuccess(dropGbId, uniqueId, equipInfo, endTime, price, redeemWaitTime, returnTime, _posInfo)
+
+    def _onTakeDropEquipSuccess(self, dropGbId, uniqueId, equipInfo, endTime, price, redeemWaitTime, returnTime, _posInfo):
+        LOG_INFO('onTakeDropEquipSuccess:', dropGbId, uniqueId, equipInfo, endTime, price, redeemWaitTime, returnTime, _posInfo)
+        self.pickDropEquipLockTime = 0
+
+        equipInfo = cPickle.loads(equipInfo)
+        equipItem = itemFactory.ItemFactory.createItemWithSavedDict(equipInfo)
 
         _spaceNo, _pos = _posInfo
         LogTrackingMgr.LogTrackingMgr.pickup_equip(
@@ -1512,7 +1633,8 @@ class ImpEquipment(object):
         )
 
         if dropGbId == self.gbID:
-            self.onDropTypeChangeToAvatar([uniqueId], [gameconst.DropNotifyType.NOTIFY_TYPE_TAKE_WAIT_DROP_GET], [[]])
+            if not gameconfig.isCrossServer():
+                self.onDropTypeChangeToAvatar([uniqueId], [gameconst.DropNotifyType.NOTIFY_TYPE_TAKE_WAIT_DROP_GET], [[]])
             self.onMessagePre(
                 GBGCD.datas['equipRepairing_msgId']['value'],
                 [str(equipInfo.get('itemId', '')), str(GBGCD.datas['equipRepairTime']['value'])]
@@ -1529,7 +1651,9 @@ class ImpEquipment(object):
             True,
             redeemWaitTime,
             False,
-            returnTime
+            returnTime,
+            0,
+            0
         )
 
         self.onMessagePre(
@@ -1537,7 +1661,14 @@ class ImpEquipment(object):
             [str(equipItem.itemId)])
 
     @gamedecorator.checkGameconfigEnable('equip')
+    @gamedecorator.crossServer
     def giveUpDropEquip(self, exposed, uniqueId):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_giveUpDropEquip', (uniqueId,))
+        else:
+            self._giveUpDropEquip(uniqueId)
+
+    def _giveUpDropEquip(self, uniqueId):
         LOG_INFO('giveUpDropEquip:', uniqueId)
         if not self.equipDropInfo.hasTakeDrop(uniqueId):
             LOG_ERR('giveUpDropEquip not found take:', uniqueId)
@@ -1546,7 +1677,15 @@ class ImpEquipment(object):
         gameengine.getGlobalBase('DropStub').giveUpDropEquip(self.gbID, uniqueId, self)
 
     @gamedecorator.checkGameconfigEnable('equip')
+    @gamedecorator.crossServer
     def redeemEquipDrop(self, exposed, uniqueId):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_redeemEquipDrop', (uniqueId,))
+        else:
+            self._redeemEquipDrop(uniqueId)
+
+    #local
+    def _redeemEquipDrop(self, uniqueId):
         LOG_INFO('redeemEquipDrop:', uniqueId)
         _dropVal = self.equipDropInfo.getDropVal(uniqueId)
         if not _dropVal:
@@ -1559,8 +1698,9 @@ class ImpEquipment(object):
             _dropVal.price,
         )
 
-        if not self.canDeductWealth(_deductVal, sendMsg=True):
-            LOG_WARN('       in doUnlockGrids, items not enough:', _deductVal)
+        res = self.canDeductWealth(_deductVal, sendMsg=True)
+        if not res:
+            LOG_WARN('       in doUnlockGrids, items not enough:', _deductVal, res())
             return
 
         _opUUID = KBEngine.genUUID64()
@@ -1570,7 +1710,17 @@ class ImpEquipment(object):
 
         gameengine.getGlobalBase('DropStub').doRedeemEquipDrop(self.gbID, uniqueId, self)
 
+        self.syncMethodCallToLocalServerBase('_syncOnRedeemEquipDrop', (_src, _deductVal, _opUUID, _detail))
+
+    #cross
+    def _syncOnRedeemEquipDrop(self, _src, _deductVal, _opUUID, _detail):
+        LOG_INFO('syncOnRedeemEquipDrop:', _src, _deductVal, _opUUID, _detail)
+        self.deductWealth(_src, _deductVal, _opUUID, _detail)
+
     def onRedeemResult(self, uniqueId, result):
+        if self.isCrossServerInLocalServer:
+            self.syncMethodCallToCrossServerBase('onRedeemResult', (uniqueId, result))
+
         LOG_INFO('onRedeemResult:', uniqueId, result)
         if result == DropResult_SUCCESS:
             self.equipDropInfo.onDropTypeChange(uniqueId, gameconst.DropNotifyType.NOTIFY_TYPE_REDEEM_WAIT_DROP_GET)
@@ -1590,8 +1740,8 @@ class ImpEquipment(object):
         else:
             LOG_ERR('onRedeemResult unknown:', uniqueId, result)
 
-    def onGetDropTakeReward(self, uniqueId, price, result):
-        LOG_INFO('onGetDropTakeReward:', uniqueId, price, result)
+    def onGetDropTakeReward(self, uniqueId, bindMoney, money, result):
+        LOG_INFO('onGetDropTakeReward:', uniqueId, bindMoney, money, result)
         if result != DropResult_SUCCESS:
             return
         takerVal = self.equipDropInfo.getTakerVal(uniqueId)
@@ -1599,11 +1749,11 @@ class ImpEquipment(object):
         if takerVal.state == gameconst.DropNotifyType.NOTIFY_TYPE_REWARD:
             self.equipDropInfo.removeTaker(self, uniqueId)
 
-        _awardVal = dropAward.AwardVal()
-        _awardVal.addWealthByItemId(
-            GBGCD.datas['equipRepairCost']['value'],
-            price,
-        )
+        
+        if gameconfig.isCrossServer():
+            return
+
+        _awardVal = dropAward.AwardVal(bindMoney=bindMoney, money=money)
 
         _opUUID = KBEngine.genUUID64()
         _src = AAC_AACDD.datas.BONUS_SRC_REDEEM_FOR_PICKER
@@ -1618,12 +1768,40 @@ class ImpEquipment(object):
         )
         self.client.onGetDropTakeRewardSuccess(uniqueId)
 
+        if self.isCrossServerInLocalServer:
+            self.syncMethodCallToCrossServerBase('_onGetDropTakeReward', (uniqueId, bindMoney, money, result, _src, _awardVal, _opUUID, _detail))
+    
+    def _onGetDropTakeReward(self, uniqueId, bindMoney, money, result, _src, _awardVal, _opUUID, _detail):
+        LOG_INFO('onGetDropTakeReward:', uniqueId, bindMoney, money, result, _src, _awardVal, _opUUID, _detail)
+        self.onGetDropTakeReward(uniqueId, bindMoney, money, result)
+        self.addWealth(
+            _src,
+            _awardVal,
+            _opUUID,
+            _detail,
+            awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID),
+        )
+        self.client.onGetDropTakeRewardSuccess(uniqueId)
+
     @gamedecorator.checkGameconfigEnable('equip')
+    @gamedecorator.crossServer
     def getTakerWaitReward(self, exposed, uniqueId):
         LOG_INFO('getTakerWaitReward:', uniqueId)
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_getTakerWaitReward', (uniqueId,))
+        else:
+            self._getTakerWaitReward(uniqueId)
+
+    def _getTakerWaitReward(self, uniqueId):
         gameengine.getGlobalBase('DropStub').doGetTakeReward(self.gbID, uniqueId, self)
 
+    #drop中心服直接返回给跨服时，也应该去本服调用，再同步给跨服
+    def onDropTypeChangeToAvatarInCross(self, uniqueIds, notifyTypes, notifyArgs):
+        LOG_INFO('onDropTypeChangeToAvatarInCross:', uniqueIds, notifyTypes, notifyArgs)
+        self.syncMethodCallToLocalServerBase('onDropTypeChangeToAvatar', (uniqueIds, notifyTypes, notifyArgs))
+
     def onDropTypeChangeToAvatar(self, uniqueIds, notifyTypes, notifyArgs):
+        self.syncMethodCallToCrossServerBase('onDropTypeChangeToAvatar', (uniqueIds, notifyTypes, notifyArgs))
         LOG_INFO('onDropTypeChangeToAvatar:', uniqueIds, notifyTypes, notifyArgs)
         for idx in range(0, len(uniqueIds)):
             uniqueId = uniqueIds[idx]
@@ -1695,8 +1873,9 @@ class ImpEquipment(object):
                 if _takeVal:
                     notifyArg = notifyArgs[idx]
                     _takeVal.state = notifyType
-                    _takeVal.price = notifyArg[0]
-                    self.client.onSetEquipPrice(uniqueId, _takeVal.price)
+                    _takeVal.bindMoney = notifyArg[0]
+                    _takeVal.money = notifyArg[1]
+                    self.client.onSetEquipPrice(uniqueId, _takeVal.bindMoney, _takeVal.money)
 
             self.client.onEquipDropStateChange(uniqueId, notifyType)
 
@@ -1725,7 +1904,7 @@ class ImpEquipment(object):
                 takerGbId
             )
 
-        for _uniqueId, _equipInfo, _endTime, _dropType, _price, redeemWaitTime, hasPrice, returnTime in takerInfo:
+        for _uniqueId, _equipInfo, _endTime, _dropType, _price, redeemWaitTime, hasPrice, returnTime, bindMoney, money in takerInfo:
             self.equipDropInfo.addTaker(
                 self,
                 _uniqueId,
@@ -1736,7 +1915,9 @@ class ImpEquipment(object):
                 False,
                 redeemWaitTime, 
                 hasPrice,
-                returnTime
+                returnTime,
+                bindMoney,
+                money
             )
 
         self.equipDropInitStatus = 1
@@ -1772,7 +1953,7 @@ class ImpEquipment(object):
             return
         curTs = utils.curTS() 
         redeemWaitTime = GBGCD.datas['equipRedeemWaitTime']['value']
-        gameengine.getGlobalBase('DropStub').takeDropEquip(self.gbID, self.serverId, uniqueId, self, redeemWaitTime)
+        gameengine.getGlobalBase('DropStub').takeDropEquip(self.gbID, self.baseFromServerId, uniqueId, self, redeemWaitTime)
         self.pickDropEquipLockTime = curTs + 60
         self.setTempMiscProp(gameconst.EntityPropsEnum.takeDropInfo, (spaceNo, position))
 
@@ -1782,6 +1963,11 @@ class ImpEquipment(object):
             _takerVal = self.equipDropInfo.removeTaker(self, uniqueId)
             if _takerVal:
                 redisUtils.RedisUtils.getSingleUserInfo(dropGbId, functools.partial(self._onGiveUpGetUserInfo, _takerVal))
+            self.syncMethodCallToCrossServerBase('_onGiveUpDropEquip', (uniqueId, result, dropGbId))
+
+    def _onGiveUpDropEquip(self, uniqueId, result, dropGbId):
+        LOG_INFO('onGiveUpDropEquip:', uniqueId, result, dropGbId)
+        self.equipDropInfo.removeTaker(self, uniqueId)
 
     def _onGiveUpGetUserInfo(self, _takerVal, fcVal):
         _item = itemFactory.ItemFactory.createItemWithSavedDict(_takerVal.equip)
@@ -1792,10 +1978,14 @@ class ImpEquipment(object):
         _msgId = GBGCD.datas['returnEnergyCrystalSuccess_msgID']['value']
 
         self.onMessagePre(_msgId, _args)
+        self.syncMethodCallToCrossServerBase('_onLocalEnergyCrystalSuccess', (_msgId, _args))
+
+    #cross
+    def _onLocalEnergyCrystalSuccess(self, _msgId, _args):
+        LOG_INFO('onLocalEnergyCrystalSuccess:', _msgId, _args)
+        self.onMessagePre(_msgId, _args)
 
     def _dealDropEquipExpire(self):
-        self.equipDropInfo.doDealDropEquipExpire(self)
-
         _endTime = utils.curTS()
         # 处理装备修复时间到提示msg
         while True:
@@ -1843,17 +2033,13 @@ class ImpEquipment(object):
             srcType=AAC_AACDD.datas.BONUS_SRC_EQUIPMENT_TAKE_EXPIRE
         )
 
-    def onDropEquipExpire(self, uniqueId, result):
-        LOG_INFO('onDropEquipExpire:', uniqueId, result)
-        if result != DropResult_SUCCESS:
-            return
-
-        _dropVal = self.equipDropInfo.getDropVal(uniqueId)
-        if _dropVal:
-            self._dropExpire(uniqueId, _dropVal.equipItem().itemId)
-            return
-
+    @gamedecorator.offlineCallback
+    def onDropEquipExpire(self, uniqueId, itemId):
+        LOG_INFO('onDropEquipExpire:', uniqueId, itemId)
+        self._dropExpire(uniqueId, itemId)
+        
     @gamedecorator.checkGameconfigEnable('equip')
+    @gamedecorator.crossServer
     def setTakeEquipRedeemPrice(self, exposed, uniqueId, price):
         LOG_INFO('setTakeEquipRedeemPrice:', uniqueId, price)
         if price <= 0:
@@ -1871,7 +2057,7 @@ class ImpEquipment(object):
             self.client.onSetTakeEquipRedeemPrice(uniqueId, -1)
             return
         if price > GBGBD.datas[takerVal.equipItem().itemId]['redeemPrice']:
-            LOG_ERR('setTakeEquipRedeemPrice invalid price:', uniqueId, price, takerVal.price)
+            LOG_ERR('setTakeEquipRedeemPrice invalid price:', uniqueId, price)
             self.client.onSetTakeEquipRedeemPrice(uniqueId, -1)
             return
         gameengine.getGlobalBase('DropStub').setTakeEquipRedeemPrice(self.gbID, uniqueId, self, price)
@@ -1912,7 +2098,14 @@ class ImpEquipment(object):
         )
 
     @gamedecorator.checkGameconfigEnable('equip')
+    @gamedecorator.crossServer
     def getBackEquip(self, exposed, uniqueId, dropType):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_getBackEquip', (uniqueId, dropType))
+        else:
+            self._getBackEquip(uniqueId, dropType)
+
+    def _getBackEquip(self, uniqueId, dropType):
         LOG_INFO('in getBackEquip:', uniqueId, dropType)
         # 检查是否还有剩余的格子
         if self.bagData.fetchEmptyGrid() is None:
@@ -1926,7 +2119,13 @@ class ImpEquipment(object):
         gameengine.getGlobalBase('DropStub').doGetBackEquip(self.gbID, self, uniqueId, dropType)
 
     @gamedecorator.checkGameconfigEnable('equip')
+    @gamedecorator.crossServer
     def payDropPrice(self, exposed, uniqueId, price):
+        self._payDropPrice(uniqueId, price)
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_payDropPrice', (uniqueId, price))
+
+    def _payDropPrice(self, uniqueId, price):
         LOG_INFO('payDropPrice:', uniqueId, price)
         if price < 0:
             LOG_ERR('payDropPrice not valid price:', uniqueId, price)
@@ -1946,7 +2145,7 @@ class ImpEquipment(object):
             LOG_ERR('payDropPrice over return time:', uniqueId)
             self.client.onPayDropPrice(uniqueId, -1)
             return
-        if _dropVal.price <= 0 or price < _dropVal.price:
+        if _dropVal.price <= 0 or price != _dropVal.price:
             LOG_ERR('payDropPrice invalid price:', uniqueId, price, _dropVal.price)
             self.client.onPayDropPrice(uniqueId, -1)
             return
@@ -1954,9 +2153,14 @@ class ImpEquipment(object):
         deductWealthVal = dropAward.DeductWealthVal()
         itemId = GBGCD.datas['equipRepairCost']['value']
         deductWealthVal.addWealthByItemId(itemId, _dropVal.price)
-        if not self.canDeductWealth(deductWealthVal):
-            LOG_WARN('payDropPrice, item is not enough')
+        res = self.canDeductWealth(deductWealthVal)
+        if not res:
+            LOG_WARN('payDropPrice, item is not enough', res())
             self.client.onPayDropPrice(uniqueId, -1)
+            return
+
+        #跨服只弹窗，扣钱后面本服同步
+        if gameconfig.isCrossServer():
             return
         
         srcType = AAC_AACDD.datas.BONUS_SRC_DROP_PAY_PRICE
@@ -1964,8 +2168,28 @@ class ImpEquipment(object):
         detail = gameclass.AwardDetailCls(uniqueId=uniqueId, itemId=itemId, itemCount=_dropVal.price)
 
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
-        rewardRatio = GBGCD.datas['equipRepairRatioForTax']['value']    
-        gameengine.getGlobalBase('DropStub').setDropEquipPayPrice(self.gbID, uniqueId, self, price, rewardRatio)
+
+        revenueRule = GBGCD.datas['equipRepairRatioForTaxTemp']['value']    
+        revenueTax = math.ceil(revenueRule[0] * _dropVal.price)
+        if revenueTax >= _dropVal.price:
+            revenueTax = _dropVal.price
+            revenueMoney = 0
+            revenueBindMoney = 0
+        else:
+            revenueMoney = math.ceil(revenueRule[2] * _dropVal.price)
+            if revenueMoney >= _dropVal.price - revenueTax:
+                revenueMoney = _dropVal.price - revenueTax
+                revenueBindMoney = 0
+            else:
+                revenueBindMoney = _dropVal.price - revenueTax - revenueMoney
+
+        gameengine.getGlobalBase('DropStub').setDropEquipPayPrice(self.gbID, uniqueId, self, _dropVal.price, revenueBindMoney, revenueMoney)
+
+        self.syncMethodCallToCrossServerBase('_onLocalPayDropPrice', (srcType, deductWealthVal, opUUID, detail))
+
+    def _onLocalPayDropPrice(self, srcType, deductWealthVal, opUUID, detail):
+        LOG_INFO('onLocalPayDropPrice:', srcType, deductWealthVal, opUUID, detail)
+        self.deductWealth(srcType, deductWealthVal, opUUID, detail)
     
     def onSetDropEquipPayPriceBase(self, uniqueId, price, result):
         LOG_INFO('onSetDropEquipPayPriceBase:', uniqueId, price, result)
@@ -1992,8 +2216,8 @@ class ImpEquipment(object):
 
         self.client.onPayDropPrice(uniqueId, price)
 
-    def onNotifyCustodyEquip(self, uniqueId, equipInfo, dropType, equip, returnTime):
-        LOG_INFO('onNotifyCustodyEquip:', uniqueId, equipInfo, dropType, equip, returnTime)
+    def onNotifyCustodyEquip(self, uniqueId, equipInfo, dropType, returnTime):
+        LOG_INFO('onNotifyCustodyEquip:', uniqueId, equipInfo, dropType, returnTime)
         self.equipDropInfo.addNewDrop(
             self,
             uniqueId,
@@ -2016,6 +2240,10 @@ class ImpEquipment(object):
     @gamedecorator.offlineCallback
     def onNotifyRemoveEquip(self, uniqueIds):
         LOG_INFO('in onNotifyRemoveEquip:', uniqueIds)
+        if not self.clientFinishInit:
+            self.registerTempEvent(gameconst.EntityPropsEnum.clientInitEvent, 'onNotifyRemoveEquip', (uniqueIds,))
+            return
+        
         for uniqueId in uniqueIds:
             # 先查背包里数据
             gridId, gridObj = self.getGridItemByUniqueId(uniqueId)
@@ -2255,10 +2483,14 @@ class ImpEquipment(object):
         for itemId, itemNum in costItem.items():
             deductWealthVal.addWealthByItemId(itemId, itemNum)
 
-        if not self.canDeductWealth(deductWealthVal):
+        res = self.canDeductWealth(deductWealthVal)
+        if not res:
             self.cell.unlockBodyEquips()
-            self.client.onMultiEquipEnhance(gameconst.EquipMultiEnhanceResult.ITEM_NOT_ENOUGH, [], [], isMulti)
-            LOG_WARN('baseMultiEquipEnhance, item is not enough')
+            code = gameconst.EquipMultiEnhanceResult.ITEM_NOT_ENOUGH
+            if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
+                code = gameconst.EquipMultiEnhanceResult.FAIL
+            self.client.onMultiEquipEnhance(code, [], [], isMulti)
+            LOG_WARN('baseMultiEquipEnhance, item is not enough', res())
             return
         
         opUUID = KBEngine.genUUID64()
@@ -2324,7 +2556,7 @@ class ImpEquipment(object):
             enhanceAttrsBefore = bagEquipItem.getEnhanceAttrs()
             upgradeAttrsBefore = bagEquipItem.getUpgradeAttrs()
             levelBefore = bagEquipItem.getEnhanceLevel()
-            bindValueBefore = bagEquipItem.getBindValue()
+            bindValueBefore = bagEquipItem.getBindValueByType(gameconst.EquipWashType.ENHANCE)
 
             bindValue = bindInfos[0]
             if bindValue > 0:
@@ -2332,7 +2564,7 @@ class ImpEquipment(object):
                 bagEquipItem.addBindEnhanceCost(bindValue)
             
             enhanceVal = bagEquipItem.doEnhanceEquip(self, opUUID, bagEquipItem.getEnhanceLevel())
-            bindValueAfter = bagEquipItem.getBindValue()
+            bindValueAfter = bagEquipItem.getBindValueByType(gameconst.EquipWashType.ENHANCE)
             # 装备破碎了
             if enhanceVal == gameconst.EquipConstVale.ENHANCEMENT_BROKEN_FLAG:
                 detail = gameclass.AwardDetailCls(uniqueid=uniqueId, itemid=bagEquipItem.itemId)
@@ -2349,8 +2581,8 @@ class ImpEquipment(object):
             }
             LogTrackingMgr.LogTrackingMgr.equip_enhancement(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, bagEquipItem.uniqueId, bagEquipItem.itemId, bagEquipItem.getItemName(), bagEquipItem.getEquipType(), \
                                                             bagEquipItem.getGrade(), bagEquipItem.getQuality(), gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, baseAttrsBefore, enhanceAttrsBefore, \
-                                                            upgradeAttrsBefore, bagEquipItem.getBaseAttrs(), bagEquipItem.getEnhanceAttrs(), bagEquipItem.getUpgradeAttrs(), 0, 0, bindValue, levelBefore, bagEquipItem.getEnhanceLevel(), enhanceVal, bagEquipItem.getEquipScore(), \
-                                                            bindValueBefore, bindValueAfter, equipAttrsBefore, equipAttrsAfter)
+                                                            bagEquipItem.getBaseAttrs(), bagEquipItem.getEnhanceAttrs(), bindValue, levelBefore, bagEquipItem.getEnhanceLevel(), enhanceVal, bagEquipItem.getEquipScore(), \
+                                                            bindValueBefore, bindValueAfter, equipAttrsBefore, equipAttrsAfter, isMulti)
             self.triggerAchievement(gameconst.AchieveType.ENHANCE_EQUIPMENT)
             enhanceResults.append([gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, enhanceVal, bagEquipItem.itemId, bagEquipItem.uniqueId, bagEquipItem.getEnhanceLevel(), bagEquipItem.getEquipScore(), bagEquipItem.equipAttr.bindEnhanceCost, bagEquipItem.bindType, bagEquipItem.getMaxEnhanceLevel()])        
         self.cell.cellMultiEquipEnhance(opUUID, bodyEquipInfos, bodyEquipBindInfos, enhanceResults, consumedItemInfos, isMulti)

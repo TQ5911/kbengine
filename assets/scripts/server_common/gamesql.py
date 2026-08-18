@@ -935,43 +935,34 @@ def loadModifyCurrency(avatar, callback):
 
 # =========================== SAFE BOX ======================================
 
-def loadSafeBoxUnclaimed(gbId, limit, callback):
-    _sql = (
-        f'SELECT id, itemId, itemCount, itemPrice, claimed, '
-        f'claimTime, orderId, orderTime '
-        f'FROM {gameconst.TABLE_NAME_GAME_SAFE_BOX} '
-        f'WHERE gbId={gbId} AND claimed=0 '
-        f'ORDER BY orderTime DESC, id DESC '
-        f'LIMIT {limit}'
-    )
+def loadSafeBoxBatch(gbId, cursorOrderTime, cursorId, batchSize, callback):
+    """Load a batch of safebox records by gbId using cursor-based pagination.
+    
+    First batch: cursorOrderTime=0, cursorId=0 loads from newest.
+    Subsequent batches: pass last record's (orderTime, id) as cursor.
+    Returns up to batchSize rows ordered by orderTime DESC, id DESC.
+    """
+    if cursorOrderTime == 0 and cursorId == 0:
+        _sql = (
+            f'SELECT id, itemId, itemCount, itemPrice, claimed, '
+            f'claimTime, orderId, orderTime '
+            f'FROM {gameconst.TABLE_NAME_GAME_SAFE_BOX} '
+            f'WHERE gbId={gbId} '
+            f'ORDER BY orderTime DESC, id DESC '
+            f'LIMIT {batchSize}'
+        )
+    else:
+        _sql = (
+            f'SELECT id, itemId, itemCount, itemPrice, claimed, '
+            f'claimTime, orderId, orderTime '
+            f'FROM {gameconst.TABLE_NAME_GAME_SAFE_BOX} '
+            f'WHERE gbId={gbId} AND '
+            f'(orderTime < {cursorOrderTime} OR '
+            f'(orderTime = {cursorOrderTime} AND id < {cursorId})) '
+            f'ORDER BY orderTime DESC, id DESC '
+            f'LIMIT {batchSize}'
+        )
     KBEngine.executeRawDatabaseCommand(_sql, callback)
-
-
-def loadSafeBoxRecentClaimed(gbId, limit, callback):
-    _sql = (
-        f'SELECT id, itemId, itemCount, itemPrice, claimed, '
-        f'claimTime, orderId, orderTime '
-        f'FROM {gameconst.TABLE_NAME_GAME_SAFE_BOX} '
-        f'WHERE gbId={gbId} AND claimed=1 '
-        f'ORDER BY claimTime DESC, id DESC '
-        f'LIMIT {limit}'
-    )
-    KBEngine.executeRawDatabaseCommand(_sql, callback)
-
-
-def loadMoreUnclaimedSafeBox(gbId, cursorOrderTime, cursorId, limit, callback):
-    _sql = (
-        f'SELECT id, itemId, itemCount, itemPrice, claimed, '
-        f'claimTime, orderId, orderTime '
-        f'FROM {gameconst.TABLE_NAME_GAME_SAFE_BOX} '
-        f'WHERE gbId={gbId} AND claimed=0 AND '
-        f'(orderTime < {cursorOrderTime} OR '
-        f'(orderTime = {cursorOrderTime} AND id < {cursorId})) '
-        f'ORDER BY orderTime DESC, id DESC '
-        f'LIMIT {limit}'
-    )
-    KBEngine.executeRawDatabaseCommand(_sql, callback)
-
 
 def insertSafeBoxItem(gbId, itemId, itemCount, itemPrice, orderId, orderTime, callback):
     _sql = (
@@ -994,7 +985,7 @@ def deleteSafeBoxItem(safeBoxId, callback=None):
 def checkOrderExists(orderId, callback):
     _sql = (
         f'SELECT id FROM {gameconst.TABLE_NAME_GAME_SAFE_BOX_IDEMPOTENT} '
-        f'WHERE orderId="{utils.escape_string(orderId)}" '
+        f'WHERE orderId={utils.escape_string(orderId)}'
         f'LIMIT 1'
     )
     KBEngine.executeRawDatabaseCommand(_sql, callback)
@@ -1023,5 +1014,8 @@ def takeOverAccount(accountName, dbid):
     KBEngine.executeRawDatabaseCommand(_sql, None)
 
 
+def getAccountNameById(dbid, callback):
+    _sql = f'SELECT sm_accountName FROM tbl_Account WHERE id = {dbid}'
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
 
 

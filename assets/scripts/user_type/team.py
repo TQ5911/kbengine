@@ -443,15 +443,19 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
         self.teamMicsSwitch = savedDataDict['teamMicsSwitch']
         self.usingItemsInfo = {}
         self.teamMicsBlocked = savedDataDict['teamMicsBlocked']
+        self.blockedMembers = set(savedDataDict.get('blockedMembers', []))
         self.recruitInfo = savedDataDict['recruitInfo']
         self.isAutoExpedition = savedDataDict['isAutoExpedition']
         self.password = savedDataDict['password']
         self.isInDungeon = savedDataDict['isInDungeon']
         self.lastDungeonFinishedTime = savedDataDict['lastDungeonFinishedTime']
         for i in savedDataDict['teamDungeonList']:
-            t = TeamDungeonSpaceCacheVal(i['dungeonNo'], i['spaceNo'], i['spaceUUID'])
-            t.initFromDict(i)
-            self.teamDungeonDict[i['dungeonNo']] = t
+            if isinstance(i, TeamDungeonSpaceCacheVal):
+                self.teamDungeonDict[i.dungeonNo] = i
+            else:
+                t = TeamDungeonSpaceCacheVal(i['dungeonNo'], i['spaceNo'], i['spaceUUID'])
+                t.initFromDict(i)
+                self.teamDungeonDict[i['dungeonNo']] = t
 
         teamMemberList = savedDataDict['teamMemberList']
         for _teamMemberDict in teamMemberList:
@@ -476,6 +480,11 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
                                                             bOnline, spaceNo, position, hp, fullHp, score=score, \
                                                             mountState=mountState, isDead=isDead, openId=openId, joinType=joinType)
 
+        # 从持久化的禁言列表恢复在线队员的 isBlockMics
+        # Leader 模式下的“无发言权”不再使用 isBlockMics，由客户端根据 teamMicsSwitch 判断
+        for _playerGbId, _memberVal in self.teamPlayerDict.items():
+            _memberVal.isBlockMics = _playerGbId in self.blockedMembers
+
     def toStreamSavedDic(self):
         savedDict = {
             'teamTarget': self.teamTarget, 
@@ -485,11 +494,12 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             'teamMinLv':self.teamMinLv,  
             'teamCaptainGbId': self.teamCaptainGbId,
             'teamMemberList': [i.toStreamSavedDic() for i in self.teamPlayerDict.values()],
-            'teamDungeonList': [i.toStreamSavedDic() for i in self.teamDungeonDict.values()],
+            'teamDungeonList': self.teamDungeonDict,
             'teamHonorPKMatchTime': self.teamHonorPKMatchTime, 
             'isSilent':self.isSilent,
             'teamMicsSwitch': self.teamMicsSwitch, 
             'teamMicsBlocked': self.teamMicsBlocked,
+            'blockedMembers': list(self.blockedMembers),
             'recruitInfo': self.recruitInfo,
             'isAutoExpedition': self.isAutoExpedition,
             'password': self.password,
@@ -549,7 +559,10 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             return False, gameconst.RaidErrno.ENUM_RAID_RAID_TEAM_IS_FULL
 
         isBlockMics = playerGbId in self.blockedMembers
-        inVoiceRoom = self.teamMicsSwitch != gameconst.TeamMicsModeEnum.OFF
+        # 新队员默认不在语音房间，需等客户端真正进入 GME 房间后再通过 reqUpdateVoiceRoomState 同步
+        inVoiceRoom = False
+        enableSpeaker = False
+        # Leader 模式下的“无发言权”由 turnOnTeamMemberMics 按模式拦截，不再写入 isBlockMics
 
         _newMember = TeamMemberCacheVal(
             playerGbId, 
@@ -565,7 +578,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
             isDead=isDead, 
             openId=openId,
             isBlockMics=isBlockMics,
-            enableSpeaker=inVoiceRoom,
+            enableSpeaker=enableSpeaker,
             inVoiceRoom=inVoiceRoom,
             joinType=joinType)
 
@@ -631,7 +644,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
                     LOG_WARN('delMember teamMember has no client', _gbId)
 
         self.teamPlayerDict.pop(playerGbId, None)
-        self.blockedMembers.discard(playerGbId)
+        # 保留 blockedMembers，玩家退出再进入同一队伍时仍保持禁言状态
         self.updateTeamMatchInfo()
     
     def setCaptainGbId(self, captainGbId):
@@ -720,6 +733,7 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
         return self.teamPlayerDict[playerGbId].playerBox
 
     def getPlayerName(self, playerGbId):
+        LOG_INFO('team, getPlayerName,', playerGbId, self.teamPlayerDict)
         return self.teamPlayerDict[playerGbId].playerName
 
     def isInTeam(self, gbId):
@@ -1068,15 +1082,24 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
         LOG_INFO("_onTeamMiscModeSwitchToFree::", extraProps)
         teamCaptainGBID = self.getCaptainGbId()
         for _teamMemberVal in self.teamPlayerDict.values():
+            _inRoom = _teamMemberVal.inVoiceRoom
             if _teamMemberVal.playerGbId == teamCaptainGBID:
                 if 'isForbidVoice' in extraProps:
-                    _teamMemberVal.enableMics, _teamMemberVal.isBlockMics = False, False
-                else:
-                    _teamMemberVal.enableMics, _teamMemberVal.isBlockMics = True, False
+                    _teamMemberVal.enableMics = False
+                elif _inRoom:
+                    _teamMemberVal.enableMics = True
+                _teamMemberVal.isBlockMics = False
             else:
-                _teamMemberVal.enableMics = _teamMemberVal.isBlockMics = False
-            _teamMemberVal.enableSpeaker = True
-            _teamMemberVal.inVoiceRoom = True
+                _teamMemberVal.enableMics = False
+                # 切到自由麦时只清队长的禁言标记；非队长的手动禁言状态保留
+                _teamMemberVal.isBlockMics = _teamMemberVal.playerGbId in self.blockedMembers
+
+            if _inRoom:
+                _teamMemberVal.enableSpeaker = True
+            else:
+                _teamMemberVal.enableSpeaker = False
+                _teamMemberVal.enableMics = False
+            # inVoiceRoom 保持原值：只有真正在 GME 房间里的队员才显示在房中
         for gbId in self.teamPlayerDict:
             self.broadcastMemberVoiceState(gbId)
 
@@ -1084,15 +1107,25 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
         LOG_INFO("_onTeamMiscModeSwitchToLeader::", extraProps)
         teamCaptainGBID = self.getCaptainGbId()
         for _teamMemberVal in self.teamPlayerDict.values():
+            _inRoom = _teamMemberVal.inVoiceRoom
             if _teamMemberVal.playerGbId == teamCaptainGBID:
                 if 'isForbidVoice' in extraProps:
-                    _teamMemberVal.enableMics, _teamMemberVal.isBlockMics = False, False
-                else:
-                    _teamMemberVal.enableMics, _teamMemberVal.isBlockMics = True, False
+                    _teamMemberVal.enableMics = False
+                elif _inRoom:
+                    _teamMemberVal.enableMics = True
+                _teamMemberVal.isBlockMics = False
             else:
-                _teamMemberVal.enableMics , _teamMemberVal.isBlockMics = False, True
-            _teamMemberVal.enableSpeaker = True
-            _teamMemberVal.inVoiceRoom = True
+                _teamMemberVal.enableMics = False
+                # 权限麦模式下的“无发言权”不再用 isBlockMics 表示；
+                # isBlockMics 只保留队长手动禁麦状态。
+                _teamMemberVal.isBlockMics = _teamMemberVal.playerGbId in self.blockedMembers
+
+            if _inRoom:
+                _teamMemberVal.enableSpeaker = True
+            else:
+                _teamMemberVal.enableSpeaker = False
+                _teamMemberVal.enableMics = False
+            # inVoiceRoom 保持原值：只有真正在 GME 房间里的队员才显示在房中
         for gbId in self.teamPlayerDict:
             self.broadcastMemberVoiceState(gbId)
 
@@ -1121,6 +1154,11 @@ class TeamVal(userType.UserSingleType, TeamDungeonMixin):
         if self.teamMicsSwitch == gameconst.TeamMicsModeEnum.FREE:
             if srcGbId != _teamCaptainGBID and srcGbId != playerGBID:
                 return None, "TEAM_MISC_FREE_MODE_LIMIT"
+
+        # 权限麦模式下只有队长能开麦
+        if self.teamMicsSwitch == gameconst.TeamMicsModeEnum.LEADER:
+            if playerGBID != _teamCaptainGBID:
+                return None, "TEAM_MISC_LEADER_MODE_LIMIT"
 
         if (srcGbId != _teamCaptainGBID) and self.teamMicsBlocked:
             return None, "TEAM_ALL_MISC_BLOCKED"

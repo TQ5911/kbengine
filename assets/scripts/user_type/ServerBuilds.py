@@ -8,6 +8,7 @@ import copy
 import userType
 import utils
 import gameconst
+import gameengine
 
 import character_charData as C_C_DD
 import skill_skill as SSD
@@ -153,8 +154,11 @@ class Build(userType.UserSingleType):
         return True
 
     def doAddActiveSkill(self, owner, skillId, skillLv):
-        self.skillLevels[skillId] = skillLv
-        owner.updateSkillLevelSetSummonSlotIdx(skillId, skillLv)
+        if skillLv >= self.skillLevels.get(skillId, 0):
+            self.skillLevels[skillId] = skillLv
+            owner.updateSkillLevelSetSummonSlotIdx(skillId, skillLv)
+        else:
+            gameengine.panicStack('doAddActiveSkill', skillId, skillLv, self.skillLevels[skillId])
         return True
 
     def buildRemoveActiveSkill(self, owner, skillId):
@@ -162,7 +166,9 @@ class Build(userType.UserSingleType):
         owner.removeSkillSetSummonSlotIdx([skillId])
         return True
 
-    def changeSkillSlot(self, owner, skillId, fromSlotId, toSlotId, isFromDeleteTempSkill = False, fromSkillNextCastTime = 0):
+    def changeSkillSlot(self, owner, skillId, fromSlotId, toSlotId, 
+                        isFromDeleteTempSkill=False, fromSkillNextCastTime=0,
+                        reason=gameconst.CHANGE_SKILL_REASON_NORMAL):
         if fromSlotId is None and toSlotId is None:
             return
 
@@ -170,12 +176,12 @@ class Build(userType.UserSingleType):
             return
 
         if fromSlotId is None:
-            owner.cell.doActionOnChangeSlot(skillId, self.skillLevels[skillId], True, True, fromSkillNextCastTime)
+            owner.cell.doActionOnChangeSlot(skillId, self.skillLevels[skillId], True, True, fromSkillNextCastTime, reason)
         else:
             self.activeSkills[fromSlotId] = 0
 
         if toSlotId is None:
-            owner.cell.doActionOnChangeSlot(skillId, self.skillLevels[skillId], False, False, fromSkillNextCastTime)
+            owner.cell.doActionOnChangeSlot(skillId, self.skillLevels[skillId], False, False, fromSkillNextCastTime, reason)
             owner.cell.removeSkill(skillId, isFromDeleteTempSkill)
         else:
             self.activeSkills[toSlotId] = skillId
@@ -209,6 +215,7 @@ class Build(userType.UserSingleType):
         return True
 
     def levelUp(self, owner, skillId, oldSkillId, delta):
+        LOG_INFO('levelUp ', skillId, oldSkillId, delta)
         if skillId not in self.skillLevels:
             return False
 
@@ -248,8 +255,9 @@ class Build(userType.UserSingleType):
         costItemId, itemNum = consumeMoney
         deductVal.addWealthByItemId(costItemId, itemNum)
 
-        if not owner.canDeductWealth(deductVal, sendMsg=True):
-            LOG_WARN('   in levelUp, canDeductWealth fail:', skillId, delta)
+        res = owner.canDeductWealth(deductVal, sendMsg=True)
+        if not res:
+            LOG_WARN('   in levelUp, canDeductWealth fail:', skillId, delta, res())
             return
 
         opUUID = KBEngine.genUUID64()
@@ -263,13 +271,17 @@ class Build(userType.UserSingleType):
 
         # 被动技能替换的技能一并要升级
         _relatedSkills = SSD.datas.get(skillId, {}).get('conflictSkill') or ()
-        skillIdList = [skillId] + list(_relatedSkills)
+        skillIdList = list(_relatedSkills)
+        skillIdList.append(skillId) 
         for _sid in _relatedSkills:
             if _sid in self.skillLevels:
                 self.skillLevels[_sid] = newLevel
                 owner.updateSkillLevelSetSummonSlotIdx(_sid, newLevel)
-
         owner.onChangeSkillLv(skillId, newLevel)
+        for _sid in _relatedSkills:
+            if _sid != skillId:
+                owner.onChangeSkillLv(_sid, newLevel)
+                
         owner.client.onUpdateSkillLevel(skillIdList, [newLevel] * len(skillIdList))
         #
         owner.achievementInfo.triggerAchieveByType(
@@ -278,22 +290,6 @@ class Build(userType.UserSingleType):
             actionContext.AchievementCtx(oldLevel=oldLevel, newLevel=newLevel))
         LogTrackingMgr.LogTrackingMgr.Skill_Upgrade(owner.gbID, owner.accountEntity.clientDistinctId, owner.gbID, skillId, list(costItemInfo.keys()), list(costItemInfo.values()), consumeMoney[0], consumeMoney[1], newLevel, opUUID)
         return True
-
-    def resetAllSkill(self, caster):
-        totalSkillIdList = []
-        for skillId in self.skillLevels:
-            totalSkillIdList.append(skillId)
-            self.skillLevels[skillId] = 1
-            caster.updateSkillLevelSetSummonSlotIdx(skillId, 1)
-            relatedSkills = SSD.datas.get(skillId, {}).get('conflictSkill') or ()
-            for _sid in relatedSkills:
-                totalSkillIdList.append(_sid)
-                if _sid in self.skillLevels:
-                    self.skillLevels[_sid] = 1
-                    caster.updateSkillLevelSetSummonSlotIdx(_sid, 1)
-            caster.onChangeSkillLv(self.buildId, skillId, 1)
-
-        caster.client.onUpdateSkillLevel(totalSkillIdList, [1] * len(totalSkillIdList))
 
     def getSkillIds(self):
         slots = self.activeSkills
@@ -311,13 +307,16 @@ class Build(userType.UserSingleType):
 
             # 被动技能替换的技能一并要升级
             _relatedSkills = SSD.datas.get(skillId, {}).get('conflictSkill') or ()
-            skillIdList = [skillId] + list(_relatedSkills)
+            skillIdList = list(_relatedSkills)
+            skillIdList.append(skillId)
             for _sid in _relatedSkills:
                 if _sid in self.skillLevels:
                     self.skillLevels[_sid] = skillLevel
                     owner.updateSkillLevelSetSummonSlotIdx(_sid, skillLevel)
-
             owner.onChangeSkillLv(skillId, skillLevel)
+            for _sid in _relatedSkills:
+                if _sid != skillId:
+                    owner.onChangeSkillLv(_sid, skillLevel) 
             owner.client.onUpdateSkillLevel(skillIdList, [skillLevel] * len(skillIdList))
 
         return True

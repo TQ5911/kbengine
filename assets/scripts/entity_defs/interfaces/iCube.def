@@ -7,7 +7,7 @@
         </leftCubeTimes>
 
         <paidCubeTimes>
-            <Type>          UINT8                       </Type>
+            <Type>          UINT32                       </Type>
             <Flags>         BASE_AND_CLIENT             </Flags>
             <Persistent>    true                        </Persistent>
         </paidCubeTimes>
@@ -73,6 +73,7 @@
     <BaseMethods>
         <beforeEnterCubeDecrementCnt>
             <Arg>           PYTHON                  </Arg>
+            <Arg>           SPACE_NO                </Arg>
         </beforeEnterCubeDecrementCnt>
 
         <reqUseItemAddCubeTimes> <Exposed/>
@@ -131,6 +132,7 @@
         <beginEnterCubeRoom>
             <Arg>           ENTITYCALL              </Arg>
             <Arg>           OBJECT_ID               </Arg>
+            <Arg>           SPACE_NO                </Arg>
             <Arg>           SPACE_NO                </Arg>
             <Arg>           PYTHON                  </Arg>
         </beginEnterCubeRoom>

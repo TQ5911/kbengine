@@ -25,7 +25,7 @@ import _pickle as cPickle
 
 class GuildCacheVal(userType.UserSingleType):
     def __init__(self, guildUUID, guildName, desc, guildBox, memberCnt, guildLevel,
-                 dspFlag, guildScore=0, icon=0, memberMax=0, joinCond=None):
+                 dspFlag, guildScore=0, icon=0, memberMax=0, joinCond=None, leagueUUID=0):
         self.guildName = guildName
         self.desc = desc
         self.guildUUID = guildUUID
@@ -37,6 +37,7 @@ class GuildCacheVal(userType.UserSingleType):
         self.icon = icon
         self.memberMax = memberMax
         self.joinCond = joinCond
+        self.leagueUUID = leagueUUID
 
     def toGuildListData(self):
         return {
@@ -369,3 +370,13 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleE
 
     def doGetGuildGamePlayData(self, playerBox, guildBox):
         guildBox.doGetGuildGamePlayData(playerBox, self.gamePlayScoreLimit)
+
+    def checkGuildExists(self, guildId, uniqueId, checkCD):
+        LOG_INFO("GuildStub::checkGuildExists: ", guildId, uniqueId, checkCD)
+        ret = False
+        _gcVal = self.guildDic.get(guildId)
+        if _gcVal:
+           ret = True 
+           _gcVal.guildBox.onCheckGuild(uniqueId, ret, checkCD)
+        else:
+            gameengine.getGlobalBase('AllianceStub').onCheckGuildResult(guildId, '', uniqueId, ret, 0, checkCD)

@@ -65,8 +65,9 @@ class IChat(object):
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(costItemId, 1)
 
-        if not self.canDeductWealth(deductWealthVal):
-            LOG_WARN('sendPaidChatMsg: items not enough:', deductWealthVal)
+        res = self.canDeductWealth(deductWealthVal)
+        if not res:
+            LOG_WARN('sendPaidChatMsg: items not enough:', deductWealthVal, res())
             return False
 
         detail = gameclass.AwardDetailCls()
@@ -77,6 +78,7 @@ class IChat(object):
     @gamedecorator.crossServer
     @gamedecorator.checkGameconfigEnable('chat')
     def sendPaidChatMsg(self, exposed, hornId, msg):
+        LOG_DBG('sendPaidChatMsg', hornId, msg)
         if gameconfig.isCrossServer():
             self.syncMethodCallToLocalServerBase('_sendPaidChatMsg', (hornId, msg))
         else:
@@ -84,7 +86,7 @@ class IChat(object):
 
 
     def _sendPaidChatMsg(self, hornId, msg):
-        LOG_DBG('sendPaidChatMsg', hornId, msg)
+        LOG_DBG('_sendPaidChatMsg', hornId, msg)
         if self.isAllServerForbidChat():
             self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
             return
@@ -115,11 +117,12 @@ class IChat(object):
     def onLocalServerPaidChatMsg(self, hornId, msg):
         if not self._deductHornItem(hornId):
             gameengine.panicStack('onLocalServerPaidChatMsg: deductHornItem failed', hornId)
+        self.sendPaidMsgTime = utils.curTS()
         self.afterCheckPaidChatMsg(msg, hornId)
 
     def afterCheckPaidChatMsg(self, originalMsg, hornId):
         LOG_INFO("afterCheckPaidChatMsg", originalMsg, hornId)
-
+        self.logChatMsg(originalMsg.get('msgType', 0), 0, gameconst.ChatChannelEnum.WORLD, originalMsg.get('msg',''), self.sendPaidMsgTime)
         baseApp = gameglobal.localBaseApp
         if baseApp:
             baseApp.addAvatarChatMsg(
@@ -151,6 +154,7 @@ class IChat(object):
 
     def afterCheckWorldChatMsg(self, originalMsg):
         LOG_DBG("afterCheckWorldChatMsg", originalMsg)
+        self.logChatMsg(originalMsg.get('msgType', 0), 0, gameconst.ChatChannelEnum.WORLD, originalMsg.get('msg',''), self.sendWorldMsgTime)
         if self.isSilentChat(gameconst.SilentSpeakScene.ENUM_CHAT):
             self.client.onRecvAvatarChannelMsg(gameconst.ChatChannelEnum.WORLD, self._getChatChannelAvatarInfo(), originalMsg)
             return
@@ -179,6 +183,8 @@ class IChat(object):
             self.onMessagePre(int(C_C_DD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
             return
 
+        self.sendSiegeWarMsgTime = now
+        self.logChatMsg(msg.get('msgType', 0), 0, gameconst.ChatChannelEnum.SIEGE_WAR, msg.get('msg',''), self.sendSiegeWarMsgTime)
         gameengine.broadcastBaseapp('broadcastToAllAvatar',
                                     (gameconst.CELL, 'onSiegeWarChatMsg',
                                      (gameconst.ChatChannelEnum.SIEGE_WAR, self._getChatChannelAvatarInfo(), msg, self.cell), ()))
@@ -213,6 +219,7 @@ class IChat(object):
 
     def afterCheckGuildChatMsg(self, includeMe, isTeamZhaomu, sendByServer,originalMsg):
         LOG_DBG("afterCheckGuildChatMsg", includeMe, isTeamZhaomu, sendByServer, originalMsg)
+        self.logChatMsg(originalMsg.get('msgType', 0), self.guildUUIDBase, gameconst.ChatChannelEnum.GUILD, originalMsg.get('msg',''), self.sendGuildMsgTime)
         if isTeamZhaomu:
             self.onMessagePre(MMD.datas.zhaomuGuildSent, [])
 
@@ -291,6 +298,7 @@ class IChat(object):
         self.afterCheckTeamChatMsg(teamId, includeMe, msg)
 
     def afterCheckTeamChatMsg(self, teamId, includeMe, originalMsg):
+        self.logChatMsg(originalMsg.get('msgType', 0), teamId, gameconst.ChatChannelEnum.TEAM, originalMsg.get('msg',''), self.sendTeamMsgTime)
         gameengine.getTeamStub(teamId).sendChatMsgFromTeamMember(teamId, self.gbID, self._getChatChannelAvatarInfo(),originalMsg)
         if includeMe:
             self.client.onRecvAvatarChannelMsg(gameconst.ChatChannelEnum.TEAM, self._getChatChannelAvatarInfo(), originalMsg)
@@ -320,6 +328,7 @@ class IChat(object):
 
     def afterCheckNearbyChatMsg(self, originalMsg):
         LOG_DBG("afterCheckNearbyChatMsg", originalMsg)
+        self.logChatMsg(originalMsg.get('msgType', 0), 0, gameconst.ChatChannelEnum.NEARBY, originalMsg.get('msg',''), self.sendNearbyMsgTime)
         self.client.onRecvAvatarChannelMsg(gameconst.ChatChannelEnum.NEARBY, self._getChatChannelAvatarInfo(), originalMsg)
         if not self.isSilentChat(gameconst.SilentSpeakScene.ENUM_CHAT):
             self.cell.handleAvatarChannelMsg(gameconst.ChatChannelEnum.NEARBY, self._getChatChannelAvatarInfo(), originalMsg)
@@ -352,7 +361,7 @@ class IChat(object):
 
     def afterCheckRaidChatMsg(self,raidUUID, avatarInfo, extraProps, originalMsg):
         LOG_DBG("afterCheckRaidChatMsg", raidUUID, avatarInfo, extraProps, originalMsg)
-
+        self.logChatMsg(originalMsg.get('msgType', 0), raidUUID, gameconst.ChatChannelEnum.RAID, originalMsg.get('msg',''), self.sendRaidMsgTime)
         self.client.onRecvAvatarChannelMsg(gameconst.ChatChannelEnum.RAID, avatarInfo, originalMsg)
         if not self.isSilentChat(gameconst.SilentSpeakScene.ENUM_CHAT):
             gameengine.getRaidStub(raidUUID).broadRaidChatMsg(self, self.gbID, raidUUID, avatarInfo, originalMsg, extraProps)
@@ -461,6 +470,7 @@ class IChat(object):
             self.sendTeamMatchRecruitMsg(channel, msg)
 
     def sendTeamMatchRecruitMsg(self, channel, msg):
+        self.logChatMsg(0, 0, channel, msg, self.sendMatchTeamRecruitMsgTime)
         if self.isSilentChat(gameconst.SilentSpeakScene.ENUM_CHAT):
             self.cell.handleTeamChannelMatchTeamMsg(self._getChatChannelAvatarInfo(), channel, msg)
         elif gameconst.ChatChannelEnum.SIEGE_WAR == channel:
@@ -530,6 +540,7 @@ class IChat(object):
         gameengine.callBaseApps('gameengine.updateChatForbiddenState', (self.gbID, 0))
 
     def updateChatForbiddenState(self, isGm=True):
+        self.syncMethodCallToCrossServerBase('updateChatForbiddenState', (isGm,))
         LOG_INFO("updateChatForbiddenState1", isGm, gameglobal.chatForbiddenSet)
         if self.isAllServerForbidChat():
             endTime = self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0)
@@ -544,3 +555,15 @@ class IChat(object):
             self.cancelNotifyChatForbiddenTimer()
             LOG_INFO("updateChatForbiddenState3")
             gameengine.callBaseApps('gameengine.updateChatForbiddenState', (self.gbID, 0))
+
+    def logChatMsg(self, messag_type, receive_gbid, channel_id, content, send_time):
+            LogTrackingMgr.LogTrackingMgr.message(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            messag_type,
+            self.gbID,
+            receive_gbid,
+            channel_id,
+            content,
+            send_time,
+        )

@@ -25,12 +25,15 @@ import awardContext
 import math
 import json
 import gzip
+import base64
 import utils
 import gameclass
 import gameconfig
 import actionContext
 import mailAssistor
 import gamedecorator
+import _pickle as cPickle
+import iRouter
 
 import itemData_itemData as ITEM_DATA
 import agent_agentFunction as A_AFD
@@ -63,6 +66,8 @@ import currencyExchange_exchange as CE_EX
 import experience_config as EXPC
 import creep_base as CBD
 import petData_set as PD_S
+import giftKey_msgLibrary as GKML
+import gearBase_gearBase as GBGBD
 
 class AwardMixin(object):
     def __init__(self):
@@ -482,6 +487,10 @@ class AwardMixin(object):
         if awardVal.isEmpty():
             return
 
+        #最先要扣除欠债的道具
+        awardVal.itemWealth.popDebtItemObjs(self)
+        awardVal.petItemWealth.popDebtItemObjs(self)
+
         #跨服获取道具链路，在本服addwealth前将物品生成出来
         if self.isCrossServerInLocalServer:
             awardVal.itemWealth.toItemObjs(extra={'school':self.getRoleCacheAttr('school')})
@@ -598,7 +607,8 @@ class AwardMixin(object):
 
         if awardVal.guildContrib:
             self.addGuildContrib(awardVal.guildContrib.data, opUUID, srcType, detail, srcSubType, idipSource)
-            self.triggerAchievementWithCtx(gameconst.AchieveType.GUILD_CONTRIB, actionContext.AchievementCtx(num=awardVal.guildContrib.data))
+            #目前帮贡可以退还，帮贡暂时不触发成就
+            #self.triggerAchievementWithCtx(gameconst.AchieveType.GUILD_CONTRIB, actionContext.AchievementCtx(num=awardVal.guildContrib.data))
 
         if self.guildBox:
             if awardVal.guildMoney and awardVal.guildMoney.data > 0:
@@ -647,11 +657,13 @@ class AwardMixin(object):
         self.handleForceBindItems(itemsList)
         self.handleForceBindItems(petItemList)
 
+        _bagLocked, _petLocked = False, False
         if itemsList or petItemList:
             if not fromMail:
                 awardCtx.mailId, _ = dataUtils.getMailId(srcType, awardCtx.mailId)
             petMailId = PD_S.datas.get('petBagFullMail', {}).get('value', 0)
-            self._addItems(itemsList, petItemList, awardCtx.mailId, petMailId, srcType, opUUID, detail, notify, srcSubType, idipSource)
+            _success, _inBagItemList, _bagLocked, _petLocked = self._addItems(itemsList, petItemList, awardCtx.mailId, petMailId, srcType, opUUID, detail, notify, srcSubType, idipSource)
+            
 
         if itemsList:
             self.checkEventTips(itemsList, srcType, awardCtx)
@@ -668,7 +680,7 @@ class AwardMixin(object):
                 _it.data,
                 opUUID,
                 srcType,
-                self.getItemNum(_it.itemId),
+                self.getItemNum(_it.itemId, ignoreCheck=True),
                 detail,
             )
 
@@ -678,7 +690,6 @@ class AwardMixin(object):
                 datas[gameconst.ItemBindType.BIND] = datas.get(gameconst.ItemBindType.BIND, 0) + cellExpVal
             for it in awardVal.getNumericWealth():
                 if it and it.itemId and it.itemId not in gameconst.ItemIdEnum.COLL_SKIP_MSG_HANDLE:
-                    #self._addWealthOnMessagePre(srcType, it.itemId, it.data, awardCtx)
                     datas = itemsDictList[0].setdefault(it.itemId, {})
                     datas[gameconst.ItemBindType.BIND] = datas.get(gameconst.ItemBindType.BIND, 0) + it.data
 
@@ -710,6 +721,12 @@ class AwardMixin(object):
         if not self.accountEntity.isAuthHost(self.gbID):
             self.addAuthStatistics(awardVal)
 
+        if _bagLocked:
+            if self.isCrossServerInLocalServer:
+                awardVal.itemWealth.clear()
+        if _petLocked:
+            if self.isCrossServerInLocalServer:
+                awardVal.petItemWealth.clear()
         return
     
     def handleForceBindItems(self, dataList):
@@ -749,7 +766,6 @@ class AwardMixin(object):
         _popList = []
         def _tip(_id, _num, _uid, isEquip=True):
             if needMsg and _num:
-
                 itemData = dataUtils.getCommItemData(_id)
                 extraDesp = dataUtils.getAddItemExtraDesp(srcType)
                 if isEquip:
@@ -808,11 +824,13 @@ class AwardMixin(object):
         LOG_DBG('showPopReward', len(_popList), srcType, itemsDictList, detailDic, detailStr, _popList)
         if not len(_popList):
             return
+        
         self.client.onShowPopReward(srcType, _popList, detailStr)
 
     def _addItems(self, itemsList, petItemList, bagMailIdOnFull, petMailIdOnFull, srcType, opUUID, detail, notify, srcSubType, idipSource, bagType=gameconst.BagTypeEnum.BAG_TYPE_NORMAL):
+        bagLocked, petLocked = False, False
         if not itemsList and not petItemList:
-            return False, []
+            return False, [], bagLocked, petLocked
 
         # addWealth已经校验了canAddWealthVal，所以如果背包被锁或空间不够，必定配置了mailId
         mailBagItemList = []
@@ -823,6 +841,7 @@ class AwardMixin(object):
             if self.bagData.isLocked():
                 # 所有物品通过邮件发送
                 mailLockedItemList.extend(itemsList)
+                bagLocked = True
             else:
                 planOp, planDic, leftItems = self.bagData.calcAddItemsPlan(itemsList)
                 if planDic:
@@ -833,7 +852,7 @@ class AwardMixin(object):
 
                     if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
                         gameengine.panicStack('_addItems error:', self.id, srcType, planDic, len(itemsList))
-                        return False, []
+                        return False, [], bagLocked, petLocked
 
                 # 记录获得equipmentItem日志
                 leftItemUniqueId = [it.uniqueId for it, _ in leftItems]
@@ -857,6 +876,7 @@ class AwardMixin(object):
             if self.petBag.isLocked():
                 # 所有物品通过邮件发送
                 mailLockedItemList.extend(petItemList)
+                petLocked = True
             else:
                 planOp, planDic, leftItems = self.petBag.calcAddItemsPlan(petItemList)
                 if planDic:
@@ -867,7 +887,7 @@ class AwardMixin(object):
 
                     if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
                         gameengine.panicStack('_addItems error:', self.id, srcType, planDic, len(petItemList))
-                        return False, []
+                        return False, [], bagLocked, petLocked
 
                 # 记录获得equipmentItem日志
                 leftItemUniqueId = [it.uniqueId for it, _ in leftItems]
@@ -897,12 +917,12 @@ class AwardMixin(object):
         if mailBagItemList:
             if not bagMailIdOnFull:
                 gameengine.panicStack('_addItems, no bagMailIdOnFull:', len(mailBagItemList), bagMailIdOnFull)
-                return False, None
+                return False, None, bagLocked, petLocked
             
         if mailPetItemList:
             if not petMailIdOnFull:
                 gameengine.panicStack('_addItems, no petMailIdOnFull:', len(mailPetItemList), petMailIdOnFull)
-                return False, None
+                return False, None, bagLocked, petLocked
         
         if mailBagItemList:
             mailWealth = dropAward.MailAttachVal(itemObjs=mailBagItemList)
@@ -914,21 +934,8 @@ class AwardMixin(object):
             mailAssistor.sendMailToPlayers([self.gbID], petMailIdOnFull, extraAttach=mailWealth, opUUID=opUUID, srcType = srcType, srcSubType=srcSubType)
             self.onMessagePre(PD_S.datas.get('petBagFullMsg', {}).get('value', ''), [])
 
-        return True, inBagItemList
-
-    def _addWealthOnMessagePre(self, srcType, itemId, number, awardCtx=None):
-        _itemData = dataUtils.getCommItemData(itemId)
-        _extraDesp = dataUtils.getAddItemExtraDesp(srcType)
-
-        if _itemData['messageTipsID']:
-            self.onMessagePre(_itemData['messageTipsID'], [str(number), str(itemId)])
-
-        if _itemData['messageChatID']:
-            self.onMessagePre(
-                _itemData['messageChatID'],
-                [str(number), str(itemId), str(0), _extraDesp]
-            )
-
+        return True, inBagItemList, bagLocked, petLocked
+    
     def onTimeAddAward(self, sourceId, delayTimes=0):
         if delayTimes > 16:
             gameengine.panicStack('onTimeAddAward, bagData locked long time:', delayTimes)
@@ -1123,10 +1130,9 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if costDict:
             _deductWealthVal = dropAward.DeductWealthVal()
             _deductWealthVal.addWealthByItemDict(costDict)
-            if not self.canDeductWealth(_deductWealthVal):
-                LOG_INFO("in checkBaseUseTreasureBoxCond: not ", _deductWealthVal)
-                costItemId = list(costDict.keys())[0]
-                self.onMessagePre(M_M_DD.datas.openCheck_lackKey, [str(costItemId)])
+            res = self.canDeductWealth(_deductWealthVal, sendMsg=True)
+            if not res:
+                LOG_INFO("in checkBaseUseTreasureBoxCond: not ", _deductWealthVal, res())
                 self.cell.onPendingCheckItemFinished(pendingOpId, gameconst.UseItemEnum.FALSE)
                 return
         self.cell.onPendingCheckItemFinished(pendingOpId, gameconst.UseItemEnum.TRUE)
@@ -1185,8 +1191,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         _opUUID = KBEngine.genUUID64()
         _src = AAC_AAC_DD.datas.BONUS_SRC_BIND_ITEM
-        _bindCnt = _bag.getItemCount(self.gbID, itemId, gameconst.ItemBindType.BIND)
-        _normalCnt = _bag.getItemCount(self.gbID, itemId, gameconst.ItemBindType.NORMAL)
+        _bindCnt = _bag.getItemCount(self.gbID, itemId, gameconst.ItemBindType.BIND, True)
+        _normalCnt = _bag.getItemCount(self.gbID, itemId, gameconst.ItemBindType.NORMAL, True)
         _detail = gameclass.AwardDetailCls(uniqueid=_itemObj.uniqueId)
         self.makeItemFlowLog(
             bagType,
@@ -1379,55 +1385,65 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if not self._unlockGrids(self.id, gridNum):
             LOG_ERR('onLocalServerUnlockGrids failed:', gridNum)
 
-    def canDeductWealth(self, deductWealthVal: dropAward.DeductWealthVal, sendMsg=False):
+    def canDeductWealth(self, deductWealthVal: dropAward.DeductWealthVal, sendMsg=False, isCheck=True):
+        checkList = []
+        if deductWealthVal.money.data:
+            checkList.append((gameconst.SecondaryPasswordCheckType.USE_MONEY, deductWealthVal.money.data))
+        if deductWealthVal.bindMoney.data:
+            checkList.append((gameconst.SecondaryPasswordCheckType.USE_BIND_MONEY, deductWealthVal.bindMoney.data))
+        LOG_DBG("canDeductWealth ", isCheck, checkList)
+        if isCheck and len(checkList) and self.checkPopupSecondaryPassword(checkList):
+            return gameclass.CanDeductResultBool(gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD, 'popup second pwd')
+
+        res = gameconst.CanDeductWealthRes.FALSE_NOT_ENOUGH_ITEM
         if deductWealthVal.coin.data and deductWealthVal.coin.data > self.coin:
             sendMsg and self.onMessagePre(M_M_DD.datas.itemNotEnough, [str(deductWealthVal.coin.itemId)])
-            return gameclass.ResultBool(False, 'coin')
+            return gameclass.CanDeductResultBool(res, 'coin')
 
         if deductWealthVal.money.data and deductWealthVal.money.data > self.money:
             sendMsg and self.onMessagePre(M_M_DD.datas.itemNotEnough, [str(deductWealthVal.money.itemId)])
-            return False
+            return gameclass.CanDeductResultBool(res, 'money')
 
         if deductWealthVal.money.data and not self._canAuthDailyUseMoney(deductWealthVal.money.data):
             self.onMessagePre(A_ACD.datas['dailyGoldLimitMsg']['value'], [])
-            return False
+            return gameclass.CanDeductResultBool(gameconst.CanDeductWealthRes.FALSE_ITEM_DAILY_LIMIT, 'money daily limit')
 
         if deductWealthVal.darkIron.data and deductWealthVal.darkIron.data > self.darkIron:
             sendMsg and self.onMessagePre(M_M_DD.datas.itemNotEnough, [str(deductWealthVal.darkIron.itemId)])
-            return False
+            return gameclass.CanDeductResultBool(res, 'darkIron')
 
         if deductWealthVal.guildContrib.data and deductWealthVal.guildContrib.data > self.guildContrib:
             sendMsg and self.onMessagePre(M_M_DD.datas.itemNotEnough, [str(deductWealthVal.guildContrib.itemId)])
-            return False
+            return gameclass.CanDeductResultBool(res, 'guildContrib')
         
         if deductWealthVal.bindMoney.data and deductWealthVal.bindMoney.data > self.bindMoney:
             sendMsg and self.onMessagePre(M_M_DD.datas.itemNotEnough, [str(deductWealthVal.bindMoney.itemId)])
-            return False
+            return gameclass.CanDeductResultBool(res, 'bindMoney')
 
         if deductWealthVal.appearanceCoin.data and deductWealthVal.appearanceCoin.data > self.appearanceCoin:
             sendMsg and self.onMessagePre(M_M_DD.datas.itemNotEnough, [str(deductWealthVal.appearanceCoin.itemId)])
-            return False
+            return gameclass.CanDeductResultBool(res, 'appearanceCoin')
 
         if deductWealthVal.itemWealth:
             if self.bagData.isLocked():
-                return gameclass.ResultBool(False, 'bag is locked')
+                return gameclass.CanDeductResultBool(gameconst.CanDeductWealthRes.FALSE_BAG_LOCKED, 'bag is locked')
             # 扣除物品中的deductWealthVal.itemWealth.itemObjs目前仅支持装备
             deductPlan, ret = self.bagData.calcDeductItemsPlan(deductWealthVal.itemWealth.data, deductWealthVal.itemWealth.itemsObjs)
             if deductPlan != gameconst.BagOpPlan.OPERATE_BAG_OK:
                 sendMsg and self.onMessagePre(M_M_DD.datas.itemNotEnough, [str(ret)])
-                return gameclass.ResultBool(False, 'itemNotEnough')
+                return gameclass.CanDeductResultBool(res, 'itemNotEnough')
         if deductWealthVal.petItemWealth:
             if self.petBag.isLocked():
-                return gameclass.ResultBool(False, 'petBag is locked')
+                return gameclass.CanDeductResultBool(gameconst.CanDeductWealthRes.FALSE_PET_BAG_LOCKED, 'petBag is locked')
             deductPlan, ret = self.petBag.calcDeductItemsPlan(deductWealthVal.petItemWealth.data, deductWealthVal.petItemWealth.itemsObjs)
             if deductPlan != gameconst.BagOpPlan.OPERATE_BAG_OK:
                 sendMsg and self.onMessagePre(M_M_DD.datas.itemNotEnough, [str(ret)])
-                return gameclass.ResultBool(False, 'itemNotEnough')
+                return gameclass.CanDeductResultBool(res, 'itemNotEnough')
 
-        return gameclass.ResultBool(True)
+        return gameclass.CanDeductResultBool(gameconst.CanDeductWealthRes.TRUE)
 
-    def deductWealth(self, srcType: int, deductWealthObj: dropAward.DeductWealthVal, opUUID, detail):
-        if not self.canDeductWealth(deductWealthObj):
+    def deductWealth(self, srcType: int, deductWealthObj: dropAward.DeductWealthVal, opUUID, detail, isCheck=False):
+        if not self.canDeductWealth(deductWealthObj, isCheck=isCheck):
             gameengine.panicStack('deductWealth failed:', srcType, deductWealthObj)
             return
 
@@ -1488,7 +1504,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 -_it.data,
                 opUUID,
                 srcType,
-                self.getItemNum(_it.itemId),
+                self.getItemNum(_it.itemId, ignoreCheck=True),
                 detail,
             )
 
@@ -1503,7 +1519,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         _bag = self.getBagByType(bagType)
         _bag.unLockBag()
 
-    def getItemNum(self, itemId, bindType=gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED):
+    def getItemNum(self, itemId, bindType=gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED, ignoreCheck = False):
         # 只能用在获得物品数量，如果要扣除物品，务必使用 canDeductWealth 做校验
         if itemId == gameconst.ItemIdEnum.MONEY:
             return self.money
@@ -1521,7 +1537,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if not (itemData and itemData['type'] == gameconst.ItemEnum.Normal):
             gameengine.panicStack('getItemNum: not support itemId:', itemId)
             return 0
-        return self.bagData.getItemCount(self.gbID, itemId, bindType)
+        return self.bagData.getItemCount(self.gbID, itemId, bindType, ignoreCheck)
 
     def addMoney(self, deltaNum, opUUID, srcType, detail, srcSubType=0, idipSource=0):
         if deltaNum <= 0:
@@ -1805,10 +1821,15 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.titleMgr.doClearExpireTitle()
         self.client.onGetAllTitle(self.titleMgr.titleValList)
     
+    @gamedecorator.crossServer
     def setTitle(self, exposed, titleId):
         if not self.titleMgr.hasTitle(titleId):
             return
 
+        self._setTitle(titleId)
+        self.syncMethodCallToLocalServerBase('_setTitle', (titleId,))
+
+    def _setTitle(self, titleId):
         self.titleMgr.setCurTitle(self, titleId)
         LOG_DBG('setTitle, titleId:', titleId)
 
@@ -1876,7 +1897,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
     def checkGatherDeductWealthVal(self, itemCheck):
         if not itemCheck:
-            return True, None
+            return gameclass.CanDeductResultBool(gameconst.CanDeductWealthRes.TRUE), None
 
         _isOr, _checkItemsList = itemCheck[0], itemCheck[1:]
         if _isOr == 0:
@@ -1895,8 +1916,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                     return _checkResult, deductWealthVal
             else:
                 if self.getItemNum(itemId) > 0:
-                    return True, None
-        return False, None
+                    return gameclass.CanDeductResultBool(gameconst.CanDeductWealthRes.TRUE), None
+        return gameclass.CanDeductResultBool(gameconst.CanDeductWealthRes.FALSE, 'default false'), None
 
     def doApplyGatherPreCheck(self, collId, gameEntityId, targetId, isCaptain, spaceNo):
         LOG_INFO("doApplyGatherPreCheck::", collId, gameEntityId, targetId, isCaptain, spaceNo)
@@ -1904,15 +1925,16 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         itemCheck = pickData['toolCheck']
         _checkResult, deductWealthVal = self.checkGatherDeductWealthVal(itemCheck)
         if not _checkResult:
-            LOG_WARN("doApplyGatherPreCheck::failed")
-            self.onMessagePre(
-                NPCST.datas["pickInteractAlert_ToolCheck"]['value'], 
-                [pickData['castDesc']],
-            )
+            LOG_WARN("doApplyGatherPreCheck::failed", _checkResult())
+            if _checkResult() != gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
+                self.onMessagePre(
+                    NPCST.datas["pickInteractAlert_ToolCheck"]['value'], 
+                    [pickData['castDesc']],
+                )
 
             self.client.onUpdateCollectionGatherFlag(targetId, 0)
 
-        self.cell.onDoApplyGatherPreCheck(collId, gameEntityId, targetId, isCaptain, spaceNo, deductWealthVal, _checkResult)
+        self.cell.onDoApplyGatherPreCheck(collId, gameEntityId, targetId, isCaptain, spaceNo, deductWealthVal, bool(_checkResult))
 
     def onUpdateCollectionGatherFlag(self, targetId, flag):
         self.client and self.client.onUpdateCollectionGatherFlag(targetId, flag)
@@ -1990,6 +2012,9 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 awardCtx.addContextVar(dataUtils.addAwardsCallBackKey(), 'onGatherRewardResult')
                 if context and context.customAward:
                     awardCtx.addContextVar('customAward', context.customAward)
+                if gameconfig.isCrossServer():
+                    LOG_ERR("giveGatherAwardBase cross server not support")
+                    return
                 self.dropAwards(
                     AAC_AAC_DD.datas.BONUS_SRC_GATHER_DROP, 
                     _rewardID, 
@@ -2012,16 +2037,20 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                     for customAwardVal in context.customAward:
                         awardVal.addWealthByItemId(customAwardVal['itemId'], customAwardVal['count'], customAwardVal['FBBind'])
                     if gameconfig.isCrossServer():
+                        awardCtx = self.getAvatarAwardCtx(None, awardCtx)
                         self.syncMethodCallToLocalServerBase("onCrossServerGatherAdd", (AAC_AAC_DD.datas.BONUS_SRC_GATHER, awardVal, opUUID, detail, awardCtx))
                     else:
                         self.addWealth(AAC_AAC_DD.datas.BONUS_SRC_GATHER, awardVal, opUUID, detail, awardCtx)
                 else:
-                    self.addAwards(
-                        AAC_AAC_DD.datas.BONUS_SRC_GATHER, 
-                        _rewardID, 
-                        1, 
-                        opUUID, 
-                        detail, 
+                    if gameconfig.isCrossServer():
+                        self.syncMethodCallToLocalServerBase("onCrossServerGatherAwardsAdd", (_rewardID, opUUID, detail, awardCtx))
+                    else:
+                        self.addAwards(
+                            AAC_AAC_DD.datas.BONUS_SRC_GATHER, 
+                            _rewardID, 
+                            1, 
+                            opUUID, 
+                            detail, 
                         awardCtx)
 
         if lifeSkMakeItemId:
@@ -2033,6 +2062,11 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.addWealth(src, awardVal, opUUID, detail, awardCtx)
         self.syncMethodCallToCrossServerBase("onLocalServerGatherAdd", (src, awardVal, opUUID, detail, awardCtx))
 
+    def onCrossServerGatherAwardsAdd(self, _rewardID, opUUID, detail, awardCtx):
+        LOG_INFO("onCrossServerGatherAwardsAdd", _rewardID, opUUID, detail, awardCtx)
+        awardVal = self.addAwards(AAC_AAC_DD.datas.BONUS_SRC_GATHER, _rewardID, 1, opUUID, detail, awardCtx)
+        self.syncMethodCallToCrossServerBase("onLocalServerGatherAdd", (AAC_AAC_DD.datas.BONUS_SRC_GATHER, awardVal, opUUID, detail, awardCtx))
+        
     def onLocalServerGatherAdd(self, src, awardVal, opUUID, detail, awardCtx):
         LOG_INFO("onLocalServerGatherAdd", src, awardVal, opUUID, detail, awardCtx)
         self.addWealth(src, awardVal, opUUID, detail, awardCtx)
@@ -2050,7 +2084,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
     def onCheckAndCostWealth(self, callbackComponent, srcType, callbackName, deductWealthVal, extraProps):
         checkResult = True
         if deductWealthVal:
-            res = self.canDeductWealth(deductWealthVal)
+            res = self.canDeductWealth(deductWealthVal, sendMsg=True)
             if res:
                 opUUID = KBEngine.genUUID64()
                 detail = gameclass.AwardDetailCls()
@@ -2103,17 +2137,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 continue
 
             if srcType in (AAC_AAC_DD.datas.BONUS_SRC_GATHER_DROP, AAC_AAC_DD.datas.BONUS_SRC_GATHER,):
-                gameengine.broadcastBaseapp(
-                    'onBroadcastToAllClients', 
-                    (
-                        'onEventTips', 
-                        (
-                            message['ID'], 
-                            [_avatarName, str(self.gbID), str(_itemId), str(0), str(_itemNum)]
-                        )
-                    )
-                )
-
+                self.broadcastTips(message['crossServer'], message['ID'], [_avatarName, str(self.gbID), str(_itemId), str(0), str(_itemNum)])
             elif srcType in (AAC_AAC_DD.datas.BONUS_SRC_KILL_MONSTER,):
                 mapId = formula.fetchMapId(self.baseSpaceNo)
                 mapData = GPGPD.datas.get(mapId, None)
@@ -2124,8 +2148,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 if not monsterData:
                     return
                 monsterName = monsterData['name'] or ''
-                gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips',
-                    (message['ID'], [_avatarName, str(self.gbID), str(mapName), str(monsterName), str(_itemId), str(0), str(_itemNum)])))
+                self.broadcastTips(message['crossServer'], message['ID'], [_avatarName, str(self.gbID), str(mapName), str(monsterName), str(_itemId), str(0), str(_itemNum)])
             elif srcType in (AAC_AAC_DD.datas.BONUS_SRC_TEAM_FIRST_PASS_REWARD, AAC_AAC_DD.datas.BONUS_SRC_TEAM_CLEAR_PASS_REWARD, \
                              AAC_AAC_DD.datas.BONUS_SRC_RAID_FIRST_PASS_REWARD, AAC_AAC_DD.datas.BONUS_SRC_RAID_CLEAR_PASS_REWARD):
                 mapId = formula.fetchMapId(self.baseSpaceNo)
@@ -2133,12 +2156,31 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 if not mapData:
                     return
                 mapName = mapData['name'] or ''
-                gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips',
-                    (message['ID'], [_avatarName, str(self.gbID), str(mapName), str(_itemId), str(0), str(_itemNum)])))
+                self.broadcastTips(message['crossServer'], message['ID'], [_avatarName, str(self.gbID), str(mapName), str(_itemId), str(0), str(_itemNum)])
             else:
-                gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips',
-                    (message['ID'], [_avatarName, str(self.gbID), str(eventTipId), str(0), str(_itemId), str(0), str(_itemNum)])))
-
+                self.broadcastTips(message['crossServer'], message['ID'], [_avatarName, str(self.gbID), str(eventTipId), str(0), str(_itemId), str(0), str(_itemNum)])
+                
+    def broadcastTips(self, crossServerType, msgId, msgArgs):
+        LOG_INFO('broadcastTips', crossServerType, msgId, msgArgs)
+        if crossServerType == gameconst.EventTipCrossServerType.CrossAndSourceServer:
+            if self.isCrossServer:
+                serverName = gameglobal.mapleServerInfo.get(int(self.baseFromServerId), {}).get('server_name', '')
+                msgArgs.insert(0, serverName)
+                gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips', (msgId, msgArgs)))
+                _stub = iRouter.RemoteServerStubEntityCall(int(self.baseFromServerId), 'CrossServerStub')
+                _stub.onGlobalEventTips(gameconst.EventTipCrossServerType.Default, msgId, msgArgs)
+        elif crossServerType == gameconst.EventTipCrossServerType.CrossAllServer:
+            if self.isCrossServer:
+                serverName = gameglobal.mapleServerInfo.get(int(self.baseFromServerId), {}).get('server_name', '')
+                msgArgs.insert(0, serverName)
+                crossServerGroupID = gameglobal.mapleServerInfo.get(gameconfig.serverId(), {}).get('server_group', 0)
+                groupServerList = utils.group2ServerIds(crossServerGroupID)
+                for serverID in groupServerList:
+                    _stub = iRouter.RemoteServerStubEntityCall(int(serverID), 'CrossServerStub')
+                    _stub.onGlobalEventTips(gameconst.EventTipCrossServerType.Default, msgId, msgArgs)
+        else:
+            gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips', (msgId, msgArgs)))
+        
     def canSendEventTips(self, itemId, itemCnt, message):
         _itemIdNoLimit = message['itemIdNoLimit']
         if _itemIdNoLimit and itemId in _itemIdNoLimit:
@@ -2157,7 +2199,14 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
     @gamedecorator.checkGameconfigEnable('bag')
     @gamedecorator.limitcall(1)
+    @gamedecorator.crossServer
     def reqMultiItemDisassemble(self, exposed, gridIdList, uniqueIdList):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_reqMultiItemDisassemble', (gridIdList, uniqueIdList))
+        else:
+            self._reqMultiItemDisassemble(gridIdList, uniqueIdList)
+
+    def _reqMultiItemDisassemble(self, gridIdList, uniqueIdList):
         # 要么全部分解，要么都不分解
         LOG_INFO('in reqMultiItemDisassemble:', gridIdList, uniqueIdList)
         
@@ -2253,6 +2302,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         self.addWealth(srcType, awardVal, opUUID, detail)
 
+        self.syncMethodCallToCrossServerBase('_onSyncMultiItemDisassemble', (gridIdList, uniqueIdList, opUUID, srcType, detail, awardVal))
+
         LogTrackingMgr.LogTrackingMgr.Item_Disassembly(
             self.gbID,
             self.accountEntity.clientDistinctId,
@@ -2265,9 +2316,26 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         )
         return
 
+    def _onSyncMultiItemDisassemble(self, gridIdList, uniqueIdList, opUUID, srcType, detail, awardVal):
+        LOG_INFO('in _onSyncMultiItemDisassemble:', gridIdList, uniqueIdList, opUUID, srcType, detail, awardVal)
+        _cleanList = []
+        for _gridId in gridIdList:
+            itemObj = self.bagData.getItemObjByGridId(_gridId)
+            self.bagData.cleanGridByGridId(self, _gridId, itemObj.itemId, opUUID, srcType, detail, sendClient=False)
+            _cleanList.append({'gridId': _gridId, 'itemNum': 0})
+        self.client.onUpdateGridItemsNum(self.bagData.bagType, _cleanList)
+        self.addWealth(srcType, awardVal, opUUID, detail)
+
     @gamedecorator.checkGameconfigEnable('bag')
     @gamedecorator.limitcall(1)
+    @gamedecorator.crossServer
     def reqItemDisassemble(self, exposed, gridId, costItemId, costItemNum):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_reqItemDisassemble', (gridId, costItemId, costItemNum))
+        else:
+            self._reqItemDisassemble(gridId, costItemId, costItemNum)
+
+    def _reqItemDisassemble(self, gridId, costItemId, costItemNum):
         LOG_INFO('in reqItemDisassemble:', gridId, costItemId, costItemNum)
         if costItemNum <= 0 or costItemId <= 0:
             LOG_ERR('reqItemDisassemble, args error:', gridId, costItemId, costItemNum)
@@ -2323,6 +2391,20 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             _detail = gameclass.AwardDetailCls(costItemId=costItemId, costItemNum=costItemNum)
             self.bagData.deductItemsByGridId(self, {gridId: costItemNum}, opUUID, srcType, _detail)
             self.addWealth(srcType, awardVal, opUUID, _detail)
+
+            self.syncMethodCallToCrossServerBase('_onSyncItemDisassemble', (gridId, costItemNum, opUUID, srcType, _detail, awardVal))
+            
+            LogTrackingMgr.LogTrackingMgr.Item_Disassembly(
+                self.gbID,
+                self.accountEntity.clientDistinctId,
+                opUUID,
+                self.gbID,
+                gameconst.ItemDisassemblyType.ITEM,
+                {'uniqueId':gridObj.uniqueId, 'itemId':gridObj.itemId, 'itemNum':gridObj.itemNum},
+                awardVal.toBriefList(),
+                self.cliConfigDic.get(gameconst.CliConfigDef.EQUIP_AUTO_DISA_KEY, 0)
+            )
+            
             return
 
         # case 2: 单种物品多个分解
@@ -2351,6 +2433,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.bagData.deductItemsByGridId(self, {gridId: costItemNum}, opUUID, srcType, _detail)
         self.addWealth(srcType, realAwardVal, opUUID, _detail)
         LOG_INFO('     reqItemDisassemble, costItemNum {} awardVal:{}:'.format(costItemNum, awardVal))
+
+        self.syncMethodCallToCrossServerBase('_onSyncItemDisassemble', (gridId, costItemNum, opUUID, srcType, _detail, realAwardVal))
         
         LogTrackingMgr.LogTrackingMgr.Item_Disassembly(
             self.gbID,
@@ -2362,6 +2446,11 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             realAwardVal.toBriefList(),
             self.cliConfigDic.get(gameconst.CliConfigDef.EQUIP_AUTO_DISA_KEY, 0)
         )
+
+    def _onSyncItemDisassemble(self, gridId, costItemNum, opUUID, srcType, _detail, realAwardVal):
+        LOG_INFO('in _onSyncItemDisassemble:', gridId, costItemNum, opUUID, srcType, _detail, realAwardVal)
+        self.bagData.deductItemsByGridId(self, {gridId: costItemNum}, opUUID, srcType, _detail)
+        self.addWealth(srcType, realAwardVal, opUUID, _detail)
 
     def getRewardByIdBase(self, rewardId, level, gridId, itemId, useNum, opUUID, ctx):
         self.unlockBag(gameconst.BagTypeEnum.BAG_TYPE_NORMAL, 'unlock by action: getReward')
@@ -2489,12 +2578,12 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             return
 
         wealthVal = dropAward.DeductWealthVal().addWealthByItemId(itemId, totalNum, bindType)
-        ret = self.canDeductWealth(wealthVal)
+        ret = self.canDeductWealth(wealthVal, isCheck=False)
         if not ret:
-            LOG_ERR('gmDeleteItems: cannot delete items:', self.gbID, itemId, totalNum, ret)
+            LOG_WARN('gmDeleteItems: cannot delete items:', self.gbID, itemId, totalNum, ret)
             return
 
-        self.deductWealth(srcType, wealthVal, opUUID, detail)
+        self.deductWealth(srcType, wealthVal, opUUID, detail, isCheck=False)
 
     def gmCleanBag(self, bagType):
         opUUID = KBEngine.genUUID64()
@@ -2560,8 +2649,9 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 LOG_INFO('exchangeItem rand unbind', rwdNum)
                 awardNormalItemNum += rwdNum
 
-        if not self.canDeductWealth(_deductWealthVal, sendMsg=True):
-            LOG_WARN("       in exchangeItem, cost failed:")
+        res = self.canDeductWealth(_deductWealthVal, sendMsg=True)
+        if not res:
+            LOG_WARN("       in exchangeItem, cost failed:", res())
             return
 
         _opUUID = KBEngine.genUUID64()
@@ -2640,8 +2730,9 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         deductVal = dropAward.DeductWealthVal()
         deductVal.addWealthByItemId(itemId, 1)
-        if not self.canDeductWealth(deductVal, sendMsg=True):
-            LOG_INFO("openNChoiceGift cost not enough")
+        res = self.canDeductWealth(deductVal, sendMsg=True)
+        if not res:
+            LOG_INFO("openNChoiceGift cost not enough", res())
             return
         awardVal = self.getChoiceReward(_itemData, choiceStr)
         if not awardVal:
@@ -2758,8 +2849,9 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         # 检查货币是否足够
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(costItemId, cost)
-        if not self.canDeductWealth(deductWealthVal, sendMsg=True):
-            LOG_WARN("exchangeCurrency, cost failed:")
+        res = self.canDeductWealth(deductWealthVal, sendMsg=True)
+        if not res:
+            LOG_WARN("exchangeCurrency, cost failed:", res())
             return
         
         addNum = 0
@@ -2819,7 +2911,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         url = gameconfig.giftCodeUrl()
         message = json.dumps({"code": giftKey, "userGameRoleId": self.gbID})
-        LOG_INFO("exchangeGiftKeyReward", url, message, self.gbID, self.accountEntity.webToken)
+        LOG_INFO("exchangeGiftKeyReward", url, message, self.gbID)
         KBEngine.urlopenv2(url, self._onExchangeGiftKeyReward, method='POST',
                 postData=message.encode('utf-8'),
                 headers={"Content-Type": "application/json", "satoken": self.accountEntity.webToken},
@@ -2850,8 +2942,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             awardCtx = self.getAvatarAwardCtx(0, None)
             self.addWealth(_src, _awardVal, _opUUID, _detail, awardCtx)
         
-        elif code in gameconst.GiftCodeResultMsg:
-            self.onMessagePre(gameconst.GiftCodeResultMsg[code], [])
+        elif code in GKML.datas:
+            self.onMessagePre(GKML.datas[code]['errorMsg'], [])
             return
         else:
             self.onMessagePre(M_M_DD.datas.CDK_anomaly, [])
@@ -2865,10 +2957,11 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.mallSpend = val
         return val - oldVal
 
-    def makeItemFlowLog(self, bagType, bindType, itemId, uniqueId, itemNum, opUUID, src, newCount, srcDetail=None):
+    def makeItemFlowLog(self, bagType, bindType, itemId, uniqueId, itemNum, opUUID, src, newCount, srcDetail=None, equipData=''):
         beforeCount = newCount - itemNum
         if itemNum < 0:
             beforeCount = newCount + abs(itemNum)
+        detailStr = str(srcDetail) + ":isCross:" + str(self.isCrossServerInLocalServer)
         LogTrackingMgr.LogTrackingMgr.item_flow(
             self.gbID,
             self.accountEntity.clientDistinctId,
@@ -2884,7 +2977,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             newCount,
             src,
             opUUID,
-            str(srcDetail),
+            detailStr,
+            equipData,
         )
 
     def getItemUniqueId(self, itemId):
@@ -3036,9 +3130,10 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             realItemInfoList.append((itemId, itemNum, bindType))
             deductVal.addWealthByItemId(itemId, itemNum, bindType)
 
-        if not self.canDeductWealth(deductVal, sendMsg=False):
-            LOG_ERR("reqRandomSynthesis cost not enough")
+        res = self.canDeductWealth(deductVal, sendMsg=False)
+        if not res:
             self.client.onRandomSynthesis(itemIdList)
+            LOG_WARN("reqRandomSynthesis cost not enough", res())
             return
 
         hasBindType = False
@@ -3052,6 +3147,9 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         synthesisUpgradeKeySet = set()
         normalItemNum = 0
         deductVal = dropAward.DeductWealthVal()
+        inItemInfos = []
+        outItemInfos = []
+        keyDict = {}
         for itemId, itemNum, bindType in realItemInfoList:
             costItemInfo[itemId] = costItemInfo.get(itemId, 0) + itemNum
             hasBindType = True if bindType == gameconst.ItemBindType.BIND else hasBindType
@@ -3161,18 +3259,30 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 if normalItemNum >= synthesisNeedNum:
                     normalItemNum -= synthesisNeedNum
                     curNormalNum = synthesisNeedNum
+                else:
+                    normalItemNum = 0
                 if curNormalNum > 0 and len(_randomCfg) > curNormalNum and random.randint(0, 100) <= _randomCfg[curNormalNum]:
                     itemBindType = gameconst.ItemBindType.NORMAL
                 #LOG_INFO("reqRandomSynthesis, normalItemNum:", normalItemNum, curNormalNum)
+                inDaatas = []
+                outDatas = []
                 for (itemId, itemNum, bindType) in curGroupInfo:
                     deductVal.addWealthByItemId(itemId, itemNum, bindType)
+                    inDaatas.append({'itemId': itemId, 'itemNum': itemNum, 'bindType': bindType})
+                
+                inItemInfos.append(inDaatas)
+                
                 randItem = itemFactory.ItemFactory.createItem(ranItemId, 1, itemBindType)
-                itemIdList.append({'itemId': ranItemId, 'itemNum': 1, 'bindType': itemBindType})
+
+                outData = {'itemId': ranItemId, 'itemNum': 1, 'bindType': itemBindType}
+                itemIdList.append(outData)
+                outDatas.append(outData)
+                outItemInfos.append(outDatas)
                 ranItemAddVal.addWealthByObjList([randItem])
                 getItemInfo[ranItemId] = getItemInfo.get(ranItemId, 0) + 1
                 key = synthesisKey * 10 + quality
                 if itemQuality == curQuality:
-                    self.randomSynthesisDic[key] = self.randomSynthesisDic.get(key, 0) + 1
+                    keyDict[key] = keyDict.get(key, 0) + 1
                     synthesisUpgradeKeySet.add(key)
             if curItemNum == 0:
                 hasBindType = False
@@ -3184,6 +3294,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.deductWealth(srcType, deductVal, opUUID, detail)
         _ctx = awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID)
         self.addWealth(srcType, ranItemAddVal, opUUID, detail, notify=False, awardCtx=_ctx)
+        for key, num in keyDict.items():
+            self.randomSynthesisDic[key] = self.randomSynthesisDic.get(key, 0) + num
         for key in synthesisUpgradeKeySet:
             synthesisUpgradeNumList.append({'synthesisKey': key, 'upgradeNum': self.randomSynthesisDic.get(key, 0)})
         self.client.onUpdateSynthesisUpgradeNum(synthesisUpgradeNumList)
@@ -3200,14 +3312,17 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 itemData = dataUtils.getCommItemData(itemId)
                 compositeType = '{}_{}'.format(itemData['type'], itemData['subType'])
 
-        self.makeSynthesisLog(
-            self.gbID,
-            compositeType,
-            isAuto,
-            getItemInfos,
-            'randomSynthesis',
-            opUUID
-        )
+        totalRecordCount = len(inItemInfos)
+        for idx in range(0, totalRecordCount):
+            self.makeSynthesisLog(
+                self.gbID,
+                compositeType,
+                isAuto,
+                inItemInfos[idx],
+                outItemInfos[idx],
+                'randomSynthesis',
+                opUUID
+            )
 
         self.triggerAchievementWithCtx(gameconst.AchieveType.SYNTHESIS, actionContext.AchievementCtx(
             getNum=list(getItemInfo.values()),
@@ -3267,7 +3382,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if self.randomSynthesisDic.get(key, 0) < upgradeNum:
             LOG_ERR("reqUpgradeSynthesis upgradeNum not enough", key)
             return
-
+        outItems = []
         ranItemAddVal = dropAward.AwardVal()
         while(self.randomSynthesisDic.get(key, 0) >= upgradeNum):
             costItemInfo[key] = costItemInfo.get(key, 0) + upgradeNum
@@ -3297,7 +3412,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             randItem = itemFactory.ItemFactory.createItem(ranItemId, 1, gameconst.ItemBindType.BIND)
             ranItemAddVal.addWealthByObjList([randItem])
             getItemInfo[ranItemId] = getItemInfo.get(ranItemId, 0) + 1
-
+            outItems.append([{'itemId': ranItemId, 'itemNum': 1, 'bindType': gameconst.ItemBindType.BIND}])
+            
         _ctx = awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID)
         self.addWealth(srcType, ranItemAddVal, opUUID, detail, notify=True, awardCtx=_ctx)
         self.client.onUpdateSynthesisUpgradeNum([{'synthesisKey': key, 'upgradeNum': self.randomSynthesisDic.get(key, 0)}])
@@ -3313,14 +3429,16 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 itemData = dataUtils.getCommItemData(itemId)
                 compositeType = '{}_{}'.format(itemData['type'], itemData['subType'])
 
-        self.makeSynthesisLog(
-            self.gbID,
-            compositeType,
-            0,
-            getItemInfos,
-            'upgradeSynthesis',
-            opUUID
-        )
+        for outItem in outItems:
+            self.makeSynthesisLog(
+                self.gbID,
+                compositeType,
+                0,
+                [],
+                outItem,
+                'upgradeSynthesis',
+                opUUID
+            )
     
     @gamedecorator.checkGameconfigEnable('bag')
     def reqRandomUpgradeSynthesis(self, exposed, infoList):
@@ -3430,7 +3548,9 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             if self.randomSynthesisDic[key] == 0:
                 self.randomSynthesisDic.pop(key)
             self.client.onUpdateSynthesisUpgradeNum([{'synthesisKey': key, 'upgradeNum': self.randomSynthesisDic.get(key, 0)}])
-    
+        
+        outItems = []
+
         getItemInfo = {}
         srcType = AAC_AAC_DD.datas.BONUS_SRC_UPGRADE_SYNTHESIS
         detail = gameclass.AwardDetailCls()
@@ -3441,6 +3561,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             randItem = itemFactory.ItemFactory.createItem(ranItemId, 1, gameconst.ItemBindType.BIND)
             ranItemAddVal.addWealthByObjList([randItem])
             getItemInfo[ranItemId] = getItemInfo.get(ranItemId, 0) + 1
+            outItems.append([{'itemId': ranItemId, 'itemNum': 1, 'bindType': gameconst.ItemBindType.BIND}])
 
         _ctx = awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID)
         self.addWealth(srcType, ranItemAddVal, opUUID, detail, notify=True, awardCtx=_ctx)
@@ -3448,29 +3569,33 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         compositeType = ''
         getItemInfos = []
+        
         for itemId, itemCount in getItemInfo.items():
             getItemInfos.append({'item_id':itemId, 'item_count':itemCount, 'item_quality':dataUtils.getItemQuality(itemId)})
             if compositeType == '':
                 itemData = dataUtils.getCommItemData(itemId)
                 compositeType = '{}_{}'.format(itemData['type'], itemData['subType'])
 
-        self.makeSynthesisLog(
-            self.gbID,
-            compositeType,
-            0,
-            getItemInfos,
-            'randomUpgrade',
-            opUUID
-        )
+        for outItem in outItems:
+            self.makeSynthesisLog(
+                self.gbID,
+                compositeType,
+                0,
+                [],
+                [outItem],
+                'randomUpgrade',
+                opUUID
+            )
         
-    def makeSynthesisLog(self, playerGbId, itemCompositeType, ifAuto, getItemInfo, desc, opUUID):
+    def makeSynthesisLog(self, playerGbId, itemCompositeType, ifAuto, itemCost, itemGet, desc, opUUID):
         LogTrackingMgr.LogTrackingMgr.item_composite(
             self.gbID,
             self.accountEntity.clientDistinctId,
             playerGbId,
             itemCompositeType,
             ifAuto,
-            getItemInfo,
+            itemCost,
+            itemGet,
             desc,
             opUUID
         )
@@ -3637,7 +3762,14 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.client.onLockItemSucc(equipIn, gridId, itemId, lockStatus)
 
     @gamedecorator.checkGameconfigEnable('bag')
+    @gamedecorator.crossServer
     def reqSellItem(self, exposed, bagType, gridId, itemId, itemNum):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_reqSellItem', (bagType, gridId, itemId, itemNum))
+        else:
+            self._reqSellItem(bagType, gridId, itemId, itemNum)
+
+    def _reqSellItem(self, bagType, gridId, itemId, itemNum):
         LOG_INFO('in reqSellItem::', bagType, gridId, itemId, itemNum)
         bag = self.getBagByType(bagType)
         if not bag:
@@ -3692,11 +3824,19 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         self.client.onSellItemSucc(bagType, gridId, itemId, itemNum)
 
+        self.syncMethodCallToCrossServerBase('onSyncSellItem', (bagType, gridId, itemId, itemNum, opUUID, srcType, deductDetail, addWealthVal, addDetail))
+
+    def onSyncSellItem(self, bagType, gridId, itemId, itemNum, opUUID, srcType, deductDetail, addWealthVal, addDetail):
+        LOG_INFO('onSyncSellItem', bagType, gridId, itemId, itemNum, opUUID, srcType, deductDetail, addWealthVal, addDetail)
+        self.bagData.deductItemsByGridId(self, {gridId: itemNum}, opUUID, srcType, deductDetail)
+        self.addWealth(srcType, addWealthVal, opUUID, addDetail)
+        self.client.onSellItemSucc(bagType, gridId, itemId, itemNum)
+
 
     def getBagLimitItemNum(self):
         itemNum = 0
         for itemId in IDIDS.categoryDatas.get(gameconst.BAG_LIMIT_ITEM_TYPE_DATA, set()):
-            itemNum += self.getItemNum(itemId)
+            itemNum += self.getItemNum(itemId, ignoreCheck=True)
         return itemNum
 
     def checkBagItemLimit(self, itemId, addNum):
@@ -3785,7 +3925,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if bag.isLocked():
             LOG_INFO('doBagFnvHashCheck pass, bag is locked')
             return
-        res = bag.calFnvHash()
+        res, checkData = bag.calFnvHash()
         self.syncMethodCallToCrossServerBase('onFnvCheck', (res, bagTp))
     
     #跨服fnv哈希校验
@@ -3795,22 +3935,40 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             LOG_INFO('onFnvCheck pass, bag is locked')
             return
 
-        _res = bag.calFnvHash()
+        _res, checkData = bag.calFnvHash()
         if res != _res:
-            LOG_ERR('onFnvCheck failed', res, _res, bagTp)
+            LOG_WARN('onFnvCheck failed', res, _res, bagTp, checkData)
             self.syncMethodCallToLocalServerBase('onFnvCheckFailed', (res, _res, bagTp))
+        else:
+            self.syncMethodCallToLocalServerBase('onFnvCheckSuccess', (bagTp,))
+
+    def fnvIsFirst(self, bagTp):
+        return not self.fnvFirstOverDict.get(bagTp, False)
 
     #校验失败本服背包数据打包
+    #登录后第一次校验失败，则报warn而不是err，因为跨服异步中可能会因为各种本服被动触发，导致背包变化，但跨服未完成，从而没同步到跨服来
     def onFnvCheckFailed(self, res, _res, bagTp):
-        LOG_ERR('onFnvCheck failed', res, _res, bagTp)
-
+        self.fnvCheckFailTimesDict.setdefault(bagTp, 0)
+        self.fnvCheckFailTimesDict[bagTp] += 1
+        LOG_WARN('onFnvCheckFailed', self.fnvCheckFailTimesDict, res, _res, bagTp)
+        if self.fnvCheckFailTimesDict[bagTp] < 3 and not self.fnvIsFirst(bagTp):
+            return
         bag = self.getBagByType(bagTp)
+        _resCheck, checkData = bag.calFnvHash()
+        if self.fnvIsFirst(bagTp):
+            LOG_WARN('onFnvCheck failed but is first', res, _res, bagTp, _resCheck, checkData)
+        else:
+            LOG_ERR('onFnvCheck failed', res, _res, bagTp, _resCheck, checkData)
         if bag.isLocked():
             LOG_ERR('onFnvCheckFailed pass, bag is locked')
             return
         
         gridIdToGridObj, itemIdToGridIds = bag.getPickleBagData()
         self.syncMethodCallToCrossServerBase('onSyncBagPickleData', (gridIdToGridObj, itemIdToGridIds, bagTp))
+
+    def onFnvCheckSuccess(self, bagTp):
+        self.fnvCheckFailTimesDict[bagTp] = 0
+        self.fnvFirstOverDict[bagTp] = True
 
     #跨服覆盖背包数据
     def onSyncBagPickleData(self, gridIdToGridObj, itemIdToGridIds, bagTp):
@@ -3824,3 +3982,220 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         bag.forceInitFromBagData(gridIdToGridObj, itemIdToGridIds)
         LOG_INFO('onSyncBagPickleData success', bag.calFnvHash())
         self.sendBagData()
+
+    @gamedecorator.offlineCallback
+    def gmDeductItem(self, itemId, bindNum, unbindNum, ignoreBindNum, debtBindNum, debtUnbindNum):
+        if bindNum > 0:
+            self._gmDeductItem(itemId, bindNum, gameconst.ItemBindType.BIND)
+        if unbindNum > 0:
+            self._gmDeductItem(itemId, unbindNum, gameconst.ItemBindType.NORMAL)
+        if ignoreBindNum > 0:
+            self._gmDeductItem(itemId, ignoreBindNum, gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED)
+        if debtBindNum > 0:
+            self._addDebtItem(itemId, debtBindNum, gameconst.ItemBindType.BIND)
+        if debtUnbindNum > 0:
+            self._addDebtItem(itemId, debtUnbindNum, gameconst.ItemBindType.NORMAL)
+
+    def _gmDeductItem(self, itemId, num, bindType, times=0):
+        #重试10次全都背包锁，则全部放入欠债
+        if times > 10:
+            LOG_ERR('_gmDeductItem error:', itemId, num)
+            self._addDebtItem(itemId, num, bindType)
+            return
+        itemType = dataUtils.getCommItemData(itemId).get('type')
+        if itemType == gameconst.ItemEnum.Normal:
+            if self.bagData.isLocked():
+                self.addTimerCB(1, '_gmDeductItem', (itemId, num, bindType, times+1), gametimer.TIMER_TAG_GM_DEDUCT_ITEM)
+                return
+            self._gmDeductItemContinue(self.bagData, itemId, num, bindType)
+            
+        elif itemType == gameconst.ItemEnum.LingShou:
+            if self.petBag.isLocked():
+                self.addTimerCB(1, '_gmDeductItem', (itemId, num, bindType, times+1), gametimer.TIMER_TAG_GM_DEDUCT_ITEM)
+                return
+            self._gmDeductItemContinue(self.petBag, itemId, num, bindType)
+        else:
+            LOG_ERR('_gmDeductItem error:', itemId, num, bindType)
+
+    def _gmDeductItemContinue(self, bagData, itemId, num, bindType):
+        remainDeductNum = num
+        bindCnt = bagData.getItemCount(self.gbID, itemId, gameconst.ItemBindType.BIND, True)
+        unbindCnt = bagData.getItemCount(self.gbID, itemId, gameconst.ItemBindType.NORMAL, True)
+        if bindType == gameconst.ItemBindType.BIND:
+            unbindCnt = 0
+        elif bindType == gameconst.ItemBindType.NORMAL:
+            bindCnt = 0
+            
+        #先计算非绑定的数量
+        deductUnbindNum = min(remainDeductNum, unbindCnt)
+        
+        #扣包中非绑道具
+        if self._gmDoDeductItem(itemId, deductUnbindNum, gameconst.ItemBindType.NORMAL):
+            remainDeductNum -= deductUnbindNum
+        
+        deductBindNum = min(remainDeductNum, bindCnt)
+        #扣包中绑定的数量
+        if self._gmDoDeductItem(itemId, deductBindNum, gameconst.ItemBindType.BIND):
+            remainDeductNum -= deductBindNum
+
+        #欠债
+        self._addDebtItem(itemId, remainDeductNum, bindType)
+        LOG_INFO('bagData _gmDeductItem success', itemId, num, bindCnt, unbindCnt, remainDeductNum, bindType)
+
+    def _gmDoDeductItem(self, itemId, deductNum, bindType):
+        if deductNum <= 0:
+            return False
+        deductWealthVal = dropAward.DeductWealthVal()
+        deductWealthVal.addWealthByItemId(itemId, deductNum, bindType)
+        if self.canDeductWealth(deductWealthVal, isCheck=False):
+            _srcType = AAC_AAC_DD.datas.BONUS_SRC_GATHER
+            _detail = gameclass.AwardDetailCls()
+            opUUID = KBEngine.genUUID64()
+            self.deductWealth(_srcType, deductWealthVal, opUUID, _detail)
+            return True
+        LOG_ERR('_gmDoDeductItem error:', itemId, bindType)
+        return False
+
+    def _addDebtItem(self, itemId, num, bindType):
+        if num == 0:
+            return
+        self.debtItemDict.setdefault(itemId, {})
+        self.debtItemDict[itemId].setdefault(bindType, 0)
+        self.debtItemDict[itemId][bindType] += num
+        LOG_INFO('_addDebtItem', self.debtItemDict)
+        self._sendDebtItemData()
+
+    def reqDebtItemData(self, exposed):
+        self._sendDebtItemData()
+        
+    def _sendDebtItemData(self):
+        popList = []
+        for itemId, bindTypeDict in self.debtItemDict.items():
+            for bindType, num in bindTypeDict.items():
+                if num <= 0:
+                    popList.append((itemId, bindType))
+        for itemId, bindType in popList:
+            self.debtItemDict[itemId].pop(bindType)
+        itemIds = []
+        nums = []
+        bindTypes = []
+        for itemId, bindTypeDict in self.debtItemDict.items():
+            for bindType, num in bindTypeDict.items():
+                itemIds.append(itemId)
+                nums.append(num)
+                bindTypes.append(bindType)
+        self.client.onDebtItemData(itemIds, nums, bindTypes)
+
+    def gmGetItemNum(self, su, itemId):
+        itemType = dataUtils.getCommItemData(itemId).get('type')
+        if itemType == gameconst.ItemEnum.Normal:
+            self._gmGetItemNum(su, itemId, self.bagData)
+        elif itemType == gameconst.ItemEnum.LingShou:
+            self._gmGetItemNum(su, itemId, self.petBag)
+        else:
+            su.onCommandResult(-1, '执行失败, 道具不存在', {"ec": -1, "itemId": itemId, "bagBindNum": 0, "bagUnbindNum": 0, "warehouseBindNum": 0, "warehouseUnbindNum": 0})
+
+    def _gmGetItemNum(self, su, itemId, bag):
+        bagBindNum = bag.getItemCount(self.gbID, itemId, gameconst.ItemBindType.BIND, True)
+        bagUnbindNum = bag.getItemCount(self.gbID, itemId, gameconst.ItemBindType.NORMAL, True)
+        warehouseBindNum = self.warehouse.getItemCount(self.gbID, itemId, gameconst.ItemBindType.BIND, True)
+        warehouseUnbindNum = self.warehouse.getItemCount(self.gbID, itemId, gameconst.ItemBindType.NORMAL, True)
+        LOG_INFO('gmGetItemNum', itemId, bagBindNum, bagUnbindNum, warehouseBindNum, warehouseUnbindNum)
+        su.onCommandResult(0, '', {"ec": 0, "itemId": itemId, "bagBindNum": bagBindNum, "bagUnbindNum": bagUnbindNum, "warehouseBindNum": warehouseBindNum, "warehouseUnbindNum": warehouseUnbindNum})
+
+    def gmDeductEquip(self, su, itemId, equipId):
+        if itemId not in GBGBD.datas:
+            LOG_INFO('gmDeductEquip error:', itemId, equipId)
+            su.onCommandResult(-1, '执行失败, 道具不存在', {"ec": -1})
+            return
+
+        #先扣背包
+        gridIds = self.bagData.getGridIdsByItemId(itemId)
+        if gridIds:
+            for gridId in gridIds:
+                gridItem = self.bagData.getItemObjByGridId(gridId)
+                if gridItem.uniqueId == equipId:
+                    opUUID = KBEngine.genUUID64()
+                    _srcType = AAC_AAC_DD.datas.BONUS_SRC_GM_DEDUCT_SPEC_ITEM
+                    _detail = gameclass.AwardDetailCls()
+                    self.bagData.cleanGridByGridId(self, gridId, itemId, opUUID, _srcType, _detail)
+                    su.onCommandResult(0, '', {"ec": 0})
+                    return
+
+        #背包没有找仓库
+        gridIds = self.warehouse.getGridIdsByItemId(itemId)
+        if gridIds:
+            for gridId in gridIds:
+                gridItem = self.warehouse.getItemObjByGridId(gridId)
+                if gridItem.uniqueId == equipId:
+                    self.warehouse.cleanGridByGridId(self, gridId, itemId, opUUID, _srcType, _detail)
+                    su.onCommandResult(0, '', {"ec": 0})
+                    return
+
+        #仓库没有找身上
+        self.cell.cellGmDeductEquip(su, itemId, equipId)
+
+    def gmQueryEquip(self, su, itemId, equipId):
+        if itemId not in GBGBD.datas:
+            LOG_INFO('gmQueryEquip error:', itemId, equipId)
+            su.onCommandResult(-1, '执行失败, 道具不存在', {"ec": -1})
+            return
+
+        #先查背包
+        gridIds = self.bagData.getGridIdsByItemId(itemId)
+        if gridIds:
+            for gridId in gridIds:
+                gridItem = self.bagData.getItemObjByGridId(gridId)
+                if gridItem.uniqueId == equipId:
+                    su.onCommandResult(0, '', {"ec": 0})
+                    return
+
+        #背包没有找仓库
+        gridIds = self.warehouse.getGridIdsByItemId(itemId)
+        if gridIds:
+            for gridId in gridIds:
+                gridItem = self.warehouse.getItemObjByGridId(gridId)
+                if gridItem.uniqueId == equipId:
+                    su.onCommandResult(0, '', {"ec": 0})
+                    return
+
+        #仓库没有找身上
+        self.cell.cellGmQueryEquip(su, itemId, equipId)
+
+    def gmRestoreEquip(self, su, data, events):
+        """
+        恢复玩家装备
+            data:
+                pickled = pickle.dumps(equipItem.toItemSavedDict())
+                compressed = gzip.compress(pickled)
+                data = base64.b64encode(compressed).decode('ascii')
+            events: "resetReturnInfo|xxx|yyy"
+        """
+        try:
+            savedDict = cPickle.loads(gzip.decompress(base64.b64decode(data)))
+            item = itemFactory.ItemFactory.createItemWithSavedDict(savedDict)
+        except Exception as e:
+            LOG_ERR('gmRestoreEquip decode error:', e)
+            su.onCommandResult(-1, '执行失败, 装备数据解析失败', {"ec": -1})
+            return
+
+        if not item:
+            LOG_ERR('gmRestoreEquip error, invalid item:', self.gbID, savedDict)
+            su.onCommandResult(-1, '执行失败, 道具不存在', {"ec": -1})
+            return
+
+        if gameconst.RestoreEquipEvent.RESET_RETURN_INFO in events:
+            item.resetOwnerInfo()
+
+        opUUID = KBEngine.genUUID64()
+        srcType = AAC_AAC_DD.datas.BONUS_SRC_GM
+        awardCtx = self.getAvatarAwardCtx(item.itemId, None)
+        wealthVal = dropAward.AwardVal().addWealthByObjList([item])
+        if not self.canAddWealthVal(srcType, wealthVal, awardCtx):
+            LOG_WARN('gmRestoreEquip failed, cannot add:', self.gbID, savedDict)
+            su.onCommandResult(-1, '执行失败, 背包无法放入该装备', {"ec": -3})
+            return
+
+        LOG_INFO('gmRestoreEquip:', self.gbID, item.itemId, item.uniqueId)
+        self.addWealth(srcType, wealthVal, opUUID, 'gm_cmd:$gmRestoreEquip', awardCtx)
+        su.onCommandResult(0, '', {"ec": 0})

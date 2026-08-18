@@ -27,23 +27,23 @@ datas = _tools.RODict({
     }),
     2: _tools.RODict({
         "equipDropPickID": 16000042,
-        "equipLimit": (23, 24, 25, 26, 27, 28, 29, 30, 32, 34),
-        "petLimit": (0, 0, 0, 0, 0)
+        "equipLimit": (1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+        "petLimit": (1, 1, 1, 1, 1)
     }),
     3: _tools.RODict({
         "equipDropPickID": 16000043,
-        "equipLimit": (35, 37, 39, 41, 43, 45, 46, 47, 48, 49),
-        "petLimit": (20, 25, 30, 30, 30)
+        "equipLimit": (1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+        "petLimit": (1, 1, 1, 1, 1)
     }),
     4: _tools.RODict({
         "equipDropPickID": 16000044,
-        "equipLimit": (50, 55, 60, 65, 70, 75, 80, 85, 90, 95),
-        "petLimit": (45, 50, 55, 60, 65)
+        "equipLimit": (1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+        "petLimit": (1, 1, 1, 1, 1)
     }),
     5: _tools.RODict({
         "equipDropPickID": 16000045,
-        "equipLimit": None,
-        "petLimit": None
+        "equipLimit": (0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+        "petLimit": (0, 0, 0, 0, 0)
     })
 })
 minKey = 0

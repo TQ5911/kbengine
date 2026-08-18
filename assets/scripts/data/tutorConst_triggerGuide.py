@@ -435,6 +435,12 @@ datas = _tools.RODict({
     24110002: _tools.RODict({
         "conditionArgs": "",
     }),
+    24110003: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24110004: _tools.RODict({
+        "conditionArgs": "",
+    }),
     24110101: _tools.RODict({
         "conditionArgs": "",
     }),
@@ -773,7 +779,13 @@ datas = _tools.RODict({
     }),
     24213505: _tools.RODict({
         "conditionArgs": "",
+    }),
+    24203601: _tools.RODict({
+        "conditionArgs": "",
+    }),
+    24213601: _tools.RODict({
+        "conditionArgs": "",
     })
 })
 minKey = 24100001
-maxKey = 24213505
+maxKey = 24213601

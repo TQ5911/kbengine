@@ -60,18 +60,14 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
                     realDestroyList.append((spaceNo, _sVal.spaceUUID, 'time destory'))
                 continue
 
-            # extra kwargs in `team.TeamDungeonSpaceCacheVal.isDungeonSpaceCanBeDestoried`
-            extraInfo = {'tCreate': _sVal.tCreate,
-                         'tState': _sVal.state}
-
-            needDestroyList.append((_sVal.guildUUID,
-                                    self.dungeonNo,
-                                    spaceNo,
-                                    'delay timeout destory',
-                                    extraInfo))
+            needDestroyList.append((spaceNo, _sVal.spaceUUID,
+                                    'delay timeout destory'))
 
         for rArgs in realDestroyList:
             self.destoryDungeonSpace(*rArgs)
+
+        for args in needDestroyList:
+            self.tryDestroyDungeon(*args)
 
     def onDungeonSpaceGone(self, spaceNo, reason):
         if reason == gameconst.OnLoseCellReasonEnum.CELLAPP_DEATH:
@@ -86,10 +82,44 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
                 sVal.spaceBox.doEntireDestroy(False, False)
                 self.spaces.pop(spaceNo)
 
+    def tryDestroyDungeon(self, spaceNo, spaceUUID, reason):
+        LOG_INFO('tryDestroyDungeon', spaceNo, spaceUUID, reason)
+        if spaceNo not in self.spaces:
+            LOG_WARN('tryDestroyDungeon cannot find space:', spaceNo)
+            return
+
+        sVal = self.spaces[spaceNo]
+        if spaceUUID and sVal.spaceUUID!=spaceUUID:
+            LOG_WARN('tryDestroyDungeon:: spaceUUID not match {}!={}'.format(sVal.spaceUUID, spaceUUID))
+            return
+        
+        if sVal.markDestroy > 0:
+            return
+        
+        if sVal.isCompleted():
+            self.doMarkDestroy(spaceNo)
+            return
+        
+        # 超时了
+        now = utils.curTS()
+        if now - sVal.tCreate > 60*DDI.datas[self.dungeonNo]['timeOut'] + 2:
+            self.doMarkDestroy(spaceNo)
+            return
+
+    def doMarkDestroy(self, spaceNo):
+        sVal = self.spaces.get(spaceNo)
+        if not sVal:
+            LOG_WARN('doMarkDestroy cannot find space:', spaceNo)
+            return
+        sVal.markDestroy = utils.curTS() + 60
+        sVal.cancelCompleteTimer(self, gametimer.TIMER_TAG_ON_GUILD_BOSS_CHALLENGE_DUNGEON_COMPLETED_CALLBACK)
+        sVal.spaceMgr.cell.cancelCompleteDelayNotifyTimer(sVal.spaceMgr.cell, gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
+        sVal.toDestoryDungeon()
+
     def destoryDungeonSpace(self, spaceNo, spaceUUID, reason):
         LOG_INFO('destoryDungeonSpace', spaceNo, spaceUUID, reason)
         if spaceNo not in self.spaces:
-            LOG_WARN('wl: destoryDungeonSpace cannot find space:', spaceNo)
+            LOG_WARN('destoryDungeonSpace cannot find space:', spaceNo)
             return
 
         sVal = self.spaces[spaceNo]
@@ -99,11 +129,7 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
 
         now = utils.curTS()
         if not sVal.markDestroy:
-            sVal.markDestroy = utils.curTS() + 60
-            sVal.cancelCompleteTimer(self, gametimer.TIMER_TAG_ON_GUILD_BOSS_CHALLENGE_DUNGEON_COMPLETED_CALLBACK)
-            sVal.spaceMgr.cell.cancelCompleteDelayNotifyTimer(sVal.spaceMgr.cell, gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
-            sVal.toDestoryDungeon()
-
+            self.doMarkDestroy(spaceNo)
             LOG_INFO('destoryDungeonSpace::space will be destroyed in next check,', spaceNo, sVal.markDestroy)
             return
 
@@ -215,8 +241,10 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
         sVal.completeDungeon(win)
         sVal.toDestoryDungeon()
 
+        self.destoryDungeonSpace(spaceNo, spaceUUID, reason)
+
     def _kickOutAllFounders(self, spaceNo, extra):
-        LOG_INFO('RaidDungeonStub _kickOutAllFounders:: kickout', spaceNo, extra)
+        LOG_INFO('GuildBossDungeonStub _kickOutAllFounders:: kickout', spaceNo, extra)
         spaceVal = self.spaces[spaceNo]
         _needDestoryGBIDs = []
         dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)

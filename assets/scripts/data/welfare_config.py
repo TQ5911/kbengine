@@ -49,7 +49,7 @@ datas = _tools.RODict({
     }),
     "AttentionMethod": _tools.RODict({
         "ID": "AttentionMethod",
-        "value": "第一步：关注官方公众号，发送口令\n“烽烟破晓”，领取专属兑换码。\n第二步：点击【兑换礼包】使用兑换码。",
+        "value": "第一步：关注官方公众号，发送口令\n“炽焰测试”，领取专属兑换码。\n第二步：点击【兑换礼包】使用兑换码。",
     }),
     "AttentionReward": _tools.RODict({
         "ID": "AttentionReward",
@@ -142,5 +142,13 @@ datas = _tools.RODict({
     "totalRechargeText": _tools.RODict({
         "ID": "totalRechargeText",
         "value": "累计充值{0}可领取",
+    }),
+    "powerRushTime": _tools.RODict({
+        "ID": "powerRushTime",
+        "value": "2026/7/30-2026/8/17",
+    }),
+    "ScoreRankDeadLine": _tools.RODict({
+        "ID": "ScoreRankDeadLine",
+        "value": "202608172200",
     })
 })

@@ -254,6 +254,14 @@ datas = _tools.RODict({
     "petFirstShowIgnoreMap": _tools.RODict({
         "ID": "petFirstShowIgnoreMap",
         "value": 4002,
+    }),
+    "petTeamPkSwitchCD": _tools.RODict({
+        "ID": "petTeamPkSwitchCD",
+        "value": 60,
+    }),
+    "petTeamPkSwitchMsg": _tools.RODict({
+        "ID": "petTeamPkSwitchMsg",
+        "value": 54003432,
     })
 })
 

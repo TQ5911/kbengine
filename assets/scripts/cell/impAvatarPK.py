@@ -107,6 +107,9 @@ class ImpAvatarPK(object):
     @gamedecorator.crossServer
     @utils.isMyself
     def setPKProtect(self, exposed, protectType, isSet):
+        self._setPKProtect(protectType, isSet)
+
+    def _setPKProtect(self, protectType, isSet):
         LOG_DBG('setPKProtect', protectType, isSet)
         if not (gameconst.PKProtectEnum.TEAM <= protectType <= gameconst.PKProtectEnum.UNION):
             return
@@ -118,6 +121,8 @@ class ImpAvatarPK(object):
 
         self.pkProtect = _newVal
         self.resetAllTargetTypeCache()
+
+        self.syncMethodCallToLocalServerCell('_setPKProtect', (protectType, isSet))
 
     @utils.isMyself
     def declareWarToAvatar(self, _, targetId):
@@ -152,6 +157,11 @@ class ImpAvatarPK(object):
         return sceneInfo['ifSafeArea'] == gameconst.PKMapType.DANGER
 
     def increaseMoralValue(self, delta, srcType):
+        self._increaseMoralValue(delta, srcType)
+        self.syncMethodCallToLocalServerCell('_increaseMoralValue', (delta, srcType))
+
+
+    def _increaseMoralValue(self, delta, srcType):
         LOG_DBG('increaseMoralValue', delta)
         upperLimitOfMoralValues = PKD_PKDD.datas['upperLimitOfMoralValues']['value']
         if self.moralValue >= upperLimitOfMoralValues:

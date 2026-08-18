@@ -17,13 +17,13 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "rechargeRange": _tools.ROList([1, 3000]),
+        "rechargeRange": _tools.ROList([1, 5000]),
         "goldRate": 100,
         "boundGoldRate": 30
     }),
     2: _tools.RODict({
         "ID": 2,
-        "rechargeRange": _tools.ROList([3001, 50000]),
+        "rechargeRange": _tools.ROList([5001, 50000]),
         "goldRate": 100,
         "boundGoldRate": 20
     }),
@@ -31,7 +31,7 @@ datas = _tools.RODict({
         "ID": 3,
         "rechargeRange": _tools.ROList([50001]),
         "goldRate": 100,
-        "boundGoldRate": 0
+        "boundGoldRate": 10
     })
 })
 minKey = 1

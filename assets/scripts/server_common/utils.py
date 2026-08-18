@@ -46,6 +46,8 @@ import cube_config
 import wonderLand_config
 import abyss_config
 import soul_soul
+import soul_soulNumQuality
+import soul_soulAffix
 import affix_affix
 import character_charData
 
@@ -79,6 +81,8 @@ import mall_coinPrice as MCP
 import mall_mallConst as MMC
 import branchData_branchData as B_BD
 import traceback
+import hmac
+import os
 
 tempTime = time.time
 ASCII_LIST = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
@@ -87,6 +91,7 @@ ASCII_LIST = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', '
               'v', 'w', 'x', 'y', 'z',
               '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
+SALT_BYTE_SIZE = 16
 
 class Swallower(object):
     def __getattribute__(self, name):
@@ -1213,10 +1218,10 @@ def parseCommEventParams(paramStr):
     return _args, _kwargs
 
 
-def checkBoxOffline(box):
+def checkBoxOffline(box, reportErr=True):
     # 先删除isDestroying判断，正常情况应该在下线销毁时就从stub注销自己，而不是持有一个isDestroyed的对象再判断
     if isinstance(box, KBEngine.Proxy):
-        if box.isDestroyed:
+        if box.isDestroyed and reportErr:
             gameengine.panicStack('use of destroyed box')
         return box.isDestroyed
 
@@ -1683,23 +1688,44 @@ def _isEnemy(src, tgt):
     return False
 
 def isMineWarEnemy(src, target):
-    if utils.bhas(src.cellFlags, gameconst.CELL_FLAGS_IS_MINE_WAR_SPACE):
-        if utils.bhas(target.cellFlags, gameconst.CELL_FLAGS_IS_MINE_WAR_SPACE):
-            if target.IsMonster:
-                if not target.mineWarCanAttack:
-                    return False, True
-                if src.IsAvatar:
-                    if src.guildUUID == 0 and target.mineWarMonsterFlag == gameconst.MineWarMonsterFlag.MINE_CORE:
+    if utils.bhas(src.cellFlags, gameconst.CELL_FLAGS_IS_MINE_WAR_SPACE) and utils.bhas(target.cellFlags, gameconst.CELL_FLAGS_IS_MINE_WAR_SPACE):
+        if target.IsMonster:
+            if not target.mineWarCanAttack:
+                return False, True
+            
+            if src.IsAvatar:
+                if target.mineWarMonsterFlag == gameconst.MineWarMonsterFlag.MINE_CORE \
+                    or target.mineWarMonsterFlag == gameconst.MineWarMonsterFlag.MINE_FLAG \
+                    or target.mineWarMonsterFlag == gameconst.MineWarMonsterFlag.MINE_HUB:
+
+                    if src.guildUUID == 0:
                         return False, True
-                    return src.mineWarCamp != target.mineWarCamp, True
-            if src.IsAvatar and target.IsAvatar and src.mineWarCanAttack and target.mineWarCanAttack:
-                if src.guildUUID > 0 and (src.guildUUID == target.guildUUID or getGuildRelation(src.guildUUID, target.guildUUID) == gameconst.GuildRelationType.UNION):
-                    result = False
-                else:
-                    result = True
-                return result, True
-            if src.IsCreation and target.IsAvatar:
-                return True, True
+                    if src.spaceMgr and src.guildUUID == src.spaceMgr.mineWarGuildId:
+                        return False, True
+                    if src.spaceMgr and src.spaceMgr.mineWarGuildId > 0 \
+                            and getGuildRelation(src.guildUUID, src.spaceMgr.mineWarGuildId) == gameconst.GuildRelationType.UNION:
+                        return False, True
+                    else:
+                        return True, True
+                    
+        if src.IsAvatar and target.IsAvatar and src.mineWarCanAttack and target.mineWarCanAttack:
+            # 安全区内不可互相攻击
+            _srcInSafe = utils.bhas(src.cellFlags, gameconst.CELL_FLAGS_PK_SAFE)
+            _tgtInSafe = utils.bhas(target.cellFlags, gameconst.CELL_FLAGS_PK_SAFE)
+            # 安全区仅对防守方生效
+            _mGuildId = src.spaceMgr.mineWarGuildId
+            if (_srcInSafe and src.guildUUID == _mGuildId) or (_tgtInSafe and target.guildUUID == _mGuildId):
+                return False, True
+
+            if src.guildUUID > 0 and target.guildUUID > 0 and (src.guildUUID == target.guildUUID \
+                                                                or getGuildRelation(src.guildUUID, target.guildUUID) == gameconst.GuildRelationType.UNION):
+                result = False
+            else:
+                result = True
+            return result, True
+        
+        if src.IsCreation and target.IsAvatar:
+            return True, True
     return False, False
 
 def isPVP(src, tgt):
@@ -3240,8 +3266,9 @@ def check4stageversion(verStr):
 
 def getCubeCoinCostByTimes(times):
     costCfg = cube_config.datas['cubeNumCoinCost'].get('value', ())
+    totalCnt = cube_config.datas['cubeNumCoinDailyLimit']['value']
     for costInfo in costCfg:
-        if times + 1 == costInfo[0]:
+        if totalCnt - times + 1 == costInfo[0]:
             return costInfo[1], costInfo[2]
     return 0, 0
 
@@ -3309,77 +3336,54 @@ def isValidProp(propId, schoolId):
     #LOG_INFO("isValidprop: propId:", propId, "schoolId:", schoolId, "propType:", propType, "excludePropType:", excludePropType)
     return excludePropType != propType
 
+def isRarityLevelProp(propId):
+    return affix_affix.datas[propId]['rarityLevel']
+
 def rollEquipSoulProps(itemId, schoolId):
     soulSoulData = soul_soul.datas[itemId]
 
-    #随数量
-    numCount = []
-    numWeight = []
-    for numData in soulSoulData['propertyNum']:
-        numCount.append(numData[0])
-        numWeight.append(numData[1])
-    numRes = random.choices(numCount, weights=numWeight, k=1)[0]
-    #LOG_INFO("rollEquipSoulProps: num: %s" % numRes)
-    
-    #随词条(基础词条可重复，稀有词条不重复)
-    normalPropIds = []
-    normalPropWeight = []
-    rarePropIds = []
-    rarePropWeight = []
-    
-    if soulSoulData['baseProp']:
-        for propData in soulSoulData['baseProp']:
-            if isValidProp(propData[0], schoolId):
-                normalPropIds.append(propData[0])
-                normalPropWeight.append(propData[1])
-    if soulSoulData['rareProp']:
-        for propData in soulSoulData['rareProp']:
-            if isValidProp(propData[0], schoolId):
-                if numRes < 3 and affix_affix.datas[propData[0]]['prop'] == 'adjAtkBless':
-                    continue
-                rarePropIds.append(propData[0])
-                rarePropWeight.append(propData[1])
-        
-    propRes = []
-    rarePropSet = set()
-    for _ in range(numRes):
-        res = random.choices(normalPropIds + rarePropIds, weights=normalPropWeight + rarePropWeight, k=1)[0]
-        propRes.append(res)
-        if res in rarePropIds:
-            rarePropWeight[rarePropIds.index(res)] = 0
-            rarePropSet.add(res)
-    #LOG_INFO("rollEquipSoulProps: prop: %s" % propRes)
+    #随数量and品质
+    idx = soulSoulData["propertyNumQuality"]
+    qualityStr = soul_soulNumQuality.randomID2qualityStr[idx]
+    weight = soul_soulNumQuality.randomID2weight[idx]
+    qualityStrRes = random.choices(qualityStr, weights=weight, k=1)[0]
+    LOG_DBG("rollEquipSoulProps: qualityStrRes:", qualityStrRes)
 
-    #随品质 and 具体数值
     qualityRes = []
-    valueRes = []
-    qualityWeightData = soul_soul.datas[itemId]['qualityWeight']
-    luckyWeightData = soul_soul.datas[itemId]['LuckyWeight']
-    for propId in propRes:
-        qualityIds = []
-        qualityWeight = []
-        weightData = luckyWeightData if affix_affix.datas[propId]['prop'] == 'adjAtkBless' else qualityWeightData
-        for qualityData in weightData:
-            qualityId = qualityData[0] - 1
-            qualityValue = affix_affix.datas[propId]['qualityValue'][qualityId]
-            # 属性区间是0到0则不参与随机(幸运词条只有紫和金)
-            if qualityValue[0] == 0 and qualityValue[1] == 0:
-                continue
+    if qualityStrRes:
+        qualityRes = qualityStrRes.split(',')
+    for i in range(len(qualityRes)):
+        qualityRes[i] = int(qualityRes[i])
+    LOG_DBG("rollEquipSoulProps: qualityRes:", qualityRes)
 
-            if qualityId >= numRes and propId in rarePropSet:
-                continue
-            qualityIds.append(qualityId)
-            qualityWeight.append(qualityData[1])
-        res = random.choices(qualityIds, weights=qualityWeight, k=1)[0]
-        qualityRes.append(res)
+    #随词条and具体数值(基础词条可重复，稀有词条不重复, 稀有词条要词条数量>=3)
+    propRes = []
+    propValueRes = []
+    for qualityIdxStr in qualityRes:
+        qualityIdx = int(qualityIdxStr) - 1
+        randomID = soulSoulData["baseProp"][qualityIdx]
 
-        # 随机具体数值
-        qualityValue = affix_affix.datas[propId]['qualityValue'][res]
-        valueRes.append(random.randint(qualityValue[0], qualityValue[1]))
+        affixIDList = []
+        affixWeightList = []
+        for i in range(len(soul_soulAffix.randomID2affixID[randomID])):
+            affixID = soul_soulAffix.randomID2affixID[randomID][i]
+            weight = soul_soulAffix.randomID2weight[randomID][i]
+            if isValidProp(affixID, schoolId):
+                if isRarityLevelProp(affixID) and len(qualityRes) < 3:
+                    continue
+                if affixID in propRes and isRarityLevelProp(affixID):
+                    continue
+                affixIDList.append(affixID)
+                affixWeightList.append(weight)
+            
+        affixIDRes = random.choices(affixIDList, weights=affixWeightList, k=1)[0]
+        propRes.append(affixIDRes)
+        valueSection = affix_affix.datas[affixIDRes]['qualityValue'][qualityIdx]
+        propValueRes.append(random.randint(valueSection[0], valueSection[1]))
 
     finalRes = []
     for i in range(len(propRes)):
-        finalRes.append([propRes[i], qualityRes[i], valueRes[i]])
+        finalRes.append([propRes[i], qualityRes[i], propValueRes[i]])
     return finalRes
 
 def rollItemProps(itemId, itemSubType, schoolId):
@@ -3528,3 +3532,26 @@ class FNV1a64:
     def reset(self) -> None:
         """重置哈希状态，复用对象"""
         self._hash = self.FNV_OFFSET_BASIS
+
+def hashPassword(password, iterations=150000, alg="sha256"):
+    password_bytes = password.encode("utf-8")
+    salt = os.urandom(SALT_BYTE_SIZE)
+    digest = hashlib.pbkdf2_hmac(alg, password_bytes, salt, iterations)
+    combined = salt + digest
+    data = base64.b64encode(combined).decode("utf-8")
+    return f"{alg}${iterations}${data}"
+
+def verifyPassword(password, stored_hash):
+    password_bytes = password.encode("utf-8")
+    try:
+        alg, iters_str, b64_data = stored_hash.split("$")
+        iterations = int(iters_str)
+        combined = base64.b64decode(b64_data)
+    except Exception:
+        return False
+    if len(combined) <= SALT_BYTE_SIZE:
+        return False
+    salt = combined[:SALT_BYTE_SIZE]
+    old_digest = combined[SALT_BYTE_SIZE:]
+    new_digest = hashlib.pbkdf2_hmac(alg, password_bytes, salt, iterations)
+    return hmac.compare_digest(new_digest, old_digest)

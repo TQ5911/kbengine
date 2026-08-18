@@ -126,8 +126,9 @@ class ImpStore(object):
                 propItemId, num, bindtype = propItem[propSlot]
                 deductWealthVal.addWealthByItemId(propItemId, num*itemNum, bindtype)
 
-        if not self.canDeductWealth(deductWealthVal):
-            LOG_WARN('buyStoreItems: items not enough:', deductWealthVal)
+        res = self.canDeductWealth(deductWealthVal)
+        if not res:
+            LOG_WARN('buyStoreItems: items not enough:', deductWealthVal, res())
             return
 
         awardCtx = self.getAvatarAwardCtx(0, None, gameconst.MailConstEnum.REWARD_MAIL_ID)
@@ -198,10 +199,12 @@ class ImpStore(object):
 
     # 等级越高，能买的数量越多
     def _getStoreLevelAddNum(self, storeItemData):
-        level = self.getRoleCacheAttr('level')
         count = 0
-        for val in MMC.datas['dynGoodsExtraTimes']['value']:
-            if level >= val[0]:
-                count += val[1]
+        if storeItemData['type'] == gameconst.StoreItemType.DYNAMIC_PRICE:
+            level = self.getRoleCacheAttr('level')
+            count = 0
+            for val in MMC.datas['dynGoodsExtraTimes']['value']:
+                if level >= val[0]:
+                    count += val[1]
         return count
 

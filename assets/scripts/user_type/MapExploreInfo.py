@@ -9,7 +9,7 @@ from KBEDebug import *
 
 class MapExploreVal(userType.UserSingleType):
     '''MAP_EXPLORE_DATA_INFO'''
-    def __init__(self, mapId, personalBox, viewPoint, hookTask, areaTask, rewardData, rewardSlot):
+    def __init__(self, mapId, personalBox, viewPoint, hookTask, areaTask, rewardData, rewardSlot, version=0):
         self.mapId = mapId
         self.personalBox = personalBox
         self.viewPoint = viewPoint
@@ -17,6 +17,7 @@ class MapExploreVal(userType.UserSingleType):
         self.areaTask = areaTask
         self.rewardData = rewardData
         self.rewardSlot = rewardSlot
+        self.version = version
 
     def toMapExploreSavedDict(self):
         return {
@@ -26,9 +27,22 @@ class MapExploreVal(userType.UserSingleType):
             'hookTask': self.hookTask,
             'areaTask': self.areaTask,
             'rewardData': self.rewardData,
-            'rewardSlot': self.rewardSlot
+            'rewardSlot': self.rewardSlot,
+            'version': self.version
         }
 
+    def checkTblChange(self):
+        version = max(GED.mapId2Version[self.mapId], GER.mapId2Version[self.mapId])
+        if self.version < version:
+            LOG_INFO("checkTblChange: mapId:", self.mapId, "version:", self.version, "newVersion:", version)
+            self.version = version
+            if self.mapId not in GER.mapId2Ids:
+                LOG_ERR("策划没有配  玩法场景表-场景探索度表  mapid:", self.mapId)
+                return
+            rewardDataIds = GER.mapId2Ids[self.mapId]
+            if self.rewardData[-1] != GER.datas[rewardDataIds[-1]]['acPoint']:
+                LOG_WARN("checkTblChange: rewardData[-1] != GER.datas[rewardDataIds[-1]]['acPoint']:", self.mapId, self.rewardData[-1], GER.datas[rewardDataIds[-1]]['acPoint'])
+                self.rewardData[-1] = GER.datas[rewardDataIds[-1]]['acPoint']
 
 class MapExploreInfo(object):
     def createObjFromDict(self, dataDict):
@@ -83,10 +97,11 @@ class MapExploreDictVal(userType.UserSingleType):
                 rewardDataIds = GER.mapId2Ids[mapId]
                 rewardData[-1] = GER.datas[rewardDataIds[-1]]['acPoint']
                 self.mapDatas[mapId] = MapExploreVal(mapId=mapId, personalBox=personalBox, viewPoint=viewPoint, hookTask=hookTask,\
-                    areaTask=areaTask, rewardData=rewardData, rewardSlot=-1)
+                    areaTask=areaTask, rewardData=rewardData, rewardSlot=-1, version=max(GED.mapId2Version[mapId], GER.mapId2Version[mapId]))
                 self.mapIds.append(mapId)
                 self.dataList.append(self.mapDatas[mapId])
-
+            else:
+                self.mapDatas[mapId].checkTblChange()
 
 class MapExploreDictInfo(object):
     def createObjFromDict(self, dataDict):

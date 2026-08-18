@@ -449,7 +449,10 @@ def modifyGlobalActData(actId, endTime):
 
 def updateFreeTicketNumConfig(dateNumInfo):
     LOG_INFO("updateFreeTicketNumConfig dateNumInfo", dateNumInfo)
-    for subType, dateNumList in dateNumInfo.items():
+    subTypeSet = set()
+    for msType, dateNumList in dateNumInfo.items():
+        mainType = msType // 100
+        subType = msType % 100
         expandInfoList = []
         for cfgIdx, cfgInfo in enumerate(dateNumList):
             expandInfoList.append([cfgInfo[0], cfgInfo[1]])
@@ -464,10 +467,11 @@ def updateFreeTicketNumConfig(dateNumInfo):
                 if adjDataTime >= nextData[0]:
                     break
                 expandInfoList.append([adjDataTime, expandInfoList[-1][1]])
-        gameglobal.freeTicketNumConfig[subType] = expandInfoList
+        gameglobal.freeTicketNumConfig.setdefault(mainType, {})[subType] = expandInfoList
+        subTypeSet.add(subType)
+        LOG_INFO("updateFreeTicketNumConfig gameglobal.freeTicketNumConfig", mainType, subType, expandInfoList, subTypeSet)
 
-        LOG_INFO("updateFreeTicketNumConfig gameglobal.freeTicketNumConfig", subType, expandInfoList)
-        gameglobal.localBaseApp.doUpdateFreeTicketNumConfig(subType, expandInfoList)
+    gameglobal.localBaseApp.doUpdateFreeTicketNumConfig(list(subTypeSet))
 
 def updateAntiAddictionData(timeType, nextStartTime):
     gameglobal.antiAddictionData = [timeType, nextStartTime]

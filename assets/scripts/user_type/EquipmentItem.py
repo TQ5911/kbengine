@@ -7,6 +7,9 @@ import random
 import json
 import math
 import copy
+import gzip
+import _pickle as cPickle
+import base64
 import itertools
 import userType
 import BaseItem
@@ -173,6 +176,21 @@ class EquipmentItem(BaseItem.BaseItem):
             #红装必定是绝品
             return True
         return False
+
+    def getRestoreData(self):
+        if self.quality <= gameconst.ItemQuality.GREEN:
+            return ''
+
+        try:
+            compressed = gzip.compress(cPickle.dumps(self.toItemSavedDict()))
+            data = base64.b64encode(compressed).decode('ascii')
+        except Exception as e:
+            LOG_ERR('getRestoreData err:', e)
+            for line in traceback.format_stack():
+                LOG_ERR(line)
+            return ''
+
+        return data
 
     def enhanceNeedItems(self):
         itemsDic = {}
@@ -530,6 +548,9 @@ class EquipmentItem(BaseItem.BaseItem):
         self.equipAttr.setDirtyFlag()
 
         return True
+
+    def getSoulAffixesLogStr(self):
+        return str(self.equipAttr.soulAffixes)
     
     def doEquipSoulSocket(self, owner, rollProps, itemId, isEquip=False):
         ret = self.equipAttr.soulSocket(rollProps, itemId)
@@ -726,6 +747,31 @@ class EquipmentItem(BaseItem.BaseItem):
 
     def getOriginalBindValue(self):
         return self.equipAttr.bindValue
+
+    def getBindValueByType(self, bindValueType, pos=-1):
+        """
+        根据绑定值类型获取装备对应的绑定值
+        :param bindValueType: EquipWashType 中定义的洗涤类型
+        :param pos: 槽位号，仅 GLYPH / SPIRIT 类型需要传入
+        :return: 对应类型的绑定值
+        """
+        if bindValueType == gameconst.EquipWashType.UPGRADE:
+            return self.equipAttr.bindValue
+        if bindValueType == gameconst.EquipWashType.ENHANCE:
+            return self.equipAttr.bindEnhanceCost
+        if bindValueType == gameconst.EquipWashType.BLESS:
+            return self.equipAttr.bindBlessCost
+        if bindValueType == gameconst.EquipWashType.GLYPH:
+            if pos < 0:
+                return gameconst.ItemBindType.BIND if len(self.equipAttr.glyphBindTypes) > 0 else gameconst.ItemBindType.NORMAL
+            return gameconst.ItemBindType.BIND if pos in self.equipAttr.glyphBindTypes else gameconst.ItemBindType.NORMAL
+        if bindValueType == gameconst.EquipWashType.SPIRIT:
+            if pos < 0:
+                return gameconst.ItemBindType.BIND if len(self.equipAttr.spiritBindTypes) > 0 else gameconst.ItemBindType.NORMAL
+            return gameconst.ItemBindType.BIND if pos in self.equipAttr.spiritBindTypes else gameconst.ItemBindType.NORMAL
+        if bindValueType == gameconst.EquipWashType.SOUL:
+            return self.equipAttr.soulBindType
+        return -1
 
     def addClassSkLvByEquip(self, owner, aVals, school, valIdx=0, isLogin=False):
         LOG_INFO('in addClassSkLvByEquip:', aVals, school, valIdx, owner.school)
@@ -1041,7 +1087,8 @@ class EquipmentItem(BaseItem.BaseItem):
         elif washType == gameconst.EquipWashType.BLESS:
             if self.equipAttr.bindBlessCost <= 0:
                 return None
-            cfgData = self.equipAttr.getBlessCfgData(0)
+            blessKey = self.equipAttr.getBlessKey(0)
+            cfgData = GEBLD.datas.get(blessKey)
             if not cfgData:
                 return None
             gearBlessItem = cfgData.get('gearBlessItem')

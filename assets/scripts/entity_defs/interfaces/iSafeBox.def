@@ -10,6 +10,7 @@
     <BaseMethods>
         <reqSafeBoxPage> <Exposed/>
             <Arg>           UINT32          </Arg>
+            <Arg>           UINT32          </Arg>
         </reqSafeBoxPage>
 
         <reqClaimSafeBoxItem> <Exposed/>
@@ -38,9 +39,10 @@
 
     <ClientMethods>
         <onSafeBoxPage>
-            <Arg>           UINT32                          </Arg>   <!-- pageIndex -->
-            <Arg>           ARRAY <of> CLI_SAFE_BOX_ITEM_VAL </of>  </Arg>   <!-- items -->
-            <Arg>           UINT8                           </Arg>   <!-- hasMore 0/1 -->
+            <Arg>           ARRAY <of> CLI_SAFE_BOX_ITEM_VAL </of>  </Arg>   
+            <Arg>           UINT32                                  </Arg>
+            <Arg>           UINT32                                  </Arg>
+            <Arg>           UINT32                                  </Arg>  
         </onSafeBoxPage>
 
         <onSafeBoxItemClaimed>
@@ -58,5 +60,10 @@
         <onSafeBoxItemDeleted>
             <Arg>           UINT32                          </Arg>
         </onSafeBoxItemDeleted>
+
+        <onSafeBoxUnclaimedCount>
+            <Arg>           UINT32                          </Arg>
+            <Arg>           UINT32                          </Arg>
+        </onSafeBoxUnclaimedCount>
     </ClientMethods>
 </root>

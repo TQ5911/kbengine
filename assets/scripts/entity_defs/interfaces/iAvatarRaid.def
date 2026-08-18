@@ -545,6 +545,7 @@
 
         <onRaidAddNewMember>
             <Arg>   ENTITY_ID    </Arg>
+            <Arg>   UINT8        </Arg>
         </onRaidAddNewMember>
         <onRaidRemoveMember>
             <Arg>   ENTITY_ID    </Arg>

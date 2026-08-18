@@ -156,7 +156,7 @@ def offlineCallback(targetFunc):
 
     return __
 
-def doCheckGameConfig(avatar, name, needMsg, checkList, *args):
+def doCheckGameConfig(avatar, name, needMsg, checkList=(), *args):
     info = gameconfig.CONFIG.get(name)
     if not info:
         LOG_ERR('gameconfig not found: 1', name)
@@ -190,7 +190,7 @@ def doCheckGameConfig(avatar, name, needMsg, checkList, *args):
 
     return True
 
-def checkGameconfigEnable(name, checkList=[]):
+def checkGameconfigEnable(name, checkList=()):
     def f(func):
         @functools.wraps(func)
         def wrapper(*args):

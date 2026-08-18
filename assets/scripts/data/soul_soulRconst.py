@@ -17,12 +17,12 @@ import crontab
 datas = _tools.RODict({ 
     "inlayType": _tools.RODict({
         "ID": "inlayType",
-        "value": "30000002",
+        "value": "30000013",
         "Type": "int"
     }),
     "inlayConsume": _tools.RODict({
         "ID": "inlayConsume",
-        "value": "10000",
+        "value": "1000",
         "Type": "int"
     })
 })

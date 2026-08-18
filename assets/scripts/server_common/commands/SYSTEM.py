@@ -197,7 +197,7 @@ def _kickAccountAfterLook(ctx, box):
         })
         return 
 
-    box.kickAccountSingleGm(ctx['msgCont'])
+    box.kickAccountSingleGm(ctx['subReason'])
     ctx['su'].onCommandResult(0, f'command success', {
         'effective': 1,
     })
@@ -226,10 +226,10 @@ def _kickaccount(ctx, ret, num, insertId, err):
     )
 
 
-@gm_cmd('$kickaccount', (Str("accountName"), Str('msg content')), RONE, BASE, '踢账号下线', ALLSIDE, GOD_GROUPS)
-def kickaccount(su, accountName, msgContent):
+@gm_cmd('$kickaccount', (Str("accountName"), Int('subReason')), RONE, BASE, '踢账号下线', ALLSIDE, GOD_GROUPS)
+def kickaccount(su, accountName, subReason):
     _ctx = {
-        'msgCont': msgContent,
+        'subReason': subReason,
         'accountName': accountName,
         'su': su,
     }
@@ -239,15 +239,15 @@ def kickaccount(su, accountName, msgContent):
     )
 
 
-@gm_cmd('$kickavatar', (Player("gbId or Id", raw=True), Str('msg content')), RARG(0), BASE, '踢玩家下线', ALLSIDE, GOD_GROUPS,minArgs=1)
-def kickAvatar(su, player, msgContent):
+@gm_cmd('$kickavatar', (Player("gbId or Id", raw=True), Int('subReason')), RARG(0), BASE, '踢玩家下线', ALLSIDE, GOD_GROUPS,minArgs=1)
+def kickAvatar(su, player, subReason):
     if gmCommand.isRawPlayer(player):
         return su.onCommandResult(0, f'command success', {
             'effective': 1
         })
 
     if not player.gmMode:
-        player.onMessagePre(LGSD.datas['forceLogout']['value'], [msgContent])
+        player.client and player.client.onAvatarOfflineClient(gameconst.OFFLINE_REASON_GMKICK_SUB_FROM+subReason)
         player.destroySelf(gameconst.OFFLINE_REASON_GMKICK)
         return su.onCommandResult(0, f'command success', {
             'effective': 1

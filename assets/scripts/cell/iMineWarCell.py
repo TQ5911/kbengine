@@ -70,15 +70,20 @@ class IMineWarCell(object):
     def onMineWarTeleportCheck(self, lineType):
         if lineType not in MBMA.datas.keys():
             return True
-        
-        if self.mineWarState != gameconst.MINE_WAR_STATE.PREPARE:
-            return True
-        
+
+        # 占领方成员随时可进
         if lineType in self.myMineList:
             return True
-        
-        if gameglobal.mineGlobalData.mineWarState != gameconst.MINE_WAR_STATE.PREPARE:
+
+        _mineData = gameglobal.mineGlobalData
+        if _mineData.mineWarState != gameconst.MINE_WAR_STATE.PREPARE:
             return True
+
+        # 非防守方仅在开战前 mineBattle_transferPersonnelTime 分钟内禁入（与清场时刻一致），其余准备时间放行
+        _forbidSec = MBC.datas['mineBattle_transferPersonnelTime']['value'] * 60
+        if utils.curTS() < _mineData.startTime - _forbidSec:
+            return True
+
         # 通知
         self.base.onMessagePre(MBC.datas['mineBattle_forbidTeleportMsg']['value'], [])
         return False
@@ -178,6 +183,8 @@ class IMineWarCell(object):
             if not _pos:
                 return False
             self.reliveToPos(_pos, _dir, reliveHp, None)
+            # 防守方复活无敌保护
+            self._checkAndAddTeleportProtectionBuff()
             return True
         else:
             mineWarArea = formula.getMineWarMineArea(self.spaceNo)
@@ -252,7 +259,9 @@ class IMineWarCell(object):
         collectionList = MBC.datas['mineBattle_flagDropCollectionId']['value']
         #  
         # 矿战宝箱检查
-        if collectionId in collectionList and self.mineWarCamp == gameconst.MINE_WAR_CAMP.CAMP_DEFEND:
+        if collectionId in collectionList and self.spaceMgr.mineWarGuildId > 0 \
+            and (self.guildUUID == self.spaceMgr.mineWarGuildId \
+                 or utils.getGuildRelation(self.guildUUID, self.spaceMgr.mineWarGuildId) == gameconst.GuildRelationType.UNION):
             self.base.onMessagePre(MBC.datas['mineBattle_notPickableMsg']['value'], [])
             return False
         

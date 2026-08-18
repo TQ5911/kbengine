@@ -20,12 +20,14 @@ import gamePlay_set as GP_SD
 import formula_generalFormula as F_GFD
 import cube_room
 import worldConfig_Area as WC_AD
+import mineBattle_miningArea as MBMA
 import gameconfig
 
 class IRelive(object):
-    def _spaceDeathPenaltyData(self, srcType=0):
+    def _spaceDeathPenaltyData(self, srcType=0, spaceNo=None):
         normalPenalty = 'deathPenaltyID'
         specialPenalty = 'specialDeathPenaltyID'
+        spaceNo = spaceNo or self.spaceNo
 
         penaltyType = normalPenalty
         if srcType == gameconst.SourceType.SrcTpDropDeath:
@@ -33,14 +35,14 @@ class IRelive(object):
             LOG_DBG('dropdeathtype', self.id, penaltyType)
 
         # special 针对地图里所有特殊死亡的情况，会忽略子区域信息
-        if penaltyType != specialPenalty and formula.inWorldLineScene(self.spaceNo) and self.areaId:
-            _areaData = WC_AD.datas[self.areaId]
-            #_dpId = _areaData[penaltyType]
+        if penaltyType != specialPenalty and formula.inWorldLineScene(spaceNo) and self.areaId:
+            _dpId = WC_AD.datas[self.areaId][penaltyType]
         else:
-            _areaData = GP_GPD.datas[formula.fetchMapId(self.spaceNo)]
-            #_dpId = GP_GPD.datas[formula.fetchMapId(self.spaceNo)][penaltyType]
+            _dpId = GP_GPD.datas[formula.fetchMapId(spaceNo)][penaltyType]
+            # 矿战开启期间，核心层地图模式切换为配置的模式（图内子区域配置仍优先）
+            if formula.inMineWarScene(spaceNo) and self.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:
+                _dpId = MBMA.datas[formula.fetchMapId(spaceNo)]['deathPenaltyID']
 
-        _dpId = _areaData[penaltyType]
         return GP_DPD.datas[_dpId]
 
     def _isCritInjured(self):
@@ -53,21 +55,24 @@ class IRelive(object):
         _beCritInjuredBuffID = GP_SD.datas['beCritInjuredBuffID']['value']
         if self.hasBuff(_buffId):
             _lv = self.getBuffLv(_buffId)
-            LOG_DBG('buff lv', _lv)
             _newLv = _lv + _beInjuredBuffLevel
             if _newLv >= GP_SD.datas['beInjuredBuffLimit']['value']:
                 self.removeBuff(_buffId)
                 self.addBuff(_beCritInjuredBuffID, 1, self.id)
+                LOG_INFO('_deathPenaltyBeInjured', _beCritInjuredBuffID, 1)
             else:
                 self.removeBuff(_buffId)
                 self.addBuff(_buffId, _newLv, self.id)
+                LOG_INFO('_deathPenaltyBeInjured', _buffId, _newLv)
 
         elif self.hasBuff(_beCritInjuredBuffID):
             self.removeBuff(_beCritInjuredBuffID)
             self.addBuff(_beCritInjuredBuffID, 1, self.id)
+            LOG_INFO('_deathPenaltyBeInjured', _beCritInjuredBuffID, 1)
 
         else:
             self.addBuff(_buffId, _beInjuredBuffLevel, self.id)
+            LOG_INFO('_deathPenaltyBeInjured', _buffId, _beInjuredBuffLevel)
     
     def _dealReliveTime(self, _now, dpData):
         self.lastDeadTime = _now # 上次死亡时间
@@ -89,15 +94,18 @@ class IRelive(object):
 
     def _onDeadPenalty(self, killerGbId, killerName, killerId=0, creationId=0, srcType=0):
         if gameconfig.isCrossServer():
-            self.syncMethodCallToLocalServerCell('_onDeadDeductHandler', (killerGbId, killerName, killerId, creationId, srcType))
+            _dpData = self._spaceDeathPenaltyData(srcType, self.spaceNo)
+            self._dealReliveTime(utils.curTS(), _dpData)
+            self.syncMethodCallToLocalServerCell('_onDeadDeductHandler', (killerGbId, killerName, killerId, creationId, srcType, self.spaceNo))
         else:
-            self._onDeadDeductHandler(killerGbId, killerName, killerId, creationId, srcType)
+            self._onDeadDeductHandler(killerGbId, killerName, killerId, creationId, srcType, self.spaceNo)
 
-    def _onDeadDeductHandler(self, killerGbId, killerName, killerId=0, creationId=0, srcType=0):
-        LOG_DBG('_onDeadDeductHandler', self.lastDeadTime, self.lastDeathPentlyTime, self.deathPenaltyTimes, self.curReliveCD, self.spaceNo, self.gbId)
+    def _onDeadDeductHandler(self, killerGbId, killerName, killerId=0, creationId=0, srcType=0, spaceNo=None):
+        LOG_INFO('_onDeadDeductHandler', self.lastDeadTime, self.lastDeathPentlyTime, self.deathPenaltyTimes, self.curReliveCD, self.spaceNo, self.gbId)
         _now = utils.curTS()
 
-        _dpData = self._spaceDeathPenaltyData(srcType)
+        spaceNo = spaceNo or self.spaceNo
+        _dpData = self._spaceDeathPenaltyData(srcType, spaceNo)
 
         self._dealDeathDrop(killerGbId, killerName, _dpData['dropGear'])
 
@@ -116,14 +124,14 @@ class IRelive(object):
         _opUUID = KBEngine.genUUID64()
         _deductExp = 0
         _deductMoney = 0
+        _src = AAC_AACDD.datas.BONUS_SRC_DEAD_PENALTY # TODO: DEAD_PENALTY
+        _detail = gameclass.AwardDetailCls()
         if _dpData['dropExp']:
             _formulaId = GP_SD.datas['expDropOnDeath']['value']
             _deductExpRate = F_GFD.datas[_formulaId]['serverFormula'](self.level) # 死亡扣除经验
             _levelExp = EPED.datas[self.level]['expPlayer']
             _deductExp = int(_levelExp * _deductExpRate / 100)
             _deductExp = int(min(_deductExp, self.exp)) # TODO: DEAD_PENALTY
-            _src = AAC_AACDD.datas.BONUS_SRC_DEAD_PENALTY # TODO: DEAD_PENALTY
-            _detail = gameclass.AwardDetailCls()
             self._modifyExp(-_deductExp, _opUUID, _src, _detail)
 
         # 死亡扣除金币
@@ -136,13 +144,16 @@ class IRelive(object):
         LOG_DBG('addDeathPenaltyVal', killerId, creationId, srcType)
         self.base.addDeathPenaltyVal(_deductExp, _deductMoney, killerGbId, killerName, _opUUID, {'killerId': killerId, 'creationId': creationId, 'srcType': srcType})
 
-        self.syncMethodCallToCrossServerCell("onLocalServerDeadSync", (_now, _dpData, _deductExp, _deductMoney, killerGbId, killerName, _opUUID, {'killerId': killerId, 'creationId': creationId, 'srcType': srcType}))
+        self.syncMethodCallToCrossServerCell("onLocalServerDeadSync", (_now, _dpData, _deductExp, _deductMoney, killerGbId, killerName, \
+            _opUUID, {'killerId': killerId, 'creationId': creationId, 'srcType': srcType}, _src, _detail))
 
     #跨服死亡分4块，1复活时间相关， 2死亡爆装，3经验，4死亡扣钱, 经验在_modifyExp里处理，其他在这里处理
-    def onLocalServerDeadSync(self, now, dpData, deductExp, deductMoney, killerGbId, killerName, opUUID, killerData):
-        LOG_INFO("onLocalServerDeadSync", now, dpData, deductExp, deductMoney, killerGbId, killerName, opUUID, killerData)
-        self._dealReliveTime(now, dpData)
-        self.base.addDeathPenaltyVal(deductExp, deductMoney, killerGbId, killerName, opUUID, killerData)
+    def onLocalServerDeadSync(self, now, dpData, deductExp, deductMoney, killerGbId, killerName, opUUID, killerData, _src, _detail):
+        LOG_INFO("onLocalServerDeadSync", now, dpData, deductExp, deductMoney, killerGbId, killerName, opUUID, killerData, _src, _detail)
+        if deductExp > 0:
+            self._modifyExp(-deductExp, opUUID, _src, _detail, local2Cross=True)
+        if dpData['beInjured']:
+            self._deathPenaltyBeInjured()
 
     @property
     def reliveCDEndTime(self):
@@ -189,6 +200,9 @@ class IRelive(object):
     def _reliveToOtherScene(self, resSceneId):
         _type = formula.getSpaceType(resSceneId)
         if _type == gameconst.SpaceType.SpaceLine:
+            if not self.onCheckMapUnlocked(resSceneId):
+                resSceneId = gameconst.DEFAULT_SCENE
+
             _src = dungeonSrc.BasicDungeonSrc()
             _enterPos, _enterDir = formula.getSpaceBornPosAndDir(resSceneId)
             if _enterDir is not None:
@@ -197,7 +211,7 @@ class IRelive(object):
             return True
 
         elif _type == gameconst.SpaceType.SpaceCube:
-            gameengine.getCubeStub(1).doEnterCubeReady(self.base, self.gbId, {})
+            gameengine.getCubeStub(1).doEnterCubeReady(self.base, self.spaceNo, self.gbId, {})
 
         return False
 
@@ -205,6 +219,11 @@ class IRelive(object):
     def doRelive(self, reliveType):
         LOG_INFO('in doRelive:', reliveType, self.spaceNo, self.gbId)
         _mapId = formula.fetchMapId(self.spaceNo)
+
+        #归墟boss层死亡，回本服
+        if self.isAbyssBossFloor():
+            self._crossServerAbyssLeave()
+            return
 
         if formula.inMineWarScene(self.spaceNo) \
               and self.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:

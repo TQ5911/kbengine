@@ -173,6 +173,10 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
             box.onMessagePre(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
             return
 
+        if self._checkSelectLineActivity(toLineNo, box, gbId, extra, _mapId) != gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS:
+            box.onMessagePre(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
+            return
+
         if playerVal:
             self.addPendingEnterPlayer(toSpaceNo, gbId)
         else:

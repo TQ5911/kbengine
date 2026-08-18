@@ -18,7 +18,7 @@ datas = _tools.RODict({
     2: _tools.RODict({
         "ID": 2,
         "consumedItem": ((30000227, 1),),
-        "consumedCoin": ((30000002, 25000),),
+        "consumedCoin": ((30000002, 15000),),
         "consumedRune": 0
     }),
     3: _tools.RODict({

@@ -73,16 +73,19 @@ class ICell(KBEngine.Entity):
         self.destroy()
         self._postSafeDestory()
 
-    def _preSafeDestory(self):
-        if self.base and hasattr(self.base, 'onCellSafeDestroy'):
-            self.base.onCellSafeDestroy()
-
-        attachedIDList = self.getTempMiscProp(gameconst.EntityPropsEnum.attachedIDList, [])
+    def destroyAttach(self):
+        attachedIDList = self.popTempMiscProp(gameconst.EntityPropsEnum.attachedIDList, [])
         for attachedID in attachedIDList:
             attachedEntity = KBEngine.entities.get(attachedID)
             if attachedEntity:
                 LOG_DBG("iCell.ICell _preSafeDestory", attachedEntity.id)
-                attachedEntity.delaySafeDestroy()
+                attachedEntity.safeDestroy()
+
+    def _preSafeDestory(self):
+        if self.base and hasattr(self.base, 'onCellSafeDestroy'):
+            self.base.onCellSafeDestroy()
+
+        self.destroyAttach()
 
     def _postSafeDestory(self):
         pass

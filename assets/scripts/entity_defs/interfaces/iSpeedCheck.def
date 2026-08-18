@@ -52,6 +52,13 @@
             <Flags>    CELL_PRIVATE        </Flags>
             <Default>  []                  </Default>
         </speedCheckRecord>
+
+        <dragBackRecrods>
+            <Type>          PY_LIST             </Type>
+            <Flags>         CELL_PRIVATE        </Flags>
+            <Persistent>    true                </Persistent>
+            <Default>       []                  </Default>
+        </dragBackRecrods>
     </Properties>
 
     <BaseMethods>

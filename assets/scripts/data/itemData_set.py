@@ -322,5 +322,9 @@ datas = _tools.RODict({
     "mesg_getItemType5": _tools.RODict({
         "ID": "mesg_getItemType5",
         "value": 54000666,
+    }),
+    "itemOnlyShowInCornor": _tools.RODict({
+        "ID": "itemOnlyShowInCornor",
+        "value": (30770100,),
     })
 })

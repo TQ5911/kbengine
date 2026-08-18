@@ -420,17 +420,12 @@ class IMineWarSpaceMgr(object):
         self.batchlyCall(_iter(), 30, 0.1)
 
     def checkAndChangeCamp(self, ent):
-        # 初始都是攻方
-        ent.mineWarCamp = gameconst.MINE_WAR_CAMP.CAMP_ATTACK
+        # 实体销毁了就不处理了
+        if ent.isDestroyed:
+            return
         if ent.IsCombatUnit:
             # 攻守切换，清下缓存
             ent.resetAllTargetTypeCache(False)
-
-        host = utils.getEntityRealEntity(ent)
-        # 帮派相同才是守方
-        if host.IsAvatar and host.guildUUID > 0 and (host.guildUUID == self.mineWarGuildId or utils.getGuildRelation(host.guildUUID, self.mineWarGuildId) == gameconst.GuildRelationType.UNION):
-            ent.mineWarCamp = gameconst.MINE_WAR_CAMP.CAMP_DEFEND
-            LOG_INFO('checkAndChangeCamp set defend camp', self.spaceNo, ent.id, host.guildUUID, self.mineWarGuildId)
 
     def sendMineWarMonsterInfo(self, ent):
         flag = self.mineWarMonsters.get(gameconst.MineWarMonsterFlag.MINE_FLAG, None)
@@ -550,6 +545,9 @@ class IMineWarSpaceMgr(object):
         if self.spaceTickTimer > 0:
             self.pyDelTimer(self.spaceTickTimer, gametimer.TIMER_MINE_WAR_SPACE_TICK)
             self.spaceTickTimer = 0
+
+        # 复活防守方玩家
+        self.checkAndRelivePlayer()
         
         # 重新同步工会矿战信息
         self.reqSyncGuildMineWarInfo(guildId, False, {
@@ -644,9 +642,6 @@ class IMineWarSpaceMgr(object):
             
             # 同步旗帜血量
             self.addTimerCB(1, 'syncMineWarFlagHpToStub', (), gametimer.TIMER_TAG_ON_MINE_WAR_LOGIN)
-        
-        # 怪物一直都是守方
-        monsterBox.mineWarCamp = gameconst.MINE_WAR_CAMP.CAMP_DEFEND
 
     def flagBoxDestroy(self):
         """旗帜实体销毁回调"""
@@ -863,11 +858,22 @@ class IMineWarSpaceMgr(object):
             _monGrp.safeDestroy()
             yield utils.emptyFunc
 
+    @staticmethod
+    def mineWarCreateFilter(data):
+        _gid, _spaceNo, _clsName, *args = data
+        if _clsName == 'Monster':
+            return True
+
+        elif _clsName == 'Collection':
+            return True
+
+        return False
+
     def recoverAllOtherMonster(self):
         """恢复场景内所有非矿战怪物"""
         self.onRestoreTemporaryDestroyTimerEntities()
         _space = gameglobal.localSpaceIDMap[self.spaceID]
-        _space.loadCommonEntities(self.id)
+        _space.loadCommonEntities(self.id, self.mineWarCreateFilter)
         _space.loadMonsterGroups(self.id)
 
         gameengine.getGlobalBase('WorldRefreshEntityStub').resumeTimeLimitedGroupEntityRefresh(
@@ -1000,7 +1006,8 @@ class IMineWarSpaceMgr(object):
                     if ent.isDie() and ent.guildUUID > 0 and ent.guildUUID == self.mineWarGuildId:
                         ent.doMineWarRelive(passive=True)
                     # 同步防守方复活时间
-                    ent.client.onMineWarNextReliveTime(self.getMineWarNextReliveTime())
+                    if self.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:
+                        ent.client.onMineWarNextReliveTime(self.getMineWarNextReliveTime())
 
                 yield lambda: None
         self.batchlyCall(_iter(), 30, 0.1)

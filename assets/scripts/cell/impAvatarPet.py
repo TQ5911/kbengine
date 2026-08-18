@@ -146,3 +146,7 @@ class ImpAvatarPet(object):
                         action and action(self, self, actionContext.PassiveSkillCtx(itemId, passiveSkill))
 
         self.lingShouBattleList[slotId] = petInfo
+
+    def checkPkStatus(self, battleIndx):
+        ret = self.checkPkFilter(gameconst.SwitchPropertyType.PET)
+        self.base.checkPkStatusResult(battleIndx, ret)

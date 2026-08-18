@@ -10,6 +10,7 @@ import gametimer
 import SwitchServer
 import utils
 import gameglobal
+import gameengine
 
 
 class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
@@ -129,3 +130,7 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def onGmModifyAllServertimeInCrossGroupResp(self, su, modifyTime):
         LOG_DBG("onGmModifyAllServertimeInCrossGroupResp", su, modifyTime)
         self.doGmModifyServertime(su, modifyTime)
+
+    def onGlobalEventTips(self, crossServerType, msgId, msgArgs):
+        LOG_DBG("onGlobalEventTips", crossServerType, msgId, msgArgs)
+        gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips', (msgId, msgArgs)))

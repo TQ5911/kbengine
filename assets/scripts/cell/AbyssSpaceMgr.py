@@ -20,6 +20,8 @@ class AbyssSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
         LOG_INFO("AbyssSpaceMgr __init__")
         iStaticSpaceMgr.IStaticSpaceMgr.__init__(self)
         gameengine.getAbyssStubBySpaceNo(self.spaceNo).onSpaceMgrReady(self.spaceNo, self)
+        
+        self.pyAddTimer(1, 60, gametimer.STATISTIC_FIGHTING_COUNT)
         self.fightingPlayersCnt = 0
 
     def onTimer(self, tid, userArg):
@@ -27,6 +29,8 @@ class AbyssSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
             self._onTimerCallback(tid)
         elif userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
+        elif userArg == gametimer.STATISTIC_FIGHTING_COUNT:
+            self._statisticFightingCount()
         else:
             self._onTimerTrigger(tid, userArg)
 

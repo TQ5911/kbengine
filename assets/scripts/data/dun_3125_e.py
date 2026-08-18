@@ -4,7 +4,7 @@ datas ={
     "entityID": [
       31250002
     ],
-    "hpMult": 3.3,
+    "hpMult": 3.2,
     "transition": {
       "finished": [
         1060,

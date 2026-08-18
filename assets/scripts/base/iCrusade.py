@@ -18,10 +18,10 @@ class ICrusade(object):
     def onCrusadeDailyRewardNumUpdate(self, *args):
         LOG_INFO('onCrusadeDailyRewardNumUpdate::')
         tType = args[0] if len(args) >= 1 else 0
-        if tType == gameconst.CycleEventTriggerType.TIMED:
-            return
         if tType == gameconst.CycleEventTriggerType.UPDATE:
-            self.updateFreeTicketInfo(gameconst.FreeTicketSubType.CRUSADE, self.crusadeInfo.leftDailyRewardNum, gameconst.FreeTicketUpdateType.UPDATE)
+            self.updateFreeTicketInfo(gameconst.RecoveryTicketType.FREE_TICKET, gameconst.RecoveryTicketSubType.CRUSADE, self.crusadeInfo.leftDailyRewardNum, gameconst.FreeTicketUpdateType.UPDATE)
+            self.updateFreeTicketInfo(gameconst.RecoveryTicketType.PAID_TICKET, gameconst.RecoveryTicketSubType.CRUSADE, self.crusadeInfo.useCoinAddRewardNum, gameconst.FreeTicketUpdateType.UPDATE)
+
         self.crusadeInfo.dailyResetRewardNum()
         self.crusadeInfo.rewardDailyCount = 0
         self.crusadeInfo.resetUseCoinAddRewardDailyNum()
@@ -59,8 +59,9 @@ class ICrusade(object):
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(itemId, itemNum, dataUtils.getItemDefaultBindType())
 
-        if not self.canDeductWealth(deductWealthVal):
-            LOG_ERR('_useItemToIncreaseCrusadeRewardNumber::check failed')
+        res = self.canDeductWealth(deductWealthVal)
+        if not res:
+            LOG_WARN('_useItemToIncreaseCrusadeRewardNumber::check failed', res())
             return False
 
         opUUID = KBEngine.genUUID64()
@@ -101,8 +102,9 @@ class ICrusade(object):
             deductWealthVal = dropAward.DeductWealthVal()
             deductWealthVal.addWealthByItemId(itemId, itemNum)
 
-            if not self.canDeductWealth(deductWealthVal):
-                LOG_ERR('_useCoinToIncreaseCrusadeRewardNumber::check failed')
+            res = self.canDeductWealth(deductWealthVal)
+            if not res:
+                LOG_WARN('_useCoinToIncreaseCrusadeRewardNumber::check failed', res())
                 return False, 0
 
             opUUID = KBEngine.genUUID64()
@@ -122,10 +124,8 @@ class ICrusade(object):
         if needMsg:
             self.onMessagePre(int(TDC_CFG.datas["useShanglingdingMsg"]["value"]), [str(addRewardNum)])
 
-    def onEnterCrusadeDungeon(self, spaceNo, dungeonNo, spaceMgrBox, extra):
-        crusadeInfo = self.crusadeInfo
-        crusadeInfo.deductRewardNum()
-        self.crusadeInfo = crusadeInfo
+    def onEnterCrusadeDungeon(self, spaceUUID, spaceNo, dungeonNo, spaceMgrBox, extra):
+        LOG_INFO('onEnterCrusadeDungeon::', spaceUUID, spaceNo, dungeonNo, spaceMgrBox, extra)
         self.onEnterDungeon(spaceNo, spaceMgrBox, extra)
         self.activityComplete(TDC_CFG.datas['teamDunChallengeActID']['value'])
 
@@ -135,7 +135,9 @@ class ICrusade(object):
             extra.get('teamUUID'),
             gameconst.DungeonPlayModeEnum.CRUSADE,
             dungeonNo,
-            crusadeInfo.getUsedTicketType(),
+            spaceNo, 
+            spaceUUID,
+            self.crusadeInfo.getUsedTicketType(),
             extra.get('joinType'),
             extra.get('totalNum'),
             self.gbID,
@@ -143,4 +145,19 @@ class ICrusade(object):
             self.getRoleCacheAttr('level')
         )
         
+        LogTrackingMgr.LogTrackingMgr.Dungeon_Entrance(
+                self.gbID,
+                self.accountEntity.clientDistinctId,
+                extra.get('teamUUID'),
+                gameconst.DungeonPlayModeEnum.CRUSADE,
+                dungeonNo,
+                spaceUUID,
+                spaceNo,
+                self.gbID,
+                self.crusadeInfo.getUsedTicketType(),
+                extra.get('joinType'),
+                self.getTotalScore(),
+                self.getRoleCacheAttr('level'),
+                self.getRoleCacheAttr('name'),
+            )
         LOG_INFO('in onEnterCrusadeDungeon::', spaceNo, dungeonNo, spaceMgrBox, extra)

@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='DropGameServer',
   syntax='proto3',
   serialized_options=_b('Z\024../gameServerService\220\001\001'),
-  serialized_pb=_b('\n\x14gameServerDrop.proto\x12\x0e\x44ropGameServer\"\x06\n\x04Void\"-\n\x19RegisterGameServerRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\"A\n\x1aNotifyRemoveEquipCacheData\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x11\n\tuniqueIds\x18\x02 \x03(\x04\"^\n\x19NotifyCollectionCacheData\x12\x15\n\rcollectionIds\x18\x01 \x03(\r\x12\x11\n\tuniqueIds\x18\x02 \x03(\x04\x12\x17\n\x0f\x63ollExpireTimes\x18\x03 \x03(\x03\"M\n\x13NotifyDropCacheData\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x11\n\tuniqueIds\x18\x02 \x03(\x04\x12\x11\n\tdropTypes\x18\x03 \x03(\x05\"\x96\x02\n\x0b\x44ropRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x10\n\x08uniqueId\x18\x02 \x01(\x04\x12\x10\n\x08\x64ropGbId\x18\x03 \x01(\x04\x12\x0f\n\x07\x65ndTime\x18\x04 \x01(\x03\x12\x10\n\x08\x64ropTime\x18\x05 \x01(\x03\x12\x11\n\tequipInfo\x18\x06 \x01(\x0c\x12\x11\n\textraInfo\x18\x07 \x01(\x0c\x12\x14\n\x0c\x63ollectionId\x18\x08 \x01(\r\x12\r\n\x05price\x18\t \x01(\r\x12\x16\n\x0e\x63ollExpireTime\x18\n \x01(\x03\x12\x0f\n\x07ownerId\x18\x0b \x01(\x04\x12\x12\n\nreturnTime\x18\x0c \x01(\x03\x12\x15\n\rownerServerId\x18\r \x01(\r\x12\x0f\n\x07isFirst\x18\x0e \x01(\x08\"1\n\x0c\x44ropResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\"\\\n\x0bTakeRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x11\n\ttakerGbId\x18\x03 \x01(\x04\x12\x16\n\x0eredeemWaitTime\x18\x04 \x01(\x03\"\xbd\x01\n\x0cTakeResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x10\n\x08\x64ropGbId\x18\x02 \x01(\x04\x12*\n\x06result\x18\x03 \x01(\x0e\x32\x1a.DropGameServer.DropResult\x12\x11\n\tequipInfo\x18\x04 \x01(\x0c\x12\x0f\n\x07\x65ndTime\x18\x05 \x01(\x03\x12\r\n\x05price\x18\x06 \x01(\r\x12\x16\n\x0eredeemWaitTime\x18\x07 \x01(\x03\x12\x12\n\nreturnTime\x18\x08 \x01(\x03\"B\n\rGiveUpRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x11\n\ttakerGbId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"n\n\x0eGiveUpResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x10\n\x08\x64ropGbId\x18\x02 \x01(\x04\x12*\n\x06result\x18\x03 \x01(\x0e\x32\x1a.DropGameServer.DropResult\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"g\n\x13GetBackEquipRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x10\n\x08uniqueId\x18\x02 \x01(\x04\x12\x10\n\x08\x64ropType\x18\x03 \x01(\r\x12\x0c\n\x04gbId\x18\x04 \x01(\x04\x12\x0c\n\x04uuid\x18\x05 \x01(\x04\"\x9b\x01\n\x14GetBackEquipResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x10\n\x08\x64ropType\x18\x03 \x01(\r\x12\x11\n\tequipInfo\x18\x04 \x01(\x0c\x12\x12\n\nreturnTime\x18\x05 \x01(\x03\x12*\n\x06result\x18\x06 \x01(\x0e\x32\x1a.DropGameServer.DropResult\"f\n\rRedeemRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x10\n\x08uniqueId\x18\x02 \x01(\x04\x12\x14\n\x0credeemerGbId\x18\x03 \x01(\x04\x12\r\n\x05price\x18\x04 \x01(\r\x12\x0c\n\x04uuid\x18\x05 \x01(\x04\"\\\n\x0eRedeemResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12*\n\x06result\x18\x02 \x01(\x0e\x32\x1a.DropGameServer.DropResult\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\x1e\n\x0e\x44ropNotifyArgs\x12\x0c\n\x04\x61rgs\x18\x01 \x03(\x03\"\x80\x01\n\x14\x44ropTypeChangeNotify\x12\x11\n\tuniqueIds\x18\x01 \x03(\x04\x12\x13\n\x0bnotifyTypes\x18\x02 \x03(\x05\x12\x32\n\nnotifyArgs\x18\x03 \x03(\x0b\x32\x1e.DropGameServer.DropNotifyArgs\x12\x0c\n\x04gbId\x18\x04 \x01(\x04\"?\n\x18NotifyTakerRedeemRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x11\n\ttakerGbId\x18\x02 \x01(\x04\"I\n\x14GetTakeRewardRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x11\n\ttakerGbId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"r\n\x15GetTakeRewardResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12*\n\x06result\x18\x02 \x01(\x0e\x32\x1a.DropGameServer.DropResult\x12\r\n\x05price\x18\x03 \x01(\r\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"0\n\x12GetDropInfoRequest\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\xef\x01\n\x08\x44ropInfo\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x10\n\x08\x64ropType\x18\x02 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x03 \x01(\x03\x12\x16\n\x0e\x63ollExpireTime\x18\x04 \x01(\x03\x12\x11\n\textraInfo\x18\x05 \x01(\x0c\x12\x11\n\tequipInfo\x18\x06 \x01(\x0c\x12\r\n\x05price\x18\x07 \x01(\r\x12\x10\n\x08\x64ropTime\x18\x08 \x01(\x03\x12\x10\n\x08hasPrice\x18\t \x01(\x08\x12\x12\n\nreturnTime\x18\n \x01(\x03\x12\x16\n\x0eredeemWaitTime\x18\x0b \x01(\x03\x12\x11\n\ttakerGbId\x18\x0c \x01(\x04\"\xa0\x01\n\tTakerInfo\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\r\n\x05price\x18\x02 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x03 \x01(\x03\x12\x10\n\x08\x64ropType\x18\x04 \x01(\r\x12\x11\n\tequipInfo\x18\x05 \x01(\x0c\x12\x16\n\x0eredeemWaitTime\x18\x06 \x01(\x03\x12\x10\n\x08hasPrice\x18\x07 \x01(\x08\x12\x12\n\nreturnTime\x18\x08 \x01(\x03\"W\n\nReturnInfo\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x12\n\nreturnTime\x18\x02 \x01(\x03\x12\x10\n\x08\x64ropType\x18\x03 \x01(\r\x12\x11\n\tequipInfo\x18\x04 \x01(\x0c\"@\n\nRewardInfo\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\r\n\x05price\x18\x02 \x01(\x04\x12\x11\n\tequipInfo\x18\x03 \x01(\x0c\"\xe1\x01\n\x13GetDropInfoResponse\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12+\n\tdropInfos\x18\x02 \x03(\x0b\x32\x18.DropGameServer.DropInfo\x12-\n\ntakerInfos\x18\x03 \x03(\x0b\x32\x19.DropGameServer.TakerInfo\x12/\n\x0breturnInfos\x18\x04 \x03(\x0b\x32\x1a.DropGameServer.ReturnInfo\x12/\n\x0brewardInfos\x18\x05 \x03(\x0b\x32\x1a.DropGameServer.RewardInfo\"-\n\x19SendRepairDropMailRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\"`\n\x1aSendRepairDropMailResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x11\n\tequipInfo\x18\x03 \x01(\x0c\x12\x0f\n\x07\x65ndTime\x18\x04 \x01(\x03\"A\n\x18UpdateCollEndTimeRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x13\n\x0b\x63ollEndTime\x18\x02 \x01(\x03\"F\n\x16\x43heckDropExpireRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\"e\n\x17\x43heckDropExpireResponse\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x10\n\x08uniqueId\x18\x02 \x01(\x04\x12*\n\x06result\x18\x03 \x01(\x0e\x32\x1a.DropGameServer.DropResult\"]\n\x1eSetTakeEquipRedeemPriceRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x10\n\x08uniqueId\x18\x03 \x01(\x04\x12\r\n\x05price\x18\x04 \x01(\r\"\x8a\x01\n\x1fSetTakeEquipRedeemPriceResponse\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x10\n\x08uniqueId\x18\x03 \x01(\x04\x12\r\n\x05price\x18\x04 \x01(\r\x12*\n\x06result\x18\x05 \x01(\x0e\x32\x1a.DropGameServer.DropResult\"H\n\x18\x43heckRedeemExpireRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\"g\n\x19\x43heckRedeemExpireResponse\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x10\n\x08uniqueId\x18\x02 \x01(\x04\x12*\n\x06result\x18\x03 \x01(\x0e\x32\x1a.DropGameServer.DropResult\"\xaf\x01\n\x0e\x43ustodyRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x10\n\x08\x64ropType\x18\x02 \x01(\x04\x12\x11\n\tequipInfo\x18\x03 \x01(\x0c\x12\x12\n\nholderGbId\x18\x04 \x01(\x04\x12\x16\n\x0eholderServerId\x18\x05 \x01(\x04\x12\x15\n\rownerServerId\x18\x06 \x01(\r\x12\x0f\n\x07ownerId\x18\x07 \x01(\x04\x12\x12\n\nreturnTime\x18\x08 \x01(\x03\"4\n\x0f\x43ustodyResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\">\n\x1c\x43heckDropReturnExpireRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"?\n\x1d\x43heckDropReturnExpireResponse\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"o\n\x1bSetDropEquipPayPriceRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x10\n\x08uniqueId\x18\x03 \x01(\x04\x12\r\n\x05price\x18\x04 \x01(\r\x12\x13\n\x0brewardRatio\x18\x05 \x01(\x01\"\x87\x01\n\x1cSetDropEquipPayPriceResponse\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x10\n\x08uniqueId\x18\x03 \x01(\x04\x12\r\n\x05price\x18\x04 \x01(\r\x12*\n\x06result\x18\x05 \x01(\x0e\x32\x1a.DropGameServer.DropResult\"[\n\x16NotifyCleanCollections\x12\x15\n\rcollectionIds\x18\x01 \x03(\r\x12\x11\n\tuniqueIds\x18\x02 \x03(\x04\x12\x17\n\x0f\x63ollExpireTimes\x18\x03 \x03(\x03\"i\n\x12NotifyCustodyEquip\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\r\n\x05\x65quip\x18\x03 \x01(\x0c\x12\x12\n\nreturnTime\x18\x04 \x01(\x03\x12\x10\n\x08\x64ropType\x18\x05 \x01(\r\"4\n\x11NotifyRemoveEquip\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\x11\n\tuniqueIds\x18\x02 \x03(\x04*\xf5\x04\n\nDropResult\x12\x15\n\x11\x44ropResult_UNKNOW\x10\x00\x12\x16\n\x12\x44ropResult_SUCCESS\x10\x01\x12\x18\n\x14\x44ropResult_NOT_FOUND\x10\x02\x12\x18\n\x14\x44ropResult_HAS_TAKEN\x10\x03\x12\x1a\n\x16\x44ropResult_STATE_ERROR\x10\x04\x12\x18\n\x14\x44ropResult_NOT_TAKER\x10\x05\x12\x15\n\x11\x44ropResult_EXPIRE\x10\x06\x12\x18\n\x14\x44ropResult_NOT_OWNER\x10\x07\x12\x19\n\x15\x44ropResult_NOT_EXPIRE\x10\x08\x12\x1b\n\x17\x44ropResult_OTHER_GIVEUP\x10\t\x12\x1b\n\x17\x44ropResult_OTHER_REDEEM\x10\n\x12&\n\"DropResult_SET_REDEEM_PRICE_EXPIRE\x10\x0b\x12#\n\x1f\x44ropResult_REDEEM_NOT_SET_PRICE\x10\x0c\x12\"\n\x1e\x44ropResult_REDEEM_TIME_EXPIRED\x10\r\x12\x1e\n\x1a\x44ropResult_IN_RETURN_STATE\x10\x0e\x12&\n\"DropResult_REDEEM_TIME_NOT_EXPIRED\x10\x0f\x12\x1f\n\x1b\x44ropResult_GET_BACK_EXPIRED\x10\x10\x12\"\n\x1e\x44ropResult_GET_BACK_TYPE_ERROR\x10\x11\x12#\n\x1f\x44ropResult_SET_PAY_PRICE_EXPIRE\x10\x12\x12%\n!DropResult_SET_PAY_PRICE_NOT_SAME\x10\x13\x32\x9e\n\n\nDropServer\x12U\n\x12registerGameServer\x12).DropGameServer.RegisterGameServerRequest\x1a\x14.DropGameServer.Void\x12\x39\n\x04\x64rop\x12\x1b.DropGameServer.DropRequest\x1a\x14.DropGameServer.Void\x12\x39\n\x04take\x12\x1b.DropGameServer.TakeRequest\x1a\x14.DropGameServer.Void\x12=\n\x06redeem\x12\x1d.DropGameServer.RedeemRequest\x1a\x14.DropGameServer.Void\x12\x38\n\nactiveTick\x12\x14.DropGameServer.Void\x1a\x14.DropGameServer.Void\x12=\n\x06giveUp\x12\x1d.DropGameServer.GiveUpRequest\x1a\x14.DropGameServer.Void\x12K\n\rgetTakeReward\x12$.DropGameServer.GetTakeRewardRequest\x1a\x14.DropGameServer.Void\x12G\n\x0bgetDropInfo\x12\".DropGameServer.GetDropInfoRequest\x1a\x14.DropGameServer.Void\x12U\n\x12sendRepairDropMail\x12).DropGameServer.SendRepairDropMailRequest\x1a\x14.DropGameServer.Void\x12S\n\x11updateCollEndTime\x12(.DropGameServer.UpdateCollEndTimeRequest\x1a\x14.DropGameServer.Void\x12O\n\x0f\x63heckDropExpire\x12&.DropGameServer.CheckDropExpireRequest\x1a\x14.DropGameServer.Void\x12_\n\x17setTakeEquipRedeemPrice\x12..DropGameServer.SetTakeEquipRedeemPriceRequest\x1a\x14.DropGameServer.Void\x12S\n\x11\x63heckRedeemExpire\x12(.DropGameServer.CheckRedeemExpireRequest\x1a\x14.DropGameServer.Void\x12I\n\x0cgetBackEquip\x12#.DropGameServer.GetBackEquipRequest\x1a\x14.DropGameServer.Void\x12?\n\x07\x63ustody\x12\x1e.DropGameServer.CustodyRequest\x1a\x14.DropGameServer.Void\x12[\n\x15\x63heckDropReturnExpire\x12,.DropGameServer.CheckDropReturnExpireRequest\x1a\x14.DropGameServer.Void\x12Y\n\x14setDropEquipPayPrice\x12+.DropGameServer.SetDropEquipPayPriceRequest\x1a\x14.DropGameServer.Void2\xef\x0b\n\nGameServer\x12<\n\x06onDrop\x12\x1c.DropGameServer.DropResponse\x1a\x14.DropGameServer.Void\x12<\n\x06onTake\x12\x1c.DropGameServer.TakeResponse\x1a\x14.DropGameServer.Void\x12@\n\x08onRedeem\x12\x1e.DropGameServer.RedeemResponse\x1a\x14.DropGameServer.Void\x12@\n\x12\x61\x63tiveTickCallback\x12\x14.DropGameServer.Void\x1a\x14.DropGameServer.Void\x12L\n\x0eonGetBackEquip\x12$.DropGameServer.GetBackEquipResponse\x1a\x14.DropGameServer.Void\x12@\n\x08onGiveUp\x12\x1e.DropGameServer.GiveUpResponse\x1a\x14.DropGameServer.Void\x12N\n\x10onDropTypeChange\x12$.DropGameServer.DropTypeChangeNotify\x1a\x14.DropGameServer.Void\x12N\n\x0fonGetTakeReward\x12%.DropGameServer.GetTakeRewardResponse\x1a\x14.DropGameServer.Void\x12J\n\ronGetDropInfo\x12#.DropGameServer.GetDropInfoResponse\x1a\x14.DropGameServer.Void\x12X\n\x14onSendRepairDropMail\x12*.DropGameServer.SendRepairDropMailResponse\x1a\x14.DropGameServer.Void\x12R\n\x11onCheckDropExpire\x12\'.DropGameServer.CheckDropExpireResponse\x1a\x14.DropGameServer.Void\x12\x62\n\x19onSetTakeEquipRedeemPrice\x12/.DropGameServer.SetTakeEquipRedeemPriceResponse\x1a\x14.DropGameServer.Void\x12V\n\x13onCheckRedeemExpire\x12).DropGameServer.CheckRedeemExpireResponse\x1a\x14.DropGameServer.Void\x12\x42\n\tonCustody\x12\x1f.DropGameServer.CustodyResponse\x1a\x14.DropGameServer.Void\x12^\n\x17onCheckDropReturnExpire\x12-.DropGameServer.CheckDropReturnExpireResponse\x1a\x14.DropGameServer.Void\x12\\\n\x16onSetDropEquipPayPrice\x12,.DropGameServer.SetDropEquipPayPriceResponse\x1a\x14.DropGameServer.Void\x12W\n\x17onNotifyCleanCollection\x12&.DropGameServer.NotifyCleanCollections\x1a\x14.DropGameServer.Void\x12P\n\x14onNotifyCustodyEquip\x12\".DropGameServer.NotifyCustodyEquip\x1a\x14.DropGameServer.Void\x12N\n\x13onNotifyRemoveEquip\x12!.DropGameServer.NotifyRemoveEquip\x1a\x14.DropGameServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x14gameServerDrop.proto\x12\x0e\x44ropGameServer\"\x06\n\x04Void\"-\n\x19RegisterGameServerRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\"A\n\x1aNotifyRemoveEquipCacheData\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x11\n\tuniqueIds\x18\x02 \x03(\x04\"^\n\x19NotifyCollectionCacheData\x12\x15\n\rcollectionIds\x18\x01 \x03(\r\x12\x11\n\tuniqueIds\x18\x02 \x03(\x04\x12\x17\n\x0f\x63ollExpireTimes\x18\x03 \x03(\x03\"M\n\x13NotifyDropCacheData\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x11\n\tuniqueIds\x18\x02 \x03(\x04\x12\x11\n\tdropTypes\x18\x03 \x03(\x05\"\x96\x02\n\x0b\x44ropRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x10\n\x08uniqueId\x18\x02 \x01(\x04\x12\x10\n\x08\x64ropGbId\x18\x03 \x01(\x04\x12\x0f\n\x07\x65ndTime\x18\x04 \x01(\x03\x12\x10\n\x08\x64ropTime\x18\x05 \x01(\x03\x12\x11\n\tequipInfo\x18\x06 \x01(\x0c\x12\x11\n\textraInfo\x18\x07 \x01(\x0c\x12\x14\n\x0c\x63ollectionId\x18\x08 \x01(\r\x12\r\n\x05price\x18\t \x01(\r\x12\x16\n\x0e\x63ollExpireTime\x18\n \x01(\x03\x12\x0f\n\x07ownerId\x18\x0b \x01(\x04\x12\x12\n\nreturnTime\x18\x0c \x01(\x03\x12\x15\n\rownerServerId\x18\r \x01(\r\x12\x0f\n\x07isFirst\x18\x0e \x01(\x08\"1\n\x0c\x44ropResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\"\\\n\x0bTakeRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x11\n\ttakerGbId\x18\x03 \x01(\x04\x12\x16\n\x0eredeemWaitTime\x18\x04 \x01(\x03\"\xbd\x01\n\x0cTakeResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x10\n\x08\x64ropGbId\x18\x02 \x01(\x04\x12*\n\x06result\x18\x03 \x01(\x0e\x32\x1a.DropGameServer.DropResult\x12\x11\n\tequipInfo\x18\x04 \x01(\x0c\x12\x0f\n\x07\x65ndTime\x18\x05 \x01(\x03\x12\r\n\x05price\x18\x06 \x01(\r\x12\x16\n\x0eredeemWaitTime\x18\x07 \x01(\x03\x12\x12\n\nreturnTime\x18\x08 \x01(\x03\"B\n\rGiveUpRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x11\n\ttakerGbId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"n\n\x0eGiveUpResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x10\n\x08\x64ropGbId\x18\x02 \x01(\x04\x12*\n\x06result\x18\x03 \x01(\x0e\x32\x1a.DropGameServer.DropResult\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"g\n\x13GetBackEquipRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x10\n\x08uniqueId\x18\x02 \x01(\x04\x12\x10\n\x08\x64ropType\x18\x03 \x01(\r\x12\x0c\n\x04gbId\x18\x04 \x01(\x04\x12\x0c\n\x04uuid\x18\x05 \x01(\x04\"\x9b\x01\n\x14GetBackEquipResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x10\n\x08\x64ropType\x18\x03 \x01(\r\x12\x11\n\tequipInfo\x18\x04 \x01(\x0c\x12\x12\n\nreturnTime\x18\x05 \x01(\x03\x12*\n\x06result\x18\x06 \x01(\x0e\x32\x1a.DropGameServer.DropResult\"f\n\rRedeemRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x10\n\x08uniqueId\x18\x02 \x01(\x04\x12\x14\n\x0credeemerGbId\x18\x03 \x01(\x04\x12\r\n\x05price\x18\x04 \x01(\r\x12\x0c\n\x04uuid\x18\x05 \x01(\x04\"\\\n\x0eRedeemResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12*\n\x06result\x18\x02 \x01(\x0e\x32\x1a.DropGameServer.DropResult\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\x1e\n\x0e\x44ropNotifyArgs\x12\x0c\n\x04\x61rgs\x18\x01 \x03(\x03\"\x80\x01\n\x14\x44ropTypeChangeNotify\x12\x11\n\tuniqueIds\x18\x01 \x03(\x04\x12\x13\n\x0bnotifyTypes\x18\x02 \x03(\x05\x12\x32\n\nnotifyArgs\x18\x03 \x03(\x0b\x32\x1e.DropGameServer.DropNotifyArgs\x12\x0c\n\x04gbId\x18\x04 \x01(\x04\"?\n\x18NotifyTakerRedeemRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x11\n\ttakerGbId\x18\x02 \x01(\x04\"I\n\x14GetTakeRewardRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x11\n\ttakerGbId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\x85\x01\n\x15GetTakeRewardResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12*\n\x06result\x18\x02 \x01(\x0e\x32\x1a.DropGameServer.DropResult\x12\x11\n\tbindMoney\x18\x03 \x01(\r\x12\r\n\x05money\x18\x04 \x01(\r\x12\x0c\n\x04uuid\x18\x05 \x01(\x04\"0\n\x12GetDropInfoRequest\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\xef\x01\n\x08\x44ropInfo\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x10\n\x08\x64ropType\x18\x02 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x03 \x01(\x03\x12\x16\n\x0e\x63ollExpireTime\x18\x04 \x01(\x03\x12\x11\n\textraInfo\x18\x05 \x01(\x0c\x12\x11\n\tequipInfo\x18\x06 \x01(\x0c\x12\r\n\x05price\x18\x07 \x01(\r\x12\x10\n\x08\x64ropTime\x18\x08 \x01(\x03\x12\x10\n\x08hasPrice\x18\t \x01(\x08\x12\x12\n\nreturnTime\x18\n \x01(\x03\x12\x16\n\x0eredeemWaitTime\x18\x0b \x01(\x03\x12\x11\n\ttakerGbId\x18\x0c \x01(\x04\"\xa0\x01\n\tTakerInfo\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\r\n\x05price\x18\x02 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x03 \x01(\x03\x12\x10\n\x08\x64ropType\x18\x04 \x01(\r\x12\x11\n\tequipInfo\x18\x05 \x01(\x0c\x12\x16\n\x0eredeemWaitTime\x18\x06 \x01(\x03\x12\x10\n\x08hasPrice\x18\x07 \x01(\x08\x12\x12\n\nreturnTime\x18\x08 \x01(\x03\"W\n\nReturnInfo\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x12\n\nreturnTime\x18\x02 \x01(\x03\x12\x10\n\x08\x64ropType\x18\x03 \x01(\r\x12\x11\n\tequipInfo\x18\x04 \x01(\x0c\"S\n\nRewardInfo\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x11\n\tbindMoney\x18\x02 \x01(\x04\x12\r\n\x05money\x18\x03 \x01(\x04\x12\x11\n\tequipInfo\x18\x04 \x01(\x0c\"\xe1\x01\n\x13GetDropInfoResponse\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12+\n\tdropInfos\x18\x02 \x03(\x0b\x32\x18.DropGameServer.DropInfo\x12-\n\ntakerInfos\x18\x03 \x03(\x0b\x32\x19.DropGameServer.TakerInfo\x12/\n\x0breturnInfos\x18\x04 \x03(\x0b\x32\x1a.DropGameServer.ReturnInfo\x12/\n\x0brewardInfos\x18\x05 \x03(\x0b\x32\x1a.DropGameServer.RewardInfo\"-\n\x19SendRepairDropMailRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\"`\n\x1aSendRepairDropMailResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x11\n\tequipInfo\x18\x03 \x01(\x0c\x12\x0f\n\x07\x65ndTime\x18\x04 \x01(\x03\"A\n\x18UpdateCollEndTimeRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x13\n\x0b\x63ollEndTime\x18\x02 \x01(\x03\"]\n\x1eSetTakeEquipRedeemPriceRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x10\n\x08uniqueId\x18\x03 \x01(\x04\x12\r\n\x05price\x18\x04 \x01(\r\"\x8a\x01\n\x1fSetTakeEquipRedeemPriceResponse\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x10\n\x08uniqueId\x18\x03 \x01(\x04\x12\r\n\x05price\x18\x04 \x01(\r\x12*\n\x06result\x18\x05 \x01(\x0e\x32\x1a.DropGameServer.DropResult\"\xaf\x01\n\x0e\x43ustodyRequest\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x10\n\x08\x64ropType\x18\x02 \x01(\x04\x12\x11\n\tequipInfo\x18\x03 \x01(\x0c\x12\x12\n\nholderGbId\x18\x04 \x01(\x04\x12\x16\n\x0eholderServerId\x18\x05 \x01(\x04\x12\x15\n\rownerServerId\x18\x06 \x01(\r\x12\x0f\n\x07ownerId\x18\x07 \x01(\x04\x12\x12\n\nreturnTime\x18\x08 \x01(\x03\"4\n\x0f\x43ustodyResponse\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\">\n\x1c\x43heckDropReturnExpireRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"?\n\x1d\x43heckDropReturnExpireResponse\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"|\n\x1bSetDropEquipPayPriceRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x10\n\x08uniqueId\x18\x03 \x01(\x04\x12\r\n\x05price\x18\x04 \x01(\r\x12\x11\n\tbindMoney\x18\x05 \x01(\r\x12\r\n\x05money\x18\x06 \x01(\r\"\x87\x01\n\x1cSetDropEquipPayPriceResponse\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x10\n\x08uniqueId\x18\x03 \x01(\x04\x12\r\n\x05price\x18\x04 \x01(\r\x12*\n\x06result\x18\x05 \x01(\x0e\x32\x1a.DropGameServer.DropResult\"[\n\x16NotifyCleanCollections\x12\x15\n\rcollectionIds\x18\x01 \x03(\r\x12\x11\n\tuniqueIds\x18\x02 \x03(\x04\x12\x17\n\x0f\x63ollExpireTimes\x18\x03 \x03(\x03\"i\n\x12NotifyCustodyEquip\x12\x10\n\x08uniqueId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\r\n\x05\x65quip\x18\x03 \x01(\x0c\x12\x12\n\nreturnTime\x18\x04 \x01(\x03\x12\x10\n\x08\x64ropType\x18\x05 \x01(\r\"4\n\x11NotifyRemoveEquip\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\x11\n\tuniqueIds\x18\x02 \x03(\x04\"1\n\x12NotifyEquipExpired\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\r\n\x05\x65quip\x18\x02 \x01(\x0c*\xf5\x04\n\nDropResult\x12\x15\n\x11\x44ropResult_UNKNOW\x10\x00\x12\x16\n\x12\x44ropResult_SUCCESS\x10\x01\x12\x18\n\x14\x44ropResult_NOT_FOUND\x10\x02\x12\x18\n\x14\x44ropResult_HAS_TAKEN\x10\x03\x12\x1a\n\x16\x44ropResult_STATE_ERROR\x10\x04\x12\x18\n\x14\x44ropResult_NOT_TAKER\x10\x05\x12\x15\n\x11\x44ropResult_EXPIRE\x10\x06\x12\x18\n\x14\x44ropResult_NOT_OWNER\x10\x07\x12\x19\n\x15\x44ropResult_NOT_EXPIRE\x10\x08\x12\x1b\n\x17\x44ropResult_OTHER_GIVEUP\x10\t\x12\x1b\n\x17\x44ropResult_OTHER_REDEEM\x10\n\x12&\n\"DropResult_SET_REDEEM_PRICE_EXPIRE\x10\x0b\x12#\n\x1f\x44ropResult_REDEEM_NOT_SET_PRICE\x10\x0c\x12\"\n\x1e\x44ropResult_REDEEM_TIME_EXPIRED\x10\r\x12\x1e\n\x1a\x44ropResult_IN_RETURN_STATE\x10\x0e\x12&\n\"DropResult_REDEEM_TIME_NOT_EXPIRED\x10\x0f\x12\x1f\n\x1b\x44ropResult_GET_BACK_EXPIRED\x10\x10\x12\"\n\x1e\x44ropResult_GET_BACK_TYPE_ERROR\x10\x11\x12#\n\x1f\x44ropResult_SET_PAY_PRICE_EXPIRE\x10\x12\x12%\n!DropResult_SET_PAY_PRICE_NOT_SAME\x10\x13\x32\xf8\x08\n\nDropServer\x12U\n\x12registerGameServer\x12).DropGameServer.RegisterGameServerRequest\x1a\x14.DropGameServer.Void\x12\x39\n\x04\x64rop\x12\x1b.DropGameServer.DropRequest\x1a\x14.DropGameServer.Void\x12\x39\n\x04take\x12\x1b.DropGameServer.TakeRequest\x1a\x14.DropGameServer.Void\x12=\n\x06redeem\x12\x1d.DropGameServer.RedeemRequest\x1a\x14.DropGameServer.Void\x12\x38\n\nactiveTick\x12\x14.DropGameServer.Void\x1a\x14.DropGameServer.Void\x12=\n\x06giveUp\x12\x1d.DropGameServer.GiveUpRequest\x1a\x14.DropGameServer.Void\x12K\n\rgetTakeReward\x12$.DropGameServer.GetTakeRewardRequest\x1a\x14.DropGameServer.Void\x12G\n\x0bgetDropInfo\x12\".DropGameServer.GetDropInfoRequest\x1a\x14.DropGameServer.Void\x12U\n\x12sendRepairDropMail\x12).DropGameServer.SendRepairDropMailRequest\x1a\x14.DropGameServer.Void\x12S\n\x11updateCollEndTime\x12(.DropGameServer.UpdateCollEndTimeRequest\x1a\x14.DropGameServer.Void\x12_\n\x17setTakeEquipRedeemPrice\x12..DropGameServer.SetTakeEquipRedeemPriceRequest\x1a\x14.DropGameServer.Void\x12I\n\x0cgetBackEquip\x12#.DropGameServer.GetBackEquipRequest\x1a\x14.DropGameServer.Void\x12?\n\x07\x63ustody\x12\x1e.DropGameServer.CustodyRequest\x1a\x14.DropGameServer.Void\x12[\n\x15\x63heckDropReturnExpire\x12,.DropGameServer.CheckDropReturnExpireRequest\x1a\x14.DropGameServer.Void\x12Y\n\x14setDropEquipPayPrice\x12+.DropGameServer.SetDropEquipPayPriceRequest\x1a\x14.DropGameServer.Void2\x95\x0b\n\nGameServer\x12<\n\x06onDrop\x12\x1c.DropGameServer.DropResponse\x1a\x14.DropGameServer.Void\x12<\n\x06onTake\x12\x1c.DropGameServer.TakeResponse\x1a\x14.DropGameServer.Void\x12@\n\x08onRedeem\x12\x1e.DropGameServer.RedeemResponse\x1a\x14.DropGameServer.Void\x12@\n\x12\x61\x63tiveTickCallback\x12\x14.DropGameServer.Void\x1a\x14.DropGameServer.Void\x12L\n\x0eonGetBackEquip\x12$.DropGameServer.GetBackEquipResponse\x1a\x14.DropGameServer.Void\x12@\n\x08onGiveUp\x12\x1e.DropGameServer.GiveUpResponse\x1a\x14.DropGameServer.Void\x12N\n\x10onDropTypeChange\x12$.DropGameServer.DropTypeChangeNotify\x1a\x14.DropGameServer.Void\x12N\n\x0fonGetTakeReward\x12%.DropGameServer.GetTakeRewardResponse\x1a\x14.DropGameServer.Void\x12J\n\ronGetDropInfo\x12#.DropGameServer.GetDropInfoResponse\x1a\x14.DropGameServer.Void\x12X\n\x14onSendRepairDropMail\x12*.DropGameServer.SendRepairDropMailResponse\x1a\x14.DropGameServer.Void\x12\x62\n\x19onSetTakeEquipRedeemPrice\x12/.DropGameServer.SetTakeEquipRedeemPriceResponse\x1a\x14.DropGameServer.Void\x12\x42\n\tonCustody\x12\x1f.DropGameServer.CustodyResponse\x1a\x14.DropGameServer.Void\x12^\n\x17onCheckDropReturnExpire\x12-.DropGameServer.CheckDropReturnExpireResponse\x1a\x14.DropGameServer.Void\x12\\\n\x16onSetDropEquipPayPrice\x12,.DropGameServer.SetDropEquipPayPriceResponse\x1a\x14.DropGameServer.Void\x12W\n\x17onNotifyCleanCollection\x12&.DropGameServer.NotifyCleanCollections\x1a\x14.DropGameServer.Void\x12P\n\x14onNotifyCustodyEquip\x12\".DropGameServer.NotifyCustodyEquip\x1a\x14.DropGameServer.Void\x12N\n\x13onNotifyRemoveEquip\x12!.DropGameServer.NotifyRemoveEquip\x1a\x14.DropGameServer.Void\x12P\n\x14onNotifyEquipExpired\x12\".DropGameServer.NotifyEquipExpired\x1a\x14.DropGameServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
 )
 
 _DROPRESULT = _descriptor.EnumDescriptor(
@@ -114,8 +114,8 @@ _DROPRESULT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=4522,
-  serialized_end=5151,
+  serialized_start=4271,
+  serialized_end=4900,
 )
 _sym_db.RegisterEnumDescriptor(_DROPRESULT)
 
@@ -1132,15 +1132,22 @@ _GETTAKEREWARDRESPONSE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='price', full_name='DropGameServer.GetTakeRewardResponse.price', index=2,
+      name='bindMoney', full_name='DropGameServer.GetTakeRewardResponse.bindMoney', index=2,
       number=3, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='uuid', full_name='DropGameServer.GetTakeRewardResponse.uuid', index=3,
-      number=4, type=4, cpp_type=4, label=1,
+      name='money', full_name='DropGameServer.GetTakeRewardResponse.money', index=3,
+      number=4, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='DropGameServer.GetTakeRewardResponse.uuid', index=4,
+      number=5, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -1157,8 +1164,8 @@ _GETTAKEREWARDRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1899,
-  serialized_end=2013,
+  serialized_start=1900,
+  serialized_end=2033,
 )
 
 
@@ -1195,8 +1202,8 @@ _GETDROPINFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2015,
-  serialized_end=2063,
+  serialized_start=2035,
+  serialized_end=2083,
 )
 
 
@@ -1303,8 +1310,8 @@ _DROPINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2066,
-  serialized_end=2305,
+  serialized_start=2086,
+  serialized_end=2325,
 )
 
 
@@ -1383,8 +1390,8 @@ _TAKERINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2308,
-  serialized_end=2468,
+  serialized_start=2328,
+  serialized_end=2488,
 )
 
 
@@ -1435,8 +1442,8 @@ _RETURNINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2470,
-  serialized_end=2557,
+  serialized_start=2490,
+  serialized_end=2577,
 )
 
 
@@ -1455,15 +1462,22 @@ _REWARDINFO = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='price', full_name='DropGameServer.RewardInfo.price', index=1,
+      name='bindMoney', full_name='DropGameServer.RewardInfo.bindMoney', index=1,
       number=2, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='equipInfo', full_name='DropGameServer.RewardInfo.equipInfo', index=2,
-      number=3, type=12, cpp_type=9, label=1,
+      name='money', full_name='DropGameServer.RewardInfo.money', index=2,
+      number=3, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='equipInfo', full_name='DropGameServer.RewardInfo.equipInfo', index=3,
+      number=4, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -1480,8 +1494,8 @@ _REWARDINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2559,
-  serialized_end=2623,
+  serialized_start=2579,
+  serialized_end=2662,
 )
 
 
@@ -1539,8 +1553,8 @@ _GETDROPINFORESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2626,
-  serialized_end=2851,
+  serialized_start=2665,
+  serialized_end=2890,
 )
 
 
@@ -1570,8 +1584,8 @@ _SENDREPAIRDROPMAILREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2853,
-  serialized_end=2898,
+  serialized_start=2892,
+  serialized_end=2937,
 )
 
 
@@ -1622,8 +1636,8 @@ _SENDREPAIRDROPMAILRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2900,
-  serialized_end=2996,
+  serialized_start=2939,
+  serialized_end=3035,
 )
 
 
@@ -1660,98 +1674,8 @@ _UPDATECOLLENDTIMEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2998,
-  serialized_end=3063,
-)
-
-
-_CHECKDROPEXPIREREQUEST = _descriptor.Descriptor(
-  name='CheckDropExpireRequest',
-  full_name='DropGameServer.CheckDropExpireRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='uniqueId', full_name='DropGameServer.CheckDropExpireRequest.uniqueId', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uuid', full_name='DropGameServer.CheckDropExpireRequest.uuid', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='gbId', full_name='DropGameServer.CheckDropExpireRequest.gbId', index=2,
-      number=3, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=3065,
-  serialized_end=3135,
-)
-
-
-_CHECKDROPEXPIRERESPONSE = _descriptor.Descriptor(
-  name='CheckDropExpireResponse',
-  full_name='DropGameServer.CheckDropExpireResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='uuid', full_name='DropGameServer.CheckDropExpireResponse.uuid', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uniqueId', full_name='DropGameServer.CheckDropExpireResponse.uniqueId', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='result', full_name='DropGameServer.CheckDropExpireResponse.result', index=2,
-      number=3, type=14, cpp_type=8, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=3137,
-  serialized_end=3238,
+  serialized_start=3037,
+  serialized_end=3102,
 )
 
 
@@ -1802,8 +1726,8 @@ _SETTAKEEQUIPREDEEMPRICEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3240,
-  serialized_end=3333,
+  serialized_start=3104,
+  serialized_end=3197,
 )
 
 
@@ -1861,98 +1785,8 @@ _SETTAKEEQUIPREDEEMPRICERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3336,
-  serialized_end=3474,
-)
-
-
-_CHECKREDEEMEXPIREREQUEST = _descriptor.Descriptor(
-  name='CheckRedeemExpireRequest',
-  full_name='DropGameServer.CheckRedeemExpireRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='uniqueId', full_name='DropGameServer.CheckRedeemExpireRequest.uniqueId', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uuid', full_name='DropGameServer.CheckRedeemExpireRequest.uuid', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='gbId', full_name='DropGameServer.CheckRedeemExpireRequest.gbId', index=2,
-      number=3, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=3476,
-  serialized_end=3548,
-)
-
-
-_CHECKREDEEMEXPIRERESPONSE = _descriptor.Descriptor(
-  name='CheckRedeemExpireResponse',
-  full_name='DropGameServer.CheckRedeemExpireResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='uuid', full_name='DropGameServer.CheckRedeemExpireResponse.uuid', index=0,
-      number=1, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uniqueId', full_name='DropGameServer.CheckRedeemExpireResponse.uniqueId', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='result', full_name='DropGameServer.CheckRedeemExpireResponse.result', index=2,
-      number=3, type=14, cpp_type=8, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=3550,
-  serialized_end=3653,
+  serialized_start=3200,
+  serialized_end=3338,
 )
 
 
@@ -2031,8 +1865,8 @@ _CUSTODYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3656,
-  serialized_end=3831,
+  serialized_start=3341,
+  serialized_end=3516,
 )
 
 
@@ -2069,8 +1903,8 @@ _CUSTODYRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3833,
-  serialized_end=3885,
+  serialized_start=3518,
+  serialized_end=3570,
 )
 
 
@@ -2107,8 +1941,8 @@ _CHECKDROPRETURNEXPIREREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3887,
-  serialized_end=3949,
+  serialized_start=3572,
+  serialized_end=3634,
 )
 
 
@@ -2145,8 +1979,8 @@ _CHECKDROPRETURNEXPIRERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3951,
-  serialized_end=4014,
+  serialized_start=3636,
+  serialized_end=3699,
 )
 
 
@@ -2186,9 +2020,16 @@ _SETDROPEQUIPPAYPRICEREQUEST = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='rewardRatio', full_name='DropGameServer.SetDropEquipPayPriceRequest.rewardRatio', index=4,
-      number=5, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
+      name='bindMoney', full_name='DropGameServer.SetDropEquipPayPriceRequest.bindMoney', index=4,
+      number=5, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='money', full_name='DropGameServer.SetDropEquipPayPriceRequest.money', index=5,
+      number=6, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -2204,8 +2045,8 @@ _SETDROPEQUIPPAYPRICEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4016,
-  serialized_end=4127,
+  serialized_start=3701,
+  serialized_end=3825,
 )
 
 
@@ -2263,8 +2104,8 @@ _SETDROPEQUIPPAYPRICERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4130,
-  serialized_end=4265,
+  serialized_start=3828,
+  serialized_end=3963,
 )
 
 
@@ -2308,8 +2149,8 @@ _NOTIFYCLEANCOLLECTIONS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4267,
-  serialized_end=4358,
+  serialized_start=3965,
+  serialized_end=4056,
 )
 
 
@@ -2367,8 +2208,8 @@ _NOTIFYCUSTODYEQUIP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4360,
-  serialized_end=4465,
+  serialized_start=4058,
+  serialized_end=4163,
 )
 
 
@@ -2405,8 +2246,46 @@ _NOTIFYREMOVEEQUIP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4467,
-  serialized_end=4519,
+  serialized_start=4165,
+  serialized_end=4217,
+)
+
+
+_NOTIFYEQUIPEXPIRED = _descriptor.Descriptor(
+  name='NotifyEquipExpired',
+  full_name='DropGameServer.NotifyEquipExpired',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='gbId', full_name='DropGameServer.NotifyEquipExpired.gbId', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='equip', full_name='DropGameServer.NotifyEquipExpired.equip', index=1,
+      number=2, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=4219,
+  serialized_end=4268,
 )
 
 _TAKERESPONSE.fields_by_name['result'].enum_type = _DROPRESULT
@@ -2419,9 +2298,7 @@ _GETDROPINFORESPONSE.fields_by_name['dropInfos'].message_type = _DROPINFO
 _GETDROPINFORESPONSE.fields_by_name['takerInfos'].message_type = _TAKERINFO
 _GETDROPINFORESPONSE.fields_by_name['returnInfos'].message_type = _RETURNINFO
 _GETDROPINFORESPONSE.fields_by_name['rewardInfos'].message_type = _REWARDINFO
-_CHECKDROPEXPIRERESPONSE.fields_by_name['result'].enum_type = _DROPRESULT
 _SETTAKEEQUIPREDEEMPRICERESPONSE.fields_by_name['result'].enum_type = _DROPRESULT
-_CHECKREDEEMEXPIRERESPONSE.fields_by_name['result'].enum_type = _DROPRESULT
 _SETDROPEQUIPPAYPRICERESPONSE.fields_by_name['result'].enum_type = _DROPRESULT
 DESCRIPTOR.message_types_by_name['Void'] = _VOID
 DESCRIPTOR.message_types_by_name['RegisterGameServerRequest'] = _REGISTERGAMESERVERREQUEST
@@ -2452,12 +2329,8 @@ DESCRIPTOR.message_types_by_name['GetDropInfoResponse'] = _GETDROPINFORESPONSE
 DESCRIPTOR.message_types_by_name['SendRepairDropMailRequest'] = _SENDREPAIRDROPMAILREQUEST
 DESCRIPTOR.message_types_by_name['SendRepairDropMailResponse'] = _SENDREPAIRDROPMAILRESPONSE
 DESCRIPTOR.message_types_by_name['UpdateCollEndTimeRequest'] = _UPDATECOLLENDTIMEREQUEST
-DESCRIPTOR.message_types_by_name['CheckDropExpireRequest'] = _CHECKDROPEXPIREREQUEST
-DESCRIPTOR.message_types_by_name['CheckDropExpireResponse'] = _CHECKDROPEXPIRERESPONSE
 DESCRIPTOR.message_types_by_name['SetTakeEquipRedeemPriceRequest'] = _SETTAKEEQUIPREDEEMPRICEREQUEST
 DESCRIPTOR.message_types_by_name['SetTakeEquipRedeemPriceResponse'] = _SETTAKEEQUIPREDEEMPRICERESPONSE
-DESCRIPTOR.message_types_by_name['CheckRedeemExpireRequest'] = _CHECKREDEEMEXPIREREQUEST
-DESCRIPTOR.message_types_by_name['CheckRedeemExpireResponse'] = _CHECKREDEEMEXPIRERESPONSE
 DESCRIPTOR.message_types_by_name['CustodyRequest'] = _CUSTODYREQUEST
 DESCRIPTOR.message_types_by_name['CustodyResponse'] = _CUSTODYRESPONSE
 DESCRIPTOR.message_types_by_name['CheckDropReturnExpireRequest'] = _CHECKDROPRETURNEXPIREREQUEST
@@ -2467,6 +2340,7 @@ DESCRIPTOR.message_types_by_name['SetDropEquipPayPriceResponse'] = _SETDROPEQUIP
 DESCRIPTOR.message_types_by_name['NotifyCleanCollections'] = _NOTIFYCLEANCOLLECTIONS
 DESCRIPTOR.message_types_by_name['NotifyCustodyEquip'] = _NOTIFYCUSTODYEQUIP
 DESCRIPTOR.message_types_by_name['NotifyRemoveEquip'] = _NOTIFYREMOVEEQUIP
+DESCRIPTOR.message_types_by_name['NotifyEquipExpired'] = _NOTIFYEQUIPEXPIRED
 DESCRIPTOR.enum_types_by_name['DropResult'] = _DROPRESULT
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -2673,20 +2547,6 @@ UpdateCollEndTimeRequest = _reflection.GeneratedProtocolMessageType('UpdateCollE
   ))
 _sym_db.RegisterMessage(UpdateCollEndTimeRequest)
 
-CheckDropExpireRequest = _reflection.GeneratedProtocolMessageType('CheckDropExpireRequest', (_message.Message,), dict(
-  DESCRIPTOR = _CHECKDROPEXPIREREQUEST,
-  __module__ = 'gameServerDrop_pb2'
-  # @@protoc_insertion_point(class_scope:DropGameServer.CheckDropExpireRequest)
-  ))
-_sym_db.RegisterMessage(CheckDropExpireRequest)
-
-CheckDropExpireResponse = _reflection.GeneratedProtocolMessageType('CheckDropExpireResponse', (_message.Message,), dict(
-  DESCRIPTOR = _CHECKDROPEXPIRERESPONSE,
-  __module__ = 'gameServerDrop_pb2'
-  # @@protoc_insertion_point(class_scope:DropGameServer.CheckDropExpireResponse)
-  ))
-_sym_db.RegisterMessage(CheckDropExpireResponse)
-
 SetTakeEquipRedeemPriceRequest = _reflection.GeneratedProtocolMessageType('SetTakeEquipRedeemPriceRequest', (_message.Message,), dict(
   DESCRIPTOR = _SETTAKEEQUIPREDEEMPRICEREQUEST,
   __module__ = 'gameServerDrop_pb2'
@@ -2700,20 +2560,6 @@ SetTakeEquipRedeemPriceResponse = _reflection.GeneratedProtocolMessageType('SetT
   # @@protoc_insertion_point(class_scope:DropGameServer.SetTakeEquipRedeemPriceResponse)
   ))
 _sym_db.RegisterMessage(SetTakeEquipRedeemPriceResponse)
-
-CheckRedeemExpireRequest = _reflection.GeneratedProtocolMessageType('CheckRedeemExpireRequest', (_message.Message,), dict(
-  DESCRIPTOR = _CHECKREDEEMEXPIREREQUEST,
-  __module__ = 'gameServerDrop_pb2'
-  # @@protoc_insertion_point(class_scope:DropGameServer.CheckRedeemExpireRequest)
-  ))
-_sym_db.RegisterMessage(CheckRedeemExpireRequest)
-
-CheckRedeemExpireResponse = _reflection.GeneratedProtocolMessageType('CheckRedeemExpireResponse', (_message.Message,), dict(
-  DESCRIPTOR = _CHECKREDEEMEXPIRERESPONSE,
-  __module__ = 'gameServerDrop_pb2'
-  # @@protoc_insertion_point(class_scope:DropGameServer.CheckRedeemExpireResponse)
-  ))
-_sym_db.RegisterMessage(CheckRedeemExpireResponse)
 
 CustodyRequest = _reflection.GeneratedProtocolMessageType('CustodyRequest', (_message.Message,), dict(
   DESCRIPTOR = _CUSTODYREQUEST,
@@ -2778,6 +2624,13 @@ NotifyRemoveEquip = _reflection.GeneratedProtocolMessageType('NotifyRemoveEquip'
   ))
 _sym_db.RegisterMessage(NotifyRemoveEquip)
 
+NotifyEquipExpired = _reflection.GeneratedProtocolMessageType('NotifyEquipExpired', (_message.Message,), dict(
+  DESCRIPTOR = _NOTIFYEQUIPEXPIRED,
+  __module__ = 'gameServerDrop_pb2'
+  # @@protoc_insertion_point(class_scope:DropGameServer.NotifyEquipExpired)
+  ))
+_sym_db.RegisterMessage(NotifyEquipExpired)
+
 
 DESCRIPTOR._options = None
 
@@ -2787,8 +2640,8 @@ _DROPSERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=5154,
-  serialized_end=6464,
+  serialized_start=4903,
+  serialized_end=6047,
   methods=[
   _descriptor.MethodDescriptor(
     name='registerGameServer',
@@ -2881,36 +2734,18 @@ _DROPSERVER = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
-    name='checkDropExpire',
-    full_name='DropGameServer.DropServer.checkDropExpire',
-    index=10,
-    containing_service=None,
-    input_type=_CHECKDROPEXPIREREQUEST,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
     name='setTakeEquipRedeemPrice',
     full_name='DropGameServer.DropServer.setTakeEquipRedeemPrice',
-    index=11,
+    index=10,
     containing_service=None,
     input_type=_SETTAKEEQUIPREDEEMPRICEREQUEST,
     output_type=_VOID,
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
-    name='checkRedeemExpire',
-    full_name='DropGameServer.DropServer.checkRedeemExpire',
-    index=12,
-    containing_service=None,
-    input_type=_CHECKREDEEMEXPIREREQUEST,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
     name='getBackEquip',
     full_name='DropGameServer.DropServer.getBackEquip',
-    index=13,
+    index=11,
     containing_service=None,
     input_type=_GETBACKEQUIPREQUEST,
     output_type=_VOID,
@@ -2919,7 +2754,7 @@ _DROPSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='custody',
     full_name='DropGameServer.DropServer.custody',
-    index=14,
+    index=12,
     containing_service=None,
     input_type=_CUSTODYREQUEST,
     output_type=_VOID,
@@ -2928,7 +2763,7 @@ _DROPSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='checkDropReturnExpire',
     full_name='DropGameServer.DropServer.checkDropReturnExpire',
-    index=15,
+    index=13,
     containing_service=None,
     input_type=_CHECKDROPRETURNEXPIREREQUEST,
     output_type=_VOID,
@@ -2937,7 +2772,7 @@ _DROPSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='setDropEquipPayPrice',
     full_name='DropGameServer.DropServer.setDropEquipPayPrice',
-    index=16,
+    index=14,
     containing_service=None,
     input_type=_SETDROPEQUIPPAYPRICEREQUEST,
     output_type=_VOID,
@@ -2955,8 +2790,8 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=6467,
-  serialized_end=7986,
+  serialized_start=6050,
+  serialized_end=7479,
   methods=[
   _descriptor.MethodDescriptor(
     name='onDrop',
@@ -3049,36 +2884,18 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
-    name='onCheckDropExpire',
-    full_name='DropGameServer.GameServer.onCheckDropExpire',
-    index=10,
-    containing_service=None,
-    input_type=_CHECKDROPEXPIRERESPONSE,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
     name='onSetTakeEquipRedeemPrice',
     full_name='DropGameServer.GameServer.onSetTakeEquipRedeemPrice',
-    index=11,
+    index=10,
     containing_service=None,
     input_type=_SETTAKEEQUIPREDEEMPRICERESPONSE,
     output_type=_VOID,
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
-    name='onCheckRedeemExpire',
-    full_name='DropGameServer.GameServer.onCheckRedeemExpire',
-    index=12,
-    containing_service=None,
-    input_type=_CHECKREDEEMEXPIRERESPONSE,
-    output_type=_VOID,
-    serialized_options=None,
-  ),
-  _descriptor.MethodDescriptor(
     name='onCustody',
     full_name='DropGameServer.GameServer.onCustody',
-    index=13,
+    index=11,
     containing_service=None,
     input_type=_CUSTODYRESPONSE,
     output_type=_VOID,
@@ -3087,7 +2904,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onCheckDropReturnExpire',
     full_name='DropGameServer.GameServer.onCheckDropReturnExpire',
-    index=14,
+    index=12,
     containing_service=None,
     input_type=_CHECKDROPRETURNEXPIRERESPONSE,
     output_type=_VOID,
@@ -3096,7 +2913,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onSetDropEquipPayPrice',
     full_name='DropGameServer.GameServer.onSetDropEquipPayPrice',
-    index=15,
+    index=13,
     containing_service=None,
     input_type=_SETDROPEQUIPPAYPRICERESPONSE,
     output_type=_VOID,
@@ -3105,7 +2922,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onNotifyCleanCollection',
     full_name='DropGameServer.GameServer.onNotifyCleanCollection',
-    index=16,
+    index=14,
     containing_service=None,
     input_type=_NOTIFYCLEANCOLLECTIONS,
     output_type=_VOID,
@@ -3114,7 +2931,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onNotifyCustodyEquip',
     full_name='DropGameServer.GameServer.onNotifyCustodyEquip',
-    index=17,
+    index=15,
     containing_service=None,
     input_type=_NOTIFYCUSTODYEQUIP,
     output_type=_VOID,
@@ -3123,9 +2940,18 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onNotifyRemoveEquip',
     full_name='DropGameServer.GameServer.onNotifyRemoveEquip',
-    index=18,
+    index=16,
     containing_service=None,
     input_type=_NOTIFYREMOVEEQUIP,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='onNotifyEquipExpired',
+    full_name='DropGameServer.GameServer.onNotifyEquipExpired',
+    index=17,
+    containing_service=None,
+    input_type=_NOTIFYEQUIPEXPIRED,
     output_type=_VOID,
     serialized_options=None,
   ),

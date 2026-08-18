@@ -33,6 +33,7 @@ import conflict_status as C_SD
 import conflict_status_def as CSDD
 import experience_exp as EPED
 import fightProp_define as FDD
+import mineBattle_miningArea as MBMA
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import performanceLevel_set as PLSD
@@ -42,6 +43,7 @@ import creep_base as CBD
 import guild_guildConst as G_GCD
 import experience_config as EXPC
 import gameengine
+import gameglobal
 
 
 class AvatarBuildsMixin(object):
@@ -74,6 +76,7 @@ class AvatarBuildsMixin(object):
         self.base.onCheckUpdateSkillRet(True, skillSlotInfos, bNotifyClient, isMessage)
 
     def onChangeSkillLv(self, skillId, toLv):
+        LOG_INFO('onChangeSkillLv, cell, ', skillId, toLv)
         skill = self.skillDic.doGetSkill(skillId, False)
         if not skill:
             return
@@ -215,6 +218,16 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     # ------------------- dead and relive start -------------------
 
     def _checkAddEnemy(self, killer):
+        _mapId = formula.fetchMapId(self.spaceNo)
+
+        # 矿战期间，矿区（核心层）内击杀根据专属配置决定
+        mineCfg = MBMA.datas.get(_mapId)
+        if mineCfg and gameglobal.mineGlobalData.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:
+            return mineCfg['ifEnemy'] != 0
+
+        if not DDL.datas[_mapId]['ifEnemy']:
+            return False
+
         if not killer:
             return False
 
@@ -327,9 +340,15 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             _mailId = PKD.datas['DeathMail_fall']['value']
 
         elif host and host.id != self.id:
-            _mailId = PKD.datas['DeathMail']['value']
-            guildName = host.myGuildInfo.get('guildName', '') if host.IsAvatar and host.guildUUID else ''
-            _args = [posMsg, guildName, _name]
+            if host.IsCreation:
+                # 碰到落雷了
+                _mailId = PKD.datas['DeathMail_abnormalDamage']['value']
+                _args = [posMsg]
+
+            else:
+                _mailId = PKD.datas['DeathMail']['value']
+                guildName = host.myGuildInfo.get('guildName', '') if host.IsAvatar and host.guildUUID else ''
+                _args = [posMsg, guildName, _name]
         else:
             _mailId = PKD.datas['DeathMail_abnormalDamage']['value']
             _args = [posMsg]
@@ -498,6 +517,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if self.isDie():
             return False
 
+        if self.isCrossServerInLocalServer:
+            return False
+
         if self.getCommonFlagCell(gameconst.AvatarFlagCell.AUTO_HEAL_HP) \
                     and self.hp * 100 < self.fullHp * self.healHpRatio:
             return True
@@ -509,6 +531,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             self.base.autoHealHp()
 
     def _checkRecoveryMp(self):
+        if self.isCrossServerInLocalServer:
+            return
+
         if self.getCommonFlagCell(gameconst.AvatarFlagCell.AUTO_HEAL_MP) \
                     and self.mp * 100 < self.fullMp * self.healMpRatio:
             return True
@@ -565,6 +590,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.clearDamageSetOutofFighting()
         if formula.inWorldLineScene(self.spaceNo):
             self.resetStatisticsData()
+        # 退出战斗，清理属性切换的cd
+        self.clearSwitchPropertyData()
 
     def enterSprintingState(self):
         if not self.hasBuff(64000007):
@@ -685,6 +712,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             self.spaceNo,
             self.level,
             str(detail),
+            self.exp
         )
 
     def _modifyExp(self, expVal, opUUID, src, detail, chaseExp=0, srcSubType=0, idipSource=0, local2Cross=False):
@@ -1322,7 +1350,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
                 return
             if self.flyValue <= 0:
                 # 报警
-                LOG_ERR('flyValue is not enough, can not fly!!! gbId={}'.format(self.gbId))
+                LOG_WARN('flyValue is not enough, can not fly!!! gbId={}'.format(self.gbId))
 
             if self.checkConflictState(dataUtils.getStateEventId(gameconst.StateEnum.Flying)):
                 self.topSpeed = gameconst.TopSpeedType.FlyingTopSpeed

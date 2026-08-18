@@ -55,5 +55,11 @@
             <Arg>           PYTHON                  </Arg>
             <Arg>           UNICODE                 </Arg>
         </onGmModifyAllServertimeInCrossGroupResp>
+
+        <onGlobalEventTips>
+            <Arg>           INT8                        </Arg>
+            <Arg>           INT32                       </Arg>
+            <Arg>           ARRAY <of> UNICODE </of>    </Arg>
+        </onGlobalEventTips>
     </BaseMethods>
 </root>

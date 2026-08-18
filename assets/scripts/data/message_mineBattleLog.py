@@ -38,7 +38,7 @@ datas = _tools.RODict({
     5: _tools.RODict({
         "ID": 5,
         "name": "mineBattle_flagDamageRecord3",
-        "log": "矿区荣誉旗帜被破坏，本周已被破坏<color=#038304>{0}/{1}</color>次，<color=#98cf48>{2}</color>帮会颜面扫地，不再获得矿区额外收益"
+        "log": "矿区荣誉旗帜被破坏，本周已被破坏<color=#038304>{0}/{1}</color>次，<color=#98cf48>{2}</color>帮会颜面扫地，矿区额外收益大幅降低"
     })
 })
 minKey = 1

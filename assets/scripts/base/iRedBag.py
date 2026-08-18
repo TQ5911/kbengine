@@ -183,8 +183,12 @@ class IRedBag(object):
 
         # 先扣钱
         _realMoney = self.getRBRealMoney(channel, money)
-        if self.getItemNum(gameconst.ItemIdEnum.MONEY) < _realMoney:
-            LOG_DBG("reqReleaseRedBag error no enough money: ", self.gbID, redbagType, channel, money, num)
+        deductVal = dropAward.DeductWealthVal()
+        deductVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, _realMoney)
+        res = self.canDeductWealth(deductVal)
+
+        if not res:
+            LOG_WARN("reqReleaseRedBag error no enough money: ", self.gbID, redbagType, channel, money, num, res())
             # 钱不足
             return
 

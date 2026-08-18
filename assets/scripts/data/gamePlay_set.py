@@ -242,5 +242,13 @@ datas = _tools.RODict({
     "explorationRateMsg": _tools.RODict({
         "ID": "explorationRateMsg",
         "value": 54001802,
+    }),
+    "dungeonCountdown": _tools.RODict({
+        "ID": "dungeonCountdown",
+        "value": _tools.ROList([10, 5, 1]),
+    }),
+    "dungeonCountdownMsg": _tools.RODict({
+        "ID": "dungeonCountdownMsg",
+        "value": _tools.ROList([54000544, 54000545, 54000546]),
     })
 })

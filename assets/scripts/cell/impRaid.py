@@ -142,7 +142,6 @@ class ImpRaid(object):
             self.joinType = playerInfo.joinType
             break
         self.raidInfo = newRaidCacheVal
-        self.joinType = gameconst.TeamJoinType.DEFAULT
 
         if formula.inLineScene(self.spaceNo):
             isLeader = self.gbId == self.raidInfo.raidCaptainGBID
@@ -654,8 +653,10 @@ class ImpRaid(object):
         LOG_INFO('createRaidLonely::raidUUID: ', raidUUID)
         leaderProps = self._getAvatarPropsForRaid().toStreamSavedDic()
         leaderProps['joinType'] = gameconst.TeamJoinType.CREATE
+        extraProps = {}
+        extraProps['joinType'] = gameconst.TeamJoinType.CREATE
         gameengine.getRaidStub(raidUUID).createRaidLonely(
-            self.base, self.gbId, raidUUID, capacity, [leaderProps, ], {}, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
+            self.base, self.gbId, raidUUID, capacity, [leaderProps, ], extraProps, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
         return True
 
     def _createRaidLonelyCheck(self, capacity):
@@ -867,7 +868,7 @@ class ImpRaid(object):
             gameengine.getRaidStub(raidUUID).onReplyJoinRaidLonely(
                 srcPlayerGbId, raidUUID, playerGBID, playerProps, extraProps)
 
-        self.raidJoinRecord.pop(raidUUID)
+        self.raidJoinRecord.pop(raidUUID, None)
 
         if err == gameconst.RaidErrno.ENUM_RAID_OK:
             self.cancelAllTeamRaidJoinRequest()
@@ -1216,9 +1217,9 @@ class ImpRaid(object):
         if self.getTotalScore() < raidScore:
             return None, gameconst.RaidErrno.ENUM_RAID_SOCRE_IS_ILLEGAL
         
-        # 我在跨服，告诉对方，不能邀请
-        if self.isCrossServer:
-            return None, gameconst.RaidErrno.ENUM_RAID_IN_CROSS_STATE
+        # # 我在跨服，告诉对方，不能邀请
+        # if self.isCrossServer:
+        #     return None, gameconst.RaidErrno.ENUM_RAID_IN_CROSS_STATE
         
         if teamUUID:
             # 传入teamID代表邀请的是组队, 回调者应该是小队队长
@@ -1235,9 +1236,9 @@ class ImpRaid(object):
         now = utils.curTS()
         recordId = KBEngine.genUUID64()
         if teamUUID:
-            inviteType = gameconst.RaidJoinTypeEnum.TEAM 
+            inviteTeamType = gameconst.RaidJoinTypeEnum.TEAM 
         else:
-            inviteType = gameconst.RaidJoinTypeEnum.SINGLE
+            inviteTeamType = gameconst.RaidJoinTypeEnum.SINGLE
 
         raidBeInvitedRecordDic = self.raidBeInvitedRecordDic
         thisRaidBeInvitedRecord = raidBeInvitedRecordDic.setdefault(raidUUID, {})
@@ -1248,7 +1249,7 @@ class ImpRaid(object):
         raidBeInvitedRecordDic[raidUUID][recordId] = {'srcPlayerGbId': srcPlayerGbId,
                                                    'raidTeamIDX': raidTeamIDX,
                                                    'teamUUID': teamUUID,
-                                                   'inviteType': inviteType,
+                                                   'inviteType': inviteTeamType,
                                                    'inviteT': now}
 
         if inviteSource == gameconst.RaidPermissionEnum.LEADER:
@@ -1536,6 +1537,8 @@ class ImpRaid(object):
         
         _raidUUID = self.raidUUID
         extraProps = {}
+        if not self.isInRaidDungeon():
+            extraProps['leaveDungen'] = True
         gameengine.getRaidStub(_raidUUID).leaveRaid(self.base, self.gbId, _raidUUID, extraProps)
             
         #主动离开team会清空怪物上的首刀归属者标记
@@ -1557,12 +1560,14 @@ class ImpRaid(object):
 
     def _onLeaveRaid(self):
         # 把自己cell的raid缓存清一遍
+        raidUUID = self.raidUUID
         self.raidInfo.reset()
         self.onRefreshPlayerRaidCacheVal(self.raidInfo)
         self.raidmateEntIdInAoiSet.clear()
         # 判断下是否在团队副本内
         if self.isInRaidDungeon():
             src = dungeonSrc.KickoutFromDungeon(kickReason=gameconst.DungeonSrcKickReason.FORCE)
+            src._extra['raidUUID'] = raidUUID
             self.selfLeaveRaidDungeon(src)
 
     @gamedecorator.checkGameconfigEnable('raid')
@@ -2475,9 +2480,10 @@ class ImpRaid(object):
 
         return _errno.ENUM_RAID_OK
 
-    def onRaidAddNewMember(self, entId):
-        # LOG_INFO('onRaidMember:: add', self.id, entId)
+    def onRaidAddNewMember(self, entId, joinType):
+        LOG_INFO('onRaidMember:: add', self.id, entId, joinType)
         if self.id == entId:
+            self.joinType = joinType
             return
         raidMember = KBEngine.entities.get(entId)
         if raidMember and raidMember in self.entitiesInView(True):

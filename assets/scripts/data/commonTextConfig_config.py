@@ -254,5 +254,10 @@ datas = _tools.RODict({
         "ID": "RemainNumUnlimited",
         "value": "剩余次数：无限制",
         "Type": "string"
+    }),
+    "cantSeeText": _tools.RODict({
+        "ID": "cantSeeText",
+        "value": "目标未在可见地图中",
+        "Type": "string"
     })
 })

@@ -25,7 +25,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000265, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10102: _tools.RODict({
         "ID": 10102,
@@ -37,7 +37,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000265, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10103: _tools.RODict({
         "ID": 10103,
@@ -49,7 +49,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000265, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10104: _tools.RODict({
         "ID": 10104,
@@ -61,7 +61,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000265, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10105: _tools.RODict({
         "ID": 10105,
@@ -73,7 +73,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000265, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10201: _tools.RODict({
         "ID": 10201,
@@ -85,7 +85,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10202: _tools.RODict({
         "ID": 10202,
@@ -97,7 +97,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10203: _tools.RODict({
         "ID": 10203,
@@ -109,7 +109,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10204: _tools.RODict({
         "ID": 10204,
@@ -121,7 +121,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10205: _tools.RODict({
         "ID": 10205,
@@ -133,7 +133,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10301: _tools.RODict({
         "ID": 10301,
@@ -145,7 +145,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
         "needItems": _tools.ROList([[30000264, 5], [30000265, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10302: _tools.RODict({
         "ID": 10302,
@@ -157,7 +157,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
         "needItems": _tools.ROList([[30000264, 5], [30000265, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10303: _tools.RODict({
         "ID": 10303,
@@ -169,7 +169,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
         "needItems": _tools.ROList([[30000264, 5], [30000265, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10304: _tools.RODict({
         "ID": 10304,
@@ -181,7 +181,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
         "needItems": _tools.ROList([[30000264, 5], [30000265, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10305: _tools.RODict({
         "ID": 10305,
@@ -193,7 +193,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
         "needItems": _tools.ROList([[30000264, 5], [30000265, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10401: _tools.RODict({
         "ID": 10401,
@@ -205,7 +205,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
         "needItems": _tools.ROList([[30000264, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10402: _tools.RODict({
         "ID": 10402,
@@ -217,7 +217,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
         "needItems": _tools.ROList([[30000264, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10403: _tools.RODict({
         "ID": 10403,
@@ -229,7 +229,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
         "needItems": _tools.ROList([[30000264, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10404: _tools.RODict({
         "ID": 10404,
@@ -241,7 +241,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
         "needItems": _tools.ROList([[30000264, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10405: _tools.RODict({
         "ID": 10405,
@@ -253,7 +253,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
         "needItems": _tools.ROList([[30000264, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10501: _tools.RODict({
         "ID": 10501,
@@ -265,7 +265,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000264, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10502: _tools.RODict({
         "ID": 10502,
@@ -277,7 +277,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000264, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10503: _tools.RODict({
         "ID": 10503,
@@ -289,7 +289,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000264, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10504: _tools.RODict({
         "ID": 10504,
@@ -301,7 +301,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000264, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10505: _tools.RODict({
         "ID": 10505,
@@ -313,7 +313,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000264, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10601: _tools.RODict({
         "ID": 10601,
@@ -325,7 +325,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000265, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10602: _tools.RODict({
         "ID": 10602,
@@ -337,7 +337,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000265, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10603: _tools.RODict({
         "ID": 10603,
@@ -349,7 +349,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000265, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10604: _tools.RODict({
         "ID": 10604,
@@ -361,7 +361,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000265, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10605: _tools.RODict({
         "ID": 10605,
@@ -373,7 +373,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000265, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10701: _tools.RODict({
         "ID": 10701,
@@ -385,7 +385,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000264, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10702: _tools.RODict({
         "ID": 10702,
@@ -397,7 +397,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000264, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10703: _tools.RODict({
         "ID": 10703,
@@ -409,7 +409,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000264, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10704: _tools.RODict({
         "ID": 10704,
@@ -421,7 +421,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000264, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10705: _tools.RODict({
         "ID": 10705,
@@ -433,7 +433,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000263, 5], [30000264, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10801: _tools.RODict({
         "ID": 10801,
@@ -445,7 +445,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000265, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10802: _tools.RODict({
         "ID": 10802,
@@ -457,7 +457,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000265, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10803: _tools.RODict({
         "ID": 10803,
@@ -469,7 +469,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000265, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10804: _tools.RODict({
         "ID": 10804,
@@ -481,7 +481,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000265, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     10805: _tools.RODict({
         "ID": 10805,
@@ -493,7 +493,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000265, 5], [30000266, 5]]),
-        "needCoins": _tools.ROList([30000002, 2000])
+        "needCoins": _tools.ROList([30000002, 2500])
     }),
     20101: _tools.RODict({
         "ID": 20101,
@@ -504,8 +504,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000265, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000265, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20102: _tools.RODict({
         "ID": 20102,
@@ -516,8 +516,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000265, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000265, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20103: _tools.RODict({
         "ID": 20103,
@@ -528,8 +528,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000265, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000265, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20104: _tools.RODict({
         "ID": 20104,
@@ -540,8 +540,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000265, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000265, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20105: _tools.RODict({
         "ID": 20105,
@@ -552,8 +552,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000265, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000265, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20201: _tools.RODict({
         "ID": 20201,
@@ -564,8 +564,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20202: _tools.RODict({
         "ID": 20202,
@@ -576,8 +576,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20203: _tools.RODict({
         "ID": 20203,
@@ -588,8 +588,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20204: _tools.RODict({
         "ID": 20204,
@@ -600,8 +600,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20205: _tools.RODict({
         "ID": 20205,
@@ -612,8 +612,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20301: _tools.RODict({
         "ID": 20301,
@@ -624,8 +624,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 10], [30000265, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000264, 12], [30000265, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20302: _tools.RODict({
         "ID": 20302,
@@ -636,8 +636,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 10], [30000265, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000264, 12], [30000265, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20303: _tools.RODict({
         "ID": 20303,
@@ -648,8 +648,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 10], [30000265, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000264, 12], [30000265, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20304: _tools.RODict({
         "ID": 20304,
@@ -660,8 +660,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 10], [30000265, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000264, 12], [30000265, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20305: _tools.RODict({
         "ID": 20305,
@@ -672,8 +672,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 10], [30000265, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000264, 12], [30000265, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20401: _tools.RODict({
         "ID": 20401,
@@ -684,8 +684,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000264, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20402: _tools.RODict({
         "ID": 20402,
@@ -696,8 +696,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000264, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20403: _tools.RODict({
         "ID": 20403,
@@ -708,8 +708,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000264, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20404: _tools.RODict({
         "ID": 20404,
@@ -720,8 +720,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000264, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20405: _tools.RODict({
         "ID": 20405,
@@ -732,8 +732,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000264, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20501: _tools.RODict({
         "ID": 20501,
@@ -744,8 +744,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000264, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000264, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20502: _tools.RODict({
         "ID": 20502,
@@ -756,8 +756,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000264, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000264, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20503: _tools.RODict({
         "ID": 20503,
@@ -768,8 +768,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000264, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000264, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20504: _tools.RODict({
         "ID": 20504,
@@ -780,8 +780,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000264, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000264, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20505: _tools.RODict({
         "ID": 20505,
@@ -792,8 +792,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000264, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000264, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20601: _tools.RODict({
         "ID": 20601,
@@ -804,8 +804,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000265, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20602: _tools.RODict({
         "ID": 20602,
@@ -816,8 +816,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000265, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20603: _tools.RODict({
         "ID": 20603,
@@ -828,8 +828,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000265, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20604: _tools.RODict({
         "ID": 20604,
@@ -840,8 +840,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000265, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20605: _tools.RODict({
         "ID": 20605,
@@ -852,8 +852,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000265, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20701: _tools.RODict({
         "ID": 20701,
@@ -864,8 +864,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000264, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000264, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20702: _tools.RODict({
         "ID": 20702,
@@ -876,8 +876,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000264, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000264, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20703: _tools.RODict({
         "ID": 20703,
@@ -888,8 +888,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000264, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000264, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20704: _tools.RODict({
         "ID": 20704,
@@ -900,8 +900,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000264, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000264, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20705: _tools.RODict({
         "ID": 20705,
@@ -912,8 +912,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 10], [30000264, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000263, 12], [30000264, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20801: _tools.RODict({
         "ID": 20801,
@@ -924,8 +924,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000265, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20802: _tools.RODict({
         "ID": 20802,
@@ -936,8 +936,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000265, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20803: _tools.RODict({
         "ID": 20803,
@@ -948,8 +948,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000265, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20804: _tools.RODict({
         "ID": 20804,
@@ -960,8 +960,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000265, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     20805: _tools.RODict({
         "ID": 20805,
@@ -972,8 +972,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 10], [30000266, 10]]),
-        "needCoins": _tools.ROList([30000002, 2500])
+        "needItems": _tools.ROList([[30000265, 12], [30000266, 12]]),
+        "needCoins": _tools.ROList([30000002, 5000])
     }),
     30101: _tools.RODict({
         "ID": 30101,
@@ -984,8 +984,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000265, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000265, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30102: _tools.RODict({
         "ID": 30102,
@@ -996,8 +996,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000265, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000265, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30103: _tools.RODict({
         "ID": 30103,
@@ -1008,8 +1008,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000265, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000265, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30104: _tools.RODict({
         "ID": 30104,
@@ -1020,8 +1020,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000265, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000265, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30105: _tools.RODict({
         "ID": 30105,
@@ -1032,8 +1032,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000265, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000265, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30201: _tools.RODict({
         "ID": 30201,
@@ -1044,8 +1044,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30202: _tools.RODict({
         "ID": 30202,
@@ -1056,8 +1056,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30203: _tools.RODict({
         "ID": 30203,
@@ -1068,8 +1068,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30204: _tools.RODict({
         "ID": 30204,
@@ -1080,8 +1080,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30205: _tools.RODict({
         "ID": 30205,
@@ -1092,8 +1092,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30301: _tools.RODict({
         "ID": 30301,
@@ -1104,8 +1104,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 20], [30000265, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000264, 25], [30000265, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30302: _tools.RODict({
         "ID": 30302,
@@ -1116,8 +1116,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 20], [30000265, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000264, 25], [30000265, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30303: _tools.RODict({
         "ID": 30303,
@@ -1128,8 +1128,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 20], [30000265, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000264, 25], [30000265, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30304: _tools.RODict({
         "ID": 30304,
@@ -1140,8 +1140,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 20], [30000265, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000264, 25], [30000265, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30305: _tools.RODict({
         "ID": 30305,
@@ -1152,8 +1152,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 20], [30000265, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000264, 25], [30000265, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30401: _tools.RODict({
         "ID": 30401,
@@ -1164,8 +1164,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000264, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30402: _tools.RODict({
         "ID": 30402,
@@ -1176,8 +1176,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000264, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30403: _tools.RODict({
         "ID": 30403,
@@ -1188,8 +1188,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000264, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30404: _tools.RODict({
         "ID": 30404,
@@ -1200,8 +1200,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000264, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30405: _tools.RODict({
         "ID": 30405,
@@ -1212,8 +1212,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000264, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30501: _tools.RODict({
         "ID": 30501,
@@ -1224,8 +1224,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000264, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000264, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30502: _tools.RODict({
         "ID": 30502,
@@ -1236,8 +1236,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000264, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000264, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30503: _tools.RODict({
         "ID": 30503,
@@ -1248,8 +1248,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000264, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000264, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30504: _tools.RODict({
         "ID": 30504,
@@ -1260,8 +1260,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000264, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000264, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30505: _tools.RODict({
         "ID": 30505,
@@ -1272,8 +1272,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000264, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000264, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30601: _tools.RODict({
         "ID": 30601,
@@ -1284,8 +1284,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000265, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30602: _tools.RODict({
         "ID": 30602,
@@ -1296,8 +1296,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000265, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30603: _tools.RODict({
         "ID": 30603,
@@ -1308,8 +1308,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000265, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30604: _tools.RODict({
         "ID": 30604,
@@ -1320,8 +1320,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000265, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30605: _tools.RODict({
         "ID": 30605,
@@ -1332,8 +1332,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000265, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30701: _tools.RODict({
         "ID": 30701,
@@ -1344,8 +1344,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000264, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000264, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30702: _tools.RODict({
         "ID": 30702,
@@ -1356,8 +1356,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000264, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000264, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30703: _tools.RODict({
         "ID": 30703,
@@ -1368,8 +1368,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000264, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000264, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30704: _tools.RODict({
         "ID": 30704,
@@ -1380,8 +1380,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000264, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000264, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30705: _tools.RODict({
         "ID": 30705,
@@ -1392,8 +1392,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 20], [30000264, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000263, 25], [30000264, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30801: _tools.RODict({
         "ID": 30801,
@@ -1404,8 +1404,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000265, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30802: _tools.RODict({
         "ID": 30802,
@@ -1416,8 +1416,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000265, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30803: _tools.RODict({
         "ID": 30803,
@@ -1428,8 +1428,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000265, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30804: _tools.RODict({
         "ID": 30804,
@@ -1440,8 +1440,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000265, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     30805: _tools.RODict({
         "ID": 30805,
@@ -1452,8 +1452,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 20], [30000266, 20]]),
-        "needCoins": _tools.ROList([30000002, 3000])
+        "needItems": _tools.ROList([[30000265, 25], [30000266, 25]]),
+        "needCoins": _tools.ROList([30000002, 7500])
     }),
     40101: _tools.RODict({
         "ID": 40101,
@@ -1464,8 +1464,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000265, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000265, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40102: _tools.RODict({
         "ID": 40102,
@@ -1476,8 +1476,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000265, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000265, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40103: _tools.RODict({
         "ID": 40103,
@@ -1488,8 +1488,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000265, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000265, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40104: _tools.RODict({
         "ID": 40104,
@@ -1500,8 +1500,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000265, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000265, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40105: _tools.RODict({
         "ID": 40105,
@@ -1512,8 +1512,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000265, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000265, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40201: _tools.RODict({
         "ID": 40201,
@@ -1524,8 +1524,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40202: _tools.RODict({
         "ID": 40202,
@@ -1536,8 +1536,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40203: _tools.RODict({
         "ID": 40203,
@@ -1548,8 +1548,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40204: _tools.RODict({
         "ID": 40204,
@@ -1560,8 +1560,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40205: _tools.RODict({
         "ID": 40205,
@@ -1572,8 +1572,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40301: _tools.RODict({
         "ID": 40301,
@@ -1584,8 +1584,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 40], [30000265, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000264, 55], [30000265, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40302: _tools.RODict({
         "ID": 40302,
@@ -1596,8 +1596,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 40], [30000265, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000264, 55], [30000265, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40303: _tools.RODict({
         "ID": 40303,
@@ -1608,8 +1608,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 40], [30000265, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000264, 55], [30000265, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40304: _tools.RODict({
         "ID": 40304,
@@ -1620,8 +1620,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 40], [30000265, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000264, 55], [30000265, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40305: _tools.RODict({
         "ID": 40305,
@@ -1632,8 +1632,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 40], [30000265, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000264, 55], [30000265, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40401: _tools.RODict({
         "ID": 40401,
@@ -1644,8 +1644,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000264, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40402: _tools.RODict({
         "ID": 40402,
@@ -1656,8 +1656,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000264, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40403: _tools.RODict({
         "ID": 40403,
@@ -1668,8 +1668,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000264, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40404: _tools.RODict({
         "ID": 40404,
@@ -1680,8 +1680,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000264, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40405: _tools.RODict({
         "ID": 40405,
@@ -1692,8 +1692,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000264, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40501: _tools.RODict({
         "ID": 40501,
@@ -1704,8 +1704,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000264, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000264, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40502: _tools.RODict({
         "ID": 40502,
@@ -1716,8 +1716,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000264, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000264, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40503: _tools.RODict({
         "ID": 40503,
@@ -1728,8 +1728,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000264, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000264, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40504: _tools.RODict({
         "ID": 40504,
@@ -1740,8 +1740,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000264, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000264, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40505: _tools.RODict({
         "ID": 40505,
@@ -1752,8 +1752,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000264, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000264, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40601: _tools.RODict({
         "ID": 40601,
@@ -1764,8 +1764,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000265, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40602: _tools.RODict({
         "ID": 40602,
@@ -1776,8 +1776,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000265, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40603: _tools.RODict({
         "ID": 40603,
@@ -1788,8 +1788,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000265, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40604: _tools.RODict({
         "ID": 40604,
@@ -1800,8 +1800,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000265, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40605: _tools.RODict({
         "ID": 40605,
@@ -1812,8 +1812,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000265, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40701: _tools.RODict({
         "ID": 40701,
@@ -1824,8 +1824,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000264, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000264, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40702: _tools.RODict({
         "ID": 40702,
@@ -1836,8 +1836,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000264, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000264, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40703: _tools.RODict({
         "ID": 40703,
@@ -1848,8 +1848,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000264, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000264, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40704: _tools.RODict({
         "ID": 40704,
@@ -1860,8 +1860,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000264, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000264, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40705: _tools.RODict({
         "ID": 40705,
@@ -1872,8 +1872,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 40], [30000264, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000263, 55], [30000264, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40801: _tools.RODict({
         "ID": 40801,
@@ -1884,8 +1884,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000265, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40802: _tools.RODict({
         "ID": 40802,
@@ -1896,8 +1896,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000265, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40803: _tools.RODict({
         "ID": 40803,
@@ -1908,8 +1908,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000265, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40804: _tools.RODict({
         "ID": 40804,
@@ -1920,8 +1920,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000265, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     40805: _tools.RODict({
         "ID": 40805,
@@ -1932,8 +1932,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 40], [30000266, 40]]),
-        "needCoins": _tools.ROList([30000002, 5000])
+        "needItems": _tools.ROList([[30000265, 55], [30000266, 55]]),
+        "needCoins": _tools.ROList([30000002, 10000])
     }),
     50101: _tools.RODict({
         "ID": 50101,
@@ -1944,8 +1944,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000265, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000265, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50102: _tools.RODict({
         "ID": 50102,
@@ -1956,8 +1956,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000265, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000265, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50103: _tools.RODict({
         "ID": 50103,
@@ -1968,8 +1968,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000265, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000265, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50104: _tools.RODict({
         "ID": 50104,
@@ -1980,8 +1980,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000265, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000265, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50105: _tools.RODict({
         "ID": 50105,
@@ -1992,8 +1992,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000265, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000265, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50201: _tools.RODict({
         "ID": 50201,
@@ -2004,8 +2004,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50202: _tools.RODict({
         "ID": 50202,
@@ -2016,8 +2016,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50203: _tools.RODict({
         "ID": 50203,
@@ -2028,8 +2028,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50204: _tools.RODict({
         "ID": 50204,
@@ -2040,8 +2040,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50205: _tools.RODict({
         "ID": 50205,
@@ -2052,8 +2052,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50301: _tools.RODict({
         "ID": 50301,
@@ -2064,8 +2064,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 80], [30000265, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000264, 100], [30000265, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50302: _tools.RODict({
         "ID": 50302,
@@ -2076,8 +2076,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 80], [30000265, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000264, 100], [30000265, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50303: _tools.RODict({
         "ID": 50303,
@@ -2088,8 +2088,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 80], [30000265, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000264, 100], [30000265, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50304: _tools.RODict({
         "ID": 50304,
@@ -2100,8 +2100,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 80], [30000265, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000264, 100], [30000265, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50305: _tools.RODict({
         "ID": 50305,
@@ -2112,8 +2112,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 80], [30000265, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000264, 100], [30000265, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50401: _tools.RODict({
         "ID": 50401,
@@ -2124,8 +2124,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000264, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50402: _tools.RODict({
         "ID": 50402,
@@ -2136,8 +2136,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000264, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50403: _tools.RODict({
         "ID": 50403,
@@ -2148,8 +2148,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000264, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50404: _tools.RODict({
         "ID": 50404,
@@ -2160,8 +2160,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000264, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50405: _tools.RODict({
         "ID": 50405,
@@ -2172,8 +2172,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 1]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 1]]),
-        "needItems": _tools.ROList([[30000264, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000264, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50501: _tools.RODict({
         "ID": 50501,
@@ -2184,8 +2184,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000264, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000264, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50502: _tools.RODict({
         "ID": 50502,
@@ -2196,8 +2196,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000264, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000264, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50503: _tools.RODict({
         "ID": 50503,
@@ -2208,8 +2208,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000264, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000264, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50504: _tools.RODict({
         "ID": 50504,
@@ -2220,8 +2220,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000264, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000264, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50505: _tools.RODict({
         "ID": 50505,
@@ -2232,8 +2232,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000264, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000264, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50601: _tools.RODict({
         "ID": 50601,
@@ -2244,8 +2244,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000265, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50602: _tools.RODict({
         "ID": 50602,
@@ -2256,8 +2256,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000265, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50603: _tools.RODict({
         "ID": 50603,
@@ -2268,8 +2268,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000265, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50604: _tools.RODict({
         "ID": 50604,
@@ -2280,8 +2280,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000265, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50605: _tools.RODict({
         "ID": 50605,
@@ -2292,8 +2292,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000265, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50701: _tools.RODict({
         "ID": 50701,
@@ -2304,8 +2304,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000264, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000264, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50702: _tools.RODict({
         "ID": 50702,
@@ -2316,8 +2316,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000264, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000264, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50703: _tools.RODict({
         "ID": 50703,
@@ -2328,8 +2328,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000264, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000264, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50704: _tools.RODict({
         "ID": 50704,
@@ -2340,8 +2340,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000264, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000264, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50705: _tools.RODict({
         "ID": 50705,
@@ -2352,8 +2352,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000263, 80], [30000264, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000263, 100], [30000264, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50801: _tools.RODict({
         "ID": 50801,
@@ -2364,8 +2364,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000265, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50802: _tools.RODict({
         "ID": 50802,
@@ -2376,8 +2376,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000265, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50803: _tools.RODict({
         "ID": 50803,
@@ -2388,8 +2388,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000265, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50804: _tools.RODict({
         "ID": 50804,
@@ -2400,8 +2400,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000265, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     50805: _tools.RODict({
         "ID": 50805,
@@ -2412,8 +2412,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000265, 80], [30000266, 80]]),
-        "needCoins": _tools.ROList([30000002, 15000])
+        "needItems": _tools.ROList([[30000265, 100], [30000266, 100]]),
+        "needCoins": _tools.ROList([30000002, 25000])
     }),
     60101: _tools.RODict({
         "ID": 60101,
@@ -2424,8 +2424,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000269, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000269, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60102: _tools.RODict({
         "ID": 60102,
@@ -2436,8 +2436,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000269, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000269, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60103: _tools.RODict({
         "ID": 60103,
@@ -2448,8 +2448,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000269, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000269, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60104: _tools.RODict({
         "ID": 60104,
@@ -2460,8 +2460,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000269, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000269, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60105: _tools.RODict({
         "ID": 60105,
@@ -2472,8 +2472,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000269, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000269, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60201: _tools.RODict({
         "ID": 60201,
@@ -2484,8 +2484,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60202: _tools.RODict({
         "ID": 60202,
@@ -2496,8 +2496,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60203: _tools.RODict({
         "ID": 60203,
@@ -2508,8 +2508,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60204: _tools.RODict({
         "ID": 60204,
@@ -2520,8 +2520,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60205: _tools.RODict({
         "ID": 60205,
@@ -2532,8 +2532,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60301: _tools.RODict({
         "ID": 60301,
@@ -2544,8 +2544,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
-        "needItems": _tools.ROList([[30000268, 15], [30000269, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000268, 18], [30000269, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60302: _tools.RODict({
         "ID": 60302,
@@ -2556,8 +2556,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
-        "needItems": _tools.ROList([[30000268, 15], [30000269, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000268, 18], [30000269, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60303: _tools.RODict({
         "ID": 60303,
@@ -2568,8 +2568,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
-        "needItems": _tools.ROList([[30000268, 15], [30000269, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000268, 18], [30000269, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60304: _tools.RODict({
         "ID": 60304,
@@ -2580,8 +2580,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
-        "needItems": _tools.ROList([[30000268, 15], [30000269, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000268, 18], [30000269, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60305: _tools.RODict({
         "ID": 60305,
@@ -2592,8 +2592,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
-        "needItems": _tools.ROList([[30000268, 15], [30000269, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000268, 18], [30000269, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60401: _tools.RODict({
         "ID": 60401,
@@ -2604,8 +2604,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
-        "needItems": _tools.ROList([[30000268, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000268, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60402: _tools.RODict({
         "ID": 60402,
@@ -2616,8 +2616,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
-        "needItems": _tools.ROList([[30000268, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000268, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60403: _tools.RODict({
         "ID": 60403,
@@ -2628,8 +2628,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
-        "needItems": _tools.ROList([[30000268, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000268, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60404: _tools.RODict({
         "ID": 60404,
@@ -2640,8 +2640,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
-        "needItems": _tools.ROList([[30000268, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000268, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60405: _tools.RODict({
         "ID": 60405,
@@ -2652,8 +2652,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
-        "needItems": _tools.ROList([[30000268, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000268, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60501: _tools.RODict({
         "ID": 60501,
@@ -2664,8 +2664,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000268, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000268, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60502: _tools.RODict({
         "ID": 60502,
@@ -2676,8 +2676,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000268, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000268, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60503: _tools.RODict({
         "ID": 60503,
@@ -2688,8 +2688,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000268, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000268, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60504: _tools.RODict({
         "ID": 60504,
@@ -2700,8 +2700,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000268, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000268, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60505: _tools.RODict({
         "ID": 60505,
@@ -2712,8 +2712,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000268, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000268, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60601: _tools.RODict({
         "ID": 60601,
@@ -2724,8 +2724,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000269, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000269, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60602: _tools.RODict({
         "ID": 60602,
@@ -2736,8 +2736,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000269, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000269, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60603: _tools.RODict({
         "ID": 60603,
@@ -2748,8 +2748,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000269, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000269, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60604: _tools.RODict({
         "ID": 60604,
@@ -2760,8 +2760,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000269, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000269, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60605: _tools.RODict({
         "ID": 60605,
@@ -2772,8 +2772,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000269, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000269, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60701: _tools.RODict({
         "ID": 60701,
@@ -2784,8 +2784,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000268, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000268, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60702: _tools.RODict({
         "ID": 60702,
@@ -2796,8 +2796,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000268, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000268, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60703: _tools.RODict({
         "ID": 60703,
@@ -2808,8 +2808,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000268, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000268, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60704: _tools.RODict({
         "ID": 60704,
@@ -2820,8 +2820,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000268, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000268, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60705: _tools.RODict({
         "ID": 60705,
@@ -2832,8 +2832,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000267, 15], [30000268, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000267, 18], [30000268, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60801: _tools.RODict({
         "ID": 60801,
@@ -2844,8 +2844,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000269, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000269, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60802: _tools.RODict({
         "ID": 60802,
@@ -2856,8 +2856,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000269, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000269, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60803: _tools.RODict({
         "ID": 60803,
@@ -2868,8 +2868,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000269, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000269, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60804: _tools.RODict({
         "ID": 60804,
@@ -2880,8 +2880,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000269, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000269, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     60805: _tools.RODict({
         "ID": 60805,
@@ -2892,8 +2892,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000269, 15], [30000270, 15]]),
-        "needCoins": _tools.ROList([30000002, 30000])
+        "needItems": _tools.ROList([[30000269, 18], [30000270, 18]]),
+        "needCoins": _tools.ROList([30000002, 45000])
     }),
     70101: _tools.RODict({
         "ID": 70101,
@@ -2905,7 +2905,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000269, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70102: _tools.RODict({
         "ID": 70102,
@@ -2917,7 +2917,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000269, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70103: _tools.RODict({
         "ID": 70103,
@@ -2929,7 +2929,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000269, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70104: _tools.RODict({
         "ID": 70104,
@@ -2941,7 +2941,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000269, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70105: _tools.RODict({
         "ID": 70105,
@@ -2953,7 +2953,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000269, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70201: _tools.RODict({
         "ID": 70201,
@@ -2965,7 +2965,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70202: _tools.RODict({
         "ID": 70202,
@@ -2977,7 +2977,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70203: _tools.RODict({
         "ID": 70203,
@@ -2989,7 +2989,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70204: _tools.RODict({
         "ID": 70204,
@@ -3001,7 +3001,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70205: _tools.RODict({
         "ID": 70205,
@@ -3013,7 +3013,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70301: _tools.RODict({
         "ID": 70301,
@@ -3025,7 +3025,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 25], [30000269, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70302: _tools.RODict({
         "ID": 70302,
@@ -3037,7 +3037,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 25], [30000269, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70303: _tools.RODict({
         "ID": 70303,
@@ -3049,7 +3049,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 25], [30000269, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70304: _tools.RODict({
         "ID": 70304,
@@ -3061,7 +3061,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 25], [30000269, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70305: _tools.RODict({
         "ID": 70305,
@@ -3073,7 +3073,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 25], [30000269, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70401: _tools.RODict({
         "ID": 70401,
@@ -3085,7 +3085,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70402: _tools.RODict({
         "ID": 70402,
@@ -3097,7 +3097,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70403: _tools.RODict({
         "ID": 70403,
@@ -3109,7 +3109,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70404: _tools.RODict({
         "ID": 70404,
@@ -3121,7 +3121,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70405: _tools.RODict({
         "ID": 70405,
@@ -3133,7 +3133,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70501: _tools.RODict({
         "ID": 70501,
@@ -3145,7 +3145,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000268, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70502: _tools.RODict({
         "ID": 70502,
@@ -3157,7 +3157,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000268, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70503: _tools.RODict({
         "ID": 70503,
@@ -3169,7 +3169,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000268, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70504: _tools.RODict({
         "ID": 70504,
@@ -3181,7 +3181,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000268, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70505: _tools.RODict({
         "ID": 70505,
@@ -3193,7 +3193,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000268, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70601: _tools.RODict({
         "ID": 70601,
@@ -3205,7 +3205,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70602: _tools.RODict({
         "ID": 70602,
@@ -3217,7 +3217,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70603: _tools.RODict({
         "ID": 70603,
@@ -3229,7 +3229,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70604: _tools.RODict({
         "ID": 70604,
@@ -3241,7 +3241,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70605: _tools.RODict({
         "ID": 70605,
@@ -3253,7 +3253,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70701: _tools.RODict({
         "ID": 70701,
@@ -3265,7 +3265,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000268, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70702: _tools.RODict({
         "ID": 70702,
@@ -3277,7 +3277,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000268, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70703: _tools.RODict({
         "ID": 70703,
@@ -3289,7 +3289,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000268, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70704: _tools.RODict({
         "ID": 70704,
@@ -3301,7 +3301,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000268, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70705: _tools.RODict({
         "ID": 70705,
@@ -3313,7 +3313,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 25], [30000268, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70801: _tools.RODict({
         "ID": 70801,
@@ -3325,7 +3325,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70802: _tools.RODict({
         "ID": 70802,
@@ -3337,7 +3337,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70803: _tools.RODict({
         "ID": 70803,
@@ -3349,7 +3349,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70804: _tools.RODict({
         "ID": 70804,
@@ -3361,7 +3361,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     70805: _tools.RODict({
         "ID": 70805,
@@ -3373,7 +3373,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 25], [30000270, 25]]),
-        "needCoins": _tools.ROList([30000002, 60000])
+        "needCoins": _tools.ROList([30000002, 80000])
     }),
     80101: _tools.RODict({
         "ID": 80101,
@@ -3385,7 +3385,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000269, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80102: _tools.RODict({
         "ID": 80102,
@@ -3397,7 +3397,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000269, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80103: _tools.RODict({
         "ID": 80103,
@@ -3409,7 +3409,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000269, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80104: _tools.RODict({
         "ID": 80104,
@@ -3421,7 +3421,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000269, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80105: _tools.RODict({
         "ID": 80105,
@@ -3433,7 +3433,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000269, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80201: _tools.RODict({
         "ID": 80201,
@@ -3445,7 +3445,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80202: _tools.RODict({
         "ID": 80202,
@@ -3457,7 +3457,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80203: _tools.RODict({
         "ID": 80203,
@@ -3469,7 +3469,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80204: _tools.RODict({
         "ID": 80204,
@@ -3481,7 +3481,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80205: _tools.RODict({
         "ID": 80205,
@@ -3493,7 +3493,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80301: _tools.RODict({
         "ID": 80301,
@@ -3505,7 +3505,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 45], [30000269, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80302: _tools.RODict({
         "ID": 80302,
@@ -3517,7 +3517,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 45], [30000269, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80303: _tools.RODict({
         "ID": 80303,
@@ -3529,7 +3529,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 45], [30000269, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80304: _tools.RODict({
         "ID": 80304,
@@ -3541,7 +3541,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 45], [30000269, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80305: _tools.RODict({
         "ID": 80305,
@@ -3553,7 +3553,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 45], [30000269, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80401: _tools.RODict({
         "ID": 80401,
@@ -3565,7 +3565,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80402: _tools.RODict({
         "ID": 80402,
@@ -3577,7 +3577,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80403: _tools.RODict({
         "ID": 80403,
@@ -3589,7 +3589,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80404: _tools.RODict({
         "ID": 80404,
@@ -3601,7 +3601,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80405: _tools.RODict({
         "ID": 80405,
@@ -3613,7 +3613,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80501: _tools.RODict({
         "ID": 80501,
@@ -3625,7 +3625,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000268, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80502: _tools.RODict({
         "ID": 80502,
@@ -3637,7 +3637,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000268, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80503: _tools.RODict({
         "ID": 80503,
@@ -3649,7 +3649,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000268, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80504: _tools.RODict({
         "ID": 80504,
@@ -3661,7 +3661,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000268, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80505: _tools.RODict({
         "ID": 80505,
@@ -3673,7 +3673,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000268, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80601: _tools.RODict({
         "ID": 80601,
@@ -3685,7 +3685,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80602: _tools.RODict({
         "ID": 80602,
@@ -3697,7 +3697,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80603: _tools.RODict({
         "ID": 80603,
@@ -3709,7 +3709,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80604: _tools.RODict({
         "ID": 80604,
@@ -3721,7 +3721,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80605: _tools.RODict({
         "ID": 80605,
@@ -3733,7 +3733,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80701: _tools.RODict({
         "ID": 80701,
@@ -3745,7 +3745,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000268, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80702: _tools.RODict({
         "ID": 80702,
@@ -3757,7 +3757,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000268, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80703: _tools.RODict({
         "ID": 80703,
@@ -3769,7 +3769,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000268, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80704: _tools.RODict({
         "ID": 80704,
@@ -3781,7 +3781,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000268, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80705: _tools.RODict({
         "ID": 80705,
@@ -3793,7 +3793,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 45], [30000268, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80801: _tools.RODict({
         "ID": 80801,
@@ -3805,7 +3805,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80802: _tools.RODict({
         "ID": 80802,
@@ -3817,7 +3817,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80803: _tools.RODict({
         "ID": 80803,
@@ -3829,7 +3829,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80804: _tools.RODict({
         "ID": 80804,
@@ -3841,7 +3841,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     80805: _tools.RODict({
         "ID": 80805,
@@ -3853,7 +3853,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 45], [30000270, 45]]),
-        "needCoins": _tools.ROList([30000002, 100000])
+        "needCoins": _tools.ROList([30000002, 150000])
     }),
     90101: _tools.RODict({
         "ID": 90101,
@@ -3865,7 +3865,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000269, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90102: _tools.RODict({
         "ID": 90102,
@@ -3877,7 +3877,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000269, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90103: _tools.RODict({
         "ID": 90103,
@@ -3889,7 +3889,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000269, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90104: _tools.RODict({
         "ID": 90104,
@@ -3901,7 +3901,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000269, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90105: _tools.RODict({
         "ID": 90105,
@@ -3913,7 +3913,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000269, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90201: _tools.RODict({
         "ID": 90201,
@@ -3925,7 +3925,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90202: _tools.RODict({
         "ID": 90202,
@@ -3937,7 +3937,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90203: _tools.RODict({
         "ID": 90203,
@@ -3949,7 +3949,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90204: _tools.RODict({
         "ID": 90204,
@@ -3961,7 +3961,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90205: _tools.RODict({
         "ID": 90205,
@@ -3973,7 +3973,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90301: _tools.RODict({
         "ID": 90301,
@@ -3985,7 +3985,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 90], [30000269, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90302: _tools.RODict({
         "ID": 90302,
@@ -3997,7 +3997,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 90], [30000269, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90303: _tools.RODict({
         "ID": 90303,
@@ -4009,7 +4009,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 90], [30000269, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90304: _tools.RODict({
         "ID": 90304,
@@ -4021,7 +4021,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 90], [30000269, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90305: _tools.RODict({
         "ID": 90305,
@@ -4033,7 +4033,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 90], [30000269, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90401: _tools.RODict({
         "ID": 90401,
@@ -4045,7 +4045,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90402: _tools.RODict({
         "ID": 90402,
@@ -4057,7 +4057,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90403: _tools.RODict({
         "ID": 90403,
@@ -4069,7 +4069,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90404: _tools.RODict({
         "ID": 90404,
@@ -4081,7 +4081,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90405: _tools.RODict({
         "ID": 90405,
@@ -4093,7 +4093,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 2]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 2]]),
         "needItems": _tools.ROList([[30000268, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90501: _tools.RODict({
         "ID": 90501,
@@ -4105,7 +4105,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000268, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90502: _tools.RODict({
         "ID": 90502,
@@ -4117,7 +4117,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000268, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90503: _tools.RODict({
         "ID": 90503,
@@ -4129,7 +4129,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000268, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90504: _tools.RODict({
         "ID": 90504,
@@ -4141,7 +4141,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000268, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90505: _tools.RODict({
         "ID": 90505,
@@ -4153,7 +4153,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000268, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90601: _tools.RODict({
         "ID": 90601,
@@ -4165,7 +4165,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90602: _tools.RODict({
         "ID": 90602,
@@ -4177,7 +4177,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90603: _tools.RODict({
         "ID": 90603,
@@ -4189,7 +4189,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90604: _tools.RODict({
         "ID": 90604,
@@ -4201,7 +4201,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90605: _tools.RODict({
         "ID": 90605,
@@ -4213,7 +4213,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90701: _tools.RODict({
         "ID": 90701,
@@ -4225,7 +4225,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000268, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90702: _tools.RODict({
         "ID": 90702,
@@ -4237,7 +4237,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000268, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90703: _tools.RODict({
         "ID": 90703,
@@ -4249,7 +4249,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000268, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90704: _tools.RODict({
         "ID": 90704,
@@ -4261,7 +4261,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000268, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90705: _tools.RODict({
         "ID": 90705,
@@ -4273,7 +4273,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 90], [30000268, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90801: _tools.RODict({
         "ID": 90801,
@@ -4285,7 +4285,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90802: _tools.RODict({
         "ID": 90802,
@@ -4297,7 +4297,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90803: _tools.RODict({
         "ID": 90803,
@@ -4309,7 +4309,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90804: _tools.RODict({
         "ID": 90804,
@@ -4321,7 +4321,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     90805: _tools.RODict({
         "ID": 90805,
@@ -4333,7 +4333,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 90], [30000270, 90]]),
-        "needCoins": _tools.ROList([30000002, 200000])
+        "needCoins": _tools.ROList([30000002, 250000])
     }),
     100101: _tools.RODict({
         "ID": 100101,
@@ -4345,7 +4345,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000269, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100102: _tools.RODict({
         "ID": 100102,
@@ -4357,7 +4357,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000269, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100103: _tools.RODict({
         "ID": 100103,
@@ -4369,7 +4369,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000269, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100104: _tools.RODict({
         "ID": 100104,
@@ -4381,7 +4381,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000269, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100105: _tools.RODict({
         "ID": 100105,
@@ -4393,7 +4393,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000269, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100201: _tools.RODict({
         "ID": 100201,
@@ -4405,7 +4405,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100202: _tools.RODict({
         "ID": 100202,
@@ -4417,7 +4417,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100203: _tools.RODict({
         "ID": 100203,
@@ -4429,7 +4429,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100204: _tools.RODict({
         "ID": 100204,
@@ -4441,7 +4441,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100205: _tools.RODict({
         "ID": 100205,
@@ -4453,7 +4453,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100301: _tools.RODict({
         "ID": 100301,
@@ -4465,7 +4465,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000268, 150], [30000269, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100302: _tools.RODict({
         "ID": 100302,
@@ -4477,7 +4477,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000268, 150], [30000269, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100303: _tools.RODict({
         "ID": 100303,
@@ -4489,7 +4489,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000268, 150], [30000269, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100304: _tools.RODict({
         "ID": 100304,
@@ -4501,7 +4501,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000268, 150], [30000269, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100305: _tools.RODict({
         "ID": 100305,
@@ -4513,7 +4513,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000268, 150], [30000269, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100401: _tools.RODict({
         "ID": 100401,
@@ -4525,7 +4525,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000268, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100402: _tools.RODict({
         "ID": 100402,
@@ -4537,7 +4537,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000268, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100403: _tools.RODict({
         "ID": 100403,
@@ -4549,7 +4549,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000268, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100404: _tools.RODict({
         "ID": 100404,
@@ -4561,7 +4561,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000268, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100405: _tools.RODict({
         "ID": 100405,
@@ -4573,7 +4573,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000268, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100501: _tools.RODict({
         "ID": 100501,
@@ -4585,7 +4585,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000268, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100502: _tools.RODict({
         "ID": 100502,
@@ -4597,7 +4597,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000268, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100503: _tools.RODict({
         "ID": 100503,
@@ -4609,7 +4609,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000268, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100504: _tools.RODict({
         "ID": 100504,
@@ -4621,7 +4621,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000268, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100505: _tools.RODict({
         "ID": 100505,
@@ -4633,7 +4633,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000268, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100601: _tools.RODict({
         "ID": 100601,
@@ -4645,7 +4645,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100602: _tools.RODict({
         "ID": 100602,
@@ -4657,7 +4657,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100603: _tools.RODict({
         "ID": 100603,
@@ -4669,7 +4669,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100604: _tools.RODict({
         "ID": 100604,
@@ -4681,7 +4681,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100605: _tools.RODict({
         "ID": 100605,
@@ -4693,7 +4693,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100701: _tools.RODict({
         "ID": 100701,
@@ -4705,7 +4705,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000268, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100702: _tools.RODict({
         "ID": 100702,
@@ -4717,7 +4717,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000268, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100703: _tools.RODict({
         "ID": 100703,
@@ -4729,7 +4729,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000268, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100704: _tools.RODict({
         "ID": 100704,
@@ -4741,7 +4741,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000268, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100705: _tools.RODict({
         "ID": 100705,
@@ -4753,7 +4753,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000267, 150], [30000268, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100801: _tools.RODict({
         "ID": 100801,
@@ -4765,7 +4765,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100802: _tools.RODict({
         "ID": 100802,
@@ -4777,7 +4777,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100803: _tools.RODict({
         "ID": 100803,
@@ -4789,7 +4789,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100804: _tools.RODict({
         "ID": 100804,
@@ -4801,7 +4801,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     100805: _tools.RODict({
         "ID": 100805,
@@ -4813,7 +4813,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000269, 150], [30000270, 150]]),
-        "needCoins": _tools.ROList([30000002, 350000])
+        "needCoins": _tools.ROList([30000002, 450000])
     }),
     110101: _tools.RODict({
         "ID": 110101,
@@ -4825,7 +4825,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000273, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110102: _tools.RODict({
         "ID": 110102,
@@ -4837,7 +4837,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000273, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110103: _tools.RODict({
         "ID": 110103,
@@ -4849,7 +4849,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000273, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110104: _tools.RODict({
         "ID": 110104,
@@ -4861,7 +4861,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000273, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110105: _tools.RODict({
         "ID": 110105,
@@ -4873,7 +4873,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000273, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110201: _tools.RODict({
         "ID": 110201,
@@ -4885,7 +4885,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110202: _tools.RODict({
         "ID": 110202,
@@ -4897,7 +4897,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110203: _tools.RODict({
         "ID": 110203,
@@ -4909,7 +4909,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110204: _tools.RODict({
         "ID": 110204,
@@ -4921,7 +4921,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110205: _tools.RODict({
         "ID": 110205,
@@ -4933,7 +4933,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110301: _tools.RODict({
         "ID": 110301,
@@ -4945,7 +4945,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 25], [30000273, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110302: _tools.RODict({
         "ID": 110302,
@@ -4957,7 +4957,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 25], [30000273, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110303: _tools.RODict({
         "ID": 110303,
@@ -4969,7 +4969,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 25], [30000273, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110304: _tools.RODict({
         "ID": 110304,
@@ -4981,7 +4981,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 25], [30000273, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110305: _tools.RODict({
         "ID": 110305,
@@ -4993,7 +4993,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 25], [30000273, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110401: _tools.RODict({
         "ID": 110401,
@@ -5005,7 +5005,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110402: _tools.RODict({
         "ID": 110402,
@@ -5017,7 +5017,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110403: _tools.RODict({
         "ID": 110403,
@@ -5029,7 +5029,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110404: _tools.RODict({
         "ID": 110404,
@@ -5041,7 +5041,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110405: _tools.RODict({
         "ID": 110405,
@@ -5053,7 +5053,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110501: _tools.RODict({
         "ID": 110501,
@@ -5065,7 +5065,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000272, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110502: _tools.RODict({
         "ID": 110502,
@@ -5077,7 +5077,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000272, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110503: _tools.RODict({
         "ID": 110503,
@@ -5089,7 +5089,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000272, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110504: _tools.RODict({
         "ID": 110504,
@@ -5101,7 +5101,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000272, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110505: _tools.RODict({
         "ID": 110505,
@@ -5113,7 +5113,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000272, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110601: _tools.RODict({
         "ID": 110601,
@@ -5125,7 +5125,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110602: _tools.RODict({
         "ID": 110602,
@@ -5137,7 +5137,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110603: _tools.RODict({
         "ID": 110603,
@@ -5149,7 +5149,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110604: _tools.RODict({
         "ID": 110604,
@@ -5161,7 +5161,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110605: _tools.RODict({
         "ID": 110605,
@@ -5173,7 +5173,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110701: _tools.RODict({
         "ID": 110701,
@@ -5185,7 +5185,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000272, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110702: _tools.RODict({
         "ID": 110702,
@@ -5197,7 +5197,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000272, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110703: _tools.RODict({
         "ID": 110703,
@@ -5209,7 +5209,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000272, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110704: _tools.RODict({
         "ID": 110704,
@@ -5221,7 +5221,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000272, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110705: _tools.RODict({
         "ID": 110705,
@@ -5233,7 +5233,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 25], [30000272, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110801: _tools.RODict({
         "ID": 110801,
@@ -5245,7 +5245,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110802: _tools.RODict({
         "ID": 110802,
@@ -5257,7 +5257,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110803: _tools.RODict({
         "ID": 110803,
@@ -5269,7 +5269,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110804: _tools.RODict({
         "ID": 110804,
@@ -5281,7 +5281,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     110805: _tools.RODict({
         "ID": 110805,
@@ -5293,7 +5293,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 25], [30000274, 25]]),
-        "needCoins": _tools.ROList([30000002, 600000])
+        "needCoins": _tools.ROList([30000002, 650000])
     }),
     120101: _tools.RODict({
         "ID": 120101,
@@ -5305,7 +5305,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000273, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120102: _tools.RODict({
         "ID": 120102,
@@ -5317,7 +5317,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000273, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120103: _tools.RODict({
         "ID": 120103,
@@ -5329,7 +5329,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000273, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120104: _tools.RODict({
         "ID": 120104,
@@ -5341,7 +5341,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000273, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120105: _tools.RODict({
         "ID": 120105,
@@ -5353,7 +5353,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000273, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120201: _tools.RODict({
         "ID": 120201,
@@ -5365,7 +5365,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120202: _tools.RODict({
         "ID": 120202,
@@ -5377,7 +5377,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120203: _tools.RODict({
         "ID": 120203,
@@ -5389,7 +5389,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120204: _tools.RODict({
         "ID": 120204,
@@ -5401,7 +5401,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120205: _tools.RODict({
         "ID": 120205,
@@ -5413,7 +5413,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120301: _tools.RODict({
         "ID": 120301,
@@ -5425,7 +5425,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 35], [30000273, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120302: _tools.RODict({
         "ID": 120302,
@@ -5437,7 +5437,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 35], [30000273, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120303: _tools.RODict({
         "ID": 120303,
@@ -5449,7 +5449,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 35], [30000273, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120304: _tools.RODict({
         "ID": 120304,
@@ -5461,7 +5461,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 35], [30000273, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120305: _tools.RODict({
         "ID": 120305,
@@ -5473,7 +5473,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 35], [30000273, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120401: _tools.RODict({
         "ID": 120401,
@@ -5485,7 +5485,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120402: _tools.RODict({
         "ID": 120402,
@@ -5497,7 +5497,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120403: _tools.RODict({
         "ID": 120403,
@@ -5509,7 +5509,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120404: _tools.RODict({
         "ID": 120404,
@@ -5521,7 +5521,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120405: _tools.RODict({
         "ID": 120405,
@@ -5533,7 +5533,7 @@ datas = _tools.RODict({
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
         "needItems": _tools.ROList([[30000272, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120501: _tools.RODict({
         "ID": 120501,
@@ -5545,7 +5545,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000272, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120502: _tools.RODict({
         "ID": 120502,
@@ -5557,7 +5557,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000272, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120503: _tools.RODict({
         "ID": 120503,
@@ -5569,7 +5569,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000272, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120504: _tools.RODict({
         "ID": 120504,
@@ -5581,7 +5581,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000272, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120505: _tools.RODict({
         "ID": 120505,
@@ -5593,7 +5593,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000272, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120601: _tools.RODict({
         "ID": 120601,
@@ -5605,7 +5605,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120602: _tools.RODict({
         "ID": 120602,
@@ -5617,7 +5617,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120603: _tools.RODict({
         "ID": 120603,
@@ -5629,7 +5629,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120604: _tools.RODict({
         "ID": 120604,
@@ -5641,7 +5641,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120605: _tools.RODict({
         "ID": 120605,
@@ -5653,7 +5653,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120701: _tools.RODict({
         "ID": 120701,
@@ -5665,7 +5665,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000272, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120702: _tools.RODict({
         "ID": 120702,
@@ -5677,7 +5677,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000272, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120703: _tools.RODict({
         "ID": 120703,
@@ -5689,7 +5689,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000272, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120704: _tools.RODict({
         "ID": 120704,
@@ -5701,7 +5701,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000272, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120705: _tools.RODict({
         "ID": 120705,
@@ -5713,7 +5713,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000271, 35], [30000272, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120801: _tools.RODict({
         "ID": 120801,
@@ -5725,7 +5725,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120802: _tools.RODict({
         "ID": 120802,
@@ -5737,7 +5737,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120803: _tools.RODict({
         "ID": 120803,
@@ -5749,7 +5749,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120804: _tools.RODict({
         "ID": 120804,
@@ -5761,7 +5761,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     120805: _tools.RODict({
         "ID": 120805,
@@ -5773,7 +5773,7 @@ datas = _tools.RODict({
         "prop1002": None,
         "prop1003": None,
         "needItems": _tools.ROList([[30000273, 35], [30000274, 35]]),
-        "needCoins": _tools.ROList([30000002, 850000])
+        "needCoins": _tools.ROList([30000002, 900000])
     }),
     130101: _tools.RODict({
         "ID": 130101,
@@ -5784,8 +5784,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000273, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000273, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130102: _tools.RODict({
         "ID": 130102,
@@ -5796,8 +5796,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000273, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000273, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130103: _tools.RODict({
         "ID": 130103,
@@ -5808,8 +5808,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000273, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000273, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130104: _tools.RODict({
         "ID": 130104,
@@ -5820,8 +5820,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000273, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000273, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130105: _tools.RODict({
         "ID": 130105,
@@ -5832,8 +5832,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000273, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000273, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130201: _tools.RODict({
         "ID": 130201,
@@ -5844,8 +5844,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130202: _tools.RODict({
         "ID": 130202,
@@ -5856,8 +5856,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130203: _tools.RODict({
         "ID": 130203,
@@ -5868,8 +5868,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130204: _tools.RODict({
         "ID": 130204,
@@ -5880,8 +5880,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130205: _tools.RODict({
         "ID": 130205,
@@ -5892,8 +5892,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130301: _tools.RODict({
         "ID": 130301,
@@ -5904,8 +5904,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 40], [30000273, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000272, 50], [30000273, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130302: _tools.RODict({
         "ID": 130302,
@@ -5916,8 +5916,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 40], [30000273, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000272, 50], [30000273, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130303: _tools.RODict({
         "ID": 130303,
@@ -5928,8 +5928,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 40], [30000273, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000272, 50], [30000273, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130304: _tools.RODict({
         "ID": 130304,
@@ -5940,8 +5940,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 40], [30000273, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000272, 50], [30000273, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130305: _tools.RODict({
         "ID": 130305,
@@ -5952,8 +5952,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 40], [30000273, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000272, 50], [30000273, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130401: _tools.RODict({
         "ID": 130401,
@@ -5964,8 +5964,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000272, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130402: _tools.RODict({
         "ID": 130402,
@@ -5976,8 +5976,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000272, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130403: _tools.RODict({
         "ID": 130403,
@@ -5988,8 +5988,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000272, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130404: _tools.RODict({
         "ID": 130404,
@@ -6000,8 +6000,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000272, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130405: _tools.RODict({
         "ID": 130405,
@@ -6012,8 +6012,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000272, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130501: _tools.RODict({
         "ID": 130501,
@@ -6024,8 +6024,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000272, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130502: _tools.RODict({
         "ID": 130502,
@@ -6036,8 +6036,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000272, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130503: _tools.RODict({
         "ID": 130503,
@@ -6048,8 +6048,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000272, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130504: _tools.RODict({
         "ID": 130504,
@@ -6060,8 +6060,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000272, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130505: _tools.RODict({
         "ID": 130505,
@@ -6072,8 +6072,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000272, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130601: _tools.RODict({
         "ID": 130601,
@@ -6084,8 +6084,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130602: _tools.RODict({
         "ID": 130602,
@@ -6096,8 +6096,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130603: _tools.RODict({
         "ID": 130603,
@@ -6108,8 +6108,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130604: _tools.RODict({
         "ID": 130604,
@@ -6120,8 +6120,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130605: _tools.RODict({
         "ID": 130605,
@@ -6132,8 +6132,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130701: _tools.RODict({
         "ID": 130701,
@@ -6144,8 +6144,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000272, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130702: _tools.RODict({
         "ID": 130702,
@@ -6156,8 +6156,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000272, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130703: _tools.RODict({
         "ID": 130703,
@@ -6168,8 +6168,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000272, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130704: _tools.RODict({
         "ID": 130704,
@@ -6180,8 +6180,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000272, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130705: _tools.RODict({
         "ID": 130705,
@@ -6192,8 +6192,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 40], [30000272, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130801: _tools.RODict({
         "ID": 130801,
@@ -6204,8 +6204,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130802: _tools.RODict({
         "ID": 130802,
@@ -6216,8 +6216,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130803: _tools.RODict({
         "ID": 130803,
@@ -6228,8 +6228,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130804: _tools.RODict({
         "ID": 130804,
@@ -6240,8 +6240,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     130805: _tools.RODict({
         "ID": 130805,
@@ -6252,8 +6252,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 40], [30000274, 40]]),
-        "needCoins": _tools.ROList([30000002, 1000000])
+        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
+        "needCoins": _tools.ROList([30000002, 1200000])
     }),
     140101: _tools.RODict({
         "ID": 140101,
@@ -6264,8 +6264,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000273, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000273, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140102: _tools.RODict({
         "ID": 140102,
@@ -6276,8 +6276,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000273, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000273, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140103: _tools.RODict({
         "ID": 140103,
@@ -6288,8 +6288,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000273, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000273, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140104: _tools.RODict({
         "ID": 140104,
@@ -6300,8 +6300,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000273, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000273, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140105: _tools.RODict({
         "ID": 140105,
@@ -6312,8 +6312,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000273, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000273, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140201: _tools.RODict({
         "ID": 140201,
@@ -6324,8 +6324,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140202: _tools.RODict({
         "ID": 140202,
@@ -6336,8 +6336,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140203: _tools.RODict({
         "ID": 140203,
@@ -6348,8 +6348,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140204: _tools.RODict({
         "ID": 140204,
@@ -6360,8 +6360,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140205: _tools.RODict({
         "ID": 140205,
@@ -6372,8 +6372,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140301: _tools.RODict({
         "ID": 140301,
@@ -6384,8 +6384,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 50], [30000273, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000272, 65], [30000273, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140302: _tools.RODict({
         "ID": 140302,
@@ -6396,8 +6396,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 50], [30000273, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000272, 65], [30000273, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140303: _tools.RODict({
         "ID": 140303,
@@ -6408,8 +6408,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 50], [30000273, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000272, 65], [30000273, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140304: _tools.RODict({
         "ID": 140304,
@@ -6420,8 +6420,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 50], [30000273, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000272, 65], [30000273, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140305: _tools.RODict({
         "ID": 140305,
@@ -6432,8 +6432,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 50], [30000273, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000272, 65], [30000273, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140401: _tools.RODict({
         "ID": 140401,
@@ -6444,8 +6444,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000272, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140402: _tools.RODict({
         "ID": 140402,
@@ -6456,8 +6456,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000272, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140403: _tools.RODict({
         "ID": 140403,
@@ -6468,8 +6468,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000272, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140404: _tools.RODict({
         "ID": 140404,
@@ -6480,8 +6480,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000272, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140405: _tools.RODict({
         "ID": 140405,
@@ -6492,8 +6492,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000272, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140501: _tools.RODict({
         "ID": 140501,
@@ -6504,8 +6504,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140502: _tools.RODict({
         "ID": 140502,
@@ -6516,8 +6516,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140503: _tools.RODict({
         "ID": 140503,
@@ -6528,8 +6528,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140504: _tools.RODict({
         "ID": 140504,
@@ -6540,8 +6540,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140505: _tools.RODict({
         "ID": 140505,
@@ -6552,8 +6552,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140601: _tools.RODict({
         "ID": 140601,
@@ -6564,8 +6564,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140602: _tools.RODict({
         "ID": 140602,
@@ -6576,8 +6576,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140603: _tools.RODict({
         "ID": 140603,
@@ -6588,8 +6588,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140604: _tools.RODict({
         "ID": 140604,
@@ -6600,8 +6600,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140605: _tools.RODict({
         "ID": 140605,
@@ -6612,8 +6612,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140701: _tools.RODict({
         "ID": 140701,
@@ -6624,8 +6624,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140702: _tools.RODict({
         "ID": 140702,
@@ -6636,8 +6636,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140703: _tools.RODict({
         "ID": 140703,
@@ -6648,8 +6648,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140704: _tools.RODict({
         "ID": 140704,
@@ -6660,8 +6660,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140705: _tools.RODict({
         "ID": 140705,
@@ -6672,8 +6672,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 50], [30000272, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140801: _tools.RODict({
         "ID": 140801,
@@ -6684,8 +6684,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140802: _tools.RODict({
         "ID": 140802,
@@ -6696,8 +6696,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140803: _tools.RODict({
         "ID": 140803,
@@ -6708,8 +6708,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140804: _tools.RODict({
         "ID": 140804,
@@ -6720,8 +6720,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     140805: _tools.RODict({
         "ID": 140805,
@@ -6732,8 +6732,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 50], [30000274, 50]]),
-        "needCoins": _tools.ROList([30000002, 1250000])
+        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
+        "needCoins": _tools.ROList([30000002, 1500000])
     }),
     150101: _tools.RODict({
         "ID": 150101,
@@ -6744,8 +6744,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000273, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000273, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150102: _tools.RODict({
         "ID": 150102,
@@ -6756,8 +6756,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000273, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000273, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150103: _tools.RODict({
         "ID": 150103,
@@ -6768,8 +6768,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000273, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000273, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150104: _tools.RODict({
         "ID": 150104,
@@ -6780,8 +6780,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000273, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000273, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150105: _tools.RODict({
         "ID": 150105,
@@ -6792,8 +6792,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000273, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000273, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150201: _tools.RODict({
         "ID": 150201,
@@ -6804,8 +6804,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150202: _tools.RODict({
         "ID": 150202,
@@ -6816,8 +6816,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150203: _tools.RODict({
         "ID": 150203,
@@ -6828,8 +6828,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150204: _tools.RODict({
         "ID": 150204,
@@ -6840,8 +6840,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150205: _tools.RODict({
         "ID": 150205,
@@ -6852,8 +6852,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150301: _tools.RODict({
         "ID": 150301,
@@ -6864,8 +6864,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 65], [30000273, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000272, 90], [30000273, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150302: _tools.RODict({
         "ID": 150302,
@@ -6876,8 +6876,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 65], [30000273, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000272, 90], [30000273, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150303: _tools.RODict({
         "ID": 150303,
@@ -6888,8 +6888,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 65], [30000273, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000272, 90], [30000273, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150304: _tools.RODict({
         "ID": 150304,
@@ -6900,8 +6900,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 65], [30000273, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000272, 90], [30000273, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150305: _tools.RODict({
         "ID": 150305,
@@ -6912,8 +6912,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 65], [30000273, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000272, 90], [30000273, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150401: _tools.RODict({
         "ID": 150401,
@@ -6924,8 +6924,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000272, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150402: _tools.RODict({
         "ID": 150402,
@@ -6936,8 +6936,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000272, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150403: _tools.RODict({
         "ID": 150403,
@@ -6948,8 +6948,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000272, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150404: _tools.RODict({
         "ID": 150404,
@@ -6960,8 +6960,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000272, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150405: _tools.RODict({
         "ID": 150405,
@@ -6972,8 +6972,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000272, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000272, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150501: _tools.RODict({
         "ID": 150501,
@@ -6984,8 +6984,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000272, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150502: _tools.RODict({
         "ID": 150502,
@@ -6996,8 +6996,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000272, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150503: _tools.RODict({
         "ID": 150503,
@@ -7008,8 +7008,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000272, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150504: _tools.RODict({
         "ID": 150504,
@@ -7020,8 +7020,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000272, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150505: _tools.RODict({
         "ID": 150505,
@@ -7032,8 +7032,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000272, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150601: _tools.RODict({
         "ID": 150601,
@@ -7044,8 +7044,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000273, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150602: _tools.RODict({
         "ID": 150602,
@@ -7056,8 +7056,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000273, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150603: _tools.RODict({
         "ID": 150603,
@@ -7068,8 +7068,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000273, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150604: _tools.RODict({
         "ID": 150604,
@@ -7080,8 +7080,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000273, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150605: _tools.RODict({
         "ID": 150605,
@@ -7092,8 +7092,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000273, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150701: _tools.RODict({
         "ID": 150701,
@@ -7104,8 +7104,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000272, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150702: _tools.RODict({
         "ID": 150702,
@@ -7116,8 +7116,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000272, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150703: _tools.RODict({
         "ID": 150703,
@@ -7128,8 +7128,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000272, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150704: _tools.RODict({
         "ID": 150704,
@@ -7140,8 +7140,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000272, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150705: _tools.RODict({
         "ID": 150705,
@@ -7152,8 +7152,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000271, 65], [30000272, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000271, 90], [30000272, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150801: _tools.RODict({
         "ID": 150801,
@@ -7164,8 +7164,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000273, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150802: _tools.RODict({
         "ID": 150802,
@@ -7176,8 +7176,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000273, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150803: _tools.RODict({
         "ID": 150803,
@@ -7188,8 +7188,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000273, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150804: _tools.RODict({
         "ID": 150804,
@@ -7200,8 +7200,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000273, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     150805: _tools.RODict({
         "ID": 150805,
@@ -7212,8 +7212,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000273, 65], [30000274, 65]]),
-        "needCoins": _tools.ROList([30000002, 1500000])
+        "needItems": _tools.ROList([[30000273, 90], [30000274, 90]]),
+        "needCoins": _tools.ROList([30000002, 1800000])
     }),
     160101: _tools.RODict({
         "ID": 160101,
@@ -7224,8 +7224,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000277, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000277, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160102: _tools.RODict({
         "ID": 160102,
@@ -7236,8 +7236,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000277, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000277, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160103: _tools.RODict({
         "ID": 160103,
@@ -7248,8 +7248,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000277, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000277, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160104: _tools.RODict({
         "ID": 160104,
@@ -7260,8 +7260,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000277, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000277, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160105: _tools.RODict({
         "ID": 160105,
@@ -7272,8 +7272,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000277, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000277, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160201: _tools.RODict({
         "ID": 160201,
@@ -7284,8 +7284,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160202: _tools.RODict({
         "ID": 160202,
@@ -7296,8 +7296,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160203: _tools.RODict({
         "ID": 160203,
@@ -7308,8 +7308,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160204: _tools.RODict({
         "ID": 160204,
@@ -7320,8 +7320,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160205: _tools.RODict({
         "ID": 160205,
@@ -7332,8 +7332,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160301: _tools.RODict({
         "ID": 160301,
@@ -7344,8 +7344,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 9], [30000277, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000276, 10], [30000277, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160302: _tools.RODict({
         "ID": 160302,
@@ -7356,8 +7356,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 9], [30000277, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000276, 10], [30000277, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160303: _tools.RODict({
         "ID": 160303,
@@ -7368,8 +7368,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 9], [30000277, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000276, 10], [30000277, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160304: _tools.RODict({
         "ID": 160304,
@@ -7380,8 +7380,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 9], [30000277, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000276, 10], [30000277, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160305: _tools.RODict({
         "ID": 160305,
@@ -7392,8 +7392,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 9], [30000277, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000276, 10], [30000277, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160401: _tools.RODict({
         "ID": 160401,
@@ -7404,8 +7404,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000276, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160402: _tools.RODict({
         "ID": 160402,
@@ -7416,8 +7416,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000276, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160403: _tools.RODict({
         "ID": 160403,
@@ -7428,8 +7428,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000276, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160404: _tools.RODict({
         "ID": 160404,
@@ -7440,8 +7440,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000276, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160405: _tools.RODict({
         "ID": 160405,
@@ -7452,8 +7452,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000276, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160501: _tools.RODict({
         "ID": 160501,
@@ -7464,8 +7464,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000276, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000276, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160502: _tools.RODict({
         "ID": 160502,
@@ -7476,8 +7476,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000276, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000276, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160503: _tools.RODict({
         "ID": 160503,
@@ -7488,8 +7488,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000276, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000276, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160504: _tools.RODict({
         "ID": 160504,
@@ -7500,8 +7500,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000276, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000276, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160505: _tools.RODict({
         "ID": 160505,
@@ -7512,8 +7512,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000276, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000276, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160601: _tools.RODict({
         "ID": 160601,
@@ -7524,8 +7524,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000277, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160602: _tools.RODict({
         "ID": 160602,
@@ -7536,8 +7536,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000277, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160603: _tools.RODict({
         "ID": 160603,
@@ -7548,8 +7548,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000277, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160604: _tools.RODict({
         "ID": 160604,
@@ -7560,8 +7560,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000277, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160605: _tools.RODict({
         "ID": 160605,
@@ -7572,8 +7572,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000277, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160701: _tools.RODict({
         "ID": 160701,
@@ -7584,8 +7584,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000276, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000276, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160702: _tools.RODict({
         "ID": 160702,
@@ -7596,8 +7596,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000276, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000276, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160703: _tools.RODict({
         "ID": 160703,
@@ -7608,8 +7608,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000276, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000276, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160704: _tools.RODict({
         "ID": 160704,
@@ -7620,8 +7620,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000276, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000276, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160705: _tools.RODict({
         "ID": 160705,
@@ -7632,8 +7632,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 9], [30000276, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000275, 10], [30000276, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160801: _tools.RODict({
         "ID": 160801,
@@ -7644,8 +7644,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000277, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160802: _tools.RODict({
         "ID": 160802,
@@ -7656,8 +7656,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000277, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160803: _tools.RODict({
         "ID": 160803,
@@ -7668,8 +7668,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000277, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160804: _tools.RODict({
         "ID": 160804,
@@ -7680,8 +7680,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000277, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     160805: _tools.RODict({
         "ID": 160805,
@@ -7692,8 +7692,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 9], [30000278, 9]]),
-        "needCoins": _tools.ROList([30000002, 2000000])
+        "needItems": _tools.ROList([[30000277, 10], [30000278, 10]]),
+        "needCoins": _tools.ROList([30000002, 2250000])
     }),
     170101: _tools.RODict({
         "ID": 170101,
@@ -7704,8 +7704,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000277, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000277, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170102: _tools.RODict({
         "ID": 170102,
@@ -7716,8 +7716,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000277, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000277, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170103: _tools.RODict({
         "ID": 170103,
@@ -7728,8 +7728,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000277, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000277, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170104: _tools.RODict({
         "ID": 170104,
@@ -7740,8 +7740,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000277, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000277, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170105: _tools.RODict({
         "ID": 170105,
@@ -7752,8 +7752,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000277, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000277, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170201: _tools.RODict({
         "ID": 170201,
@@ -7764,8 +7764,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170202: _tools.RODict({
         "ID": 170202,
@@ -7776,8 +7776,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170203: _tools.RODict({
         "ID": 170203,
@@ -7788,8 +7788,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170204: _tools.RODict({
         "ID": 170204,
@@ -7800,8 +7800,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170205: _tools.RODict({
         "ID": 170205,
@@ -7812,8 +7812,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170301: _tools.RODict({
         "ID": 170301,
@@ -7824,8 +7824,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 12], [30000277, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000276, 15], [30000277, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170302: _tools.RODict({
         "ID": 170302,
@@ -7836,8 +7836,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 12], [30000277, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000276, 15], [30000277, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170303: _tools.RODict({
         "ID": 170303,
@@ -7848,8 +7848,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 12], [30000277, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000276, 15], [30000277, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170304: _tools.RODict({
         "ID": 170304,
@@ -7860,8 +7860,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 12], [30000277, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000276, 15], [30000277, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170305: _tools.RODict({
         "ID": 170305,
@@ -7872,8 +7872,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 12], [30000277, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000276, 15], [30000277, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170401: _tools.RODict({
         "ID": 170401,
@@ -7884,8 +7884,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000276, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170402: _tools.RODict({
         "ID": 170402,
@@ -7896,8 +7896,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000276, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170403: _tools.RODict({
         "ID": 170403,
@@ -7908,8 +7908,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000276, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170404: _tools.RODict({
         "ID": 170404,
@@ -7920,8 +7920,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000276, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170405: _tools.RODict({
         "ID": 170405,
@@ -7932,8 +7932,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000276, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170501: _tools.RODict({
         "ID": 170501,
@@ -7944,8 +7944,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000276, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170502: _tools.RODict({
         "ID": 170502,
@@ -7956,8 +7956,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000276, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170503: _tools.RODict({
         "ID": 170503,
@@ -7968,8 +7968,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000276, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170504: _tools.RODict({
         "ID": 170504,
@@ -7980,8 +7980,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000276, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170505: _tools.RODict({
         "ID": 170505,
@@ -7992,8 +7992,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000276, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170601: _tools.RODict({
         "ID": 170601,
@@ -8004,8 +8004,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170602: _tools.RODict({
         "ID": 170602,
@@ -8016,8 +8016,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170603: _tools.RODict({
         "ID": 170603,
@@ -8028,8 +8028,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170604: _tools.RODict({
         "ID": 170604,
@@ -8040,8 +8040,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170605: _tools.RODict({
         "ID": 170605,
@@ -8052,8 +8052,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170701: _tools.RODict({
         "ID": 170701,
@@ -8064,8 +8064,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000276, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170702: _tools.RODict({
         "ID": 170702,
@@ -8076,8 +8076,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000276, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170703: _tools.RODict({
         "ID": 170703,
@@ -8088,8 +8088,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000276, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170704: _tools.RODict({
         "ID": 170704,
@@ -8100,8 +8100,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000276, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170705: _tools.RODict({
         "ID": 170705,
@@ -8112,8 +8112,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 12], [30000276, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170801: _tools.RODict({
         "ID": 170801,
@@ -8124,8 +8124,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170802: _tools.RODict({
         "ID": 170802,
@@ -8136,8 +8136,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170803: _tools.RODict({
         "ID": 170803,
@@ -8148,8 +8148,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170804: _tools.RODict({
         "ID": 170804,
@@ -8160,8 +8160,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     170805: _tools.RODict({
         "ID": 170805,
@@ -8172,8 +8172,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 12], [30000278, 12]]),
-        "needCoins": _tools.ROList([30000002, 2500000])
+        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
+        "needCoins": _tools.ROList([30000002, 2750000])
     }),
     180101: _tools.RODict({
         "ID": 180101,
@@ -8184,8 +8184,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000277, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000277, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180102: _tools.RODict({
         "ID": 180102,
@@ -8196,8 +8196,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000277, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000277, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180103: _tools.RODict({
         "ID": 180103,
@@ -8208,8 +8208,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000277, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000277, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180104: _tools.RODict({
         "ID": 180104,
@@ -8220,8 +8220,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000277, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000277, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180105: _tools.RODict({
         "ID": 180105,
@@ -8232,8 +8232,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000277, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000277, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180201: _tools.RODict({
         "ID": 180201,
@@ -8244,8 +8244,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180202: _tools.RODict({
         "ID": 180202,
@@ -8256,8 +8256,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180203: _tools.RODict({
         "ID": 180203,
@@ -8268,8 +8268,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180204: _tools.RODict({
         "ID": 180204,
@@ -8280,8 +8280,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180205: _tools.RODict({
         "ID": 180205,
@@ -8292,8 +8292,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180301: _tools.RODict({
         "ID": 180301,
@@ -8304,8 +8304,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 15], [30000277, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000276, 20], [30000277, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180302: _tools.RODict({
         "ID": 180302,
@@ -8316,8 +8316,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 15], [30000277, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000276, 20], [30000277, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180303: _tools.RODict({
         "ID": 180303,
@@ -8328,8 +8328,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 15], [30000277, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000276, 20], [30000277, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180304: _tools.RODict({
         "ID": 180304,
@@ -8340,8 +8340,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 15], [30000277, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000276, 20], [30000277, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180305: _tools.RODict({
         "ID": 180305,
@@ -8352,8 +8352,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 15], [30000277, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000276, 20], [30000277, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180401: _tools.RODict({
         "ID": 180401,
@@ -8364,8 +8364,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000276, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180402: _tools.RODict({
         "ID": 180402,
@@ -8376,8 +8376,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000276, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180403: _tools.RODict({
         "ID": 180403,
@@ -8388,8 +8388,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000276, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180404: _tools.RODict({
         "ID": 180404,
@@ -8400,8 +8400,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000276, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180405: _tools.RODict({
         "ID": 180405,
@@ -8412,8 +8412,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000276, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180501: _tools.RODict({
         "ID": 180501,
@@ -8424,8 +8424,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180502: _tools.RODict({
         "ID": 180502,
@@ -8436,8 +8436,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180503: _tools.RODict({
         "ID": 180503,
@@ -8448,8 +8448,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180504: _tools.RODict({
         "ID": 180504,
@@ -8460,8 +8460,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180505: _tools.RODict({
         "ID": 180505,
@@ -8472,8 +8472,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180601: _tools.RODict({
         "ID": 180601,
@@ -8484,8 +8484,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180602: _tools.RODict({
         "ID": 180602,
@@ -8496,8 +8496,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180603: _tools.RODict({
         "ID": 180603,
@@ -8508,8 +8508,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180604: _tools.RODict({
         "ID": 180604,
@@ -8520,8 +8520,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180605: _tools.RODict({
         "ID": 180605,
@@ -8532,8 +8532,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180701: _tools.RODict({
         "ID": 180701,
@@ -8544,8 +8544,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180702: _tools.RODict({
         "ID": 180702,
@@ -8556,8 +8556,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180703: _tools.RODict({
         "ID": 180703,
@@ -8568,8 +8568,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180704: _tools.RODict({
         "ID": 180704,
@@ -8580,8 +8580,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180705: _tools.RODict({
         "ID": 180705,
@@ -8592,8 +8592,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 15], [30000276, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180801: _tools.RODict({
         "ID": 180801,
@@ -8604,8 +8604,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180802: _tools.RODict({
         "ID": 180802,
@@ -8616,8 +8616,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180803: _tools.RODict({
         "ID": 180803,
@@ -8628,8 +8628,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180804: _tools.RODict({
         "ID": 180804,
@@ -8640,8 +8640,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     180805: _tools.RODict({
         "ID": 180805,
@@ -8652,8 +8652,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 15], [30000278, 15]]),
-        "needCoins": _tools.ROList([30000002, 3000000])
+        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
+        "needCoins": _tools.ROList([30000002, 3250000])
     }),
     190101: _tools.RODict({
         "ID": 190101,
@@ -8664,8 +8664,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000277, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000277, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190102: _tools.RODict({
         "ID": 190102,
@@ -8676,8 +8676,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000277, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000277, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190103: _tools.RODict({
         "ID": 190103,
@@ -8688,8 +8688,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000277, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000277, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190104: _tools.RODict({
         "ID": 190104,
@@ -8700,8 +8700,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000277, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000277, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190105: _tools.RODict({
         "ID": 190105,
@@ -8712,8 +8712,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000277, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000277, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190201: _tools.RODict({
         "ID": 190201,
@@ -8724,8 +8724,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190202: _tools.RODict({
         "ID": 190202,
@@ -8736,8 +8736,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190203: _tools.RODict({
         "ID": 190203,
@@ -8748,8 +8748,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190204: _tools.RODict({
         "ID": 190204,
@@ -8760,8 +8760,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190205: _tools.RODict({
         "ID": 190205,
@@ -8772,8 +8772,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190301: _tools.RODict({
         "ID": 190301,
@@ -8784,8 +8784,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 20], [30000277, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000276, 30], [30000277, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190302: _tools.RODict({
         "ID": 190302,
@@ -8796,8 +8796,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 20], [30000277, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000276, 30], [30000277, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190303: _tools.RODict({
         "ID": 190303,
@@ -8808,8 +8808,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 20], [30000277, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000276, 30], [30000277, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190304: _tools.RODict({
         "ID": 190304,
@@ -8820,8 +8820,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 20], [30000277, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000276, 30], [30000277, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190305: _tools.RODict({
         "ID": 190305,
@@ -8832,8 +8832,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 20], [30000277, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000276, 30], [30000277, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190401: _tools.RODict({
         "ID": 190401,
@@ -8844,8 +8844,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000276, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190402: _tools.RODict({
         "ID": 190402,
@@ -8856,8 +8856,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000276, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190403: _tools.RODict({
         "ID": 190403,
@@ -8868,8 +8868,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000276, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190404: _tools.RODict({
         "ID": 190404,
@@ -8880,8 +8880,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000276, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190405: _tools.RODict({
         "ID": 190405,
@@ -8892,8 +8892,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000276, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190501: _tools.RODict({
         "ID": 190501,
@@ -8904,8 +8904,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000276, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190502: _tools.RODict({
         "ID": 190502,
@@ -8916,8 +8916,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000276, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190503: _tools.RODict({
         "ID": 190503,
@@ -8928,8 +8928,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000276, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190504: _tools.RODict({
         "ID": 190504,
@@ -8940,8 +8940,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000276, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190505: _tools.RODict({
         "ID": 190505,
@@ -8952,8 +8952,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000276, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190601: _tools.RODict({
         "ID": 190601,
@@ -8964,8 +8964,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000277, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190602: _tools.RODict({
         "ID": 190602,
@@ -8976,8 +8976,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000277, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190603: _tools.RODict({
         "ID": 190603,
@@ -8988,8 +8988,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000277, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190604: _tools.RODict({
         "ID": 190604,
@@ -9000,8 +9000,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000277, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190605: _tools.RODict({
         "ID": 190605,
@@ -9012,8 +9012,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000277, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190701: _tools.RODict({
         "ID": 190701,
@@ -9024,8 +9024,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000276, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190702: _tools.RODict({
         "ID": 190702,
@@ -9036,8 +9036,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000276, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190703: _tools.RODict({
         "ID": 190703,
@@ -9048,8 +9048,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000276, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190704: _tools.RODict({
         "ID": 190704,
@@ -9060,8 +9060,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000276, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190705: _tools.RODict({
         "ID": 190705,
@@ -9072,8 +9072,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 20], [30000276, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000275, 30], [30000276, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190801: _tools.RODict({
         "ID": 190801,
@@ -9084,8 +9084,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000277, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190802: _tools.RODict({
         "ID": 190802,
@@ -9096,8 +9096,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000277, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190803: _tools.RODict({
         "ID": 190803,
@@ -9108,8 +9108,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000277, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190804: _tools.RODict({
         "ID": 190804,
@@ -9120,8 +9120,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000277, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     190805: _tools.RODict({
         "ID": 190805,
@@ -9132,8 +9132,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 20], [30000278, 20]]),
-        "needCoins": _tools.ROList([30000002, 3500000])
+        "needItems": _tools.ROList([[30000277, 30], [30000278, 30]]),
+        "needCoins": _tools.ROList([30000002, 4000000])
     }),
     200101: _tools.RODict({
         "ID": 200101,
@@ -9144,8 +9144,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000277, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000277, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200102: _tools.RODict({
         "ID": 200102,
@@ -9156,8 +9156,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000277, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000277, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200103: _tools.RODict({
         "ID": 200103,
@@ -9168,8 +9168,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000277, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000277, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200104: _tools.RODict({
         "ID": 200104,
@@ -9180,8 +9180,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000277, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000277, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200105: _tools.RODict({
         "ID": 200105,
@@ -9192,8 +9192,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000277, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000277, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200201: _tools.RODict({
         "ID": 200201,
@@ -9204,8 +9204,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200202: _tools.RODict({
         "ID": 200202,
@@ -9216,8 +9216,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200203: _tools.RODict({
         "ID": 200203,
@@ -9228,8 +9228,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200204: _tools.RODict({
         "ID": 200204,
@@ -9240,8 +9240,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200205: _tools.RODict({
         "ID": 200205,
@@ -9252,8 +9252,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200301: _tools.RODict({
         "ID": 200301,
@@ -9264,8 +9264,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 35], [30000277, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000276, 40], [30000277, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200302: _tools.RODict({
         "ID": 200302,
@@ -9276,8 +9276,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 35], [30000277, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000276, 40], [30000277, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200303: _tools.RODict({
         "ID": 200303,
@@ -9288,8 +9288,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 35], [30000277, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000276, 40], [30000277, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200304: _tools.RODict({
         "ID": 200304,
@@ -9300,8 +9300,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 35], [30000277, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000276, 40], [30000277, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200305: _tools.RODict({
         "ID": 200305,
@@ -9312,8 +9312,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMaxMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMaxPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 35], [30000277, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000276, 40], [30000277, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200401: _tools.RODict({
         "ID": 200401,
@@ -9324,8 +9324,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000276, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200402: _tools.RODict({
         "ID": 200402,
@@ -9336,8 +9336,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000276, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200403: _tools.RODict({
         "ID": 200403,
@@ -9348,8 +9348,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000276, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200404: _tools.RODict({
         "ID": 200404,
@@ -9360,8 +9360,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000276, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200405: _tools.RODict({
         "ID": 200405,
@@ -9372,8 +9372,8 @@ datas = _tools.RODict({
         "prop1001": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1002": _tools.ROList([['adjMinMagicAtk', 3]]),
         "prop1003": _tools.ROList([['adjMinPhysicalAtk', 3]]),
-        "needItems": _tools.ROList([[30000276, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000276, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200501: _tools.RODict({
         "ID": 200501,
@@ -9384,8 +9384,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000276, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000276, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200502: _tools.RODict({
         "ID": 200502,
@@ -9396,8 +9396,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000276, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000276, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200503: _tools.RODict({
         "ID": 200503,
@@ -9408,8 +9408,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000276, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000276, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200504: _tools.RODict({
         "ID": 200504,
@@ -9420,8 +9420,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000276, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000276, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200505: _tools.RODict({
         "ID": 200505,
@@ -9432,8 +9432,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000276, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000276, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200601: _tools.RODict({
         "ID": 200601,
@@ -9444,8 +9444,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000277, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200602: _tools.RODict({
         "ID": 200602,
@@ -9456,8 +9456,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000277, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200603: _tools.RODict({
         "ID": 200603,
@@ -9468,8 +9468,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000277, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200604: _tools.RODict({
         "ID": 200604,
@@ -9480,8 +9480,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000277, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200605: _tools.RODict({
         "ID": 200605,
@@ -9492,8 +9492,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000277, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200701: _tools.RODict({
         "ID": 200701,
@@ -9504,8 +9504,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000276, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000276, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200702: _tools.RODict({
         "ID": 200702,
@@ -9516,8 +9516,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000276, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000276, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200703: _tools.RODict({
         "ID": 200703,
@@ -9528,8 +9528,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000276, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000276, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200704: _tools.RODict({
         "ID": 200704,
@@ -9540,8 +9540,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000276, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000276, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200705: _tools.RODict({
         "ID": 200705,
@@ -9552,8 +9552,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000275, 35], [30000276, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000275, 40], [30000276, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200801: _tools.RODict({
         "ID": 200801,
@@ -9564,8 +9564,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000277, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200802: _tools.RODict({
         "ID": 200802,
@@ -9576,8 +9576,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000277, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200803: _tools.RODict({
         "ID": 200803,
@@ -9588,8 +9588,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000277, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200804: _tools.RODict({
         "ID": 200804,
@@ -9600,8 +9600,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000277, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     }),
     200805: _tools.RODict({
         "ID": 200805,
@@ -9612,8 +9612,8 @@ datas = _tools.RODict({
         "prop1001": None,
         "prop1002": None,
         "prop1003": None,
-        "needItems": _tools.ROList([[30000277, 35], [30000278, 35]]),
-        "needCoins": _tools.ROList([30000002, 4000000])
+        "needItems": _tools.ROList([[30000277, 40], [30000278, 40]]),
+        "needCoins": _tools.ROList([30000002, 5000000])
     })
 })
 minKey = 10101

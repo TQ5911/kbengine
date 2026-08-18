@@ -118,6 +118,7 @@ class IReport(object):
 
     @gamedecorator.limitcall(1)
     @gamedecorator.checkGameconfigEnable(UVVD.datas.get('report', {}).get('type', 'report'))
+    @gamedecorator.crossServer
     def reqReport(self, exposed, gbId, name, types, chatRef, desc):
         LOG_INFO("IReport::reqReport", self.gbID, self.characterName, gbId, name, types, chatRef, desc)
         if False:

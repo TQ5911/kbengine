@@ -303,8 +303,15 @@ class Friendship(userType.UserSingleType):
             _fVal = FriendVal(gbId=_gbId)
             self.friendsDict[_gbId] = _fVal
 
-    def updateFriendsInInit(self, fcValList):
-        for _fcVal in fcValList:
+    def updateFriendsInInit(self, gbIds, fcValList):
+        for _idx, _fcVal in enumerate(fcValList):
+            if not _fcVal:
+                if _idx < len(gbIds):
+                    LOG_ERR('updateFriendsInInit 1', gbIds[_idx])
+                else:
+                    LOG_ERR('updateFriendsInInit 2', _idx, gbIds)
+                continue
+
             _fVal = self.friendsDict.get(_fcVal.gbId)
             if _fVal:
                 _fVal.updateFromFcVal(_fcVal)
@@ -375,7 +382,7 @@ class Friendship(userType.UserSingleType):
 
     def notifyFriendsImOffline(self, ownerGbId):
         for _fVal in self.friendsDict.values():
-            if utils.checkBoxOffline(_fVal.box):
+            if utils.checkBoxOffline(_fVal.box, False):
                 continue
 
             _fVal.box.onNotifyOffline(ownerGbId)

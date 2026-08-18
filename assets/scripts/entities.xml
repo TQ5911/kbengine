@@ -51,7 +51,8 @@
 	<StatisticStub/>
 	<BountyStub/>
 	<ResourceRecoveryStub/>
-
+	<AllianceStub/>
+	
 	<DungeonSpaceMgr hasClient="False"></DungeonSpaceMgr>
 	<MonsterGrp hasClient="False"></MonsterGrp>
 	<Account hasClient="true"></Account>

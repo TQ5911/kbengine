@@ -3,6 +3,7 @@
 from KBEDebug import *
 import teamDunChallenge_config as TDC_CFG
 import gameconst
+import gameconfig
 
 
 
@@ -22,6 +23,10 @@ class IGuildCell(object):
 
         if 'guildLevel' in attrDict:
             self.guildLevel = attrDict['guildLevel']
+        
+        if 'leagueUUID' in attrDict:
+            self.leagueUUID = attrDict['leagueUUID']
+            self.syncMethodCallToCrossServerCell('_syncLeagueUUID', (self.leagueUUID, ))
 
     def doFinishGuildDungeonTask(self):
         if not self.guildUUID:
@@ -33,6 +38,12 @@ class IGuildCell(object):
             1)
         
     def doKillMonster(self):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerCell('_doKillMonster', ())
+        else:
+            self._doKillMonster()
+
+    def _doKillMonster(self):
         if not self.guildUUID:
             return
         self.guildBoxCell.statGuildData(gameconst.GuildGamePlayType.WORLD_BOSS_KILLER)

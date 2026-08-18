@@ -40,7 +40,7 @@ DatetimeTimerCallbackDataTup = collections.namedtuple(
 class DatetimeTimerMixin(object):
     """
     NOTE(): 使用DataTime需要
-        1. 在适当位置调用addDatetimeTimerTick方法
+        1. 在适当位置调用initDatetimeTimerTick方法
         2. 在onTimer方法中加入以下代码
 
         def onTimer(...):

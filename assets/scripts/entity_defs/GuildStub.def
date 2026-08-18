@@ -126,5 +126,11 @@
             <Arg>       ENTITYCALL              </Arg>
             <Arg>       ENTITYCALL              </Arg>    
         </doGetGuildGamePlayData>
+
+        <checkGuildExists>
+            <Arg>   GUILD_UUID  </Arg>
+            <Arg>   UUID        </Arg>
+            <Arg>   BOOL        </Arg>
+        </checkGuildExists>
     </BaseMethods>
 </root>

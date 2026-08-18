@@ -174,6 +174,10 @@ class AbyssStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
             box.onMessagePre(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
             return
 
+        if self._checkSelectLineActivity(toLineNo, box, gbId, extra, _mapId) != gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS:
+            box.onMessagePre(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
+            return
+
         if playerVal:
             self.addPendingEnterPlayer(toSpaceNo, gbId)
         else:
@@ -181,10 +185,20 @@ class AbyssStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
             
         box.cell.doSwitchAbyssLine(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id, _spaceVal.getSpaceNo(), extra)
 
-    def checkCanEnterCrossAbyss(self, box):
+    def _canAbyssEnter(self, spaceNo):
+        _mapId = formula.fetchMapId(spaceNo)
+        if _mapId in B_BD.datas:
+            _linePlayers = self.allLines.get(spaceNo)
+            if not _linePlayers:
+                return True
+            _curNum = len(_linePlayers) + len(_linePlayers.pendingEnterPlayersDic)
+            return _curNum < B_BD.datas[_mapId]['N1']
+        return True
+
+    def checkCanEnterCrossAbyss(self, box, extra):
         for spaceNo, spaceVal in self.staticSpaces.items():
-            if self.canSpaceEnter(spaceNo):
-                box.onCrossServerCheckCanEnterAbyss(self.floor, True, 0)
+            if self.canSpaceEnter(spaceNo) and self._canAbyssEnter(spaceNo):
+                box.onCrossServerCheckCanEnterAbyss(self.floor, True, 0, extra)
                 return
 
-        box.onCrossServerCheckCanEnterAbyss(self.floor, False, 0)
+        box.onCrossServerCheckCanEnterAbyss(self.floor, False, 0, extra)

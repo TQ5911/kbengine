@@ -245,7 +245,7 @@ class BaseBag(itemContainer.ItemContainer):
         # 3. 计算fnv
         fnv = utils.FNV1a64()
         fnv.update_str(str(checkData))
-        return fnv.digest_uint64()
+        return fnv.digest_uint64(), checkData
 
     #这里用pickle打包再解压出来的dict和原先的hash不一致，所以直接传dict
     def getPickleBagData(self):

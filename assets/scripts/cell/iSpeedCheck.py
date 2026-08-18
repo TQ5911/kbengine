@@ -5,12 +5,16 @@ from KBEDebug import *
 
 import math
 import random
+import uuid
+import json
+from datetime import datetime
 
 import Math
 import gameconfig
 import gameconst
 import gametimer
 import LogTrackingMgr
+import utils
 
 import const_const as CONST
 import jumpData_set as JDS
@@ -144,6 +148,32 @@ class ISpeedCheck(object):
                 LOG_DBG('ISpeedCheck::calculateOverSpeed drag back, ', moveDistance, self.lastSpeed, self.lastPosition, self.speedCheckWindowSize, self.speedCheckCountPerWindow)
                 # 一个窗口内违规了一次
                 self.speedCheckContinuousUnit += 1
+
+                # 检查是否拉到了上报的阈值
+                now = utils.curTS()
+                self.dragBackRecrods.append(now)
+                removeCount = 0
+                for dragBackRecord in self.dragBackRecrods:
+                    if dragBackRecord + gameconst.SpeedCheckData.CHECK_GAP_TIME >= now:
+                        break
+                    else:
+                        removeCount +=1
+
+                for _ in range(0, removeCount):
+                    self.dragBackRecrods.pop(0)
+
+                if len(self.dragBackRecrods) >= gameconst.SpeedCheckData.CONTINIOUS_DRAG_BACK_COUNT:
+                    self.dragBackRecrods.clear()
+                    res = {}
+                    res['serverId'] = gameconfig.serverId()
+                    res['userGameId'] = self.accountNameCell
+                    res['userGameRoleId'] = self.gbId
+                    res['roleName'] = self.name
+                    res['sendTime'] = datetime.fromtimestamp(utils.curTS()).strftime("%Y-%m-%d %H:%M:%S")
+                    res['idempotentKey'] = str(uuid.uuid4()).replace("-", "")
+                    res['tagId'] = 301
+                    res = json.dumps(res)
+                    LogTrackingMgr.LogTrackingMgr.game_risk_detection(self.gbId, self.clientDistinctIdCell, res)
             else:
                 # 清理连续窗口违规行为
                 self.speedCheckContinuousUnit = 0

@@ -37,7 +37,6 @@ namespace KBEngine
 		
 		
 		
-		public Byte mineWarCamp = 0;
 		
 		public float mulSpeed = 0f;
 		
@@ -655,22 +654,6 @@ namespace KBEngine
 						}
 
 						break;
-					case 28:
-						Byte oldval_mineWarCamp = mineWarCamp;
-						mineWarCamp = stream.readUint8();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMineWarCampChanged(oldval_mineWarCamp);
-						}
-						else
-						{
-							if(inWorld)
-								onMineWarCampChanged(oldval_mineWarCamp);
-						}
-
-						break;
 					case 237:
 						float oldval_mulCD = mulCD;
 						mulCD = stream.readFloat();
@@ -1236,27 +1219,6 @@ namespace KBEngine
 					else
 					{
 						onLevelChanged(oldval_level);
-					}
-				}
-			}
-
-			Byte oldval_mineWarCamp = mineWarCamp;
-			Property prop_mineWarCamp = pdatas[5];
-			if(prop_mineWarCamp.isBase())
-			{
-				if(inited && !inWorld)
-					onMineWarCampChanged(oldval_mineWarCamp);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_mineWarCamp.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMineWarCampChanged(oldval_mineWarCamp);
 					}
 				}
 			}

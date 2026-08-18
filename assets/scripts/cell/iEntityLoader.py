@@ -116,10 +116,12 @@ class IEntityLoader(object):
         self.batchlyCall(_iter, 1, 0.1)
         self.doLoadTimerEntities(spaceMgrId)
 
-    def loadCommonEntities(self, spaceMgrId):
+    def loadCommonEntities(self, spaceMgrId, filterFunc=None):
         entityIDs = self._initEntities(self.spaceNo)
         readyEntitiesList = []
         self.loadLineEntities(self.spaceNo, entityIDs, readyEntitiesList)
+        if filterFunc is not None:
+            readyEntitiesList = list(filter(filterFunc, readyEntitiesList))
         self.loadEntitiesBatchly(self.spaceNo, iter(readyEntitiesList),
                                  gameconfig.entityLoadSpeed(),
                                  gameconst.LoadEntitySetting.BATCH_DELAY, True, spaceMgrId)

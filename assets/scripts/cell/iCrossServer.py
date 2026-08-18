@@ -60,7 +60,7 @@ class ICrossServer(object):
 
     def handleCrossServerWaitingClientInitReasonTimeout(self, timeout):
         _crossServerWaitingClientInitTuple = self.crossServerWaitingClientInitTuple
-        LOG_ERR("handleCrossServerWaitingClientInitReasonTimeout::", timeout, _crossServerWaitingClientInitTuple)
+        LOG_INFO("handleCrossServerWaitingClientInitReasonTimeout::", timeout, _crossServerWaitingClientInitTuple)
         self.crossServerWaitingClientInitTimerId = 0
         self.handleCrossServerWaitingClientInitReason()
 
@@ -182,3 +182,39 @@ class ICrossServer(object):
     def onCrossServerSuc(self, reasonNo):
         LOG_INFO("onCrossServerSuc::", reasonNo)
         # 【【跨服战场】在进入跨服前需要先退出一些临时的场景（比如副本、帮战分线）】
+        savedBuffDic = {}
+        for buffId in list(self.buffMgrDic.keys()):
+            buffMap = self.buffMgrDic.get(buffId)
+            if not buffMap:
+                continue
+            for buffSrcKey in list(buffMap.keys()):
+                _buffVal = buffMap.get(buffSrcKey)
+                if _buffVal.getOfflineKeep(_buffVal.buffId):
+                    savedBuffDic.setdefault(buffId, {})[buffSrcKey] = _buffVal
+        
+        self.syncMethodCallToCrossServerCell('_syncSaveBuffs', (savedBuffDic, ))
+        self.syncMethodCallToCrossServerCell('_syncLeagueUUID', (self.leagueUUID, ))
+        self.syncMethodCallToCrossServerCell('_afterCrossServerSuc', ())
+
+    def _syncSaveBuffs(self, buffMgrDic):
+        LOG_DBG('_syncSaveBuffs', buffMgrDic)
+        self.buffMgrDic.update(buffMgrDic)
+
+        for buffId in list(self.buffMgrDic.keys()):
+            buffMap = self.buffMgrDic.get(buffId)
+            if not buffMap:
+                continue
+            for buffSrcKey in list(buffMap.keys()):
+                _buffVal = buffMap.get(buffSrcKey)
+                if _buffVal:
+                    _buffVal.initBuff(self)
+                    _buffVal.onRestored(self)
+        self.client.onUpdateBuffs(self.buffMgrDic.getClientData(self))
+
+    def _syncLeagueUUID(self, leagueUUID):
+        LOG_INFO('_syncLeagueUUID', leagueUUID)
+        self.leagueUUID = leagueUUID
+
+    def _afterCrossServerSuc(self):
+        LOG_INFO('_afterCrossServerSuc')
+        self._checkAndAddTeleportProtectionBuff()

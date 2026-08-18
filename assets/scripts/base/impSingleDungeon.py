@@ -50,8 +50,9 @@ class ImpSingleDungeon(object):
                   spaceMgrId, spaceNo, playerBox, playerGbId, teamUUID, extra)
         _deductWealthVal = dropAward.DeductWealthVal()
         _deductWealthVal.addWealthByItemDict(needDic)
-        if not self.canDeductWealth(_deductWealthVal):
-            LOG_ERR('Enter singleDungeon Failed, use item error: spaceNo={}'.format(spaceNo))
+        res = self.canDeductWealth(_deductWealthVal)
+        if not res:
+            LOG_WARN('Enter singleDungeon Failed, use item error: spaceNo={}, res={}'.format(spaceNo, res()))
             return
 
         opUUID = KBEngine.genUUID64()

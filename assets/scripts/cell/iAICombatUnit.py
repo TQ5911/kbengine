@@ -248,6 +248,10 @@ class IAICombatUnit(SkillManager.SkillManager):
                 if skillVal.inCDTime():
                     continue
 
+                if skillVal.hasSkillTag(gameconst.SkillTagEnum.changeCDStatusSkill) and\
+                    skillVal.getTempData(gameconst.SkillTempDataKey.CHANGE_SKILL_CD_STATUS, gameconst.SkillCDStatus.DEFAULT) == gameconst.SkillCDStatus.DISABLED:
+                    continue
+
                 if targetType and skillVal.getTarget(skillId) != targetType:
                     continue
 
@@ -484,7 +488,11 @@ class IAICombatUnit(SkillManager.SkillManager):
 
         if not self.moveController:
             self.cancelController('Movement')
-            LOG_WARN('navigate fail', self.spaceNo, self.position, pos)
+            # 如果寻路时候距离过近是会寻路失败的，因为没必要寻路，这里就不报WARN了
+            if sMath.manhattanDist(self.position, pos) > 0.01:
+                LOG_WARN('navigate fail', self.spaceNo, self.position, pos)
+            else:
+                LOG_INFO('navigate fail', self.spaceNo, self.position, pos)
             return False
 
         return True

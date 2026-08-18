@@ -214,5 +214,9 @@ datas = _tools.RODict({
     "WonderLanf_FreeIconPath": _tools.RODict({
         "ID": "WonderLanf_FreeIconPath",
         "value": "Assets/Res/ui/texturenp/item/item_017.png",
+    }),
+    "WonderLand_exitJugeTime": _tools.RODict({
+        "ID": "WonderLand_exitJugeTime",
+        "value": 10,
     })
 })

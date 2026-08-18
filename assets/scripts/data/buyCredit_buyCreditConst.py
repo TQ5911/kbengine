@@ -153,7 +153,7 @@ datas = _tools.RODict({
     }),
     "premiumMonthlyPassPerks": _tools.RODict({
         "ID": "premiumMonthlyPassPerks",
-        "value": ('挂机时长8小时增加到16小时，并可获得道具奖励', '可交易道具掉落概率+5%（购买赤铜月卡后生效）', '材料特供专享绑元购买，且购买次数增加 '),
+        "value": ('挂机时长8小时增加到16小时，并可获得道具奖励', '可交易道具掉落概率+10% (购买赤铜月卡后生效)', '材料特供专享绑元购买，且购买次数增加 '),
     }),
     "monthCardRenew": _tools.RODict({
         "ID": "monthCardRenew",

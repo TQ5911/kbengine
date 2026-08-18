@@ -185,6 +185,7 @@
         </getGuildList>
 
         <onJoinGuild>
+            <Arg>       LEAGUE_UUID             </Arg>
             <Arg>       GUILD_UUID              </Arg>
             <Arg>       ENTITYCALL              </Arg>
             <Arg>       UINT8                   </Arg>
@@ -353,46 +354,13 @@
             <Arg>       QIXIE_TYPE              </Arg>
         </upgradeQixie>
 
-        <applyGuildUnion> <Exposed/>
-            <Arg>       GUILD_UUID              </Arg>
-        </applyGuildUnion>
-
-        <dealGuildUnionApply> <Exposed/>
-            <Arg>       GUILD_UUID              </Arg>
-            <Arg>       BOOL                    </Arg>
-        </dealGuildUnionApply>
-
-        <cancelGuildUnion> <Exposed/>
-            <Arg>       GUILD_UUID              </Arg>
-        </cancelGuildUnion>
-
-        <getGuildInfosByRelationType> <Exposed/>
-            <Arg>       UINT8                   </Arg>
-        </getGuildInfosByRelationType>
-
-        <declareEnemy> <Exposed/>
-            <Arg>       GUILD_UUID              </Arg>
-        </declareEnemy>
-
         <donateCityBattleToken> <Exposed/>
             <Arg>       CITY_BATTLE_TOKEN       </Arg>
         </donateCityBattleToken>
 
-        <getGuildUnionApplySender> <Exposed/>
-        </getGuildUnionApplySender>
-
-        <cancelApplyGuildUnion> <Exposed/>
-            <Arg>       GUILD_UUID              </Arg>
-        </cancelApplyGuildUnion>
-
         <getGuildDetailOtherServer> <Exposed/>
             <Arg>       GUILD_UUID              </Arg>
         </getGuildDetailOtherServer>
-
-        <onGetGuildInfosByRelationType>
-            <Arg>       ARRAY   <of>    GUILD_CROSS_DATA_INFO          </of>   </Arg>
-            <Arg>       UINT8                       </Arg>
-        </onGetGuildInfosByRelationType>
 
         <getGuildTaskReward><Exposed/>
              <Arg>      ARRAY   <of> UINT8  </of>     </Arg>
@@ -472,6 +440,11 @@
         <onGuildLevelChangedBase>
             <Arg>      GUILD_LEVEL          </Arg>
         </onGuildLevelChangedBase>
+
+        <onGetClientGuildInfoToCrossServer>
+            <Arg>       GUILD_CLIENT_DATA       </Arg>
+            <Arg>       GUILD_MEMBER_DATA_INFO                     </Arg>
+        </onGetClientGuildInfoToCrossServer>
     </BaseMethods>
 
     <CellMethods>
@@ -589,15 +562,6 @@
             <Arg>       ARRAY   <of>    GUILD_CROSS_DATA_INFO          </of>   </Arg>
         </onGuildInfoFromCrossData>
 
-        <onGuildInfosByRelationType>
-            <Arg>       ARRAY   <of>    GUILD_CROSS_DATA_INFO          </of>   </Arg>
-            <Arg>       UINT8                       </Arg>
-        </onGuildInfosByRelationType>
-
-        <onGetEnemyGuildInfosClient>
-            <Arg>       ARRAY   <of>    ENEMY_GUILD_CROSS_DATA_INFO          </of>   </Arg>
-        </onGetEnemyGuildInfosClient>
-
         <onCityBattleTokenChanged>
             <Arg>       CITY_BATTLE_TOKEN       </Arg>
         </onCityBattleTokenChanged>
@@ -606,39 +570,15 @@
             <Arg>       JUN_XU_QI_XIE_DATA_INFO             </Arg>
         </onQixieChanged>
 
-        <onGuildRelationAll>
-            <Arg>       UINT32                               </Arg>
-            <Arg>       ARRAY   <of>    GUILD_AND_RELATION          </of>   </Arg>
-        </onGuildRelationAll>
-
         <onAddGuildRelationClient>
             <Arg>       GUILD_UUID              </Arg>
             <Arg>       UINT8                   </Arg>
+            <Arg>       UINT32                  </Arg>
         </onAddGuildRelationClient>
 
         <onRemoveGuildRelationClient>
             <Arg>       GUILD_UUID              </Arg>
         </onRemoveGuildRelationClient>
-
-        <onNewApplyGuildUnion>
-            <Arg>       GUILD_APPLY_UNION_DATA_INFO       </Arg>
-        </onNewApplyGuildUnion>
-
-        <onRemoveApplyGuildUnion>
-            <Arg>       GUILD_UUID              </Arg>
-        </onRemoveApplyGuildUnion>
-
-        <onAllApplyGuildUnion>
-            <Arg>       ARRAY   <of>    GUILD_APPLY_UNION_DATA_INFO          </of>   </Arg>
-        </onAllApplyGuildUnion>
-
-        <onGetGuildUnionApplySender>
-            <Arg>       ARRAY   <of>    GUILD_APPLY_UNION_SENDER_DATA_INFO          </of>   </Arg>
-        </onGetGuildUnionApplySender>
-
-        <onNewGuildUnionApplySender>
-            <Arg>       GUILD_APPLY_UNION_SENDER_DATA_INFO          </Arg>
-        </onNewGuildUnionApplySender>
 
         <syncGuildTaskInfo>
             <Arg>      ARRAY   <of> GUILD_ONETASK_INFO      </of>  </Arg>
@@ -688,5 +628,16 @@
         <onInviteGuildMics>
             <Arg>       PLAYER_GBID              </Arg>
         </onInviteGuildMics>
+
+        <onGuildJoinLeague>
+            <Arg>       UINT64                  </Arg>
+        </onGuildJoinLeague>
+
+        <onAllianceChatMessage>
+            <Arg>       PYTHON                  </Arg>
+        </onAllianceChatMessage>
+        <onGuildIronChanged>
+            <Arg>       UINT64                  </Arg>
+        </onGuildIronChanged>
     </ClientMethods>
 </root>

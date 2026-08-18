@@ -48,7 +48,7 @@ datas ={
           "Props": {
             "ChestGroupID": 1,
             "GroupID": "",
-            "Level": 38,
+            "Level": 34,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
@@ -80,7 +80,7 @@ datas ={
           "Props": {
             "ChestGroupID": 1,
             "GroupID": "",
-            "Level": 38,
+            "Level": 34,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
@@ -112,7 +112,7 @@ datas ={
           "Props": {
             "ChestGroupID": 1,
             "GroupID": "",
-            "Level": 38,
+            "Level": 34,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
@@ -144,7 +144,7 @@ datas ={
           "Props": {
             "ChestGroupID": 1,
             "GroupID": "",
-            "Level": 38,
+            "Level": 34,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,
@@ -176,7 +176,7 @@ datas ={
           "Props": {
             "ChestGroupID": 1,
             "GroupID": "",
-            "Level": 38,
+            "Level": 34,
             "LightPillar": "",
             "MapEntityScale": 0,
             "MapEntityType": 0,

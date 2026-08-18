@@ -49,13 +49,15 @@ class IFriendship(object):
         self.friendship.initFriends(_gbIds)
 
         if _gbIds:
-            redisUtils.RedisUtils.getUsersInfo(_gbIds, self._onGetFriendsInfoFromRedis)
+            redisUtils.RedisUtils.getUsersInfo(
+                _gbIds, 
+                functools.partial(self._onGetFriendsInfoFromRedis, _gbIds))
         else:
-            self._onGetFriendsInfoFromRedis([])
+            self._onGetFriendsInfoFromRedis([], [])
 
-    def _onGetFriendsInfoFromRedis(self, fcValList):
+    def _onGetFriendsInfoFromRedis(self, gbIds, fcValList):
         LOG_DBG("IFriendship::_onGetFriendsInfoFromRedis", fcValList)
-        self.friendship.updateFriendsInInit(fcValList)
+        self.friendship.updateFriendsInInit(gbIds, fcValList)
 
         _ed = utils.curTS() - gameconst.ONE_DAY_COST_SECONDS * RC_RCD.datas['relationApplicationExpiryDate']['value']
         redisUtils.FriendUtils.getFriendInitInfo(self.gbID, _ed, self._onGetFriendInitList)
@@ -722,6 +724,7 @@ class IFriendship(object):
     # -------------------------------- block list start ------------------------
     @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
+    @gamedecorator.crossServer
     def blockPlayer(self, exposed, gbId):
         LOG_INFO("IFriends::blockPlayer gbId={}".format(gbId))
         if self.friendship.isBlock(gbId):
@@ -771,6 +774,7 @@ class IFriendship(object):
 
     @gamedecorator.checkGameconfigEnable('friend')
     @AuthClsWraper.authWithPermission(A_AFD.UIFriendPanel)
+    @gamedecorator.crossServer
     def removeFromBlock(self, exposed, gbId):
         LOG_INFO("IFriends::removeFromBlock gbId={}".format(gbId))
         if not self.friendship.isBlock(gbId):
@@ -1190,15 +1194,27 @@ class IFriendship(object):
 
         # 走到这里整个授权的流程就结束了
         _char = self.accountEntity.getCharVal(self.gbID)
-        _fVal.box.onAgreeAuthRoleSuccess(self.gbID, _char)
+        _fVal.box.onAgreeAuthRoleSuccess(self.gbID, _char, self.accountEntity.accountName)
         self.authStatistics.otherGbId = gbId
         self.authStatistics.authExpire = _char.authExpire
         self.authStatistics = self.authStatistics
 
         self.client.onDealAuthResult(True)
 
-    def onAgreeAuthRoleSuccess(self, gbId, char):
+    def onAgreeAuthRoleSuccess(self, gbId, char, accountName):
         self.accountEntity.addOtherCharVal(gbId, char)
+        _days = (char.authExpire - utils.curTS()) / 86400
+        LogTrackingMgr.LogTrackingMgr.agent_start(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            accountName,
+            char.gbId,
+            char.name,
+            self.accountEntity.accountName,
+            self.gbID,
+            self.getRoleCacheAttr('name'),
+            int(round(_days)),
+        )
 
     def hasAuthPermission(self, permission):
         return utils.bhas(self.authPermission.permission, permission)

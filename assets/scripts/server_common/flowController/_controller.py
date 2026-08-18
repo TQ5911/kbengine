@@ -2919,10 +2919,10 @@ def handleStopAiTick(event, srcE, ctx, **referenceArgument):
     for entityGID in entityGIDs:
         gidTag = 'gid_{}'.format(entityGID)
         for _ent in spaceMgr.listEntitiesByTag(gidTag):
+            _ent.stopByFuben = True
             if not _ent.thinkTimer:
                 LOG_WARN("FlowController::handleStopAiTick:skip entity AItick already stopped", entityGID, _ent.id)
                 continue
-            _ent.stopByFuben = True
             _ent.stopThink()
 
 

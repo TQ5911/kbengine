@@ -58,7 +58,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         self.prepareNeed = utils.getMineWarPrepareNeedSec()
         self.startOffsetSec = utils.getMineWarStartOffsetSec()
         self.endOffsetSec = utils.getMineWarEndOffsetSec()
-        _data = MineGlobalData.MineGlobalData(self.state)
+        _data = MineGlobalData.MineGlobalData(self.state, self.startTime)
         gameengine.callAllApps('gameengine.resetMineGlobalData', (_data,))
         #
         self.canAttackFlagState = -1
@@ -69,6 +69,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         self.pyAddTimer(1, 1, gametimer.MINE_WAR_STATE_CHECK)
 
         self.registerDailyEvent('_onMineWarDailyEvent')
+        self.registerWeekEvent('_onMineWarWeeklyEvent')
         self.onDailyEvent()
 
         super(MineWarStub, self).doNext()
@@ -95,6 +96,29 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         # 矿石结算
         for mapId, mineWarVal in self.mineMapData.items():
             mineWarVal.onCollectEnd()
+
+    def _onMineWarWeeklyEvent(self, *args):
+        # 每周一5点：旗帜摧毁次数清零、归属收益惩罚恢复，并同步归属公会成员
+        for mapId, mineWarVal in self.mineMapData.items():
+            if not mineWarVal.onWeeklyReset():
+                continue
+            guildId = mineWarVal.getGuildGbId()
+            if guildId <= 0:
+                continue
+            # 重建该公会完整的收益数据后整体同步（onMineWarStateSync 会整体覆盖玩家的 MineRevenueDict）
+            mineList = []
+            revenueDict = {}
+            for mId, val in self.mineMapData.items():
+                if val.getGuildGbId() == guildId:
+                    mineList.append(mId)
+                    revenueDict[mId] = val.currGuildInfo.revenue
+                elif guildId in val.guildOwnerDict:
+                    revenueDict[mId] = val.guildOwnerDict[guildId].revenue
+            self._doMineWarBroadcastGuildMember(
+                guildId,
+                'doBroadcastGuildMemberBase',
+                ('onMineWarStateSync', (self.state, self.startTime, self.endTime, mineList, revenueDict)),
+            )
 
     def getMineWarState(self):
         return self.state
@@ -180,7 +204,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
     def _onStateChange(self, oldState, newState):
         LOG_INFO('MineWarStub.onStateChange oldState:', oldState, 'newState:', newState)
         self.state = newState
-        _data = MineGlobalData.MineGlobalData(self.state)
+        _data = MineGlobalData.MineGlobalData(self.state, self.startTime)
         gameengine.callAllApps('gameengine.resetMineGlobalData', (_data,))
 
         gameengine.broadcastBaseapp(
@@ -278,9 +302,18 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             ownerList = ownerList[:MBC.datas['mineBatte_rankGuildNum']['value']]
             mineWarVal.ownerRankList = ownerList    # 暂存
 
-            #同盟数量相关
-            winnerDict[tempguildGbId] = True
-            loserDict[guildGbId] = True
+            winGuildIds = winnerDict.get(mapId, None)
+            if not winGuildIds:
+                winGuildIds = []
+            winGuildIds.append(tempguildGbId)
+            winnerDict[mapId] = winGuildIds
+
+            loserGuildIds = loserDict.get(mapId, None)
+            if not loserGuildIds:
+                loserGuildIds = []
+            loserGuildIds.append(guildGbId)
+        
+            loserDict[mapId] = loserGuildIds
 
             try:
                 logRankList = []
@@ -290,12 +323,13 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             except Exception as e:
                 LOG_ERR('LogTrackingMgr.mineBattle_end error:', mapId, tempguildGbId)
 
-        for guildGbId in loserDict:
-            if guildGbId not in winnerDict:
-                gameengine.getGlobalBase('GuildStub').callOnGuild(guildGbId, 'onMineWarWin', (False, ), None, '', ())
+        for mapId, guildIds in winnerDict.items():
+            for guildId in guildIds:
+                gameengine.getGlobalBase('GuildStub').callOnGuild(guildId, 'onMineWarWin', (True,), None, '', ())
 
-        for guildGbId in winnerDict:
-            gameengine.getGlobalBase('GuildStub').callOnGuild(guildGbId, 'onMineWarWin', (True, ), None, '', ())
+        for mapId, guildIds in loserDict.items():
+            for guildId in guildIds:
+                gameengine.getGlobalBase('GuildStub').callOnGuild(guildId, 'onMineWarWin', (False,), None, '', ())
 
         # 结算
         self.onEndRewardByScore()
@@ -694,6 +728,9 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                 
         return rankCfg
 
+    # 积分大于 mineBattle_rankScoreThreshold 且排名前100的玩家可以上榜
+    # 榜上玩家发排名奖励
+    # 其他玩家积分大于 mineBattle_rewardThreshold 的，发参与奖
     def onEndRewardByScore(self):
         if self.state != gameconst.MINE_WAR_STATE.END:
             return
@@ -709,6 +746,7 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             mapCfg = MBMA.datas.get(mapId, {})
             mapName = mapCfg.get('name', '')
             for val in scoreDict.values():
+                LOG_INFO(f'onEndRewardByScore iter scoreDict, map:{mapId}, gbid:{val.gbId}, guildId:{val.guildGbId}, score:{val.totalScore}')
                 if val.totalScore >= MBC.datas['mineBattle_rankScoreThreshold']['value']:
                     rankList.append(val)
                 else:
@@ -728,16 +766,14 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             mineWarVal.playerScoreDict = {} # 清理
 
             if gameconfig.visibleConfigEnabled('mineBattle'):
-                sendRankList = rankList[:len(rankCfg)]
-                for i, obj in enumerate(sendRankList):
+                for i, obj in enumerate(rankList):
                     if i < len(rankCfg):
                         _addVal = dropAward.MailAttachVal()
                         _addVal.addWealthByItemId(rankCfg[i + 1], 1)
                         mailAssistor.sendMailToPlayers([obj.gbId], MBC.datas['mineBatte_scoreRankMail']['value'], 
                                                     extraAttach=_addVal, despArgs=(mapName,), srcType=srcType, opUUID=opUUID)
                         LOG_INFO('onEndRewardByScore send mail', mapId, obj.gbId, i + 1, rankCfg[i + 1])
-                    else:
-                        # 参与奖 
+                    elif obj.totalScore >= MBC.datas['mineBattle_rewardThreshold']['value']:
                         otherList.append(obj)
                 
                 _otherVal = dropAward.MailAttachVal()

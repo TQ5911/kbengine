@@ -547,6 +547,10 @@ datas = _tools.RODict({
         "ID": "uiVisibleCard3LimitMsg",
         "value": 54000216,
     }),
+    "wechatPayLimitMsg": _tools.RODict({
+        "ID": "wechatPayLimitMsg",
+        "value": 54000217,
+    }),
     "leaveTheScene": _tools.RODict({
         "ID": "leaveTheScene",
         "value": 54001966,
@@ -661,7 +665,7 @@ datas = _tools.RODict({
     }),
     "BossProfileRange": _tools.RODict({
         "ID": "BossProfileRange",
-        "value": 6400.0,
+        "value": -1.0,
     }),
     "killRecordTimeLimit": _tools.RODict({
         "ID": "killRecordTimeLimit",
@@ -945,7 +949,7 @@ datas = _tools.RODict({
     }),
     "maxAccumulateTime": _tools.RODict({
         "ID": "maxAccumulateTime",
-        "value": 3360,
+        "value": 1440,
     }),
     "offlineTriggerMin": _tools.RODict({
         "ID": "offlineTriggerMin",
@@ -1022,6 +1026,10 @@ datas = _tools.RODict({
     "saveFailedMsg": _tools.RODict({
         "ID": "saveFailedMsg",
         "value": 54920011,
+    }),
+    "saveSuccessMobileMsg": _tools.RODict({
+        "ID": "saveSuccessMobileMsg",
+        "value": 54920013,
     }),
     "photoMinDistance": _tools.RODict({
         "ID": "photoMinDistance",
@@ -1313,7 +1321,7 @@ datas = _tools.RODict({
     }),
     "lowHPAutoCounter": _tools.RODict({
         "ID": "lowHPAutoCounter",
-        "value": 20,
+        "value": 50,
     }),
     "defaultInitialRatioHP": _tools.RODict({
         "ID": "defaultInitialRatioHP",
@@ -1438,5 +1446,37 @@ datas = _tools.RODict({
     "monsterBornPosResetTime": _tools.RODict({
         "ID": "monsterBornPosResetTime",
         "value": 60,
+    }),
+    "storageRecordCD": _tools.RODict({
+        "ID": "storageRecordCD",
+        "value": 3,
+    }),
+    "storageShowLimit": _tools.RODict({
+        "ID": "storageShowLimit",
+        "value": 10,
+    }),
+    "mutexSceneMsg": _tools.RODict({
+        "ID": "mutexSceneMsg",
+        "value": 54003504,
+    }),
+    "shareSystem_iOS": _tools.RODict({
+        "ID": "shareSystem_iOS",
+        "value": 1,
+    }),
+    "breakClearTarget": _tools.RODict({
+        "ID": "breakClearTarget",
+        "value": 1000.0,
+    }),
+    "monsterCannotAttackResetTimer": _tools.RODict({
+        "ID": "monsterCannotAttackResetTimer",
+        "value": 20,
+    }),
+    "maxChaseRange": _tools.RODict({
+        "ID": "maxChaseRange",
+        "value": 30,
+    }),
+    "dungeonStartTime": _tools.RODict({
+        "ID": "dungeonStartTime",
+        "value": 3,
     })
 })

@@ -48,6 +48,10 @@ class IBranchLineStub(object):
         self.fightingPlayersCntBase = {}
         self.lastChooseLineNo = 0
 
+    def _checkSelectLineActivity(self, lineNo, box, gbId, extraInfo, lineType):
+        extraInfo = EnterLineExtra.new(extraInfo, lineNo)
+        return self._checkSelectLine(lineNo, box, gbId, extraInfo, exlude=None, isSwitchLine=False, lineType=lineType, checkCellAvatarCount=True)
+
     def _checkSelectLine(self, lineNo, box, gbId, extraInfo, exlude=None, isSwitchLine=False, lineType=None, checkCellAvatarCount=True):
         LOG_DBG("checkSelectLine", lineNo, box, gbId, extraInfo, exlude, isSwitchLine, lineType)
         lineType = lineType or self.lineType
@@ -103,6 +107,14 @@ class IBranchLineStub(object):
                 LOG_INFO("checkmaxCellAvatarCount", cellappIndx, cellAvatarCount)
                 if cellAvatarCount >= gameconfig.maxCellAvatarCount():
                     return gameconst.EnterLineCodeEnum.ERR_REACH_MAX_AVATAR_COUNT
+            else:
+                cellappIndx = (lineNo + 1) % gameconfig.cellAppCount()
+                if cellappIndx == 0:
+                    cellappIndx = gameconfig.cellAppCount()
+                cellAvatarCount = gameglobal.cellAvatarCountDict.get(cellappIndx, 0)
+                LOG_INFO("checkmaxCellAvatarCount Dungeon", cellappIndx, cellAvatarCount)
+                if cellAvatarCount >= gameconfig.maxCellAvatarCount():
+                    return gameconst.EnterLineCodeEnum.ERR_REACH_MAX_AVATAR_COUNT
 
         return gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS
 
@@ -111,6 +123,15 @@ class IBranchLineStub(object):
         needCnt = len(extraInfo.followers) + 1
         lineMaxCnt = B_BD.datas[lineType]['N1']
         allPlayers = self.getMapBranchLinePlayers(lineType)
+
+        # 优先进入指定分线（如 BOSS 互斥回源分线，由 extraInfo 携带），
+        # 进不去则走原有选线逻辑，由后续进入流程校验报错
+        bossMutexLine = getattr(extraInfo, 'bossMutexLine', None)
+        if bossMutexLine is not None and bossMutexLine in allPlayers:
+            checkCode = self._checkSelectLine(bossMutexLine, box, gbId, extraInfo, exlude, isSwitchLine, lineType)
+            if checkCode == gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS:
+                return bossMutexLine
+            LOG_INFO('_autoSelectLine bossMutexLine cannot enter, fallback', bossMutexLine, checkCode, gbId)
 
         # 有队伍且不是队长，优先找队长
         if extraInfo.teamUUID and not extraInfo.isLeader:
@@ -409,7 +430,7 @@ class ILinePlayersStub(IBranchLineStub):
 
         _spaceNo = formula.combineLineSpaceNo(self.lineType, lineNo)
         # 处理连续两次(异常)调用进入分线的情况
-        self.removeLinePlayerWhenExist(gbId)
+        self.removeLinePlayerWhenExist(gbId, None)
         self.addLinePlayerToLine(lineNo, box, gbId, 0, 0, linePlayers.LinePlayerVal.ENTERING, _spaceNo, extra)
         _playerVal = self.allPlayers.getPlayer(lineNo, gbId)
 
@@ -422,7 +443,10 @@ class ILinePlayersStub(IBranchLineStub):
         self.lastChooseLineNo = lineNo
 
     # 进入分线添加playerVal前调用，保证只存在一个playerVal
-    def removeLinePlayerWhenExist(self, gbId):
+    def removeLinePlayerWhenExist(self, gbId, reason):
+        if reason:
+            LOG_INFO('removeLinePlayerWhenExist', gbId, reason)
+
         for lineNo_ in self.allPlayers.keys():
             _playerVal = self.allPlayers.getPlayer(lineNo_, gbId)
             if _playerVal:
@@ -434,6 +458,14 @@ class ILinePlayersStub(IBranchLineStub):
                 return
 
     def removeLinePlayerFromLine(self, lineNo, gbId):
+        _playerVal = self.allPlayers.getPlayer(lineNo, gbId)
+        if not _playerVal:
+            return
+
+        if _playerVal.checkEnterTimer:
+            self.cancelTimerCB(_playerVal.checkEnterTimer, gametimer.TIMER_TAG_CHECK_PLAYER_ENTER_LINE)
+            _playerVal.checkEnterTimer = 0
+
         self.allPlayers.removeLinePlayer(self, lineNo, gbId)
 
     def addLinePlayerToLine(self, lineNo, box, gbId, teamUUID, areaId, status, curSpaceNo, extra):
@@ -504,7 +536,7 @@ class ILinePlayersStub(IBranchLineStub):
             if not lineMembers:
                 LOG_ERR("autoSwitchLine: toLineNo is not in line", toLineNo)
                 return
-            lineMembers.addPendingEnterPlayer(self, gbId)
+            lineMembers.doAddPendingEnterPlayer(self, gbId)
 
         spaceVal = self.getLineSpaceVal(toLineNo) if toLineNo != -1 else self.getLineSpaceVal(0)
         box.callMethod(cbName, (toLineNo, spaceVal.lineSpaceBox, extra.get('position', None)) + cbArgs)
@@ -526,7 +558,7 @@ class ILinePlayersStub(IBranchLineStub):
             if not _lineMembers:
                 LOG_ERR("autoSwitchLineToMainCity: toLineNo is not in line", toLineNo)
                 return
-            _lineMembers.addPendingEnterPlayer(self, gbId)
+            _lineMembers.doAddPendingEnterPlayer(self, gbId)
 
         _spaceVal = self.getLineSpaceVal(toLineNo)
         box.callMethod(cbName, (toLineNo, _spaceVal.lineSpaceBox, extra.get('position', None)) + cbArgs)
@@ -673,7 +705,7 @@ class ILinePlayersStub(IBranchLineStub):
         if ret == gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS:
             if extra["needPending"]:
                 lineMembers = self.allPlayers.getLinePlayers(lineNo)
-                lineMembers.addPendingEnterPlayer(self, gbId)
+                lineMembers.doAddPendingEnterPlayer(self, gbId)
         LOG_DBG('check enter line', lineNo, box, gbId, extra, method, ret)
         _callback = getattr(box.cell, method)
         _callback(ret, *args)
@@ -684,7 +716,7 @@ class ILinePlayersStub(IBranchLineStub):
         if not _lineMembers:
             return
 
-        _lineMembers.removePendingEnterPlayer(self, gbId)
+        _lineMembers.removePendingEnterPlayer(gbId)
 
         if method:
             callback = getattr(box.cell, method)
@@ -729,7 +761,7 @@ class ILinePlayersStub(IBranchLineStub):
         _lineMembers = self.allPlayers.getLinePlayers(lineNo)
         if not _lineMembers:
             return
-        _lineMembers.removePendingEnterPlayer(self, gbId)
+        _lineMembers.removePendingEnterPlayer(gbId)
 
     def debugPlayerAreaInfo(self):
         pass

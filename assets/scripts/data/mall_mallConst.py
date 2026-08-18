@@ -57,7 +57,7 @@ datas = _tools.RODict({
     }),
     "monthCardExtraTimes": _tools.RODict({
         "key": "monthCardExtraTimes",
-        "value": ((30, 2), (50, 1), (70, 1)),
+        "value": ((1, 1), (50, 0), (70, 0)),
     }),
     "defaultBgImage": _tools.RODict({
         "key": "defaultBgImage",

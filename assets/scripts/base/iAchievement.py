@@ -11,6 +11,8 @@ import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import dropAward
 import message_Message_def as M_M_DD
 import LogTrackingMgr
+import gameconfig
+import antiAddictCategory_antiAddictCategory_def as AAC_AAC_DD
 
 class IAchievement(object):
     def __init__(self):
@@ -20,16 +22,28 @@ class IAchievement(object):
         self.achievementInfo.sendInitDataToClient(self)
 
     @gamedecorator.checkGameconfigEnable('achievement')
+    @gamedecorator.crossServer
     def takeAchievementRewards(self, exposed, achievementIds):
         LOG_INFO('takeAchievementRewards:', achievementIds)
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_takeAchievementRewards', (achievementIds,))
+        else:
+            self._takeAchievementRewards(achievementIds)
+
+    def _takeAchievementRewards(self, achievementIds):
         self.achievementInfo.takeAllAchievementRewards(achievementIds, self)
+        self.syncMethodCallToCrossServerBase('_takeAchievementRewards', (achievementIds,))
+
+    #本服获取完成就奖励，同步给跨服
+    def _onLocalServerTakeAllAchievementRewards(self, crossServerPack, popRewardUUID, _takeIds, sumPoint):
+        LOG_INFO('onLocalServerTakeAllAchievementRewards:', crossServerPack, popRewardUUID, _takeIds, sumPoint)
+        for _awardVal, _opUUID, _detail in crossServerPack:
+            self.addWealth(AAC_AAC_DD.datas.BONUS_SRC_ACHIEVEMENT, _awardVal, _opUUID, _detail, directly=False)
+        self._showPopReward(AAC_AAC_DD.datas.BONUS_SRC_ACHIEVEMENT, popRewardUUID, gameclass.AwardDetailCls(achievementId=_takeIds))
+        self.client.onTakeAchievementRewards(_takeIds, sumPoint)
 
     def onCrossServerTriggerAchieveByType(self, achieveType, ctx):
         LOG_INFO("onCrossServerTriggerAchieveByType", achieveType, ctx)
-        if isinstance(ctx, dict):
-            ctx['fromCrossServer'] = True
-        else:
-            ctx.fromCrossServer = True
         self.triggerAchievement(achieveType, ctx)
     
     def triggerAchievementWithCtx(self, achieveType, ctx):
@@ -70,7 +84,8 @@ class IAchievement(object):
             mapExploreInfo.rewardData[0] += num * GED.mapId2Point[mapId][tp]
     
             LOG_INFO("after triggerMapExplore:", mapId, tp, num, self.mapExploreInfo.mapDatas[mapId])
-            self.onMessagePre(M_M_DD.datas.explorationRate, [str(num * GED.mapId2Point[mapId][tp]),])
+            if tp != gameconst.AchieveType.HOOK_TASK_REWARD:
+                self.onMessagePre(M_M_DD.datas.explorationRate, [str(num * GED.mapId2Point[mapId][tp]),])
         self.client.onUpdateMapExplore([mapExploreInfo,])
 
         LogTrackingMgr.LogTrackingMgr.map_exploration(self.gbID, self.accountEntity.clientDistinctId, mapId, tp, mapExploreInfo.rewardData[0], mapExploreInfo.rewardSlot)

@@ -45,7 +45,6 @@ datas ={
     "transition": {
       "finished": [
         1032,
-        1034,
         1036,
         1040,
         1044,
@@ -53,7 +52,8 @@ datas ={
         1067,
         1042,
         1074,
-        1076
+        1076,
+        1020
       ]
     }
   },
@@ -170,7 +170,11 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
-    "transition": {}
+    "transition": {
+      "finished": [
+        1034
+      ]
+    }
   },
   "1040": {
     "type": "taskFinished",

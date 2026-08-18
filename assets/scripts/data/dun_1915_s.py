@@ -12284,31 +12284,6 @@ datas ={
             "TelY": 180.0427,
             "TelZ": 191.6423
           }
-        },
-        "19158005": {
-          "ActivityID": 0,
-          "AttachedGIDList": [],
-          "ClassName": "Teleporter",
-          "ClassNameType": 2,
-          "CustomID": "",
-          "Dir": 117.5188,
-          "DisplayName": "",
-          "EliteCustomID": "11268004",
-          "EntityID": 17112502,
-          "ID": 19158005,
-          "PosX": 169.46,
-          "PosY": 210.8224,
-          "PosZ": 522.67,
-          "Props": {
-            "CameraId": 33010001,
-            "GateType": 0,
-            "Remark": "",
-            "ShowInSceneMap": 1,
-            "TelDir": 137.4067,
-            "TelX": 180.1915,
-            "TelY": 210.5124,
-            "TelZ": 514.9592
-          }
         }
       }
     },

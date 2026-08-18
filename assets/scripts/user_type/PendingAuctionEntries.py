@@ -13,8 +13,8 @@ class PendingAuctionEntryVal(userType.UserSingleType):
             'pendingAuctionEntries': self.pendingAuctionEntries,
         }
 
-    def addPendingAuctionEntry(self, auctionItemUUID=0, amount=0, dealTime=0):
-        entry = PendingAuctionEntry.PendingAuctionEntry(auctionItemUUID=auctionItemUUID, amount=amount, dealTime=dealTime)
+    def addPendingAuctionEntry(self, auctionItemUUID=0, bindMoney=0, money=0, dealTime=0):
+        entry = PendingAuctionEntry.PendingAuctionEntry(auctionItemUUID=auctionItemUUID, bindMoney=bindMoney, money=money, dealTime=dealTime)
         self.pendingAuctionEntries.append(entry)
 
 class PendingAuctionEntriesMgr(object):

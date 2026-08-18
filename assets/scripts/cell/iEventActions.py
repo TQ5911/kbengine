@@ -916,6 +916,7 @@ class IEventActions(object):
         if len(args) < 2:
             LOG_ERR('changeSkill args error')
             return
+
         fromSkillId = args[0]
         toSkillId = args[1]
 
@@ -1152,7 +1153,7 @@ class IEventActions(object):
                 LOG_WARN('dodgeSkill distance too far 1 ', context.parentContext.lastBlinkPos, self.position, _realDstPos, distance)
                 return False
         else:
-            if sMath.distance2D(self.position, _realDstPos) > distance + 1:
+            if sMath.distance2D(self.position, _realDstPos) > distance + 1 + CONST.datas['maxSkillMove']['value']:
                 LOG_WARN('dodgeSkill distance too far 2 ', self.position, _realDstPos, distance)
                 return False
 

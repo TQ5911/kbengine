@@ -490,6 +490,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         entity销毁
         """
         LOG_DBG("monster::onDestroy: %i." % self.id)
+        if self.hasCreepTag(gameconst.CREEP_TAG_LARGE_ENT):
+            self.unsetBodySize()
         super(Monster, self)._preSafeDestory()
         spaceMgr = self.spaceMgr
         if spaceMgr:
@@ -619,6 +621,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             dropCtx.addContextVar('opUUID', opUUID)
             dropCtx.addContextVar('detail', detail)
 
+            fbTargetKiller = None
             if gameconst.DropShareRewardType.FIRST_BLOOD in shareRewardIDList:
                 if not self.FirstBloodTargetId:
                     host = utils.getEntityRealEntity(killer)
@@ -631,6 +634,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                 fbTarget = KBEngine.entities.get(self.FirstBloodTargetId, None)
                 if not fbTarget:
                     fbTarget = killer
+                fbTargetKiller = fbTarget
 
                 for i in range(len(rewardIDList)):
                     if shareRewardIDList[i] == gameconst.DropShareRewardType.FIRST_BLOOD:
@@ -653,7 +657,11 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                             {"needFBTarget":True, "FBTime":NPC_PC.datas['pickupPermissionTime']['value'], "FBItemId": items[j].itemId,
                             "fromMonsterId": self.id, "FBPos": posList[j], "FBBind":items[j].bindType})
 
-            self.doDispatchAward(killer, rewardIDList, shareRewardIDList, displayModeList, dropCtx)
+            # 只要包含首刀归属，那么击杀奖励也由首刀归属者领取
+            if fbTargetKiller:
+                self.doDispatchAward(fbTargetKiller, rewardIDList, shareRewardIDList, displayModeList, dropCtx)
+            else:
+                self.doDispatchAward(killer, rewardIDList, shareRewardIDList, displayModeList, dropCtx)
 
         # 【【程序自主】【副本编辑器】服务流程编辑器怪物原型ID检测支持临时Entity(没有副本ID的Entity)】
         self.addDungeonKillCount()
@@ -698,6 +706,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         _suffixId = C_BD.datas.get(self.monsterId, {}).get('nameSuffixID', 0)
         if _suffixId not in gameconst.MonsterSuffix.NEED_LOG_SUFFIX:
             return
+
+        self.destroyAttach()
 
         LogTrackingMgr.LogTrackingMgr.Kill_Monster(
             'Monster',
@@ -1017,10 +1027,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             self.lastLoseFTTime = now
 
     def safeDestroy(self, forceDestroy=False):
-        if self.hasCreepTag(gameconst.CREEP_TAG_LARGE_ENT):
-            self.unsetBodySize()
-
-        return super().safeDestroy(forceDestroy)
+        return super(Monster, self).safeDestroy(forceDestroy)
 
     def calcFirstBloodTarget(self, srcOriId):
         if not self.isFirstBloodMonster:

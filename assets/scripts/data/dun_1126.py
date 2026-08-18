@@ -26,7 +26,7 @@ datas ={
       "MonsterGroupID": "",
       "PathID": "",
       "Radius": 0.0,
-      "RefreshNum": 1,
+      "RefreshNum": 0,
       "RefreshTime": 0.0,
       "RefreshTimedID": 1,
       "Remark": "",
@@ -99,33 +99,6 @@ datas ={
       "MapEntityType": "26",
       "Remark": "",
       "ShowInSceneMap": 1
-    }
-  },
-  "11268004": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Teleporter",
-    "ClassNameType": 2,
-    "CustomID": "",
-    "Dir": 170.0,
-    "DisplayName": "\u4e94\u6bd2\u77f3\u7a9f\u56db\u5c42\u00b7\u7cbe\u82f1",
-    "EliteCustomID": "19158005",
-    "EntityID": 17112601,
-    "ID": 11268004,
-    "Name": "\u4e94\u6bd2\u77f3\u7a9f\u56db\u5c42",
-    "PosX": 246.8106,
-    "PosY": -127.9807,
-    "PosZ": 500.983,
-    "Props": {
-      "CameraId": 33112602,
-      "GateType": 0,
-      "Remark": "",
-      "ShowInSceneMap": 1,
-      "TelDir": 170.0,
-      "TelX": 250.7737,
-      "TelY": -127.4607,
-      "TelZ": 477.931
     }
   },
   "11268005": {

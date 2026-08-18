@@ -227,7 +227,7 @@ datas = _tools.RODict({
     }),
     18: _tools.RODict({
         "ID": 18,
-        "type": 2,
+        "type": 0,
         "showChest": 0,
         "showLevel": 1,
         "iconGrayOut": "Assets/Res/ui/texture/worldmap/map_3_summoning.png",

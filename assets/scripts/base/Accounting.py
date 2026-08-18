@@ -21,6 +21,8 @@ import appearance
 import redisUtils
 import waitMapCharacter
 import antiAddictionSystem_config as AASC
+import copy
+import CloudServicesUtils
 
 
 class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
@@ -268,6 +270,21 @@ class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
         stub = gameengine.getGlobalBase('WaitMapSpaceStub', reportErr=False)
         stub and stub.onPlayerLogout(self.accountName)
 
+    def checkTextSecurityCallback(self, req, httpCode, jsonData, headers, success, *args):
+        LOG_INFO("checkTextSecurityCallback", req, httpCode, jsonData, headers, success)
+        self.client.checkTextSecurityResp({'res': True, 'id': req['id'], 'resp': jsonData})
+
+    def checkTextSecurityReq(self, exposed, req):
+        LOG_INFO('checkTextSecurityReq req', req)
+        datas = {
+            'text'      : str(req['text']),
+            'id'        : str(self.accountName),
+            'bizType'   : str(req['bizType']),
+        }
+        res = CloudServicesUtils.checkTextSecurity(datas, functools.partial(self.checkTextSecurityCallback, copy.deepcopy(req)))
+        LOG_DBG('checkTextSecurityReq res', res)
+        if not res:
+            self.client.checkTextSecurityResp({'res': False, 'id': req['id'], 'resp': "{}"})
 
 class _QueryCharacterCtx(object):
     def __init__(self, accounting, gbids, callback):

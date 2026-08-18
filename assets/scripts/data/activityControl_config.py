@@ -34,5 +34,17 @@ datas = _tools.RODict({
     "isActivityNotice": _tools.RODict({
         "ID": "isActivityNotice",
         "value": 54001435,
+    }),
+    "crossServer_enterPlaceMsg": _tools.RODict({
+        "ID": "crossServer_enterPlaceMsg",
+        "value": 54003433,
+    }),
+    "crossServer_leaveMsg": _tools.RODict({
+        "ID": "crossServer_leaveMsg",
+        "value": 54003434,
+    }),
+    "crossServer_peopleFull": _tools.RODict({
+        "ID": "crossServer_peopleFull",
+        "value": 54003435,
     })
 })

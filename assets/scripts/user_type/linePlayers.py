@@ -65,7 +65,7 @@ class LinePlayers(userType.UserDictType):
                     _clearList.append(gbId)
 
         for gbId in _clearList:
-            self.doRemoveLinePlayer(None, gbId)
+            self.doRemoveLinePlayer(gbId)
 
         return _clearList
 
@@ -80,7 +80,7 @@ class LinePlayers(userType.UserDictType):
             self.areaPlayersDic.setdefault(playerVal.areaId, {})
             self.areaPlayersDic[playerVal.areaId][playerVal.gbId] = 1
 
-        self.removePendingEnterPlayer(None, playerVal.gbId)
+        self.removePendingEnterPlayer(playerVal.gbId)
 
     def doAddLinePlayer(self, owner, box, gbId, teamUUID, areaId, status, curSpaceNo, extra):
         self[gbId] = LinePlayerVal(
@@ -101,7 +101,7 @@ class LinePlayers(userType.UserDictType):
             self.areaPlayersDic.setdefault(areaId, {})
             self.areaPlayersDic[areaId][gbId] = 1
 
-        self.removePendingEnterPlayer(owner, gbId)
+        self.removePendingEnterPlayer(gbId)
 
     def isTeamLeader(self, teamUUID, gbId):
         return self.teamPlayersDic.get(teamUUID, {}).get(gbId)
@@ -115,7 +115,7 @@ class LinePlayers(userType.UserDictType):
                 return gbId
         return 0
 
-    def doRemoveLinePlayer(self, _, gbId):
+    def doRemoveLinePlayer(self, gbId):
         _pVal = self.pop(gbId, None)
         if not _pVal:
             return False
@@ -169,9 +169,9 @@ class LinePlayers(userType.UserDictType):
     def playersInArea(self, areaId):
         return self.areaPlayersDic.get(areaId, {})
 
-    def addPendingEnterPlayer(self, owner, gbId):
+    def doAddPendingEnterPlayer(self, owner, gbId):
         if gbId in self.pendingEnterPlayersDic:
-            self.removePendingEnterPlayer(owner, gbId)
+            self.removePendingEnterPlayer(gbId)
 
         _sec = utils.curTS()
         self.pendingEnterPlayersDic[gbId] = _sec
@@ -181,7 +181,14 @@ class LinePlayers(userType.UserDictType):
             self.pendingSec = _sec
             self.pendingSecNum = 1
 
-    def removePendingEnterPlayer(self, _, gbId):
+    def doEnterSpaceFailed(self, gbId):
+        if gbId in self.pendingEnterPlayersDic:
+            self.removePendingEnterPlayer(gbId)
+            return False
+
+        return self.doRemoveLinePlayer(gbId)
+
+    def removePendingEnterPlayer(self, gbId):
         if gbId not in self.pendingEnterPlayersDic:
             return
 
@@ -226,11 +233,11 @@ class AllLinePlayers(userType.UserDictType):
         if not _players:
             return
 
-        if not _players.doRemoveLinePlayer(owner, gbId):
+        if not _players.doRemoveLinePlayer(gbId):
             LOG_ERR('zt: fail to remove player', lineNo, gbId)
             for ln, playersVal in self.items():
                 if ln == lineNo:
                     continue
-                if _players.doRemoveLinePlayer(owner, gbId):
+                if _players.doRemoveLinePlayer(gbId):
                     LOG_DBG('zt: remove player', ln, gbId)
 

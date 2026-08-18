@@ -174,6 +174,9 @@ class ImpMail(object):
         self.startLoadMails(mailLoadType)
 
     def startLoadMails(self, mailLoadType):
+        if gameconfig.isCrossServer():
+            return
+            
         if utils.curTS() < self.mailInitLockedTime:
             LOG_WARN('startLoadMails, mail init not finished')
             return

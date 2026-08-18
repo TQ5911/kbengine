@@ -94,6 +94,9 @@
             <Arg>   BOOL      </Arg>
         </startAutoCombat>
 
+        <setAvatarActive><Exposed/>
+        </setAvatarActive>
+
         <stopAutoCombat><Exposed/>
         </stopAutoCombat>
 

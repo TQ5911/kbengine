@@ -120,7 +120,7 @@ class Bag(BaseBag.BaseBag):
         )
 
         if src != AAC_AACDD.datas.BONUS_SRC_BAG_SORT:
-            newCount = self.getItemCount(owner.gbID, itemObj.itemId, itemObj.bindType)
+            newCount = self.getItemCount(owner.gbID, itemObj.itemId, itemObj.bindType, True)
             owner.makeItemFlowLog(
                 self.bagType,
                 itemObj.bindType,
@@ -159,7 +159,7 @@ class Bag(BaseBag.BaseBag):
             datas = tmpItem.setdefault(item.itemId, {})
             datas[item.bindType] = datas.get(item.bindType, 0) + mergeNum
 
-            newCount = self.getItemCount(owner.gbID, item.itemId, item.bindType)
+            newCount = self.getItemCount(owner.gbID, item.itemId, item.bindType, True)
             owner.makeItemFlowLog(
                 self.bagType,
                 item.bindType,
@@ -224,7 +224,7 @@ class Bag(BaseBag.BaseBag):
         super(Bag, self).deductItemsByGridId(owner, grid2ItemNum, opUUID, srcType, detail, sendClient=sendClient)
 
         for _item, num in deducteItems:
-            newCount = self.getItemCount(owner.gbID, _item.itemId, _item.bindType)
+            newCount = self.getItemCount(owner.gbID, _item.itemId, _item.bindType, True)
             owner.makeItemFlowLog(
                 self.bagType, 
                 _item.bindType,
@@ -234,7 +234,9 @@ class Bag(BaseBag.BaseBag):
                 opUUID, 
                 srcType, 
                 newCount, 
-                detail)
+                detail,
+                _item.getRestoreData(),
+            )
 
         owner.onItemCountChanged(itemIdList)
 
@@ -246,7 +248,7 @@ class Bag(BaseBag.BaseBag):
                 gridId, self.bagType, itemId))
 
         owner.onItemCountChanged([itemId])
-        newCount = self.getItemCount(owner.gbID, _cleanItem.itemId, _cleanItem.bindType)
+        newCount = self.getItemCount(owner.gbID, _cleanItem.itemId, _cleanItem.bindType, True)
         owner.makeItemFlowLog(
             self.bagType, 
             _cleanItem.bindType,
@@ -256,7 +258,9 @@ class Bag(BaseBag.BaseBag):
             opUUID, 
             srcType, 
             newCount, 
-            detail)
+            detail,
+            _cleanItem.getRestoreData(),
+        )
 
         if oldObj.uniqueId in self.item2timer:
             tid = self.item2timer.pop(oldObj.uniqueId)
@@ -302,17 +306,6 @@ class Bag(BaseBag.BaseBag):
                 owner.triggerAchievementWithCtx(
                     gameconst.AchieveType.USE_POTION, 
                     actionContext.AchievementCtx(itemId=int(gridItem.itemId), useNum=useNum))
-
-    def useItemSuccSyncToLocalServer(self, owner, uniqueId, itemId, useNum):
-        _gridId, _itemObj = self.getItemByUniqueId(uniqueId)
-        if not _itemObj:
-            return
-        newItemNum = _itemObj.itemNum - useNum
-        if newItemNum <= 0:
-            detail = gameclass.AwardDetailCls(uniqueid=uniqueId)
-            self.cleanGridByGridId(owner, _gridId, itemId, KBEngine.genUUID64(), 0, detail, sendClient=False)
-        else:
-            _itemObj.setItemNum(newItemNum)
 
     def doUseGridItems(self, owner, gridId, itemId, useNum, useItemCtx, isBaseAct=False):
         LOG_DBG('in doUseGridItems:', gridId, itemId)
@@ -515,15 +508,18 @@ class Bag(BaseBag.BaseBag):
         startGrid = self.capacity - initGridNum + 1
         needItemId = 0
         itemNum = 0
+        totalItemNum = 0
         deductWealthVal = dropAward.DeductWealthVal()
         for gridId in range(startGrid, startGrid + gridNum):
             needItemId = BagCommCapData.datas[gridId]['itemNeeded']
             itemNum = BagCommCapData.datas[gridId]['itemNum']
+            totalItemNum += itemNum
             deductWealthVal.addWealthByItemId(needItemId, itemNum, dataUtils.getItemDefaultBindType())
             LOG_INFO('     in doUnlockGrids:', needItemId, itemNum)
 
-        if not owner.canDeductWealth(deductWealthVal, sendMsg=True):
-            LOG_WARN('       in doUnlockGrids, items not enough:', deductWealthVal)
+        res = owner.canDeductWealth(deductWealthVal, sendMsg=True)
+        if not res:
+            LOG_WARN('       in doUnlockGrids, items not enough:', deductWealthVal, res())
             return
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_UNLOCK_GRIDS
@@ -541,7 +537,7 @@ class Bag(BaseBag.BaseBag):
             gridNum,
             self.capacity,
             owner.getRoleCacheAttr('level'),
-            {needItemId:itemNum}
+            {needItemId:totalItemNum}
         )
         return self.capacity
 
@@ -664,6 +660,9 @@ class Bag(BaseBag.BaseBag):
             if bagEquipItem.quality >= A_ACD.datas['itemDisassemblyLimit']['value']:
                 if not owner.checkAuthDisassembleAndMsg(A_AFD.Disassembly, A_ACD.datas['itemDisassemblyLimitMsg']['value']):
                     return
+            if owner.checkPopupSecondaryPassword([(gameconst.SecondaryPasswordCheckType.ITEM_DISASSEMBLE, bagEquipItem.quality)]):
+                LOG_WARN('     in doBagEquipDisassemble, need popup sp', _gridId, bagEquipItem.quality)
+                return
 
             _totalWealthVal += bagEquipItem.returnWealthyByDisassemble(owner)
             _succGridIdList.append(_gridId)
@@ -690,6 +689,8 @@ class Bag(BaseBag.BaseBag):
         owner.client.onUpdateGridItemsNum(self.bagType, clientData)
         owner.addWealth(srcType, _totalWealthVal, opUUID, detail, awardCtx)
 
+        owner.syncMethodCallToCrossServerBase('_doBagEquipDisassemble', (srcType, _totalWealthVal, opUUID, detail, awardCtx, _succGridIdList, succUniqueIdList))
+
         LogTrackingMgr.LogTrackingMgr.Item_Disassembly(
             owner.gbID,
             owner.accountEntity.clientDistinctId,
@@ -700,8 +701,16 @@ class Bag(BaseBag.BaseBag):
             _totalWealthVal.toBriefList(),
             owner.cliConfigDic.get(gameconst.CliConfigDef.EQUIP_AUTO_DISA_KEY, 0)
         )
-        
-        return _totalWealthVal.toBriefList()
+
+    def _doBagEquipDisassemble(self, owner, srcType, _totalWealthVal, opUUID, detail, awardCtx, _succGridIdList, succUniqueIdList):
+        clientData =[]
+        for _gridId, uniqueId in zip(_succGridIdList, succUniqueIdList):
+            bagEquipItem = self.getItemObjByGridId(_gridId)
+            itemNum = bagEquipItem.itemNum
+            self.cleanGridByGridId(owner, _gridId, bagEquipItem.itemId, opUUID, srcType, detail, sendClient=False)
+            clientData.append({'gridId': _gridId, 'itemNum': 0})
+        owner.client.onUpdateGridItemsNum(self.bagType, clientData)
+        owner.addWealth(srcType, _totalWealthVal, opUUID, detail, awardCtx)
 
     def getItemObjByItemID(self, itemID, bindType):
         gridID, gridObj = self.getMinGridByItemId(itemID, bindType)

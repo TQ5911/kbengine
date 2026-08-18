@@ -20,6 +20,8 @@ datas = _tools.RODict({
         "name": "祖珂地堡",
         "sceneList": _tools.ROList([1024, 1027, 1028]),
         "sceneID": 1028,
+        "deathPenaltyID": 6,
+        "ifEnemy": 0,
         "safeScene": 1024,
         "coreTempletId": 10280001,
         "batchTempletId": 10280148,

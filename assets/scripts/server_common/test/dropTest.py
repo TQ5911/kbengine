@@ -1,3 +1,5 @@
+import time
+
 from filecmp import clear_cache
 import KBEngine
 from KBEDebug import *
@@ -31,7 +33,7 @@ BATCH_SEND_SIZE = 4096  # 4K
 BATCH_TIME_COUNT_INIT = 1000       # 初始批次大小
 BATCH_TIME_COUNT_MIN = 100          # 最小批次大小
 BATCH_TIME_COUNT_MAX = 50000        # 最大批次大小
-TARGET_TICK_S = 0.05                # 目标每tick耗时（秒），超过则暂停等待下个tick
+TARGET_TICK_S = 0.2                # 目标每tick耗时（秒），超过则暂停等待下个tick
 
 BATCH_TIME_DUN_COUNT_INIT = 5       # 副本掉落初始批次大小
 BATCH_TIME_DUN_COUNT_MIN = 1
@@ -78,7 +80,7 @@ class DropUnit():
                 QA_DROP_GLOBAL_CACHE[cacheKey]['callbacks'].append(callback)
             process_info = self._get_process_info(cacheKey)
             return False, cacheStatus, '正在执行中，请等待', process_info   
-        self.startTime[cacheKey] = utils.curTS()
+        self.startTime[cacheKey] = time.perf_counter()
         QA_DROP_GLOBAL_CACHE[cacheKey] = {'data': None, 'status': CACHE_STATUS_RUNNING, 'callbacks': [], 'process_info': {}}
         if callback:
             QA_DROP_GLOBAL_CACHE[cacheKey]['callbacks'].append(callback)
@@ -86,7 +88,7 @@ class DropUnit():
         return False, cacheStatus, '开始执行，请等待', {}
     
     def _setCacheResult(self, cacheKey, data):
-        endTime = utils.curTS()
+        endTime = time.perf_counter()
         LOG_DBG("DropUnit: _setCacheResult cacheKey:%s dataLen:%s costTime:%s" % (cacheKey, len(data), endTime - self.startTime[cacheKey])) 
         QA_DROP_GLOBAL_CACHE[cacheKey]['data'] = data
         QA_DROP_GLOBAL_CACHE[cacheKey]['status'] = CACHE_STATUS_FINISHED
@@ -119,15 +121,15 @@ class DropUnit():
 
         def process_batch():
             nonlocal allAward, processed, current_batch_size
-            tick_start = utils.curTS()
+            tick_start = time.perf_counter()
 
             while processed < totalTimes:
                 remaining = totalTimes - processed
                 batch_size = min(current_batch_size, remaining)
 
-                batch_start = utils.curTS()
+                batch_start = time.perf_counter()
                 allAward += dropAward.getAward(awardId, batch_size, awardCtx, False)
-                batch_elapsed = utils.curTS() - batch_start
+                batch_elapsed = time.perf_counter() - batch_start
 
                 processed += batch_size
                 self._update_process_info(cacheKey, processed)
@@ -142,7 +144,7 @@ class DropUnit():
                         (awardId, totalTimes, processed, batch_size, batch_elapsed))
 
                 # 如果当前tick已消耗超过目标时间，暂停等待下个tick
-                if utils.curTS() - tick_start >= TARGET_TICK_S:
+                if time.perf_counter() - tick_start >= TARGET_TICK_S:
                     break
 
             if processed >= totalTimes:
@@ -299,7 +301,7 @@ class DropUnit():
 
         # 本批次待回调数量
         pending_count = end_index - current_index
-        tick_start = utils.curTS()
+        tick_start = time.perf_counter()
 
         def on_one_done():
             nonlocal pending_count
@@ -309,7 +311,7 @@ class DropUnit():
 
         def _finish_batch():
             nonlocal batch_size
-            tick_elapsed = utils.curTS() - tick_start
+            tick_elapsed = time.perf_counter() - tick_start
             # 根据本批次总耗时动态调整下一批的批次大小
             if tick_elapsed > TARGET_TICK_S * 2:
                 process_data['batch_size'] = max(BATCH_TIME_DUN_COUNT_MIN, batch_size // 2)

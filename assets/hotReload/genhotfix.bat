@@ -1,5 +1,6 @@
 @echo off
 cd /d "%~dp0"
+echo [%date% %time%] args: %* >> genhotfix.log
 @rem echo curdir:%CD%
 @rem python --version
 copy "hotReloadTemp.py" "..\scripts\server_common\hotReload.py"

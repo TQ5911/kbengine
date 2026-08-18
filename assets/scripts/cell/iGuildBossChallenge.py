@@ -153,7 +153,7 @@ class IGuildBossChallenge(object):
             
             openTime = now
 
-        self.guildBoxCell.openGuildChallenge(self.gbId, self.base, openType, openId, openTime)
+        self.guildBoxCell.openGuildChallenge(self.gbId, self.base, openType, openId, openTime, self.name)
 
     @gamedecorator.checkGameconfigEnable('guildBossChallenge')
     @gamedecorator.limitcall(1)

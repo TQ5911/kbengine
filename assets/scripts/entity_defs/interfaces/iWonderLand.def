@@ -8,7 +8,7 @@
         </wonderLandTicket>
 
         <paidWonderLandTicket>
-            <Type>          UINT8                       </Type>
+            <Type>          UINT32                       </Type>
             <Flags>         BASE_AND_CLIENT             </Flags>
             <Persistent>    True                        </Persistent>
             <Default>       0                           </Default>
@@ -37,6 +37,7 @@
     <BaseMethods>
         <checkAndEnterWonderLand>
             <Arg>          UINT8                        </Arg>
+            <Arg>          UINT16                       </Arg>
         </checkAndEnterWonderLand>
 
         <doAddWonderLandTicket>

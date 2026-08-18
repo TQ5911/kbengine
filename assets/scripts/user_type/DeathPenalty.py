@@ -58,8 +58,8 @@ class DeathPenalty(userType.UserSingleType):
         self._clear(now)
         return [x.toStreamSavedDic() for x in self.deathPenaltyList]
 
-    def addDeathPenaltyExp(self, exp):
-        _now = utils.curTS()
+    def addDeathPenaltyExp(self, exp, now=None):
+        _now = now or utils.curTS()
         _expireTime = _now + GP_SD.datas['maxExpRecTime']['value']
         while self._isInExpire(_expireTime):
             _expireTime += 1
@@ -72,7 +72,7 @@ class DeathPenalty(userType.UserSingleType):
 
         _retList.extend(self._clear(_now))
 
-        return _retList
+        return _retList, _now
 
     def toStreamSaveDict(self):
         deathPenaltyList = []

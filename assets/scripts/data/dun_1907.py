@@ -7220,9 +7220,9 @@ datas ={
     "EntityID": 11231125,
     "ID": 19070303,
     "Name": "\u5e7d\u888d\u517d\u5deb",
-    "PosX": 224.989792,
-    "PosY": 130.948227,
-    "PosZ": 375.86087,
+    "PosX": 224.9898,
+    "PosY": 130.9482,
+    "PosZ": 375.8609,
     "Props": {
       "ChestGroupID": "",
       "GroupID": "",
@@ -7288,9 +7288,9 @@ datas ={
     "EntityID": 11231123,
     "ID": 19070305,
     "Name": "\u7eff\u888d\u517d\u6cd5",
-    "PosX": 221.686386,
-    "PosY": 130.320541,
-    "PosZ": 378.266052,
+    "PosX": 221.6864,
+    "PosY": 130.3205,
+    "PosZ": 378.2661,
     "Props": {
       "ChestGroupID": "",
       "GroupID": "",
@@ -7594,8 +7594,8 @@ datas ={
     "EntityID": 11231123,
     "ID": 19070324,
     "Name": "\u7eff\u888d\u517d\u6cd5",
-    "PosX": 215.027527,
-    "PosY": 129.549911,
+    "PosX": 215.0275,
+    "PosY": 129.5499,
     "PosZ": 400.4704,
     "Props": {
       "ChestGroupID": "",
@@ -7730,9 +7730,9 @@ datas ={
     "EntityID": 11231125,
     "ID": 19070328,
     "Name": "\u5e7d\u888d\u517d\u5deb",
-    "PosX": 223.197067,
-    "PosY": 130.011551,
-    "PosZ": 407.458344,
+    "PosX": 223.1971,
+    "PosY": 130.0116,
+    "PosZ": 407.4583,
     "Props": {
       "ChestGroupID": "",
       "GroupID": "",
@@ -7764,9 +7764,9 @@ datas ={
     "EntityID": 11231123,
     "ID": 19070329,
     "Name": "\u7eff\u888d\u517d\u6cd5",
-    "PosX": 223.635773,
-    "PosY": 130.081055,
-    "PosZ": 411.478821,
+    "PosX": 223.6358,
+    "PosY": 130.0811,
+    "PosZ": 411.4788,
     "Props": {
       "ChestGroupID": "",
       "GroupID": "",
@@ -7798,9 +7798,9 @@ datas ={
     "EntityID": 11231123,
     "ID": 19070330,
     "Name": "\u7eff\u888d\u517d\u6cd5",
-    "PosX": 219.893661,
+    "PosX": 219.8937,
     "PosY": 129.9884,
-    "PosZ": 409.863556,
+    "PosZ": 409.8636,
     "Props": {
       "ChestGroupID": "",
       "GroupID": "",
@@ -7817,6 +7817,85 @@ datas ={
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "\u4e94\u4eba\u7ec4"
+    }
+  },
+  "19070331": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Monster",
+    "ClassNameType": 0,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 11231030,
+    "ID": 19070331,
+    "Name": "\u971c\u725b\u961f\u957f",
+    "PosX": 552.7686,
+    "PosY": 127.3569,
+    "PosZ": 359.4929,
+    "Props": {
+      "ChestGroupID": "",
+      "GroupID": 1,
+      "Level": 34,
+      "LightPillar": "",
+      "MapEntityScale": 0,
+      "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": 57102002,
+      "Radius": 0.0,
+      "RandomRegion": [
+        [
+          552.795044,
+          127.356255,
+          359.544434,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          428.9944,
+          119.873558,
+          245.871826,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          231.285751,
+          128.221085,
+          129.493958,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          306.62323,
+          142.436,
+          307.981476,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          256.265,
+          131.301636,
+          405.649231,
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      "RefreshNum": 1,
+      "RefreshTime": [
+        1600.0,
+        2000.0
+      ],
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1,
+      "ShowMonsterGroupID": ""
     }
   },
   "19078001": {

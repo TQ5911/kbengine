@@ -574,6 +574,7 @@ class ImpTeam(object):
         self.expAddRatioByTeam = 0
         self.teammateEntIdInAoiSet.clear()
         self.stopTeamTimer()
+        teamUUID = self.teamId
         self.teamId = 0
         self.joinType = gameconst.TeamJoinType.DEFAULT
         self.teamInfo.reset()
@@ -586,7 +587,9 @@ class ImpTeam(object):
         # must mix impTeamDungeon/impSingleDungeon in Avatar
         if self.isInTeamDungeon():
             LOG_INFO('onLeaveTeam:: player leave dungeon {}'.format(self.spaceNo))
-            self.selfLeaveTeamDungeon(dungeonSrc.BasicDungeonSrc())
+            src = dungeonSrc.BasicDungeonSrc()
+            src._extra['teamUUID'] = teamUUID
+            self.selfLeaveTeamDungeon(src)
 
         if formula.inLineScene(self.spaceNo):
             _lineType = formula.fetchMapId(self.spaceNo)
@@ -1021,6 +1024,9 @@ class ImpTeam(object):
             self.reCheckRelationType(_teamMember)
 
     def onAddTeamCell(self, teamInfo):
+        if teamInfo is None:
+            LOG_ERROR('onAddTeamCell: teamInfo is None, team failed to load')
+            return
         LOG_INFO('onAddTeamCell', teamInfo)
         self.teamInfo = team.TeamCacheValInPlayer(
             teamInfo.teamId, 

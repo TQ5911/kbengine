@@ -146,5 +146,10 @@
             <Arg>       SPACE_NO       </Arg>
             <Arg>       INT32          </Arg>
         </onFightingPlayersCntSync>
+
+        <removeLinePlayerWhenExist>
+            <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       STRING          </Arg>
+        </removeLinePlayerWhenExist>
     </BaseMethods>
 </root>

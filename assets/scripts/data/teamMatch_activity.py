@@ -37,7 +37,7 @@ datas = _tools.RODict({
     }),
     2: _tools.RODict({
         "ID": 2,
-        "value": "归墟",
+        "value": "综合地区",
         "pareActivity": 2,
         "minScore": 0,
         "scene": 0,

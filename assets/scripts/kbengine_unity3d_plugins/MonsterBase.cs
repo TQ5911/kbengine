@@ -42,7 +42,6 @@ namespace KBEngine
 		
 		
 		
-		public Byte mineWarCamp = 0;
 		
 		public virtual void onMonsterIdChanged(Int32 oldValue) {}
 		
@@ -702,22 +701,6 @@ namespace KBEngine
 						}
 
 						break;
-					case 7:
-						Byte oldval_mineWarCamp = mineWarCamp;
-						mineWarCamp = stream.readUint8();
-
-						if(prop.isBase())
-						{
-							if(inited)
-								onMineWarCampChanged(oldval_mineWarCamp);
-						}
-						else
-						{
-							if(inWorld)
-								onMineWarCampChanged(oldval_mineWarCamp);
-						}
-
-						break;
 					case 384:
 						Int32 oldval_monsterId = monsterId;
 						monsterId = stream.readInt32();
@@ -1341,27 +1324,6 @@ namespace KBEngine
 					else
 					{
 						onLevelChanged(oldval_level);
-					}
-				}
-			}
-
-			Byte oldval_mineWarCamp = mineWarCamp;
-			Property prop_mineWarCamp = pdatas[4];
-			if(prop_mineWarCamp.isBase())
-			{
-				if(inited && !inWorld)
-					onMineWarCampChanged(oldval_mineWarCamp);
-			}
-			else
-			{
-				if(inWorld)
-				{
-					if(prop_mineWarCamp.isOwnerOnly() && !isPlayer())
-					{
-					}
-					else
-					{
-						onMineWarCampChanged(oldval_mineWarCamp);
 					}
 				}
 			}

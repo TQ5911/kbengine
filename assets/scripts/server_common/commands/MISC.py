@@ -730,8 +730,14 @@ def gm_getItems(superUser, playerEnt, bagType, itemNum, _bindType, itemId_Start,
         bindTypes = [gameconst.ItemBindType.NORMAL]
     else:
         return False, '执行失败, 绑定概率错误'
+    _maxIterTimes = 1000
     for bindType in bindTypes:
         for itemId in range(min(itemId_Start, itemId_End), max(itemId_Start, itemId_End) + 1):
+            _maxIterTimes -= 1
+            if _maxIterTimes <= 0:
+                LOG_ERR('gm_getItems meet max times')
+                break
+
             # 检查是否在装备表中存在
             if itemId in GBG.datas:
                 # 检查是否为离线玩家，如果是离线玩家则执行失败
@@ -2067,7 +2073,7 @@ def gm_switchServer(superUser, playerEnt, serverId):
 @gm_cmd('$enterMap', (Player("gbId or Id"), Int("int mapId")), RARG(0), CELL, '进入地图', ALLSIDE, GOD_GROUPS)
 def gm_enterMap(superUser, playerEnt, mapId):
     enterPos, direction = formula.getSpaceBornPosAndDir(mapId)
-    playerEnt.applyEnterLineInternal(mapId, 0, enterPos, direction, {'isForceEnter': True})
+    playerEnt.applyEnterLineInternal(mapId, -1, enterPos, direction, {'isForceEnter': True})
     return True, 'command success'
 
 @gm_cmd('$EnterAbyss', (Player("gbId or Id"), Int("int floor")), RARG(0), BASE, '进入归墟', ALLSIDE, GOD_GROUPS)
@@ -2082,7 +2088,12 @@ def gm_LeaveAbyss(superUser, playerEnt):
 
 @gm_cmd('$EnterWonderLand', (Player("gbId or Id"), Int("int mapId")), RARG(0), BASE, '进入秘境峰', ALLSIDE, GOD_GROUPS)
 def gm_EnterWonderLand(superUser, playerEnt, mapId):
-    gameengine.getWonderLandStub(mapId).doEnterWonderLand(playerEnt, playerEnt.gbID, {})
+    playerEnt.modifyWonderLandTicket(1, 3, KBEngine.genUUID64())
+    extra = {
+            'enterWonderLandType': gameconst.WONDER_LAND_ENTER_TYPE_TICKET,
+            'floor': 0,
+        }
+    gameengine.getWonderLandStub(mapId).doEnterWonderLand(playerEnt, playerEnt.gbID, extra)
     return True, 'command success'
 
 @gm_cmd('$enterCube', (Player("gbId or Id"), Int("int floor")), RARG(0), CELL, '进入魔方阵', ALLSIDE, GOD_GROUPS)
@@ -2434,7 +2445,7 @@ def gm_gotoLinePos(superUser, playerEnt, spaceNo=0, x=0, y=0, z=0):
 
     pos = Math.Vector3(x, y, z)
     if x == 0 and y == 0 and z == 0:
-        pos, _ = utils.getPlayerBornInfo()
+        pos = formula.getSpaceBornPoint(spaceNo)
 
     try:
         lineNo = formula.parseLineNo(spaceNo)

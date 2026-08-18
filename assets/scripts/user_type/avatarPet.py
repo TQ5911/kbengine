@@ -240,6 +240,9 @@ class LingShouBattleListVal(userType.UserSingleType):
             if d == petId:
                 return True
         return False 
+    
+    def getPetIds(self):
+        return self.petIdList
 
 class LingShouInfo(userType.UserSingleType):
     def __init__(self):
@@ -427,11 +430,18 @@ class LingShouInfo(userType.UserSingleType):
             for v in self.battleList:
                 if v.checkPet(petId):
                     joinBattleCount += 1
+
             battleCount = self.battleList[battleIndex].getPetCount()
+            petIds = self.battleList[battleIndex].getPetIds()
             petTeamInfo = []
             pets = self.getAllPets()
-            for _, pet in pets.items():
-                petTeamInfo.append(LingShou.getPetInfo(pet.petId, pet.quality, pet.level, pet.equipList))
+            for pId in petIds:
+                if pId > 0:
+                    pet = pets.get(pId, None)
+                    if not pet:
+                        continue
+                    petTeamInfo.append(LingShou.getPetInfo(pet.petId, pet.quality, pet.level, pet.equipList))
+                    
             LogTrackingMgr.LogTrackingMgr.pet_make_team(owner.gbID, owner.accountEntity.clientDistinctId, owner.gbID, owner.getAvatarLevel(), battleIndex, battleType, \
                                                         petId, petQuality, petLevel, petEquipList, joinBattleCount, battleCount, petTeamInfo)
         

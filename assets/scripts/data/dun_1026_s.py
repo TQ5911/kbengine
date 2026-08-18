@@ -27,39 +27,12 @@ datas ={
             "MonsterGroupID": "",
             "PathID": "",
             "Radius": 0.0,
-            "RefreshNum": 1,
+            "RefreshNum": 0,
             "RefreshTime": 0.0,
             "RefreshTimedID": 1,
             "Remark": "",
             "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
-          }
-        }
-      },
-      "Teleporter": {
-        "10268002": {
-          "ActivityID": 0,
-          "AttachedGIDList": [],
-          "ClassName": "Teleporter",
-          "ClassNameType": 2,
-          "CustomID": "",
-          "Dir": 159.7834,
-          "DisplayName": "\u7956\u73c2\u5730\u5821\u56db\u5c42\u00b7\u7cbe\u82f1",
-          "EliteCustomID": "19108007",
-          "EntityID": 17102601,
-          "ID": 10268002,
-          "PosX": 432.44,
-          "PosY": 107.8591,
-          "PosZ": 821.07,
-          "Props": {
-            "CameraId": 33102601,
-            "GateType": 0,
-            "Remark": "",
-            "ShowInSceneMap": 1,
-            "TelDir": 154.2752,
-            "TelX": 441.7427,
-            "TelY": 107.8591,
-            "TelZ": 791.8442
           }
         }
       },
@@ -113,7 +86,7 @@ datas ={
           "MonsterGroupID": "",
           "PathID": "",
           "Radius": 0.0,
-          "RefreshNum": 1,
+          "RefreshNum": 0,
           "RefreshTime": 0.0,
           "RefreshTimedID": 1,
           "Remark": "",

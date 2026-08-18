@@ -101,93 +101,6 @@ datas ={
       "ShowMonsterGroupID": "\u86c7\u62183\u4eba\u7ec4"
     }
   },
-  "10350396": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Monster",
-    "ClassNameType": 0,
-    "CustomID": "",
-    "Dir": 0.0,
-    "DisplayName": "",
-    "EliteCustomID": "",
-    "EntityID": 11226036,
-    "ID": 10350396,
-    "Name": "\u9752\u7075\u86c7\u5996",
-    "PosX": 111.7012,
-    "PosY": 148.9495,
-    "PosZ": 252.8028,
-    "Props": {
-      "ChestGroupID": "",
-      "GroupID": 1,
-      "Level": 33,
-      "LightPillar": "",
-      "MapEntityScale": 0,
-      "MapEntityType": 0,
-      "MonsterGroupID": "",
-      "PathID": 57103502,
-      "Radius": 0.0,
-      "RandomRegion": [
-        [
-          536.76,
-          153.809036,
-          107.924477,
-          0.0,
-          1.0,
-          0.0
-        ],
-        [
-          320.140076,
-          159.2017,
-          426.389526,
-          0.0,
-          1.0,
-          0.0
-        ],
-        [
-          224.836548,
-          209.485092,
-          419.06073,
-          0.0,
-          1.0,
-          0.0
-        ],
-        [
-          223.278412,
-          153.29982,
-          596.6742,
-          0.0,
-          1.0,
-          0.0
-        ],
-        [
-          539.068542,
-          148.93808,
-          408.2386,
-          0.0,
-          1.0,
-          0.0
-        ],
-        [
-          473.9216,
-          166.4773,
-          280.9725,
-          0.0,
-          1.0,
-          0.0
-        ]
-      ],
-      "RefreshNum": 1,
-      "RefreshTime": [
-        1600.0,
-        2000.0
-      ],
-      "RefreshTimedID": 0,
-      "Remark": "",
-      "ShowInSceneMap": 1,
-      "ShowMonsterGroupID": ""
-    }
-  },
   "10350397": {
     "ActivityID": 0,
     "AttachedGIDList": [],
@@ -269,9 +182,9 @@ datas ={
     "EntityID": 11226032,
     "ID": 10350399,
     "Name": "\u5ca9\u9762\u9b3c\u9c7c",
-    "PosX": 107.004089,
-    "PosY": 149.16658,
-    "PosZ": 201.900833,
+    "PosX": 107.0041,
+    "PosY": 149.1666,
+    "PosZ": 201.9008,
     "Props": {
       "ChestGroupID": "",
       "GroupID": "",

@@ -199,8 +199,10 @@ class StatisticsCacheVal(userType.UserSingleType):
 
     def _sendStatistics(self):
         maxRankCount = 5
-        for gbId, pVal in self.statisticPlayerDic.items():
-            if not pVal.playerBox or not pVal.isNeedBroadcast:
+        gbIds = list(self.statisticPlayerDic.keys())
+        for gbId in gbIds:
+            pVal = self.statisticPlayerDic.get(gbId)
+            if not pVal or not pVal.playerBox or not pVal.isNeedBroadcast:
                 continue
 
             if utils.checkBoxOffline(pVal.playerBox):

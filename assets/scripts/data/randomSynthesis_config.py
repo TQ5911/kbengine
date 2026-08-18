@@ -77,7 +77,7 @@ datas = _tools.RODict({
     }),
     "synthesRandomPityCounter": _tools.RODict({
         "ID": "synthesRandomPityCounter",
-        "value": 30,
+        "value": 25,
     }),
     "synthesNumShortageMsg": _tools.RODict({
         "ID": "synthesNumShortageMsg",

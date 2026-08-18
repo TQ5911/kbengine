@@ -8,6 +8,7 @@ namespace KBEngine
 	public class EntityCommon : EntityCommonProperty
 	{
 		public virtual void aiChatToPlayer(UInt32 arg1, UInt32 arg2) {} //Monster Summon Npc AvatarReplica 
+		public virtual void checkTextSecurityResp(CHECK_TEXT_SECURITY_RESP arg1) {} //Account Avatar Accounting Avataring 
 		public virtual void drawCube(Vector3 arg1, Vector3 arg2, float arg3, float arg4) {} //Avatar Monster Summon Npc Creation AvatarReplica 
 		public virtual void minorAccountConstraintTip(UInt64 arg1) {} //Account Accounting 
 		public virtual void notifyCastingSkill(UInt32 arg1, double arg2) {} //Avatar Monster Summon Npc Creation AvatarReplica 
@@ -81,7 +82,6 @@ namespace KBEngine
 		public virtual void onIsWitnessCompleteChanged(Byte oldValue) {}	//Avatar Monster Summon Npc Creation AvatarReplica Avataring 
 		public virtual void onLevelChanged(UInt32 oldValue) {}	//Avatar Monster Summon Npc Creation AvatarReplica 
 		public virtual void onMedicineRateChanged(float oldValue) {}	//Avatar AvatarReplica 
-		public virtual void onMineWarCampChanged(Byte oldValue) {}	//Avatar Monster Summon 
 		public virtual void onMiningRateChanged(float oldValue) {}	//Avatar AvatarReplica 
 		public virtual void onMpChanged(Int32 oldValue) {}	//Avatar AvatarReplica 
 		public virtual void onMulCDChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation AvatarReplica 

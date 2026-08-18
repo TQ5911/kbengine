@@ -17,10 +17,12 @@ import weakref
 
 import skill_skill as S_SD
 import conflict_conflict_def as C_C_DD
+import conflict_status_def as C_S_DD
 import conflict_status as C_SD
 import fx_fx as FF
 import const_const as C_CD
 import skillRelevant_skillConst as SRSC
+import gameconfig
 import gameclass
 import functools
 import gametimer
@@ -1143,7 +1145,7 @@ class SkillBaseClass(userType.UserSingleType):
                 _direction.normalise()
 
         elif _scopeType == gameconst.SkillScopeEnum.CURRENT_DIRECTION_RECTANGLE:
-            _direction = sMath.getDirFromYaw(caster._direction[2])
+            _direction = sMath.getDirFromYaw(caster.direction[2])
             _direction.normalise()
             _position = caster.position
 
@@ -1191,6 +1193,9 @@ class SkillBaseClass(userType.UserSingleType):
             _arr = list(direction)
 
         elif _scopeType == gameconst.SkillScopeEnum.MULTI_SECTOR:
+            _arr = list(direction)
+
+        elif _scopeType == gameconst.SkillScopeEnum.TARGET_AUTO:
             _arr = list(direction)
 
         if self.isChangePosSkill(self.skillId):
@@ -1247,7 +1252,11 @@ class SkillBaseClass(userType.UserSingleType):
                 if skillRange > distance:
                     skillRange = distance
 
-            dstPosition = caster.position + skillDir * skillRange
+            if skillDir:
+                dstPosition = caster.position + skillDir * skillRange
+            else:
+                dstPosition = caster.position
+
             dstPosition = utils.getSurfacePos(caster.spaceID, dstPosition)
             _realDstPos = utils.getRaycastPosition(caster.spaceID, caster.position, dstPosition)
             desPosition = list(_realDstPos)
@@ -1377,6 +1386,9 @@ class SkillBaseClass(userType.UserSingleType):
 
             length = self.getServerScoperRange(target, length)
             checkScopeFun = lambda target: self.isInAttackLine(target, caster.position, _skillDir, length, width)
+            if gameconfig.enableDrawCube():
+                caster.allClients.drawCube(caster.position, _skillDir, width, length)
+
             return caster.getTargetsWithNum(caster, targetId, self.getEffectTargetType(self.skillId), self.getServerEffectRange(caster),
                                             self.getMaxTargetNum(caster, self.skillId, context), checkScopeFun)
 
@@ -1587,7 +1599,7 @@ class SkillBaseClass(userType.UserSingleType):
                     return gameconst.UseSkillCheck.USC_ENUM_SINGLE_HEAL_OUT_OF_RANGE
         if needReleaseTarget:
             target = KBEngine.entities.get(targetId)
-            if not target:
+            if not (target and target.isReal()):
                 if ignoreReasons & gameconst.UseSkillCheck.USC_ENUM_TARGET_NOT_FOUND:
                     return gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK
 
@@ -1622,6 +1634,11 @@ class SkillBaseClass(userType.UserSingleType):
 
                     owner.debugCombatMsg('_checkUseSkillTarget skill cannot use because needReleaseTarget and not inRange: skillId:%s, targetPosition:%s, ownerPosition:%s, distance:%s',
                                         self.getSkillId(), target.position, owner.position, sMath.distance2D(owner.position, target.position))
+                    return code
+
+            code = gameconst.UseSkillCheck.USC_ENUM_STATE_INVALID
+            if not code & ignoreReasons:
+                if target.hasState(C_S_DD.datas.teleport):
                     return code
 
         return gameconst.UseSkillCheck.USC_ENUM_CHEKC_OK
@@ -1796,14 +1813,25 @@ class SkillBaseClass(userType.UserSingleType):
                 isSucc=isSucc)
             endAction(owner, target, _ctx)
 
+        if not isSucc:
+            self.doFailClearBuffs(owner)
+
         # 在aiController的useSkillDone里面会把当前这个skillId pop掉，改为放在最后把
         owner.IsAICombatUnit and owner.aiController and owner.aiController.useSkillDone(self.skillId)
+
+    def doFailClearBuffs(self, owner):
+        _failClearBuffs = S_SD.datas[self.skillId]['failClearBuffs']
+        if not _failClearBuffs:
+            return
+
+        for _buffId in _failClearBuffs:
+            owner.removeBuff(_buffId)
 
     def getRealSkillVal(self, owner):
         # 目前只有StageSkill实现了这个方法
         return self, False
 
-    def doActionOnChangeSlot(self, owner, bActive):
+    def skillDoActionOnChangeSlot(self, owner, bActive):
         if bActive:
             _action = self.getActivateAction(self.skillId)
         else:

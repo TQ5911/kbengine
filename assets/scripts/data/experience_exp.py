@@ -106,7 +106,7 @@ datas = _tools.RODict({
     9: _tools.RODict({
         "ID": 9,
         "grade": 9,
-        "expPlayer": 6600,
+        "expPlayer": 6900,
         "fakeOnlineTime": 2,
         "score": 0,
         "powerRange": ([0, 5007], [5008, 6120], [6121]),
@@ -128,7 +128,7 @@ datas = _tools.RODict({
     11: _tools.RODict({
         "ID": 11,
         "grade": 11,
-        "expPlayer": 15000,
+        "expPlayer": 10200,
         "fakeOnlineTime": 2,
         "score": 0,
         "powerRange": ([0, 6913], [6914, 8450], [8451]),
@@ -139,7 +139,7 @@ datas = _tools.RODict({
     12: _tools.RODict({
         "ID": 12,
         "grade": 12,
-        "expPlayer": 16200,
+        "expPlayer": 13800,
         "fakeOnlineTime": 2,
         "score": 0,
         "powerRange": ([0, 7681], [7682, 9388], [9389]),
@@ -150,7 +150,7 @@ datas = _tools.RODict({
     13: _tools.RODict({
         "ID": 13,
         "grade": 13,
-        "expPlayer": 21600,
+        "expPlayer": 16800,
         "fakeOnlineTime": 2,
         "score": 0,
         "powerRange": ([0, 8388], [8389, 10253], [10254]),
@@ -161,7 +161,7 @@ datas = _tools.RODict({
     14: _tools.RODict({
         "ID": 14,
         "grade": 14,
-        "expPlayer": 22800,
+        "expPlayer": 18600,
         "fakeOnlineTime": 2,
         "score": 0,
         "powerRange": ([0, 8556], [8557, 10457], [10458]),
@@ -172,7 +172,7 @@ datas = _tools.RODict({
     15: _tools.RODict({
         "ID": 15,
         "grade": 15,
-        "expPlayer": 30000,
+        "expPlayer": 27000,
         "fakeOnlineTime": 2,
         "score": 0,
         "powerRange": ([0, 9329], [9330, 11402], [11403]),
@@ -260,7 +260,7 @@ datas = _tools.RODict({
     23: _tools.RODict({
         "ID": 23,
         "grade": 23,
-        "expPlayer": 540000,
+        "expPlayer": 500000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 16044], [16045, 19609], [19610]),
@@ -271,7 +271,7 @@ datas = _tools.RODict({
     24: _tools.RODict({
         "ID": 24,
         "grade": 24,
-        "expPlayer": 855000,
+        "expPlayer": 945000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 16533], [16534, 20208], [20209]),
@@ -282,7 +282,7 @@ datas = _tools.RODict({
     25: _tools.RODict({
         "ID": 25,
         "grade": 25,
-        "expPlayer": 860000,
+        "expPlayer": 950000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 18130], [18131, 22159], [22160]),
@@ -293,7 +293,7 @@ datas = _tools.RODict({
     26: _tools.RODict({
         "ID": 26,
         "grade": 26,
-        "expPlayer": 870000,
+        "expPlayer": 955000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 18424], [18425, 22519], [22520]),
@@ -304,7 +304,7 @@ datas = _tools.RODict({
     27: _tools.RODict({
         "ID": 27,
         "grade": 27,
-        "expPlayer": 900000,
+        "expPlayer": 960000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 19393], [19394, 23702], [23703]),
@@ -315,7 +315,7 @@ datas = _tools.RODict({
     28: _tools.RODict({
         "ID": 28,
         "grade": 28,
-        "expPlayer": 920000,
+        "expPlayer": 965000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 19705], [19706, 24084], [24085]),
@@ -326,7 +326,7 @@ datas = _tools.RODict({
     29: _tools.RODict({
         "ID": 29,
         "grade": 29,
-        "expPlayer": 1500000,
+        "expPlayer": 2000000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 20360], [20361, 24885], [24886]),
@@ -337,7 +337,7 @@ datas = _tools.RODict({
     30: _tools.RODict({
         "ID": 30,
         "grade": 30,
-        "expPlayer": 1740000,
+        "expPlayer": 2500000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 22262], [22263, 27209], [27210]),
@@ -348,7 +348,7 @@ datas = _tools.RODict({
     31: _tools.RODict({
         "ID": 31,
         "grade": 31,
-        "expPlayer": 2640000,
+        "expPlayer": 3000000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 23174], [23175, 28323], [28324]),
@@ -359,7 +359,7 @@ datas = _tools.RODict({
     32: _tools.RODict({
         "ID": 32,
         "grade": 32,
-        "expPlayer": 2990000,
+        "expPlayer": 3500000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 24085], [24086, 29438], [29439]),
@@ -370,7 +370,7 @@ datas = _tools.RODict({
     33: _tools.RODict({
         "ID": 33,
         "grade": 33,
-        "expPlayer": 3010000,
+        "expPlayer": 3600000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 24997], [24998, 30552], [30553]),
@@ -381,7 +381,7 @@ datas = _tools.RODict({
     34: _tools.RODict({
         "ID": 34,
         "grade": 34,
-        "expPlayer": 4410000,
+        "expPlayer": 5100000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 25909], [25910, 31666], [31667]),
@@ -392,7 +392,7 @@ datas = _tools.RODict({
     35: _tools.RODict({
         "ID": 35,
         "grade": 35,
-        "expPlayer": 5410000,
+        "expPlayer": 6100000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 26820], [26821, 32781], [32782]),
@@ -403,7 +403,7 @@ datas = _tools.RODict({
     36: _tools.RODict({
         "ID": 36,
         "grade": 36,
-        "expPlayer": 5610000,
+        "expPlayer": 6350000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 27732], [27733, 33895], [33896]),
@@ -414,7 +414,7 @@ datas = _tools.RODict({
     37: _tools.RODict({
         "ID": 37,
         "grade": 37,
-        "expPlayer": 5730000,
+        "expPlayer": 6650000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 28644], [28645, 35009], [35010]),
@@ -425,7 +425,7 @@ datas = _tools.RODict({
     38: _tools.RODict({
         "ID": 38,
         "grade": 38,
-        "expPlayer": 5810000,
+        "expPlayer": 6950000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 29556], [29557, 36124], [36125]),
@@ -436,7 +436,7 @@ datas = _tools.RODict({
     39: _tools.RODict({
         "ID": 39,
         "grade": 39,
-        "expPlayer": 6410000,
+        "expPlayer": 7410000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 30467], [30468, 37238], [37239]),
@@ -447,7 +447,7 @@ datas = _tools.RODict({
     40: _tools.RODict({
         "ID": 40,
         "grade": 40,
-        "expPlayer": 11170000,
+        "expPlayer": 13070000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 31380], [31381, 38353], [38354]),
@@ -458,7 +458,7 @@ datas = _tools.RODict({
     41: _tools.RODict({
         "ID": 41,
         "grade": 41,
-        "expPlayer": 11870000,
+        "expPlayer": 13900000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 32411], [32412, 39614], [39615]),
@@ -469,7 +469,7 @@ datas = _tools.RODict({
     42: _tools.RODict({
         "ID": 42,
         "grade": 42,
-        "expPlayer": 12450000,
+        "expPlayer": 14580000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 33443], [33444, 40874], [40875]),
@@ -480,7 +480,7 @@ datas = _tools.RODict({
     43: _tools.RODict({
         "ID": 43,
         "grade": 43,
-        "expPlayer": 13180000,
+        "expPlayer": 15430000,
         "fakeOnlineTime": 10,
         "score": 0,
         "powerRange": ([0, 34474], [34475, 42135], [42136]),
@@ -491,7 +491,7 @@ datas = _tools.RODict({
     44: _tools.RODict({
         "ID": 44,
         "grade": 44,
-        "expPlayer": 14460000,
+        "expPlayer": 16830000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 35505], [35506, 43396], [43397]),
@@ -502,7 +502,7 @@ datas = _tools.RODict({
     45: _tools.RODict({
         "ID": 45,
         "grade": 45,
-        "expPlayer": 14850000,
+        "expPlayer": 17390000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 36537], [36538, 44656], [44657]),
@@ -513,7 +513,7 @@ datas = _tools.RODict({
     46: _tools.RODict({
         "ID": 46,
         "grade": 46,
-        "expPlayer": 23510000,
+        "expPlayer": 27520000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 37568], [37569, 45917], [45918]),
@@ -524,7 +524,7 @@ datas = _tools.RODict({
     47: _tools.RODict({
         "ID": 47,
         "grade": 47,
-        "expPlayer": 25900000,
+        "expPlayer": 30140000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 38600], [38601, 47177], [47178]),
@@ -535,7 +535,7 @@ datas = _tools.RODict({
     48: _tools.RODict({
         "ID": 48,
         "grade": 48,
-        "expPlayer": 26070000,
+        "expPlayer": 30520000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 39631], [39632, 48438], [48439]),
@@ -546,7 +546,7 @@ datas = _tools.RODict({
     49: _tools.RODict({
         "ID": 49,
         "grade": 49,
-        "expPlayer": 33730000,
+        "expPlayer": 41190000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 40662], [40663, 49699], [49700]),
@@ -557,7 +557,7 @@ datas = _tools.RODict({
     50: _tools.RODict({
         "ID": 50,
         "grade": 50,
-        "expPlayer": 71820000,
+        "expPlayer": 87130000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 41695], [41696, 50960], [50961]),
@@ -568,7 +568,7 @@ datas = _tools.RODict({
     51: _tools.RODict({
         "ID": 51,
         "grade": 51,
-        "expPlayer": 73260000,
+        "expPlayer": 89460000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 42795], [42796, 52306], [52307]),
@@ -579,7 +579,7 @@ datas = _tools.RODict({
     52: _tools.RODict({
         "ID": 52,
         "grade": 52,
-        "expPlayer": 77130000,
+        "expPlayer": 94180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 43896], [43897, 53651], [53652]),
@@ -590,7 +590,7 @@ datas = _tools.RODict({
     53: _tools.RODict({
         "ID": 53,
         "grade": 53,
-        "expPlayer": 81840000,
+        "expPlayer": 99930000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 44997], [44998, 54996], [54997]),
@@ -601,7 +601,7 @@ datas = _tools.RODict({
     54: _tools.RODict({
         "ID": 54,
         "grade": 54,
-        "expPlayer": 87050000,
+        "expPlayer": 106300000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 46098], [46099, 56342], [56343]),
@@ -612,7 +612,7 @@ datas = _tools.RODict({
     55: _tools.RODict({
         "ID": 55,
         "grade": 55,
-        "expPlayer": 92120000,
+        "expPlayer": 112490000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 47198], [47199, 57687], [57688]),
@@ -623,7 +623,7 @@ datas = _tools.RODict({
     56: _tools.RODict({
         "ID": 56,
         "grade": 56,
-        "expPlayer": 97010000,
+        "expPlayer": 118450000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 48299], [48300, 59032], [59033]),
@@ -634,7 +634,7 @@ datas = _tools.RODict({
     57: _tools.RODict({
         "ID": 57,
         "grade": 57,
-        "expPlayer": 102740000,
+        "expPlayer": 125450000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 49400], [49401, 60377], [60378]),
@@ -645,7 +645,7 @@ datas = _tools.RODict({
     58: _tools.RODict({
         "ID": 58,
         "grade": 58,
-        "expPlayer": 107830000,
+        "expPlayer": 131670000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 50500], [50501, 61723], [61724]),
@@ -656,7 +656,7 @@ datas = _tools.RODict({
     59: _tools.RODict({
         "ID": 59,
         "grade": 59,
-        "expPlayer": 235170000,
+        "expPlayer": 287160000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 51601], [51602, 63068], [63069]),
@@ -667,7 +667,7 @@ datas = _tools.RODict({
     60: _tools.RODict({
         "ID": 60,
         "grade": 60,
-        "expPlayer": 246620000,
+        "expPlayer": 301150000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 52703], [52704, 64414], [64415]),
@@ -678,7 +678,7 @@ datas = _tools.RODict({
     61: _tools.RODict({
         "ID": 61,
         "grade": 61,
-        "expPlayer": 261420000,
+        "expPlayer": 319220000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 53792], [53793, 65745], [65746]),
@@ -689,7 +689,7 @@ datas = _tools.RODict({
     62: _tools.RODict({
         "ID": 62,
         "grade": 62,
-        "expPlayer": 274760000,
+        "expPlayer": 335500000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 54881], [54882, 67076], [67077]),
@@ -700,7 +700,7 @@ datas = _tools.RODict({
     63: _tools.RODict({
         "ID": 63,
         "grade": 63,
-        "expPlayer": 288780000,
+        "expPlayer": 352620000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 55970], [55971, 68407], [68408]),
@@ -711,7 +711,7 @@ datas = _tools.RODict({
     64: _tools.RODict({
         "ID": 64,
         "grade": 64,
-        "expPlayer": 308930000,
+        "expPlayer": 377230000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 57059], [57060, 69738], [69739]),
@@ -722,7 +722,7 @@ datas = _tools.RODict({
     65: _tools.RODict({
         "ID": 65,
         "grade": 65,
-        "expPlayer": 325090000,
+        "expPlayer": 396960000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 58148], [58149, 71069], [71070]),
@@ -733,7 +733,7 @@ datas = _tools.RODict({
     66: _tools.RODict({
         "ID": 66,
         "grade": 66,
-        "expPlayer": 340520000,
+        "expPlayer": 415810000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 59237], [59238, 72400], [72401]),
@@ -744,7 +744,7 @@ datas = _tools.RODict({
     67: _tools.RODict({
         "ID": 67,
         "grade": 67,
-        "expPlayer": 361080000,
+        "expPlayer": 440910000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 60326], [60327, 73731], [73732]),
@@ -755,7 +755,7 @@ datas = _tools.RODict({
     68: _tools.RODict({
         "ID": 68,
         "grade": 68,
-        "expPlayer": 379410000,
+        "expPlayer": 463290000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 61415], [61416, 75062], [75063]),
@@ -766,7 +766,7 @@ datas = _tools.RODict({
     69: _tools.RODict({
         "ID": 69,
         "grade": 69,
-        "expPlayer": 403220000,
+        "expPlayer": 492360000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 62504], [62505, 76393], [76394]),
@@ -777,7 +777,7 @@ datas = _tools.RODict({
     70: _tools.RODict({
         "ID": 70,
         "grade": 70,
-        "expPlayer": 447950000,
+        "expPlayer": 546980000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 63601], [63602, 77734], [77735]),
@@ -788,7 +788,7 @@ datas = _tools.RODict({
     71: _tools.RODict({
         "ID": 71,
         "grade": 71,
-        "expPlayer": 471600000,
+        "expPlayer": 575860000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 64991], [64992, 79434], [79435]),
@@ -799,7 +799,7 @@ datas = _tools.RODict({
     72: _tools.RODict({
         "ID": 72,
         "grade": 72,
-        "expPlayer": 495230000,
+        "expPlayer": 604710000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 66382], [66383, 81133], [81134]),
@@ -810,7 +810,7 @@ datas = _tools.RODict({
     73: _tools.RODict({
         "ID": 73,
         "grade": 73,
-        "expPlayer": 524510000,
+        "expPlayer": 640460000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 67772], [67773, 82833], [82834]),
@@ -821,7 +821,7 @@ datas = _tools.RODict({
     74: _tools.RODict({
         "ID": 74,
         "grade": 74,
-        "expPlayer": 551330000,
+        "expPlayer": 673210000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 69163], [69164, 84532], [84533]),
@@ -832,7 +832,7 @@ datas = _tools.RODict({
     75: _tools.RODict({
         "ID": 75,
         "grade": 75,
-        "expPlayer": 733950000,
+        "expPlayer": 896210000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 70553], [70554, 86232], [86233]),
@@ -843,7 +843,7 @@ datas = _tools.RODict({
     76: _tools.RODict({
         "ID": 76,
         "grade": 76,
-        "expPlayer": 776920000,
+        "expPlayer": 948670000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 71944], [71945, 87931], [87932]),
@@ -854,7 +854,7 @@ datas = _tools.RODict({
     77: _tools.RODict({
         "ID": 77,
         "grade": 77,
-        "expPlayer": 816800000,
+        "expPlayer": 997370000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 73334], [73335, 89631], [89632]),
@@ -865,7 +865,7 @@ datas = _tools.RODict({
     78: _tools.RODict({
         "ID": 78,
         "grade": 78,
-        "expPlayer": 857510000,
+        "expPlayer": 1047080000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 74725], [74726, 91330], [91331]),
@@ -876,7 +876,7 @@ datas = _tools.RODict({
     79: _tools.RODict({
         "ID": 79,
         "grade": 79,
-        "expPlayer": 908680000,
+        "expPlayer": 1109570000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 76115], [76116, 93030], [93031]),
@@ -887,7 +887,7 @@ datas = _tools.RODict({
     80: _tools.RODict({
         "ID": 80,
         "grade": 80,
-        "expPlayer": 953600000,
+        "expPlayer": 1164420000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 77512], [77513, 94737], [94738]),
@@ -898,7 +898,7 @@ datas = _tools.RODict({
     81: _tools.RODict({
         "ID": 81,
         "grade": 81,
-        "expPlayer": 1004560000,
+        "expPlayer": 1226640000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 78580], [78581, 96043], [96044]),
@@ -909,7 +909,7 @@ datas = _tools.RODict({
     82: _tools.RODict({
         "ID": 82,
         "grade": 82,
-        "expPlayer": 1061600000,
+        "expPlayer": 1296300000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 79649], [79650, 97348], [97349]),
@@ -920,7 +920,7 @@ datas = _tools.RODict({
     83: _tools.RODict({
         "ID": 83,
         "grade": 83,
-        "expPlayer": 1117090000,
+        "expPlayer": 1364050000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 80717], [80718, 98654], [98655]),
@@ -931,7 +931,7 @@ datas = _tools.RODict({
     84: _tools.RODict({
         "ID": 84,
         "grade": 84,
-        "expPlayer": 1466100000,
+        "expPlayer": 1790220000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 81785], [81786, 99960], [99961]),
@@ -942,7 +942,7 @@ datas = _tools.RODict({
     85: _tools.RODict({
         "ID": 85,
         "grade": 85,
-        "expPlayer": 1552350000,
+        "expPlayer": 1895530000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 82854], [82855, 101266], [101267]),
@@ -953,7 +953,7 @@ datas = _tools.RODict({
     86: _tools.RODict({
         "ID": 86,
         "grade": 86,
-        "expPlayer": 1629230000,
+        "expPlayer": 1989410000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 83922], [83923, 102571], [102572]),
@@ -964,7 +964,7 @@ datas = _tools.RODict({
     87: _tools.RODict({
         "ID": 87,
         "grade": 87,
-        "expPlayer": 1714670000,
+        "expPlayer": 2093750000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 84990], [84991, 103877], [103878]),
@@ -975,7 +975,7 @@ datas = _tools.RODict({
     88: _tools.RODict({
         "ID": 88,
         "grade": 88,
-        "expPlayer": 1799910000,
+        "expPlayer": 2197830000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 86058], [86059, 105183], [105184]),
@@ -986,7 +986,7 @@ datas = _tools.RODict({
     89: _tools.RODict({
         "ID": 89,
         "grade": 89,
-        "expPlayer": 1894100000,
+        "expPlayer": 2312850000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 87127], [87128, 106488], [106489]),
@@ -997,7 +997,7 @@ datas = _tools.RODict({
     90: _tools.RODict({
         "ID": 90,
         "grade": 90,
-        "expPlayer": 1989380000,
+        "expPlayer": 2429190000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1008,7 +1008,7 @@ datas = _tools.RODict({
     91: _tools.RODict({
         "ID": 91,
         "grade": 91,
-        "expPlayer": 2089590000,
+        "expPlayer": 2551550000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1019,7 +1019,7 @@ datas = _tools.RODict({
     92: _tools.RODict({
         "ID": 92,
         "grade": 92,
-        "expPlayer": 2193090000,
+        "expPlayer": 2677930000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1030,7 +1030,7 @@ datas = _tools.RODict({
     93: _tools.RODict({
         "ID": 93,
         "grade": 93,
-        "expPlayer": 2303150000,
+        "expPlayer": 2812320000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1041,7 +1041,7 @@ datas = _tools.RODict({
     94: _tools.RODict({
         "ID": 94,
         "grade": 94,
-        "expPlayer": 2418150000,
+        "expPlayer": 2952740000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1052,7 +1052,7 @@ datas = _tools.RODict({
     95: _tools.RODict({
         "ID": 95,
         "grade": 95,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1063,7 +1063,7 @@ datas = _tools.RODict({
     96: _tools.RODict({
         "ID": 96,
         "grade": 96,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1074,7 +1074,7 @@ datas = _tools.RODict({
     97: _tools.RODict({
         "ID": 97,
         "grade": 97,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1085,7 +1085,7 @@ datas = _tools.RODict({
     98: _tools.RODict({
         "ID": 98,
         "grade": 98,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1096,7 +1096,7 @@ datas = _tools.RODict({
     99: _tools.RODict({
         "ID": 99,
         "grade": 99,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1107,7 +1107,7 @@ datas = _tools.RODict({
     100: _tools.RODict({
         "ID": 100,
         "grade": 100,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1118,7 +1118,7 @@ datas = _tools.RODict({
     101: _tools.RODict({
         "ID": 101,
         "grade": 101,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1129,7 +1129,7 @@ datas = _tools.RODict({
     102: _tools.RODict({
         "ID": 102,
         "grade": 102,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1140,7 +1140,7 @@ datas = _tools.RODict({
     103: _tools.RODict({
         "ID": 103,
         "grade": 103,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1151,7 +1151,7 @@ datas = _tools.RODict({
     104: _tools.RODict({
         "ID": 104,
         "grade": 104,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1162,7 +1162,7 @@ datas = _tools.RODict({
     105: _tools.RODict({
         "ID": 105,
         "grade": 105,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1173,7 +1173,7 @@ datas = _tools.RODict({
     106: _tools.RODict({
         "ID": 106,
         "grade": 106,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1184,7 +1184,7 @@ datas = _tools.RODict({
     107: _tools.RODict({
         "ID": 107,
         "grade": 107,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1195,7 +1195,7 @@ datas = _tools.RODict({
     108: _tools.RODict({
         "ID": 108,
         "grade": 108,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1206,7 +1206,7 @@ datas = _tools.RODict({
     109: _tools.RODict({
         "ID": 109,
         "grade": 109,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1217,7 +1217,7 @@ datas = _tools.RODict({
     110: _tools.RODict({
         "ID": 110,
         "grade": 110,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1228,7 +1228,7 @@ datas = _tools.RODict({
     111: _tools.RODict({
         "ID": 111,
         "grade": 111,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1239,7 +1239,7 @@ datas = _tools.RODict({
     112: _tools.RODict({
         "ID": 112,
         "grade": 112,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1250,7 +1250,7 @@ datas = _tools.RODict({
     113: _tools.RODict({
         "ID": 113,
         "grade": 113,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1261,7 +1261,7 @@ datas = _tools.RODict({
     114: _tools.RODict({
         "ID": 114,
         "grade": 114,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1272,7 +1272,7 @@ datas = _tools.RODict({
     115: _tools.RODict({
         "ID": 115,
         "grade": 115,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1283,7 +1283,7 @@ datas = _tools.RODict({
     116: _tools.RODict({
         "ID": 116,
         "grade": 116,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1294,7 +1294,7 @@ datas = _tools.RODict({
     117: _tools.RODict({
         "ID": 117,
         "grade": 117,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1305,7 +1305,7 @@ datas = _tools.RODict({
     118: _tools.RODict({
         "ID": 118,
         "grade": 118,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1316,7 +1316,7 @@ datas = _tools.RODict({
     119: _tools.RODict({
         "ID": 119,
         "grade": 119,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1327,7 +1327,7 @@ datas = _tools.RODict({
     120: _tools.RODict({
         "ID": 120,
         "grade": 120,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1338,7 +1338,7 @@ datas = _tools.RODict({
     121: _tools.RODict({
         "ID": 121,
         "grade": 121,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1349,7 +1349,7 @@ datas = _tools.RODict({
     122: _tools.RODict({
         "ID": 122,
         "grade": 122,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1360,7 +1360,7 @@ datas = _tools.RODict({
     123: _tools.RODict({
         "ID": 123,
         "grade": 123,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1371,7 +1371,7 @@ datas = _tools.RODict({
     124: _tools.RODict({
         "ID": 124,
         "grade": 124,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1382,7 +1382,7 @@ datas = _tools.RODict({
     125: _tools.RODict({
         "ID": 125,
         "grade": 125,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1393,7 +1393,7 @@ datas = _tools.RODict({
     126: _tools.RODict({
         "ID": 126,
         "grade": 126,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1404,7 +1404,7 @@ datas = _tools.RODict({
     127: _tools.RODict({
         "ID": 127,
         "grade": 127,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1415,7 +1415,7 @@ datas = _tools.RODict({
     128: _tools.RODict({
         "ID": 128,
         "grade": 128,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1426,7 +1426,7 @@ datas = _tools.RODict({
     129: _tools.RODict({
         "ID": 129,
         "grade": 129,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1437,7 +1437,7 @@ datas = _tools.RODict({
     130: _tools.RODict({
         "ID": 130,
         "grade": 130,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1448,7 +1448,7 @@ datas = _tools.RODict({
     131: _tools.RODict({
         "ID": 131,
         "grade": 131,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1459,7 +1459,7 @@ datas = _tools.RODict({
     132: _tools.RODict({
         "ID": 132,
         "grade": 132,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1470,7 +1470,7 @@ datas = _tools.RODict({
     133: _tools.RODict({
         "ID": 133,
         "grade": 133,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1481,7 +1481,7 @@ datas = _tools.RODict({
     134: _tools.RODict({
         "ID": 134,
         "grade": 134,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1492,7 +1492,7 @@ datas = _tools.RODict({
     135: _tools.RODict({
         "ID": 135,
         "grade": 135,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1503,7 +1503,7 @@ datas = _tools.RODict({
     136: _tools.RODict({
         "ID": 136,
         "grade": 136,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1514,7 +1514,7 @@ datas = _tools.RODict({
     137: _tools.RODict({
         "ID": 137,
         "grade": 137,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1525,7 +1525,7 @@ datas = _tools.RODict({
     138: _tools.RODict({
         "ID": 138,
         "grade": 138,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1536,7 +1536,7 @@ datas = _tools.RODict({
     139: _tools.RODict({
         "ID": 139,
         "grade": 139,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1547,7 +1547,7 @@ datas = _tools.RODict({
     140: _tools.RODict({
         "ID": 140,
         "grade": 140,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1558,7 +1558,7 @@ datas = _tools.RODict({
     141: _tools.RODict({
         "ID": 141,
         "grade": 141,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1569,7 +1569,7 @@ datas = _tools.RODict({
     142: _tools.RODict({
         "ID": 142,
         "grade": 142,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1580,7 +1580,7 @@ datas = _tools.RODict({
     143: _tools.RODict({
         "ID": 143,
         "grade": 143,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1591,7 +1591,7 @@ datas = _tools.RODict({
     144: _tools.RODict({
         "ID": 144,
         "grade": 144,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1602,7 +1602,7 @@ datas = _tools.RODict({
     145: _tools.RODict({
         "ID": 145,
         "grade": 145,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1613,7 +1613,7 @@ datas = _tools.RODict({
     146: _tools.RODict({
         "ID": 146,
         "grade": 146,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1624,7 +1624,7 @@ datas = _tools.RODict({
     147: _tools.RODict({
         "ID": 147,
         "grade": 147,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1635,7 +1635,7 @@ datas = _tools.RODict({
     148: _tools.RODict({
         "ID": 148,
         "grade": 148,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1646,7 +1646,7 @@ datas = _tools.RODict({
     149: _tools.RODict({
         "ID": 149,
         "grade": 149,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1657,7 +1657,7 @@ datas = _tools.RODict({
     150: _tools.RODict({
         "ID": 150,
         "grade": 150,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1668,7 +1668,7 @@ datas = _tools.RODict({
     151: _tools.RODict({
         "ID": 151,
         "grade": 151,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1679,7 +1679,7 @@ datas = _tools.RODict({
     152: _tools.RODict({
         "ID": 152,
         "grade": 152,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1690,7 +1690,7 @@ datas = _tools.RODict({
     153: _tools.RODict({
         "ID": 153,
         "grade": 153,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1701,7 +1701,7 @@ datas = _tools.RODict({
     154: _tools.RODict({
         "ID": 154,
         "grade": 154,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1712,7 +1712,7 @@ datas = _tools.RODict({
     155: _tools.RODict({
         "ID": 155,
         "grade": 155,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1723,7 +1723,7 @@ datas = _tools.RODict({
     156: _tools.RODict({
         "ID": 156,
         "grade": 156,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1734,7 +1734,7 @@ datas = _tools.RODict({
     157: _tools.RODict({
         "ID": 157,
         "grade": 157,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1745,7 +1745,7 @@ datas = _tools.RODict({
     158: _tools.RODict({
         "ID": 158,
         "grade": 158,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1756,7 +1756,7 @@ datas = _tools.RODict({
     159: _tools.RODict({
         "ID": 159,
         "grade": 159,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1767,7 +1767,7 @@ datas = _tools.RODict({
     160: _tools.RODict({
         "ID": 160,
         "grade": 160,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1778,7 +1778,7 @@ datas = _tools.RODict({
     161: _tools.RODict({
         "ID": 161,
         "grade": 161,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1789,7 +1789,7 @@ datas = _tools.RODict({
     162: _tools.RODict({
         "ID": 162,
         "grade": 162,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1800,7 +1800,7 @@ datas = _tools.RODict({
     163: _tools.RODict({
         "ID": 163,
         "grade": 163,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1811,7 +1811,7 @@ datas = _tools.RODict({
     164: _tools.RODict({
         "ID": 164,
         "grade": 164,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1822,7 +1822,7 @@ datas = _tools.RODict({
     165: _tools.RODict({
         "ID": 165,
         "grade": 165,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1833,7 +1833,7 @@ datas = _tools.RODict({
     166: _tools.RODict({
         "ID": 166,
         "grade": 166,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1844,7 +1844,7 @@ datas = _tools.RODict({
     167: _tools.RODict({
         "ID": 167,
         "grade": 167,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1855,7 +1855,7 @@ datas = _tools.RODict({
     168: _tools.RODict({
         "ID": 168,
         "grade": 168,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1866,7 +1866,7 @@ datas = _tools.RODict({
     169: _tools.RODict({
         "ID": 169,
         "grade": 169,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1877,7 +1877,7 @@ datas = _tools.RODict({
     170: _tools.RODict({
         "ID": 170,
         "grade": 170,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1888,7 +1888,7 @@ datas = _tools.RODict({
     171: _tools.RODict({
         "ID": 171,
         "grade": 171,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1899,7 +1899,7 @@ datas = _tools.RODict({
     172: _tools.RODict({
         "ID": 172,
         "grade": 172,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1910,7 +1910,7 @@ datas = _tools.RODict({
     173: _tools.RODict({
         "ID": 173,
         "grade": 173,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1921,7 +1921,7 @@ datas = _tools.RODict({
     174: _tools.RODict({
         "ID": 174,
         "grade": 174,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1932,7 +1932,7 @@ datas = _tools.RODict({
     175: _tools.RODict({
         "ID": 175,
         "grade": 175,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1943,7 +1943,7 @@ datas = _tools.RODict({
     176: _tools.RODict({
         "ID": 176,
         "grade": 176,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1954,7 +1954,7 @@ datas = _tools.RODict({
     177: _tools.RODict({
         "ID": 177,
         "grade": 177,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1965,7 +1965,7 @@ datas = _tools.RODict({
     178: _tools.RODict({
         "ID": 178,
         "grade": 178,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1976,7 +1976,7 @@ datas = _tools.RODict({
     179: _tools.RODict({
         "ID": 179,
         "grade": 179,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1987,7 +1987,7 @@ datas = _tools.RODict({
     180: _tools.RODict({
         "ID": 180,
         "grade": 180,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -1998,7 +1998,7 @@ datas = _tools.RODict({
     181: _tools.RODict({
         "ID": 181,
         "grade": 181,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2009,7 +2009,7 @@ datas = _tools.RODict({
     182: _tools.RODict({
         "ID": 182,
         "grade": 182,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2020,7 +2020,7 @@ datas = _tools.RODict({
     183: _tools.RODict({
         "ID": 183,
         "grade": 183,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2031,7 +2031,7 @@ datas = _tools.RODict({
     184: _tools.RODict({
         "ID": 184,
         "grade": 184,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2042,7 +2042,7 @@ datas = _tools.RODict({
     185: _tools.RODict({
         "ID": 185,
         "grade": 185,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2053,7 +2053,7 @@ datas = _tools.RODict({
     186: _tools.RODict({
         "ID": 186,
         "grade": 186,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2064,7 +2064,7 @@ datas = _tools.RODict({
     187: _tools.RODict({
         "ID": 187,
         "grade": 187,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2075,7 +2075,7 @@ datas = _tools.RODict({
     188: _tools.RODict({
         "ID": 188,
         "grade": 188,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2086,7 +2086,7 @@ datas = _tools.RODict({
     189: _tools.RODict({
         "ID": 189,
         "grade": 189,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2097,7 +2097,7 @@ datas = _tools.RODict({
     190: _tools.RODict({
         "ID": 190,
         "grade": 190,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2108,7 +2108,7 @@ datas = _tools.RODict({
     191: _tools.RODict({
         "ID": 191,
         "grade": 191,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2119,7 +2119,7 @@ datas = _tools.RODict({
     192: _tools.RODict({
         "ID": 192,
         "grade": 192,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2130,7 +2130,7 @@ datas = _tools.RODict({
     193: _tools.RODict({
         "ID": 193,
         "grade": 193,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2141,7 +2141,7 @@ datas = _tools.RODict({
     194: _tools.RODict({
         "ID": 194,
         "grade": 194,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2152,7 +2152,7 @@ datas = _tools.RODict({
     195: _tools.RODict({
         "ID": 195,
         "grade": 195,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2163,7 +2163,7 @@ datas = _tools.RODict({
     196: _tools.RODict({
         "ID": 196,
         "grade": 196,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2174,7 +2174,7 @@ datas = _tools.RODict({
     197: _tools.RODict({
         "ID": 197,
         "grade": 197,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2185,7 +2185,7 @@ datas = _tools.RODict({
     198: _tools.RODict({
         "ID": 198,
         "grade": 198,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2196,7 +2196,7 @@ datas = _tools.RODict({
     199: _tools.RODict({
         "ID": 199,
         "grade": 199,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),
@@ -2207,7 +2207,7 @@ datas = _tools.RODict({
     200: _tools.RODict({
         "ID": 200,
         "grade": 200,
-        "expPlayer": 2539710000,
+        "expPlayer": 3101180000,
         "fakeOnlineTime": 20,
         "score": 0,
         "powerRange": ([0, 88200], [88201, 107800], [107801]),

@@ -226,7 +226,10 @@ class StateAngry(StateImpCls):
             aiController.destroyAllVassal()
             aiController.clearHateAndGoHome()
             return
-        if aiController.inHate():
+        if aiController.isAiAfk():
+            aiController.destroyAllVassal()
+            aiController.clearHateAndGoHome()
+        elif aiController.inHate():
             aiController.executeRandomSkill()
         else:
             aiController.destroyAllVassal()
@@ -243,7 +246,10 @@ class StateAngryAndBlink(StateImpCls):
             aiController.stand(False)
             aiController.tickOnce()
             return
-        if aiController.inHate():
+        if aiController.isAiAfk():
+            aiController.stand(False)
+            aiController.tickOnce()
+        elif aiController.inHate():
             aiController.executeRandomSkill()
         else:
             aiController.stand(False)
@@ -257,7 +263,10 @@ class StateAngryEx(StateImpCls):
     mask = Event.ATTACK
 
     def tick(self, aiController):
-        if aiController.inHate():
+        if aiController.isAiAfk():
+            aiController.destroyAllVassal()
+            aiController.clearHateAndGoHome()
+        elif aiController.inHate():
             aiController.executeRandomSkill()
         else:
             aiController.destroyAllVassal()
@@ -282,6 +291,8 @@ class StateBack(StateImpCls):
                 aiController.addContinueBuff()
                 aiController.addHomeBuff()
                 aiController.restart()
+            else:
+                aiController.simpleGoHome()
 
 
 @withName('telBackAfterResetAnim')
@@ -529,7 +540,10 @@ class StateluckyMonsterAngry(StateImpCls):
     name = StateEnum.ANGRY
 
     def tick(self, aiController):
-        if aiController.inHate():
+        if aiController.isAiAfk():
+            aiController.clearHateAndRoute()
+            aiController.starRoutePatrol()
+        elif aiController.inHate():
             aiController.executeRandomSkill()
             aiController.stopRoutingMove()
         else:
@@ -542,7 +556,10 @@ class StateluckyGroupAngry(StateImpCls):
     name = StateEnum.ANGRY
 
     def tick(self, aiController):
-        if not aiController.owner.checkInCombatArea(aiController.owner.position) or not aiController.inHate():
+        if aiController.isAiAfk():
+            aiController.addHomeBuff()
+            aiController.luckyGroupStand()
+        elif not aiController.owner.checkInCombatArea(aiController.owner.position) or not aiController.inHate():
             aiController.addHomeBuff()
             aiController.luckyGroupStand()
         else:

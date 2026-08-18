@@ -18,10 +18,12 @@ import DungeonSettlement
 import LogTrackingMgr
 
 import gamePlay_gamePlay as DDI
+import gamePlay_set as GP_SD
 import activityControl_config as ACCD
 import teamMatch_matchConfig as TMMCD
 import teamMatch_pointsRanking as TM_PR
 import creep_base as CBD
+import const_const as C_CD
 
 class DungeonPlayerReliveRecordMixin(object):
     def __init__(self):
@@ -68,7 +70,10 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         # 副本不用定刷
         #self.initDatetimeTimerTick()
 
+        _dur = 2 * 60 * 60 # 定一个两小时的时间，做一个保底报错，正常来讲副本不应该存在这么久
+        self.pyAddTimer(_dur, _dur, gametimer.TIMER_DUN_TIMEOUT_ERR)
         self.dungeonSettlementDataCache = {}
+        self.dungeonStartWaitTime = 0
         if not self.dungeonPlayMode:
             self.dungeonPlayMode = dungeonPlayMode.UnknownDungeonPlayMode()
 
@@ -122,6 +127,8 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             self._onTimerCallback(tid)
         elif userData == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
+        elif userData == gametimer.TIMER_DUN_TIMEOUT_ERR:
+            self._onDunTimeoutErr()
         else:
             super(DungeonSpaceMgr, self).onTimer(tid, userData)
 
@@ -192,20 +199,37 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             self.flowController.trigger_now()
             return
         
-        # 【【任务】团队副本的创建和进入接口独立】
-        if not self.players and not formula.inRaidDungeonScene(self.spaceNo):
-            # 对于一下情况, 直接开始副本流程逻辑(不等待玩家)
-            # 1. 团队副本
+        # 针对非团队和队伍的副本，没有人就等待
+        if not self.players and not formula.inRaidDungeonScene(self.spaceNo) and not formula.inTeamDungeonScene(self.spaceNo):
             self.asyncCallbackAfter(0.5)._flowStart()
             return
-
+         
+        # 团队和队伍的副本，最多等x分钟，自动开启
+        realPlayerCount = 0
+        ghostPlayerCount = 0
         for pid in self.players:
             ent = KBEngine.entities.get(pid)
-            # if not (ent and ent.isReal() and ent.newbieTaskInitFinishe):
-            if not (ent and ent.isReal()):
+            if ent and ent.isReal():
+                realPlayerCount += 1
+            else:
+                ghostPlayerCount += 1
+            
+            if realPlayerCount > 0 and ghostPlayerCount > 0:
+                break
+        # 没人就继续等待
+        if realPlayerCount == 0:
+            self.asyncCallbackAfter(0.5)._flowStart()
+            return
+        # 有人没进来，就等待x分钟直接开启
+        if ghostPlayerCount > 0:
+            if self.dungeonStartWaitTime == 0:
+                self.dungeonStartWaitTime = utils.curTS()
+
+            # x分钟内继续等待
+            if utils.curTS() - self.dungeonStartWaitTime < C_CD.datas['systemSwitch']['value'] * 60:
                 self.asyncCallbackAfter(0.5)._flowStart()
                 return
-
+                
         if self.dungeonStage:
             LOG_WARN('_flowStart:: NOW FROM STAGE, {}'.format(self.dungeonStage))
             r = self.resetFlowControllerStartByStage(self.dungeonStage)
@@ -239,6 +263,49 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             if _ent and _ent.isReal() and formula.inDungeonScene(_ent.spaceNo):
                 if formula.parseDungeonNoBySpaceNo(self.spaceNo) == formula.parseDungeonNoBySpaceNo(_ent.spaceNo):
                     _ent.client.changeDungeonRemainTime(self.spaceNo, endTime)
+        self.doAfterDungeonStart(dungeonNo, endTime)          
+    
+    def doAfterDungeonStart(self, dungeonNo, endTime):
+        LOG_INFO('doAfterDungeonStart', dungeonNo, endTime)
+        gamePlayCfg = DDI.datas.get(dungeonNo)
+        if not gamePlayCfg or gamePlayCfg['ModeType'] != gameconst.GamePlayModeType.Dungeon or not gamePlayCfg['timeOut']:  
+            return
+        dungeonCDCfg = GP_SD.datas.get('dungeonCountdown')
+        if not dungeonCDCfg:
+            return
+        dungeonCountDowns = dungeonCDCfg['value']
+        if not dungeonCountDowns:
+            return
+        dungeonCDMsgsCfg = GP_SD.datas.get('dungeonCountdownMsg')
+        if not dungeonCDMsgsCfg:
+            return
+        dungeonCountDownMsgs = dungeonCDMsgsCfg['value']
+        if not dungeonCountDownMsgs:
+            return
+        if len(dungeonCountDowns) != len(dungeonCountDownMsgs):
+            LOG_ERR('doAfterDungeonStart, dungeonCountDowns is not equal with dungeonCountDownMsgs', dungeonNo, endTime)
+            return
+        
+        curTime = utils.curTS()
+
+        for idx in range(0, len(dungeonCountDowns)):
+            cdTime = dungeonCountDowns[idx] * 60
+            delta = endTime - curTime
+            if delta <= cdTime:
+                continue
+            cdTime = delta - cdTime
+            cdMsg = dungeonCountDownMsgs[idx]
+            self.addTimerCB(cdTime, '_onNotifyDungeonCD', (cdMsg, dungeonNo, endTime), gametimer.TIMER_TAG_ON_DUNGEON_TIMELY_NOTIFY)
+            break
+
+    def _onNotifyDungeonCD(self, messageId, dungeonNo, endTime):
+        LOG_INFO('doAfterDungeonStart ', messageId, dungeonNo, endTime)
+        self.doAfterDungeonStart(dungeonNo, endTime)
+        for pid in self.players:
+            ent = KBEngine.entities.get(pid)
+            if ent and ent.isReal() and formula.inDungeonScene(ent.spaceNo):
+                if formula.parseDungeonNoBySpaceNo(self.spaceNo) == formula.parseDungeonNoBySpaceNo(ent.spaceNo):
+                    ent.client.onMessage(messageId, [])
 
     def onDungeonStartChallenge(self, endTime):
         LOG_INFO('onDungeonStartChallenge::', endTime, self.dungeonPlayMode)
@@ -1154,6 +1221,9 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         cliDungeonData['innerDemonTime'] = innerDemonTime
         LOG_INFO("notifyInnerDemonData", opUUID, cliDungeonData)
         self.syncPlayer(lambda box: box.client.onDungeonCompleteDungeonData(opUUID, cliDungeonData))
+
+    def _onDunTimeoutErr(self):
+        LOG_ERR('_onDunTimeoutErr:', utils.getNowTimeStr(self.createSpaceMgrTime))
 
     def sendDungeonProps(self, box):
         if self.dungeonPlayMode.playMode != gameconst.DungeonPlayModeEnum.INNER_DEMON:

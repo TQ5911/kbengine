@@ -490,5 +490,13 @@ datas = _tools.RODict({
     "Soul_Unselect": _tools.RODict({
         "ID": "Soul_Unselect",
         "value": 54482013,
+    }),
+    "gearPkSwitchCD": _tools.RODict({
+        "ID": "gearPkSwitchCD",
+        "value": 60,
+    }),
+    "gearPkSwitchMsg": _tools.RODict({
+        "ID": "gearPkSwitchMsg",
+        "value": 54003432,
     })
 })

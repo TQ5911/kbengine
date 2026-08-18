@@ -73,6 +73,10 @@
         <avatarOffline>
             <Arg>       UINT8     </Arg>
         </avatarOffline>
+
+        <checkTextSecurityReq> <Exposed/>
+            <Arg>        CHECK_TEXT_SECURITY_REQ      </Arg>
+        </checkTextSecurityReq>
     </BaseMethods>
 
     <ClientMethods>
@@ -95,5 +99,9 @@
             <Arg>        INT32                        </Arg>
             <Arg>        ARRAY <of> UNICODE </of>     </Arg>
         </onMessage>
+
+        <checkTextSecurityResp>
+            <Arg>           CHECK_TEXT_SECURITY_RESP     </Arg>
+        </checkTextSecurityResp>
     </ClientMethods>
 </root>

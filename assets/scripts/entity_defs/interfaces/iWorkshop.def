@@ -11,7 +11,7 @@
     <BaseMethods>
         <reqWorkshopMF> <Exposed/>
             <Arg>       ITEM_ID                     </Arg>
-            <Arg>       UINT8                       </Arg>
+            <Arg>       UINT16                      </Arg>
             <Arg>       ARRAY <of> GRIDID </of>     </Arg>
             <Arg>       ARRAY <of> UINT16 </of>     </Arg>
         </reqWorkshopMF>
@@ -24,7 +24,7 @@
 
     <ClientMethods>
         <onWorkshopMF>
-            <Arg>  UINT8                                                   </Arg>
+            <Arg>  UINT16                                                  </Arg>
             <Arg>  ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
             <Arg>  ARRAY       <of>        BAG_ITEM_BRIEF_VAL      </of>   </Arg>
         </onWorkshopMF>

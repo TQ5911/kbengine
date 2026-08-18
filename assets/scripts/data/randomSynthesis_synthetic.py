@@ -64,7 +64,7 @@ datas = _tools.RODict({
         "ID": 1000,
         "refNumber": 3,
         "qualityTypes": (0, 1, 1, 1, 0, 0),
-        "openLv": (0, 1, 1, 45, 0, 0),
+        "openLv": (0, 1, 1, 1, 0, 0),
         "probList": (0, 0.1, 0.07, 0.05, 0, 0),
         "upgradeNum": (0, 0, 25, 20, 0, 0),
         "isOpen": 1,

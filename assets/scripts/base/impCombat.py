@@ -68,6 +68,7 @@ class AvatarBuildsMixin(object):
         self.updateSkillScore()
 
     def onChangeSkillLv(self, skillId, toLv):
+        LOG_INFO('onChangeSkillLv, base, ', skillId, toLv)
         self.cell.onChangeSkillLv(skillId, toLv)
 
     def _isCanUnlockSkill(self, isActive, skillId, lv, mid):
@@ -114,7 +115,7 @@ class AvatarBuildsMixin(object):
 
         recommendSlot = self.buildDic.getSkillRecommendSlot(self, _buildSkillId)
         if recommendSlot is not None:
-            self.buildDic.changeSkillSlot(self, skillId, None, recommendSlot)
+            self.buildDic.changeSkillSlot(self, skillId, None, recommendSlot, reason=gameconst.CHANGE_SKILL_REASON_UNLOCK)
 
         return True
 
@@ -174,6 +175,8 @@ class AvatarBuildsMixin(object):
         self.client.onChangeSkill(fromSkillId, toSkillId)
 
     def buildAddActiveSkill(self, skillId, skillLv):
+        if skillId in self.buildDic.skillLevels:
+            skillLv = self.buildDic.skillLevels[skillId]
         self.buildDic.doAddActiveSkill(self, skillId, skillLv)
         self.client.onUpdateSkillLevel([skillId], [skillLv])
 
@@ -256,9 +259,29 @@ class ImpCombat(AvatarBuildsMixin):
             _detail = gameclass.AwardDetailCls()
             self.deductWealth(_src, _deductVal, opUUID, _detail)
             _showList = _deductVal.toBriefList()
+        now = 0
+        if expChange:
+            _toClientData, now = self.deathPenaltyData.addDeathPenaltyExp(expChange)
+            if _toClientData:
+                self.client.onDeathPenaltyExpChange(_toClientData)
+
+            _showList.append({'itemId': gameconst.ItemIdEnum.EXP, 'itemNum': expChange, 'bindType': gameconst.ItemBindType.BIND})
+
+        self.client.onDeathPenaltyReward(killerGbId, killerName, _showList, killerData)
+        self.syncMethodCallToCrossServerBase('_addDeathPenaltyVal', (expChange, coinChange, killerGbId, killerName, opUUID, killerData, now))
+
+    def _addDeathPenaltyVal(self, expChange, coinChange, killerGbId, killerName, opUUID, killerData, timestamp):
+        _showList = []
+        if coinChange:
+            _src = AAC_AACDD.datas.BONUS_SRC_DEAD_PENALTY # TODO: DEAD_PENALTY
+            _coin = min(coinChange, self.coin)
+            _deductVal = dropAward.DeductWealthVal(coin=_coin) # TODO: DEAD_PENALTY
+            _detail = gameclass.AwardDetailCls()
+            self.deductWealth(_src, _deductVal, opUUID, _detail)
+            _showList = _deductVal.toBriefList()
 
         if expChange:
-            _toClientData = self.deathPenaltyData.addDeathPenaltyExp(expChange)
+            _toClientData, now = self.deathPenaltyData.addDeathPenaltyExp(expChange, timestamp)
             if _toClientData:
                 self.client.onDeathPenaltyExpChange(_toClientData)
 
@@ -312,8 +335,9 @@ class ImpCombat(AvatarBuildsMixin):
             _src = AAC_AACDD.datas.BONUS_SRC_RECOVER_DEAD_PENALTY_DEDUCT
             _deductVal = dropAward.DeductWealthVal()
             _deductVal.addWealthByItemId(itemId, _num)
-            if not self.canDeductWealth(_deductVal, sendMsg=True):
-                LOG_ERR('recoverDeathPenaltyExp canDeductWealth failed:', self.gbID)
+            res = self.canDeductWealth(_deductVal, sendMsg=True)
+            if not res:
+                LOG_WARN('recoverDeathPenaltyExp canDeductWealth failed:', self.gbID, res())
                 return
 
             self.deductWealth(_src, _deductVal, _opUUID, gameclass.AwardDetailCls())
@@ -527,7 +551,13 @@ class ImpCombat(AvatarBuildsMixin):
         self.autoDrinkPotionTimerId = 0
 
     @gamedecorator.checkGameconfigEnable('quickSettings')
+    @gamedecorator.crossServer
     def unsetInstantPotionSlots(self, exposed, slotId):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_unsetInstantPotionSlots', (slotId,))
+        self._unsetInstantPotionSlots(slotId)
+
+    def _unsetInstantPotionSlots(self, slotId):
         LOG_INFO('unsetInstantPotionSlots', slotId)
         self.instantPotionSlots.unsetSlot(slotId)
 
@@ -567,8 +597,10 @@ class ImpCombat(AvatarBuildsMixin):
         LOG_INFO('initSummonSlotIdx', self.summonSlotIdxBase)
         self.cell.setSummonSlotIdx(self.summonSlotIdxBase)
 
+    @gamedecorator.crossServer
     def setSummonSlotIdx(self, exposed, slotIdx):
         self._setSummonSlotIdx(slotIdx)
+        self.syncMethodCallToLocalServerBase('_setSummonSlotIdx', (slotIdx,))
 
     def _setSummonSlotIdx(self, slotIdx):
         if slotIdx == self.summonSlotIdxBase:

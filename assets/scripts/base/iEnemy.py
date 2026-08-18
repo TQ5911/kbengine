@@ -27,7 +27,11 @@ class IEnemy(object):
         self.client.onRemoveEnemy([gbId])
 
     @gamedecorator.limitcall(60)
+    @gamedecorator.crossServer
     def getEnemyFreshInfo(self, exposed):
+        if self.isCrossServer:
+            return
+
         LOG_INFO('getEnemyFreshInfo')
         _gbIds = self.enemyMgr.getEnemyGbIds()
 
@@ -69,8 +73,9 @@ class IEnemy(object):
             RC_RCD.datas['enemySearchItemNum']['value'],
         )
 
-        if not self.canDeductWealth(_deductVal, sendMsg=True):
-            LOG_WARN('in onGetEnemyPosInfoResult, items not enough:', _deductVal)
+        res = self.canDeductWealth(_deductVal, sendMsg=True)
+        if not res:
+            LOG_WARN('in onGetEnemyPosInfoResult, items not enough:', _deductVal, res())
             self.client.sendEnemyPosInfoToClient(otherGbId, find, 0, True)
             return
 

@@ -1,5 +1,6 @@
 AbyssSpaceMgr property force 4
 AbyssSpaceMgr property spaceNo 5
+Account method checkTextSecurityResp 20
 Account method minorAccountConstraintTip 16
 Account method onAccountOfflineClient 19
 Account method onAvatarDetailInAccount 4
@@ -21,6 +22,7 @@ Account method onReqAvatarList 3
 Account method onSelectGameFailed 15
 Account property lastSelectGbId 5
 Account property phone 4
+Accounting method checkTextSecurityResp 9
 Accounting method minorAccountConstraintTip 7
 Accounting method onGetAvataringCharacter 6
 Accounting method onKickAnotherAccount 1
@@ -113,6 +115,7 @@ Avatar property lastBigMonthCardDailyRewardTime 92
 Avatar property lastDeadTime 88
 Avatar property lastDeathPentlyTime 121
 Avatar property lastMonthCardDailyRewardTime 60
+Avatar property leagueUUID 120
 Avatar property leftCubeTimes 96
 Avatar property leftGuildTS 100
 Avatar property level 5
@@ -128,7 +131,6 @@ Avatar property minMagicArmor 166
 Avatar property minMagicAtk 83
 Avatar property minPhysicalArmor 167
 Avatar property minPhysicalAtk 85
-Avatar property mineWarCamp 4
 Avatar property miningRate 154
 Avatar property money 13
 Avatar property monsterDmg 137
@@ -161,6 +163,7 @@ Avatar property realDmg 140
 Avatar property realDmgDef 141
 Avatar property remainHangupMinutes 8
 Avatar property reportCnt 53
+Avatar property saleItemBindMoney 107
 Avatar property saleItemMoney 113
 Avatar property school 6
 Avatar property selectedTargetId 168
@@ -184,6 +187,7 @@ Avatar property teamId 34
 Avatar property title 30
 Avatar property totalScore 43
 Avatar property ultraSkillPower 71
+Avatar property withDrawBindMoney 119
 Avatar property withDrawMoney 66
 Avatar property wonderLandAddTimes 63
 Avatar property wonderLandTicket 68
@@ -260,6 +264,7 @@ AvatarReplica property state 31
 AvatarReplica property state2 32
 AvatarReplica property summonSlotIdx 42
 AvatarReplica property ultraSkillPower 43
+Avataring method checkTextSecurityResp 13
 Avataring method onAnotherClientLogin 11
 Avataring method onBreakAwayStuckSuccess 5
 Avataring method onClientDataSyncFinished 1
@@ -428,7 +433,6 @@ Monster property ignoreArmor 57
 Monster property isBoss 86
 Monster property isWitnessComplete 87
 Monster property level 88
-Monster property mineWarCamp 4
 Monster property monsterId 11
 Monster property mulCD 104
 Monster property mulSpeed 43
@@ -563,7 +567,6 @@ Summon property ignoreArmor 102
 Summon property isBoss 58
 Summon property isWitnessComplete 59
 Summon property level 62
-Summon property mineWarCamp 5
 Summon property mulCD 76
 Summon property mulSpeed 38
 Summon property name 80

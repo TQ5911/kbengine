@@ -28,9 +28,10 @@ class IGuildTrain(object):
         currency, amount = G_GCD.datas['guildTrainResetFee']['value']
         deductWealthVal = dropAward.DeductWealthVal().addWealthByItemId(currency, amount)
 
-        if not self.canDeductWealth(deductWealthVal):
+        res = self.canDeductWealth(deductWealthVal)
+        if not res:
             # self.onMessagePre(G_GCD.datas['guildTrainReset_lackCoin_msg']['value'], [ID_IDD.datas[currency]['name']])
-            LOG_WARN('resetGuildTrain not enough 1:', deductWealthVal)
+            LOG_WARN('resetGuildTrain not enough 1:', deductWealthVal, res())
             return
 
         opUUID = KBEngine.genUUID64()
@@ -107,7 +108,10 @@ class IGuildTrain(object):
             coin=gtuData['upgradeCoinCost'],
             guildContrib=gtuData['upgradeContributionCost'])
 
-        if not self.canDeductWealth(dwVal):
+        res = self.canDeductWealth(dwVal)
+        if not res:
+            if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
+                return None
             self.onMessagePre(
                 M_MD.datas.guildTrain_notEnoughRes,
                 [
@@ -135,6 +139,9 @@ class IGuildTrain(object):
         )
 
     def onCheckUpgradeTrainLevelResult(self, result, ctx):
+        if not result:
+            return
+
         _trainId = ctx['trainId']
         _targetLevel = ctx['targetLevel']
         _dwVal = self._checkCanUpgradeTrainLevel(_trainId, _targetLevel, GT_GTUD.datas.get(_targetLevel))

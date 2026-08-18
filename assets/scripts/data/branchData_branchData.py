@@ -216,7 +216,7 @@ datas = _tools.RODict({
     1036: _tools.RODict({
         "ID": 1036,
         "name": "月光海港五层",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
@@ -1618,8 +1618,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     5101: _tools.RODict({
         "ID": 5101,
@@ -1629,8 +1629,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     5102: _tools.RODict({
         "ID": 5102,
@@ -1640,8 +1640,8 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     5103: _tools.RODict({
         "ID": 5103,
@@ -1651,13 +1651,35 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20
     }),
     5201: _tools.RODict({
         "ID": 5201,
         "name": "归墟一层",
         "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 100,
+        "MergeRequired": 50
+    }),
+    5204: _tools.RODict({
+        "ID": 5204,
+        "name": "祖珂地堡五层·精英",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 100,
+        "MergeRequired": 50
+    }),
+    5205: _tools.RODict({
+        "ID": 5205,
+        "name": "五毒石窟五层·精英",
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,

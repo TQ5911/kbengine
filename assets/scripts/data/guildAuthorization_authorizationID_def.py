@@ -16,7 +16,7 @@ import crontab
 
 class datas(object, metaclass=_tools.VarNameDefinedMeta):
     BONUS_SRC_UNKNOWN = 0
-    guildChannelCD = 0
+    appointPresident = 0
     appointVicePresident = 1
     appointMinister = 2
     dismissVicePresident = 3

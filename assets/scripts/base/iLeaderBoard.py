@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import gameconfig
 import gameconst
 import gametimer
 import actionContext
@@ -25,7 +26,14 @@ class ILeaderBoard(object):
             gametimer.UPDATE_AVATAR_LEADERBOARD)
 
     @gamedecorator.checkGameconfigEnable('rank')
+    @gamedecorator.crossServer
     def getLeaderBoardList(self, exposed, leaderBoardType, leaderBoardIdx, school, page):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_getLeaderBoardList', (leaderBoardType, leaderBoardIdx, school, page))
+        else:
+            self._getLeaderBoardList(leaderBoardType, leaderBoardIdx, school, page)
+
+    def _getLeaderBoardList(self, leaderBoardType, leaderBoardIdx, school, page):
         if leaderBoardType == gameconst.LeaderBoardType.GUILD:
             gameengine.getLeaderStub(leaderBoardType).doGetLeaderBoardGuildList(
                 self,
@@ -43,6 +51,13 @@ class ILeaderBoard(object):
             school,
             page)
 
+    def onGetLeaderBoardList(self, funcName, leaderBoardIdx, _list, school, page, _isEnd, _rank):
+        if self.isCrossServerInLocalServer:
+            self.syncMethodCallToCrossServerBase('_onGetLeaderBoardList', (funcName, leaderBoardIdx, _list, school, page, _isEnd, _rank))
+
+    def _onGetLeaderBoardList(self, funcName, leaderBoardIdx, _list, school, page, _isEnd, _rank):
+        getattr(self.client, funcName)(leaderBoardIdx, _list, school, page, _isEnd, _rank)
+
     @gamedecorator.checkGameconfigEnable('rank')
     def getLevelRushRankList(self, exposed, leaderBoardType, leaderBoardIdx, school, page):
         return gameengine.getLeaderStub(leaderBoardType).doGetLeaderBoardList(
@@ -51,6 +66,16 @@ class ILeaderBoard(object):
             leaderBoardIdx,
             school,
             page)
+
+    @gamedecorator.limitcall(0.5)
+    @gamedecorator.checkGameconfigEnable('rank')
+    def getScoreRushRankSelf(self, exposed):
+        gameengine.getLeaderStub(gameconst.LeaderBoardType.AVATAR_SCORE).getScoreRushRankSelf(self, self.gbID)
+
+    @gamedecorator.limitcall(2)
+    @gamedecorator.checkGameconfigEnable('rank')
+    def getScoreRushRankList(self, exposed, page):
+        gameengine.getLeaderStub(gameconst.LeaderBoardType.AVATAR_SCORE).getScoreRushRankList(self, self.gbID, page)
 
     def toLeaderBoardAvatarCache(self):
         roleInfo = gameglobal.roleCache.get(self.id, None)
@@ -113,10 +138,6 @@ class ILeaderBoard(object):
             _lbacVal = self.toLeaderBoardAvatarCache()
             gameengine.getLeaderStub(gameconst.LeaderBoardType.AVATAR_LEVEL).onGetLeaderBoardCache(_lbacVal)
 
-        if _level >= R_RD.datas[gameconst.LeaderBoardType.AVATAR_SCORE]['minLevel']:
-            _lbacVal = self.toLeaderBoardAvatarScore()
-            gameengine.getLeaderStub(gameconst.LeaderBoardType.AVATAR_SCORE).onGetLeaderBoardCache(_lbacVal)
-
         if _level >= R_RD.datas[gameconst.LeaderBoardType.ACHIEVEMENT]['minLevel']:
             if self.achievementInfo.sumPoint > 0:
                 _lbacVal = self.toLeaderBoardAvatarAchievement()
@@ -131,6 +152,9 @@ class ILeaderBoard(object):
         self.cell.syncAvatarScoreRank(rank)
 
     def onLeaderBoardRank(self, leaderBoardType, rank):
+        if gameconfig.isCrossServer():
+            return
+
         self.achievementInfo.triggerAchieveByType(
             self,
             gameconst.AchieveType.LEADER_BOARD,

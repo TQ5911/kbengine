@@ -193,7 +193,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         return _mapIds[_randomIdx]
 
-    def doEnterCube(self, box, mapId, gbId, extra):
+    def doEnterCube(self, box, fromSpaceNo, mapId, gbId, extra):
         _lineNo = 0
         if mapId in B_BD.datas:
             _lineNo = self._autoSelectLine(box, gbId, iLinePlayersStub.EnterLineExtra.new(extra, -1), lineType=mapId)
@@ -202,11 +202,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             LOG_ERR('CubeStub::doEnterCube: lineNo is -1')
             return
         _spaceNo = formula.combineLineSpaceNo(mapId, _lineNo)
-        self._doAvatarEnterCubeRoom(_spaceNo, box, gbId, extra)
-
-    def gmEnterTargetRoom(self, box, gbId, spaceNo):
-        _playerVal = self.allPlayers.get(gbId)
-        self._doAvatarEnterCubeRoom(spaceNo, box, gbId, {})
+        self._doAvatarEnterCubeRoom(fromSpaceNo, _spaceNo, box, gbId, extra)
 
     def _getAvailableReadyRoom(self):
         _mapId = cube_room.floorTypeMapDic[self.cubeNo][gameconst.CubeRoomType.READY][0]
@@ -226,9 +222,9 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         else:
             return _enterSpaceNo
 
-    def doEnterCubeReady(self, box, gbId, extra):
+    def doEnterCubeReady(self, box, fromSpaceNo, gbId, extra):
         _enterSpaceNo = self._getAvailableReadyRoom()
-        self._doAvatarEnterCubeRoom(_enterSpaceNo, box, gbId, extra)
+        self._doAvatarEnterCubeRoom(fromSpaceNo, _enterSpaceNo, box, gbId, extra)
 
     def onAvatarOffline(self, gbId):
         LOG_INFO('CubeStub::onAvatarOffline: {}'.format(gbId))
@@ -269,7 +265,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                 return True
         return False
 
-    def enterRandomRoom(self, box, gbId, extra, curSpaceNo, filterTypes):
+    def enterRandomRoom(self, box, fromSpaceNo, gbId, extra, curSpaceNo, filterTypes):
         mapId = self._getRandomMapId(curSpaceNo, filterTypes)
         if mapId is None:
             LOG_ERR('enterRandomRoom: no space available')
@@ -279,28 +275,29 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if mapId in B_BD.datas:
             _lineNo = self._autoSelectLine(box, gbId, iLinePlayersStub.EnterLineExtra.new(extra, -1), lineType=mapId)
         if _lineNo == -1:
-            LOG_ERR('CubeStub::enterRandomRoom: lineNo is -1')
+            LOG_WARN('CubeStub::enterRandomRoom: lineNo is -1')
+            box.onMessagePre(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
             return
 
         _spaceNo = formula.combineLineSpaceNo(mapId, _lineNo)
 
-        self._doAvatarEnterCubeRoom(_spaceNo, box, gbId, extra)
+        self._doAvatarEnterCubeRoom(fromSpaceNo, _spaceNo, box, gbId, extra)
         if not self.canMapEnter(mapId):
             self._removeRandomInfos(formula.fetchMapId(_spaceNo))
 
-    def _doAvatarEnterCubeRoom(self, spaceNo, box, gbId, extra):
+    def _doAvatarEnterCubeRoom(self, fromSpaceNo, spaceNo, box, gbId, extra):
         playerVal = self.allPlayers.get(gbId)
-        if playerVal and playerVal.curSpaceNo == spaceNo:
-            LOG_ERR('CubeStub::_doAvatarEnterCubeRoom: player already in space: {} {}'.format(gbId, spaceNo))
-            return
-
         if playerVal:
+            if playerVal.curSpaceNo == spaceNo:
+                LOG_ERR('CubeStub::_doAvatarEnterCubeRoom: player already in space: {} {}'.format(gbId, spaceNo))
+                return
+
             self.addPendingEnterPlayer(spaceNo, gbId)
         else:
             self.addEnterPlayer(box, gbId, 0, 0, linePlayers.LinePlayerVal.ENTERING, spaceNo, {})
 
         _spaceVal = self.staticSpaces[spaceNo]
-        box.cell.beginEnterCubeRoom(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id, _spaceVal.getSpaceNo(), extra)
+        box.cell.beginEnterCubeRoom(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id, fromSpaceNo, _spaceVal.getSpaceNo(), extra)
 
     def onEnterCubeSuccess(self, gbId, spaceNo):
         LOG_INFO('CubeStub::onEnterCubeSuccess: {} {}'.format(gbId, spaceNo))
@@ -403,14 +400,14 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         _canEnter = self.canSpaceEnter(_spaceNo)
         box.cell.onCheckSwitchCubeLineResult(lineNo, _canEnter)
 
-    def doSwitchCubeLine(self, box, gbId, lineNo, extra, _mapId):
+    def doSwitchCubeLine(self, box, fromSpaceNo, gbId, lineNo, extra, _mapId):
         _spaceNo = formula.combineLineSpaceNo(_mapId, lineNo)
 
         if not self.canSpaceEnter(_spaceNo):
             self.onMessagePre(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
             return
 
-        self._doAvatarEnterCubeRoom(_spaceNo, box, gbId, extra)
+        self._doAvatarEnterCubeRoom(fromSpaceNo, _spaceNo, box, gbId, extra)
     
 
 

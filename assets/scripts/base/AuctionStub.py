@@ -4,6 +4,7 @@ import KBEngine
 from KBEDebug import *
 
 import random
+import math
 
 import gameengine
 import iGlobal
@@ -146,19 +147,16 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         if errno == 1:
             # 抢购
             if buyType == gameconst.AuctionBuyType.SNATCH:
-                data = self.auctionSnatchRecords.get(auctionItemUUID, None)
-                if not data:
-                    data = AuctionSnatchRecords.AuctionSnatchRecords(auctionItemUUID, extra.get('auctionBuyItemId'), price, extra.get('number'), publicityEndTime)
-                    self.auctionSnatchRecords[auctionItemUUID] = data
-                # 已完成直接返还
-                if data.isFinished():
-                    self.doSnatchReturnBack(playerGBID, extra.get('tlogProps').get('role_name'), extra.get('opUUID'), extra.get('auctionBuyItemId'), price)
-                    return
-                data.addAuctionSnatchRecords(playerGBID, extra.get('tlogProps').get('role_name'), extra.get('opUUID'))
-                # 发消息
-                gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                                        [playerGBID, ], 'onMessagePre', (AUC_CONST.datas['auctionLuckyBuyCheck']['value'], []),
-                                        None, '', ())
+                gameglobal.localBaseApp.getRedisClient().setnxex(
+                    gameconst.AuctionSnatchData.SNATCH_PARTICIPATE_PREFIX.format(str(playerGBID), str(auctionItemUUID)), 1,
+                    self.SNATCH_LOCK_TTL,
+                    lambda cid, err, result, 
+                    playerGBID=playerGBID,
+                    auctionItemUUID=auctionItemUUID, 
+                    extra=extra, 
+                    price=price,
+                    publicityEndTime=publicityEndTime:
+                        self._onChekResult(cid, err, result, playerGBID, auctionItemUUID, extra, price, publicityEndTime))
                 return
             
         if not self.isAuctionCenterActive():
@@ -344,31 +342,62 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             itemId = data['itemId']
             self.getItemLastAndAvgPrice(0, itemId, {})
 
-    def _onLockResult(self, cid, err, result, auctionUUID, itemId, price, number, records):
+    def _onLockResult(self, cid, err, result, auctionUUID, itemId, price, number, auctionRecord):
         if err:
             LOG_ERR('snatch:: lock error', err)
             # redis报错，全部返还
-            self.doBatchSnatchRetunBack(itemId, price, records.records)
+            self.doBatchSnatchRetunBack(itemId, price, auctionRecord)
             return
 
         if result != 'OK':
             LOG_INFO('snatch:: already in flight')
             # 没抢到锁，全部返还
-            self.doBatchSnatchRetunBack(itemId, price, records.records)
+            self.doBatchSnatchRetunBack(itemId, price, auctionRecord)
             return
         # 开始抢购
-        self.startSnatch(auctionUUID, itemId, price, number, records)
+        self.startSnatch(auctionUUID, itemId, price, number, auctionRecord)
+
+    def _onChekResult(self, cid, err, result, playerGBID, auctionItemUUID, extra, price, publicityEndTime):
+        if err:
+            LOG_ERR('snatch:: participate error', err)
+            # redis报错，全部返还
+            self.doSnatchReturnBack(playerGBID, extra.get('tlogProps').get('role_name'), extra.get('opUUID'), extra.get('auctionBuyItemId'), price)
+            return
+
+        if result != 'OK':
+            LOG_INFO('snatch:: already in participate')
+            # 重复参加，返还
+            self.doSnatchReturnBack(playerGBID, extra.get('tlogProps').get('role_name'), extra.get('opUUID'), extra.get('auctionBuyItemId'), price)
+            return
+        
+        data = self.auctionSnatchRecords.get(auctionItemUUID, None)
+        if not data:
+            data = AuctionSnatchRecords.AuctionSnatchRecords(auctionItemUUID, extra.get('auctionBuyItemId'), price, extra.get('number'), publicityEndTime)
+            self.auctionSnatchRecords[auctionItemUUID] = data
+        # 已完成直接返还
+        if data.isFinished():
+            self.doSnatchReturnBack(playerGBID, extra.get('tlogProps').get('role_name'), extra.get('opUUID'), extra.get('auctionBuyItemId'), price)
+            return
+        data.addAuctionSnatchRecords(playerGBID, extra.get('tlogProps').get('role_name'), extra.get('opUUID'))
+        # 发消息
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                                [playerGBID, ], 'onMessagePre', (AUC_CONST.datas['auctionLuckyBuyCheck']['value'], []),
+                                None, '', ())
 
     def auctionSnatch(self):
         now = utils.curTS()
-        for auctionSnatchRecord in self.auctionSnatchRecords.values():
+        recordKeys = list(self.auctionSnatchRecords.keys())
+        for recordKey in recordKeys:
+            auctionSnatchRecord = self.auctionSnatchRecords.get(recordKey, None)
+            if auctionSnatchRecord is None:
+                continue
             # 完成了，不处理
             if auctionSnatchRecord.isFinished():
                 continue
             # 交易行关了，全部走返还
             if not self.isAuctionCenterActive():
                 auctionSnatchRecord.setFinished()
-                self.doBatchSnatchRetunBack(auctionSnatchRecord.itemId, auctionSnatchRecord.price, auctionSnatchRecord.records)
+                self.doBatchSnatchRetunBack(auctionSnatchRecord.itemId, auctionSnatchRecord.price, auctionSnatchRecord)
                 LOG_INFO("auctionSnatch auctionCenter is not active")
                 return
             if now >= auctionSnatchRecord.publicityEndTime:
@@ -387,15 +416,13 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                     rcd=auctionSnatchRecord:
                         self._onLockResult(cid, err, result, auctionUUID, itemId, price, number, rcd))    
 
-    def startSnatch(self, auctionUUID, itemId, price, number, records):
+    def startSnatch(self, auctionUUID, itemId, price, number, auctionRecord):
         LOG_INFO('startSnatch ', auctionUUID, itemId, price, number)
-        idx = random.randint(0, len(records.records) - 1)
+        idx = random.randint(0, len(auctionRecord.records) - 1)
         # 幸运儿随机
-        record = records.records.pop(idx)
+        record = auctionRecord.records.pop(idx)
         # 其他人走返还
-        self.doBatchSnatchRetunBack(itemId, price, records.records)
-        # 清理本次数据
-        records.records.clear()
+        self.doBatchSnatchRetunBack(itemId, price, auctionRecord)
         # 开启去买
         extra = {}
         extra['number'] = number
@@ -406,9 +433,11 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         extra['tlogProps'] = props
         self.startDoBuyAction(auctionUUID, record.gbId, price, extra, gameconst.AuctionErrno.ERR_AUCTION_OK.errno)
 
-    def doBatchSnatchRetunBack(self, itemId, price, records):
-        for record in records:
+    def doBatchSnatchRetunBack(self, itemId, price, auctionRecord):
+        for record in auctionRecord.records:
             self.doSnatchReturnBack(record.gbId, record.name, record.opUUID, itemId, price)
+        auctionRecord.clearRecords()
+        self.auctionSnatchRecords.pop(auctionRecord.auctionUUID, None)
 
     def doSnatchReturnBack(self, gbId, name, opUUID, itemId, price):
         # 发消息
@@ -515,7 +544,8 @@ class AuctionStubService(GameServer):
                 None, '', ())
 
             LogTrackingMgr.LogTrackingMgr.auction_item_sale(playerGBID, '', playerGBID, extra.get('opUUID'), auctionItem.auctionItemUUID, auctionItem.itemId, \
-                                                        dataUtils.getItemType(auctionItem.itemId), auctionItem.number, auctionItem.price, auctionItem.totalPrice, auctionItem.addPublicityTime > 0)
+                                                        dataUtils.getItemType(auctionItem.itemId), auctionItem.number, auctionItem.price, auctionItem.totalPrice, auctionItem.addPublicityTime > 0, \
+                                                            gameglobal.mallItemPriceInfoDict.get(auctionItem.itemId, {}).get('avgPrice', 0.0), gameglobal.mallItemPriceInfoDict.get(auctionItem.itemId, {}).get('avgPrice7', 0.0))
 
     def replyBuyItem(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
@@ -692,35 +722,47 @@ class AuctionStubService(GameServer):
         roleName = tlogProps.get('role_name', '')
         roleAccount = tlogProps.get('role_account', '')
         totalPrice = extra.get('totalPrice')
-        auctionTaxRate = AUC_CONST.datas['auctionTaxRate']['value']
-        totalPriceTax = round(totalPrice * auctionTaxRate/100)
-        totalPriceInDeductTax = totalPrice - totalPriceTax
 
+        auctionRevenueRule = AUC_CONST.datas['auctionRevenueRate']['value']
+        revenueTax = math.ceil(totalPrice * auctionRevenueRule[0])
+        if revenueTax >= totalPrice:
+            revenueTax = totalPrice
+            revenueMoney = 0
+            revenueBindMoney = 0
+        else:
+            revenueMoney = math.ceil(totalPrice * auctionRevenueRule[2])
+            if revenueMoney >= totalPrice - revenueTax:
+                revenueMoney = totalPrice - revenueTax
+                revenueBindMoney = 0
+            else:
+                revenueBindMoney = totalPrice - revenueTax - revenueMoney
+        
         fromPlayerGBID = auctionItem.fromPlayerGBID
         if fromPlayerGBID:
             m_playerStub = gameengine.getGlobalBase('PlayerStub')
             redisUtils.PlayerCoinAuctionRecord.recordMessage(
-                now, fromPlayerGBID, auctionItem.itemId, number, totalPriceInDeductTax,
+                now, fromPlayerGBID, auctionItem.itemId, number, revenueBindMoney, revenueMoney,
                 auctionItem.itemData.toItemSavedDict(), opUUID,
                 auctionItem.auctionItemUUID, 0)
 
             m_playerStub.doOnOthersBase(
                 [fromPlayerGBID], "onPlayerGlobalAuctionItemBeSaled",
-                (auctionItem, number, auctionItem.price, now, totalPriceInDeductTax, extra),
+                (auctionItem, number, auctionItem.price, now, revenueBindMoney, revenueMoney, extra),
                 m_playerStub, 'recordOfflineCallback',
                 (fromPlayerGBID, 'onPlayerGlobalAuctionItemBeSaledOffline',
-                 (auctionItem, number, auctionItem.price, now, totalPriceInDeductTax, extra)))
+                 (auctionItem, number, auctionItem.price, now, revenueBindMoney, revenueMoney, extra)))
 
 
         LogTrackingMgr.LogTrackingMgr.auction_item_deal(playerGBID, '', playerGBID, opUUID, auctionItem.auctionItemUUID, \
                                                        auctionItem.itemId, dataUtils.getItemType(auctionItem.itemId), auctionItem.addPublicityTime > 0, \
-                                                       auctionItem.number, totalPrice, totalPriceInDeductTax, totalPriceTax, auctionItem.fromPlayerGBID, \
-                                                       roleName, roleAccount)
+                                                       auctionItem.number, totalPrice, revenueBindMoney, revenueMoney, revenueTax, auctionItem.fromPlayerGBID, \
+                                                       roleName, roleAccount,
+                                                       gameglobal.mallItemPriceInfoDict.get(auctionItem.itemId, {}).get('avgPrice', 0.0), gameglobal.mallItemPriceInfoDict.get(auctionItem.itemId, {}).get('avgPrice7', 0.0))
         
 
         crossSiegeWarServerInfo = gameconfig.crossSiegeWarServerInfo()
         _stub = iRouter.RemoteServerStubEntityCall(crossSiegeWarServerInfo['crossServerId'], 'CrossSiegeWarStub')
-        _stub.onCityAuctionTax(gameconfig.serverId(), totalPriceTax)
+        _stub.onCityAuctionTax(gameconfig.serverId(), revenueTax)
 
     def onItemSaling(self, rpc_controller, request, done):
         auctionItemUUID = request.auctionItemUUID
@@ -832,3 +874,11 @@ class AuctionStubService(GameServer):
                 [playerGBID], "onGetAuctionItemsByAuctionIdsResp",
                 (categoryId, auctionItems),
                 None, '', ())
+
+    def pushItemPriceInfoList(self, rpc_controller, request, done):
+        LOG_INFO("pushItemPriceInfoList", request.infoList)
+        for priceInfo in request.infoList:
+            gameglobal.mallItemPriceInfoDict[priceInfo.itemId] = {
+                'avgPrice' : priceInfo.avgPrice,
+                'avgPrice7' : priceInfo.avgPrice7
+            }

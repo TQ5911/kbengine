@@ -7,6 +7,13 @@
             <Persistent>    true                    </Persistent>
         </crossServerToSpaceNo>
 
+        <crossServerFromSpaceNo>
+            <Type>          SPACE_NO                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+            <Persistent>    true                    </Persistent>
+        </crossServerFromSpaceNo>
+
         <crossServerDict>
             <Type>          PY_DICT                 </Type>
             <Flags>         BASE                    </Flags>

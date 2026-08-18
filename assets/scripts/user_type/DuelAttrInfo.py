@@ -25,7 +25,10 @@ class DuelAttrVal(userType.UserSingleType):
     def isDuelEnemy(self, target):
         if not self.inFight():
             return False
-        
+
+        if not target.IsAvatar:
+            return False
+
         if not target.duelAttr.inFight():
             return False
         

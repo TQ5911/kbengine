@@ -2,6 +2,7 @@
 import KBEngine
 from KBEDebug import *
 import formula
+import gameglobal
 import utils
 import gameconst
 import sMath
@@ -27,6 +28,11 @@ class IDuelCell(object):
     @utils.isMyself
     def reqDuel(self, exposed, targetId):
         LOG_INFO('reqDuel: ', targetId)
+        if formula.inMineWarScene(self.spaceNo):
+            if gameglobal.mineGlobalData.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:
+                self.showMsg(D_CD.datas['duel_wrongState1']['value'], [])
+                return
+
         _mapId = formula.fetchMapId(self.spaceNo)
         if not GP_GPD.datas[_mapId].get('ifSinglePK', 0):
             self.showMsg(D_CD.datas['duel_forbidScene']['value'], [])
@@ -181,6 +187,11 @@ class IDuelCell(object):
     @utils.isMyself
     def dealDuelReq(self, exposed, accept, isBlack):
         LOG_INFO('dealDuelReq: ', accept, isBlack)
+        if formula.inMineWarScene(self.spaceNo):
+            if gameglobal.mineGlobalData.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:
+                self.showMsg(D_CD.datas['duel_wrongState1']['value'], [])
+                return
+
         if not accept:
             self._rejectDuelReq(isBlack)
             return

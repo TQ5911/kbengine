@@ -61,9 +61,9 @@
 						msgid = stream.readUint16();
 						stream.clear();
 
-						Message msg = Messages.clientMessages[msgid];
+						Messages.clientMessages.TryGetValue(msgid, out Message msg);
 
-						if(msg.msglen == -1)
+						if(msg == null || msg.msglen == -1)
 						{
 							state = READ_STATE.READ_STATE_MSGLEN;
 							expectSize = 2;
@@ -181,40 +181,42 @@
 						totallen += expectSize;
 						length -= expectSize;
 
-						Message msg = Messages.clientMessages[msgid];
+						Messages.clientMessages.TryGetValue(msgid, out Message msg);
+						if(msg != null)
+						{
+							
+		#if UNITY_EDITOR
+							Dbg.profileStart(msg.name);
+		#endif
 
-#if UNITY_EDITOR
-						Dbg.profileStart(msg.name);
-#endif
+							try
+							{
+								msg.handleMessage(stream);
+								//修复明文和密文粘包问题，因为onReloginBaseappSuccessfully回调完成才会创建EncryptionFilter
+								if (networkInterface != null && networkInterface.fileter() != null)
+								{
+									stream.clear();
+									state = READ_STATE.READ_STATE_MSGID;
+									expectSize = 2;
+		#if UNITY_EDITOR
+									Dbg.profileEnd(msg.name);
+		#endif
+									if (length > 0)
+									{
+										networkInterface.fileter().recv(this, datas, (uint)totallen, (uint)length);
+										return;
+									}
+								}
+							}
+							catch (Exception e)
+							{
+								Dbg.ERROR_MSG("handleMessage error1: " + msg.name + " " + msgid + " " + e.Message + " " + e.StackTrace);
+							}
 
-                        try
-                        {
-                            msg.handleMessage(stream);
-                            //修复明文和密文粘包问题，因为onReloginBaseappSuccessfully回调完成才会创建EncryptionFilter
-                            if (networkInterface != null && networkInterface.fileter() != null)
-                            {
-	                            stream.clear();
-	                            state = READ_STATE.READ_STATE_MSGID;
-	                            expectSize = 2;
-#if UNITY_EDITOR
-	                            Dbg.profileEnd(msg.name);
-#endif
-	                            if (length > 0)
-	                            {
-		                            networkInterface.fileter().recv(this, datas, (uint)totallen, (uint)length);
-		                            return;
-	                            }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Dbg.ERROR_MSG("handleMessage error1: " + msg.name + " " + msgid + " " + e.Message + " " + e.StackTrace);
-                        }
-
-#if UNITY_EDITOR
-						Dbg.profileEnd(msg.name);
-#endif
-
+		#if UNITY_EDITOR
+							Dbg.profileEnd(msg.name);
+		#endif
+						}
                         stream.clear();
 						
 						state = READ_STATE.READ_STATE_MSGID;

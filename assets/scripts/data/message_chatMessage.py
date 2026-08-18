@@ -99,6 +99,12 @@ datas = _tools.RODict({
         "Message": "<color=#b35b00>{0}</color>等级已提升至<color=#718bad>{1}</color>级",
         "channelID": (3,)
     }),
+    58000015: _tools.RODict({
+        "ID": 58000015,
+        "name": "guild_union_recruit_chat",
+        "Message": "联盟<color=#98cf48>{1}</color>寻找结盟伙伴，期待各方豪杰加盟！<color=#ae6fee><link allianceApply name=\"申请加入\" gbid={0}></color>",
+        "channelID": (2,)
+    }),
     58000018: _tools.RODict({
         "ID": 58000018,
         "name": "teamChannel_enterTeamMsg",
@@ -185,9 +191,9 @@ datas = _tools.RODict({
     }),
     58000032: _tools.RODict({
         "ID": 58000032,
-        "name": "guild_declareWar",
+        "name": "guild_declareWar1",
         "Message": "众志成城，热血争锋，帮会<color=#98cf48>{0}</color>向帮会<color=#98cf48>{1}</color>宣战！",
-        "channelID": (3, 99)
+        "channelID": (2, 3, 99)
     }),
     58000033: _tools.RODict({
         "ID": 58000033,
@@ -206,6 +212,24 @@ datas = _tools.RODict({
         "name": "auctionChannel_jumpToBuy",
         "Message": "<link auctionItem id={0} auctionid={1}>已上架交易行，手快有手慢无<link business itemId={2}><color=#54e7f2>前往查看</color></link>",
         "channelID": (10,)
+    }),
+    58000036: _tools.RODict({
+        "ID": 58000036,
+        "name": "guild_declareWar2",
+        "Message": "众志成城，热血争锋，帮会<color=#98cf48>{0}</color>向联盟<color=#98cf48>{1}</color>宣战！",
+        "channelID": (2, 3, 99)
+    }),
+    58000037: _tools.RODict({
+        "ID": 58000037,
+        "name": "guild_declareWar3",
+        "Message": "众志成城，热血争锋，联盟<color=#98cf48>{0}</color>向联盟<color=#98cf48>{1}</color>宣战！",
+        "channelID": (2, 3, 99)
+    }),
+    58000038: _tools.RODict({
+        "ID": 58000038,
+        "name": "guild_declareWar4",
+        "Message": "众志成城，热血争锋，联盟<color=#98cf48>{0}</color>向帮会<color=#98cf48>{1}</color>宣战！",
+        "channelID": (2, 3, 99)
     }),
     58000060: _tools.RODict({
         "ID": 58000060,
@@ -270,7 +294,7 @@ datas = _tools.RODict({
     58000205: _tools.RODict({
         "ID": 58000205,
         "name": "mineBattle_chatChannelMsg5",
-        "Message": "<color=#54e7f2>{0}</color>矿区荣誉旗帜被破坏，本周已被破坏{1}/{2}次，不再获得矿区额外收益",
+        "Message": "<color=#54e7f2>{0}</color>矿区荣誉旗帜被破坏，本周已被破坏{1}/{2}次，矿区额外收益大幅降低",
         "channelID": (2, 3)
     }),
     58000206: _tools.RODict({
@@ -282,7 +306,7 @@ datas = _tools.RODict({
     58000207: _tools.RODict({
         "ID": 58000207,
         "name": "mineBattle_chatChannelMsg7",
-        "Message": "<color=#98cf48>{0}</color>帮会占领的<color=#54e7f2>{1}</color>矿区被多次破坏，帮会颜面扫地，不再获得该矿区额外收益",
+        "Message": "<color=#98cf48>{0}</color>帮会占领的<color=#54e7f2>{1}</color>矿区被多次破坏，帮会颜面扫地，矿区额外收益大幅降低",
         "channelID": (2, 3, 99)
     }),
     58000208: _tools.RODict({
@@ -362,7 +386,19 @@ datas = _tools.RODict({
         "name": "guild_unionSupport3",
         "Message": "帮会{0}向帮会{1}援助{2}",
         "channelID": (3,)
+    }),
+    58000221: _tools.RODict({
+        "ID": 58000221,
+        "name": "guildChat_switchOn",
+        "Message": "帮会语音已被{0}[{1}]开启",
+        "channelID": (3,)
+    }),
+    58000222: _tools.RODict({
+        "ID": 58000222,
+        "name": "guildChat_switchOff",
+        "Message": "帮会语音已关闭",
+        "channelID": (3,)
     })
 })
 minKey = 58000001
-maxKey = 58000220
+maxKey = 58000222

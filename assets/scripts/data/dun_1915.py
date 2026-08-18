@@ -13119,33 +13119,6 @@ datas ={
       "TelZ": 191.6423
     }
   },
-  "19158005": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Teleporter",
-    "ClassNameType": 2,
-    "CustomID": "",
-    "Dir": 117.5188,
-    "DisplayName": "",
-    "EliteCustomID": "11268004",
-    "EntityID": 17112502,
-    "ID": 19158005,
-    "Name": "\u4e94\u6bd2\u77f3\u7a9f\u4e94\u5c42\u00b7\u7cbe\u82f1",
-    "PosX": 169.46,
-    "PosY": 210.8224,
-    "PosZ": 522.67,
-    "Props": {
-      "CameraId": 33010001,
-      "GateType": 0,
-      "Remark": "",
-      "ShowInSceneMap": 1,
-      "TelDir": 137.4067,
-      "TelX": 180.1915,
-      "TelY": 210.5124,
-      "TelZ": 514.9592
-    }
-  },
   "19158006": {
     "ActivityID": 0,
     "AttachedGIDList": [],

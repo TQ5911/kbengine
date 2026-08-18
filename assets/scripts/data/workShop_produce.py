@@ -15,24 +15,17 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    30000224: _tools.RODict({
-        "ID": 30000224,
-        "materials": _tools.ROList([[30000223, 10]]),
-        "cost": _tools.ROList([[30000002, 5000]]),
+    30000235: _tools.RODict({
+        "ID": 30000235,
+        "materials": _tools.ROList([[30000241, 10]]),
+        "cost": _tools.ROList([[30000002, 25000]]),
         "lucky": None,
         "isOpen": 1
     }),
-    30000225: _tools.RODict({
-        "ID": 30000225,
-        "materials": _tools.ROList([[30000224, 4]]),
-        "cost": _tools.ROList([[30000013, 1000]]),
-        "lucky": None,
-        "isOpen": 1
-    }),
-    30000226: _tools.RODict({
-        "ID": 30000226,
-        "materials": _tools.ROList([[30000225, 2]]),
-        "cost": _tools.ROList([[30000013, 5000]]),
+    30000320: _tools.RODict({
+        "ID": 30000320,
+        "materials": _tools.ROList([[30000321, 10]]),
+        "cost": _tools.ROList([[30000002, 10000]]),
         "lucky": None,
         "isOpen": 1
     }),
@@ -67,56 +60,56 @@ datas = _tools.RODict({
     30000271: _tools.RODict({
         "ID": 30000271,
         "materials": _tools.ROList([[30000267, 10]]),
-        "cost": _tools.ROList([[30000002, 1000]]),
+        "cost": _tools.ROList([[30000002, 500]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000272: _tools.RODict({
         "ID": 30000272,
         "materials": _tools.ROList([[30000268, 10]]),
-        "cost": _tools.ROList([[30000002, 1000]]),
+        "cost": _tools.ROList([[30000002, 500]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000273: _tools.RODict({
         "ID": 30000273,
         "materials": _tools.ROList([[30000269, 10]]),
-        "cost": _tools.ROList([[30000002, 1000]]),
+        "cost": _tools.ROList([[30000002, 500]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000274: _tools.RODict({
         "ID": 30000274,
         "materials": _tools.ROList([[30000270, 10]]),
-        "cost": _tools.ROList([[30000002, 1000]]),
+        "cost": _tools.ROList([[30000002, 500]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000275: _tools.RODict({
         "ID": 30000275,
         "materials": _tools.ROList([[30000271, 10]]),
-        "cost": _tools.ROList([[30000002, 10000]]),
+        "cost": _tools.ROList([[30000002, 2500]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000276: _tools.RODict({
         "ID": 30000276,
         "materials": _tools.ROList([[30000272, 10]]),
-        "cost": _tools.ROList([[30000002, 10000]]),
+        "cost": _tools.ROList([[30000002, 2500]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000277: _tools.RODict({
         "ID": 30000277,
         "materials": _tools.ROList([[30000273, 10]]),
-        "cost": _tools.ROList([[30000002, 10000]]),
+        "cost": _tools.ROList([[30000002, 2500]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000278: _tools.RODict({
         "ID": 30000278,
         "materials": _tools.ROList([[30000274, 10]]),
-        "cost": _tools.ROList([[30000002, 10000]]),
+        "cost": _tools.ROList([[30000002, 2500]]),
         "lucky": None,
         "isOpen": 1
     }),
@@ -144,101 +137,115 @@ datas = _tools.RODict({
     30000287: _tools.RODict({
         "ID": 30000287,
         "materials": _tools.ROList([[30000283, 5]]),
-        "cost": _tools.ROList([[30000002, 5000]]),
+        "cost": _tools.ROList([[30000002, 10000]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000288: _tools.RODict({
         "ID": 30000288,
         "materials": _tools.ROList([[30000284, 5]]),
-        "cost": _tools.ROList([[30000002, 5000]]),
+        "cost": _tools.ROList([[30000002, 10000]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000289: _tools.RODict({
         "ID": 30000289,
         "materials": _tools.ROList([[30000285, 5]]),
-        "cost": _tools.ROList([[30000002, 5000]]),
+        "cost": _tools.ROList([[30000002, 10000]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000290: _tools.RODict({
         "ID": 30000290,
         "materials": _tools.ROList([[30000286, 5]]),
-        "cost": _tools.ROList([[30000002, 5000]]),
+        "cost": _tools.ROList([[30000002, 10000]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000291: _tools.RODict({
         "ID": 30000291,
         "materials": _tools.ROList([[30000287, 5]]),
-        "cost": _tools.ROList([[30000013, 1000]]),
+        "cost": _tools.ROList([[30000002, 30000]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000292: _tools.RODict({
         "ID": 30000292,
         "materials": _tools.ROList([[30000288, 5]]),
-        "cost": _tools.ROList([[30000013, 1000]]),
+        "cost": _tools.ROList([[30000002, 30000]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000293: _tools.RODict({
         "ID": 30000293,
         "materials": _tools.ROList([[30000289, 5]]),
-        "cost": _tools.ROList([[30000013, 1000]]),
+        "cost": _tools.ROList([[30000002, 30000]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000294: _tools.RODict({
         "ID": 30000294,
         "materials": _tools.ROList([[30000290, 5]]),
-        "cost": _tools.ROList([[30000013, 1000]]),
+        "cost": _tools.ROList([[30000002, 30000]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000295: _tools.RODict({
         "ID": 30000295,
         "materials": _tools.ROList([[30000291, 5]]),
-        "cost": _tools.ROList([[30000013, 5000]]),
+        "cost": _tools.ROList([[30000002, 100000]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000296: _tools.RODict({
         "ID": 30000296,
         "materials": _tools.ROList([[30000292, 5]]),
-        "cost": _tools.ROList([[30000013, 5000]]),
+        "cost": _tools.ROList([[30000002, 100000]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000297: _tools.RODict({
         "ID": 30000297,
         "materials": _tools.ROList([[30000293, 5]]),
-        "cost": _tools.ROList([[30000013, 5000]]),
+        "cost": _tools.ROList([[30000002, 100000]]),
         "lucky": None,
         "isOpen": 1
     }),
     30000298: _tools.RODict({
         "ID": 30000298,
         "materials": _tools.ROList([[30000294, 5]]),
-        "cost": _tools.ROList([[30000013, 5000]]),
+        "cost": _tools.ROList([[30000002, 100000]]),
         "lucky": None,
         "isOpen": 1
     }),
-    30000235: _tools.RODict({
-        "ID": 30000235,
-        "materials": _tools.ROList([[30000241, 10]]),
-        "cost": _tools.ROList([[30000002, 20000]]),
-        "lucky": None,
-        "isOpen": 1
-    }),
-    30000320: _tools.RODict({
-        "ID": 30000320,
-        "materials": _tools.ROList([[30000321, 10]]),
+    30000224: _tools.RODict({
+        "ID": 30000224,
+        "materials": _tools.ROList([[30000223, 10]]),
         "cost": _tools.ROList([[30000002, 10000]]),
+        "lucky": None,
+        "isOpen": 1
+    }),
+    30000225: _tools.RODict({
+        "ID": 30000225,
+        "materials": _tools.ROList([[30000224, 4]]),
+        "cost": _tools.ROList([[30000013, 1000]]),
+        "lucky": None,
+        "isOpen": 1
+    }),
+    30000226: _tools.RODict({
+        "ID": 30000226,
+        "materials": _tools.ROList([[30000225, 3]]),
+        "cost": _tools.ROList([[30000013, 2000]]),
+        "lucky": None,
+        "isOpen": 1
+    }),
+    30000220: _tools.RODict({
+        "ID": 30000220,
+        "materials": _tools.ROList([[30000221, 10]]),
+        "cost": _tools.ROList([[30000013, 3000]]),
         "lucky": None,
         "isOpen": 1
     })
 })
-minKey = 30000224
+minKey = 30000220
 maxKey = 30000320

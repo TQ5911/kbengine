@@ -54,83 +54,6 @@ datas ={
         }
       },
       "Monster": {
-        "10310003": {
-          "ActivityID": 0,
-          "AttachedGIDList": [],
-          "ClassName": "Monster",
-          "ClassNameType": 0,
-          "CustomID": "",
-          "Dir": 0.0,
-          "DisplayName": "",
-          "EliteCustomID": "",
-          "EntityID": 11222031,
-          "ID": 10310003,
-          "PosX": 592.9982,
-          "PosY": 311.6006,
-          "PosZ": 194.5642,
-          "Props": {
-            "ChestGroupID": "",
-            "GroupID": 1,
-            "Level": 22,
-            "LightPillar": "",
-            "MapEntityScale": 0,
-            "MapEntityType": 0,
-            "MonsterGroupID": "",
-            "PathID": 57103102,
-            "Radius": 0.0,
-            "RandomRegion": [
-              [
-                522.2193,
-                338.2231,
-                157.974655,
-                0.0,
-                1.0,
-                0.0
-              ],
-              [
-                258.372925,
-                304.270752,
-                236.096954,
-                0.0,
-                1.0,
-                0.0
-              ],
-              [
-                431.9417,
-                321.993439,
-                565.17804,
-                0.0,
-                1.0,
-                0.0
-              ],
-              [
-                513.1311,
-                317.952972,
-                403.768433,
-                0.0,
-                1.0,
-                0.0
-              ],
-              [
-                603.5878,
-                320.967,
-                383.525146,
-                0.0,
-                1.0,
-                0.0
-              ]
-            ],
-            "RefreshNum": 1,
-            "RefreshTime": [
-              1600.0,
-              2000.0
-            ],
-            "RefreshTimedID": 0,
-            "Remark": "\u5e78\u8fd0\u602a5\u533a\u57df",
-            "ShowInSceneMap": 1,
-            "ShowMonsterGroupID": ""
-          }
-        },
         "10310015": {
           "ActivityID": 0,
           "AttachedGIDList": [],
@@ -208,7 +131,7 @@ datas ={
           "ID": 10310017,
           "PosX": 415.2161,
           "PosY": 311.1246,
-          "PosZ": 117.375183,
+          "PosZ": 117.3752,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",

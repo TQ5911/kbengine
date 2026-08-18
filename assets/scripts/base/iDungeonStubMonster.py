@@ -7,6 +7,7 @@ import warnings
 import math
 import random
 
+import gameconfig
 import gameengine
 import gametimer
 import formula
@@ -34,13 +35,14 @@ class IDungeonStubMonster(object):
     DEFAULT_MAX_ENT_LOAD_NUM = 5
 
     EACH_TICK_SAPCE_CREATE_ENTITY_COUNT = 5
-    EACH_TICK_TOTAL_CREATE_ENTITY_COUNT = 20
+    # 先把流速改为 400了 第一个副本总共会放141个怪，400的话一秒钟能放完三个4002
+    # 这个后续必须得压测下
 
     def onTimerCreateEntity(self):
         _currentTotalCreateEntityCount = 0
         for _spaceNo, _sVal in self.spaces.items():
             try:
-                if _currentTotalCreateEntityCount > self.EACH_TICK_TOTAL_CREATE_ENTITY_COUNT:
+                if _currentTotalCreateEntityCount > gameconfig.stubTickCreateEntNum():
                     break
 
                 if not _sVal.isNeedCreateEntity():
@@ -55,7 +57,7 @@ class IDungeonStubMonster(object):
                         if _currentSpaceCreateEntityCount > self.EACH_TICK_SAPCE_CREATE_ENTITY_COUNT:
                             break
 
-                        if _currentTotalCreateEntityCount > self.EACH_TICK_TOTAL_CREATE_ENTITY_COUNT:
+                        if _currentTotalCreateEntityCount > gameconfig.stubTickCreateEntNum():
                             break
 
                         if _entVal.loadStatus != gameconst.DungeonEntityLoadEnum.UNLOAD:

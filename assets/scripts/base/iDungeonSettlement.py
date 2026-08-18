@@ -89,7 +89,9 @@ class IDungeonSettlement(object):
         firstPassRewards = None
         goldPassRewards = None
         dungeonRewards = None
-        if win:
+        if win: 
+            self.chiefInfo.deductRewardNum()
+            self.chiefInfo = self.chiefInfo
             dungeonRewardId = RBC_BI.clearPassRewardDic.get(dungeonNo, 0)
             if dungeonRewardId > 0:
                 ctx = self.getAvatarAwardCtx(dungeonRewardId, None)
@@ -132,6 +134,9 @@ class IDungeonSettlement(object):
         goldPassRewards = None
         dungeonRewards = None
         if win:
+            self.crusadeInfo.deductRewardNum()
+            self.crusadeInfo = self.crusadeInfo
+
             dungeonRewardId = TDC_BI.clearPassRewardDic.get(dungeonNo, 0)
             if dungeonRewardId > 0:
                 ctx = self.getAvatarAwardCtx(dungeonRewardId, None)
@@ -162,6 +167,7 @@ class IDungeonSettlement(object):
                 actionContext.AchievementCtx(dungeonNo=dungeonNo)
             )
             self.taskCheckCounterTarget(TCCTD.couterTargetDic['CompleteACertainInstance'], (dungeonNo,))
+
         box.cell.onNotifySettlementResult(self, gameconst.DungeonPlayModeEnum.CRUSADE, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, firstPassRewards if firstPassRewards else [], goldPassRewards if goldPassRewards else [], dungeonRewards if dungeonRewards else [])
         self.sendDungeonFinishedMail(gameconst.DungeonPlayModeEnum.CRUSADE, dungeonNo, opUUId, extra['gbId'], win)
         LogTrackingMgr.LogTrackingMgr.Dungeon_Settlement(self.gbID, self.accountEntity.clientDistinctId, extra['uniqueID'], gameconst.DungeonPlayModeEnum.CRUSADE, dungeonNo, extra['spaceUUID'], spaceNo, self.gbID, \
@@ -266,10 +272,7 @@ class IDungeonSettlement(object):
         else:
             return
         
-        if isWin:
-            mailAssistor.sendMailToPlayers([gbId], int(TDC_CFG.datas['raid_mailSuccess']['value']), opUUID=opUUID, 
-                                        despArgs=(dungeonName,), srcType=AAC_AACDD.datas.BONUS_SRC_DUNGEON_FINISHED)
-        else:
+        if not isWin:
             mailAssistor.sendMailToPlayers([gbId], int(TDC_CFG.datas['raid_mailFailure']['value']), opUUID=opUUID, 
                                         despArgs=(dungeonName,), srcType=AAC_AACDD.datas.BONUS_SRC_DUNGEON_FINISHED)
             

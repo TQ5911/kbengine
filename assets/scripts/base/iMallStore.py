@@ -76,7 +76,10 @@ class IMallStore(object):
             itemId, qty = costItem
             deductWealth.addWealthByItemId(itemId, qty)
 
-        if not self.canDeductWealth(deductWealth):
+        res = self.canDeductWealth(deductWealth)
+        if not res:
+            if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
+                return gameconst.MallStoreResult.FAIL
             return gameconst.MallStoreResult.ITEM_IS_NOT_ENOUGH
 
         rewardId = cfg.get('reward')
@@ -96,8 +99,9 @@ class IMallStore(object):
 
         if limitNumber > 0:
             purchaseDic[storeId] = purchaseDic.get(storeId, 0) + 1
-
-        LogTrackingMgr.LogTrackingMgr.Gift_Buy(self.gbID, self.accountEntity.clientDistinctId, self.gbID, storeId, opUUID)
+        limitType = cfg.get('limitType', 0)
+        boughtNum = purchaseDic.get(storeId, 0)
+        LogTrackingMgr.LogTrackingMgr.Gift_Buy(self.gbID, self.accountEntity.clientDistinctId, self.gbID, storeId, opUUID, limitType, limitNumber, boughtNum)
         return gameconst.MallStoreResult.SUCCESS
 
     def _resetMallLimits(self, storeType, configDatas, purchaseDic, limitType):

@@ -15,12 +15,6 @@
             <Flags>             CELL_PRIVATE    </Flags>
             <Default>           0       </Default>
         </mineWarGuildId>
-        <mineWarCamp>
-            <Type>          UINT8           </Type>
-            <Flags>         ALL_CLIENTS     </Flags>
-            <Default>       0               </Default>
-            <WitnessName>   true            </WitnessName>
-        </mineWarCamp>
         <recoverProgress>
             <Type>          FLOAT           </Type>
             <Flags>         ALL_CLIENTS     </Flags>

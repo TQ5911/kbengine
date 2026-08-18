@@ -26,7 +26,7 @@ import guildChallenge_basicInfo as GCBI
 import guildChallenge_config as GCC
 import mineBattle_config as MBC
 import guildAuthorization_action as GA_ACT
-
+import gameconfig
 
 class IGuild(object):
     def __init__(self):
@@ -72,8 +72,6 @@ class IGuild(object):
         if isOnline:
             self.guildInitStatus = 1
             self.triggerTempEvent(gameconst.EntityPropsEnum.guildInitEvent)
-        elif guildUUID:
-            self._sendAllGuildRelation()
 
         self.cell.syncModifyGuildInfo({
             'guildUUID': guildUUID,
@@ -142,8 +140,9 @@ class IGuild(object):
         for _itemId, _num in _cost:
             _deductVal.addWealthByItemId(_itemId, _num)
 
-        if not self.canDeductWealth(_deductVal):
-            LOG_ERR("IGuild::createGuild: canDeductWealth failed.")
+        res = self.canDeductWealth(_deductVal)
+        if not res:
+            LOG_WARN("IGuild::createGuild: canDeductWealth failed.", res())
             return
 
         _src = AAC_AACDD.datas.BONUS_SRC_CREATE_GUILD
@@ -191,8 +190,8 @@ class IGuild(object):
         self.guildInitStatus = 1
         self.triggerTempEvent(gameconst.EntityPropsEnum.guildInitEvent)
 
-    def onJoinGuild(self, guildUUID, guildBox, reason, joinGuildData):
-        LOG_INFO("IGuild::onJoinGuild:", guildUUID, guildBox, reason)
+    def onJoinGuild(self, leagueUUID, guildUUID, guildBox, reason, joinGuildData):
+        LOG_INFO("IGuild::onJoinGuild:", leagueUUID, guildUUID, guildBox, reason)
         self.guildBox = guildBox
         self.guildUUIDBase = guildUUID
         self.guildNameBase = joinGuildData['guildName']
@@ -229,6 +228,7 @@ class IGuild(object):
             'guildName': joinGuildData['guildName'],
             'guildBox': guildBox,
             'guildLevel': joinGuildData['guildLevel'],
+            'leagueUUID': leagueUUID,
         })
 
         self.applyedGuilds.clear()
@@ -239,7 +239,6 @@ class IGuild(object):
         })
 
         if reason != gameconst.JoinGuildReason.ONLINE:
-            self._sendAllGuildRelation()
             if self.isCrossServerInLocalServer and self.otherServerAvatarBox:
                 self.otherServerAvatarBox.onSetGuildInfoCross(guildUUID, self.guildNameBase, False)
 
@@ -274,10 +273,32 @@ class IGuild(object):
             return
 
         self.client.onUpdateApplyedGuilds(list(self.applyedGuilds.values()))
+
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_sendGuildInfoToCrossServer', ())
+            return
+
         if not self.guildBox:
             return
 
         gameengine.getGlobalBase('GuildStub').doGetGamePlayScoreLimit(self.gbID, self, self.guildBox)
+
+    def _sendGuildInfoToCrossServer(self):
+        if not self.guildBox:
+            return
+
+        gameengine.getGlobalBase('GuildStub').doGetGamePlayScoreLimit(self.gbID, self, self.guildBox)
+
+    def onGetClientGuildInfoToCrossServer(self, clientData, gmVal):
+        if not self.isCrossServerInLocalServer:
+            return
+
+        LOG_INFO('onGetClientGuildInfoToCrossServer:', clientData, gmVal)
+        self.syncMethodCallToCrossServerBase('_onGetClientGuildInfoToCrossServer', (clientData, gmVal))
+
+    def _onGetClientGuildInfoToCrossServer(self, clientData, gmVal):
+        self.client.onGetGuildData(clientData)
+        self.client.onGuildMemberDatas([gmVal])
 
     def getGuildList(self, exposed):
         LOG_INFO("IGuild::getGuildList")
@@ -318,6 +339,7 @@ class IGuild(object):
             LOG_ERR("IGuild::onExitGuild: guildUUIDBase not match.", self.guildUUIDBase, guildUUIDBase)
 
         self.setLeftGuildTS(utils.curTS())
+        self.leagueUUID = 0
         self.guildUUIDBase = 0
         self.guildBox = None
         self.guildNameBase = ""
@@ -327,6 +349,7 @@ class IGuild(object):
             'guildName': "",
             'guildBox': None,
             'guildLevel': 0,
+            'leagueUUID': 0,
         })
 
         self.client.onExitGuildClient()
@@ -340,24 +363,6 @@ class IGuild(object):
             self.otherServerAvatarBox.onSetGuildInfoCross(0, '', False)
 
         self.onMineWarGuildChange()
-
-    def _sendAllGuildRelation(self):
-        if not self.guildInitStatus:
-            self.registerTempEvent(gameconst.EntityPropsEnum.guildInitEvent, '_sendAllGuildRelation', ())
-            return
-
-        if not self.guildUUIDBase:
-            return
-
-        _datas = []
-        for _guildUUID, _relationType in utils.iterGuildAndRelation(self.guildUUIDBase):
-            _datas.append({
-                'guildUUID': _guildUUID,
-                'relationType': _relationType,
-            })
-
-        if self.guildBox:
-            self.guildBox.onGetGuildRelationAll(_datas, self)
 
     @property
     def guildJoinContext(self):
@@ -385,8 +390,9 @@ class IGuild(object):
         return True
 
     def _checkJoinGuild(self):
-        if self.getRoleCacheAttr('level') < G_GCD.datas['guildJoinLevelRequire']['value']:
-            self.onMessagePre(G_GCD.datas['guild_applyFail_levelNotEnough_msg']['value'], [])
+        #if self.getRoleCacheAttr('level') < G_GCD.datas['guildJoinLevelRequire']['value']:
+        if not self.isUIVisible('Guild', True):
+            #self.onMessagePre(G_GCD.datas['guild_applyFail_levelNotEnough_msg']['value'], [])
             return False
 
         _now = utils.curTS()
@@ -545,6 +551,8 @@ class IGuild(object):
         elif event == gameconst.JoinGuildEvent.NOT_ELIGIBLE:
             self._applyJoinGuild()
         elif event == gameconst.JoinGuildEvent.HAS_APPLY:
+            self._applyJoinGuild()
+        elif event == gameconst.JoinGuildEvent.HAS_IN:
             self._applyJoinGuild()
         else:
             self.guildJoinContext = None
@@ -779,7 +787,10 @@ class IGuild(object):
         _detail = gameclass.AwardDetailCls()
 
         _deductVal.addWealthByItemId(_itemId, _num)
-        if not self.canDeductWealth(_deductVal):
+        res = self.canDeductWealth(_deductVal)
+        if not res:
+            if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
+                return
             self.onMessagePre(ID_SD.datas['itemNotEnough_msgID']['value'], [str(_itemId)])
             return
 
@@ -873,8 +884,9 @@ class IGuild(object):
         _detail = gameclass.AwardDetailCls()
 
         _deductVal.addWealthByItemId(_itemId, 1)
-        if not self.canDeductWealth(_deductVal):
-            LOG_ERR("IGuild::createGuild: canDeductWealth failed.")
+        res = self.canDeductWealth(_deductVal)
+        if not res:
+            LOG_WARN("IGuild::createGuild: canDeductWealth failed.", res())
             return
 
         _src = AAC_AACDD.datas.BONUS_SRC_MODIFY_GUILD_NAME
@@ -938,8 +950,9 @@ class IGuild(object):
         _opUUID = KBEngine.genUUID64()
         _detail = gameclass.AwardDetailCls()
 
-        if not self.canDeductWealth(_deductVal):
-            LOG_ERR("IGuild::createGuild: canDeductWealth failed.")
+        res = self.canDeductWealth(_deductVal)
+        if not res:
+            LOG_WARN("IGuild::createGuild: canDeductWealth failed.", res())
             return
 
         _src = AAC_AACDD.datas.BONUS_SRC_GUILD_DONATE
@@ -1091,47 +1104,6 @@ class IGuild(object):
         LOG_INFO('IGuild::onGetGuildInfosFromCrossData:', guildDatas)
         self.client.onGuildInfoFromCrossData(guildDatas)
 
-    @gamedecorator.checkGameconfigEnable('guild')
-    @AuthClsWraper.authWithPermission(A_AFD.Guild)
-    @gamedecorator.limitcall(1)
-    def applyGuildUnion(self, exposed, guildUUID):
-        LOG_INFO('IGuild::applyGuildUnion:', guildUUID)
-        if not self.guildBox:
-            LOG_ERR('IGuild::applyGuildUnion: guildBox is None')
-            return
-
-        self.guildBox.doApplyGuildUnion(self.gbID, self, guildUUID)
-
-    @gamedecorator.checkGameconfigEnable('guild')
-    @AuthClsWraper.authWithPermission(A_AFD.Guild)
-    def dealGuildUnionApply(self, exposed, guildUUID, agree):
-        LOG_INFO('IGuild::dealGuildUnionApply:', guildUUID, agree)
-        if not self.guildBox:
-            LOG_ERR('IGuild::dealGuildUnionApply: guildBox is None')
-            return
-
-        self.guildBox.doDealGuildUnionApply(self.gbID, self, guildUUID, agree)
-
-    @gamedecorator.checkGameconfigEnable('guild')
-    @AuthClsWraper.authWithPermission(A_AFD.Guild)
-    def cancelGuildUnion(self, exposed, guildUUID):
-        LOG_INFO('IGuild::cancelGuildUnion:', guildUUID)
-        if not self.guildBox:
-            LOG_ERR('IGuild::cancelGuildUnion: guildBox is None')
-            return
-
-        #https://www.tapd.cn/tapd_fe/59721401/story/detail/1159721401001006636  【任务】城战期间，禁止解除同盟
-        if self.siegeWarState == gameconst.SiegeWarState.WAR or (self.siegeWarState == gameconst.SiegeWarState.WAR_COUNT_DOWN
-                                                                 and utils.curTS() >= self.siegeWarStateEndTime - CBC.datas['cityBattle_prepareTime']['value'] * 60):
-            self.onMessagePre(CBC.datas["cityBattle_forbidLiftAlliance"]["value"], [])
-            return
-
-        _curRelationType = utils.getGuildRelation(self.guildUUIDBase, guildUUID)
-        if _curRelationType == gameconst.GuildRelationType.UNION:
-            self.guildBox.doCancelGuildUnion(self.gbID, self, guildUUID)
-        else:
-            LOG_WARN('IGuild::cancelGuildUnion: guildUUID is not union', guildUUID)
-
     def qixieAssist(self, exposed, qixieType):
         LOG_INFO('IGuild::qixieAssist:', qixieType)
         if not self.guildBox:
@@ -1139,7 +1111,7 @@ class IGuild(object):
             return
 
         if self.qixieAssistTimes <= 0:
-            LOG_ERR('IGuild::qixieAssist: qixieAssistTimes <= 0')
+            LOG_INFO('IGuild::qixieAssist: qixieAssistTimes <= 0')
             return
 
         self.guildBox.doQixieAssistFetchCostCoin(self.gbID, self, qixieType)
@@ -1155,8 +1127,9 @@ class IGuild(object):
         _detail = gameclass.AwardDetailCls()
 
         _deductVal.addWealthByItemId(_itemId, cost)
-        if not self.canDeductWealth(_deductVal):
-            LOG_ERR("IGuild::onQixieAssistFetchCostCoinResult: canDeductWealth failed.")
+        res = self.canDeductWealth(_deductVal)
+        if not res:
+            LOG_WARN("IGuild::onQixieAssistFetchCostCoinResult: canDeductWealth failed.", res())
             return
 
         _src = AAC_AACDD.datas.BONUS_SRC_QIXIE_ASSIST
@@ -1222,40 +1195,6 @@ class IGuild(object):
 
         self.guildBox.doUpgradeQixie(self.gbID, self, qixieType)
 
-    @gamedecorator.checkGameconfigEnable('guild')
-    @AuthClsWraper.authWithPermission(A_AFD.Guild)
-    def declareEnemy(self, exposed, guildUUID):
-        LOG_INFO('IGuild::declareEnemy:', guildUUID)
-        if not self.guildBox:
-            LOG_ERR('IGuild::declareEnemy: guildBox is None')
-            return
-
-        self.guildBox.doDeclareEnemy(self.gbID, self, guildUUID)
-
-    @gamedecorator.limitcall(1, keyFun=lambda x: '{}'.format(*x))
-    def getGuildInfosByRelationType(self, exposed, relationType):
-        LOG_INFO('IGuild::getGuildInfosByRelationType:', relationType)
-        if not self.guildUUIDBase:
-            LOG_ERR('IGuild::getGuildInfosByRelationType: guildBox is None')
-            return
-
-        if relationType == gameconst.GuildRelationType.ENEMY:
-            gameengine.getGlobalBase('CrossDataStub').getEnemyGuildInfos(
-                self,
-                self.guildUUIDBase,
-            )
-        else:
-            _guildUUIDs = utils.getGuildUUIDsByRelationType(self.guildUUIDBase, relationType)
-            gameengine.getGlobalBase('CrossDataStub').getGuildInfosByGuildUUID(
-                _guildUUIDs,
-                self,
-                'onGetGuildInfosByRelationType',
-                (relationType,)
-            )
-
-    def onGetGuildInfosByRelationType(self, guildDatas, relationType):
-        self.client.onGuildInfosByRelationType(guildDatas, relationType)
-
     def donateCityBattleToken(self, exposed, num):
         LOG_INFO('IGuild::donateCityBattleToken:', num)
         if not self.guildBox:
@@ -1268,8 +1207,9 @@ class IGuild(object):
         _detail = gameclass.AwardDetailCls()
 
         _deductVal.addWealthByItemId(_itemId, num)
-        if not self.canDeductWealth(_deductVal):
-            LOG_ERR("IGuild::donateCityBattleToken: canDeductWealth failed.")
+        res = self.canDeductWealth(_deductVal)
+        if not res:
+            LOG_WARN("IGuild::donateCityBattleToken: canDeductWealth failed.", res())
             return
 
         _src = AAC_AACDD.datas.BONUS_SRC_GUILD_CITY_BATTLE_TOKEN
@@ -1285,26 +1225,7 @@ class IGuild(object):
 
         _num *= G_GCD.datas['guildDonateTokenToGuildMoney']['value']
         self.guildBox.doDonateCityBattleToken(self.gbID, self, _num, _opUUID)
-
-    def getGuildUnionApplySender(self, exposed):
-        LOG_INFO('IGuild::getGuildUnionApplySender:')
-        if not self.guildBox:
-            LOG_ERR('IGuild::getGuildUnionApplySender: guildBox is None')
-            return
-
-        self.guildBox.doGetGuildUnionApplySender(self.gbID, self)
-
-    @gamedecorator.checkGameconfigEnable('guild')
-    @AuthClsWraper.authWithPermission(A_AFD.Guild)
-    def cancelApplyGuildUnion(self, exposed, guildUUID):
-        LOG_INFO('IGuild::cancelApplyGuildUnion:', guildUUID)
-        if not self.guildBox:
-            LOG_ERR('IGuild::cancelApplyGuildUnion: guildBox is None')
-            return
-
-        self.guildBox.doCancelApplyGuildUnion(self.gbID, self, guildUUID)
-
-    @gamedecorator.limitcall(1, keyFun=lambda x: '{}'.format(*x))
+        
     def getGuildDetailOtherServer(self, exposed, guildUUID):
         LOG_INFO('IGuild::getGuildDetailOtherServer:', guildUUID)
         gameengine.getGlobalBase('CrossDataStub').getCrossServerGuildDetail(
@@ -1476,7 +1397,7 @@ class IGuild(object):
     @gamedecorator.checkGameconfigEnable('guild')
     def leaveGuildMics(self, exposed):
         if not self.guildBox:
-            LOG_ERR('IGuild::turnOnGuildMics: guildBox is None')
+            LOG_INFO('IGuild::leaveGuildMics: guildBox is None')
             return
         self.guildBox.onAvatarLeaveMics(self.gbID)
 

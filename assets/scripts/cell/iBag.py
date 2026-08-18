@@ -662,6 +662,13 @@ class IBag(object):
         if triggerAction and callable(triggerAction):
             triggerAction(self, collectionId)
 
+        # BOSS 互斥组冷却触发
+        groupId = _pickData.get('mutexGroup', 0)
+        if groupId > 0:
+            mapId = formula.fetchMapId(self.spaceNo)
+            lineNo = formula.parseLineNo(self.spaceNo)
+            self.addBossMutexCoolDown(groupId, mapId, lineNo)
+
     def checkCollectionGatherFlag(self, eid):
         collection = KBEngine.entities.get(eid)
         if not collection or collection.isDestroyed:
@@ -672,18 +679,29 @@ class IBag(object):
 
         if hasattr(collection, 'firstBloodTargetGbIds'):
             isTarget = self.gbId in collection.firstBloodTargetGbIds
-            self.addTimerCB(0.5, '_doSyncIsFBTarget', (eid, isTarget, 0), gametimer.TIMER_TAG_DO_SYNC_IS_FB_TARGET)
+            if not self.fbAOITimerId:
+                self.fbAOITimerId = self.addTimerCB(0.5, '_doSyncIsFBTarget', (), gametimer.TIMER_TAG_DO_SYNC_IS_FB_TARGET)
+            self.fbAOICacheList.append((eid, isTarget, 0))
         LOG_INFO("checkCollectionGatherFlag ", eid)
 
-    def _doSyncIsFBTarget(self, eid, isTarget, times):
-        targetClient = self.clientEntity(eid)
-        LOG_INFO("_doSyncIsFBTarget", eid, isTarget, targetClient, isinstance(targetClient, (utils.Swallower,)))
-        if targetClient and not isinstance(targetClient, (utils.Swallower,)):
-            targetClient.syncIsFBTarget(isTarget)
-        elif times < 5:
-            self.addTimerCB(0.5, '_doSyncIsFBTarget', (eid, isTarget, times + 1), gametimer.TIMER_TAG_DO_SYNC_IS_FB_TARGET)
-        else:
-            LOG_ERR("_doSyncIsFBTarget repeat times >= 5", eid, isTarget, targetClient, times)
+    def _doSyncIsFBTarget(self):
+        self.fbAOITimerId = 0
+        unfinishList = []
+        for eid, isTarget, times in self.fbAOICacheList:
+            targetClient = self.clientEntity(eid)
+            if not targetClient:
+                continue
+            if not isinstance(targetClient, (utils.Swallower,)):
+                LOG_INFO("_doSyncIsFBTarget", eid, isTarget, targetClient)
+                targetClient.syncIsFBTarget(isTarget)
+            elif times < 5:
+                unfinishList.append((eid, isTarget, times + 1))
+            else:
+                LOG_ERR("_doSyncIsFBTarget repeat times >= 5", eid, isTarget, targetClient, times)
+        LOG_INFO("_doSyncIsFBTarget unfinishList", len(unfinishList), "cacheList", len(self.fbAOICacheList))
+        self.fbAOICacheList = unfinishList
+        if unfinishList:
+            self.fbAOITimerId = self.addTimerCB(0.5, '_doSyncIsFBTarget', (), gametimer.TIMER_TAG_DO_SYNC_IS_FB_TARGET)
 
     ################################## 采集 end #########################################
 
@@ -832,6 +850,10 @@ class IBag(object):
     @gamedecorator.crossServer
     @utils.isMyself
     def setBAutoHeal(self, exposed, autoUse, isHp):
+        self._setBAutoHeal(autoUse, isHp)
+        self.syncMethodCallToLocalServerCell('_setBAutoHeal', (autoUse, isHp))
+
+    def _setBAutoHeal(self, autoUse, isHp):
         # flag 定义位置 gameconst.AvatarFlagCell
         if isHp:
             _flag = gameconst.AvatarFlagCell.AUTO_HEAL_HP
@@ -843,6 +865,10 @@ class IBag(object):
     @gamedecorator.crossServer
     @utils.isMyself
     def setHealRatio(self, exposed, ratio, isHp):
+        self._setHealRatio(ratio, isHp)
+        self.syncMethodCallToLocalServerCell('_setHealRatio', (ratio, isHp))
+
+    def _setHealRatio(self, ratio, isHp):
         if 0 <= ratio <= 100:
             if isHp:
                 self.healHpRatio = ratio
@@ -876,7 +902,8 @@ class IBag(object):
 
     def addPickedCollections(self, collectionEnt, maxPickTimes):
         collectionId = collectionEnt.collectionId
-        if len(self.pickedCollections) >= 100 and collectionId not in self.pickedCollections:
+        # 这个二测先改成 200 吧，如果要考虑性能的话需要编码一下，这种就要跟策划沟通了
+        if len(self.pickedCollections) >= 200 and collectionId not in self.pickedCollections:
             LOG_ERR('addPickedCollections: too many collections', collectionId)
 
         self.pickedCollections[collectionId] = self.pickedCollections.get(collectionId, 0) + 1

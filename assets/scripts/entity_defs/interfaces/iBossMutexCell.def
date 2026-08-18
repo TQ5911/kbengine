@@ -1,0 +1,25 @@
+<root>
+    <Interfaces>
+    </Interfaces>
+
+    <Properties>
+        <bossMutexCoolDownDict>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       {}                      </Default>
+            <Persistent>    true                    </Persistent>
+        </bossMutexCoolDownDict>
+    </Properties>
+
+    <CellMethods>
+    </CellMethods>
+
+    <BaseMethods>
+    </BaseMethods>
+
+    <ClientMethods>
+        <onBossMutexCoolDownUpdate>
+            <Arg>       ARRAY <of>  BOSS_MUTEX_COOL_DOWN_INFO </of>    </Arg>
+        </onBossMutexCoolDownUpdate>
+    </ClientMethods>
+</root>

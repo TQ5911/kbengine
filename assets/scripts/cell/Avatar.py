@@ -71,6 +71,7 @@ import iNewbie
 import iCrossServer
 import iWorldLevel
 import iReplicaAvatar
+import iBossMutexCell
 
 import iMeridian
 import iMonthCard
@@ -112,7 +113,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
              iCollectible.ICollectible, iDuelCell.IDuelCell, iSiegeWarCell.ISiegeWarCell, iChief.IChief, iBounty.IBounty, iEmote.IEmote,
              iNewbie.INewbie, iCrossServer.ICrossServer, iMeridian.IMeridian, iMonthCard.IMonthCard, iMineWarCell.IMineWarCell,
              iGuildBossChallenge.IGuildBossChallenge, impStatistics.IStatistics, iDungeonSettlement.IDungeonSettlement,
-             iWorldLevel.IWorldLevel, iSpeedCheck.ISpeedCheck, iAbyssCell.IAbyssCell, metaclass=ExposedWrapper.ExposedWrapperMetaClass):
+             iWorldLevel.IWorldLevel, iSpeedCheck.ISpeedCheck, iAbyssCell.IAbyssCell,
+             iBossMutexCell.IBossMutexCell, metaclass=ExposedWrapper.ExposedWrapperMetaClass):
 
     IsAvatar = True
     IsCombatUnit = True
@@ -142,6 +144,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         iEmote.IEmote.__init__(self)
         iSpeedCheck.ISpeedCheck.__init__(self)
         iReplicaAvatar.IReplicaAvatar.__init__(self)
+        iBossMutexCell.IBossMutexCell.__init__(self)
 
         self.initDatetimeTimerTick()
 
@@ -172,6 +175,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self._updateExpRateToBase()
         self.viewMgr = KBEngine.getNewViewManager()
         # 上线重算下是否可战斗区域
+        self.areaId = utils.getAreaId(formula.fetchMapId(self.spaceNo), self.position)
         self.calcPkSafeArea()
         if not gameconfig.isCrossServer():
             self.fromServerId = gameconfig.serverId()
@@ -277,6 +281,20 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if not self._isMyself(exposed):
             return
 
+        if exposed < 0:
+            self._backSelectCharacter(exposed)
+            return
+
+        self._commonNeedCast(
+            C_C_DD.datas.teleportCast,
+            gameconst.StateEnum.Teleporting,
+            gameconst.CastEnum.teleportAnchor,
+            '_backSelectCharacter',
+            (exposed,),
+            castTime=CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR)
+        )
+
+    def _backSelectCharacter(self, exposed):
         if self.isCrossServerInOtherServer:
             self.base.gobackServer(gameconst.CrossServerCBComponent.ENUM_CELL,
                                    'backSelectCharacterFromCrossServer', ())
@@ -300,6 +318,20 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if not self._isMyself(exposed):
             return
 
+        # exposed > 0 说明是主号
+        if reason == gameconst.OFFLINE_REASON_CLIENT_LOGOUT and exposed > 0:
+            self._commonNeedCast(
+                C_C_DD.datas.teleportCast,
+                gameconst.StateEnum.Teleporting,
+                gameconst.CastEnum.teleportAnchor,
+                '_offlineContinue',
+                (exposed, reason),
+                castTime=CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR)
+            )
+        else:
+            self._offlineContinue(exposed, reason)
+
+    def _offlineContinue(self, exposed, reason):
         if exposed < 0:
             self.base.subBackLoginBase()
             return
@@ -321,6 +353,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         LOG_INFO('zt: avatar offline', reason, self.isDestroyed)
         if self.isDestroyed:
             return
+
+        if reason != gameconst.OFFLINE_REASON_SELECT_CHARACTER:
+            self.client.onBackLogin()
 
         self.recordRedisFullPlayerInfoWhenOffline()
         # todo x 玩家下线更新排行榜数据
@@ -392,6 +427,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.toClientCubeLoginData()
         self._sendRoomKickLeftTime(self.spaceNo)
         self.stopPlayEmote(gameconst.StopPlayEmoteReason.LOGIN)
+
+        # 同步 BOSS 互斥冷却给客户端（用于寻路前置拦截）
+        self.syncBossMutexCoolDownToClient()
 
     def checkRelationTypeCallback(self, id):
         _e = KBEngine.entities.get(id)
@@ -573,7 +611,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         LOG_INFO('reachNewArea', areaId, self.position)
         if areaId != self.areaId:
             self.areaId = areaId
-            self.resetAllTargetTypeCache()
             if formula.inWorldLineScene(self.spaceNo):
                 curAreaId = utils.getAreaId(formula.fetchMapId(self.spaceNo), self.position)
                 if curAreaId != self.areaId:
@@ -583,10 +620,24 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             if formula.inCubeScene(self.spaceNo):
                 self.spaceMgr and self.spaceMgr.onChangeSafeArea(self, beSafe)
 
+            self.resetAllTargetTypeCache()
+
     @utils.isMyself
     def reqTransmitWithMapPoint(self, exposed, mapId, exampleId):
         LOG_DBG('reqTransmitWithMapPoint', mapId, exampleId)
         if not self.onCheckMapUnlocked(mapId):
+            return
+
+        # BOSS 互斥组检查
+        if mapId == formula.fetchMapId(self.spaceNo):
+            # 同地图：按当前分线判定，允许传回触发冷却的源分线
+            toLineNo = formula.parseLineNo(self.spaceNo)
+            isBlocked, leftSec = self.checkBossMutexBlock(mapId, toLineNo)
+        else:
+            # 跨地图自动选线：源地图放行（优先源分线由 applyEnterLineInternal 注入），同组其他地图拦截
+            isBlocked, leftSec, _ = self.checkBossMutexBlockAutoEnter(mapId)
+        if isBlocked:
+            self.showMsg(MMD.datas.mutexSceneMsg, [str(leftSec)])
             return
 
         if not formula.inLineScene(self.spaceNo):
@@ -633,7 +684,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     def transmitWithMapPointCallback(self, checkResult, extraProps):
         LOG_INFO("transmitWithMapPointCallback", checkResult, extraProps)
         if not checkResult:
-            self.showMsg(MMD.datas.itemNotEnough, [str(gameconst.ItemIdEnum.COIN)])
+            #self.showMsg(MMD.datas.itemNotEnough, [str(gameconst.ItemIdEnum.COIN)])
             LOG_WARN('transmitWithMapPointCallback checkResult')
             return
 
@@ -1063,6 +1114,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.lastTeleportSpaceNoRecord = self.spaceNo
         if nearbyEnt and self.spaceNo != nearbyEnt.spaceNo:
             self.spaceNo = nearbyEnt.spaceNo
+            self.areaId = utils.getAreaId(formula.fetchMapId(self.spaceNo), self.position)
             if self.lastTeleportSpaceNoRecord != self.spaceNo:
                 self.spaceMgrId = 0
 
@@ -1118,6 +1170,18 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                     self.removeState(i, gameconst.RemoveStateReason.TELEPORT)
                     LOG_INFO("resetStateTeleport", self.id, i)
 
+    def _checkAndAddTeleportProtectionBuff(self):
+        # 保护buffId
+        teleportationProtectionBuffIdCfg = CONST.datas.get('teleportationProtectionBuffId')
+        # 保护时间
+        teleportationProtectionTimeCfg = CONST.datas.get('teleportationProtectionTime')
+        if teleportationProtectionBuffIdCfg and teleportationProtectionTimeCfg:
+            teleportationProtectionBuffId = int(teleportationProtectionBuffIdCfg['value'])
+            teleportationProtectionTime = int(teleportationProtectionTimeCfg['value'])
+            if teleportationProtectionTime > 0 and teleportationProtectionBuffId in B_BD.datas:
+                LOG_INFO('_onTeleportSuccess, add protection buff: ', teleportationProtectionBuffId, teleportationProtectionTime)
+                self.addBuff(teleportationProtectionBuffId, 1, self.id, duration = teleportationProtectionTime)
+
     def _onTeleportSuccess(self, nearbyEntity):
         LOG_INFO('zt: onTeleportSuccess', self.gbId, self.spaceNo, self._getTeleportInfoCache())
         self.refreshAreaTaskTimer()
@@ -1151,16 +1215,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if self.teleportQueue:
             self.addTimerCB(0.1, '_doTeleportQueue', (), gametimer.TIMER_TAG_TELEPORT_QUEUE)
 
-        # 保护buffId
-        teleportationProtectionBuffIdCfg = CONST.datas.get('teleportationProtectionBuffId')
-        # 保护时间
-        teleportationProtectionTimeCfg = CONST.datas.get('teleportationProtectionTime')
-        if teleportationProtectionBuffIdCfg and teleportationProtectionTimeCfg:
-            teleportationProtectionBuffId = int(teleportationProtectionBuffIdCfg['value'])
-            teleportationProtectionTime = int(teleportationProtectionTimeCfg['value'])
-            if teleportationProtectionTime > 0 and teleportationProtectionBuffId in B_BD.datas:
-                LOG_INFO('_onTeleportSuccess, add protection buff: ', teleportationProtectionBuffId, teleportationProtectionTime)
-                self.addBuff(teleportationProtectionBuffId, 1, self.id, duration = teleportationProtectionTime)
+        self._checkAndAddTeleportProtectionBuff()
         return True
 
     def _doTeleportQueue(self):
@@ -1322,7 +1377,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         _load = KBEngine.getAverageLoad()
 
         if _load > 0.9:
-            if KBEngine.time() - self.lastResortTimes < 30:
+            if KBEngine.time() - self.lastResortTimes < gameconfig.highLoadDelay():
                 return
 
         elif _load > 0.8:
@@ -1564,7 +1619,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     def healWoundsFromNpcCallback(self, checkResult, args):
         if not checkResult:
-            self.showMsg(MMD.datas.itemNotEnough, [str(GP_SD.datas['HealingWoundsCostCurrency']['value'])])
+            #self.showMsg(MMD.datas.itemNotEnough, [str(GP_SD.datas['HealingWoundsCostCurrency']['value'])])
             return
 
         self.dailyHealWoundsTimes += 1
@@ -1587,12 +1642,13 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     @utils.isMyself
     @gamedecorator.limitcall(1)
     @gamedecorator.checkGameconfigEnable('myPage')
+    @gamedecorator.crossServer
     def getTargetPlayerInfo(self, exposed, targetGbId):
         _stub = gameengine.getGlobalBase('PlayerStub')
         _stub.doOnOthersCell(
             [targetGbId, ],
             'onGetTargetPlayerInfo',
-            (self, ),
+            (self.base, ),
             _stub,
             'getPlayerInfoOffline',
             (self.base,) 
@@ -1636,28 +1692,37 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         data["collectibleData"] = collectible
         LOG_INFO("collectibleData", data["collectibleData"])
 
+        data["serverID"] = self.fromServerId
+
         return data
 
     def recordRedisFullPlayerInfoWhenOffline(self):
         data = self._concatPlayerInfo((GA_A_DD.datas.BONUS_SRC_UNKNOWN, 0, 0, 0))
-        self.base.onGetFullPlayerInfo(data, self)
+        self.base.onGetFullPlayerInfo(data, self, False)
 
     def onGetTargetPlayerInfo(self, src):
+        if not gameconfig.isCrossServer():
+            self._getTargetPlayerInfo(src, False)
+        else:
+            self.syncMethodCallToLocalServerCell('_getTargetPlayerInfo', (src, True))
+
+    def _getTargetPlayerInfo(self, src, isCross):
         gameengine.getGlobalBase('GuildStub').callOnGuild(
             self.guildUUID,
             'getMemberJobAndGuildCache',
-            (self.gbId, self, src),
+            (self.gbId, self, src, isCross),
             self,
             'onGetMemberJobAndGuildCache',
-            ((GA_A_DD.datas.BONUS_SRC_UNKNOWN, 0, 0, 0), src),
+            ((GA_A_DD.datas.BONUS_SRC_UNKNOWN, 0, 0, 0), src, isCross),
         )
 
-    def onGetMemberJobAndGuildCache(self, guildData, src):
+    def onGetMemberJobAndGuildCache(self, guildData, src, isCross):
         data = self._concatPlayerInfo(guildData)
-        self.base.onGetFullPlayerInfo(data, src)
+        self.base.onGetFullPlayerInfo(data, src, isCross)
 
 # ----------------------------------------- blazing start --------------------------------------
     @utils.isMyself
+    @gamedecorator.crossServer
     def blaze(self, exposed, blazeId):
         LOG_INFO('blaze::', blazeId)
         _mapId = formula.fetchMapId(self.spaceNo)
@@ -1695,6 +1760,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.removeState(C_S_DD.datas.blazing)
 
     @utils.isMyself
+    @gamedecorator.crossServer
     def blazeEnd(self, exposed):
         LOG_INFO('blazeEnd::')
         _mapId = formula.fetchMapId(self.spaceNo)
@@ -1737,6 +1803,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
 # ----------------------------------------- map buff start -----------------------------
     @utils.isMyself
+    @gamedecorator.crossServer
     def setMapBuff(self, exposed):
         if formula.inWolrdBossScene(self.spaceNo):
             if not self.spaceMgr.hasSceneState(gameconst.WorldLineSceneState.LEI_JI):
@@ -1752,6 +1819,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             self.addBuff(_buffId, 1, self.id)
 
     @utils.isMyself
+    @gamedecorator.crossServer
     def removeMapBuff(self, exposed):
         self.removeMapBuffInternal()
 

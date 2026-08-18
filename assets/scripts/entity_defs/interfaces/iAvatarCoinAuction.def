@@ -15,6 +15,12 @@
             <Persistent>    true                    </Persistent>
         </saleItemMoney>
 
+        <saleItemBindMoney>
+            <Type>          MONEY                   </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Persistent>    true                    </Persistent>
+        </saleItemBindMoney>
+
         <pendingAuctionEntries>
             <Type>          PENDING_AUCTION_ENTRIES     </Type>
             <Flags>         BASE                        </Flags>
@@ -26,6 +32,12 @@
             <Flags>         BASE_AND_CLIENT         </Flags>
             <Persistent>    true                    </Persistent>
         </withDrawMoney>
+
+        <withDrawBindMoney>
+            <Type>          MONEY                   </Type>
+            <Flags>         BASE_AND_CLIENT         </Flags>
+            <Persistent>    true                    </Persistent>
+        </withDrawBindMoney>
 
         <collectionAuctionIdList>
             <Type>      ARRAY <of>  AUCTION_ITEM_UUID </of>    </Type>
@@ -132,8 +144,19 @@
             <Arg> MONEY </Arg>
             <Arg> LONGTIME </Arg>
             <Arg> MONEY </Arg>
+            <Arg> MONEY </Arg>
             <Arg> PYTHON </Arg>
         </onPlayerGlobalAuctionItemBeSaled>
+
+        <onPlayerGlobalAuctionItemBeSaledOffline>
+            <Arg> AUCTION_ITEM </Arg>
+            <Arg> UINT32 </Arg>
+            <Arg> MONEY </Arg>
+            <Arg> LONGTIME </Arg>
+            <Arg> MONEY </Arg>
+            <Arg> MONEY </Arg>
+            <Arg> PYTHON </Arg>
+        </onPlayerGlobalAuctionItemBeSaledOffline>
 
         <!-- API: 下架出售的物品 -->
         <cancelSaleItemInCoinAuction>
@@ -318,6 +341,7 @@
             <Arg> ITEMID </Arg>
             <Arg> FLOAT </Arg>
             <Arg> FLOAT </Arg>
+            <Arg> FLOAT </Arg>
         </onGetItemLastAndAvgPrice>
 
         <onGetItemNumByCategoryIdResp>
@@ -334,6 +358,7 @@
         	<Arg> FLOAT </Arg>
         	<Arg>   AUCTION_ITEM_CLIENT_LIST      </Arg>
             <Arg> UINT8 </Arg>
+            <Arg> FLOAT </Arg>
         </onGetCurrentSaleItemInfoResp>
 
         <onNotiyNewAuctionItemCollection>

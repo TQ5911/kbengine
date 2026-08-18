@@ -155,7 +155,7 @@ namespace KBEngine
 				Dbg.ERROR_MSG(string.Format("NetworkInterfaceBase::_onConnectionState(), connect error! ip: {0}:{1}, err: {2}", state.connectIP, state.connectPort, state.error));
 			}
 
-            EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_CONNECTION_STATE, success, valid());
+            EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_CONNECTION_STATE, success, state);
 
             //Event.fireAll(EventOutTypes.onConnectionState, success);
 
@@ -291,22 +291,30 @@ namespace KBEngine
 
         public static bool IsIpv6OnlyEnv()
         {
-            IPHostEntry here = Dns.GetHostEntry(Dns.GetHostName());
-            IPAddress localaddress = null;
-            bool isIpv6Only = true;
-            foreach (IPAddress ip in here.AddressList)
-            {
-                if (ip.AddressFamily.ToString().ToUpper() == "INTERNETWORK")
-                {
-                    localaddress = ip;
-                    isIpv6Only = false;
-                }
-                else if (ip.AddressFamily.ToString().ToUpper() == "INTERNETWORKV6")
-                {
-                    localaddress = ip;
-                }
-            }
-            return isIpv6Only;
+			try
+    		{
+				IPHostEntry here = Dns.GetHostEntry(Dns.GetHostName());
+				IPAddress localaddress = null;
+				bool isIpv6Only = true;
+				foreach (IPAddress ip in here.AddressList)
+				{
+					if (ip.AddressFamily.ToString().ToUpper() == "INTERNETWORK")
+					{
+						localaddress = ip;
+						isIpv6Only = false;
+					}
+					else if (ip.AddressFamily.ToString().ToUpper() == "INTERNETWORKV6")
+					{
+						localaddress = ip;
+					}
+				}
+				return isIpv6Only;
+			}
+			catch (Exception e)
+			{
+				Dbg.ERROR_MSG("NetworkInterfaceBase::IsIpv6OnlyEnv: exception: " + e.ToString());
+				return false;
+			}
         }
     }
 }

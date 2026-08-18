@@ -45,15 +45,18 @@ class WarehouseBag(BaseBag.BaseBag):
         startGrid = self.capacity - initGridNum + 1
         needItemId = 0
         itemNum = 0
+        totalItemNum = 0
         deductWealthVal = dropAward.DeductWealthVal()
         for gridId in range(startGrid, startGrid + gridNum):
             needItemId = BGBUD.datas[gridId]['itemNeeded']
             itemNum = BGBUD.datas[gridId]['itemNum']
+            totalItemNum += itemNum
             deductWealthVal.addWealthByItemId(needItemId, itemNum, dataUtils.getItemDefaultBindType())
             LOG_DBG('     in doUnlockWarehouseGrids:', needItemId, itemNum)
 
-        if not owner.canDeductWealth(deductWealthVal, sendMsg=True):
-            LOG_WARN('       in doUnlockWarehouseGrids, items not enough:', deductWealthVal)
+        res = owner.canDeductWealth(deductWealthVal, sendMsg=True)
+        if not res:
+            LOG_WARN('       in doUnlockWarehouseGrids, items not enough:', deductWealthVal, res())
             return
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_UNLOCK_GRIDS
@@ -71,6 +74,6 @@ class WarehouseBag(BaseBag.BaseBag):
             gridNum,
             self.capacity,
             owner.getRoleCacheAttr('level'),
-            {needItemId:itemNum}
+            {needItemId:totalItemNum}
         )
         return self.capacity

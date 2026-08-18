@@ -21,6 +21,16 @@ namespace KBEngine
 			type = ENTITYCALL_TYPE.ENTITYCALL_TYPE_BASE;
 		}
 
+		public void checkTextSecurityReq(CHECK_TEXT_SECURITY_REQ arg1)
+		{
+			Bundle pBundle = newCall("checkTextSecurityReq", 0);
+			if(pBundle == null)
+				return;
+
+			((DATATYPE_CHECK_TEXT_SECURITY_REQ)EntityDef.id2datatypes[488]).addToStreamEx(bundle, arg1);
+			sendCall(null);
+		}
+
 		public void sendWorldChatMsg(CHAT_MSG_DATA arg1)
 		{
 			Bundle pBundle = newCall("sendWorldChatMsg", 0);

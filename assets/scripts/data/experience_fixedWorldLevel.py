@@ -18,31 +18,7 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "day": 1,
         "worldLevel": 1
-    }),
-    2: _tools.RODict({
-        "day": 2,
-        "worldLevel": 23
-    }),
-    3: _tools.RODict({
-        "day": 3,
-        "worldLevel": 26
-    }),
-    4: _tools.RODict({
-        "day": 4,
-        "worldLevel": 29
-    }),
-    5: _tools.RODict({
-        "day": 5,
-        "worldLevel": 32
-    }),
-    6: _tools.RODict({
-        "day": 6,
-        "worldLevel": 35
-    }),
-    7: _tools.RODict({
-        "day": 7,
-        "worldLevel": 38
     })
 })
 minKey = 1
-maxKey = 7
+maxKey = 1

@@ -231,7 +231,7 @@ class ShieldInfo(object):
     def createObjFromDict(self, dict):
         _shields = buff.Shields()
         for sVal in dict['shields']:
-            _shields[sVal['buffId']] = buff.ShieldVal(sVal['buffId'], sVal['shieldMaxValue'], sVal.get('shieldType', 0), sVal['shieldValue'], sVal.get('shieldEffects', {}))
+            _shields[sVal['buffId']] = buff.ShieldVal(sVal['buffId'], sVal.get('shieldType', 0), sVal['shieldMaxValue'], sVal['shieldValue'], sVal.get('shieldEffects', {}))
         return _shields
 
     def isSameType(self, obj):

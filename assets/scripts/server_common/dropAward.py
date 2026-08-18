@@ -210,6 +210,44 @@ class WealthItem(WealthUnit):
                     soulList.extend(itemFactory.ItemFactory.createItemList(itemId, itemNum, bindType, extra=extra))
         return soulList
 
+    def popDebtItemObjs(self, owner):
+        popData = {}
+        removeList = []
+        beforeDatas = str(self.data) + ", " + str(self.itemsObjs)
+        for it in self.itemsObjs:
+            if it.itemId in owner.debtItemDict:
+                for bindType in (it.bindType, gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED):
+                    if bindType in owner.debtItemDict[it.itemId]:
+                        deductNum = min(it.itemNum, owner.debtItemDict[it.itemId][bindType])
+                        if deductNum > 0:
+                            it.itemNum -= deductNum
+                            owner.debtItemDict[it.itemId][bindType] -= deductNum
+                            popData.setdefault(it.itemId, {})
+                            popData[it.itemId].setdefault(bindType, 0)
+                            popData[it.itemId][bindType] += deductNum
+                            if it.itemNum <= 0:
+                                removeList.append(it)
+                        
+        for it in removeList:
+            self.itemsObjs.remove(it)
+        
+        for itemId, datas in self.data.items():
+            if itemId in owner.debtItemDict:
+                for itemBindType, _ in datas.items():
+                    for bindType in (itemBindType, gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED):
+                        if bindType in owner.debtItemDict[itemId]:
+                            deductNum = min(datas[itemBindType], owner.debtItemDict[itemId][bindType])
+                            if deductNum > 0:
+                                datas[itemBindType] -= deductNum
+                                owner.debtItemDict[itemId][bindType] -= deductNum
+                                popData.setdefault(itemId, {})
+                                popData[itemId].setdefault(bindType, 0)
+                                popData[itemId][bindType] += deductNum
+
+        if popData:
+            LOG_INFO('popDebtItemObjs:', popData, beforeDatas, str(self.data) + ", " + str(self.itemsObjs))
+            owner._sendDebtItemData()
+
     def popExtractRewardItems(self):
         _extractRewardItemsDic = {}
         for _itemId in list(self.data.keys()):
@@ -1235,7 +1273,7 @@ def _getBindWeightRank(extra):
     isMonthCardExpired = extra['isMonthCardExpired']
     isBigMonthCardExpired = extra['isBigMonthCardExpired']
     isCrossServer = extra['isCrossServer']
-    #只要有大or小月卡就吃月卡加成
+    #小月卡加成
     for _, v in R_RD.datas.items():
         l, r = v['rankRange'][0], v['rankRange'][1]
         if rank >= l and rank <= r:

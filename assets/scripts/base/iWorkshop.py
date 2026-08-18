@@ -66,7 +66,7 @@ class IWorkshop(object):
             return
         
         if self.bagData.isLocked():
-            LOG_ERR("reqWorkshopMF ~ bag is locked", itemID, batchCount)
+            LOG_WARN("reqWorkshopMF ~ bag is locked", itemID, batchCount)
             self.client.onWorkshopMF(gameconst.WorkshopResult.WORKSHOP_LIMIT_BAG_LOCK, normalDatas, luckyDatas)
             return
         
@@ -140,6 +140,8 @@ class IWorkshop(object):
         datas = {}
         for gridId, gridNum in gridInfos.items():
             item = self.bagData.getItemObjByGridId(gridId)
+            if not item:
+                continue
             # 检查数量和锁定状态
             if item.itemNum < gridNum or item.isLocked():
                 LOG_ERR("calculateComsumeItems ~ item is not enough ", item.itemId, item.itemNum, gridNum, item.isLocked())
@@ -231,8 +233,11 @@ class IWorkshop(object):
             for mID, mCount in costCurrency.items():
                 deductWealthVal.addWealthByItemId(mID, mCount)
 
-            if not self.canDeductWealth(deductWealthVal):
-                LOG_WARN("doWorkshopManufactoring ~ item is not enough")
+            res = self.canDeductWealth(deductWealthVal)
+            if not res:
+                LOG_WARN("doWorkshopManufactoring ~ item is not enough", res())
+                if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
+                    return gameconst.WorkshopResult.WORKSHOP_FAIL, None, None
                 return gameconst.WorkshopResult.WORKSHOP_LIMIT_CURRENCY_IS_NOT_ENOUGH, None, None
             
             costDetail = gameclass.AwardDetailCls()
@@ -253,15 +258,14 @@ class IWorkshop(object):
             self.addWealth(srcType, addWealthVal, opUUID, gotDetail)
 
             targetDatas = []
-            itemData = {'item_id':itemID, 'item_count':1, 'item_quality':dataUtils.getItemQuality(itemID)}
-            for _ in range(0, batchCount):
-                targetDatas.append(itemData)
+            itemData = {'item_id':itemID, 'item_count':batchCount, 'item_quality':dataUtils.getItemQuality(itemID)}
+            targetDatas.append(itemData)
             LogTrackingMgr.LogTrackingMgr.workshop(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, targetDatas, batchCount, normalDatas, luckyDatas)
             return ret, normalWealthVal.toBriefList(), luckyWealthVal.toBriefList()
         return ret, None, None
 
     def calculateWorkshopMaterials(self, itemID, batchCount, costCurrency, normalItems, luckyItems, datas):
-        LOG_INFO("calculateWorkshopMaterials ", itemID, batchCount, costCurrency, normalItems, luckyItems, datas)
+        #LOG_INFO("calculateWorkshopMaterials ", itemID, batchCount, costCurrency, normalItems, luckyItems, datas)
         produceCfgData = WSP.datas.get(itemID)
         if not produceCfgData:
             LOG_WARN("calculateWorkshopMaterials ~ this item has no configuration", produceCfgData, itemID, batchCount)
@@ -297,8 +301,11 @@ class IWorkshop(object):
         for mID, mCount in costCurrency.items():
             deductWealthVal.addWealthByItemId(mID, mCount)
 
-        if not self.canDeductWealth(deductWealthVal):
-            LOG_WARN("calculateWorkshopMaterials ~ currency is not enough", produceCfgData, itemID, batchCount)
+        res = self.canDeductWealth(deductWealthVal)
+        if not res:
+            LOG_WARN("calculateWorkshopMaterials ~ currency is not enough", produceCfgData, itemID, batchCount, res())
+            if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
+                return gameconst.WorkshopResult.WORKSHOP_FAIL, 0, 0
             return gameconst.WorkshopResult.WORKSHOP_LIMIT_CURRENCY_IS_NOT_ENOUGH, 0, 0
         
         # 制造这一批需要总的绑定和非绑定材料数量

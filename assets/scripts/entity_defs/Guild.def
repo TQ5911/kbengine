@@ -6,6 +6,25 @@
     </Interfaces>
 
     <Properties>
+        <leaveLeagueCD>
+            <Type>          UINT32                      </Type>
+            <Flags>         BASE                        </Flags>
+            <Default>       0                           </Default>
+            <Persistent>    true                        </Persistent>
+        </leaveLeagueCD>
+        
+        <initLeagueUUID>
+            <Type>          BOOL                            </Type>
+            <Flags>         BASE                            </Flags>
+            <Default>       false                           </Default>
+        </initLeagueUUID>
+
+        <initLeagueUUIDTimer>
+            <Type>      UINT32                 </Type>
+            <Flags>     BASE                   </Flags>
+            <Default>   0                      </Default>
+        </initLeagueUUIDTimer>
+
         <leaderGbId>
             <Type>          PLAYER_GBID                     </Type>
             <Flags>         BASE                            </Flags>
@@ -53,12 +72,6 @@
             <Flags>         BASE                </Flags>
             <Persistent>    true                </Persistent>
         </guildScore>
-
-        <maxGuildUnionNum>
-            <Type>          UINT32              </Type>
-            <Flags>         BASE                </Flags>
-            <Persistent>    true                </Persistent>
-        </maxGuildUnionNum>
 
         <guildLevel>
             <Type>          LEVEL           </Type>
@@ -204,11 +217,11 @@
             <Flags>         BASE                </Flags>
         </guildSyncDataToCrossDataCache>
 
-        <guildUnionApplyMgr>
-            <Type>          GUILD_APPLY_UNION_MGR_DATA_INFO      </Type>
-            <Flags>         BASE                                    </Flags>
-            <Persistent>    true                                    </Persistent>
-        </guildUnionApplyMgr>
+        <leagueUUID>
+            <Type>          UINT64              </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+        </leagueUUID>
 
         <junXuArchitecture>
             <Type>          JUN_XU_ARCHITECTURE_DATA_INFO           </Type>
@@ -595,31 +608,6 @@
             <Arg>       ENTITYCALL              </Arg>
         </doGetGuildInfosFromCrossData>
 
-        <doApplyGuildUnion>
-            <Arg>       PLAYER_GBID             </Arg>
-            <Arg>       ENTITYCALL              </Arg>
-            <Arg>       GUILD_UUID              </Arg>
-        </doApplyGuildUnion>
-
-        <onApplyGuildUnion>
-            <Arg>       UUID                    </Arg>
-            <Arg>       SERVER_ID               </Arg>
-            <Arg>       APPLY_GUILD_UNION_DATA_INFO         </Arg>
-        </onApplyGuildUnion>
-
-        <doDealGuildUnionApply>
-            <Arg>       PLAYER_GBID             </Arg>
-            <Arg>       ENTITYCALL              </Arg>
-            <Arg>       GUILD_UUID              </Arg>
-            <Arg>       BOOL                    </Arg>
-        </doDealGuildUnionApply>
-
-        <doCancelGuildUnion>
-            <Arg>       PLAYER_GBID             </Arg>
-            <Arg>       ENTITYCALL              </Arg>
-            <Arg>       GUILD_UUID              </Arg>
-        </doCancelGuildUnion>
-
         <doQixieAssistFetchCostCoin>
             <Arg>       PLAYER_GBID             </Arg>
             <Arg>       ENTITYCALL              </Arg>
@@ -639,12 +627,6 @@
             <Arg>       ENTITYCALL              </Arg>
             <Arg>       QIXIE_TYPE              </Arg>
         </doUpgradeQixie>
-
-        <doDeclareEnemy>
-            <Arg>       PLAYER_GBID             </Arg>
-            <Arg>       ENTITYCALL              </Arg>
-            <Arg>       GUILD_UUID              </Arg>
-        </doDeclareEnemy>
 
         <doDonateCityBattleToken>
             <Arg>       PLAYER_GBID             </Arg>
@@ -668,59 +650,13 @@
             <Arg>       ARRAY   <of>    UNICODE     </of>   </Arg>
         </addGuildEvent>
 
-        <onApplyGuildUnionResult>
-            <Arg>       BOOL                        </Arg>
-            <Arg>       PYTHON                      </Arg>
-            <Arg>       ENTITYCALL                  </Arg>
-        </onApplyGuildUnionResult>
-
-        <doGetGuildUnionApplySender>
-            <Arg>       PLAYER_GBID             </Arg>
-            <Arg>       ENTITYCALL              </Arg>
-        </doGetGuildUnionApplySender>
-
-        <onAddGuildUnionToGuild>
-            <Arg>       GUILD_UUID              </Arg>
-            <Arg>       UNICODE                 </Arg>
-        </onAddGuildUnionToGuild>
-
-        <onRemoveReceiverGuildApplyUnion>
-            <Arg>       GUILD_UUID              </Arg>
-        </onRemoveReceiverGuildApplyUnion>
-
         <getGuildDetailFromOtherServer>
             <Arg>       UUID                    </Arg>
             <Arg>       UINT32                  </Arg>
         </getGuildDetailFromOtherServer>
 
-        <doCancelApplyGuildUnion>
-            <Arg>       PLAYER_GBID             </Arg>
-            <Arg>       ENTITYCALL              </Arg>
-            <Arg>       GUILD_UUID              </Arg>
-        </doCancelApplyGuildUnion>
-
         <clearCrossDataCache>
         </clearCrossDataCache>
-
-        <onDeclareEnemyFailed>
-            <Arg>       UUID                    </Arg>
-        </onDeclareEnemyFailed>
-
-        <disagreeRemoveOtherSender>
-            <Arg>       UUID                    </Arg>
-            <Arg>       SERVER_ID               </Arg>
-            <Arg>       GUILD_UUID              </Arg>
-        </disagreeRemoveOtherSender>
-
-        <onAddGuildEnemyToGuild>
-            <Arg>       GUILD_UUID              </Arg>
-            <Arg>       UNICODE                 </Arg>
-        </onAddGuildEnemyToGuild>
-
-        <onAddGuildEnemyToOtherGuild>
-            <Arg>       GUILD_UUID              </Arg>
-            <Arg>       UNICODE                 </Arg>
-        </onAddGuildEnemyToOtherGuild>
 
         <getCacheBeforeEnterCrossSiegeWar>
             <Arg>       ENTITYCALL              </Arg>
@@ -749,6 +685,7 @@
             <Arg>       PLAYER_GBID             </Arg>
             <Arg>       ENTITYCALL              </Arg>
             <Arg>       PYTHON                  </Arg>
+            <Arg>       BOOL                    </Arg>
         </getMemberJobAndGuildCache>
 
         <doSendGuildRedBagMsg>
@@ -788,6 +725,7 @@
             <Arg>       UINT8            </Arg>
             <Arg>       UINT16           </Arg>
             <Arg>       INT64            </Arg>
+            <Arg>       UNICODE          </Arg>
         </openGuildChallenge>
 
         <getChangllengeDataInfo>
@@ -887,11 +825,6 @@
             <Arg>       LEADER_BOARD_IDX                    </Arg>
         </onLeaderBoardRank>
 
-        <onGetGuildRelationAll>
-            <Arg>       ARRAY   <of>    GUILD_AND_RELATION          </of>   </Arg>
-            <Arg>       ENTITYCALL          </Arg>
-        </onGetGuildRelationAll>
-
         <tryApplyInviteGuild>
             <Arg>       PLAYER_GBID      </Arg>
             <Arg>       UINT8            </Arg>
@@ -956,5 +889,292 @@
         <commissionWeeklyCalc>
             <Arg>   UINT32  </Arg>
         </commissionWeeklyCalc>
+
+        <onCreateLeague>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UNICODE                 </Arg>
+            <Arg>       UNICODE                 </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onCreateLeague>
+
+        <onCreateLeagueResult>
+            <Arg>       UINT32                      </Arg>
+            <Arg>       LEAGUE_DETAIL_INFO          </Arg>
+            <Arg>       ARRAY <of> LEAGUE_MEMBER_INFO </of>  </Arg>
+            <Arg>       ENTITYCALL                  </Arg>
+        </onCreateLeagueResult>
+
+        <onDisbandLeagueResult>
+            <Arg>       UINT32                      </Arg>
+            <Arg>       ENTITYCALL                  </Arg>
+        </onDisbandLeagueResult>
+
+        <onLeagueDisbanded>
+            <Arg>       UINT64                      </Arg>
+        </onLeagueDisbanded>
+
+        <onDisbandLeague>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onDisbandLeague>
+
+        <onModifyLeagueInfo>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UNICODE                 </Arg>
+            <Arg>       UNICODE                 </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onModifyLeagueInfo>
+
+        <onGetLeagueList>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onGetLeagueList>
+
+        <onSearchLeague>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UNICODE                 </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onSearchLeague>
+
+        <onGetLeagueBasicInfo>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onGetLeagueBasicInfo>
+
+        <onGetLeagueDetail>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onGetLeagueDetail>
+
+        <onGetLeagueDetailByGuild>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onGetLeagueDetailByGuild>
+
+        <onApplyLeagueToJoin>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onApplyLeagueToJoin>
+
+        <onApproveLeagueJoin>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       GUILD_UUID              </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onApproveLeagueJoin>
+
+        <onCancelLeagueApply>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       LEAGUE_UUID             </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onCancelLeagueApply>
+
+        <onInviteGuild>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onInviteGuild>
+
+        <onAcceptInvite>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onAcceptInvite>
+
+        <onRejectInvite>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       LEAGUE_UUID             </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onRejectInvite>
+
+        <onKickMember>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onKickMember>
+
+        <onLeaveLeague>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onLeaveLeague>
+
+        <onTransferLeader>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onTransferLeader>
+
+        <onGetLeagueApplyList>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onGetLeagueApplyList>
+
+        <onGetInviteList>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onGetInviteList>
+
+        <onGetLeagueSentApplies>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onGetLeagueSentApplies>
+
+        <onDeclareLeagueWar>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       SERVER_ID               </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onDeclareLeagueWar>
+
+        <onGetEnemyList>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onGetEnemyList>
+
+        <onGetUnionList>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onGetUnionList>
+
+        <onCheckLeagueRelation>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onCheckLeagueRelation>
+
+        <onGetGuildAllianceId>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onGetGuildAllianceId>
+
+        <onDonateFund>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onDonateFund>
+
+        <onAidResource>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onAidResource>
+
+        <onGetLeagueFund>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onGetLeagueFund>
+
+        <onGetEventList>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onGetEventList>
+
+        <onSendChatMessage>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       UNICODE                 </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onSendChatMessage>
+
+        <onGetChatHistory>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onGetChatHistory>
+
+        <onAllianceNewEvent>
+            <Arg>       LEAGUE_EVENT_INFO       </Arg>
+        </onAllianceNewEvent>
+
+        <onCheckGuild>
+            <Arg>   UUID    </Arg>
+            <Arg>   BOOL    </Arg>
+            <Arg>   BOOL    </Arg>
+        </onCheckGuild>
+
+        <onSetLeagueUUID>
+            <Arg>   LEAGUE_UUID     </Arg>
+        </onSetLeagueUUID>
+
+        <onQueryLeagueUUID>
+            <Arg>   LEAGUE_UUID     </Arg>
+            <Arg>   BOOL            </Arg>
+        </onQueryLeagueUUID>
+
+        <onRejectJoin>
+            <Arg>   PLAYER_GBID </Arg>
+            <Arg>   GUILD_UUID  </Arg>
+            <Arg>   ENTITYCALL  </Arg>
+        </onRejectJoin>
+        <onNewInviteNotify>
+            <Arg>   LEAGUE_INVITE_INFO  </Arg>
+        </onNewInviteNotify>
+        <onGetEnemyAllianceList>
+            <Arg>   PLAYER_GBID </Arg>
+            <Arg>   ENTITYCALL  </Arg>
+        </onGetEnemyAllianceList>
+        <onAllianceWarStarted>
+            <Arg>       LEAGUE_ENEMY_ROW_INFO                  </Arg>
+        </onAllianceWarStarted>
+
+        <onAllianceWarEnded>
+            <Arg>       LEAGUE_ENEMY_END_INFO                  </Arg>
+        </onAllianceWarEnded>
+
+        <onReturnBackFund>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT64      </Arg>
+        </onReturnBackFund>
+
+        <onGuildAidResource>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT64      </Arg>
+        </onGuildAidResource>
+        <getGuildSimpleInfo>
+            <Arg>   ENTITYCALL  </Arg>
+            <Arg>   STRING      </Arg>
+            <Arg>   PYTHON      </Arg>
+        </getGuildSimpleInfo>
+        <onLeagueGuildLeave>
+            <Arg>   GUILD_UUID  </Arg>
+            <Arg>   GUILD_UUID  </Arg>
+        </onLeagueGuildLeave>
+
+        <onRecruitLeagueMember>
+            <Arg>   PLAYER_GBID </Arg>
+            <Arg>   ENTITYCALL  </Arg>
+        </onRecruitLeagueMember>
+
+        <exitGuildDone>
+            <Arg>   BOOL        </Arg>
+            <Arg>   PLAYER_GBID </Arg>
+            <Arg>   ENTITYCALL  </Arg>   
+        </exitGuildDone>
+
+        <onGetLeagueSimpleInfo>
+            <Arg>   PLAYER_GBID </Arg>
+            <Arg>   LEAGUE_UUID </Arg>
+            <Arg>   ENTITYCALL  </Arg>   
+        </onGetLeagueSimpleInfo>
     </BaseMethods>
 </root>

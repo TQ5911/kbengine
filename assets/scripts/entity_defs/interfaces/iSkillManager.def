@@ -26,6 +26,11 @@
             <Persistent>      true                </Persistent>
         </skillDic>
 
+        <stateCounters>
+            <Type>            PY_DICT                   </Type>
+            <Flags>           CELL_PRIVATE              </Flags>
+        </stateCounters>
+
         <buffMgrDic>
             <Type>            SERVER_BUFFS              </Type>
             <Flags>           CELL_PRIVATE             </Flags>
@@ -871,6 +876,7 @@
             <Arg>           BOOL           </Arg>
             <Arg>           BOOL           </Arg>
             <Arg>           DOUBLETIME     </Arg>
+            <Arg>           UINT8          </Arg>
         </doActionOnChangeSlot>
 
         <removeSkill>

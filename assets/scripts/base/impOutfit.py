@@ -102,8 +102,9 @@ class ImpOutfit(object):
             costItemNum = costData[1]
             deductWealth.addWealthByItemId(costItemId, costItemNum)
 
-        if not self.canDeductWealth(deductWealth, sendMsg=True):
-            LOG_INFO("reqBuyOutfit failed, not enouth itemId:", deductWealth)
+        res = self.canDeductWealth(deductWealth, sendMsg=True)
+        if not res:
+            LOG_INFO("reqBuyOutfit failed, not enouth itemId:", deductWealth, res())
             return
 
         opUUID = KBEngine.genUUID64()

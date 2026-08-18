@@ -60,7 +60,8 @@ class LoginService(GameServer):
         accountType = reply.accountType
         accountName = reply.accountName
         kickReason = reply.kickReason
-        stubs = gameengine.getLoginStubsByAccountName(accountName)
+        realAccountName = utils.mixRealAccountName(accountType, accountName)
+        stubs = gameengine.getLoginStubsByAccountName(realAccountName)
         gameclass.DuplicatedCallList(stubs).onKickAccount(accountType, accountName, kickReason)
 
     def onLockedLogin(self, rpc_controller, reply, done):
@@ -140,9 +141,13 @@ class ICentralLogin(object):
     def onCentralServerConnected(self, centralServerId):
         pass
 
-    def tagTypeCheck(self, otherData, extra, realAccountName):
+    def tagTypeCheck(self, otherData, extra, realAccountName, accountType):
         tagTypeStr = otherData["tagType"] if "tagType" in otherData else "1"
         tagTypeSet = set(tagTypeStr.split(","))
+
+        # 给压测用的，正式时候通过中心服verifyLogin禁止password
+        if accountType == centralLogin.ACCOUNT_PASSWD:
+            return True
 
         # 白名单一律放行
         if str(gameconst.UserTagType.WHITE_LIST) in tagTypeSet:
@@ -229,7 +234,7 @@ class ICentralLogin(object):
             return
 
         #白名单、激活码用户
-        if not self.tagTypeCheck(otherData, extra, realAccountName):
+        if not self.tagTypeCheck(otherData, extra, realAccountName, accountType):
             return
 
         if resCode == VerifyAccountReply.VERIFY_ACCOUNT_OK:

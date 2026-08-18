@@ -4745,7 +4745,7 @@ datas = _tools.RODict({
     }),
     18000758: _tools.RODict({
         "ID": 18000758,
-        "name": "祖柯之魂",
+        "name": "祖珂之魂",
         "baseSpeed": 1.0,
         "adjSpeed": 1.0,
         "isNameDisplay": 1,
