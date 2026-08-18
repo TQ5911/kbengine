@@ -1,0 +1,32 @@
+databases:
+  game1:
+    host: 10.209.0.39
+    port: 33069
+    username: xzj
+    password: replace-me
+    db: gamedb_xzj
+    server_id: 19004
+  game2:
+    host: 10.209.0.58
+    port: 33069
+    username: xzj
+    password: replace-me
+    db: gamedb_xzj
+    server_id: 19003
+  game3:
+    host: 10.209.0.29
+    port: 33069
+    username: xzj
+    password: replace-me
+    db: gamedb_xzj
+    server_id: 19005
+
+merge:
+  read_batch: 1000
+  write_batch: 400
+  root: Avatar
+  jobs:
+    - src: game1
+      dst: game2
+    - src: game3
+      dst: game2
