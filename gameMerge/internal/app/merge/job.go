@@ -504,6 +504,9 @@ func (j *Job) Run(ctx context.Context, parentMap interface {
 		{Name: "tbl_BountyStub", Deps: nil, Fn: func(ctx context.Context) error {
 			return j.mergeBountyStubTbl(ctx)
 		}},
+		{Name: "tbl_RedBagStub", Deps: nil, Fn: func(ctx context.Context) error {
+			return j.mergeRedBagStubTbl(ctx)
+		}},
 
 		// === 等 KBE 完：tbl_Account 消费 accMap + duplicated ===
 		{Name: "tbl_Account", Deps: []string{"kbe_accountinfos"}, Fn: func(ctx context.Context) error {
@@ -582,5 +585,22 @@ func (j *Job) mergeAutoIncrementIDTbl(ctx context.Context, table string) error {
 		return fmt.Errorf("auto-increment %s: %w", table, err)
 	}
 	slog.Info("auto-increment-id merge done", "table", table)
+	return nil
+}
+
+func (j *Job) mergeRedBagStubTbl(ctx context.Context) (error) {
+	slog.Info("red stub merge start")
+	merger := &RedBagEntityMerger{
+		Src:        j.Src,
+		Dst:        j.Dst,
+		ReadBatch:  j.ReadBatch,
+		WriteBatch: j.WriteBatch,
+		Name:     	"RedBagStub",
+	}
+	if err := merger.Merge(ctx); err != nil {
+		slog.Error("red bag stub merge", "err", err)
+		return fmt.Errorf("red bag stub merge error: %w", err)
+	}
+	slog.Info("red bag stub merge done")
 	return nil
 }

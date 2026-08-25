@@ -194,3 +194,59 @@ func (b *bulkBuilder) RowPlaceholder(n int) string {
 	out = append(out, ')')
 	return string(out)
 }
+
+
+type RedStubBulkSink struct {
+	*BulkSink
+}
+
+func NewRedBagStubBulkSink(db *sql.DB, table string, columns []string, colIdxs []int, batch int) *RedStubBulkSink {
+	return &RedStubBulkSink{
+		BulkSink: NewBulkSink(db, table, columns, colIdxs, batch),
+	}
+}
+
+func (s *RedStubBulkSink) Submit(ctx context.Context, rows []Row) error {
+	if len(rows) == 0 {
+		return nil
+	}
+	args := make([]any, 0, len(s.cols)*len(rows))
+	var sb bulkBuilder
+	sb.WriteString("INSERT INTO `")
+	sb.WriteString(s.Table)
+	sb.WriteString("` (")
+	sb.WriteQuoted(s.cols)
+	sb.WriteString(") VALUES ")
+	rowPH := sb.RowPlaceholder(len(s.cols))
+	for i, row := range rows {
+		if i > 0 {
+			sb.WriteString(", ")
+		}
+		sb.WriteString(rowPH)
+		for _, idx := range s.colIdxs {
+			var v any
+			if idx >= 0 && idx < len(row) {
+				v = row[idx]
+			}
+			args = append(args, normalizeArg(v))
+		}
+	}
+	sb.WriteString(" ON DUPLICATE KEY UPDATE ")
+	for i, col := range s.cols {
+		if i > 0 {
+			sb.WriteString(", ")
+		}
+
+		sb.WriteString("`")
+		sb.WriteString(col)
+		sb.WriteString("`")
+	
+		sb.WriteString("=VALUES(`")
+		sb.WriteString(col)
+		sb.WriteString("`)")
+	}
+	if _, err := s.DB.ExecContext(ctx, sb.String(), args...); err != nil {
+		return fmt.Errorf("bulk insert %s: %w", s.Table, err)
+	}
+	return nil
+}
