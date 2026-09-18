@@ -54,7 +54,7 @@ func main() {
 		return
 	}
 
-	base.Init("centralLoginConf.json", &CentralLogin.LoginConfig, func() common.IApp {
+	base.Init(&CentralLogin.LoginConfig, func() common.IApp {
 		return CentralLogin.NewCentralLoginApp()
 	})
 }

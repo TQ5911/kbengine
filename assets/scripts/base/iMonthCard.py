@@ -62,15 +62,29 @@ class IMonthCard(object):
             return True
         return False
 
+    def addMonthCardByItemAction(self, monthCardId, gridId, itemId, useNum, opUUID, ctx):
+        LOG_INFO("addMonthCardByItemAction ", monthCardId, gridId, itemId, useNum, opUUID, ctx)
+        effectiveCount = 0
+        seconds = BCBCCD.datas['durationHours']['value'] * 3600
+        for _ in range(0, useNum):
+            if not self.checkCanAddMonthCard(monthCardId):
+                break
+            effectiveCount += 1
+            self.doAddMonthCard(seconds, monthCardId)
+        ctx.usedCount = effectiveCount
+            
+        return effectiveCount == 0
+
     def addMonthCardByItem(self, monthCardId, opUUID, ctx):
         seconds = BCBCCD.datas['durationHours']['value'] * 3600
         if not self.checkCanAddMonthCard(monthCardId):
             self.cell.onPendingUseItemFinished(ctx.pendingOpId, gameconst.UseItemEnum.FALSE)
             self.onMessagePre(BCBCCD.datas["durationHoursLimitMsg"]["value"], [])
-            return
+            return False
         self.doAddMonthCard(seconds, monthCardId)
         self.cell.onPendingUseItemFinished(ctx.pendingOpId, gameconst.UseItemEnum.TRUE)
-
+        return True
+    
     def checkCanAddMonthCard(self, monthCardId):
         monthCardExpireTime = self.monthCardExpireTime if monthCardId == gameconst.PremiumType.SMALL_MONTH_CARD else self.bigMonthCardExpireTime
         durationHoursLimit = BCBCCD.datas['durationHoursLimit']['value']
@@ -133,7 +147,29 @@ class IMonthCard(object):
 
         self.checkAndGetHangupTime()
         return opUUID
-    
+
+    @gamedecorator.offlineCallback
+    def gmDeductMonthCard(self, monthCardId, seconds):
+        isSmall = monthCardId == gameconst.PremiumType.SMALL_MONTH_CARD
+        oldExpire = self.monthCardExpireTime if isSmall else self.bigMonthCardExpireTime
+        if oldExpire <= utils.curTS():
+            LOG_INFO("gmDeductMonthCard already expired", monthCardId, oldExpire)
+            return False, oldExpire, 0
+        newExpire = max(0, oldExpire - seconds)
+        if newExpire <= utils.curTS():
+            newExpire = 0
+        LOG_INFO("gmDeductMonthCard", monthCardId, seconds, oldExpire, newExpire)
+        if isSmall:
+            self.monthCardExpireTime = newExpire
+            redisUtils.RedisUtils.cmdSet(
+                gameconst.PrivilegeRedisKey.VIP + self.accountName,
+                self.monthCardExpireTime,
+                self._onUpdateMonthCardExpireTime)
+        else:
+            self.bigMonthCardExpireTime = newExpire
+        if self.cell:
+            self.cell.syncMonthCardInfo(self.monthCardExpireTime, self.bigMonthCardExpireTime)
+        return True, oldExpire, newExpire
 
     @gamedecorator.limitcall(5, keyFun=lambda x: '{1}'.format(*x))
     def tryGetMonthCardDailyReward(self, exposed, cardType):
@@ -632,6 +668,8 @@ class IMonthCard(object):
             opUUID,
             0,
             0,
-            0
+            0,
+            costItem[0],
+            costItem[1]
         )
         return True

@@ -294,6 +294,7 @@ class ImpTask(TaskProgress, TaskEvent):
             self.autoQuitTask()
             self.fixTaskTargetInfo()
             self.taskInfo.sendHookRewardTaskList(self)
+            self.triggerAutoClaimTask(dataUtils.getUnlockDayAutoClaimTaskIds(utils.getSvrOpenDays()))
         except Exception as e:
             gameengine.panicStack('in taskOnLogin exception:', e)
             return
@@ -311,6 +312,7 @@ class ImpTask(TaskProgress, TaskEvent):
         self.client.onTasksRem(removeTaskIds)
         self.sendUpdateTasksToClient()
         self.taskInfo.sendHookRewardTaskList(self)
+        self.triggerAutoClaimTask(dataUtils.getUnlockDayAutoClaimTaskIds(utils.getSvrOpenDays()))
 
     def onTaskWeeklyUpdate(self, *args):
         LOG_INFO('onTaskWeeklyUpdate:', args)

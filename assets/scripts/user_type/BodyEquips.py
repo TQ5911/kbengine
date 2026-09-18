@@ -8,6 +8,10 @@ import userType
 import itemFactory
 import gameengine
 import dataUtils
+import gameclass
+import LogTrackingMgr
+import gameconfig
+
 import gearEnhance_blessEffect as GEBE
 
 class BodyEquips(userType.UserSingleType):
@@ -89,6 +93,32 @@ class BodyEquips(userType.UserSingleType):
             'addSkillLvDic':self.addSkillLvDic,
             'blessAttrs':self.blessAttrs,
         }
+
+    def calFnvHash(self):
+        checkData = []
+        for k in sorted(self.equips_map.keys()):
+            v = self.equips_map[k]
+            checkData.append((k, v.itemId, v.itemNum, v.uniqueId, v.getEquipScore()))
+        fnv = utils.FNV1a64()
+        fnv.update_str(str(checkData))
+        return fnv.digest_uint64(), checkData
+
+    @staticmethod
+    def diffFnvCheckData(localCheckData, crossCheckData):
+        localMap = {item[0]: item for item in (localCheckData or ())}
+        crossMap = {item[0]: item for item in (crossCheckData or ())}
+        diffs = []
+        for slotId in sorted(set(localMap) | set(crossMap)):
+            localItem = localMap.get(slotId)
+            crossItem = crossMap.get(slotId)
+            if localItem == crossItem:
+                continue
+            diffs.append({
+                'slotId': slotId,
+                'local': localItem,
+                'cross': crossItem,
+            })
+        return diffs
 
     def toBodyEquipsClientDict(self):
         _bodyEquipList = []
@@ -236,7 +266,7 @@ class BodyEquips(userType.UserSingleType):
         else:
             return gameconst.BodyEquipSlot.EQUIP_BRACELET_RIGHT_SLOT
 
-    def dressEquip(self, owner, slotId, bagEquipItem):
+    def dressEquip(self, owner, slotId, bagEquipItem, opUUID, opType):
         # bagEquipItem.setItemBind()
         self.addEquipItem(owner, slotId, bagEquipItem)
         bagEquipItem.applyEquipEffectToAvatar(owner)
@@ -247,24 +277,57 @@ class BodyEquips(userType.UserSingleType):
         if bagEquipItem.getOwnerGbId() > 0:
             self.waitExpireEquipList[bagEquipItem.uniqueId] = bagEquipItem
 
+        detail = gameclass.AwardDetailCls(uniqueid=bagEquipItem.uniqueId, itemid=bagEquipItem.itemId, isCross=owner.isCrossServerInLocalServer)
+        LogTrackingMgr.LogTrackingMgr.body_equip_flow(
+            owner.gbId,
+            owner.clientDistinctIdCell,
+            opUUID,
+            gameconfig.serverId(),
+            owner.accountNameCell,
+            gameconfig.gameId(),
+            bagEquipItem.itemId,
+            1,
+            opType,
+            bagEquipItem.uniqueId,
+            detail
+        )
+        
+
     def updateEquipDressAppearance(self, owner, uniqueId):
         slotId, equipItem = self.getEquipItemByUniqueId(uniqueId)
         if equipItem:
             owner.appearance.setEquip(owner, slotId, equipItem.itemId, equipItem.getGrade())
 
-    def doBodyUndressEquip(self, owner, slotId):
+    def doBodyUndressEquip(self, owner, slotId, opUUID, opType):
         LOG_INFO('in doBodyUndressEquip, slotId:', slotId)
         equipItem = self.removeEquipItem(owner, slotId)
         if not equipItem:
             LOG_ERR(' in doBodyUndressEquip, data err, no equip:', slotId)
-            return
+            return None
 
         equipItem.removeEquipEffectToAvatar(owner)
         owner.appearance.setEquip(owner, slotId, 0, 0)
         self.changeAvatarAttrs(owner)
         owner.updateEquipmentScore()
         self.waitExpireEquipList.pop(equipItem.uniqueId, None)
-        owner.client.onUndressEquipment(slotId)
+
+        detail = gameclass.AwardDetailCls(uniqueid=equipItem.uniqueId, itemid=equipItem.itemId, isCross=owner.isCrossServerInLocalServer)
+        LogTrackingMgr.LogTrackingMgr.body_equip_flow(
+            owner.gbId,
+            owner.clientDistinctIdCell,
+            opUUID,
+            gameconfig.serverId(),
+            owner.accountNameCell,
+            gameconfig.gameId(),
+            equipItem.itemId,
+            -1,
+            opType,
+            equipItem.uniqueId,
+            detail
+        )
+
+        if owner.client:
+            owner.client.onUndressEquipment(slotId)
         return equipItem
     
     def changeAvatarAttrs(self, owner):
@@ -303,9 +366,9 @@ class BodyEquips(userType.UserSingleType):
         equipItem = self.equips_map.pop(slotId, None)
         if not equipItem:
             return equipItem
-        LOG_INFO(" BodyEquips-->removeEquipItem, begin~ ", slotId, self.equips_map)
+        LOG_INFO(" BodyEquips-->removeEquipItem, begin~ ", slotId)
         self.recalculateAllInscriptionEffects(owner)
-        LOG_INFO("BodyEquips-->removeEquipItem, end~", slotId, self.equips_map)
+        LOG_INFO("BodyEquips-->removeEquipItem, end~", slotId)
         return equipItem
     
     def addEquipItem(self, owner, slotId, equipItem):

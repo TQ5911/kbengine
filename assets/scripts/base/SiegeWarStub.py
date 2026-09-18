@@ -59,6 +59,12 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             return
         gameengine.getGlobalBase('ActStub').updateAnnouncement(gameconst.AnnouncementType.SIEGE_WAR, uaType, utils.curTS(), timestamp)
 
+    def _broadcastSiegeWarChatMsg(self, msgId, args):
+        LOG_DBG('[lj]broadcast siege war chat msg', msgId, args)
+        gameengine.broadcastBaseapp(
+            'broadcastToAllAvatar',
+            (gameconst.BASE, 'onMessagePre', (msgId, args), ()))
+
     #跨服同步城战状态
     def setSiegeWarState(self, state, timestamp):
         LOG_DBG('[lj]set siege war state from cross server', state, timestamp)
@@ -88,12 +94,11 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                         declaration = ownerName + ': ' + self.cityDefenseDeclaration
                     gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
                         mailId, attach, [ownerName, declaration], title, content, 0, timestamp, 0, 1,
-                        utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_SIGNUP)
+                        utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_SIGNUP, 0)
 
-                    content = content.replace('{0}', ownerName)
-                    content = content.replace('{1}', declaration)
-                    content = content.replace('\n', '  ')
-                    gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onOfficialMessage', (95, content, 1, [], 0)))
+                    self._broadcastSiegeWarChatMsg(
+                        CBC.datas['cityBattle_auctionStart']['value'],
+                        [ownerName, declaration, str(self.cityOwnerUUID)])
                     gameengine.getGlobalBase('GuildStub').broadcastToAllGuild('onResetSiegeWarSignUpData', ())
 
                 self.siegeWarState = state
@@ -190,7 +195,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             content = MAMAD.datas[mailId]['content']
             gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
                 mailId, attach, [], title, content, 0, utils.curTS(), 0, 1,
-                utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BIDDING_FAILED)
+                utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BIDDING_FAILED, 0)
             return
 
         #todo 广播邮件
@@ -203,7 +208,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         content = MAMAD.datas[mailId]['content']
         gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
             mailId, attach, [firstBiddingServerName, firstBiddingGuildName, firstBiddingAvatarName, str(firstBiddingPrice)], 
-            title, content, 0, utils.curTS(), 0, 1, utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BIDDING_SUCCESS)
+            title, content, 0, utils.curTS(), 0, 1, utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BIDDING_SUCCESS, 0)
 
         #玉玺
         gameengine.getGlobalBase('GuildStub').getGuildBox(
@@ -239,7 +244,9 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.defensiveJunXuQiXieLevelData = {}
         self.officialWarStartTime = officialWarStartTime
         LOG_DBG('[lj]on siege war declare war official', CBC.datas['cityBattle_mailDeclare']['value'])
-        mailId = CBC.datas['cityBattle_mailDeclare']['value'][0]
+        mailIds = CBC.datas['cityBattle_mailDeclare']['value']
+        mailId = mailIds[0]
+        msgId = CBC.datas['cityBattle_declareWar1']['value']
         self.cityOffensiveDeclaration = self.cityOffensiveDeclaration if self.cityOffensiveDeclaration else ""
         declaration = ""
         if self.cityOffensiveDeclaration != "":
@@ -248,10 +255,12 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         y, m, d = time.strftime("%Y-%m-%d", time.localtime(officialWarStartTime)).split('-')
         args = [guildName, offensiveName, defensiveName, y, m, d, declaration]
         if offensiveGuildUUID == 0:
-            mailId = CBC.datas['cityBattle_mailDeclare']['value'][1]
+            mailId = mailIds[1]
+            msgId = CBC.datas['cityBattle_declareWar2']['value']
             args = [defensiveName, y, m, d]
         elif defensiveGuildUUID == 0:
-            mailId = CBC.datas['cityBattle_mailDeclare']['value'][2]
+            mailId = mailIds[2]
+            msgId = CBC.datas['cityBattle_declareWar3']['value']
             args = [guildName, offensiveName, y, m, d, declaration]
         rewardId = MAMAD.datas[mailId]['rewardId']
         attach = None
@@ -262,12 +271,9 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         LOG_DBG('[lj]on siege war declare war official mail id:', mailId, 'args:', args, content)
         gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
             mailId, attach, args, title, content, 0, utils.curTS(), 0, 1,
-            utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_NOTICE_BATTLE)
+            utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_NOTICE_BATTLE, 0)
 
-        for i in range(len(args)):
-            content = content.replace('{' + str(i) + '}', args[i])
-        content = content.replace('\n', '  ')
-        gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onOfficialMessage', (95, content, 1, [], 0)))
+        self._broadcastSiegeWarChatMsg(msgId, args)
 
         gameengine.getGlobalBase('GuildStub').callOnGuild(
             offensiveGuildUUID,
@@ -495,7 +501,7 @@ class SiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 content = MAMAD.datas[mailId]['content']
                 gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(
                     mailId, None, [str(dataList[-1]), str(dataList[6]), str(dataList[1])], title, content, 0, utils.curTS(), 0, 1,
-                    utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BROATCAST_LEADER)
+                    utils.getMaxPlayerLevel() + 1, 0, AAC_AACDD.datas.BONUS_SRC_SIEGEWAR_BROATCAST_LEADER, 0)
             lastCityOwnerGuildName = self.cityOwnerGuildName
             self.cityOwnerUUID = dataList[0]
             self.cityOwnerName = dataList[1]

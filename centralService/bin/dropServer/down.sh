@@ -1,6 +1,6 @@
 #!/bin/bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIG_FILE="${SCRIPT_DIR}/dropConf.json"
+CONFIG_FILE="${SCRIPT_DIR}/dropServer.json"
 
 if [ ! -f "$CONFIG_FILE" ]; then
     echo "Error: config file $CONFIG_FILE not found"

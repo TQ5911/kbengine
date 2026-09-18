@@ -69,6 +69,10 @@ class Space(iBase.IBase):
             if not KBEngine.isShuttingDown():
                 gameengine.getWonderLandStubBySpaceNo(self.spaceno).onSpaceCellAppDeath(self.spaceno)
 
+        elif formula.inAbyssScene(self.spaceno):
+            if not KBEngine.isShuttingDown():
+                gameengine.getAbyssStubBySpaceNo(self.spaceno).onSpaceCellAppDeath(self.spaceno)
+
         elif formula.inLineScene(self.spaceno):
             lineType = formula.fetchMapId(self.spaceno)
             gameengine.getLineStub(lineType).onLineSpaceGone(self.spaceno, 0)
@@ -157,5 +161,3 @@ class Space(iBase.IBase):
     def _initData(self):
         LOG_INFO("Space#initData", self.spaceid, self.spaceno)
 
-    def setBaseAppData(self, key, val):
-        gameengine.setBaseAppData(key, val)

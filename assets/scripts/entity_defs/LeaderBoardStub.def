@@ -19,6 +19,34 @@
             <Persistent>    true                                            </Persistent>
         </dynamicWorldLevel>
 
+        <peakOnlineNum>
+            <Type>          UINT32                                          </Type>
+            <Flags>         BASE                                            </Flags>
+            <Persistent>    true                                            </Persistent>
+            <Default>       0                                               </Default>
+        </peakOnlineNum>
+
+        <yesterdayPeakOnlineNum>
+            <Type>          UINT32                                          </Type>
+            <Flags>         BASE                                            </Flags>
+            <Persistent>    true                                            </Persistent>
+            <Default>       0                                               </Default>
+        </yesterdayPeakOnlineNum>
+
+        <peakOnlineDate>
+            <Type>          UINT32                                          </Type>
+            <Flags>         BASE                                            </Flags>
+            <Persistent>    true                                            </Persistent>
+            <Default>       0                                               </Default>
+        </peakOnlineDate>
+
+        <crossWorldLevel>
+            <Type>          LEVEL                                           </Type>
+            <Flags>         BASE                                            </Flags>
+            <Persistent>    true                                            </Persistent>
+            <Default>       0                                               </Default>
+        </crossWorldLevel>
+
         <leaderBoardCache>
             <Type>          PY_DICT         </Type>
             <Flags>         BASE            </Flags>
@@ -66,6 +94,19 @@
         <gmSetDynamicWorldLevel>
             <Arg>          LEVEL                       </Arg>
         </gmSetDynamicWorldLevel>
+
+        <onReqServerWorldLevel>
+            <Arg>          SERVER_ID                   </Arg>
+        </onReqServerWorldLevel>
+
+        <onAckServerWorldLevel>
+            <Arg>          SERVER_ID                   </Arg>
+            <Arg>          LEVEL                       </Arg>
+        </onAckServerWorldLevel>
+
+        <onSyncCrossWorldLevel>
+            <Arg>          LEVEL                       </Arg>
+        </onSyncCrossWorldLevel>
 
         <getScoreRushRankSelf>
             <Arg>          ENTITYCALL                  </Arg>

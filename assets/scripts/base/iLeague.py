@@ -170,6 +170,15 @@ class ILeague:
         LOG_INFO('iLeague::leaveLeague', exposed, self.gbID)
         if not self._inGuild():
             return
+        gameengine.getGlobalBase('MineWarStub').checkGuildOccupation(self, self.guildUUIDBase)
+    
+    def onCheckGuildOccupationResult(self, ret):
+        LOG_DBG('iLeague::onCheckGuildOccupationResult', ret)
+        if ret:
+            self.client.onMessage(G_GCD.datas['guild_unionExitLimit3']['value'], [])
+            return
+        if not self._inGuild():
+            return
         self.guildBox.onLeaveLeague(self.gbID, self)
 
     @gamedecorator.checkGameconfigEnable('guild_union')
@@ -208,12 +217,6 @@ class ILeague:
             return
         if attackType not in gameconst.EnemyActionType.VALID_TYPES or targetType not in gameconst.EnemyActionType.VALID_TYPES:
             LOG_ERR('iLeague::declareLeagueWar, wrong args', exposed, attackType, targetType, targetId, targetServerId, self.gbID)
-            return
-        
-        #// 注意！！！非同个服务器的联盟宣战，暂时禁止
-        if gameconfig.serverId() != targetServerId:
-            LOG_WARN('iLeague::declareLeagueWar, not same server id', gameconfig.serverId(), targetServerId)
-            self.client.onMessage(G_GCD.datas['guild_crossServerDeclareLimit']['value'], [])
             return
         
         self.guildBox.onDeclareLeagueWar(self.gbID, attackType, targetType, targetId, targetServerId, self)
@@ -396,6 +399,8 @@ class ILeague:
         self.client.onLeagueDonateFundResult(allianceId, allianceFund)
 
     def onAidResourceResult(self, errCode):
+        if errCode == gameconst.LeagueErrCode.ErrCodeSuccess:
+            self.client.onMessage(G_GCD.datas['guild_unionSupportSuccess']['value'], [])
         LOG_INFO('iLeague::onAidResourceResult', errCode, self.gbID)
 
     def onLeagueFundResult(self, fund):
@@ -404,6 +409,7 @@ class ILeague:
 
     def onSendChatMessageResult(self, errCode):
         LOG_INFO('iLeague::onSendChatMessageResult', errCode, self.gbID)
+        self.client.onSendChatMessageResult(errCode)
 
     # ---- List/Query result handlers (AllianceStub → avatar → client) ----
     def onLeagueListResult(self, entries, pageIndex, totalPage):
@@ -450,12 +456,12 @@ class ILeague:
         self.client.onLeagueEnemyList(enemies)
     
     def onLeagueEnemyAllianceList(self, enemies):
-        LOG_INFO('iLeague::onLeagueEnemyAllianceList', len(enemies), self.gbID)
+        LOG_INFO('iLeague::onLeagueEnemyAllianceList', gameconfig.isCrossServer(), len(enemies), self.gbID)
         self.client.onLeagueEnemyAllianceList(enemies)
 
-    def onLeagueUnionList(self, leagueUUIDs):
-        LOG_INFO('iLeague::onLeagueUnionList', leagueUUIDs, len(leagueUUIDs), self.gbID)
-        self.client.onLeagueUnionList(leagueUUIDs)
+    def onLeagueUnionList(self, guildUUIDs):
+        LOG_INFO('iLeague::onLeagueUnionList', gameconfig.isCrossServer(), guildUUIDs, len(guildUUIDs), self.gbID)
+        self.client.onLeagueUnionList(guildUUIDs)
 
     def onCheckLeagueRelationResult(self, isSameAlliance, allianceId):
         LOG_INFO('iLeague::onCheckLeagueRelationResult', isSameAlliance, allianceId, self.gbID)
@@ -479,3 +485,10 @@ class ILeague:
 
     def onRecruitLeagueMemberResult(self, errCode, leagueUUID):
         LOG_INFO('iLeague::onRecruitLeagueMemberResult', self.gbID, errCode, leagueUUID)
+
+    def onBroadcastMessage(self, func, args):
+        LOG_INFO('iLeague::onBroadcastMessage', self.isCrossServerInLocalServer, func, args)
+        getattr(self.client, func)(*args)
+        # 我有实体在跨服才需要同步给跨服
+        if self.isCrossServerInLocalServer:
+            self.syncMethodCallToCrossClient(func, args)

@@ -101,6 +101,18 @@ class StateWaitAnim(StateImpCls):
             aiController.setBornState(gameconst.BornStateEnum.bornAnim)
             aiController.tickOnce()
 
+@withName('waitAnimEx')
+class StateWaitAnimEx(StateImpCls):
+    '''无法移动'''
+    name = StateEnum.IDLE
+    mask = Event.ATTACK
+
+    def tick(self, aiController):
+        if aiController.inHate() or aiController.checkWaitAnimElapsedTime():
+            aiController.transformPlayAnimation()
+            aiController.setBornState(gameconst.BornStateEnum.bornAnim)
+            aiController.tickOnce()
+
 @withName('playAnim')
 class StatePlayAnim(StateImpCls):
     '''无法移动'''
@@ -1248,6 +1260,30 @@ class Machine3054(MachineImpCls):
             StateEnum.STAND: 'luckyGroupStand',
         })
 
+class Machine3055(MachineWithChangeTime):
+    '''雕塑怪EX
+    1 初始为雕塑状态
+    2 周围有人之后开始溶解
+    3 溶解后开始正常攻击
+    4 脱战后瞬移会出生位置并播放重置动画
+    '''
+    def __init__(self):
+        super(Machine3055, self).__init__({
+            StateEnum.IDLE: 'waitAnimEx',
+            StateEnum.PLAY_ANIM: 'playAnimAndAngry',
+            StateEnum.ANGRY: 'angryAndBlink',
+            StateEnum.STAND: 'standAndResetAnim',
+            StateEnum.BACK: 'telBackAfterResetAnim'
+        })
+        self.speialAICombatTup = True
+        self.changeStateTime = time.time()
+
+    def doLoseWitnessTask(self, aiController):
+        aiController.addHomeBuff()
+        aiController.clearHateAndTelBack()
+        aiController.backWait()
+        aiController.setBornState(gameconst.BornStateEnum.reMove)
+
 _machineDic = {
     3001: Machine3001,
     3002: Machine3002,
@@ -1288,6 +1324,7 @@ _machineDic = {
     3052: Machine3052,
     3053: Machine3053,
     3054: Machine3054,
+    3055: Machine3055,
 }
 
 

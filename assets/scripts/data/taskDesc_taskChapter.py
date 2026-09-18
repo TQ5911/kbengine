@@ -16,34 +16,54 @@ import crontab
 
 datas = _tools.RODict({ 
     1: _tools.RODict({
-        "ChapterName": "孤村启程"
+        "ChapterName": "孤村启程",
+        "ChapterReward": 0,
+        "RewardTasks": 0
     }),
     2: _tools.RODict({
-        "ChapterName": "双试锋芒"
+        "ChapterName": "双试锋芒",
+        "ChapterReward": 0,
+        "RewardTasks": 0
     }),
     3: _tools.RODict({
-        "ChapterName": "情劫共渡"
+        "ChapterName": "情劫共渡",
+        "ChapterReward": 0,
+        "RewardTasks": 0
     }),
     4: _tools.RODict({
-        "ChapterName": "异乡隔阂"
+        "ChapterName": "异乡隔阂",
+        "ChapterReward": 0,
+        "RewardTasks": 0
     }),
     5: _tools.RODict({
-        "ChapterName": "深海挽歌"
+        "ChapterName": "深海挽歌",
+        "ChapterReward": 0,
+        "RewardTasks": 0
     }),
     6: _tools.RODict({
-        "ChapterName": "同源异命"
+        "ChapterName": "同源异命",
+        "ChapterReward": 0,
+        "RewardTasks": 0
     }),
     7: _tools.RODict({
-        "ChapterName": "飞沙告急"
+        "ChapterName": "飞沙告急",
+        "ChapterReward": 0,
+        "RewardTasks": 0
     }),
     8: _tools.RODict({
-        "ChapterName": "飞沙之殇"
+        "ChapterName": "飞沙之殇",
+        "ChapterReward": 0,
+        "RewardTasks": 0
     }),
     9: _tools.RODict({
-        "ChapterName": "五毒奇遇"
+        "ChapterName": "五毒奇遇",
+        "ChapterReward": 0,
+        "RewardTasks": 0
     }),
     10: _tools.RODict({
-        "ChapterName": "起死回生"
+        "ChapterName": "起死回生",
+        "ChapterReward": 0,
+        "RewardTasks": 0
     })
 })
 minKey = 1

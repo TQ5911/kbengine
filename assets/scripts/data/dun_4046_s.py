@@ -547,6 +547,30 @@ datas ={
           "ShowInSceneMap": 1
         }
       }
+    },
+    "CustomFuncPos": {
+      "40468003": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "CustomFuncPos",
+        "ClassNameType": 10,
+        "CustomID": "",
+        "Dir": 0.0,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 0,
+        "ID": 40468003,
+        "PosX": 522.9408,
+        "PosY": 195.4831,
+        "PosZ": 527.5815,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "RefreshTimedID": 0,
+          "Remark": "86010285",
+          "ShowInSceneMap": 1
+        }
+      }
     }
   }
 }

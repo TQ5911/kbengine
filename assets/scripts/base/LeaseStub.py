@@ -78,7 +78,7 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     # ---------- 请求转发 ----------
 
-    def addItemPrepare(self, playerGBID, uniqueId, itemId, itemData, pricePerDay, leaseDays, returnServer, returnOwner, returnTime, returnReason, opUUID):
+    def addItemPrepare(self, playerGBID, uniqueId, itemId, itemData, pricePerDay, leaseDays, returnServer, returnOwner, returnTime, returnReason, enhanceLv, grade, opUUID):
         if not self.isLeaseCenterActive():
             LOG_ERR("addItemPrepare leaseCenter is not active")
             return
@@ -94,6 +94,8 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         request.returnOwner = returnOwner
         request.returnTime = returnTime
         request.returnReason = returnReason
+        request.enhanceLv = enhanceLv
+        request.grade = grade
         request.opUUID = opUUID
 
         self.leaseService.serviceStub.addItemPrepare(None, request, None)
@@ -184,7 +186,7 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         self.leaseService.serviceStub.getShopSummary(None, request, None)
 
-    def getShopItems(self, itemId, page, pageSize, playerGBID):
+    def getShopItems(self, itemId, page, pageSize, playerGBID, enhanceLvMask=0xFFFFFFFF, gradeMask=0xFFFFFFFF):
         if not self.isLeaseCenterActive():
             LOG_ERR("getShopItems leaseCenter is not active")
             return
@@ -194,6 +196,8 @@ class LeaseStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         request.page = page
         request.pageSize = pageSize
         request.playerGBID = playerGBID
+        request.enhanceLv = enhanceLvMask
+        request.grade = gradeMask
 
         self.leaseService.serviceStub.getShopItems(None, request, None)
 

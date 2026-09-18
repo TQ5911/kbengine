@@ -181,7 +181,7 @@ datas = _tools.RODict({
     }),
     "dunTimesText": _tools.RODict({
         "ID": "dunTimesText",
-        "value": "挑战次数",
+        "value": "入场门票",
     }),
     "startRaidBtnText": _tools.RODict({
         "ID": "startRaidBtnText",

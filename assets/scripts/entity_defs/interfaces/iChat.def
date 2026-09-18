@@ -87,9 +87,19 @@
             <Flags>         BASE                </Flags>
             <Default>       0                   </Default>
         </notifyChatForbiddenTimer>
+
+        <sendAllianceMsgTime>
+            <Type>          LONGTIME        </Type>
+            <Flags>         BASE            </Flags>
+            <Default>       0               </Default>
+        </sendAllianceMsgTime>
     </Properties>
 
     <BaseMethods>
+        <sendAllianceChatMsg> <Exposed/>
+            <Arg>           CHAT_MSG_DATA         </Arg>
+        </sendAllianceChatMsg>
+        
         <setChatChannel> <Exposed/>
             <Arg>          CHAT_CHANNEL     </Arg>
         </setChatChannel>

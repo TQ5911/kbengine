@@ -277,7 +277,7 @@ datas = _tools.RODict({
     }),
     "selectRange": _tools.RODict({
         "ID": "selectRange",
-        "value": 40,
+        "value": 60,
     }),
     "selectRangeInRaid": _tools.RODict({
         "ID": "selectRangeInRaid",
@@ -871,10 +871,6 @@ datas = _tools.RODict({
         "ID": "pathFindingInterrupt",
         "value": 54000718,
     }),
-    "monsterResetCount": _tools.RODict({
-        "ID": "monsterResetCount",
-        "value": 8,
-    }),
     "monsterResetTimer": _tools.RODict({
         "ID": "monsterResetTimer",
         "value": 15,
@@ -942,6 +938,10 @@ datas = _tools.RODict({
     "function_notAvailable": _tools.RODict({
         "ID": "function_notAvailable",
         "value": 54003127,
+    }),
+    "crossServer_notAvailable": _tools.RODict({
+        "ID": "crossServer_notAvailable",
+        "value": 54003131,
     }),
     "offlineRetentionTime": _tools.RODict({
         "ID": "offlineRetentionTime",
@@ -1113,7 +1113,7 @@ datas = _tools.RODict({
     }),
     "fallFastEndTime": _tools.RODict({
         "ID": "fallFastEndTime",
-        "value": 0.6,
+        "value": 0.5,
     }),
     "fallEndTime": _tools.RODict({
         "ID": "fallEndTime",
@@ -1467,10 +1467,6 @@ datas = _tools.RODict({
         "ID": "breakClearTarget",
         "value": 1000.0,
     }),
-    "monsterCannotAttackResetTimer": _tools.RODict({
-        "ID": "monsterCannotAttackResetTimer",
-        "value": 20,
-    }),
     "maxChaseRange": _tools.RODict({
         "ID": "maxChaseRange",
         "value": 30,
@@ -1478,5 +1474,9 @@ datas = _tools.RODict({
     "dungeonStartTime": _tools.RODict({
         "ID": "dungeonStartTime",
         "value": 3,
+    }),
+    "triggerRadialMenu": _tools.RODict({
+        "ID": "triggerRadialMenu",
+        "value": 0.4,
     })
 })

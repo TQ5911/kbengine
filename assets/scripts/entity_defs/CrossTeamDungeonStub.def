@@ -1,0 +1,63 @@
+<root>
+
+    <Interfaces>
+        <Interface> iDungeonStub </Interface>
+        <Interface> iDungeonStubMonsterMixin </Interface>
+    </Interfaces>
+
+    <Properties>
+        <spaces>
+            <Type>          PY_DICT        </Type>
+            <Flags>         BASE           </Flags>
+            <Default>       {}             </Default>
+        </spaces>
+
+        <creatingRaidDict>
+            <Type>      PY_DICT     </Type>
+            <Flags>     BASE        </Flags>
+            <Default>   {}          </Default>
+        </creatingRaidDict>
+
+        <!-- 创建时 props 传入线别：gameconst.DungeonEnterTypeEnum.TEAM(2)=小队线 / RAID(4)=团队线 -->
+        <dungeonEnterType>
+            <Type>      UINT8       </Type>
+            <Flags>     BASE        </Flags>
+        </dungeonEnterType>
+    </Properties>
+
+    <BaseMethods>
+        <completeTeamDungeon>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            TEAMID          </Arg>
+            <Arg>            BOOL            </Arg>
+            <Arg>            UINT32          </Arg>
+            <Arg>            INT8            </Arg>
+        </completeTeamDungeon>
+
+        <completeRaidDungeon>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            RAID_ID         </Arg>
+            <Arg>            BOOL            </Arg>
+            <Arg>            UINT32          </Arg>
+            <Arg>            INT8            </Arg>
+        </completeRaidDungeon>
+
+        <leaveTeamDungeon>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            RAID_ID         </Arg>
+            <Arg>            PYTHON          </Arg>
+            <Arg>            MAILBOX         </Arg>
+        </leaveTeamDungeon>
+
+        <leaveRaidDungeon>
+            <Arg>            SPACE_NO        </Arg>
+            <Arg>            RAID_ID         </Arg>
+            <Arg>            PYTHON          </Arg>
+            <Arg>            MAILBOX         </Arg>
+        </leaveRaidDungeon>
+
+        <releaseRaidDungeonCreatingLock>
+            <Arg>   RAID_ID         </Arg>
+        </releaseRaidDungeonCreatingLock>
+    </BaseMethods>
+</root>

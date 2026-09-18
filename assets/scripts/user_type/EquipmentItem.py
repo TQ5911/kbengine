@@ -26,7 +26,6 @@ import SpiritInfo
 import drop_gearQualityWeight as DGQWD
 import gearBase_gearBase as GBGBD
 import affix_affix as AFAFD
-import affix_randomAffixCountWeight as AFRAFCWD
 import affix_affixTypeWeight as AFAFTWD
 import affix_glyphTypeWeight as GLYPHTWD
 import gearEnhance_gearStrengthen as GEGS
@@ -432,7 +431,6 @@ class EquipmentItem(BaseItem.BaseItem):
         return valList[idx]
 
     def doEnhanceEquip(self, owner, opUUID, level, onBody=False, isGM = False):
-        LOG_INFO('in doEnhanceEquip')
         enhanceLevelKey = self.equipAttr.getEnhanceLevelKey(level)
         cfgData = GEGS.datas.get(enhanceLevelKey)
         if not cfgData:
@@ -447,7 +445,6 @@ class EquipmentItem(BaseItem.BaseItem):
         # 没有破碎就正常强化升级
         if encVal != gameconst.EquipConstVale.ENHANCEMENT_BROKEN_FLAG:
             self.equipAttr.doEnhanceLv(encVal, isGM)
-            LOG_INFO('     in doEnhanceEquip, success:', level, encVal)
         if onBody:
             self.applyEquipEffectToAvatar(owner)
         return encVal
@@ -560,12 +557,86 @@ class EquipmentItem(BaseItem.BaseItem):
         glyphCraftResult = self.glyphWashingCraftResult()
         if not glyphCraftResult:
             return False, None, None
-        ret, oldGlyphAffixes, newGlyphAffixes = self.equipAttr.glyphWashing(glyphPos, glyphCraftResult, affixIds)
+        ret, oldGlyphAffixes, newGlyphAffixes = self.equipAttr.gmGlyphWashing(glyphPos, glyphCraftResult, affixIds)
         if ret:
             self.onEquipAffixChanged()
         return ret, oldGlyphAffixes, newGlyphAffixes
+    
+    def doEquipGlyphWashingPreview(self, owner, glyphPos, unbindValue):
+        """
+        铭文预览：洗涤结果写入 previewGlyphDatas，不应用装备效果。
+        """
+        glyphCraftResult = self.glyphWashingCraftResult()
+        if not glyphCraftResult:
+            return False, None, None
+        ret, oldGlyphAffixes, newGlyphAffixes = self.equipAttr.glyphWashing(glyphPos, glyphCraftResult, unbindValue)
+        return ret, oldGlyphAffixes, newGlyphAffixes
 
-    def doEquipBlessing(self, owner):
+    def doEquipGlyphWashingConfirm(self, owner, glyphPos, onBody=False):
+        """
+        铭文确认：将 previewGlyphDatas[glyphPos] 覆盖到 glyphInfo[glyphPos]，
+        执行原应用逻辑并清空 previewGlyphDatas[glyphPos]。
+        """
+        if not self.equipAttr.checkSlotNum(glyphPos):
+            LOG_ERR('in doEquipGlyphWashingConfirm invalid glyphPos', glyphPos)
+            return False
+
+        if glyphPos >= len(self.equipAttr.previewGlyphDatas):
+            LOG_ERR('in doEquipGlyphWashingConfirm previewGlyphDatas not initialized', glyphPos)
+            return False
+
+        previewGlyphData = self.equipAttr.previewGlyphDatas[glyphPos]
+        if not previewGlyphData or len(previewGlyphData.getGlyphAffixes()) == 0:
+            LOG_ERR('in doEquipGlyphWashingConfirm previewGlyphDatas is empty', glyphPos)
+            return False
+
+        if onBody:
+            self.removeEquipEffectToAvatar(owner)
+
+        # 将 preview 词缀覆盖到正式铭文位
+        self.equipAttr.updateGlyphInfo(glyphPos, previewGlyphData.getGlyphAffixes())
+
+        # 将 preview 绑定状态应用到正式绑定位置
+        glyphBindType = gameconst.ItemBindType.BIND if self.isPreviewGlyphBindType(glyphPos) else gameconst.ItemBindType.NORMAL
+        self.setGlyphBindType(glyphPos, glyphBindType)
+
+        # 清空 preview 数据
+        previewGlyphData.updateGlyphAffixes([])
+        self.removePreviewGlyphBindType(glyphPos)
+
+        self.equipAttr.calcScore()
+        self.equipAttr.setDirtyFlag()
+        self.onEquipAffixChanged()
+
+        if onBody:
+            self.applyEquipEffectToAvatar(owner)
+        return True
+
+    def doEquipGlyphWashingDiscard(self, owner, glyphPos):
+        """
+        铭文丢弃：清除 previewGlyphDatas[glyphPos] 的预览数据。
+        """
+        if not self.equipAttr.checkSlotNum(glyphPos):
+            LOG_ERR('in doEquipGlyphWashingDiscard invalid glyphPos', glyphPos)
+            return False
+
+        if glyphPos >= len(self.equipAttr.previewGlyphDatas):
+            LOG_ERR('in doEquipGlyphWashingDiscard previewGlyphDatas not initialized', glyphPos)
+            return False
+
+        previewGlyphData = self.equipAttr.previewGlyphDatas[glyphPos]
+        if not previewGlyphData or len(previewGlyphData.getGlyphAffixes()) == 0:
+            LOG_ERR('in doEquipGlyphWashingDiscard previewGlyphDatas is empty', glyphPos)
+            return False
+
+        # 清空 preview 数据
+        previewGlyphData.updateGlyphAffixes([])
+        self.removePreviewGlyphBindType(glyphPos)
+        self.equipAttr.setDirtyFlag()
+
+        return True
+
+    def doEquipBlessing(self):
         ret = self.equipAttr.blessing()
         if ret:
             self.onEquipAffixChanged()
@@ -627,9 +698,8 @@ class EquipmentItem(BaseItem.BaseItem):
             return False
         # 检查拥有者
         if not ignoreCheckOwner:
-            # 检查是否是自己的
-            ownerGbId = self.equipAttr.ownerGbId
-            if ownerGbId != 0 and ownerGbId != gbId:
+            # 检查是否有返还时间
+            if self.equipAttr.returnTime > 0:
                 return False
         return True
 
@@ -689,6 +759,44 @@ class EquipmentItem(BaseItem.BaseItem):
                 glyphBindTypes.remove(pos)
         self.equipAttr.glyphBindTypes = glyphBindTypes
         self._updateBindType()
+
+    def setPreviewGlyphBindType(self, pos, bindType):
+        """设置铭文预览槽位状态：绑定 pos 进入列表，取消时移除"""
+        previewGlyphBindTypes = self.equipAttr.previewGlyphBindTypes
+        if bindType == gameconst.ItemBindType.BIND:
+            if pos not in previewGlyphBindTypes:
+                previewGlyphBindTypes.append(pos)
+        else:
+            if pos in previewGlyphBindTypes:
+                previewGlyphBindTypes.remove(pos)
+        self.equipAttr.previewGlyphBindTypes = previewGlyphBindTypes
+
+    def isPreviewGlyphBindType(self, pos):
+        """判断指定铭文预览槽位是否为绑定状态"""
+        return pos in self.equipAttr.previewGlyphBindTypes
+
+    def removePreviewGlyphBindType(self, pos):
+        """移除指定铭文预览槽位的绑定状态"""
+        previewGlyphBindTypes = self.equipAttr.previewGlyphBindTypes
+        if pos in previewGlyphBindTypes:
+            previewGlyphBindTypes.remove(pos)
+            self.equipAttr.previewGlyphBindTypes = previewGlyphBindTypes
+
+    def calcGlyphWashingPreviewScore(self, glyphPos):
+        """根据 previewGlyphDatas 计算本次确认后装备评分（不修改装备数据）"""
+        if glyphPos // 2 != self.equipAttr.glyphGroup:
+            return self.getEquipScore()
+        oldGlyphData = self.equipAttr.getGlyphData(glyphPos)
+        newGlyphData = self.equipAttr.previewGlyphDatas[glyphPos] if glyphPos < len(self.equipAttr.previewGlyphDatas) else None
+        oldScore = sum(affix.getAfxScore(self.equipAttr.school) for affix in oldGlyphData.getGlyphAffixes()) if oldGlyphData else 0
+        newScore = sum(affix.getAfxScore(self.equipAttr.school) for affix in newGlyphData.getGlyphAffixes()) if newGlyphData else 0
+        return self.getEquipScore() - oldScore + newScore
+
+    def getPreviewGlyphDatas(self):
+        previewGlyphDatas = []
+        for previewGlyphData in self.equipAttr.previewGlyphDatas:
+            previewGlyphDatas.append(previewGlyphData.toClientData() if previewGlyphData else None)
+        return previewGlyphDatas
 
     def setSpiritBindType(self, pos, bindType):
         """附灵槽位绑定状态：绑定则把 pos 加入列表，非绑则移除"""
@@ -1188,6 +1296,12 @@ class EquipmentItem(BaseItem.BaseItem):
         if self.equipAttr.soulBindType == gameconst.ItemBindType.BIND:
             return False
         return True
+    
+    def getBlessFailLevels(self):
+        return list(self.equipAttr.blessLvFailedCount.keys())
+    
+    def getBlessFailCounts(self):
+        return list(self.equipAttr.blessLvFailedCount.values())
 
 class EquipAttr(userType.UserSingleType):
 
@@ -1212,7 +1326,11 @@ class EquipAttr(userType.UserSingleType):
         self.spiritGroup = 0
         # 铭文数据
         self.glyphInfo = []
-        # 铭文编组
+        # 铭文预览数据：preview 阶段写入，confirm 后覆盖到 glyphInfo 并清空
+        self.previewGlyphDatas = []
+        # 铭文预览槽位绑定状态：绑定的 glyphPos 列表（与 glyphBindTypes 规则一致）
+        self.previewGlyphBindTypes = []
+        # 铭文绑定
         self.glyphGroup = 0
         self.blessAffixes = []
         self.washingLuckData = {}    #词条洗练保底数据
@@ -1361,6 +1479,10 @@ class EquipAttr(userType.UserSingleType):
         glyphInfos = []
         for glyphData in self.glyphInfo:
             glyphInfos.append(glyphData.toClientData())
+
+        previewGlyphDatas = []
+        for glyphData in self.previewGlyphDatas:
+            previewGlyphDatas.append(glyphData.toClientData())
         
         soulAffixes = []
         for oneAffix in self.soulAffixes:
@@ -1375,6 +1497,8 @@ class EquipAttr(userType.UserSingleType):
             'soulAffixes': soulAffixes,
             'soulItemId': self.soulItemId,
             'glyphInfos': glyphInfos,
+            'previewGlyphDatas': previewGlyphDatas,
+            'previewGlyphBindTypes': list(self.previewGlyphBindTypes),
             'glyphGroup': self.glyphGroup,
             'enhanceLv': self.enhanceLv,
             'maxBlessLv': self.maxBlessLv,
@@ -1393,6 +1517,8 @@ class EquipAttr(userType.UserSingleType):
             'glyphBindTypes': self.glyphBindTypes,
             'spiritBindTypes': self.spiritBindTypes,
             'soulBindType': self.soulBindType,
+            'blessFailLevels': list(self.blessLvFailedCount.keys()),  
+            'blessFailCounts': list(self.blessLvFailedCount.values()),  
         }
     
     def toAttrDic(self, extraAttrs=None):
@@ -1411,6 +1537,10 @@ class EquipAttr(userType.UserSingleType):
         glyphInfos = []
         for glyphData in self.glyphInfo:
             glyphInfos.append(glyphData.toDBData())
+
+        previewGlyphDatas = []
+        for glyphData in self.previewGlyphDatas:
+            previewGlyphDatas.append(glyphData.toDBData())
         
         soulAffixes = []
         for oneAffix in self.soulAffixes:
@@ -1427,6 +1557,8 @@ class EquipAttr(userType.UserSingleType):
             'soulAffixes': soulAffixes,
             'soulItemId': self.soulItemId,
             'glyphInfos': glyphInfos,
+            'previewGlyphDatas': previewGlyphDatas,
+            'previewGlyphBindTypes': list(self.previewGlyphBindTypes),
             'glyphGroup': self.glyphGroup,
             'washingLuckData': self.washingLuckData,
             'enhanceLv': self.enhanceLv,
@@ -1495,6 +1627,15 @@ class EquipAttr(userType.UserSingleType):
                 newGlyphData = GlyphInfo.GlyphInfo()
                 newGlyphData.fromDBData(glyphData)
                 self.glyphInfo.append(newGlyphData)
+
+            self.previewGlyphDatas = []
+            previewGlyphDatas = value.get('previewGlyphDatas', [])
+            for glyphData in previewGlyphDatas:
+                newGlyphData = GlyphInfo.GlyphInfo()
+                newGlyphData.fromDBData(glyphData)
+                self.previewGlyphDatas.append(newGlyphData)
+
+            self.previewGlyphBindTypes = list(value.get('previewGlyphBindTypes', []))
 
             self.glyphGroup = value.get('glyphGroup', 0)
 
@@ -1586,15 +1727,7 @@ class EquipAttr(userType.UserSingleType):
             LOG_ERR('in _genGlyphAffix: error quality', self.quality, totalAffixesNum)
             return randomAffixes
 
-        if totalAffixesNum == 0:
-            weight_list = AFRAFCWD.affixNumWeightDic.get(self.quality)
-            if not weight_list:
-                LOG_ERR('in _genGlyphAffix: missing weight list', self.quality, totalAffixesNum)
-                return randomAffixes
-            rdIdx = utils.randomByWeight(weight_list)
-            rdAfNum = rdIdx
-        else:
-            rdAfNum = totalAffixesNum
+        rdAfNum = totalAffixesNum
 
         key = 'gear_' + str(self.equipSubType) + '_' + str(self.quality)
         affixIdList = []
@@ -1967,10 +2100,38 @@ class EquipAttr(userType.UserSingleType):
         self.setDirtyFlag(True)
         LOG_INFO('after refresh, _refreshWashingLuckData:', self.washingLuckData)
 
-    def glyphWashing(self, glyphPos, glyphCraftResult, affixIds = None):
-        LOG_INFO('in glyphWashing', glyphPos, glyphCraftResult, affixIds)
+    def glyphWashing(self, glyphPos, glyphCraftResult, unbindValue):
+        """
+        铭文洗涤：结果写入 previewGlyphDatas，确认后才覆盖到 glyphInfo 并计分。
+        """
+        LOG_INFO('in glyphWashing:', glyphPos, glyphCraftResult, unbindValue)
         if not self.checkSlotNum(glyphPos):
             LOG_ERR('in glyphWashing invalid glyphPos', glyphPos, self.glyphSlotNum)
+            return False, None, None
+
+        idx = utils.randomByWeight(glyphCraftResult)
+        totalAffixCount = idx + 1
+        newGlyphAffixes = self._genGlyphAffix(totalAffixCount)
+
+        if len(newGlyphAffixes) == 0:
+            LOG_ERR('in glyphWashing empty glyph affixes', newGlyphAffixes)
+            return False, None, None
+
+        # 预览数据写入 previewGlyphDatas，confirm 后才覆盖到 glyphInfo
+        if glyphPos + 1 > len(self.previewGlyphDatas):
+            for i in range(len(self.previewGlyphDatas), glyphPos + 1):
+                self.previewGlyphDatas.append(GlyphInfo.GlyphInfo(i))
+        previewGlyphData = self.previewGlyphDatas[glyphPos]
+        previewGlyphData.glyphPos = glyphPos
+        oldGlyphAffixes = previewGlyphData.getGlyphAffixes()
+        previewGlyphData.updateGlyphAffixes(newGlyphAffixes)
+        self.setDirtyFlag()
+        return True, oldGlyphAffixes, newGlyphAffixes
+
+    def gmGlyphWashing(self, glyphPos, glyphCraftResult, affixIds = None):
+        LOG_INFO('in gmGlyphWashing', glyphPos, glyphCraftResult, affixIds)
+        if not self.checkSlotNum(glyphPos):
+            LOG_ERR('in gmGlyphWashing invalid glyphPos', glyphPos, self.glyphSlotNum)
             return False, None, None
 
         if affixIds:
@@ -1986,7 +2147,7 @@ class EquipAttr(userType.UserSingleType):
             newGlyphAffixes = self._genGlyphAffix(totalAffixCount)
 
         if len(newGlyphAffixes) == 0:
-            LOG_ERR('in glyphWashing empty glyph affixes', newGlyphAffixes)
+            LOG_ERR('in gmGlyphWashing empty glyph affixes', newGlyphAffixes)
             return False, None, None
 
         # 更新铭文数据
@@ -1994,7 +2155,7 @@ class EquipAttr(userType.UserSingleType):
         self.calcScore()
         self.setDirtyFlag()
         return True, oldGlyphAffixes, newGlyphAffixes
-
+    
     def updateGlyphInfo(self, glyphPos, glyphAffixes):
         isGot = False
         oldGlyphAffixes = None

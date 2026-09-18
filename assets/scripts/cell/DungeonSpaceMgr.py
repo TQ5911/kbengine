@@ -6,8 +6,10 @@ from KBEDebug import *
 import formula
 import gameconst
 import gameengine
+import gameconfig
 import utils
 import gametimer
+import gameglobal
 
 import iCell
 import iTimer
@@ -16,6 +18,7 @@ import flowController
 import dungeonPlayMode
 import DungeonSettlement
 import LogTrackingMgr
+import DunEntities
 
 import gamePlay_gamePlay as DDI
 import gamePlay_set as GP_SD
@@ -74,6 +77,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         self.pyAddTimer(_dur, _dur, gametimer.TIMER_DUN_TIMEOUT_ERR)
         self.dungeonSettlementDataCache = {}
         self.dungeonStartWaitTime = 0
+        self.dunEntitiesMgr = DunEntities.DunEntities(self.id, self.spaceNo)
         if not self.dungeonPlayMode:
             self.dungeonPlayMode = dungeonPlayMode.UnknownDungeonPlayMode()
 
@@ -226,7 +230,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                 self.dungeonStartWaitTime = utils.curTS()
 
             # x分钟内继续等待
-            if utils.curTS() - self.dungeonStartWaitTime < C_CD.datas['systemSwitch']['value'] * 60:
+            if utils.curTS() - self.dungeonStartWaitTime < C_CD.datas['dungeonStartTime']['value'] * 60:
                 self.asyncCallbackAfter(0.5)._flowStart()
                 return
                 
@@ -346,14 +350,6 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         super(DungeonSpaceMgr, self).addEntity(entId, tags)
         _ent = KBEngine.entities.get(entId)
 
-        if hasattr(_ent, 'gameEntityIdentifyID'):
-            if _ent.gameEntityIdentifyID <= 0:
-                LOG_WARN("DungeonSpaceMgr::addEntity:: gameEntityIdentifyID zero", 
-                         _ent, tags, _ent.gameEntityIdentifyID)
-                return
-            gameengine.getDungeonStubBySpaceNo(self.spaceNo).onEntityCreated(
-                self.spaceNo, self.spaceUUID, entId, _ent.gameEntityIdentifyID)
-
         if 'RebornPos' in tags:
             gameengine.getDungeonStubBySpaceNo(self.spaceNo).onCreateNewRebornPos(self.spaceNo, _ent.position)
 
@@ -395,7 +391,10 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
     def onTeamDungeonCompleted(self, spaceNo, teamUUID, win, delay, elapsedTime, playerGbId, completedReasonType):
         LOG_INFO('onTeamDungeonCompleted::', spaceNo, teamUUID, win, delay, elapsedTime, playerGbId, completedReasonType)
 
-        self._doDungeonPreSettlement(teamUUID, spaceNo, win, delay, elapsedTime, gameconst.DungeonPlayModeEnum.CRUSADE, completedReasonType)
+        # 玩法枚举取空间上的 dungeonPlayMode（旧本服队为 CRUSADE，跨服组队空间跨服服为
+        # CROSS_CRUSADE、本服模式同为 CRUSADE；跨服组队副本结束由 owner stub 在完成链路上报中心，
+        # 不在此处通知）
+        self._doDungeonPreSettlement(teamUUID, spaceNo, win, delay, elapsedTime, self.dungeonPlayMode.playMode, completedReasonType)
 
     def finishGuildDungeonTask(self):
         self.syncPlayer(lambda box: box.doFinishGuildDungeonTask())
@@ -403,7 +402,9 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
     def onRaidDungeonCompleted(self, spaceNo, raidUUID, win, delay, creepBaseKillDic, playerGbidAndNameList, elapsedTime, playerGbId, completedReasonType):
         LOG_INFO('onRaidDungeonCompleted::', spaceNo, raidUUID, win, delay, creepBaseKillDic, len(playerGbidAndNameList), elapsedTime, playerGbId, completedReasonType)
 
-        self._doDungeonPreSettlement(raidUUID, spaceNo, win, delay, elapsedTime, gameconst.DungeonPlayModeEnum.CHIEF, completedReasonType)
+        # 玩法枚举取空间上的 dungeonPlayMode（旧本服团为 CHIEF，跨服组队空间跨服服为
+        # CROSS_CHIEF、本服模式同为 CHIEF）
+        self._doDungeonPreSettlement(raidUUID, spaceNo, win, delay, elapsedTime, self.dungeonPlayMode.playMode, completedReasonType)
 
     def onGuildBossDungeonCompleted(self, spaceNo, guildUUID, win, delay, elapsedTime, completedReasonType):
         LOG_INFO('onGuildBossDungeonCompleted::', spaceNo, guildUUID, win, delay, elapsedTime, completedReasonType)
@@ -452,7 +453,8 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         # 记录需要获取的排名数据类型
         if playMode == gameconst.DungeonPlayModeEnum.GUILD_BOSS:
             self.dungeonSettlementDataCache['statisticTypes'] = [gameconst.StatisticEnum.STA_TYPE_DAMAGE]
-        elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+        elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF \
+                or playMode in gameconst.DungeonPlayModeEnum.COLL_CROSS:
             self.dungeonSettlementDataCache['statisticTypes'] = [
                 gameconst.StatisticEnum.STA_TYPE_DAMAGE,
                 gameconst.StatisticEnum.STA_TYPE_HEAL,
@@ -558,7 +560,8 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         # 开始计算有多少人能获得奖励
         players = self.dungeonSettlementDataCache['players']
         playMode = self.dungeonSettlementDataCache['playMode']
-        if playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+        if playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF \
+                or playMode in gameconst.DungeonPlayModeEnum.COLL_CROSS:
             self._calcStatisticPoints(playMode)
         batchSize = 20
         validEntities = list(players.values())
@@ -587,7 +590,8 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                     if playMode == gameconst.DungeonPlayModeEnum.GUILD_BOSS:
                         settlement = DungeonSettlement.DungeonSettlementData()
                         settlement._calcGuildBossSettlement(self.base, self.dungeonRewardDatas, opUUID, uniqueID, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, self.dungeonStatisticRecords)
-                    elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+                    elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF \
+                            or playMode in gameconst.DungeonPlayModeEnum.COLL_CROSS:
                         score, deadCount = self._calcPlayerStatisticScore(playMode, dungeonExtraDatas.gbId)
                         extra = {}
                         extra['elaspedTime'] = self.dungeonSettlementDataCache['elapsedTime']
@@ -597,13 +601,15 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                         extra['deadCount'] = deadCount
                         extra['spaceUUID'] = self.dungeonPlayMode.spaceUUID
                         extra['completedReasonType'] = self.dungeonSettlementDataCache['completedReasonType']
-                        
-                        if playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
+
+                        if playMode == gameconst.DungeonPlayModeEnum.CRUSADE \
+                                or playMode == gameconst.DungeonPlayModeEnum.CROSS_CRUSADE:
                             settlement = DungeonSettlement.DungeonSettlementData()
-                            settlement._calcCrusadeSettlement(self.base, self.dungeonRewardDatas, opUUID, uniqueID, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, score, extra)
-                        elif playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+                            settlement._calcCrusadeSettlement(self.base, self.dungeonRewardDatas, opUUID, uniqueID, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, score, extra, playMode)
+                        elif playMode == gameconst.DungeonPlayModeEnum.CHIEF \
+                                or playMode == gameconst.DungeonPlayModeEnum.CROSS_CHIEF:
                             settlement = DungeonSettlement.DungeonSettlementData()
-                            settlement._calcChiefSettlement(self.base, self.dungeonRewardDatas, opUUID, uniqueID, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, score, extra)
+                            settlement._calcChiefSettlement(self.base, self.dungeonRewardDatas, opUUID, uniqueID, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, score, extra, playMode)
                     elif playMode == gameconst.DungeonPlayModeEnum.INNER_DEMON:
                         score = self.dungeonSettlementDataCache['innerDemonTime']
                         settlement = DungeonSettlement.DungeonSettlementData()
@@ -650,7 +656,6 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         cliDungeonData['endTime'] = endTime
         cliDungeonData['dungeonNo'] = dungeonNo
         cliDungeonData['playMode'] = playMode
-        cliDungeonData['playMode'] = playMode
         cliDungeonData['rankCount'] = 0
         cliDungeonData['rewardCount'] = 0
         cliDungeonData['innerDemonTime'] = 0
@@ -660,7 +665,8 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             # 通知客户端伤害排行榜数量
             rankCountList = self.dungeonSettlementDataCache.get('rankCountList')
             cliDungeonData['rankCount'] = rankCountList.get(gameconst.StatisticEnum.STA_TYPE_DAMAGE)
-        elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+        elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF \
+                or playMode in gameconst.DungeonPlayModeEnum.COLL_CROSS:
             rankCountList = self.dungeonSettlementDataCache.get('rankCountList')
             rewardCount = 0
             for count in rankCountList.values():
@@ -702,7 +708,8 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                     yield lambda *args:None
             # 间隔0.1秒处理一次
             self.batchlyCall(_notifyDungeonSettlement(allCount, batchSize), 1, 0.1)
-        elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+        elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF \
+                or playMode in gameconst.DungeonPlayModeEnum.COLL_CROSS:
             gbIds = list(self.dungeonRewardDatas.keys())
             # 计算发送批次
             batchSize = 10
@@ -1233,3 +1240,102 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         score = self.dungeonSettlementDataCache.get('innerDemonTime', -1)
         LOG_INFO("sendDungeonProps", score)
         box.client.changeDungeonChallengeRemainTime(self.spaceNo, self.dungeonPlayMode.challengeEndTime, score)
+
+
+    # ------------------------------------------ spawn entity start ---------------------------------------
+    def doSpawnDunEntities(self, flagIds, num, level, extra):
+        self.dunEntitiesMgr.spawnDungeonEntityByGameEntityId(flagIds, num, level, extra)
+        self._genEntitiesAndNotify()
+
+    @staticmethod
+    def addGlobalDunCreateNum(ts=0):
+        if not ts:
+            ts = utils.curTS()
+
+        if ts == gameglobal.dunCreateTS:
+            gameglobal.dunCreateNum += 1
+
+        else:
+            gameglobal.dunCreateTS = ts
+            gameglobal.dunCreateNum = 1
+
+    @staticmethod
+    def checkGlobalDunCreateNum(ts=0):
+        if not ts:
+            ts = utils.curTS()
+
+        if ts == gameglobal.dunCreateTS:
+            return gameglobal.dunCreateNum < gameconfig.stubTickCreateEntNum()
+        else:
+            return True
+
+    def _genEntitiesAndNotify(self):
+        LOG_DBG('_genEntitiesAndNotify')
+        self._genDunEntities()
+        self._triggerDunEventAfterGen()
+        if self.dunEntitiesMgr.fetchGenVal() is None:
+            return
+
+        if self.spawnDunEntityTimer:
+            return
+
+        self.spawnDunEntityTimer = self.addTimerCB(1, '_genEntitiesAndNotify', (), gametimer.TIMER_TAG_GEN_DUN_ENTITIES, 'spawnDunEntityTimer')
+
+    def _genDunEntities(self):
+        _ts = utils.curTS()
+        for _genVal in self.dunEntitiesMgr.genList:
+            if not self.checkGlobalDunCreateNum(_ts):
+                break
+
+            for _entVal in _genVal.entityList:
+                if _entVal.loadStatus != gameconst.DungeonEntityLoadEnum.UNLOAD:
+                    continue
+
+                _pos = _entVal.entProps.pop('position')
+                _dir = _entVal.entProps.pop('direction')
+                self.getCurrentSpace().createCellLocally(
+                    _entVal.entType, _pos, _dir, _entVal.entProps)
+                _entVal.loadStatus = gameconst.DungeonEntityLoadEnum.LOADED
+                self.addGlobalDunCreateNum(_ts)
+
+                if not self.checkGlobalDunCreateNum(_ts):
+                    break
+
+            if not self.checkGlobalDunCreateNum(_ts):
+                break
+
+    def _triggerDunEventAfterGen(self):
+        for i in range(9999):
+            _genVal = self.dunEntitiesMgr.fetchGenVal()
+            if not _genVal:
+                break
+
+            if not _genVal.isAllEntityLoaded():
+                break
+
+            self.dunEntitiesMgr.popGenVal()
+
+            _flagIds = _genVal.extra.get('flagIds')
+            className = _genVal.extra.get('className')
+            fromEventId = _genVal.extra.get('fromEventId')
+            if fromEventId and fromEventId > 0:
+                self.flowCtrrlDungeonEntityReleaseCompleteByEventId(_flagIds, fromEventId)
+                continue
+
+            if className == 'Monster':
+                self.flowCtrlDunMonsterReleaseComplete(_flagIds)
+            elif className in ('Npc', 'CNpc'):
+                self.flowCtrlDungeonNPCReleaseComplete(_flagIds)
+            elif className == 'Collection':
+                self.flowCtrlDungeonCollectionReleaseComplete(_flagIds)
+            elif className in ('Barrier', 'AirWall'):
+                self.flowCtrlDungeonAirWallReleaseComplete(_flagIds)
+            elif className == 'Teleporter':
+                self.flowCtrlDungeonTeleporterCreatedComplete(_flagIds)
+            elif className == 'RebornPos':
+                self.flowCtrlDungeonRebornPosCreatedComplete(_flagIds)
+        else:
+            LOG_ERR('_triggerDunEventAfterGen meet max')
+
+    # ------------------------------------------ spawn entity end ---------------------------------------
+

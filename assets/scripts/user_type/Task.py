@@ -506,7 +506,7 @@ class Task(userType.UserSingleType):
     def isStat(self, stat):
         return self.stat == stat
 
-    def setStat(self, owner, stat):
+    def setStat(self, owner, stat, opUUID=0):
         if self.stat == stat:
             return
 
@@ -519,8 +519,10 @@ class Task(userType.UserSingleType):
         data = RRTID.datas.get(self.taskId, None)
         if data:
             mapId = data['mapID']
-        
-        LogTrackingMgr.LogTrackingMgr.Task_State_Change(owner.gbID, owner.accountEntity.clientDistinctId, owner.gbID, self.taskId, self.stat, self.taskType, mapId, owner.getRoleCacheAttr('level'))
+
+        if not opUUID:
+            opUUID = KBEngine.genUUID64()
+        LogTrackingMgr.LogTrackingMgr.Task_State_Change(owner.gbID, owner.accountEntity.clientDistinctId, owner.gbID, self.taskId, self.stat, self.taskType, mapId, owner.getRoleCacheAttr('level'), opUUID)
 
     def isInEndStat(self):
         # 任务是否处于最终状态

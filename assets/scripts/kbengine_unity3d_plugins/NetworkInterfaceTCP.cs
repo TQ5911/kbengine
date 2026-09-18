@@ -59,33 +59,42 @@ namespace KBEngine
 		{
 			try
 			{
-                state.socket.ConnectAsync(state.connectIP, state.connectPort);
-                //state.socket.Connect(state.connectIP, state.connectPort);
-                List<Socket> writeList = new List<Socket>();
-				List<Socket> errorList = new List<Socket>();
-                writeList.Add(state.socket);
-				errorList.Add(state.socket);
-                Socket.Select(null, writeList, errorList, 3000000);
-				if (errorList.Count > 0)
+				int retryTime = 3;
+				for(int i = 0; i < retryTime; i++)
 				{
-                    state.error = "connect error";
-                    Dbg.ERROR_MSG(string.Format("NetworkInterfaceTCP::_asyncConnect(), connect to '{0}:{1}' error", state.connectIP, state.connectPort));
-                }
-                else if(writeList.Count>0)
-                {
-                    state.socket.Blocking = true;
-                }
-                else
-                {
-                    state.error = "connect timeout";
-                    Dbg.ERROR_MSG(string.Format("NetworkInterfaceTCP::_asyncConnect(), connect to '{0}:{1}' timeout", state.connectIP, state.connectPort));
-                }
+					Dbg.DEBUG_MSG($"NetworkInterfaceTCP::_asyncConnect(), connect to '{state.connectIP}:{state.connectPort}', retry {i}");
+					state.socket.ConnectAsync(state.connectIP, state.connectPort);
+					//state.socket.Connect(state.connectIP, state.connectPort);
+					List<Socket> writeList = new List<Socket>();
+					List<Socket> errorList = new List<Socket>();
+					writeList.Add(state.socket);
+					errorList.Add(state.socket);
+					Socket.Select(null, writeList, errorList, 3000000);
+					if (errorList.Count > 0)
+					{
+						state.error = "connect error";
+						state.errorType = ErrorType.ConnectError;
+						Dbg.ERROR_MSG($"NetworkInterfaceTCP::_asyncConnect(), connect to '{state.connectIP}:{state.connectPort}' error");
+					}
+					else if(writeList.Count>0)
+					{
+						state.socket.Blocking = true;
+						break;
+					}
+					else
+					{
+						state.error = "connect timeout";
+						state.errorType = ErrorType.TimeoutError;
+						Dbg.ERROR_MSG($"NetworkInterfaceTCP::_asyncConnect(), connect to '{state.connectIP}:{state.connectPort}' timeout");
+					}
+				}
                 
 			}
 			catch (Exception e)
 			{
-				Dbg.ERROR_MSG(string.Format("NetworkInterfaceTCP::_asyncConnect(), connect to '{0}:{1}' fault! error = '{2}'", state.connectIP, state.connectPort, e));
+				Dbg.ERROR_MSG($"NetworkInterfaceTCP::_asyncConnect(), connect to '{state.connectIP}:{state.connectPort}' fault! error = '{e}'");
 				state.error = e.ToString();
+				state.errorType = ErrorType.ExceptionError;
 			}
 		}
 	}

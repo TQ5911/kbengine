@@ -35,5 +35,9 @@
         <getAnnouncement>
             <Arg>           MAILBOX         </Arg>
         </getAnnouncement>
+
+        <onCellappRelive>
+            <Arg>           UINT8           </Arg>
+        </onCellappRelive>
     </BaseMethods>
 </root>

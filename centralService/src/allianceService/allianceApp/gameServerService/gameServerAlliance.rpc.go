@@ -307,6 +307,13 @@ func AllianceService_QueryLeagueUUID_Handler(endPoint prpc.IEndPoint, dec func(i
     }
     return endPoint.(IAllianceServiceInterface).QueryLeagueUUID(in)
 }
+func AllianceService_RemoveEnemyRelation_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(RemoveEnemyRelationRequest)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IAllianceServiceInterface).RemoveEnemyRelation(in)
+}
 var AllianceServiceServiceDesc = prpc.ServiceDesc{
     ServiceName: "AllianceService.AllianceService",
     Methods: []prpc.MethodDesc{
@@ -525,6 +532,11 @@ var AllianceServiceServiceDesc = prpc.ServiceDesc{
             MethodIndex: 42,
             Handler:     AllianceService_QueryLeagueUUID_Handler,
         },
+        {
+            MethodName:  "RemoveEnemyRelation",
+            MethodIndex: 43,
+            Handler:     AllianceService_RemoveEnemyRelation_Handler,
+        },
     },
 }
 
@@ -711,6 +723,10 @@ func (self *AllianceServiceClient) QueryLeagueUUID(in *QueryLeagueUUIDRequest) (
     err := self.Channel.CallMethod(&AllianceServiceServiceDesc.Methods[42], in)
     return &Void{}, err
 }
+func (self *AllianceServiceClient) RemoveEnemyRelation(in *RemoveEnemyRelationRequest) (*Void, error) {
+    err := self.Channel.CallMethod(&AllianceServiceServiceDesc.Methods[43], in)
+    return &Void{}, err
+}
 type IAllianceServiceInterface interface {
     RegisterGameServer(*RegisterGameServerRequest) (*Void, error)
     ActiveTick(*Void) (*Void, error)
@@ -755,6 +771,7 @@ type IAllianceServiceInterface interface {
     RecruitLeagueMember(*RecruitLeagueMemberRequest) (*Void, error)
     CheckLeaveGuild(*CheckLeaveGuildRequest) (*Void, error)
     QueryLeagueUUID(*QueryLeagueUUIDRequest) (*Void, error)
+    RemoveEnemyRelation(*RemoveEnemyRelationRequest) (*Void, error)
 }
 
 func GameClient_ActiveTickCallback_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
@@ -1093,6 +1110,27 @@ func GameClient_OnBroadcastRemoveGuildRelation_Handler(endPoint prpc.IEndPoint, 
     }
     return endPoint.(IGameClientInterface).OnBroadcastRemoveGuildRelation(in)
 }
+func GameClient_OnEnemyAllRelation_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(EnemyRelationAllInfo)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameClientInterface).OnEnemyAllRelation(in)
+}
+func GameClient_OnBroadcastAddEnemyRelation_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(EnemyRelationInfo)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameClientInterface).OnBroadcastAddEnemyRelation(in)
+}
+func GameClient_OnBroadcastRemoveEnemyRelation_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(EnemyRelationInfo)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameClientInterface).OnBroadcastRemoveEnemyRelation(in)
+}
 func GameClient_OnNewMemberJoined_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
     in := new(NewMemberJoinedNotify)
     if err := dec(in); err != nil {
@@ -1183,6 +1221,20 @@ func GameClient_OnQueryLeagueUUIDResult_Handler(endPoint prpc.IEndPoint, dec fun
         return nil, err
     }
     return endPoint.(IGameClientInterface).OnQueryLeagueUUIDResult(in)
+}
+func GameClient_OnEventTipsNotify_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(EventTipsNotify)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameClientInterface).OnEventTipsNotify(in)
+}
+func GameClient_OnRemoveEnemyRelation_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(RemoveEnemyRelationResponse)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameClientInterface).OnRemoveEnemyRelation(in)
 }
 var GameClientServiceDesc = prpc.ServiceDesc{
     ServiceName: "AllianceService.GameClient",
@@ -1428,69 +1480,94 @@ var GameClientServiceDesc = prpc.ServiceDesc{
             Handler:     GameClient_OnBroadcastRemoveGuildRelation_Handler,
         },
         {
-            MethodName:  "OnNewMemberJoined",
+            MethodName:  "OnEnemyAllRelation",
             MethodIndex: 48,
+            Handler:     GameClient_OnEnemyAllRelation_Handler,
+        },
+        {
+            MethodName:  "OnBroadcastAddEnemyRelation",
+            MethodIndex: 49,
+            Handler:     GameClient_OnBroadcastAddEnemyRelation_Handler,
+        },
+        {
+            MethodName:  "OnBroadcastRemoveEnemyRelation",
+            MethodIndex: 50,
+            Handler:     GameClient_OnBroadcastRemoveEnemyRelation_Handler,
+        },
+        {
+            MethodName:  "OnNewMemberJoined",
+            MethodIndex: 51,
             Handler:     GameClient_OnNewMemberJoined_Handler,
         },
         {
             MethodName:  "OnJoinToAllianceNotify",
-            MethodIndex: 49,
+            MethodIndex: 52,
             Handler:     GameClient_OnJoinToAllianceNotify_Handler,
         },
         {
             MethodName:  "OnUnionListResult",
-            MethodIndex: 50,
+            MethodIndex: 53,
             Handler:     GameClient_OnUnionListResult_Handler,
         },
         {
             MethodName:  "OnReturnGuildFundNotify",
-            MethodIndex: 51,
+            MethodIndex: 54,
             Handler:     GameClient_OnReturnGuildFundNotify_Handler,
         },
         {
             MethodName:  "OnGuildAidResourceNotify",
-            MethodIndex: 52,
+            MethodIndex: 55,
             Handler:     GameClient_OnGuildAidResourceNotify_Handler,
         },
         {
             MethodName:  "OnLeagueGuildLeave",
-            MethodIndex: 53,
+            MethodIndex: 56,
             Handler:     GameClient_OnLeagueGuildLeave_Handler,
         },
         {
             MethodName:  "OnLeagueDisband",
-            MethodIndex: 54,
+            MethodIndex: 57,
             Handler:     GameClient_OnLeagueDisband_Handler,
         },
         {
             MethodName:  "OnLeagueGuildEventNotify",
-            MethodIndex: 55,
+            MethodIndex: 58,
             Handler:     GameClient_OnLeagueGuildEventNotify_Handler,
         },
         {
             MethodName:  "OnLeagueGuildMessageNotify",
-            MethodIndex: 56,
+            MethodIndex: 59,
             Handler:     GameClient_OnLeagueGuildMessageNotify_Handler,
         },
         {
             MethodName:  "OnLeagueBroadCastMessageNotify",
-            MethodIndex: 57,
+            MethodIndex: 60,
             Handler:     GameClient_OnLeagueBroadCastMessageNotify_Handler,
         },
         {
             MethodName:  "OnRecruitLeagueMemberResult",
-            MethodIndex: 58,
+            MethodIndex: 61,
             Handler:     GameClient_OnRecruitLeagueMemberResult_Handler,
         },
         {
             MethodName:  "OnCheckLeaveGuildResult",
-            MethodIndex: 59,
+            MethodIndex: 62,
             Handler:     GameClient_OnCheckLeaveGuildResult_Handler,
         },
         {
             MethodName:  "OnQueryLeagueUUIDResult",
-            MethodIndex: 60,
+            MethodIndex: 63,
             Handler:     GameClient_OnQueryLeagueUUIDResult_Handler,
+        },
+        {
+            MethodName:  "OnEventTipsNotify",
+            MethodIndex: 64,
+            Handler:     GameClient_OnEventTipsNotify_Handler,
+        },
+        {
+            MethodName:  "OnRemoveEnemyRelation",
+            MethodIndex: 65,
+            Handler:     GameClient_OnRemoveEnemyRelation_Handler,
         },
     },
 }
@@ -1698,56 +1775,76 @@ func (self *GameClientClient) OnBroadcastRemoveGuildRelation(in *GuildRelationRe
     err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[47], in)
     return &Void{}, err
 }
-func (self *GameClientClient) OnNewMemberJoined(in *NewMemberJoinedNotify) (*Void, error) {
+func (self *GameClientClient) OnEnemyAllRelation(in *EnemyRelationAllInfo) (*Void, error) {
     err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[48], in)
     return &Void{}, err
 }
-func (self *GameClientClient) OnJoinToAllianceNotify(in *JoinToAllianceNotify) (*Void, error) {
+func (self *GameClientClient) OnBroadcastAddEnemyRelation(in *EnemyRelationInfo) (*Void, error) {
     err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[49], in)
     return &Void{}, err
 }
-func (self *GameClientClient) OnUnionListResult(in *GetUnionListResult) (*Void, error) {
+func (self *GameClientClient) OnBroadcastRemoveEnemyRelation(in *EnemyRelationInfo) (*Void, error) {
     err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[50], in)
     return &Void{}, err
 }
-func (self *GameClientClient) OnReturnGuildFundNotify(in *ReturnGuildFundNotify) (*Void, error) {
+func (self *GameClientClient) OnNewMemberJoined(in *NewMemberJoinedNotify) (*Void, error) {
     err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[51], in)
     return &Void{}, err
 }
-func (self *GameClientClient) OnGuildAidResourceNotify(in *GuildAidResourceNotify) (*Void, error) {
+func (self *GameClientClient) OnJoinToAllianceNotify(in *JoinToAllianceNotify) (*Void, error) {
     err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[52], in)
     return &Void{}, err
 }
-func (self *GameClientClient) OnLeagueGuildLeave(in *LeagueGuildLeave) (*Void, error) {
+func (self *GameClientClient) OnUnionListResult(in *GetUnionListResult) (*Void, error) {
     err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[53], in)
     return &Void{}, err
 }
-func (self *GameClientClient) OnLeagueDisband(in *LeagueDisband) (*Void, error) {
+func (self *GameClientClient) OnReturnGuildFundNotify(in *ReturnGuildFundNotify) (*Void, error) {
     err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[54], in)
     return &Void{}, err
 }
-func (self *GameClientClient) OnLeagueGuildEventNotify(in *LeagueGuildEvent) (*Void, error) {
+func (self *GameClientClient) OnGuildAidResourceNotify(in *GuildAidResourceNotify) (*Void, error) {
     err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[55], in)
     return &Void{}, err
 }
-func (self *GameClientClient) OnLeagueGuildMessageNotify(in *LeagueGuildMessage) (*Void, error) {
+func (self *GameClientClient) OnLeagueGuildLeave(in *LeagueGuildLeave) (*Void, error) {
     err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[56], in)
     return &Void{}, err
 }
-func (self *GameClientClient) OnLeagueBroadCastMessageNotify(in *LeagueBroadCastMessage) (*Void, error) {
+func (self *GameClientClient) OnLeagueDisband(in *LeagueDisband) (*Void, error) {
     err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[57], in)
     return &Void{}, err
 }
-func (self *GameClientClient) OnRecruitLeagueMemberResult(in *RecruitLeagueMemberResult) (*Void, error) {
+func (self *GameClientClient) OnLeagueGuildEventNotify(in *LeagueGuildEvent) (*Void, error) {
     err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[58], in)
     return &Void{}, err
 }
-func (self *GameClientClient) OnCheckLeaveGuildResult(in *CheckLeaveGuildResult) (*Void, error) {
+func (self *GameClientClient) OnLeagueGuildMessageNotify(in *LeagueGuildMessage) (*Void, error) {
     err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[59], in)
     return &Void{}, err
 }
-func (self *GameClientClient) OnQueryLeagueUUIDResult(in *QueryLeagueUUIDResult) (*Void, error) {
+func (self *GameClientClient) OnLeagueBroadCastMessageNotify(in *LeagueBroadCastMessage) (*Void, error) {
     err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[60], in)
+    return &Void{}, err
+}
+func (self *GameClientClient) OnRecruitLeagueMemberResult(in *RecruitLeagueMemberResult) (*Void, error) {
+    err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[61], in)
+    return &Void{}, err
+}
+func (self *GameClientClient) OnCheckLeaveGuildResult(in *CheckLeaveGuildResult) (*Void, error) {
+    err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[62], in)
+    return &Void{}, err
+}
+func (self *GameClientClient) OnQueryLeagueUUIDResult(in *QueryLeagueUUIDResult) (*Void, error) {
+    err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[63], in)
+    return &Void{}, err
+}
+func (self *GameClientClient) OnEventTipsNotify(in *EventTipsNotify) (*Void, error) {
+    err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[64], in)
+    return &Void{}, err
+}
+func (self *GameClientClient) OnRemoveEnemyRelation(in *RemoveEnemyRelationResponse) (*Void, error) {
+    err := self.Channel.CallMethod(&GameClientServiceDesc.Methods[65], in)
     return &Void{}, err
 }
 type IGameClientInterface interface {
@@ -1799,6 +1896,9 @@ type IGameClientInterface interface {
     OnGuildRelationAll(*GuildRelationAllInfo) (*Void, error)
     OnBroadcastAddGuildRelation(*GuildRelationInfo) (*Void, error)
     OnBroadcastRemoveGuildRelation(*GuildRelationRemoveInfo) (*Void, error)
+    OnEnemyAllRelation(*EnemyRelationAllInfo) (*Void, error)
+    OnBroadcastAddEnemyRelation(*EnemyRelationInfo) (*Void, error)
+    OnBroadcastRemoveEnemyRelation(*EnemyRelationInfo) (*Void, error)
     OnNewMemberJoined(*NewMemberJoinedNotify) (*Void, error)
     OnJoinToAllianceNotify(*JoinToAllianceNotify) (*Void, error)
     OnUnionListResult(*GetUnionListResult) (*Void, error)
@@ -1812,5 +1912,7 @@ type IGameClientInterface interface {
     OnRecruitLeagueMemberResult(*RecruitLeagueMemberResult) (*Void, error)
     OnCheckLeaveGuildResult(*CheckLeaveGuildResult) (*Void, error)
     OnQueryLeagueUUIDResult(*QueryLeagueUUIDResult) (*Void, error)
+    OnEventTipsNotify(*EventTipsNotify) (*Void, error)
+    OnRemoveEnemyRelation(*RemoveEnemyRelationResponse) (*Void, error)
 }
 

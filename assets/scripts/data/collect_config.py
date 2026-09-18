@@ -50,5 +50,9 @@ datas = _tools.RODict({
     "isTopAttr": _tools.RODict({
         "ID": "isTopAttr",
         "value": ('expGrow', 'copper'),
+    }),
+    "trackMax": _tools.RODict({
+        "ID": "trackMax",
+        "value": 3,
     })
 })

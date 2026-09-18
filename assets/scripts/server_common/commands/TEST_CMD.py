@@ -40,6 +40,8 @@ import fightProp_define as FP_DD
 import visible_visible as V_VD
 import tutorConst_triggerReleat as TTRD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import collect_equipIndex as CEIDX
+import character_charData as CCDATA
 import gameconfig
 
 # 判断当前进程类型
@@ -803,7 +805,7 @@ def unlockAllFunc(su, player, onlyTask=0):
     return True, 'command success'
 
 # 统计掉落 路由那边需要随便选一个stub来固定所在base，不然第二次来取cache的话可能会串
-@gm_cmd('$equipBlessTest', (Int("int rewardId"), Int("int count")), RSTUB('PlayerStub'), BASE, 
+@gm_cmd('$equipBlessTest', (Int("int equipId"), Int("int count")), RSTUB('PlayerStub'), BASE, 
     '根据装备ID测试祝福期望', ALLSIDE, GOD_GROUPS)
 def equipBlessTest(su, playerStub, equipId, count):
     from test import equipTest
@@ -816,6 +818,18 @@ def equipBlessTest(su, playerStub, equipId, count):
 
 
 # 统计掉落 路由那边需要随便选一个stub来固定所在base，不然第二次来取cache的话可能会串
+@gm_cmd('$equipEnhanceTest', (Int("int equipId"), Int("int count")), RSTUB('PlayerStub'), BASE, 
+    '根据装备ID测试强化期望', ALLSIDE, GOD_GROUPS)
+def equipEnhanceTest(su, playerStub, equipId, count):
+    from test import enhanceTest
+    equipUnit = enhanceTest.EquipEnhanceUnit(su, count)
+    ret, content, process_info = equipUnit.calcEnhanceExpectation(equipId)
+    if ret:
+        su.onCommandResult(0, 'ok', {'data': {f"{equipId}_{count}": content}})
+    else:
+        su.onCommandResult(0, 'wait', {'msg': content, 'process_info': process_info})
+
+
 @gm_cmd('$statDropByDropId', (Int("int rewardId"), Int("int count"), Int("int Level"), Int("int school"), Int("int sex"), Int("int isMonthCardExpired"), Int("int isBigMonthCardExpired"), Int("int avatarScoreRank"), Int("int isCrossServer")), RSTUB('PlayerStub'), BASE, 
     '根据掉落id统计掉落', ALLSIDE, GOD_GROUPS, minArgs=2)
 def statDropByDropId(su, playerStub, rewardId, count, level=0, school=0, sex=0, isMonthCardExpired=0, isBigMonthCardExpired=0, avatarScoreRank=0, isCrossServer=0):
@@ -1556,6 +1570,18 @@ def modifyGuildMoney(su, player, addCount):
     player.guildBox.modifyGuildMoney(addCount, src, opUUID, detail)
     return True, 'command success'
 
+@gm_cmd('$modifyGuildIron', (Player("gbId or Id"), Int("int addCount")), RARG(0), gameconst.BASE, '加公会金玄铁', ALLSIDE, GOD_GROUPS)
+def modifyGuildIron(su, player, addCount):
+    opUUID = KBEngine.genUUID64()
+    src = AAC_AACDD.datas.BONUS_SRC_GM
+    detail = gameclass.AwardDetailCls(gm_cmd='$modifyGuildIron', addCount=addCount)
+    if addCount < 1:
+        return False, '执行失败，玄铁不能小于1'
+    elif player.guildBox is None:
+        return False, '当前玩家没有帮会'
+    player.guildBox.modifyGuildIronMine(addCount, src, opUUID, detail)
+    return True, 'command success'
+
 @gm_cmd('$modifyGuildDungeonStatus', (Player("gbId or Id"), Int("int status")), RARG(0), gameconst.BASE, '修改公会副本状态', ALLSIDE, GOD_GROUPS)
 def modifyGuildDungeonStatus(su, player, status):
     if player.guildBox is None:
@@ -1658,19 +1684,39 @@ def showPetDraw(su, player, petItemList):
 
 def _gmFinishCollect(player, collectId):
     school = player.getAvatarSchool()
+    if school not in CCDATA.allSchoolList:
+        return False, '执行失败，玩家职业无效'
+    schoolIdx = CCDATA.allSchoolList.index(school)
+    
     if collectId == 0:
         propIndexList = []
         for collectId, info in PDETAIL.datas.items():
             unavailableClass = info.get('unavailableClass', [])
             if unavailableClass and school in unavailableClass:
                 continue
-            equipment_len = len(info['equipment']) if info['equipment'] else 0
+            equipment_len = len(info['equip']) if info['equip'] else 0
             prop_len = len(info['props']) if info['props'] else 0
+            total_len = equipment_len + prop_len
+            
             player.collectibleData.collectibleDict.setdefault(collectId, collectItem(collectId))
-            for collectGridID in range(equipment_len + prop_len):
+            for collectGridID in range(total_len):
+                propGridID = collectGridID - equipment_len
+                if propGridID < 0:
+                    indexId = info['equip'][collectGridID]
+                    equipInfo = CEIDX.datas.get(indexId, None)
+                    if not equipInfo or schoolIdx >= len(equipInfo['propList']):
+                        continue
+                elif propGridID >= prop_len:
+                    continue
+                    
                 player.collectibleData.collectibleDict[collectId].onComplete(collectGridID)
-            propIndexList.append(collectId)
-        player.cell.onCollectAward(propIndexList, 0)
+                
+            if player.collectibleData.collectibleDict[collectId].isCompleteAll(total_len):
+                propIndexList.append(collectId)
+                
+        for validCollectId in propIndexList:
+            player._onScore(validCollectId, 0)
+            
         player.sendCollectInfo()
         
     else:
@@ -1680,14 +1726,30 @@ def _gmFinishCollect(player, collectId):
         unavailableClass = info.get('unavailableClass', [])
         if unavailableClass and school in unavailableClass:
             return False, '执行失败，收集项本职业不可用'
-        equipment_len = len(info['equipment']) if info['equipment'] else 0
+        equipment_len = len(info['equip']) if info['equip'] else 0
         prop_len = len(info['props']) if info['props'] else 0
+        total_len = equipment_len + prop_len
+        
         player.collectibleData.collectibleDict.setdefault(collectId, collectItem(collectId))
-        for collectGridID in range(equipment_len + prop_len):
+        for collectGridID in range(total_len):
+            propGridID = collectGridID - equipment_len
+            if propGridID < 0:
+                indexId = info['equip'][collectGridID]
+                equipInfo = CEIDX.datas.get(indexId, None)
+                if not equipInfo or schoolIdx >= len(equipInfo['propList']):
+                    continue
+            elif propGridID >= prop_len:
+                continue
+                
             player.collectibleData.collectibleDict[collectId].onComplete(collectGridID)
-        player.cell.onCollectAward([collectId], 0)
+            
+        if player.collectibleData.collectibleDict[collectId].isCompleteAll(total_len):
+            player._onScore(collectId, 0)
+            
         player.client.onGetCollectInfo([player.collectibleData.collectibleDict[collectId].toStreamSavedDic()])
+        
     return True, 'command success'
+
 
 
 @gm_cmd('$setAutoCombat', (Player("gbId or Id"), Int('isStart')), RARG(0), CELL, '指令控制自动战斗', ALLSIDE, GOD_GROUPS, minArgs=1)
@@ -1820,6 +1882,20 @@ def testeventtips(su, player, eventTipId, srcType, itemId, itemCount):
     _opUUID = KBEngine.genUUID64()
     detail = gameclass.AwardDetailCls()
     player.addWealth(srcType, wealthVal, _opUUID, detail, awardCtx)
+    return True, 'command success'
+
+@gm_cmd('$testpaydropprice', (Player("gbId or Id"), Int('uniqueId'), Int('price')), RARG(0), gameconst.BASE, '测试提前付钱', ALLSIDE, GOD_GROUPS)
+def testpaydropprice(su, player, uniqueId, price):
+    if player is None:
+        return False, '执行失败'
+    player.payDropPrice(player.id, uniqueId, price)
+    return True, 'command success'
+
+@gm_cmd('$testrecyclelingshouequip', (Player("gbId or Id"), Int('petId'), Int('slotId')), RARG(0), gameconst.BASE, '回收精灵装备', ALLSIDE, GOD_GROUPS)
+def testrecyclelingshouequip(su, player, petId, slotId):
+    if player is None:
+        return False, '执行失败'
+    player.recycleLingShouEquip(player.id, petId, slotId)
     return True, 'command success'
 
 # --------------------------dev test only cmd segment-----------------------------------------------------------------------------------------------------------------------------------------

@@ -54,8 +54,8 @@ const (
 	AUCTION_SALED_ITEM_REJECTED          = 20041 // 交易行对应物品无法出售
 	AUCTION_ITEM_IS_IN_PUBLICITY         = 20042 // 交易行物品正在公示期
 	AUCTION_ITEM_IS_NOT_IN_SNATCH        = 20046 // 交易行物品正不在抢购期
-
-	AUCTION_IDIP_GM_BAN = 20100 // IDIP禁止
+	AUCTION_ITEM_IS_SELF_SALE            = 20048 // 自己的商品不能购买
+	AUCTION_ITEM_IS_NOT_IN_SELLING       = 20049 // 交易行物品不在出售状态
 )
 
 const (
@@ -104,12 +104,20 @@ const (
 )
 
 const (
+	EQUIP_DEFAULT_VALUE = -1
+	EQUIP_FLAG          = "equipment"
+	EQUIP_GRADE_LEVEL   = "gradeLv"
+	EQUIP_ENHANCE_LEVEL = "enhanceLv"
+)
+
+const (
 	BUY_TYPE_NORMAL = 1
 	BUY_TYPE_SNATCH = 2
 )
 
 const (
-	SNATCH_LOCK_ID = 1
+	SNATCH_LOCK_ID           = 1
+	AUCTION_ITEM_LOCKED_TIME = 60
 )
 
 // 设置配置数据

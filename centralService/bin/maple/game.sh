@@ -1,6 +1,6 @@
 #!/bin/bash
 export GOTRACEBACK=crash
-binName='maple'
+binName=$(basename "$PWD")
 binPath=`pwd`'/'$binName
 
 if [ -n "$2" ]; then
@@ -9,11 +9,13 @@ else
     INST_ID=0
 fi
 
-pidFileName="mapleServer_${INST_ID}.pid"
+pidFileName="${binName}_${INST_ID}.pid"
 
 function stop_fileserver(){
     if [ -f ${pidFileName} ]; then
-        kill `cat ${pidFileName}`
+        kill `cat ${pidFileName} 2>/dev/null`
+    else
+        echo "$binName - missing pid file, $pidFileName"
     fi
 }
 

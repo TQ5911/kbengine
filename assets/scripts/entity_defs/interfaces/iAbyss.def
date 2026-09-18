@@ -1,7 +1,7 @@
 <root>
     <Properties>
         <abyssTicket>
-            <Type>          UINT8                       </Type>
+            <Type>          UINT32                      </Type>
             <Flags>         BASE_AND_CLIENT             </Flags>
             <Persistent>    True                        </Persistent>
             <Default>       0                           </Default>
@@ -32,6 +32,11 @@
             <Flags>         CELL_PRIVATE                </Flags>
             <Persistent>    True                        </Persistent>
         </abyssQuota>
+
+        <abyssCoinTicketData>
+            <Type>          COIN_TICKET_INFO_DATA   </Type>
+            <Flags>         BASE                    </Flags>
+        </abyssCoinTicketData>
     </Properties>
 
     <BaseMethods>
@@ -41,8 +46,7 @@
 
         <doAddAbyssTicket>
             <Arg>          UINT8                        </Arg>
-            <Arg>          ITEM_ID                      </Arg>
-            <Arg>          UINT32                       </Arg>
+            <Arg>          PYTHON                       </Arg>
             <Arg>          UINT8                        </Arg>
             <Arg>          UINT8                        </Arg>
             <Arg>          UINT8                        </Arg>
@@ -59,8 +63,7 @@
         <addAbyssDurFailed>
             <Arg>          OP_UUID                      </Arg>
             <Arg>          UINT8                        </Arg>
-            <Arg>          ITEM_ID                      </Arg>
-            <Arg>          UINT32                       </Arg>
+            <Arg>          PYTHON                       </Arg>
             <Arg>          UINT8                        </Arg>
         </addAbyssDurFailed>
 
@@ -69,7 +72,9 @@
         </autoRenewAbyss>
 
         <addAbyssDurationFailedRewindTimes>
-            <Arg>          OP_UUID                      </Arg>
+            <Arg>           OP_UUID                     </Arg>
+            <Arg>           UINT16                      </Arg>
+            <Arg>           UINT16                      </Arg>
         </addAbyssDurationFailedRewindTimes>
 
         <afterEnterAbyssDeductTimes>
@@ -157,8 +162,7 @@
 
         <checkAddAbyssDurationCondition>
             <Arg>           UINT8                       </Arg>
-            <Arg>           ITEM_ID                     </Arg>
-            <Arg>           UINT32                      </Arg>
+            <Arg>           PYTHON                      </Arg>
             <Arg>           UINT8                       </Arg>
             <Arg>           OP_UUID                     </Arg>
         </checkAddAbyssDurationCondition>

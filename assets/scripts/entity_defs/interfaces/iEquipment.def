@@ -133,6 +133,7 @@
         </cellUndressEquipmentFail>
 
         <cellUndressEquipmentSucc>
+            <Arg>   UINT64       </Arg>
             <Arg>   ITEM_VAL     </Arg>
         </cellUndressEquipmentSucc>
 
@@ -193,14 +194,27 @@
             <Arg>      BOOL                         </Arg>
         </bagEquipGlyphWashing>
 
-        <bagEquipGlyphWashingDeductItemsCB>
+        <bagEquipGlyphWashingPreviewCB>
             <Arg>       OP_STAT     </Arg>
+            <Arg>       UINT16      </Arg>
             <Arg>       UINT16      </Arg>
             <Arg>       UUID        </Arg>
             <Arg>       GRIDID      </Arg>
             <Arg>       UINT8       </Arg>
             <Arg>       BOOL        </Arg>
-        </bagEquipGlyphWashingDeductItemsCB>
+        </bagEquipGlyphWashingPreviewCB>
+
+        <bagEquipGlyphWashingConfirm>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UINT8        </Arg>
+            <Arg>      UUID         </Arg>
+        </bagEquipGlyphWashingConfirm>
+
+        <bagEquipGlyphWashingDiscard>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UINT8        </Arg>
+            <Arg>      UUID         </Arg>
+        </bagEquipGlyphWashingDiscard>
 
         <bagEquipBless>
             <Arg>      GRIDID                       </Arg>
@@ -271,6 +285,7 @@
             <Arg>       SERVER_ID           </Arg>
             <Arg>       UNIQUE_ID           </Arg>
             <Arg>       UINT32              </Arg>
+            <Arg>       UINT32              </Arg>
             <Arg>       SPACE_NO            </Arg>
             <Arg>       POSITION_ARG        </Arg>
             <Arg>       PYTHON              </Arg>
@@ -296,6 +311,7 @@
             <Arg>       UNIQUE_ID           </Arg>
             <Arg>       BLOB                </Arg>
             <Arg>       LONGTIME            </Arg>
+            <Arg>       UINT32              </Arg>
             <Arg>       UINT32              </Arg>
             <Arg>       LONGTIME            </Arg>
             <Arg>       LONGTIME            </Arg>
@@ -367,12 +383,6 @@
             <Arg>   UINT32     </Arg>
             <Arg>   UINT32     </Arg>
         </gmGlyphWashingEquips>
-
-        <cellBrokenEquipment>
-            <Arg>   UINT16       </Arg>
-            <Arg>   UNIQUE_ID    </Arg>
-            <Arg>   ITEM_VAL     </Arg>
-        </cellBrokenEquipment>
 
         <baseMultiEquipEnhance>
             <Arg>   PY_LIST                       </Arg>
@@ -524,15 +534,30 @@
             <Arg>      BOOL                         </Arg>
         </reqEquipGlyphWashing>
 
-        <cellEquipGlyphWashing>
-            <Arg>   UINT32      </Arg>
+        <reqEquipGlyphWashingConfirm> <Exposed/>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT16                       </Arg>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT64                       </Arg>
+        </reqEquipGlyphWashingConfirm>
+
+        <reqEquipGlyphWashingDiscard> <Exposed/>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT16                       </Arg>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT64                       </Arg>
+        </reqEquipGlyphWashingDiscard>
+
+        <cellEquipGlyphWashingPreview>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT16      </Arg>
             <Arg>   UINT16      </Arg>
             <Arg>   UUID        </Arg>
             <Arg>   UINT32      </Arg>
             <Arg>   UINT64      </Arg>
             <Arg>   UINT8       </Arg>
             <Arg>   BOOL        </Arg>
-        </cellEquipGlyphWashing>
+        </cellEquipGlyphWashingPreview>
 
         <reqEquipWash> <Exposed/>
             <Arg>      UINT8       </Arg>
@@ -670,6 +695,17 @@
             <Arg>   ITEM_ID  </Arg>
             <Arg>   UNIQUE_ID   </Arg>
         </cellGmQueryEquip>
+
+        <cellGmCheckRestoreEquip>
+            <Arg>   PYTHON  </Arg>
+            <Arg>   ITEM_ID  </Arg>
+            <Arg>   UNIQUE_ID   </Arg>
+            <Arg>   STRING  </Arg>
+            <Arg>   STRING  </Arg>
+        </cellGmCheckRestoreEquip>
+
+        <doBodyEquipFnvHashCheck>
+        </doBodyEquipFnvHashCheck>
     </CellMethods>
 
     <ClientMethods>
@@ -731,6 +767,30 @@
             <Arg>      UINT8            </Arg>
         </onEquipGlyphWashingSucc>
 
+        <onEquipGlyphWashingPreview>
+            <Arg>      UINT8            </Arg>
+            <Arg>      GRIDID           </Arg>
+            <Arg>      UINT8            </Arg>
+            <Arg>      CLI_GLYPH_INFO   </Arg>
+            <Arg>      UINT32           </Arg>
+            <Arg>      UINT8            </Arg>
+            <Arg>      UINT8            </Arg>
+            <Arg>      UUID             </Arg>
+        </onEquipGlyphWashingPreview>
+
+        <onEquipGlyphWashingConfirmFail>
+            <Arg>      UINT8            </Arg>
+            <Arg>      GRIDID           </Arg>
+            <Arg>      UINT8            </Arg>
+        </onEquipGlyphWashingConfirmFail>
+
+        <onEquipGlyphWashingDiscardResult>
+            <Arg>      UINT8            </Arg>
+            <Arg>      GRIDID           </Arg>
+            <Arg>      UINT8            </Arg>
+            <Arg>      UINT8            </Arg>
+        </onEquipGlyphWashingDiscardResult>
+
         <onEquipBlessSucc>
             <Arg>      UINT8                        </Arg>
             <Arg>      GRIDID                       </Arg>
@@ -740,6 +800,8 @@
             <Arg>      UINT32                       </Arg>
             <Arg>      UINT16                        </Arg>
             <Arg>      UINT8                        </Arg>
+            <Arg>      ARRAY <of>  UINT16 </of>     </Arg>
+            <Arg>      ARRAY <of>  UINT16 </of>     </Arg>
         </onEquipBlessSucc>
 
         <onEquipBackBlessSucc>

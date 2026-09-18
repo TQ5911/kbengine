@@ -200,7 +200,12 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
         curState = self._calcState()
         if curState != self.state:
             self._onStateChange(self.state, curState)
-            
+
+    def onCellappRelive(self, gorder):
+        INFO_MSG('onCellappRelive', gorder)
+        _data = MineGlobalData.MineGlobalData(self.state, self.startTime)
+        gameengine.callAllApps('gameengine.resetMineGlobalData', (_data,))
+
     def _onStateChange(self, oldState, newState):
         LOG_INFO('MineWarStub.onStateChange oldState:', oldState, 'newState:', newState)
         self.state = newState
@@ -830,3 +835,12 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
             if spaceMgrbox:
                 spaceMgrbox.onMineWarFlagChangeAttack(bool(_newCanAttack))
 
+    def checkGuildOccupation(self, box, guildUUID):
+        LOG_DBG('MineWarStub.checkGuildOccupation:', guildUUID)
+        ret = False
+        if self.state == gameconst.MINE_WAR_STATE.RUNNING:
+            for mineWarVal in self.mineMapData.values():
+                if guildUUID == mineWarVal.currGuildInfo.guildGbId:
+                    ret = True
+                    break
+        box.onCheckGuildOccupationResult(ret)

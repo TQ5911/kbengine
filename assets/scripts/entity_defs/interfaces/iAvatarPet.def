@@ -52,9 +52,14 @@
 
         <useLingShouEquip> <Exposed/>
             <Arg>   GRIDID      </Arg>
-            <Arg>   PETID    </Arg>
+            <Arg>   PETID       </Arg>
             <Arg>   UINT8       </Arg>
         </useLingShouEquip>
+
+        <recycleLingShouEquip> <Exposed/>
+            <Arg>   PETID       </Arg>
+            <Arg>   UINT8       </Arg>
+        </recycleLingShouEquip>
 
         <setFollowPet> <Exposed/>
             <Arg>   BOOL        </Arg>

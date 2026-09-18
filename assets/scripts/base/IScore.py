@@ -23,9 +23,11 @@ class IScore(object):
 
     def initAvatarBaseScores(self):
         LOG_DBG('initAvatarBaseScores')
-        data = {'mount': math.floor(self.getTotalMountScore()),
-                'pet': math.floor(self.getTotalPetScore()),
-                'skill': math.floor(self.getTotalSkillScore())}
+        data = {
+            gameconst.PlayerScoreKeyDatas.Mount: math.floor(self.getTotalMountScore()),
+            gameconst.PlayerScoreKeyDatas.Pet: math.floor(self.getTotalPetScore()),
+            gameconst.PlayerScoreKeyDatas.Skill: math.floor(self.getTotalSkillScore())
+        }
         self.cell.onInitAvatarBaseScores(data)
     # --------------------------------------------------------------
     # SCORE CALC.
@@ -51,8 +53,8 @@ class IScore(object):
     def getTotalScore(self):
         return self.baseScoreInfo.totalScore
     
-    def baseScoreChanged(self, scoreInitFinished, scoreKey, scoreVal):
-        self.baseScoreInfo.updateScore(scoreKey, scoreVal)
+    def baseScoreChanged(self, opUUID, scoreInitFinished, scoreKey, scoreVal):
+        self.baseScoreInfo.updateScore(self, scoreInitFinished, opUUID, scoreKey, scoreVal)
         totalScore = self.getTotalScore()
         self.updateScoreToRedis(totalScore)
 
@@ -102,12 +104,12 @@ class IScore(object):
         newScore = math.floor(self.getTotalMountScore())
         self.cell.onUpdateMountScore(newScore)
 
-    def updatePetScore(self):
+    def updatePetScore(self, opUUID = 0):
         newScore = math.floor(self.getTotalPetScore())
-        self.cell.onUpdatePetScore(newScore)
+        self.cell.onUpdatePetScore(newScore, opUUID)
 
-    def updateSkillScore(self):
+    def updateSkillScore(self, opUUID = 0):
         newScore = math.floor(self.getTotalSkillScore())
         LOG_DBG('updateSkillScore ', newScore)
-        self.cell.onUpdateSkillScore(newScore)
+        self.cell.onUpdateSkillScore(newScore, opUUID)
     # --------------------------------------------------------------

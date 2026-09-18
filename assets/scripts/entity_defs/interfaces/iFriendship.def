@@ -317,5 +317,9 @@
         <onDailyUseMoneyChanged>
             <Arg>           MONEY                   </Arg>
         </onDailyUseMoneyChanged>
+
+        <onAuthorizeRoleStart>
+            <Arg>           PLAYER_GBID             </Arg>
+        </onAuthorizeRoleStart>
     </ClientMethods>
 </root>

@@ -22,7 +22,7 @@ class ICrossServer(object):
     CROSSSERVER_TIMEOUT = 10
 
     def __init__(self):
-        pass
+        self.serverOpenTime = gameconfig.serverOpenTime()
 
     def putCrossServerMethodSyncToLocalServer(self, funcName, args=None):
         if not self.hasTempMiscProp(gameconst.EntityPropsEnum.crossServerMethodSyncToLocalServerBase):
@@ -204,7 +204,9 @@ class ICrossServer(object):
     def onCrossServerResp(self, ret, token, reasonNo):
         LOG_INFO("onCrossServerResp", ret, token, reasonNo)
         if ret:
-            mapId = formula.parseLineType(self.crossServerToSpaceNo)
+            # 用 fetchMapId 而非 parseLineType：跨服讨伐传的是裸 dungeonNo（副本场景非分线），
+            # parseLineType 会得 0 导致客户端预加载落空；对分线空间号（深渊/城战）结果不变
+            mapId = formula.fetchMapId(self.crossServerToSpaceNo)
             crossServerId = self.crossServerDict['crossServerId']
             self.crossServerDict['token'] = token
             self.crossServerDict['spaceNo'] = mapId
@@ -214,6 +216,7 @@ class ICrossServer(object):
             LogTrackingMgr.LogTrackingMgr.teleport(
                 self.gbID,
                 self.accountEntity.clientDistinctId,
+                self.accountEntity.accountName,
                 formula.parseLineType(self.baseSpaceNo),
                 mapId,
             )
@@ -303,16 +306,19 @@ class ICrossServer(object):
         gameengine.getGlobalBase('CrossServerStub').onGobackServer(self.accountEntity.accountName)
 
         self.cell.offline(gameconst.OFFLINE_REASON_END_CROSS_SERVER)
-
+        
         LogTrackingMgr.LogTrackingMgr.teleport(
             self.gbID,
             self.accountEntity.clientDistinctId,
+            self.accountEntity.accountName,
             formula.parseLineType(self.crossServerToSpaceNo),
             formula.parseLineType(self.crossServerFromSpaceNo),
         )
 
     def onCrossServerEnd(self, callbackComponent, callbackName, args):
         LOG_INFO("onCrossServerEnd", callbackComponent, callbackName, args)
+        if self.guildBox:
+            self.guildBox.getUnionAndEnemyInfo(self.gbID, self)
         self.stopBagFnvHashCheck()
         if self.crossServerState != gameconst.CrossServerState.ENUM_IN_CROSS_SERVER:
             LOG_ERR("onCrossServerSuc state is not IN_CROSS_SERVER", self.crossServerState)
@@ -367,6 +373,7 @@ class ICrossServer(object):
                 scoresInfo=AvatarScores.avatarScoresInstance.getDictFromObj(self.baseScoreInfo),
                 guildUUID=self.guildUUIDBase,
                 guildName=self.guildNameBase,
+                serverOpenTime=self.serverOpenTime
             )
             callbackComponent = self.crossServerDict.get('callbackComponent')
             callbackName = self.crossServerDict.get('callbackName')
@@ -383,8 +390,22 @@ class ICrossServer(object):
     def onCrossServerSyncOtherInitedDataToCrossServer(self, crossData, baseInitData, cellInitData):
         LOG_WARN("onCrossServerSyncOtherInitedDataToCrossServer::", crossData, baseInitData, cellInitData)
         self.scoresInfo = AvatarScores.avatarScoresInstance.createObjFromDict(baseInitData['scoresInfo'])
+        self.serverOpenTime = baseInitData['serverOpenTime']
         self.cell.onCrossServerSyncOtherInitedDataToCrossServerCell(crossData, cellInitData)
-        self.onSetGuildInfoCross(baseInitData['guildUUID'], baseInitData['guildName'], True)
+        self.onSetGuildInfoCross(baseInitData['guildUUID'], baseInitData['guildName'], cellInitData['leagueUUID'], True)
+        self.onUpdateUseCoinTimesTicketInfoCross()
+
+    # localServer
+    def beSyncMethodCallFromLocalClient(self, fnname, fnargs):
+        LOG_DBG("beSyncMethodCallFromLocalClient::", fnname, fnargs)
+        getattr(self.client, fnname)(*fnargs)
+
+    # CrossServer
+    def syncMethodCallToCrossClient(self, fnname, fnargs):
+        LOG_DBG("syncMethodCallToCrossClient::", fnname, fnargs)
+        if self.isCrossServerInLocalServer and self.otherServerAvatarBox:
+            LOG_DBG("syncMethodCallToCrossClient::", fnname, fnargs)
+            self.otherServerAvatarBox.beSyncMethodCallFromLocalClient(fnname, fnargs)
 
     # localServer
     def beSyncMethodCallFromCrossServerBase(self, fnname, fnargs):
@@ -402,6 +423,10 @@ class ICrossServer(object):
         if self.isCrossServerInLocalServer and self.otherServerAvatarBox:
             LOG_DBG("syncMethodCallToCrossServerBase::", fnname, fnargs)
             self.otherServerAvatarBox.beSyncMethodCallFromLocalServerBase(fnname, fnargs)
+        else:
+            # 回传静默失败排查用：跨服期间正常必有镜像 mailbox，缺失即异常
+            LOG_WARN('syncMethodCallToCrossServerBase skipped', fnname,
+                     self.isCrossServerInLocalServer, bool(self.otherServerAvatarBox), self.gbID)
 
     # localServer
     def beSyncMethodCallFromLocalServerBase(self, fnname, fnargs):
@@ -421,7 +446,9 @@ class ICrossServer(object):
 
     # localServer
     def syncMethodCallToCrossServerCell(self, fnname, fnargs):
-        self.otherServerAvatarBox.beSyncMethodCallFromLocalServerCell(fnname, fnargs)
+        if self.isCrossServerInLocalServer and self.otherServerAvatarBox:
+            LOG_DBG("syncMethodCallToCrossServerCell::", fnname, fnargs)
+            self.otherServerAvatarBox.beSyncMethodCallFromLocalServerCell(fnname, fnargs)
     
     def beSyncMethodCallFromLocalServerCell(self, fnname, fnargs):
         LOG_DBG("beSyncMethodCallFromLocalServerCell::", fnname, fnargs)
@@ -437,3 +464,18 @@ class ICrossServer(object):
 
     def onAvatarLevelUp_localCrossClient(self, oldLevel, level):
         LOG_INFO("onAvatarLevelUp_localCrossClient::", oldLevel, level)
+
+    def setCrossGhostReturnSpaceNo(self, citySpaceNo):
+        # 本服幽灵已回城（跨服组队副本）：回程落点改为主城，
+        # gobackServer 的客户端预加载图/埋点取 crossServerFromSpaceNo
+        LOG_INFO("setCrossGhostReturnSpaceNo::", self.gbID, self.crossServerFromSpaceNo, '->', citySpaceNo)
+        self.crossServerFromSpaceNo = citySpaceNo
+
+    def onAfterSyncLeagueUUID(self, leagueUUID, guildUUID):
+        LOG_INFO("onAfterSyncLeagueUUID::", leagueUUID, guildUUID)
+        if leagueUUID > 0:
+            gameengine.getGlobalBase('AllianceStub').getUnionList(guildUUID, self)
+        gameengine.getGlobalBase('AllianceStub').getEnemyAllianceList(leagueUUID, guildUUID, self)
+        
+    def getServerOpenTimestamp(self):
+        return self.serverOpenTime if self.serverOpenTime else gameconfig.serverOpenTime()

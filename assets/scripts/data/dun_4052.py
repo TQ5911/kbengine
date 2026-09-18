@@ -490,5 +490,29 @@ datas ={
       "Remark": "",
       "ShowInSceneMap": 1
     }
+  },
+  "40528003": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "CustomFuncPos",
+    "ClassNameType": 10,
+    "CustomID": "",
+    "Dir": 0.0,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 0,
+    "ID": 40528003,
+    "Name": "\u81ea\u5b9a\u4e49\u529f\u80fd\u70b9",
+    "PosX": 189.8493,
+    "PosY": 169.6119,
+    "PosZ": 155.7819,
+    "Props": {
+      "Num": 0,
+      "Radius": 0.0,
+      "RefreshTimedID": 0,
+      "Remark": "86010416",
+      "ShowInSceneMap": 1
+    }
   }
 }

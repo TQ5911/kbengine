@@ -482,8 +482,15 @@ class IAICombatUnit(SkillManager.SkillManager):
         else:
             return gameconst.RouteStateEnum.ROUTE_STATE_IDLE
 
-    def navigateToPosition(self, pos, distance=0, userData=None):
-        navController = self.scriptNavigate(pos, self.speed, distance, userData=userData)
+    def navigateToPosition(self, pos, distance=0, userData=None, extra=None):
+        navController = self.scriptNavigate(
+            pos, 
+            self.speed, 
+            distance, 
+            userData=userData,
+            extra=extra,
+        )
+
         self.setMoveController(navController)
 
         if not self.moveController:

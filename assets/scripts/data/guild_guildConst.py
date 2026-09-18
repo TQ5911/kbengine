@@ -721,11 +721,11 @@ datas = _tools.RODict({
     }),
     "guild_enmityTime": _tools.RODict({
         "key": "guild_enmityTime",
-        "value": 21600,
+        "value": 7200,
     }),
     "guild_unionNum": _tools.RODict({
         "key": "guild_unionNum",
-        "value": 5,
+        "value": 4,
     }),
     "guild_unionNum2": _tools.RODict({
         "key": "guild_unionNum2",
@@ -745,7 +745,7 @@ datas = _tools.RODict({
     }),
     "guild_exitUnionCd": _tools.RODict({
         "key": "guild_exitUnionCd",
-        "value": 60,
+        "value": 0,
     }),
     "guild_aidRequirement": _tools.RODict({
         "key": "guild_aidRequirement",
@@ -773,11 +773,11 @@ datas = _tools.RODict({
     }),
     "guild_enmityCost": _tools.RODict({
         "key": "guild_enmityCost",
-        "value": 50000,
+        "value": 2000,
     }),
     "guild_enmityUnionCost": _tools.RODict({
         "key": "guild_enmityUnionCost",
-        "value": 50000,
+        "value": 8000,
     }),
     "guild_relieveUnion": _tools.RODict({
         "key": "guild_relieveUnion",
@@ -946,6 +946,18 @@ datas = _tools.RODict({
     "guild_crossServerDeclareLimit": _tools.RODict({
         "key": "guild_crossServerDeclareLimit",
         "value": 54003191,
+    }),
+    "guildChannel_NotInUnion": _tools.RODict({
+        "key": "guildChannel_NotInUnion",
+        "value": 54003192,
+    }),
+    "guild_unionExitLimit3": _tools.RODict({
+        "key": "guild_unionExitLimit3",
+        "value": 54003193,
+    }),
+    "guild_unionSupportSuccess": _tools.RODict({
+        "key": "guild_unionSupportSuccess",
+        "value": 54003194,
     }),
     "guild_commissionHelpinfoID": _tools.RODict({
         "key": "guild_commissionHelpinfoID",

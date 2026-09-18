@@ -17,7 +17,17 @@
         <onGetSwitchServerData>
             <Arg>       BLOB                        </Arg>
         </onGetSwitchServerData>
+
+        <onPing>
+            <Arg>       SERVER_ID                   </Arg>
+            <Arg>       UNICODE                     </Arg>
+        </onPing>
         
+        <onPong>
+            <Arg>       SERVER_ID                   </Arg>
+            <Arg>       UNICODE                     </Arg>
+        </onPong>
+
         <onReqCrossServer>
             <Arg>           UNICODE                 </Arg>
             <Arg>           UINT16                  </Arg>

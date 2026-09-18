@@ -101,7 +101,8 @@ class IMallStore(object):
             purchaseDic[storeId] = purchaseDic.get(storeId, 0) + 1
         limitType = cfg.get('limitType', 0)
         boughtNum = purchaseDic.get(storeId, 0)
-        LogTrackingMgr.LogTrackingMgr.Gift_Buy(self.gbID, self.accountEntity.clientDistinctId, self.gbID, storeId, opUUID, limitType, limitNumber, boughtNum)
+        currencyId, costNum = costItems[0] if costItems else (0, 0)
+        LogTrackingMgr.LogTrackingMgr.Gift_Buy(self.gbID, self.accountEntity.clientDistinctId, self.gbID, storeId, opUUID, limitType, limitNumber, boughtNum, currencyId, costNum)
         return gameconst.MallStoreResult.SUCCESS
 
     def _resetMallLimits(self, storeType, configDatas, purchaseDic, limitType):

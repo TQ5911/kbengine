@@ -24,6 +24,7 @@ import LogTrackingMgr
 import redisUtils
 import login_set as LSD
 import functools
+import copy
 import secondpwd_secondPwdFunction as SP_SPF
 import secondpwd_secondPwdConfig as SP_SPC
 import visible_visible as V_VD
@@ -194,20 +195,30 @@ class IBindPhone(object):
 
         data = json.loads(jsonData)
         code = data['code']
-        if code == 200 or code == 202:
+        if code in (gameconst.BindPhoneWebCode.SUCCESS, gameconst.BindPhoneWebCode.SUCCESS_ASYNC):
             self.onMessagePre(MMD.datas.smsSentSuccess, [])
             self.client.bindPhoneReplay(gameconst.BindPhoneRes.ALERADY_SENT, self.getTempPhone())
             LOG_INFO("IBindPhone _reqBindPhoneResponse success ", self.getTempPhone())
-        elif code == 1002 or code == 1003:
+        elif code in (gameconst.BindPhoneWebCode.PHONE_REPEAT, gameconst.BindPhoneWebCode.PHONE_REPEAT_ASYNC):
             curCnt = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, 0)
             curCnt = max(int(curCnt - 1), 0)
             self.accountEntity.setPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, curCnt)
             self.onMessagePre(MMD.datas.login_phoneRepeat, [])
-        elif code == 4005:
+        elif code == gameconst.BindPhoneWebCode.CHECK_CAPTCHA_VERIFY1:
             curCnt = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, 0)
             curCnt = max(int(curCnt - 1), 0)
             self.accountEntity.setPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, curCnt)
-            self.client.bindPhoneReplay(gameconst.BindPhoneRes.CHECK_CAPTCHA_VERIF, self.getTempPhone())
+            self.client.bindPhoneReplay(gameconst.BindPhoneRes.CHECK_CAPTCHA_VERIFY, self.getTempPhone())
+        elif code == gameconst.BindPhoneWebCode.COOL_DOWN_NO_BIND1:
+            curCnt = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, 0)
+            curCnt = max(int(curCnt - 1), 0)
+            self.accountEntity.setPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, curCnt)
+            self.onMessagePre(MMD.datas.cooldownNoBindMsg, [])
+        elif code == gameconst.BindPhoneWebCode.COOL_DOWN_NO_BIND2:
+            curCnt = self.accountEntity.getPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, 0)
+            curCnt = max(int(curCnt - 1), 0)
+            self.accountEntity.setPersistentMiscProp(gameconst.EntityPropsEnum.reqBindPhoneCnt, curCnt)
+            self.onMessagePre(MMD.datas.cooldownNoBindMsg2, [])
         else:
             LOG_WARN("IBindPhone _reqBindPhoneResponse exception")
             self.onMessagePre(MMD.datas.web_requestException, [])
@@ -275,15 +286,16 @@ class IBindPhone(object):
 
         data = json.loads(jsonData)
         code = data['code']
-        if code == 200:
+        if code == gameconst.BindPhoneWebCode.SUCCESS:
             self.accountEntity.phone = self.getTempPhone()
-            self.accountEntity.pyWriteToDB()
             self.client.bindPhoneReplay(gameconst.BindPhoneRes.BIND_SUCCESSED, self.accountEntity.phone)
             self.popTempPhone()
             self.onMessagePre(MMD.datas.login_phoneSuccess, [])
             LOG_INFO("IBindPhone _reqVerifyCodeResponse success ", self.accountEntity.phone)
-        elif code == 1002 or code == 1003:
+        elif code in (gameconst.BindPhoneWebCode.PHONE_REPEAT, gameconst.BindPhoneWebCode.PHONE_REPEAT_ASYNC):
             self.onMessagePre(MMD.datas.login_phoneRepeat, [])
+        elif code == gameconst.BindPhoneWebCode.COOL_DOWN_NO_BIND2:
+            self.onMessagePre(MMD.datas.cooldownNoBindMsg2, [])
         else:
             self.onMessagePre(MMD.datas.smsInvalid, [])
 #####################################################################################
@@ -368,7 +380,7 @@ class IBindPhone(object):
 
         data = json.loads(jsonData)
         code = data['code']
-        if code == 0:
+        if code == gameconst.BindPhoneWebCode.QUERY_RECHARGE_SUCCESS:
             rechargeAmount = float(data['data'])
             self.client.queryRechargeAmountReplay(rechargeAmount)
             self.accountEntity.setTempMiscProp(gameconst.EntityPropsEnum.rechargeAmount, rechargeAmount)
@@ -421,11 +433,20 @@ class IBindPhone(object):
             self.accountEntity.setTempMiscProp(gameconst.EntityPropsEnum.rechargeStageReward, rechargeStageRewardInfo)
         self.client.rechargeStageRewardInfo(rechargeStageRewardInfo)
 
-    def onUpdateRechargeStageRewardInfoCB(self, ok, res):
-        LOG_INFO("IBindPhone::onUpdateRechargeStageRewardInfoCB", ok, res)
+    def onUpdateRechargeStageRewardInfoCB(self, stage, rewardId, rechargeStageRewardInfo, ok, res):
+        LOG_INFO("IBindPhone::onUpdateRechargeStageRewardInfoCB", stage, rewardId, rechargeStageRewardInfo, ok, res)
         if not ok:
+            rechargeStageRewardInfo[stage] = 0
+            self.accountEntity.setTempMiscProp(gameconst.EntityPropsEnum.rechargeStageReward, rechargeStageRewardInfo)
             LOG_ERR("IBindPhone::onUpdateRechargeStageRewardInfoCB error")
             return
+        detail = gameclass.AwardDetailCls()
+        srcType = AAC_AACDD.datas.BONUS_SRC_WIPE_RECHARGE_REWARD
+        awardVal = dropAward.AwardVal()
+        awardVal.addWealthByItemId(rewardId, 1)
+        awardCtx = self.getAvatarAwardCtx(0, None)
+        self.addWealth(srcType, awardVal, KBEngine.genUUID64(), detail, awardCtx=awardCtx)
+        self.client.rechargeStageRewardInfo(rechargeStageRewardInfo)
     
     def doGetRechargeStageReward(self, stage, condition, rewardId, rechargeStageRewardInfo, num):
         LOG_INFO("IBindPhone::doGetRechargeStageReward", stage, condition, rewardId, rechargeStageRewardInfo, num)
@@ -442,14 +463,11 @@ class IBindPhone(object):
 
         rechargeStageRewardInfo[stage] =  rewardId
         self.accountEntity.setTempMiscProp(gameconst.EntityPropsEnum.rechargeStageReward, rechargeStageRewardInfo)
-        redisUtils.RedisUtils.cmdSet(gameconst.RedisKey.RECHARGE_STAGE_INFO + self.accountName, self.rechargeStageRewardInfo2RedisValue(rechargeStageRewardInfo), self.onUpdateRechargeStageRewardInfoCB)
-        detail = gameclass.AwardDetailCls()
-        srcType = AAC_AACDD.datas.BONUS_SRC_WIPE_RECHARGE_REWARD
-        awardVal = dropAward.AwardVal()
-        awardVal.addWealthByItemId(rewardId, 1)
-        awardCtx = self.getAvatarAwardCtx(0, None)
-        self.addWealth(srcType, awardVal, KBEngine.genUUID64(), detail, awardCtx=awardCtx)
-        self.client.rechargeStageRewardInfo(rechargeStageRewardInfo)
+        tempRechargeStageRewardInfo = copy.deepcopy(rechargeStageRewardInfo)
+        redisUtils.RedisUtils.cmdSet(gameconst.RedisKey.RECHARGE_STAGE_INFO + self.accountName, 
+                                     self.rechargeStageRewardInfo2RedisValue(tempRechargeStageRewardInfo), 
+                                     functools.partial(self.onUpdateRechargeStageRewardInfoCB, stage, rewardId, tempRechargeStageRewardInfo)
+                                     )
 
     @staticmethod
     def redisValue2RechargeStageRewardInfo(infoValueStr):
@@ -500,14 +518,14 @@ class IBindPhone(object):
             "type"          : str(typeStr)
         })
         LOG_INFO("IBindPhone::smsServiceSendCode url", url, message)
-        KBEngine.urlopenv2(url, functools.partial(self._smsServiceSendCodeResponse, 1), 
+        KBEngine.urlopenv2(url, functools.partial(self._smsServiceSendCodeResponse, opType), 
                 method='POST',
                 postData=message.encode('utf-8'),
                 headers={"Content-Type": "application/json", "satoken": self.accountEntity.webToken},
                 timeoutSec=5)
         
-    def _smsServiceSendCodeResponse(self, sbType, httpCode, jsonData, headers, success, *args):
-        LOG_INFO("IBindPhone::_smsServiceSendCodeResponse", httpCode, jsonData, headers, success, *args)
+    def _smsServiceSendCodeResponse(self, opType, httpCode, jsonData, headers, success, *args):
+        LOG_INFO("IBindPhone::_smsServiceSendCodeResponse", opType, httpCode, jsonData, headers, success, *args)
         if not (httpCode == 200 and success):
             self.onMessagePre(MMD.datas.web_requestException, [])
             LOG_ERR("IBindPhone::_smsServiceSendCodeResponse failed")
@@ -517,13 +535,19 @@ class IBindPhone(object):
         code = data['code']
         msg = data['message']
         LOG_INFO("IBindPhone::_smsServiceSendCodeResponse code, msg",code, msg)
-        if code == 200 or code == 202:
+        if code in (gameconst.BindPhoneWebCode.SUCCESS, gameconst.BindPhoneWebCode.SUCCESS_ASYNC):
             self.onMessagePre(MMD.datas.smsSentSuccess, [])
-            self.client.reqSMSServiceResReplay(gameconst.ReqSMSServiceRes.ALERADY_SENT)
+            self.client.reqSMSServiceResReplay(gameconst.ReqSMSServiceRes.ALERADY_SENT, opType)
             LOG_INFO("IBindPhone::_smsServiceSendCodeResponse alerady sent")
-        elif code == 5005:
-            self.client.reqSMSServiceResReplay(gameconst.ReqSMSServiceRes.CHECK_CAPTCHA_VERIFY)
+        elif code == gameconst.BindPhoneWebCode.CHECK_CAPTCHA_VERIFY2:
+            self.client.reqSMSServiceResReplay(gameconst.ReqSMSServiceRes.CHECK_CAPTCHA_VERIFY, opType)
             LOG_INFO("IBindPhone::_smsServiceSendCodeResponse check captcha verify")
+        elif code == gameconst.BindPhoneWebCode.TAPTAP_UNBIND_PARMS_INCOMPLETE:
+            self.onMessagePre(MMD.datas.tapUnbindParmsIncomplete, [])
+        elif code == gameconst.BindPhoneWebCode.TAPTAP_UNBIND_ACCOUNT_FORBIDDEN:
+            self.onMessagePre(MMD.datas.tapUnbindAccountForbidden, [])
+        elif code == gameconst.BindPhoneWebCode.TAPTAP_UNBIND_PHONE_MISMATCH:
+            self.onMessagePre(MMD.datas.tapUnbindPhoneMismatch, [])
         else:
             LOG_WARN("IBindPhone::_smsServiceSendCodeResponse exception")
             self.onMessagePre(MMD.datas.web_requestException, [])
@@ -554,13 +578,14 @@ class IBindPhone(object):
             "type"          : str(typeStr)
         })
         LOG_INFO("IBindPhone::smsServiceVerifyCode url", url, message)
-        KBEngine.urlopenv2(url, self._smsServiceVerifyCodeResponse, method='POST',
+        KBEngine.urlopenv2(url, functools.partial(self._smsServiceVerifyCodeResponse, opType), 
+                method='POST',
                 postData=message.encode('utf-8'),
                 headers={"Content-Type": "application/json", "satoken": self.accountEntity.webToken},
                 timeoutSec=5)
 
-    def _smsServiceVerifyCodeResponse(self, httpCode, jsonData, headers, success, *args):
-        LOG_INFO("IBindPhone::_smsServiceVerifyCodeResponse", httpCode, jsonData, headers, success)
+    def _smsServiceVerifyCodeResponse(self, opType, httpCode, jsonData, headers, success, *args):
+        LOG_INFO("IBindPhone::_smsServiceVerifyCodeResponse", opType, httpCode, jsonData, headers, success)
         if not (httpCode == 200 and success):
             self.onMessagePre(MMD.datas.web_requestException, [])
             LOG_ERR("IBindPhone::_smsServiceVerifyCodeResponse failed")
@@ -568,18 +593,25 @@ class IBindPhone(object):
 
         data = json.loads(jsonData)
         code = data['code']
-        if code == 200:
+        if code == gameconst.BindPhoneWebCode.SUCCESS:
             self.onMessagePre(MMD.datas.pwdVerifySuccess, [])
-            self.client.reqSMSServiceResReplay(gameconst.ReqSMSServiceRes.VERIFY_SUCCESSED)
+            self.client.reqSMSServiceResReplay(gameconst.ReqSMSServiceRes.VERIFY_SUCCESSED, opType)
             LOG_INFO("IBindPhone::_smsServiceVerifyCodeResponse verify success")
-            self.grantSMSOperation()
+            self.grantSMSOperation(opType)
+            self.autoProceSMSOperation(opType)
+        elif code == gameconst.BindPhoneWebCode.TAPTAP_UNBIND_PARMS_INCOMPLETE:
+            self.onMessagePre(MMD.datas.tapUnbindParmsIncomplete, [])
+        elif code == gameconst.BindPhoneWebCode.TAPTAP_UNBIND_ACCOUNT_FORBIDDEN:
+            self.onMessagePre(MMD.datas.tapUnbindAccountForbidden, [])
+        elif code == gameconst.BindPhoneWebCode.TAPTAP_UNBIND_PHONE_MISMATCH:
+            self.onMessagePre(MMD.datas.tapUnbindPhoneMismatch, [])
         else:
             LOG_INFO("IBindPhone::_smsServiceVerifyCodeResponse 验证码不存在或已经失效")
             self.onMessagePre(MMD.datas.smsInvalid, [])
 
-    def grantSMSOperation(self):
+    def grantSMSOperation(self, opType):
         self.setTempMiscProp(gameconst.EntityPropsEnum.smsServiceValidTimestamp, utils.curTS() + 300)
-        LOG_DBG("IBindPhone::grantSMSOperation", self.getTempMiscProp(gameconst.EntityPropsEnum.smsServiceValidTimestamp, 0))
+        LOG_DBG("IBindPhone::grantSMSOperation", opType, self.getTempMiscProp(gameconst.EntityPropsEnum.smsServiceValidTimestamp, 0))
 
     def revokeSMSOperation(self):
         self.popTempMiscProp(gameconst.EntityPropsEnum.smsServiceValidTimestamp, 0)
@@ -596,6 +628,13 @@ class IBindPhone(object):
             return False
         
         return True
+
+    def getSecondaryPwdInfo(self):
+        _pwdInfo = self.getTempMiscProp(gameconst.EntityPropsEnum.authSecondPwdInfo, None)
+        if _pwdInfo is not None:
+            return _pwdInfo
+
+        return self.accountEntity.secondaryPwdInfo
     
     def preCheckSMSOperationType(self, opType):
         LOG_INFO("IBindPhone::preCheckSMSOperationType", opType)
@@ -607,9 +646,9 @@ class IBindPhone(object):
         if opType in gameconst.SMSOperationType.SECONDARY_PWD_VAILD_TYPE:
             if not self.checkSPGameConfigEnable():
                 return False, typeStr
-            beHas = self.accountEntity.secondaryPwdInfo.hasSecondaryPassword()
+            beHas = self.getSecondaryPwdInfo().hasSecondaryPassword()
             typeStr = gameconst.SMSOperationTypeStr.SECONDARY_PWD
-            LOG_INFO("IBindPhone::preCheckSMSOperationType check", beHas)
+            LOG_INFO("IBindPhone::preCheckSMSOperationType check sp", beHas)
             if opType == gameconst.SMSOperationType.SECONDARY_PWD_SET:
                 #self.onMessagePre(MMD.datas., [])# 提示已经设置了密码
                 return not beHas, typeStr
@@ -621,6 +660,14 @@ class IBindPhone(object):
             elif opType == gameconst.SMSOperationType.SECONDARY_PWD_ENABLE:
                 #self.onMessagePre(MMD.datas., [])# 提示没有密码无需切换
                 return beHas, typeStr
+        elif opType in gameconst.SMSOperationType.TAPTAP_PHONE_VAILD_TYPE:
+            if not self.checkBindPhoneConfigEnable():
+                return False, typeStr
+            beTaptapChannel = self.accountEntity.channelId == centralLogin.THIRD_LOGIN_TAPTAP
+            LOG_INFO("IBindPhone::preCheckSMSOperationType check channel", beTaptapChannel)
+            if opType == gameconst.SMSOperationType.TAPTAP_UNBIND_PHONE:
+                typeStr = gameconst.SMSOperationTypeStr.TAPTAP_UNBIND_PHONE
+                return beTaptapChannel, typeStr
         # 其他业务
         return False, typeStr
 
@@ -636,6 +683,14 @@ class IBindPhone(object):
                 return False, typeStr
             typeStr = gameconst.SMSOperationTypeStr.SECONDARY_PWD
             return True, typeStr
+        elif opType in gameconst.SMSOperationType.TAPTAP_PHONE_VAILD_TYPE:
+            if not self.checkBindPhoneConfigEnable():
+                return False, typeStr
+            beTaptapChannel = self.accountEntity.channelId == centralLogin.THIRD_LOGIN_TAPTAP
+            LOG_INFO("IBindPhone::checkSMSOperationType check channel", beTaptapChannel)
+            if opType == gameconst.SMSOperationType.TAPTAP_UNBIND_PHONE:
+                typeStr = gameconst.SMSOperationTypeStr.TAPTAP_UNBIND_PHONE
+                return beTaptapChannel, typeStr
         
         # 其他业务
         return False, typeStr
@@ -646,6 +701,24 @@ class IBindPhone(object):
             return False
 
         return True
+
+    def checkBindPhoneConfigEnable(self):
+        if not gameconfig.visibleConfigEnabled('welfare_phoneBind'):
+            LOG_WARN("IBindPhone::checkBindPhoneConfigEnable not open")
+            return False
+
+        return True
+
+    def autoProceSMSOperation(self, opType):
+        LOG_INFO("IBindPhone::autoProceSMSOperation", opType)
+        if opType not in gameconst.SMSOperationType.AUTO_PROCE_VAILD_TYPE:
+            return
+        
+        if opType == gameconst.SMSOperationType.TAPTAP_UNBIND_PHONE:
+            self.accountEntity.phone = 0
+            self.client.onUpdatePhone(0, opType)
+
+        self.revokeSMSOperation()
 #####################################################################################
     def checkValidSecondaryPassword(self, pwd):
         pwdMinLength = SP_SPC.datas.get('pwdMinLength', {}).get('value', 6)
@@ -682,30 +755,30 @@ class IBindPhone(object):
             pwdHash = utils.hashPassword(pwd)
             LOG_DBG("IBindPhone::reqSecondaryPasswordSMSOperation pwdHash", pwdHash)
             if opType == gameconst.SMSOperationType.SECONDARY_PWD_SET:
-                if self.accountEntity.secondaryPwdInfo.hasSecondaryPassword():
+                if self.getSecondaryPwdInfo().hasSecondaryPassword():
                     #self.onMessagePre(MMD.datas., [])# 提示已经设置了密码
                     LOG_WARN("IBindPhone::reqSecondaryPasswordSMSOperation SECONDARY_PWD_SET alerady set pwdHash")
                     return
-                self.accountEntity.secondaryPwdInfo.updateSecondaryPassword(pwdHash)
+                self.getSecondaryPwdInfo().updateSecondaryPassword(pwdHash)
                 self.onMessagePre(MMD.datas.setSecondPwdSuccess, [])
                 LOG_INFO("IBindPhone::reqSecondaryPasswordSMSOperation set pwdHash success")
             elif opType == gameconst.SMSOperationType.SECONDARY_PWD_UPDATE:
-                if not self.accountEntity.secondaryPwdInfo.hasSecondaryPassword():
+                if not self.getSecondaryPwdInfo().hasSecondaryPassword():
                     LOG_WARN("IBindPhone::reqSecondaryPasswordSMSOperation SECONDARY_PWD_UPDATE no pwdHash")
-                self.accountEntity.secondaryPwdInfo.updateSecondaryPassword(pwdHash)
+                self.getSecondaryPwdInfo().updateSecondaryPassword(pwdHash)
                 self.onMessagePre(MMD.datas.modifySuccess, [])
                 LOG_INFO("IBindPhone::reqSecondaryPasswordSMSOperation update pwdHash success")
         elif opType in (gameconst.SMSOperationType.SECONDARY_PWD_DELETE, gameconst.SMSOperationType.SECONDARY_PWD_ENABLE):
             if opType == gameconst.SMSOperationType.SECONDARY_PWD_DELETE:
-                if not self.accountEntity.secondaryPwdInfo.hasSecondaryPassword():
+                if not self.getSecondaryPwdInfo().hasSecondaryPassword():
                     LOG_WARN("IBindPhone::reqSecondaryPasswordSMSOperation SECONDARY_PWD_DELETE no pwdHash")
-                self.accountEntity.secondaryPwdInfo.delSecondaryPassword()
+                self.getSecondaryPwdInfo().delSecondaryPassword()
                 LOG_INFO("IBindPhone::reqSecondaryPasswordSMSOperation delete pwdHash success")
             elif opType == gameconst.SMSOperationType.SECONDARY_PWD_ENABLE:
-                if not self.accountEntity.secondaryPwdInfo.hasSecondaryPassword():
+                if not self.getSecondaryPwdInfo().hasSecondaryPassword():
                     LOG_WARN("IBindPhone::reqSecondaryPasswordSMSOperation SECONDARY_PWD_ENABLE no pwdHash")
                     return
-                self.accountEntity.secondaryPwdInfo.enableSecondaryPassword()
+                self.getSecondaryPwdInfo().enableSecondaryPassword()
                 LOG_INFO("IBindPhone::reqSecondaryPasswordSMSOperation switch enable success")
 
         self.secondaryPwdVerityInfo.updateBeVerity(now, False, SP_SPC.datas.get('pwdFreeVerifyDurationMs', {}).get('value', ()))
@@ -720,14 +793,14 @@ class IBindPhone(object):
         if not self.checkSPGameConfigEnable():
             return False
         LOG_INFO("IBindPhone::checkPopupSecondaryPassword", checkList)
-        LOG_DBG("IBindPhone::checkPopupSecondaryPassword", self.accountEntity.secondaryPwdInfo)
+        LOG_DBG("IBindPhone::checkPopupSecondaryPassword", self.getSecondaryPwdInfo())
         LOG_DBG("IBindPhone::checkPopupSecondaryPassword", self.secondaryPwdVerityInfo)
         now = utils.curTS()
-        if not self.accountEntity.secondaryPwdInfo.hasSecondaryPassword():
+        if not self.getSecondaryPwdInfo().hasSecondaryPassword():
             LOG_DBG("IBindPhone::checkPopupSecondaryPassword no pwdHash")
             # self.client.notifyPopupSecondaryPassword(gameconst.NotifyPopupSecondaryPasswordType.TO_SET)
             return False
-        #if not self.accountEntity.secondaryPwdInfo.getBeEnable():
+        #if not self.getSecondaryPwdInfo().getBeEnable():
         if not self.secondaryPwdVerityInfo.getBeEnable():
             LOG_DBG("IBindPhone::checkPopupSecondaryPassword not enable")
             return False
@@ -753,11 +826,10 @@ class IBindPhone(object):
         return False
         
     @gamedecorator.limitcall(1)
-    @AuthClsWraper.onlyHost
     @gamedecorator.checkGameconfigEnable('settings_secondPwd')
     def reqSecondaryPasswordVerity(self, exposed, pwd):
         LOG_INFO("IBindPhone::reqSecondaryPasswordVerity")
-        LOG_DBG("IBindPhone::reqSecondaryPasswordVerity", self.accountEntity.secondaryPwdInfo)
+        LOG_DBG("IBindPhone::reqSecondaryPasswordVerity", self.getSecondaryPwdInfo())
         LOG_DBG("IBindPhone::reqSecondaryPasswordVerity", self.secondaryPwdVerityInfo)
         now = utils.curTS()
         checkRes = self.secondaryPwdVerity(now, pwd, gameconst.SecondaryPasswordVerityType.VERITY)
@@ -771,14 +843,14 @@ class IBindPhone(object):
         LOG_INFO("IBindPhone::secondaryPwdVerity", now, verityType)
         if not self.checkValidSecondaryPassword(pwd):
             return False
-        if not self.accountEntity.secondaryPwdInfo.hasSecondaryPassword():
+        if not self.getSecondaryPwdInfo().hasSecondaryPassword():
             #self.onMessagePre(MMD.datas., [])# 提示还未设置密码
             LOG_WARN("IBindPhone::secondaryPwdVerity no pwdHash")
             return False
         if verityType in (gameconst.SecondaryPasswordVerityType.MODIFY,):
             pass
         elif verityType in (gameconst.SecondaryPasswordVerityType.VERITY,):
-            #if not self.accountEntity.secondaryPwdInfo.getBeEnable():
+            #if not self.getSecondaryPwdInfo().getBeEnable():
             if not self.secondaryPwdVerityInfo.getBeEnable():
                 #self.onMessagePre(MMD.datas., [])# 提示没启用密码当前无需校验
                 LOG_WARN("IBindPhone::secondaryPwdVerity not enable")
@@ -787,16 +859,19 @@ class IBindPhone(object):
                 #self.onMessagePre(MMD.datas., [])# 提示当前无需再校验
                 LOG_WARN("IBindPhone::secondaryPwdVerity alerady verity")
                 return False
-        if self.accountEntity.secondaryPwdInfo.checkBeVerityLocked(now):
+        if self.getSecondaryPwdInfo().checkBeVerityLocked(now):
             LOG_INFO("IBindPhone::secondaryPwdVerity be verity locked")
             #self.onMessagePre(MMD.datas., [])# 提示当前处于锁定状态,无法校验
             return False
-        if not utils.verifyPassword(pwd, self.accountEntity.secondaryPwdInfo.getSecondaryPassword()):
+        if not utils.verifyPassword(pwd, self.getSecondaryPwdInfo().getSecondaryPassword()):
             LOG_INFO("IBindPhone::secondaryPwdVerity pwd not match")
             continuousWrong = SP_SPC.datas.get('continuousWrong', {}).get('value', [])
-            beLocked, msgId = self.accountEntity.secondaryPwdInfo.incrVerityFailedCnt(now, continuousWrong)
+            beLocked, msgId = self.getSecondaryPwdInfo().incrVerityFailedCnt(now, continuousWrong)
             if beLocked:
-                self.accountEntity.checkSecondaryPwdLockedExpired(len(continuousWrong))
+                if self.accountEntity.isAuthHost(self.gbID):
+                    # 号主才能走这里
+                    self.accountEntity.checkSecondaryPwdLockedExpired(len(continuousWrong))
+
                 self.secondaryPwdVerityInfo.updateBeVerity(now, False, SP_SPC.datas.get('pwdFreeVerifyDurationMs', {}).get('value', ()))
                 self.onMessagePre(msgId, [])
             else:
@@ -804,11 +879,11 @@ class IBindPhone(object):
 
             self.sendSecondaryPasswordInfo()
             LOG_INFO("IBindPhone::secondaryPwdVerity verity failed", beLocked)
-            LOG_DBG("IBindPhone::secondaryPwdVerity verity failed", self.accountEntity.secondaryPwdInfo)
+            LOG_DBG("IBindPhone::secondaryPwdVerity verity failed", self.getSecondaryPwdInfo())
             LOG_DBG("IBindPhone::secondaryPwdVerity verity failed", self.secondaryPwdVerityInfo)
             return False
         
-        self.accountEntity.secondaryPwdInfo.veritySecondaryPassword()
+        self.getSecondaryPwdInfo().veritySecondaryPassword()
         self.sendSecondaryPasswordInfo()
         self.onMessagePre(MMD.datas.secondPwdSuccess, [])
         LOG_INFO("IBindPhone::secondaryPwdVerity end")
@@ -842,8 +917,12 @@ class IBindPhone(object):
     @gamedecorator.checkGameconfigEnable('settings_secondPwd')
     def reqModifySecondaryPwdVerityInfo(self, exposed, pwd, clientCfg):
         LOG_INFO("IBindPhone::reqModifySecondaryPwdVerityInfo", clientCfg)
-        LOG_DBG("IBindPhone::reqModifySecondaryPwdVerityInfo", self.accountEntity.secondaryPwdInfo)
+        LOG_DBG("IBindPhone::reqModifySecondaryPwdVerityInfo", self.getSecondaryPwdInfo())
         LOG_DBG("IBindPhone::reqModifySecondaryPwdVerityInfo", self.secondaryPwdVerityInfo)
+        if not self.accountEntity.isAuthHost(self.gbID):
+            LOG_ERR('reqModifySecondaryPwdVerityInfo but not auth host')
+            return
+
         if not self.checkModifySecondaryPwdVerityInfo(clientCfg):
             return
         now = utils.curTS()
@@ -873,9 +952,9 @@ class IBindPhone(object):
         self.sendSecondaryPasswordInfo()
 
     def sendSecondaryPasswordInfo(self):
-        LOG_DBG("IBindPhone::sendSecondaryPasswordInfo1", self.accountEntity.secondaryPwdInfo)
-        LOG_INFO("IBindPhone::sendSecondaryPasswordInfo2", self.accountEntity.secondaryPwdInfo.toStreamClientDic())
-        self.client.sendSecondaryPasswordInfo(self.accountEntity.secondaryPwdInfo.toStreamClientDic())
+        LOG_DBG("IBindPhone::sendSecondaryPasswordInfo1", self.getSecondaryPwdInfo())
+        LOG_INFO("IBindPhone::sendSecondaryPasswordInfo2", self.getSecondaryPwdInfo().toStreamClientDic())
+        self.client.sendSecondaryPasswordInfo(self.getSecondaryPwdInfo().toStreamClientDic())
 
     def sendSecondaryPasswordVerityInfo(self):
         LOG_DBG("IBindPhone::sendSecondaryPasswordVerityInfo1", self.secondaryPwdVerityInfo)

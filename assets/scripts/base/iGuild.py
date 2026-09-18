@@ -64,11 +64,11 @@ class IGuild(object):
         })
         self.client.onGuildLevelChanged(guildLevel)
 
-    def onSetGuildInfoCross(self, guildUUID, guildName, isOnline):
-        LOG_INFO("IGuild::onSetGuildInfoCross:", guildUUID, guildName, isOnline)
+    def onSetGuildInfoCross(self, guildUUID, guildName, leagueUUID, isOnline):
+        LOG_INFO("IGuild::onSetGuildInfoCross:", guildUUID, guildName, leagueUUID, isOnline)
         self.guildUUIDBase = guildUUID
         self.guildNameBase = guildName
-
+        self.leagueUUID = leagueUUID
         if isOnline:
             self.guildInitStatus = 1
             self.triggerTempEvent(gameconst.EntityPropsEnum.guildInitEvent)
@@ -76,6 +76,7 @@ class IGuild(object):
         self.cell.syncModifyGuildInfo({
             'guildUUID': guildUUID,
             'guildName': guildName,
+            'leagueUUID':leagueUUID,
         })
 
 
@@ -240,7 +241,7 @@ class IGuild(object):
 
         if reason != gameconst.JoinGuildReason.ONLINE:
             if self.isCrossServerInLocalServer and self.otherServerAvatarBox:
-                self.otherServerAvatarBox.onSetGuildInfoCross(guildUUID, self.guildNameBase, False)
+                self.otherServerAvatarBox.onSetGuildInfoCross(guildUUID, self.guildNameBase, leagueUUID, False)
 
             self.onMineWarGuildChange()
 
@@ -360,7 +361,7 @@ class IGuild(object):
         })
 
         if self.isCrossServerInLocalServer and self.otherServerAvatarBox:
-            self.otherServerAvatarBox.onSetGuildInfoCross(0, '', False)
+            self.otherServerAvatarBox.onSetGuildInfoCross(0, '', 0, False)
 
         self.onMineWarGuildChange()
 
@@ -567,6 +568,9 @@ class IGuild(object):
     @gamedecorator.offlineCallback
     def setLeftGuildTS(self, ts):
         self.leftGuildTS = ts
+
+    def gmClearGuildEnterCD(self):
+        self.leftGuildTS = 0
 
     def modifyJoinCond(self, exposed, joinCond):
         LOG_INFO("IGuild::modifyJoinCond:", joinCond)
@@ -1368,7 +1372,7 @@ class IGuild(object):
             LOG_ERR('IGuild::getGuildIronMine: guildBox is None')
             return
 
-        self.guildBox.doGetGuildIronMine(self.gbID, self)
+        self.guildBox.doGetGuildIronMine(self)
 
     @gamedecorator.checkGameconfigEnable('guild')
     def reqShareCommission(self, exposed, shareList):
@@ -1461,3 +1465,11 @@ class IGuild(object):
         if not self.guildBox:
             return
         self.guildBox.getGuildVoiceMembers(self)
+
+    def gmDoModifyGuildBuildLv(self, buildTp, level):
+        if not self.guildBox:
+            return
+
+        self.guildBox.gmModifyGuildBuildLv(buildTp, level)
+
+        

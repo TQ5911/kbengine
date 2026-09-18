@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	base.Init("crossDataServerConfig.json", &crossDataApp.CrossDataConfig, func() common.IApp {
+	base.Init(&crossDataApp.CrossDataConfig, func() common.IApp {
 		return crossDataApp.NewCrossDataApp()
 	})
 }

@@ -13,7 +13,8 @@ class CrusadeDungeonPlayModePlayerObjInfo(userType.ABCInfo):
                                                                 dic['useCoinAddRewardNum'], 
                                                                 dic['rewardCoinNumber'], 
                                                                 dic['rewardItemNumber'], 
-                                                                dic['ticketType'])
+                                                                dic['ticketType'],
+                                                                dic['rewardCommonNumber'])
 
     def getDictFromObj(self, obj):
         return {'rewardNumber': obj.rewardNumber,
@@ -21,7 +22,8 @@ class CrusadeDungeonPlayModePlayerObjInfo(userType.ABCInfo):
                 'rewardItemNumber': obj.rewardItemNumber,
                 'rewardDailyCount': obj.rewardDailyCount,
                 'useCoinAddRewardNum': obj.useCoinAddRewardNum,
-                'ticketType': obj.ticketType}
+                'ticketType': obj.ticketType,
+                'rewardCommonNumber': obj.rewardCommonNumber}
 
     def isSameType(self, obj):
         return type(obj) is dungeonPlayMode.CrusadeDungeonPlayModePlayerObj
@@ -36,7 +38,8 @@ class ChiefDungeonPlayModePlayerObjInfo(userType.ABCInfo):
                                                                 dic['useCoinAddRewardNum'], 
                                                                 dic['rewardCoinNumber'], 
                                                                 dic['rewardItemNumber'], 
-                                                                dic['ticketType'])
+                                                                dic['ticketType'],
+                                                                dic['rewardCommonNumber'])
 
     def getDictFromObj(self, obj):
         return {'rewardNumber': obj.rewardNumber,
@@ -44,7 +47,8 @@ class ChiefDungeonPlayModePlayerObjInfo(userType.ABCInfo):
                 'rewardItemNumber': obj.rewardItemNumber,
                 'rewardDailyCount': obj.rewardDailyCount,
                 'useCoinAddRewardNum': obj.useCoinAddRewardNum,
-                'ticketType': obj.ticketType}
+                'ticketType': obj.ticketType,
+                'rewardCommonNumber': obj.rewardCommonNumber}
 
     def isSameType(self, obj):
         return type(obj) is dungeonPlayMode.ChiefDungeonPlayModePlayerObj

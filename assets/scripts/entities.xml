@@ -11,8 +11,10 @@
 	<PlayerStub/>
 	<BaseApp/>
 	<TeamStub/>
+	<CrossTeamStub/>
 	<TeamMatchStub/>
 	<TeamDungeonStub/>
+	<CrossTeamDungeonStub/>
 	<SingleDungeonStub/>
 	<WorldLineStub/>
 	<CubeStub/>

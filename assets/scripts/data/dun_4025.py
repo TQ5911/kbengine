@@ -1165,5 +1165,29 @@ datas ={
       "Remark": "",
       "ShowInSceneMap": 1
     }
+  },
+  "40258004": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "CustomFuncPos",
+    "ClassNameType": 10,
+    "CustomID": "",
+    "Dir": 93.35069,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 0,
+    "ID": 40258004,
+    "Name": "\u81ea\u5b9a\u4e49\u529f\u80fd\u70b9",
+    "PosX": 317.0825,
+    "PosY": 321.8982,
+    "PosZ": 550.9863,
+    "Props": {
+      "Num": 0,
+      "Radius": 0.0,
+      "RefreshTimedID": 0,
+      "Remark": "86010179",
+      "ShowInSceneMap": 1
+    }
   }
 }

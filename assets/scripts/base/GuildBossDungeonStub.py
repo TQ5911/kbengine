@@ -27,15 +27,12 @@ class GuildBossDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub
     def doNext(self):
         super(GuildBossDungeonStub, self).doNext()
         self.pyAddTimer(30, 30, gametimer.TIMER_DUNGEON_CHECK_DESTROY)
-        self.pyAddTimer(1, 0.1, gametimer.TIMER_DUNGEON_ENTITY_GENERATOR)
         return
 
     def onTimer(self, tid, userArg):
         self._onTimerTrigger(tid, userArg)
         if userArg == gametimer.TIMER_DUNGEON_CHECK_DESTROY:
             self._checkDungeonSpaceDestroy()
-        elif userArg == gametimer.TIMER_DUNGEON_ENTITY_GENERATOR:
-            self.onTimerCreateEntity()
         else:
             super(GuildBossDungeonStub, self).onTimer(tid, userArg)
 

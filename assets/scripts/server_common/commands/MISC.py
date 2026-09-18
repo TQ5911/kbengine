@@ -587,9 +587,15 @@ def gm_setSpeed(superUser, playerEnt, speed):
 
 @gm_cmd('$moralValue', (Player('entityId'), Int('moralValue')), RARG(0), CELL, '设置玩家善恶值', ALLSIDE, GOD_GROUPS)
 def gm_setmoralValue(superUser, playerEnt, moralValue):
+    import PKData_PKData as PKD_PKDD
     if gmCommand.isRawPlayer(playerEnt):
         return False, '执行失败'
-
+    upperLimitOfMoralValues = PKD_PKDD.datas['upperLimitOfMoralValues']['value']
+    lowerLimitOfMoralValues = PKD_PKDD.datas['lowerLimitOfMoralValues']['value']
+    if moralValue < lowerLimitOfMoralValues:
+        moralValue = lowerLimitOfMoralValues
+    if moralValue > upperLimitOfMoralValues:
+        moralValue = upperLimitOfMoralValues
     playerEnt.moralValue = moralValue
     playerEnt.moralLevel = utils.getMoralLevel(playerEnt.moralValue)
     return True, 'command success'
@@ -748,6 +754,12 @@ def gm_getItems(superUser, playerEnt, bagType, itemNum, _bindType, itemId_Start,
                     ret = playerEnt.gmAddGearbaseEquipItem(itemId,bindType)
             # 如果不存在，检查是否在普通物品表中存在
             elif itemId in ITEM_DATA.datas:
+                _itemData = ITEM_DATA.datas[itemId]
+                # type == 2 是货币，货币不受 这规则控制 
+                if itemNum > _itemData['maxStackSize'] * 100 and _itemData['type'] != 2:
+                    LOG_ERR('gm_getItems item num meet max', itemNum)
+                    itemNum = _itemData['maxStackSize'] * 100
+
                 detail = 'gm_cmd:$getitems %s %s %s' % (itemId, itemNum, bindType)
                 # 判断是否为原始玩家对象（可能是离线玩家）
                 if gmCommand.isRawPlayer(playerEnt):
@@ -1639,6 +1651,12 @@ def gm_recoverServertimeBase(superUser):
     time.time = utils.tempTime
 
 
+@gm_cmd('$refreshMesh', (Str('meshName'),), RALL, CELL, '重载mesh', ALLSIDE, GOD_GROUPS)
+def gm_refreshMesh(superUser, meshName):
+    LOG_INFO('gm_refreshMesh', meshName)
+    KBEngine.reloadNavigation('spaces/{}'.format(meshName))
+
+
 @gm_cmd('$onlinenum', (), RSTUB('PlayerStub'), BASE, '获取在线人数', ALLSIDE, GOD_GROUPS)
 def gm_getOnlineNum(superUser, playerStub):
     return True, '%s' % playerStub.getOnlineNum()
@@ -1828,17 +1846,20 @@ def gm_gmOffline(superUser, playerEnt):
 
 
 @gm_cmd('$modifyName', (Player("gbId or Id", raw=True), Str('newName')), RARG(0), BASE, '改名', ALLSIDE, GOD_GROUPS)
-def gm_modifyName(superUser, playerEnt, newName):
+def gm_modifyName(su, playerEnt, newName):
+    LOG_INFO('in gm_modifyName:', playerEnt, newName)
     if gmCommand.isRawPlayer(playerEnt):
         gbId, name, accountName, dbId = playerEnt
         gamesql.recordAvatarOfflineCallback(gbId, 'IDIPModifyName', (newName,))
     else:
         playerEnt.IDIPModifyName(newName)
+
+    su.onCommandResult(0, 'command success', {})
     return True, 'command success'
 
 @gm_cmd('$modifyscore', (Player("gbId or Id", raw=True), Int('newScore')), RARG(0), CELL, '修改战力', ALLSIDE, GOD_GROUPS)
 def gm_modifyscore(superUser, playerEnt, newScore):
-    playerEnt._changeScore("rewardFightProp", newScore)
+    playerEnt._changeScore(0, "rewardFightProp", newScore)
     return True, 'command success'
 
 
@@ -2230,6 +2251,24 @@ def gm_addguildexp(superUser, playerEnt,exp):
     playerEnt._sendGuildInfo()
     return True, 'command success'
 
+
+@gm_cmd('$modifyGuildBuildLv', (Player("gbId or Id"), Int('buildTp'), Int('level')), RARG(0), BASE, '修改帮会建筑等级 1.聚义楼 2.百宝阁 3.厢房 4.演武场 5.仓库 6.军需所', ALLSIDE, GOD_GROUPS)
+def gm_modifyGuildBuildLv(superUser, playerEnt, buildTp, level):
+    playerEnt.gmDoModifyGuildBuildLv(buildTp, level)
+    return True, 'command success'
+
+@gm_cmd('$clearGuildEnterCD', (Player("gbId or Id"), ), RARG(0), BASE, '清除入帮cd', ALLSIDE, GOD_GROUPS)
+def gm_clearGuildEnterCD(superUser, playerEnt):
+    playerEnt.gmClearGuildEnterCD()
+    return True, 'command success'
+
+
+@gm_cmd('$clearLeagueEnterCD', (Player("gbId or Id"), ), RARG(0), BASE, '清除入盟cd', ALLSIDE, GOD_GROUPS)
+def gm_clearLeagueEnterCD(superUser, playerEnt):
+    playerEnt.guildBox.gmClearLeaveLeagueTS()
+    return True, 'command success'
+
+
 @gm_cmd('$modifyBuildingExp', (Player("gbId or Id"),Int('building'),Int('Exp')), RARG(0), BASE, '增加帮会建筑经验', ALLSIDE, GOD_GROUPS)
 def gm_modifybuildingexp(superUser, playerEnt,building,exp):
     if building not in (gameconst.GuildBuilding.JU_YING,gameconst.GuildBuilding.WU_HUA,gameconst.GuildBuilding.XIANG_FANG,gameconst.GuildBuilding.YAN_WU,gameconst.GuildBuilding.CANG_KU, gameconst.GuildBuilding.JUN_XU):
@@ -2540,3 +2579,11 @@ def gm_reqGetPublicBountyList(superUser, playerEnt, startIdx):
 def gm_setDynamicWorldLevel(superUser, playerEnt, level):
     gameengine.getGlobalBase('LeaderBoardStub' + str(gameconst.LeaderBoardType.AVATAR_LEVEL)).gmSetDynamicWorldLevel(level)
     return True, 'command success'
+
+
+@gm_cmd('$routerPing', (Int('serverId'),), RONE, BASE, 'router ping', ALLSIDE, GOD_GROUPS)
+def gm_routerPing(superUser, serverId):
+    _r = iRouter.RemoteServerStubEntityCall(serverId, "CrossServerStub")
+    _r.onPing(gameconfig.serverId(), 'hello world')
+    return True, 'command success'
+

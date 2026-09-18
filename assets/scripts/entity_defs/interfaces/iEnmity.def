@@ -1,0 +1,41 @@
+<root>
+    <Properties>
+        <enmityInfoData>
+            <Type>          ENMITY_INFO_DATA    </Type>
+            <Flags>         BASE                </Flags>
+            <Persistent>    true                </Persistent>
+        </enmityInfoData>
+
+        <enmityList>
+            <Type>          ARRAY   <of>    PLAYER_GBID   </of>       </Type>
+            <Flags>         CELL_PRIVATE                            </Flags>
+        </enmityList>
+    </Properties>
+
+    <BaseMethods>
+        <getEnmityInfo> <Exposed/>
+        </getEnmityInfo>
+
+        <addEnmity> <Exposed/>
+            <Arg>   PLAYER_GBID     </Arg>
+        </addEnmity>
+
+        <removeEnmity> <Exposed/>
+            <Arg>   PLAYER_GBID     </Arg>
+        </removeEnmity>
+    </BaseMethods>
+
+    <CellMethods>
+        <onUpdateEnmityList>
+            <Arg>   UINT8   </Arg>
+            <Arg>   ARRAY <of> PLAYER_GBID </of>   </Arg>
+        </onUpdateEnmityList>
+    </CellMethods>
+
+    <ClientMethods>
+        <onEnmityDatas>
+            <Arg>  UINT8   </Arg>
+            <Arg>  ARRAY <of>  ENMITY_ITEM_CLIENT_VAL </of>   </Arg>
+        </onEnmityDatas>
+    </ClientMethods>
+</root>

@@ -267,10 +267,22 @@ class ICell(KBEngine.Entity):
         """All Entity need check event listened method"""
         return False
 
-    def scriptNavigate(self, dstPos, speed, distance=0, faceMovement=True, layer=gameconst.SpaceLayer.DEFAULT,
-                       userData=None):
+    def scriptNavigate(self, dstPos, speed, distance=0, faceMovement=True, 
+                       layer=gameconst.SpaceLayer.DEFAULT, userData=None, 
+                       extra=None):
         maxDis = 128  # 引擎预留参数，暂时没有意义
         _width = CONST.datas['navAgentWidth']['value']
+        if extra is None:
+            extra = {
+                'sl': _width, # 搜索起始点的长
+                'sw': _width, # 搜索起始点的宽
+                'sh': 4.0, # 搜索起始点的高
+            }
+        else:
+            extra['sl'] = _width
+            extra['sw'] = _width
+            extra['sh'] = 4.0
+        
         navController = self.navigate(
             dstPos, 
             speed, 
@@ -281,11 +293,7 @@ class ICell(KBEngine.Entity):
             layer, 
             True, 
             userData,
-            {
-                'sl': _width, # 搜索起始点的长
-                'sw': _width, # 搜索起始点的宽
-                'sh': 4.0, # 搜索起始点的高
-            }
+            extra
         )
         return navController
 

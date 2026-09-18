@@ -20,6 +20,7 @@
         <Interface>         iAvatarVariable             </Interface>
         <Interface>         iCycleEvent                 </Interface>
         <Interface>         iAvatarTeam                 </Interface>
+        <Interface>         iAvatarCrossTeam            </Interface>
         <Interface>         iAvatarTeamDungeon          </Interface>
         <Interface>         iAvatarSingleDungeon        </Interface>
         <Interface>         iTask                       </Interface>
@@ -71,6 +72,7 @@
         <Interface>         iGuildBossChallenge         </Interface>
         <Interface>         iAvatarStatistics           </Interface>
         <Interface>         iBindPhone                  </Interface>
+        <Interface>         iTestReward                 </Interface>
         <Interface>         iBounty                     </Interface>
         <Interface>         iWorldLevel                 </Interface>
         <Interface>         iEmote                      </Interface>
@@ -81,6 +83,7 @@
         <Interface>         iMallStore                  </Interface>
         <Interface>         iReplicaAvatar              </Interface>
         <Interface>         iLeague                     </Interface>
+        <Interface>         iEnmity                     </Interface>
     </Interfaces>
 
     <Properties>
@@ -303,6 +306,12 @@
             <Default>       0                    </Default>
             <Persistent>    true                 </Persistent>
         </tLoginBase>
+
+        <tLoginTmpTime>
+            <Type>          LONGTIME             </Type>
+            <Flags>         BASE                 </Flags>
+            <Default>       0                    </Default>
+        </tLoginTmpTime>
 
         <cellDataCache>
             <Type>          PYTHON               </Type>
@@ -854,6 +863,11 @@
             <Arg>        INT32                 </Arg>
         </gmBanAvatar>
 
+        <gmDeleteSafeBoxItem>
+            <Arg>        PYTHON            </Arg>
+            <Arg>        INT64             </Arg>
+        </gmDeleteSafeBoxItem>
+
         <IDIPBanState>
             <Arg>        PYTHON                </Arg>
             <Arg>        INT32                 </Arg>
@@ -1062,6 +1076,10 @@
         <switchMapModeTransmitFail>
             <Arg>       UINT8            </Arg>
         </switchMapModeTransmitFail>
+
+        <afterModifyName>
+            <Arg>       UNICODE            </Arg>
+        </afterModifyName>
 
         <switchMapMode><Exposed/>
             <Arg>        UINT32     </Arg>

@@ -53,7 +53,7 @@ import mail_mail as MAMAD
 import appearance_ModelResource as AMRD
 import randomSynthesis_config as RS_CD
 import guild_guildConst as G_GCD
-
+import teamMatch_activity as TMMA
 
 def getRaidConstDataValue(key):
     raidConstData = RAID_CONST.datas.get(key, None)
@@ -62,9 +62,17 @@ def getRaidConstDataValue(key):
 
     return raidConstData.get('value')
 
-def isRaidCapacityValidate(capacity):
-    value = getRaidConstDataValue('raidMemberLimit')
-    return capacity and value and capacity >= 1 and capacity <= value
+def isRaidCapacityValidate(raidTarget, capacity):
+    maxPlayerCount = getRaidConstDataValue('raidMemberLimit')
+    data = TMMA.datas.get(raidTarget, None)
+    if data:
+        value = data['maxPlayer']
+        if value > 0:
+            maxPlayerCount = value
+    return capacity and maxPlayerCount and capacity >= 1 and capacity <= maxPlayerCount
+
+def raidMaxTeamMemberCount():
+    return getRaidConstDataValue('raidTeamMemberMaxCount')
 
 def isEquipItemByItemId(itemId):
     return itemId in GBGBD.datas or itemId == gameconst.ItemIdEnum.COMMON_EQUIPMENT_ID
@@ -219,6 +227,29 @@ def isTaskInOpenTime(taskId):
     if endTime and now > utils.parseTimeStr(endTime):
         return False
     return True
+
+
+def isTaskUnlockDayReached(taskData):
+    # OpenCondUnlockDay: 相比开服时间的n天后才可解锁；0/None 表示不限制
+    unlockDay = taskData.get('OpenCondUnlockDay') or 0
+    if not unlockDay:
+        return True
+    return utils.getSvrOpenDays() >= int(unlockDay)
+
+
+@functools.lru_cache(32)
+def getUnlockDayAutoClaimTaskIds(svrOpenDays):
+    taskIds = []
+    for taskId, taskData in TSKD.datas.items():
+        unlockDay = taskData.get('OpenCondUnlockDay') or 0
+        if not unlockDay or int(unlockDay) > svrOpenDays:
+            continue
+        if not getTaskFieldVal(taskData, 'ClaimCondAutoTake'):
+            continue
+        if getTaskFieldVal(taskData, 'FatherTaskId'):
+            continue
+        taskIds.append(int(taskId))
+    return tuple(taskIds)
 
 
 def getTaskMsgId(msgName):

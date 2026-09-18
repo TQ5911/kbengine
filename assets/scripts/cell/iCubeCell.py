@@ -298,6 +298,7 @@ class ICubeCell(object):
             LOG_ERR('ICubeCell::enterCube: has entered')
             return
 
+        self.base.onTryAddUseCoinTimesFreeTicket(gameconst.RecoveryTicketSubType.CUBE)
         if self.cubeQuota.leftTime <= 0:
             self.base.beforeEnterCubeDecrementCnt({'floor': _floor}, self.spaceNo)
             return
@@ -510,11 +511,11 @@ class ICubeCell(object):
 
         return True
 
-    def checkAddCubeRoomDurationCondition(self, addType, itemId, itemNum, num, opUUID):
+    def checkAddCubeRoomDurationCondition(self, addType, costList, num, opUUID):
         if not self._checkAddCubeRoomDurationCondition():
             return
 
-        self.base.useItemAddCubeTimes(addType, itemId, itemNum, num, True, True, gameconst.CubeAddTimesReason.CHECK_COND, opUUID)
+        self.base.useItemAddCubeTimes(addType, costList, num, True, True, gameconst.CubeAddTimesReason.CHECK_COND, opUUID)
 
     def directlyAddCubeRoomDuration(self, func, args, cubeDurCtx):
         if not self._checkAddCubeRoomDurationCondition():
@@ -685,3 +686,16 @@ class ICubeCell(object):
 
         self.spaceMgr.doSendArenaKingPos(self)
 
+    def tipCowRoomRefresh(self, *args):
+        floor = args[0] if len(args) >= 1 else 0
+        cubeEnterFloor = self.cubeEnterFloor if self.cubeEnterFloor else 1
+        LOG_DBG("ICubeCell::tipCowRoomRefresh", *args, floor, self.cubeEnterFloor, cubeEnterFloor)
+        if cubeEnterFloor != floor:
+            return
+
+        _useTime, _enterTime = self.cubeRoomLeftTimeDic.get(gameconst.CubeRoomType.COW, (0, 0))
+        _maxTime = dataUtils.getCubeTypeMaxTime(gameconst.CubeRoomType.COW)
+        _leftTime = max(0, _maxTime - _useTime)
+        if _leftTime <= 0:
+            return
+        self.showMsg(cube_config.datas['cube_cowRoomRefreshMsg']['value'] , [])

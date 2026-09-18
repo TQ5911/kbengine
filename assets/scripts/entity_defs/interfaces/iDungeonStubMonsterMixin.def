@@ -1,10 +1,5 @@
 <root>
     <Properties>
-    <crtGameEntityID>
-            <Type>      UINT32  </Type>
-            <Flags>     BASE     </Flags>
-            <Default>       0           </Default>
-    </crtGameEntityID>
     </Properties>
 
     <ClientMethods>
@@ -16,14 +11,6 @@
             <Arg>   UINT32      </Arg>
             <Arg>   UINT32      </Arg>
         </addKillCount>
-
-        <spawnDungeonEntityByGameEntityId>
-            <Arg>   DUNGEON_NO  </Arg>
-            <Arg>   PY_LIST       </Arg>
-            <Arg>   UINT32  </Arg>
-            <Arg>   PYTHON   </Arg>
-            <Arg>   PYTHON   </Arg>
-        </spawnDungeonEntityByGameEntityId>
 
         <flowCheckDungeonKillCount>
             <Arg> SPACE_NO </Arg>

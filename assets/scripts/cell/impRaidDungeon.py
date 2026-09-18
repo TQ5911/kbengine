@@ -432,7 +432,9 @@ class ImpRaidDungeon(impDungeonCommon.ImpDungeonCommon):
                 self.acquireGlobalTeleportLock(now=_now)
 
             if not self.inRaid():
-                return None, gameconst.RaidDunErrno.ENUM_RAIDDUN_NOT_IN_RAID
+                # 跨服讨伐（首领巢穴）：跨服镜像无本服团队，凭跨服队伍镜像标记放行
+                if not self.crossTeamId:
+                    return None, gameconst.RaidDunErrno.ENUM_RAIDDUN_NOT_IN_RAID
             return None, gameconst.RaidDunErrno.ENUM_RAIDDUN_OK
 
         _, err = _enterCheck()

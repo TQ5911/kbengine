@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import functools
 import gc
 # gc.disable()
 
@@ -37,6 +38,7 @@ def onInit(isReload):
 
     gameglobal.avatarExposedMethods = utils.fetchExposedMethods()
     KBEngine.addTimer(1800, 1800, outputExposedMethodStats)
+    gameglobal.worldLevel = KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_WORLD_LEVEL, 0)
 
 def initAsyncore(timerId):
     asyncore.loop(0, True, None, 1)
@@ -79,6 +81,10 @@ def onGlobalData(key, value):
 
         elif key == gameconst.GLOBALDATA_KEY_CELLAPP_CALL:
             gameengine.onAppCall(value)
+
+        elif key == gameconst.GLOBALDATA_KEY_WORLD_LEVEL:
+            gameglobal.worldLevel = value
+            LOG_INFO('onGlobalData worldLevel', value)
 
 
 def onGlobalDataDel(key):
@@ -187,13 +193,61 @@ def onInited():
         for lineType in gameconst.lineStubMap().keys():
             gameengine.getLineStub(lineType).onCellappRelive(gorder)
 
+        # 通知 Cube/WonderLand/Abyss stub (multi-static space 系)
+        import cube_floor as C_FD
+        import wonderLand_floor as WL_FD
+        import abyss_floor as AB_FD
+        for _floorNo in C_FD.datas.keys():
+            _stub = gameengine.getGlobalBase('CubeStub%d' % _floorNo, reportErr=False)
+            if _stub:
+                _stub.onCellappRelive(gorder)
+        for _floorNo in WL_FD.datas.keys():
+            _stub = gameengine.getGlobalBase('WonderLandStub%d' % _floorNo, reportErr=False)
+            if _stub:
+                _stub.onCellappRelive(gorder)
+        for _floorNo in AB_FD.datas.keys():
+            _stub = gameengine.getGlobalBase('AbyssStub%d' % _floorNo, reportErr=False)
+            if _stub:
+                _stub.onCellappRelive(gorder)
+
         # cell 重新拉起,广播给所有可用的base
         bases = gameengine.chooseGoodBaseApp()
         for base in bases:
             base.onCellappRelive(gorder)
+
+        gameengine.getGlobalBase('ActStub').onCellappRelive(gorder)
+        gameengine.getGlobalBase('MineWarStub').onCellappRelive(gorder)
 
 def buildAreaData():
     if gameglobal.areaData is not None:
         return
 
     gameglobal.areaData = ResMgr.loadAreaData()
+
+
+def _updateSpaceNavHandle(_spaceIds, resPath, *args):
+    _cnt = 10
+    while _cnt >= 0 and _spaceIds:
+        _cnt -= 1
+        _spaceId = _spaceIds.pop(0)
+        _space = gameglobal.localSpaceIDMap.get(_spaceId)
+        if _space is None:
+            continue
+
+        if _space.spaceMap != resPath:
+            continue
+
+        KBEngine.updateSpaceNavHandle(_spaceId)
+
+    if not _spaceIds:
+        return
+
+    KBEngine.addTimer(0.1, 0, functools.partial(_updateSpaceNavHandle, _spaceIds, resPath))
+
+
+def onNavigationReloaded(resPath, success):
+    INFO_MSG('onNavigationReloaded', resPath, success)
+    _spaceIds = list(gameglobal.localSpaceIDMap.keys())
+    _updateSpaceNavHandle(_spaceIds, resPath)
+
+

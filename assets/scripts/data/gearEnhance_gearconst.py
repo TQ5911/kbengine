@@ -475,6 +475,18 @@ datas = _tools.RODict({
         "ID": "Abandoning_confirmation",
         "value": 54003311,
     }),
+    "Replacement_confirmation2": _tools.RODict({
+        "ID": "Replacement_confirmation2",
+        "value": 54003312,
+    }),
+    "Confirmation_of_spirit_attachment2": _tools.RODict({
+        "ID": "Confirmation_of_spirit_attachment2",
+        "value": 54003313,
+    }),
+    "Abandoning_confirmation2": _tools.RODict({
+        "ID": "Abandoning_confirmation2",
+        "value": 54003314,
+    }),
     "Secondary_confirmation_condition3": _tools.RODict({
         "ID": "Secondary_confirmation_condition3",
         "value": 4,

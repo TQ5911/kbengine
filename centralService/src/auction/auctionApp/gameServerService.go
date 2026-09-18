@@ -4,9 +4,9 @@ import (
 	"centralService/src/appLog"
 	gameServerService "centralService/src/auction/auctionApp/gameServerService"
 	"centralService/src/trpc"
+	"encoding/json"
 	"sync"
 	"time"
-	"encoding/json"
 )
 
 // 给游戏服务器提供的接口
@@ -92,6 +92,24 @@ var doBuyItemRespPool = sync.Pool{
 var buyItemRespPool = sync.Pool{
 	New: func() interface{} {
 		return &gameServerService.BuyItemResp{}
+	},
+}
+
+var buyItemsRespPool = sync.Pool{
+	New: func() interface{} {
+		return &gameServerService.BuyItemsResp{}
+	},
+}
+
+var buyItemsResultPool = sync.Pool{
+	New: func() interface{} {
+		return &gameServerService.BuyItemsResult{}
+	},
+}
+
+var doBuyItemsRespPool = sync.Pool{
+	New: func() interface{} {
+		return &gameServerService.DoBuyItemsResp{}
 	},
 }
 
@@ -359,6 +377,73 @@ func (gs *GameServerService) DoBuyItem(in *gameServerService.DoBuyItemReq) (*gam
 	return nil, nil
 }
 
+func (gs *GameServerService) BuyItems(in *gameServerService.BuyItemsReq) (*gameServerService.Void, error) {
+	gs.app.funcChan <- func() {
+		appLog.Infow("BuyItems", "PlayerGBID", in.PlayerGBID, "AuctionItemUUIDs", in.AuctionItemUUIDs, "AuctionItemNumbers", in.AuctionItemNumbers, "Extra", in.Extra)
+		results, extra, err := gs.app.BuyItems(in.PlayerGBID, in.AuctionItemUUIDs, in.AuctionItemNumbers, in.Extra)
+		if err != nil {
+			appLog.Errorw("BuyItems", "err", err)
+			return
+		}
+
+		response := buyItemsRespPool.Get().(*gameServerService.BuyItemsResp)
+		response.PlayerGBID = in.PlayerGBID
+		response.Results = results
+		response.Extra = extra
+
+		_, err = gs.GetClientEndPoint().(gameServerService.IGameServerInterface).ReplyBuyItems(response)
+		if err != nil {
+			appLog.Errorw("BuyItems->ReplyBuyItems failed", "err", err)
+		}
+
+		for _, result := range response.Results {
+			result.Reset()
+			buyItemsResultPool.Put(result)
+		}
+		response.Results = nil
+		response.Reset()
+		buyItemsRespPool.Put(response)
+	}
+	return nil, nil
+}
+
+func (gs *GameServerService) DoBuyItems(in *gameServerService.DoBuyItemsReq) (*gameServerService.Void, error) {
+	gs.app.funcChan <- func() {
+		appLog.Infow("DoBuyItems", "PlayerGBID", in.PlayerGBID, "Items", in.Items, "Extra", in.Extra)
+		successUUIDs, successItems, failUUIDs, failCodes, extra, err := gs.app.DoBuyItems(in.PlayerGBID, in.ErrCode, in.PreFailUUIDs, in.PreFailCodes, in.Items, in.Extra)
+		if err != nil {
+			appLog.Errorw("DoBuyItems", "err", err)
+			return
+		}
+
+		response := doBuyItemsRespPool.Get().(*gameServerService.DoBuyItemsResp)
+		response.PlayerGBID = in.PlayerGBID
+		response.SuccessUUIDs = successUUIDs
+		response.FailUUIDs = failUUIDs
+		response.FailCodes = failCodes
+		response.OpUUID = in.OpUUID
+		response.Extra = extra
+		for _, auctionItem := range successItems {
+			dstAuctionItem := gs.newAuctionItem()
+			gs.transAuctionItem(auctionItem, dstAuctionItem)
+			response.SuccessItems = append(response.SuccessItems, dstAuctionItem)
+		}
+
+		_, err = gs.GetClientEndPoint().(gameServerService.IGameServerInterface).ReplyDoBuyItems(response)
+		if err != nil {
+			appLog.Errorw("DoBuyItems->ReplyDoBuyItems failed", "err", err)
+		}
+
+		for _, dstAuctionItem := range response.SuccessItems {
+			gs.putAuctionItem(dstAuctionItem)
+		}
+
+		response.Reset()
+		doBuyItemsRespPool.Put(response)
+	}
+	return nil, nil
+}
+
 const onSaleChatPushPerSec int = 300 // 每秒每个serverId最大推送数量
 
 func (gs *GameServerService) pushConsumer() {
@@ -501,8 +586,8 @@ func (gs *GameServerService) DoCancelSaleItem(in *gameServerService.DoCancelSale
 func (gs *GameServerService) SearchItemsByItemId(in *gameServerService.SearchItemsByItemIdReq) (*gameServerService.Void, error) {
 	go func() {
 
-		appLog.Debugw("SearchItemsByItemId", "PlayerGBID", in.PlayerGBID, "ItemIds", in.ItemIds, "Limit", in.Limit, "Offset", in.Offset, "IsPublicity", in.IsPublicity, "Extra", in.Extra)
-		auctionItems, allCount, err := gs.app.SearchItemsByItemId(in.PlayerGBID, in.ItemIds, in.Limit, in.Offset, in.IsPublicity, in.Extra)
+		appLog.Debugw("SearchItemsByItemId", "PlayerGBID", in.PlayerGBID, "ItemIds", in.ItemIds, "GradeLevels", in.GradeLevels, "EnhanceLevels", in.EnhanceLevels, "Limit", in.Limit, "Offset", in.Offset, "IsPublicity", in.IsPublicity, "Extra", in.Extra)
+		auctionItems, allCount, err := gs.app.SearchItemsByItemId(in.PlayerGBID, in.ItemIds, in.GradeLevels, in.EnhanceLevels, in.Limit, in.Offset, in.IsPublicity, in.Extra)
 		if err != nil {
 			appLog.Errorw("SearchItemsByItemId", "err", err)
 			return

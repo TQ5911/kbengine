@@ -140,8 +140,8 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         for _key in _deleteList:
             self.remoteCallCache.pop(_key, None)
 
-    def dropEquipItem(self, ownerServerId, ownerId, returnTime, gbId, uniqueId, box, equipData, extraBlob, collEndTime, endTime, price, serverId, collectionId, isFirst):
-        LOG_DBG('Drop dropEquipItem', ownerServerId, ownerId, returnTime, gbId, uniqueId, box, equipData, extraBlob, collEndTime, endTime, price, serverId, collectionId, isFirst)
+    def dropEquipItem(self, ownerServerId, ownerId, returnTime, gbId, uniqueId, box, equipData, extraBlob, collEndTime, endTime, price, maxPrice, serverId, collectionId, isFirst):
+        LOG_DBG('Drop dropEquipItem', ownerServerId, ownerId, returnTime, gbId, uniqueId, box, equipData, extraBlob, collEndTime, endTime, price, maxPrice, serverId, collectionId, isFirst)
         if uniqueId in self.remoteCallCache:
             LOG_ERR('dropEquipItem uniqueId in remoteCallCache', gbId, uniqueId)
             return
@@ -151,6 +151,7 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         req.dropGbId = gbId
         req.uniqueId = uniqueId
         req.price = price
+        req.maxPrice = maxPrice
         req.dropTime = utils.curTS()
         req.endTime = endTime
         req.equipInfo = equipData
@@ -213,7 +214,7 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
 
         _box = _cache.get('box')
         if reply.result == DropResult_SUCCESS:
-            _box.onTakeDropEquipSuccess(reply.dropGbId, reply.uniqueId, reply.equipInfo, reply.endTime, reply.price, reply.redeemWaitTime, reply.returnTime)
+            _box.onTakeDropEquipSuccess(reply.dropGbId, reply.uniqueId, reply.equipInfo, reply.endTime, reply.maxPrice, reply.price, reply.redeemWaitTime, reply.returnTime)
         else:
             _box.onTakeDropEquipFailed(reply.uniqueId, reply.result)
 
@@ -467,7 +468,8 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
             _takerData.hasPrice,
             _takerData.returnTime,
             0,
-            0))
+            0,
+            _takerData.maxPrice))
         # 补充剩余的
         for _rewardData in _rewardList.values():
             _takerList.append((
@@ -480,7 +482,8 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
                 True,
                 0,
                 _rewardData.bindMoney,
-                _rewardData.money))
+                _rewardData.money,
+                0))
             
 
         _box.onGetDropInfo(_dropList, _takerList, list(_returnList.keys()), list(_rewardList.keys()))

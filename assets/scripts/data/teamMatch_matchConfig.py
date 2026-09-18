@@ -233,7 +233,7 @@ datas = _tools.RODict({
     }),
     "teamExperienceBonus": _tools.RODict({
         "ID": "teamExperienceBonus",
-        "value": _tools.ROList([10, 20, 40, 50]),
+        "value": _tools.ROList([10, 20, 30, 40]),
     }),
     "zhaomuMessageCD": _tools.RODict({
         "ID": "zhaomuMessageCD",
@@ -510,5 +510,17 @@ datas = _tools.RODict({
     "teammateChangeNameMsg": _tools.RODict({
         "ID": "teammateChangeNameMsg",
         "value": 54000636,
+    }),
+    "teamAnimFade": _tools.RODict({
+        "ID": "teamAnimFade",
+        "value": (0.1, 0.2, 18, 0.45, 30, 0.15, 3),
+    }),
+    "crossServerFollowMsg": _tools.RODict({
+        "ID": "crossServerFollowMsg",
+        "value": 54003520,
+    }),
+    "crossServerSummonMsg": _tools.RODict({
+        "ID": "crossServerSummonMsg",
+        "value": 54003521,
     })
 })

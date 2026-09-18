@@ -596,5 +596,11 @@ datas = _tools.RODict({
     }),
     "UnlockCustomText": _tools.RODict({
         "value": ''
+    }),
+    "TaskCollectText": _tools.RODict({
+        "value": ''
+    }),
+    "ClaimCondManualTake": _tools.RODict({
+        "value": False
     })
 })

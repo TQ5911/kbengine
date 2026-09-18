@@ -1,0 +1,16 @@
+{
+    "serverName":"queueServer",
+    "serverId":1,
+    "httpServer": "0.0.0.0:4396",
+    "addressForDebug":"localhost:8989",
+    "logPath":"queue.log",
+    "logLevel":0,
+    "logRotateSize":500,
+    "redisServer":{
+    	"addr":"192.168.10.12:6379",
+    	"username":"",
+    	"passwd":"",
+    	"db":""
+    },
+    "reportAddr":"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5"
+}

@@ -8,6 +8,11 @@
             <Flags> BASE_AND_CLIENT  </Flags>
             <Persistent>true</Persistent>
         </crusadeInfo>
+
+        <crusadeCoinTicketData>
+            <Type>          COIN_TICKET_INFO_DATA   </Type>
+            <Flags>         BASE                    </Flags>
+        </crusadeCoinTicketData>
     </Properties>
 
     <CellMethods>

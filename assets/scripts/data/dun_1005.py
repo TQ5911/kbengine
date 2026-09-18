@@ -207,7 +207,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10054022": {
@@ -384,7 +386,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10054029": {
@@ -463,7 +467,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10054033": {
@@ -488,7 +494,9 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": 1,
-      "Remark": ""
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
     }
   },
   "10054034": {
@@ -561,6 +569,33 @@ datas ={
     "PosX": 183.0529,
     "PosY": 150.8549,
     "PosZ": 311.215,
+    "Props": {
+      "IsOpen": 1,
+      "MapEntityType": 0,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "10054037": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Npc",
+    "ClassNameType": 1,
+    "CustomID": "",
+    "Dir": 187.2543,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 18000063,
+    "ID": 10054037,
+    "Name": "\u4f0a\u8482\u65af",
+    "PosX": 146.3147,
+    "PosY": 150.785,
+    "PosZ": 298.9364,
     "Props": {
       "IsOpen": 1,
       "MapEntityType": 0,
@@ -1019,6 +1054,54 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "10058017": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "CustomFuncPos",
+    "ClassNameType": 10,
+    "CustomID": "",
+    "Dir": 207.5156,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 18000608,
+    "ID": 10058017,
+    "Name": "\u81ea\u5b9a\u4e49\u529f\u80fd\u70b9",
+    "PosX": 119.8612,
+    "PosY": 154.4115,
+    "PosZ": 313.6899,
+    "Props": {
+      "Num": 0,
+      "Radius": 0.0,
+      "RefreshTimedID": 0,
+      "Remark": "86010159",
+      "ShowInSceneMap": 1
+    }
+  },
+  "10058018": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "CustomFuncPos",
+    "ClassNameType": 10,
+    "CustomID": "",
+    "Dir": 207.3931,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 0,
+    "ID": 10058018,
+    "Name": "\u81ea\u5b9a\u4e49\u529f\u80fd\u70b9",
+    "PosX": 98.08533,
+    "PosY": 158.8577,
+    "PosZ": 254.0709,
+    "Props": {
+      "Num": 0,
+      "Radius": 0.0,
+      "RefreshTimedID": 0,
+      "Remark": "86010199 \u98de\u884c\u540e",
       "ShowInSceneMap": 1
     }
   }

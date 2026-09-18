@@ -2,6 +2,8 @@ CREATE TABLE IF NOT EXISTS lease_market (
 	id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增主键',
 	unique_id BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '装备全局唯一 ID，跨服唯一标识',
 	item_id INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '装备配置 ID',
+	enhance_lv INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '强化等级（列表过滤用）',
+	grade INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '装备阶数（列表过滤用）',
 	return_owner_gbid BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '链条顶端原出租方/最终归还方 gbId',
 	return_owner_server_id INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '链条顶端原出租方/最终归还方所在服 ID',
 	return_time INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '归还时间/到期时间，正常租赁或爆装归还时使用',

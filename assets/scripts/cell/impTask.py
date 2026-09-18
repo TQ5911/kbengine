@@ -21,6 +21,7 @@ import dungeonSrc
 import taskItemSrc as TISD
 import taskMonster as TMD
 import gameconfig
+import taskClass_taskTarget as TCCTD
 
 
 class ImpTask(impTalk.ImpTalk):
@@ -112,6 +113,9 @@ class ImpTask(impTalk.ImpTalk):
             return gameclass.TaskCondResultCls(False, playerName=self.name)
         taskId = taskData.get("TaskId", 0)
         if not dataUtils.isTaskInOpenTime(taskId):
+            return gameclass.TaskCondResultCls(False, playerName=self.name)
+        if not dataUtils.isTaskUnlockDayReached(taskData):
+            LOG_WARN('   _checkPlayerClaimTaskCellCond, OpenCondUnlockDay not reached:', taskId)
             return gameclass.TaskCondResultCls(False, playerName=self.name)
         # level condition
         levelCondResult = self._checkTaskPlayerLevelCond(taskData)
@@ -428,6 +432,9 @@ class ImpTask(impTalk.ImpTalk):
 
     def onCinemaPlayingEnd(self, cinemaId):
         self.flowCtrlPlayerCinemaPlayEnded(cinemaId)
+        # 推进「播放指定id剧情动画」计次任务目标
+        if cinemaId:
+            self.base.taskCheckCounterTarget(TCCTD.couterTargetDic['SkipSpecifiedTimeline'], (cinemaId,))
 
     def captainSyncTasksToNewMem(self, teamId, newMemGbId, newMemBox):
         LOG_INFO("captainSyncTasksToNewMem::", teamId, newMemGbId, newMemBox)

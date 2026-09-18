@@ -200,12 +200,31 @@ class IChat(object):
 
         self._sendMsgToGuild(msg,True)
 
+    @gamedecorator.crossServer
+    @gamedecorator.forwardToLocal
+    @gamedecorator.checkGameconfigEnable('chat')
+    @gamedecorator.checkGameconfigEnable('guild_union')
+    def sendAllianceChatMsg(self, exposed, msg):
+        """
+        联盟频道发言入口(2026-08-24 联盟频道新增):
+          链路: client -> iChat(local) -> Guild.onSendChatMessage
+                -> AllianceStub.sendChatMessage -> central service
+                -> 广播 ChatMessageBroadcast -> 所有 game server
+                -> Guild.broadcastMemberClient -> 玩家客户端
+        """
+        LOG_DBG('sendAllianceChatMsg', msg)
+        if self.isAllServerForbidChat():
+            self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
+            return
+
+        self._sendMsgToAlliance(msg)
+
     def _sendMsgToGuild(self, msg, includeMe=False, isTeamZhaomu=False):
         _now = utils.curTS()
         if _now < self.sendGuildMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.GUILD]['channelCD']):
             _timeDelta = self.sendGuildMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.GUILD]['channelCD']) - _now
             self.onMessagePre(
-                int(C_C_DD.datas['msgId_worldChannelCD']['value']), 
+                int(C_C_DD.datas['msgId_worldChannelCD']['value']),
                 [str(_timeDelta)])
             return
 
@@ -216,6 +235,33 @@ class IChat(object):
 
         self.sendGuildMsgTime = _now
         self.afterCheckGuildChatMsg(includeMe, isTeamZhaomu, False, msg)
+
+    def _sendMsgToAlliance(self, msg):
+        """
+        联盟频道发言核心逻辑(2026-08-24 新增):
+          - CD 校验走 chatConfig_channel.py ALLIANCE(11) 配置
+          - 未加入帮会 -> 沿用 sendGuildChatMsg 同款提示(MMD.guildTrain_notInGuild)
+          - 加入帮会但未加入联盟 -> 提示 54003192 "您的所属帮会未加入联盟"
+          - 通过后委托 Guild.onSendChatMessage,由其转给 AllianceStub
+        """
+        _now = utils.curTS()
+        if _now < self.sendAllianceMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.ALLIANCE]['channelCD']):
+            _timeDelta = self.sendAllianceMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.ALLIANCE]['channelCD']) - _now
+            self.onMessagePre(
+                int(C_C_DD.datas['msgId_worldChannelCD']['value']),
+                [str(_timeDelta)])
+            return
+
+        if not self.guildBox:
+            LOG_WARN('sendAllianceChatMsg failed: not has guild')
+            self.onMessagePre(MMD.datas.guildTrain_notInGuild, [])
+            return
+
+        self.sendAllianceMsgTime = _now
+        
+        self.guildBox.onSendChatMessage(self.gbID, self._getChatChannelAvatarInfo(), dict(msg), self)
+
+        self.logChatMsg(msg.get('msgType', 0), 0, gameconst.ChatChannelEnum.ALLIANCE, msg.get('msg',''), self.sendAllianceMsgTime)
 
     def afterCheckGuildChatMsg(self, includeMe, isTeamZhaomu, sendByServer,originalMsg):
         LOG_DBG("afterCheckGuildChatMsg", includeMe, isTeamZhaomu, sendByServer, originalMsg)
@@ -445,10 +491,19 @@ class IChat(object):
             LOG_ERR('in sendTeamMatchMessage, teamTarget error 2')
             return
 
-        chatMsgKey = 'teamChannel_applyTeamMsg' if isTeam else 'teamChannel_applyRaidMsg'
-        teamMemberCount = gameconst.TEAM_MEMBER_MAX_NUM if isTeam else gameconst.RAID_MEMBER_MAX_NUM
-        isRaid = 0 if isTeam else 1
+        if isTeam:
+            teamMemberCount = gameconst.TEAM_MEMBER_MAX_NUM
+            c = targetInfo['maxPlayer']
+            if c > 0:
+                teamMemberCount = teamMemberCount if c > teamMemberCount else c
+        else:
+            teamMemberCount = gameconst.RAID_MEMBER_MAX_NUM
+            c = targetInfo['maxPlayer']
+            if c > 0:
+                teamMemberCount = teamMemberCount if c > teamMemberCount else c
 
+        isRaid = 0 if isTeam else 1
+        chatMsgKey = 'teamChannel_applyTeamMsg' if isTeam else 'teamChannel_applyRaidMsg'
         #活动：%s%d-%d级%s的队伍正在招募:<link team name=申请加入 teamId=%d>
         msg = MCM.datas[TM_MCD.datas[chatMsgKey]['value']]['Message'].format(targetInfo['value'], content, curNum, teamMemberCount, teamId, isRaid, teamTarget)
 

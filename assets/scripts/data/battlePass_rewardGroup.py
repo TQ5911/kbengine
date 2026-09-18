@@ -1,0 +1,578 @@
+# coding: utf-8
+
+# NOTE: This file is AUTO GENERATE by excel export script, please NOT MODIFIED
+#       file data manually.
+# ------------------------------------------------------------------
+# Copyright QianHui.INC 2023-2023
+# ------------------------------------------------------------------
+# SHEET NAME: battlePass/rewardGroup
+import gamedatatools as _tools
+# useful import
+import collections
+import random
+import math
+import re
+import crontab
+
+datas = _tools.RODict({ 
+    1: _tools.RODict({
+        "ID": 1,
+        "groupID": 9001,
+        "level": 1,
+        "reward": 40000079,
+    }),
+    2: _tools.RODict({
+        "ID": 2,
+        "groupID": 9001,
+        "level": 2,
+        "reward": 40000079,
+    }),
+    3: _tools.RODict({
+        "ID": 3,
+        "groupID": 9001,
+        "level": 3,
+        "reward": 40000079,
+    }),
+    4: _tools.RODict({
+        "ID": 4,
+        "groupID": 9001,
+        "level": 4,
+        "reward": 40000079,
+    }),
+    5: _tools.RODict({
+        "ID": 5,
+        "groupID": 9001,
+        "level": 5,
+        "reward": 40000079,
+    }),
+    6: _tools.RODict({
+        "ID": 6,
+        "groupID": 9001,
+        "level": 6,
+        "reward": 40000079,
+    }),
+    7: _tools.RODict({
+        "ID": 7,
+        "groupID": 9001,
+        "level": 7,
+        "reward": 40000079,
+    }),
+    8: _tools.RODict({
+        "ID": 8,
+        "groupID": 9001,
+        "level": 8,
+        "reward": 40000079,
+    }),
+    9: _tools.RODict({
+        "ID": 9,
+        "groupID": 9001,
+        "level": 9,
+        "reward": 40000079,
+    }),
+    10: _tools.RODict({
+        "ID": 10,
+        "groupID": 9001,
+        "level": 10,
+        "reward": 40000079,
+    }),
+    11: _tools.RODict({
+        "ID": 11,
+        "groupID": 9001,
+        "level": 11,
+        "reward": 40000079,
+    }),
+    12: _tools.RODict({
+        "ID": 12,
+        "groupID": 9001,
+        "level": 12,
+        "reward": 40000079,
+    }),
+    13: _tools.RODict({
+        "ID": 13,
+        "groupID": 9001,
+        "level": 13,
+        "reward": 40000079,
+    }),
+    14: _tools.RODict({
+        "ID": 14,
+        "groupID": 9001,
+        "level": 14,
+        "reward": 40000079,
+    }),
+    15: _tools.RODict({
+        "ID": 15,
+        "groupID": 9001,
+        "level": 15,
+        "reward": 40000079,
+    }),
+    16: _tools.RODict({
+        "ID": 16,
+        "groupID": 9001,
+        "level": 16,
+        "reward": 40000079,
+    }),
+    17: _tools.RODict({
+        "ID": 17,
+        "groupID": 9001,
+        "level": 17,
+        "reward": 40000079,
+    }),
+    18: _tools.RODict({
+        "ID": 18,
+        "groupID": 9001,
+        "level": 18,
+        "reward": 40000079,
+    }),
+    19: _tools.RODict({
+        "ID": 19,
+        "groupID": 9001,
+        "level": 19,
+        "reward": 40000079,
+    }),
+    20: _tools.RODict({
+        "ID": 20,
+        "groupID": 9001,
+        "level": 20,
+        "reward": 40000079,
+    }),
+    21: _tools.RODict({
+        "ID": 21,
+        "groupID": 9001,
+        "level": 21,
+        "reward": 40000079,
+    }),
+    22: _tools.RODict({
+        "ID": 22,
+        "groupID": 9001,
+        "level": 22,
+        "reward": 40000079,
+    }),
+    23: _tools.RODict({
+        "ID": 23,
+        "groupID": 9001,
+        "level": 23,
+        "reward": 40000079,
+    }),
+    24: _tools.RODict({
+        "ID": 24,
+        "groupID": 9001,
+        "level": 24,
+        "reward": 40000079,
+    }),
+    25: _tools.RODict({
+        "ID": 25,
+        "groupID": 9001,
+        "level": 25,
+        "reward": 40000079,
+    }),
+    26: _tools.RODict({
+        "ID": 26,
+        "groupID": 9001,
+        "level": 26,
+        "reward": 40000079,
+    }),
+    27: _tools.RODict({
+        "ID": 27,
+        "groupID": 9001,
+        "level": 27,
+        "reward": 40000079,
+    }),
+    28: _tools.RODict({
+        "ID": 28,
+        "groupID": 9001,
+        "level": 28,
+        "reward": 40000079,
+    }),
+    29: _tools.RODict({
+        "ID": 29,
+        "groupID": 9001,
+        "level": 29,
+        "reward": 40000079,
+    }),
+    30: _tools.RODict({
+        "ID": 30,
+        "groupID": 9001,
+        "level": 30,
+        "reward": 40000079,
+    }),
+    31: _tools.RODict({
+        "ID": 31,
+        "groupID": 9001,
+        "level": 31,
+        "reward": 40000079,
+    }),
+    32: _tools.RODict({
+        "ID": 32,
+        "groupID": 9002,
+        "level": 1,
+        "reward": 40000079,
+    }),
+    33: _tools.RODict({
+        "ID": 33,
+        "groupID": 9002,
+        "level": 2,
+        "reward": 40000079,
+    }),
+    34: _tools.RODict({
+        "ID": 34,
+        "groupID": 9002,
+        "level": 3,
+        "reward": 40000079,
+    }),
+    35: _tools.RODict({
+        "ID": 35,
+        "groupID": 9002,
+        "level": 4,
+        "reward": 40000079,
+    }),
+    36: _tools.RODict({
+        "ID": 36,
+        "groupID": 9002,
+        "level": 5,
+        "reward": 40000079,
+    }),
+    37: _tools.RODict({
+        "ID": 37,
+        "groupID": 9002,
+        "level": 6,
+        "reward": 40000079,
+    }),
+    38: _tools.RODict({
+        "ID": 38,
+        "groupID": 9002,
+        "level": 7,
+        "reward": 40000079,
+    }),
+    39: _tools.RODict({
+        "ID": 39,
+        "groupID": 9002,
+        "level": 8,
+        "reward": 40000079,
+    }),
+    40: _tools.RODict({
+        "ID": 40,
+        "groupID": 9002,
+        "level": 9,
+        "reward": 40000079,
+    }),
+    41: _tools.RODict({
+        "ID": 41,
+        "groupID": 9002,
+        "level": 10,
+        "reward": 40000079,
+    }),
+    42: _tools.RODict({
+        "ID": 42,
+        "groupID": 9002,
+        "level": 11,
+        "reward": 40000079,
+    }),
+    43: _tools.RODict({
+        "ID": 43,
+        "groupID": 9002,
+        "level": 12,
+        "reward": 40000079,
+    }),
+    44: _tools.RODict({
+        "ID": 44,
+        "groupID": 9002,
+        "level": 13,
+        "reward": 40000079,
+    }),
+    45: _tools.RODict({
+        "ID": 45,
+        "groupID": 9002,
+        "level": 14,
+        "reward": 40000079,
+    }),
+    46: _tools.RODict({
+        "ID": 46,
+        "groupID": 9002,
+        "level": 15,
+        "reward": 40000079,
+    }),
+    47: _tools.RODict({
+        "ID": 47,
+        "groupID": 9002,
+        "level": 16,
+        "reward": 40000079,
+    }),
+    48: _tools.RODict({
+        "ID": 48,
+        "groupID": 9002,
+        "level": 17,
+        "reward": 40000079,
+    }),
+    49: _tools.RODict({
+        "ID": 49,
+        "groupID": 9002,
+        "level": 18,
+        "reward": 40000079,
+    }),
+    50: _tools.RODict({
+        "ID": 50,
+        "groupID": 9002,
+        "level": 19,
+        "reward": 40000079,
+    }),
+    51: _tools.RODict({
+        "ID": 51,
+        "groupID": 9002,
+        "level": 20,
+        "reward": 40000079,
+    }),
+    52: _tools.RODict({
+        "ID": 52,
+        "groupID": 9002,
+        "level": 21,
+        "reward": 40000079,
+    }),
+    53: _tools.RODict({
+        "ID": 53,
+        "groupID": 9002,
+        "level": 22,
+        "reward": 40000079,
+    }),
+    54: _tools.RODict({
+        "ID": 54,
+        "groupID": 9002,
+        "level": 23,
+        "reward": 40000079,
+    }),
+    55: _tools.RODict({
+        "ID": 55,
+        "groupID": 9002,
+        "level": 24,
+        "reward": 40000079,
+    }),
+    56: _tools.RODict({
+        "ID": 56,
+        "groupID": 9002,
+        "level": 25,
+        "reward": 40000079,
+    }),
+    57: _tools.RODict({
+        "ID": 57,
+        "groupID": 9002,
+        "level": 26,
+        "reward": 40000079,
+    }),
+    58: _tools.RODict({
+        "ID": 58,
+        "groupID": 9002,
+        "level": 27,
+        "reward": 40000079,
+    }),
+    59: _tools.RODict({
+        "ID": 59,
+        "groupID": 9002,
+        "level": 28,
+        "reward": 40000079,
+    }),
+    60: _tools.RODict({
+        "ID": 60,
+        "groupID": 9002,
+        "level": 29,
+        "reward": 40000079,
+    }),
+    61: _tools.RODict({
+        "ID": 61,
+        "groupID": 9002,
+        "level": 30,
+        "reward": 40000079,
+    }),
+    62: _tools.RODict({
+        "ID": 62,
+        "groupID": 9002,
+        "level": 31,
+        "reward": 40000079,
+    }),
+    63: _tools.RODict({
+        "ID": 63,
+        "groupID": 9003,
+        "level": 1,
+        "reward": 40000079,
+    }),
+    64: _tools.RODict({
+        "ID": 64,
+        "groupID": 9003,
+        "level": 2,
+        "reward": 40000079,
+    }),
+    65: _tools.RODict({
+        "ID": 65,
+        "groupID": 9003,
+        "level": 3,
+        "reward": 40000079,
+    }),
+    66: _tools.RODict({
+        "ID": 66,
+        "groupID": 9003,
+        "level": 4,
+        "reward": 40000079,
+    }),
+    67: _tools.RODict({
+        "ID": 67,
+        "groupID": 9003,
+        "level": 5,
+        "reward": 40000079,
+    }),
+    68: _tools.RODict({
+        "ID": 68,
+        "groupID": 9003,
+        "level": 6,
+        "reward": 40000079,
+    }),
+    69: _tools.RODict({
+        "ID": 69,
+        "groupID": 9003,
+        "level": 7,
+        "reward": 40000079,
+    }),
+    70: _tools.RODict({
+        "ID": 70,
+        "groupID": 9003,
+        "level": 8,
+        "reward": 40000079,
+    }),
+    71: _tools.RODict({
+        "ID": 71,
+        "groupID": 9003,
+        "level": 9,
+        "reward": 40000079,
+    }),
+    72: _tools.RODict({
+        "ID": 72,
+        "groupID": 9003,
+        "level": 10,
+        "reward": 40000079,
+    }),
+    73: _tools.RODict({
+        "ID": 73,
+        "groupID": 9003,
+        "level": 11,
+        "reward": 40000079,
+    }),
+    74: _tools.RODict({
+        "ID": 74,
+        "groupID": 9003,
+        "level": 12,
+        "reward": 40000079,
+    }),
+    75: _tools.RODict({
+        "ID": 75,
+        "groupID": 9003,
+        "level": 13,
+        "reward": 40000079,
+    }),
+    76: _tools.RODict({
+        "ID": 76,
+        "groupID": 9003,
+        "level": 14,
+        "reward": 40000079,
+    }),
+    77: _tools.RODict({
+        "ID": 77,
+        "groupID": 9003,
+        "level": 15,
+        "reward": 40000079,
+    }),
+    78: _tools.RODict({
+        "ID": 78,
+        "groupID": 9003,
+        "level": 16,
+        "reward": 40000079,
+    }),
+    79: _tools.RODict({
+        "ID": 79,
+        "groupID": 9003,
+        "level": 17,
+        "reward": 40000079,
+    }),
+    80: _tools.RODict({
+        "ID": 80,
+        "groupID": 9003,
+        "level": 18,
+        "reward": 40000079,
+    }),
+    81: _tools.RODict({
+        "ID": 81,
+        "groupID": 9003,
+        "level": 19,
+        "reward": 40000079,
+    }),
+    82: _tools.RODict({
+        "ID": 82,
+        "groupID": 9003,
+        "level": 20,
+        "reward": 40000079,
+    }),
+    83: _tools.RODict({
+        "ID": 83,
+        "groupID": 9003,
+        "level": 21,
+        "reward": 40000079,
+    }),
+    84: _tools.RODict({
+        "ID": 84,
+        "groupID": 9003,
+        "level": 22,
+        "reward": 40000079,
+    }),
+    85: _tools.RODict({
+        "ID": 85,
+        "groupID": 9003,
+        "level": 23,
+        "reward": 40000079,
+    }),
+    86: _tools.RODict({
+        "ID": 86,
+        "groupID": 9003,
+        "level": 24,
+        "reward": 40000079,
+    }),
+    87: _tools.RODict({
+        "ID": 87,
+        "groupID": 9003,
+        "level": 25,
+        "reward": 40000079,
+    }),
+    88: _tools.RODict({
+        "ID": 88,
+        "groupID": 9003,
+        "level": 26,
+        "reward": 40000079,
+    }),
+    89: _tools.RODict({
+        "ID": 89,
+        "groupID": 9003,
+        "level": 27,
+        "reward": 40000079,
+    }),
+    90: _tools.RODict({
+        "ID": 90,
+        "groupID": 9003,
+        "level": 28,
+        "reward": 40000079,
+    }),
+    91: _tools.RODict({
+        "ID": 91,
+        "groupID": 9003,
+        "level": 29,
+        "reward": 40000079,
+    }),
+    92: _tools.RODict({
+        "ID": 92,
+        "groupID": 9003,
+        "level": 30,
+        "reward": 40000079,
+    }),
+    93: _tools.RODict({
+        "ID": 93,
+        "groupID": 9003,
+        "level": 31,
+        "reward": 40000079,
+    })
+})
+minKey = 1
+maxKey = 93

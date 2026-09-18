@@ -109,9 +109,9 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 11214102,
           "ID": 40170004,
-          "PosX": 99.98236,
-          "PosY": 24.64082,
-          "PosZ": 291.5421,
+          "PosX": 107.428009,
+          "PosY": 24.5023,
+          "PosZ": 299.0201,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
@@ -141,9 +141,9 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 11214102,
           "ID": 40170005,
-          "PosX": 101.8239,
-          "PosY": 24.58921,
-          "PosZ": 286.9006,
+          "PosX": 109.269547,
+          "PosY": 24.4056358,
+          "PosZ": 294.3786,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
@@ -173,9 +173,9 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 11214103,
           "ID": 40170006,
-          "PosX": 105.8083,
-          "PosY": 24.51011,
-          "PosZ": 290.099,
+          "PosX": 113.253952,
+          "PosY": 24.3249626,
+          "PosZ": 297.577,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
@@ -205,9 +205,9 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 11214101,
           "ID": 40170007,
-          "PosX": 81.59071,
-          "PosY": 24.98074,
-          "PosZ": 285.4542,
+          "PosX": 88.25169,
+          "PosY": 25.0883,
+          "PosZ": 289.2717,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
@@ -237,9 +237,9 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 11214102,
           "ID": 40170008,
-          "PosX": 102.88,
-          "PosY": 24.3677,
-          "PosZ": 304.27,
+          "PosX": 110.3256,
+          "PosY": 24.47261,
+          "PosZ": 311.748,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
@@ -269,9 +269,9 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 11214102,
           "ID": 40170009,
-          "PosX": 104.7215,
-          "PosY": 24.27436,
-          "PosZ": 299.6285,
+          "PosX": 112.167168,
+          "PosY": 24.4393883,
+          "PosZ": 307.1065,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
@@ -301,9 +301,9 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 11214103,
           "ID": 40170010,
-          "PosX": 108.7059,
-          "PosY": 24.2473,
-          "PosZ": 302.8269,
+          "PosX": 116.151558,
+          "PosY": 24.3199883,
+          "PosZ": 310.3049,
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
@@ -377,6 +377,33 @@ datas ={
             "Remark": "",
             "ShowInSceneMap": 1
           }
+        },
+        "40178006": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Collection",
+          "ClassNameType": 3,
+          "CustomID": "",
+          "Dir": 109.3953,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 16000166,
+          "ID": 40178006,
+          "PosX": 70.11378,
+          "PosY": 24.94737,
+          "PosZ": 286.3065,
+          "Props": {
+            "ChestGroupID": "",
+            "IsOnGround": 1,
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1
+          }
         }
       }
     },
@@ -423,6 +450,30 @@ datas ={
         "PosZ": 323.3487,
         "Props": {
           "MapEntityType": 0,
+          "Num": 0,
+          "Radius": 0.0,
+          "RefreshTimedID": 0,
+          "Remark": "",
+          "ShowInSceneMap": 1
+        }
+      }
+    },
+    "CustomFuncPos": {
+      "40178005": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "CustomFuncPos",
+        "ClassNameType": 10,
+        "CustomID": "",
+        "Dir": 216.9662,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 0,
+        "ID": 40178005,
+        "PosX": 146.146,
+        "PosY": 24.20985,
+        "PosZ": 323.3487,
+        "Props": {
           "Num": 0,
           "Radius": 0.0,
           "RefreshTimedID": 0,

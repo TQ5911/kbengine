@@ -144,8 +144,8 @@ class EquipDropMgrVal(userType.UserSingleType):
     def getTakerVal(self, uniqueId):
         return self.takerDict.get(uniqueId, None)
 
-    def addTaker(self, avatar, uniqueId, equip, endTime, state, price, isNotify, redeemWaitTime, hasPrice, returnTime, bindMoney, money):
-        _takerVal = EquipDropTakerInfo.EquipDropTakerVal(uniqueId, equip, endTime, state, price, redeemWaitTime, hasPrice, returnTime, bindMoney, money)
+    def addTaker(self, avatar, uniqueId, equip, endTime, state, price, isNotify, redeemWaitTime, hasPrice, returnTime, bindMoney, money, maxPrice):
+        _takerVal = EquipDropTakerInfo.EquipDropTakerVal(uniqueId, equip, endTime, state, price, redeemWaitTime, hasPrice, returnTime, bindMoney, money, maxPrice)
         self.takerDict[uniqueId] = _takerVal
         if isNotify:
             avatar.client.onPickNewEquipDrop(_takerVal)

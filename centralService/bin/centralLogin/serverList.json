@@ -1,0 +1,25 @@
+{
+  "maxAccountPerDevice": 2,
+  "maxOnlineNum": 1000,
+  "auditServerId": 20001,
+  "gameServerList": {
+    "20001": "192.168.11.118:20013"
+  },
+
+  "queueServerList": {
+    "20001": "192.168.11.118:7999"
+  },
+
+  "serverGroup": {
+    "group1": ["20001" ]
+  },
+
+  "provinceServer": {
+    "prov1": "group1",
+    "prov2": "group1",
+    "prov3": "group1",
+    "prov4": "group1",
+    "prov5": "group1",
+    "prov6": "group1"
+  }
+}

@@ -21,7 +21,7 @@ datas = _tools.RODict({
     }),
     "commonBagCapacity": _tools.RODict({
         "ID": "commonBagCapacity",
-        "value": 200,
+        "value": 300,
     }),
     "currencyBagCapacity": _tools.RODict({
         "ID": "currencyBagCapacity",

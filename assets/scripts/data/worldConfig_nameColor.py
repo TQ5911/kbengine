@@ -30,14 +30,8 @@ datas = _tools.RODict({
     "neutralPlayer": _tools.RODict({
         "ID": "neutralPlayer",
     }),
-    "greyPlayer": _tools.RODict({
-        "ID": "greyPlayer",
-    }),
     "greySelf": _tools.RODict({
         "ID": "greySelf",
-    }),
-    "redPlayer": _tools.RODict({
-        "ID": "redPlayer",
     }),
     "redSelf": _tools.RODict({
         "ID": "redSelf",
@@ -68,5 +62,14 @@ datas = _tools.RODict({
     }),
     "enemycityBattle": _tools.RODict({
         "ID": "enemycityBattle",
+    }),
+    "redPlayer": _tools.RODict({
+        "ID": "redPlayer",
+    }),
+    "greyPlayer": _tools.RODict({
+        "ID": "greyPlayer",
+    }),
+    "unfriendlyPlayer": _tools.RODict({
+        "ID": "unfriendlyPlayer",
     })
 })

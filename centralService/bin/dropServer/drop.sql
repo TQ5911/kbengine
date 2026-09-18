@@ -12,6 +12,7 @@ CREATE TABLE `drop_info` (
   `dropTime` INT UNSIGNED NOT NULL,
   `collExpireTime` INT UNSIGNED NOT NULL,
   `price` INT UNSIGNED NOT NULL,
+  `maxPrice` INT UNSIGNED NOT NULL,
   `equipInfo` BLOB NOT NULL,
   `extraInfo` BLOB NOT NULL,
   `collectionId` INT UNSIGNED NOT NULL,
@@ -88,6 +89,23 @@ DEALLOCATE PREPARE stmt;
 
 SET @table_name = 'drop_info';
 SET @column_name = 'hasRedeemPrice';
+SET @column_def = 'INT UNSIGNED NOT NULL';
+
+SET @sql = IF(
+    (SELECT COUNT(*) FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = @db_name
+       AND TABLE_NAME = @table_name
+       AND COLUMN_NAME = @column_name) = 0,
+    CONCAT('ALTER TABLE ', @table_name, ' ADD COLUMN ', @column_name, ' ', @column_def),
+    'SELECT concat(concat(concat("Table: ", @table_name), concat(", Column: ", @column_name)), " already exists, skipped") AS ''execute result message:'''
+);
+
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @table_name = 'drop_info';
+SET @column_name = 'maxPrice';
 SET @column_def = 'INT UNSIGNED NOT NULL';
 
 SET @sql = IF(

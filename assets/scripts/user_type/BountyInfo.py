@@ -311,7 +311,7 @@ class hunterRankItem(userType.UserSingleType):
         self.isInList[subType] = False
 
     def needInitAppend(self, subType):
-        return self.successedCnt[subType] != 0 or self.failedCnt[subType] != 0
+        return self.successedCnt[subType] != 0# or self.failedCnt[subType] != 0
 
 class hunterRankInfo(userType.UserDictType):
     def __init__(self):

@@ -63,7 +63,14 @@ datas = _tools.RODict({
         "itemID": 30000320,
         "openID": "",
         "resRefreshMode": 0,
+    }),
+    8: _tools.RODict({
+        "ID": 8,
+        "name": "巧匠令",
+        "itemID": 30000242,
+        "openID": "",
+        "resRefreshMode": 0,
     })
 })
 minKey = 1
-maxKey = 7
+maxKey = 8

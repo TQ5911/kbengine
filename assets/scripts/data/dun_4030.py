@@ -752,5 +752,58 @@ datas ={
       "Remark": "",
       "ShowInSceneMap": 1
     }
+  },
+  "40308005": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "CustomFuncPos",
+    "ClassNameType": 10,
+    "CustomID": "",
+    "Dir": 195.5616,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 0,
+    "ID": 40308005,
+    "Name": "\u81ea\u5b9a\u4e49\u529f\u80fd\u70b9",
+    "PosX": 601.9083,
+    "PosY": 307.1273,
+    "PosZ": 311.1344,
+    "Props": {
+      "Num": 0,
+      "Radius": 0.0,
+      "RefreshTimedID": 0,
+      "Remark": "86010034",
+      "ShowInSceneMap": 1
+    }
+  },
+  "40308006": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Collection",
+    "ClassNameType": 3,
+    "CustomID": "",
+    "Dir": 170.125,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 16000138,
+    "ID": 40308006,
+    "Name": "\u9b54\u6c14\u88c2\u7f1d",
+    "PosX": 520.26,
+    "PosY": 338.2006,
+    "PosZ": 157.83,
+    "Props": {
+      "ChestGroupID": "",
+      "IsOnGround": 1,
+      "IsOpen": 1,
+      "MapEntityType": 0,
+      "Radius": 0.0,
+      "RefreshNum": 1,
+      "RefreshTime": 1,
+      "RefreshTimedID": 0,
+      "Remark": "",
+      "ShowInSceneMap": 1
+    }
   }
 }

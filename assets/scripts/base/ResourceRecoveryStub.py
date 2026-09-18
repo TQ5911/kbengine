@@ -18,6 +18,7 @@ import cube_config as CC
 import abyss_config as ABC
 import teamDunChallenge_config as TDC_CFG
 import raidBossChallenge_config as RBC_CFG
+import activityControl_activityTicket as AC_AT
 from datetime import datetime
 import gameconfig
 
@@ -65,47 +66,15 @@ class ResourceRecoveryStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITim
 
         needUpdateSubType = set()
 
-        curNum = CC.datas['dailyCubeNum']['value']
-        if self.recoveryData.ftRecoveryItem.update(now, gameconst.RecoveryTicketSubType.CUBE, dateTime, curNum):
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.CUBE)
-        curNum = CC.datas['cubeNumCoinDailyLimit']['value']
-        if self.recoveryData.ptRecoveryItem.update(now, gameconst.RecoveryTicketSubType.CUBE, dateTime, curNum):
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.CUBE)
-
-        curNum = WLC.datas['dailyWonderLandNum']['value']
-        if self.recoveryData.ftRecoveryItem.update(now, gameconst.RecoveryTicketSubType.WONDER_LAND, dateTime, curNum):
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.WONDER_LAND)
-        curNum = WLC.datas['wonderLandNumCoinDailyLimit']['value']
-        if self.recoveryData.ptRecoveryItem.update(now, gameconst.RecoveryTicketSubType.WONDER_LAND, dateTime, curNum):
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.WONDER_LAND)
-
-        curNum = ABC.datas['abyssDailyNum']['value']
-        if self.recoveryData.ftRecoveryItem.update(now, gameconst.RecoveryTicketSubType.ABYSS, dateTime, curNum):
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.ABYSS)
-        curNum = ABC.datas['abyssNumCoinDailyLimit']['value']
-        if self.recoveryData.ptRecoveryItem.update(now, gameconst.RecoveryTicketSubType.ABYSS, dateTime, curNum):
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.ABYSS)
-            
-        curNum = TDC_CFG.datas['dailyRewardNum']['value']
-        if self.recoveryData.ftRecoveryItem.update(now, gameconst.RecoveryTicketSubType.CRUSADE, dateTime, curNum):
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.CRUSADE)
-        curNum = TDC_CFG.datas['rewardNumCoinDailyLimit']['value']
-        if self.recoveryData.ptRecoveryItem.update(now, gameconst.RecoveryTicketSubType.CRUSADE, dateTime, curNum):
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.CRUSADE)
-
-        curNum = RBC_CFG.datas['dailyRewardNum']['value']
-        if self.recoveryData.ftRecoveryItem.update(now, gameconst.RecoveryTicketSubType.CHIEF, dateTime, curNum):
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.CHIEF)
-        curNum = RBC_CFG.datas['rewardNumCoinDailyLimit']['value']
-        if self.recoveryData.ptRecoveryItem.update(now, gameconst.RecoveryTicketSubType.CHIEF, dateTime, curNum):
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.CHIEF)
-
-        if beInit:
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.CUBE)
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.WONDER_LAND)
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.ABYSS)
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.CRUSADE)
-            needUpdateSubType.add(gameconst.RecoveryTicketSubType.CHIEF)
+        for subType in gameconst.RecoveryTicketSubType.VALID_SUB_TYPE:
+            curNum = len(AC_AT.freeTicketDic[subType])
+            if self.recoveryData.ftRecoveryItem.update(now, subType, dateTime, curNum):
+                needUpdateSubType.add(subType)
+            curNum = len(AC_AT.paidTicketDic[subType])
+            if self.recoveryData.ptRecoveryItem.update(now, subType, dateTime, curNum):
+                needUpdateSubType.add(subType)
+            if beInit:
+                needUpdateSubType.add(subType)
         LOG_DBG('ResourceRecoveryStub::checkFreeTicketNumConfigCallback', needUpdateSubType)
 
         if not needUpdateSubType:

@@ -4,6 +4,7 @@ protoc.exe -I../../src/AdminServer/adminProto/gsmanager --go_out=../../src/Admin
 protoc.exe -I../../src/centralLogin/centralLoginApp/clientService --go_out=../../src/centralLogin/centralLoginApp/clientService centralLogin.proto
 protoc.exe -I../../src/centralLogin/centralLoginApp/gameServerService --go_out=../../src/centralLogin/centralLoginApp/gameServerService gameServerLogin.proto
 protoc.exe -I../../src/router/routerApp/gameServerService --go_out=../../src/router/routerApp/gameServerService gameServerRouter.proto
+protoc.exe -I../../src/router/routerApp/routerCluster --go_out=../../src/router/routerApp/routerCluster routerCluster.proto
 protoc.exe -I../../src/queueServer/queueApp/clientService --go_out=../../src/queueServer/queueApp/clientService clientServerQueue.proto
 protoc.exe -I../../src/queueServer/queueApp/gameServerService --go_out=../../src/queueServer/queueApp/gameServerService gameServerQueue.proto
 
@@ -19,6 +20,7 @@ protoc.exe -I../../src/AdminServer/adminProto/gsmanager --plugin=protoc-gen-cust
 protoc.exe -I../../src/centralLogin/centralLoginApp/clientService --plugin=protoc-gen-custom=rpc_plugin.bat --custom_out=../../src/centralLogin/centralLoginApp/clientService centralLogin.proto
 protoc.exe -I../../src/centralLogin/centralLoginApp/gameServerService --plugin=protoc-gen-custom=rpc_plugin.bat --custom_out=../../src/centralLogin/centralLoginApp/gameServerService gameServerLogin.proto
 protoc.exe -I../../src/router/routerApp/gameServerService --plugin=protoc-gen-custom=rpc_plugin.bat --custom_out=../../src/router/routerApp/gameServerService gameServerRouter.proto
+protoc.exe -I../../src/router/routerApp/routerCluster --plugin=protoc-gen-custom=rpc_plugin.bat --custom_out=../../src/router/routerApp/routerCluster routerCluster.proto
 protoc.exe -I../../src/queueServer/queueApp/clientService --plugin=protoc-gen-custom=rpc_plugin.bat --custom_out=../../src/queueServer/queueApp/clientService clientServerQueue.proto
 protoc.exe -I../../src/queueServer/queueApp/gameServerService --plugin=protoc-gen-custom=rpc_plugin.bat --custom_out=../../src/queueServer/queueApp/gameServerService gameServerQueue.proto
 protoc.exe -I../../src/auction/auctionApp/gameServerService --plugin=protoc-gen-custom=rpc_plugin.bat --custom_out=../../src/auction/auctionApp/gameServerService gameServerAuction.proto

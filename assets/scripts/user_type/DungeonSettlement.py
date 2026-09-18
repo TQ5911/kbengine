@@ -94,15 +94,17 @@ class DungeonSettlementData(userType.UserSingleType):
 
         entity.base.onDungeonSettlement(gameconst.DungeonPlayModeEnum.GUILD_BOSS, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
 
-    def _calcCrusadeSettlement(self, box, rewardDatas, opUUId, uniqueId, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, score, extra):
+    def _calcCrusadeSettlement(self, box, rewardDatas, opUUId, uniqueId, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, score, extra, playMode=gameconst.DungeonPlayModeEnum.CRUSADE):
+        # playMode：跨服讨伐时传 CROSS_CRUSADE（结算在跨服服 Avatar 上再透传回本服）
         datas = self._getDungeonExtraData(rewardDatas, dungeonExtraDatas, win, 0, score)
         extra.update(datas)
-        entity.base.onDungeonSettlement(gameconst.DungeonPlayModeEnum.CRUSADE, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
+        entity.base.onDungeonSettlement(playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
 
-    def _calcChiefSettlement(self, box, rewardDatas, opUUId, uniqueId, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, score, extra):
+    def _calcChiefSettlement(self, box, rewardDatas, opUUId, uniqueId, entity, spaceNo, dungeonNo, dungeonExtraDatas, win, score, extra, playMode=gameconst.DungeonPlayModeEnum.CHIEF):
+        # playMode：跨服讨伐时传 CROSS_CHIEF
         datas = self._getDungeonExtraData(rewardDatas, dungeonExtraDatas, win, 0, score)
         extra.update(datas)
-        entity.base.onDungeonSettlement(gameconst.DungeonPlayModeEnum.CHIEF, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
+        entity.base.onDungeonSettlement(playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
 
     def _getDungeonExtraData(self, rewardDatas, dungeonExtraDatas, win, rank, score):
         extra = {}

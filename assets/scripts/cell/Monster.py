@@ -176,6 +176,9 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         # 标记相关
         self.teamMarkDict = {}
         self.raidMarkDict = {}
+        # 跨服组队标记记录：{crossTeamId: 槽位 index}（跨服队标怪物的死亡自动摘除依据，
+        # 死亡时经本服 CrossTeamStub 上行中心摘除并广播）
+        self.crossTeamMarkDict = {}
 
         if formula.inTeamDungeonScene(self.spaceNo) or formula.inRaidDungeonScene(self.spaceNo):
             self.spaceMgr.doDungeonMonsterBorn(self.monsterId, self.createTime)
@@ -451,8 +454,20 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         _radii = self.getAlertDistance()
         if _radii <= 0:
             return
+
+        _mapId = formula.fetchMapId(self.spaceNo)
+        _aoi = GP_GP.datas.get(_mapId, {}).get('AOI') or gameconst.DEFAULT_AOI
+
+        # 这里加个5的容错吧，防止边界误差等问题
+        if _radii > _aoi - 5 > 0:
+            _delta = _radii - _aoi + 5
+        else:
+            _delta = 0
+
+        _radii -= _delta
         self.hateTrapId = self.addProximity(_radii, _radii, gameconst.AGGRO_TRIGGER_TRAP)
         leaveAoiRange = self.getLeaveAlertDistance()
+        leaveAoiRange -= _delta
         self.addProximity(leaveAoiRange, 0.0, gameconst.AOI_EXIT_TRAP)
 
     def onGetWitness(self):
@@ -638,11 +653,15 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
                 for i in range(len(rewardIDList)):
                     if shareRewardIDList[i] == gameconst.DropShareRewardType.FIRST_BLOOD:
-                        _ctx = fbTarget.getAvatarAwardCtxCell(rewardIDList[i], None)
+                        _ctx = fbTarget.getAvatarAwardCtxCell(rewardIDList[i], dropCtx)
                         award = dropAward.getAwardOne(
                             rewardIDList[i],
                             _ctx
                         )
+                        worldRatio = utils.getMonsterWorldLevelDropRatio(self.monsterId, self.level)
+                        if worldRatio != 1.0:
+                            award *= worldRatio
+                            LOG_INFO("FB worldLevel drop ratio", self.monsterId, self.level, utils.getWorldLevel(), worldRatio)
                         items = award.itemWealth.getItemObjs() + award.petItemWealth.getItemObjs()
                         radius = NPC_PC.datas['pickupPermissionRange']['value']
                         collectionId = NPC_PC.datas['pickupPermissionId']['value']
@@ -700,23 +719,25 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
             for raidId in self.raidMarkDict.keys():
                 gameengine.getRaidStub(raidId).onMarkMonsterDead(self.id)
+
+            # 跨服组队标记摘除：上行本服 CrossTeamStub 转中心删除并广播
+            for crossTeamId, markIdx in self.crossTeamMarkDict.values():
+                gameengine.getCrossTeamStub(crossTeamId).onCrossMarkMonsterDead(crossTeamId, markIdx)
         except Exception as e:
             LOG_ERR("Error in onDead for clear team record: ", e)
 
-        _suffixId = C_BD.datas.get(self.monsterId, {}).get('nameSuffixID', 0)
-        if _suffixId not in gameconst.MonsterSuffix.NEED_LOG_SUFFIX:
-            return
-
+        coefficientType = C_BD.datas.get(self.monsterId, {}).get('coefficientType', 0)
+        if CCF.datas.get(coefficientType, {}).get('ifRecordDie', 0) == 1:
+            LogTrackingMgr.LogTrackingMgr.Kill_Monster(
+                'Monster',
+                '',
+                self.monsterId,
+                formula.fetchMapId(self.spaceNo),
+                self.gameEntityId,
+                C_BD.datas.get(self.monsterId, {}).get('nameSuffixID', 0),
+            )
         self.destroyAttach()
 
-        LogTrackingMgr.LogTrackingMgr.Kill_Monster(
-            'Monster',
-            '',
-            self.monsterId,
-            formula.fetchMapId(self.spaceNo),
-            self.gameEntityId,
-            _suffixId,
-        )
 
     def doDispatchAward(self, killer, deathDropIds, shareRewardIds, displayModes, dropCtx):
         LOG_DBG("Monster-->doDispatchAward 1 ", killer, deathDropIds, shareRewardIds, displayModes)
@@ -901,6 +922,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             self.teamMarkDict[teamId] = index
         elif teamType == gameconst.TeamType.RAID:
             self.raidMarkDict[teamId] = index
+        elif teamType == gameconst.TeamType.CROSS_TEAM:
+            self.crossTeamMarkDict[teamId] = index
         LOG_DBG("Monster::onBeMarkedAsEnemy: {}, {}, {}, {}".format(self.id, teamId, teamType, index))
 
     def delBeMarkedAsEnemy(self, teamId, teamType):
@@ -910,6 +933,9 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         elif teamType == gameconst.TeamType.RAID:
             if teamId in self.raidMarkDict:
                 self.raidMarkDict.pop(teamId)
+        elif teamType == gameconst.TeamType.CROSS_TEAM:
+            if teamId in self.crossTeamMarkDict:
+                self.crossTeamMarkDict.pop(teamId)
         LOG_DBG("Monster::delBeMarkedAsEnemy: {}, {}, {}".format(self.id, teamId, teamType))
 
     def checkCombatRangeY(self, target):

@@ -11,6 +11,9 @@ import SwitchServer
 import utils
 import gameglobal
 import gameengine
+import gameconfig
+import iRouter
+import gameconst
 
 
 class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
@@ -34,6 +37,14 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def onGetSwitchServerData(self, data):
         LOG_INFO("onGetSwitchServerData: {}".format(len(data)))
         SwitchServer.SwitchServerUtils.saveData(data)
+
+    def onPing(self, serverId, msg):
+        INFO_MSG('onPing', serverId, msg)
+        _r = iRouter.RemoteServerStubEntityCall(serverId, "CrossServerStub")
+        _r.onPong(gameconfig.serverId(), 'hello world pong')
+
+    def onPong(self, serverId, msg):
+        INFO_MSG('onPong', serverId, msg)
 
     def onReqCrossServer(self, accountName, reasonNo, crossServerEntityCall):
         LOG_INFO("onReqCrossServer", accountName, reasonNo)
@@ -133,4 +144,13 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def onGlobalEventTips(self, crossServerType, msgId, msgArgs):
         LOG_DBG("onGlobalEventTips", crossServerType, msgId, msgArgs)
+        if crossServerType == gameconst.EventTipCrossServerType.CrossAllServer:
+            if gameconfig.isCrossServer():
+                crossServerGroupID = gameglobal.mapleServerInfo.get(int(gameconfig.getCrossServerId()), {}).get('server_group', 0)
+                groupServerList = utils.group2ServerIds(crossServerGroupID)
+                for serverID in groupServerList:
+                    LOG_INFO('broadcastTips', gameconst.EventTipCrossServerType.Default, msgId, msgArgs, gameconfig.isCrossServer(), serverID)
+                    _stub = iRouter.RemoteServerStubEntityCall(int(serverID), 'CrossServerStub')
+                    _stub.onGlobalEventTips(gameconst.EventTipCrossServerType.Default, msgId, msgArgs)
+                return
         gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips', (msgId, msgArgs)))

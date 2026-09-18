@@ -220,6 +220,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             self.guildFund,
             self.guildMoney,
             self.guildCommission,
+            self.guildIronMine,
             self.cityBattleToken,
             src,
             opUUID,
@@ -246,6 +247,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             self.guildFund,
             self.guildMoney,
             self.guildCommission,
+            self.guildIronMine,
             self.cityBattleToken,
             src,
             opUUID,
@@ -272,6 +274,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             self.guildFund,
             self.guildMoney,
             self.guildCommission,
+            self.guildIronMine,
             self.cityBattleToken,
             src,
             opUUID,
@@ -294,6 +297,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             self.guildFund,
             self.guildMoney,
             self.guildCommission,
+            self.guildIronMine,
             self.cityBattleToken,
             src,
             opUUID,
@@ -441,6 +445,14 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
 
             func(_gmVal.box)
             yield lambda : None
+
+    def broadcastMemberClientWithCrossServer(self, func, args, exclude=None):
+        for _gmVal in self.members.values(): 
+            if exclude and _gmVal.gbId in exclude:
+                continue
+            if utils.checkBoxOffline(_gmVal.box):
+                continue
+            _gmVal.box.onBroadcastMessage(func, args)
 
     def broadcastMemberClient(self, func, args, exclude=None):
         for _gmVal in self.members.values():
@@ -896,8 +908,6 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         else:
             # 我的联盟收到的申请
             self.onGetLeagueApplyList(gbId, box)
-            # 获取敌对信息
-            self.onGetEnemyList(gbId, self.guildUUID, box)
             # 获取联盟信息
             self.onGetUnionList(gbId, self.guildUUID, box)
         # 获取敌对信息
@@ -928,6 +938,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             if self.leagueUUID > 0:
                 gameengine.getGlobalBase('AllianceStub').onCheckLeaveGuild(self.leagueUUID, self.guildUUID, gbId, box)
                 return
+            else:
+                gameengine.getGlobalBase('AllianceStub').removeEnemyRelation(self.guildUUID)
         self.exitGuildDone(True, gbId, box)
 
     def exitGuildDone(self, ret, gbId, box):
@@ -996,7 +1008,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         })
 
     def _dissolveGuild(self, reason):
-        LOG_INFO('_dissolveGuild', self.guildUUID, reason)
+        LOG_INFO('_dissolveGuild', self.guildUUID, self.leagueUUID, reason)
         if utils.bhas(self.guildFlag, gameconst.GuildFlags.DISSOLVE):
             return
 
@@ -1368,6 +1380,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             self.guildFund,
             self.guildMoney,
             self.guildCommission,
+            self.guildIronMine,
             self.cityBattleToken,
             src,
             opUUID,
@@ -1678,6 +1691,13 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         if self.guildBuilding.juYing.level >= G_GUD.datas[self.guildLevel]['juYingGeLv']:
             return False
         return True
+
+    def gmModifyGuildBuildLv(self, buildingId, level):
+        _building = self._getBuilding(buildingId)
+        if not _building:
+            return
+
+        _building.level = level
 
     def doUpgradeGuildBuilding(self, gbId, box, buildingId):
         if not self._checkHasPermission(gbId, GA_AI_DD.datas.guildBuildingUpgrade):
@@ -2190,7 +2210,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         box.client.onMineWarShareBonusResult(True)
 
         # 同步数据
-        self.doGetGuildIronMine(0, box)
+        self.doGetGuildIronMine(box)
 
         # LogTrackingMgr.LogTrackingMgr.MineBattle_Shared('Guild', '', srcGbId, self.guildUUID, self.guildIronMine, playerList, bonusNumList, opUUID)
         LogTrackingMgr.LogTrackingMgr.mineBattle_dividendedCurrency('Guild', '', srcGbId, self.guildUUID, self.guildIronMine, playerList, bonusNumList, opUUID)
@@ -2550,6 +2570,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             self.guildFund,
             self.guildMoney,
             self.guildCommission,
+            self.guildIronMine,
             self.cityBattleToken,
             src,
             opUUID,
@@ -3080,7 +3101,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
     def doAddGuildIronMineFromStub(self, num):
         self.modifyGuildIronMine(num, AAC_AACDD.datas.BONUS_SRC_MINE_WAR_GUILD_SHARE, KBEngine.genUUID64(), gameclass.AwardDetailCls())
 
-    def doGetGuildIronMine(self, gbId, box):
+    def doGetGuildIronMine(self, box):
         box.client.onGetGuildIronMine(self.guildIronMine)
 
     def _logMineWarGuildMember(self):
@@ -3676,9 +3697,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         _detail = gameclass.AwardDetailCls()
         _src = AAC_AACDD.datas.BONUS_SRC_LEAGUE_IRON_AID
         self.modifyGuildIronMine(-amount, _src, _opUUID, _detail)
-        avatarBox.client.onGuildIronChanged(self.guildIronMine)
+        avatarBox.client.onGetGuildIronMine(self.guildIronMine)
 
-        gameengine.getGlobalBase('AllianceStub').aidResource(self.leagueUUID, self.guildUUID, toGuildId, gameconst.ItemIdEnum.DARK_IRON, amount, oprGbId, avatarBox)
+        gameengine.getGlobalBase('AllianceStub').aidResource(self.leagueUUID, self.guildUUID, toGuildId, gameconst.ItemIdEnum.GUILD_DARK_IRON, amount, oprGbId, avatarBox)
 
     def onGetLeagueFund(self, oprGbId, allianceId, avatarBox):
         gameengine.getGlobalBase('AllianceStub').getLeagueFund(allianceId, avatarBox)
@@ -3686,8 +3707,12 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
     def onGetEventList(self, oprGbId, avatarBox):
         gameengine.getGlobalBase('AllianceStub').getEventList(self.leagueUUID, avatarBox)
 
-    def onSendChatMessage(self, oprGbId, allianceId, content, avatarBox):
-        gameengine.getGlobalBase('AllianceStub').sendChatMessage(allianceId, self.guildUUID, self.guildName, gameconfig.serverId(), content, avatarBox)
+    def onSendChatMessage(self, oprGbId, avatarInfo, content, avatarBox):
+        if self.leagueUUID == 0:
+            LOG_ERR("Guild:: onSendChatMessage, 不在联盟", oprGbId, self.leaderGbId, self.leagueUUID)
+            avatarBox.onMessagePre(M_M_DD.datas.guildChannel_NotInUnion, [])
+            return
+        gameengine.getGlobalBase('AllianceStub').sendChatMessage(self.leagueUUID, self.guildUUID, self.guildName, gameconfig.serverId(), avatarInfo, content, avatarBox)
 
     def onGetChatHistory(self, oprGbId, allianceId, limit, avatarBox):
         gameengine.getGlobalBase('AllianceStub').getChatHistory(allianceId, limit, avatarBox)
@@ -3704,7 +3729,12 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         self.broadcastMemberClient('onLeagueNewEvent', (event,))
 
     def onAllianceChatMessage(self, reply):
-        self.broadcastMemberClient('onAllianceChatMessage', (reply,))
+        LOG_DBG("Guild:: onAllianceChatMessage", self.guildUUID, reply)
+        self.broadcastMemberClientWithCrossServer('onAllianceChatMessage', (reply,))
+    
+    def onAllianceEventTips(self, messageId, messageArgs):
+        LOG_DBG("Guild:: onAllianceEventTips", self.guildUUID, messageId, messageArgs)
+        self.broadcastMemberClient('onMessage', (messageId, messageArgs))
 
     def onNewApplyNotify(self, data):
         """联盟新申请通知:只有当前帮会是盟主帮会时才会被调用,
@@ -3753,6 +3783,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
     def onSetLeagueUUID(self, leagueUUID):
         LOG_INFO('Guild::onSetLeagueUUID:', self.guildUUID, leagueUUID)
         self.leagueUUID = leagueUUID
+        gameengine.getGlobalBase('GuildStub').updateLeagueIdByGuildId(self.guildUUID, self.leagueUUID)
         self.syncLeagueInfoToMembers()
         if self.leagueUUID > 0:
             _gmVal = self.members.get(self.leaderGbId)
@@ -3761,8 +3792,6 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
                 return
             if utils.checkBoxOffline(_gmVal.box):
                 return
-            # 获取敌对信息
-            self.onGetEnemyList(_gmVal.gbId, self.guildUUID, _gmVal.box)
             # 获取联盟信息
             self.onGetUnionList(_gmVal.gbId, self.guildUUID, _gmVal.box)
             # 获取敌对信息
@@ -3808,7 +3837,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         elif itemType == gameconst.LeagueReturnFundType.IRON:
             self.modifyGuildIronMine(itemNum, _src, _opUUID, _detail)
             gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
-                                    [self.leaderGbId, ], 'onGuildIronChanged', (self.guildIronMine,),
+                                    [self.leaderGbId, ], 'onGetGuildIronMine', (self.guildIronMine,),
                                     None, '', ())
             
         else:
@@ -3827,7 +3856,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         if itemType == gameconst.LeagueReturnFundType.IRON:
             self.modifyGuildIronMine(itemNum, _src, _opUUID, _detail)
             gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
-                                    [self.leaderGbId, ], 'onGuildIronChanged', (self.guildIronMine,),
+                                    [self.leaderGbId, ], 'onGetGuildIronMine', (self.guildIronMine,),
                                     None, '', ())
             
         else:
@@ -3852,6 +3881,9 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             return
         gameengine.getGlobalBase('AllianceStub').queryLeagueUUID(self.guildUUID)
 
+    def gmClearLeaveLeagueTS(self):
+        self.leaveLeagueCD = 0
+
     def updateLeaveLeagueTs(self):
         self.leaveLeagueCD = utils.curTS() + int(G_GCD.datas['guild_exitUnionCd']['value']) * 60
 
@@ -3873,3 +3905,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
                     None, '', ())
             return False
         return True
+    
+    def getUnionAndEnemyInfo(self, gbId, box):
+        LOG_INFO("getUnionAndEnemyInfo ", gbId)
+        self.doLeagueSteps(gbId, box)

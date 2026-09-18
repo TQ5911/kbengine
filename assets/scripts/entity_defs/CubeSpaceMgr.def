@@ -29,5 +29,10 @@
             <Arg>       POSITION3D          </Arg>
             <Arg>       FLOAT               </Arg>
         </createChapMan>
+
+        <callOnSpaceMgr>
+            <Arg>       STRING          </Arg>
+            <Arg>       PYTHON          </Arg>
+        </callOnSpaceMgr>
     </CellMethods>
 </root>

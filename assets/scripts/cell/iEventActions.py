@@ -373,14 +373,18 @@ class IEventActions(object):
             return False
         return True
 
-    def blinkToTarget(self, targetEnt, context, *args):
+    def blinkToTarget(self, targetEnt, context, *args, lockTarget=False):
         length = 0
         if len(args) == 1:
             length = args[0]
         skillVal = self._getSkillByActionContext(context)
         realDstPos = tuple(context.skillArgs[-3:])
-        if not realDstPos:
+        if lockTarget:
             realDstPos = targetEnt.position
+
+        elif not realDstPos:
+            realDstPos = targetEnt.position
+
         if sMath.distance2D(self.position, realDstPos) > skillVal.getRange(self, skillVal.skillId, skillVal.skillLv)*1.2:
             LOG_WARN('blinkToTarget distance too far')
             return False

@@ -45,11 +45,11 @@ datas = _tools.RODict({
     }),
     "auctionRevenueRate": _tools.RODict({
         "key": "auctionRevenueRate",
-        "value": (0.05, 0.15, 0.8),
+        "value": (0.1, 0, 0.9),
     }),
     "auctionRevenueClientRate": _tools.RODict({
         "key": "auctionRevenueClientRate",
-        "value": (500, 1500, 8000),
+        "value": (1000, 0, 9000),
     }),
     "auctionServiceFee": _tools.RODict({
         "key": "auctionServiceFee",
@@ -253,7 +253,7 @@ datas = _tools.RODict({
     }),
     "rentalProp01": _tools.RODict({
         "key": "rentalProp01",
-        "value": (0.05, 0.15, 0.8),
+        "value": (0.1, 0, 0.9),
     }),
     "rentalProp02": _tools.RODict({
         "key": "rentalProp02",
@@ -261,7 +261,7 @@ datas = _tools.RODict({
     }),
     "rentalProp01ClientRate01": _tools.RODict({
         "key": "rentalProp01ClientRate01",
-        "value": (500, 1500, 8000),
+        "value": (1000, 0, 9000),
     }),
     "rentalProp01ClientRate02": _tools.RODict({
         "key": "rentalProp01ClientRate02",
@@ -302,5 +302,41 @@ datas = _tools.RODict({
     "auctionLuckyBuyDuplicate": _tools.RODict({
         "key": "auctionLuckyBuyDuplicate",
         "value": 54000313,
+    }),
+    "purchaseSelfForbid": _tools.RODict({
+        "key": "purchaseSelfForbid",
+        "value": 54000314,
+    }),
+    "strengthenLevel": _tools.RODict({
+        "key": "strengthenLevel",
+        "value": "强化+{0}",
+    }),
+    "strengthenLevelRange": _tools.RODict({
+        "key": "strengthenLevelRange",
+        "value": (0, 10),
+    }),
+    "equipStage": _tools.RODict({
+        "key": "equipStage",
+        "value": "{0}阶",
+    }),
+    "equipStageRange": _tools.RODict({
+        "key": "equipStageRange",
+        "value": (1, 4),
+    }),
+    "filterUnlimited": _tools.RODict({
+        "key": "filterUnlimited",
+        "value": "不限",
+    }),
+    "auctionBatchPurchaseConfirm": _tools.RODict({
+        "key": "auctionBatchPurchaseConfirm",
+        "value": 54000228,
+    }),
+    "selectMaxLimit": _tools.RODict({
+        "key": "selectMaxLimit",
+        "value": 10,
+    }),
+    "auctionSellNeedBP": _tools.RODict({
+        "key": "auctionSellNeedBP",
+        "value": 54000267,
     })
 })

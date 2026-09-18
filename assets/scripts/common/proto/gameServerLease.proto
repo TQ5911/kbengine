@@ -29,6 +29,8 @@ message LeaseAddItemPrepareReq {
     uint32 returnTime = 9;      // 归还时间
     uint32 returnReason = 10;   // 归还原因
     uint64 opUUID = 11;         // 透传追踪 ID
+    uint32 enhanceLv = 12;      // 强化等级（用于列表过滤）
+    uint32 grade = 13;          // 装备阶数（用于列表过滤）
 }
 
 message LeaseAddItemPrepareResp {
@@ -78,7 +80,7 @@ message LeaseItemPrepareResp {
 message LeaseItemCommitReq {
     uint64 uniqueId = 1;
     uint64 opUUID = 2;         // 透传追踪 ID
-    uint64 playerGBID = 3;     // 承租人 GBID（回包时用于定位玩家）
+    uint64 playerGBID = 3;     // 新增
 }
 
 message LeaseItemCommitResp {
@@ -154,6 +156,8 @@ message LeaseShopItemsReq {
     uint32 page = 2;
     uint32 pageSize = 3;
     uint64 playerGBID = 4;
+    uint32 enhanceLv = 5;    // 强化等级过滤（按位掩码：bit N 匹配等级 N，全 1 表示不限制）
+    uint32 grade = 6;        // 装备阶数过滤（按位掩码：bit N 匹配等级 N，全 1 表示不限制）
 }
 
 message LeaseShopItemsResp {

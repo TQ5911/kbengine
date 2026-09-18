@@ -740,6 +740,7 @@
             <Type>          FLOATATTR          </Type>
             <Flags>         ALL_CLIENTS     </Flags>
             <Persistent>    true                </Persistent>
+            <WitnessName>     true                  </WitnessName>
         </speed>
         <mulSpeed>
             <Type>          FLOATATTR               </Type>
@@ -789,6 +790,23 @@
             <Type>              PY_DICT             </Type>
             <Flags>             CELL_PRIVATE        </Flags>
         </skillForbidTagDic>
+
+        <skillDmg>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </skillDmg>
+        <adjSkillDmg>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjSkillDmg>
+        <skillDmgAnti>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </skillDmgAnti>
+        <adjSkillDmgAnti>
+            <Type>          FLOAT          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjSkillDmgAnti>
     </Properties>
 
     <CellMethods>

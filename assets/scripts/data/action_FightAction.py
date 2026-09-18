@@ -514,7 +514,7 @@ def isHit(self, target, context):
         AtkRatio = self.getProp("accuracy")
         DefRatio = target.getProp("evasion")
 
-    hitRatio = min(max(0.95 + (addValue + AtkRatio - DefRatio - min(max((target.level - self.level), 0), 10)) / 100, minHitRate), maxHitRate)
+    hitRatio = min(max(1 + (addValue + AtkRatio - DefRatio - min(max((target.level - self.level), 0), 10)) / 100, minHitRate), maxHitRate)
     if random.randint(1, 100) <= hitRatio * 100:
         return True
     else:
@@ -818,7 +818,7 @@ def controlResist(self, target, context, *args):
                 if random.randint(1, 100) <= controlPowerData:
                     # 控制衰减
                     if isDecay:
-                        resistRatio = decayLv * 0.05
+                        resistRatio = decayLv * 0.07
                         arg1 = arg1 * (1 - resistRatio)
                     if arg1 < 0.3:
                         result.resultCode = 2

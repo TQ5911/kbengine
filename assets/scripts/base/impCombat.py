@@ -49,17 +49,18 @@ class AvatarBuildsMixin(object):
     def baseLevelUpSkill(self, newSkillId, oldSkillId, levelDelta):
         LOG_INFO('baseLevelUpSkill', newSkillId, oldSkillId, levelDelta)
         _skillId = dataUtils.getSkillIdByMorphState(newSkillId, self.morphState)
-        ret = self._levelUpSkill(_skillId, oldSkillId, levelDelta)
-        self.updateSkillScore()
+        ret, opUUID = self._levelUpSkill(_skillId, oldSkillId, levelDelta)
+        self.updateSkillScore(opUUID)
         if ret:
             self.syncMethodCallToCrossServerBase('onLocalServerLevelUpSkill', (_skillId, oldSkillId, levelDelta))
 
     def _levelUpSkill(self, newSkillId, oldSkillId, levelDelta):
         LOG_INFO("_levelUpSkill", newSkillId, oldSkillId, levelDelta)
-        if not self.buildDic.levelUp(self, newSkillId, oldSkillId, levelDelta):
+        ret, opUUID = self.buildDic.levelUp(self, newSkillId, oldSkillId, levelDelta)
+        if not ret:
             LOG_INFO('skill can not levelUp', newSkillId, oldSkillId)
-            return False
-        return True
+            return False, opUUID
+        return True, opUUID
 
     #本服升完，跨服也会重走升级技能接口
     def onLocalServerLevelUpSkill(self, _skillId, oldSkillId, levelDelta):
@@ -386,6 +387,7 @@ class ImpCombat(AvatarBuildsMixin):
         self.checkAndUnlockWelfareSignIn()
         self.checkUnlockBountyTask()
         self._updateLeaderBoardAvatar()
+        self.onUpdateUseCoinTimesTicketInfo(newLv)
 
     def playerDeadTlog(self, tlogProps):
         pass
@@ -408,7 +410,7 @@ class ImpCombat(AvatarBuildsMixin):
             self.awardFightPropDic[propName] = self.awardFightPropDic.get(propName, 0) + val
             _syncPropList.append((propName, val))
 
-        self.cell.addAwardFightPropsCell(_syncPropList)
+        self.cell.addAwardFightPropsCell(_syncPropList, opUUID)
 
     def sendServerLevel(self, serverLevel=0):
         serverLevel = serverLevel or utils.getServerLevel()

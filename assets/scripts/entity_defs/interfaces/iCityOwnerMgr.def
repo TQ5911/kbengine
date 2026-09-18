@@ -3,132 +3,113 @@
         <cityOwnerServerId>
             <Type>          INT32                   </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </cityOwnerServerId>
         
         <cityOwnerId>
             <Type>          PLAYER_GBID             </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </cityOwnerId>
 
         <cityOwnerName>
             <Type>          UNICODE                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </cityOwnerName>
 
         <cityOwnerServerName>
             <Type>          UNICODE                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </cityOwnerServerName>
 
         <cityOwnerGuildName>
             <Type>          UNICODE                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </cityOwnerGuildName>
 
         <cityOwnerGuildIcon>
             <Type>          INT32                   </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </cityOwnerGuildIcon>
 
         <cityOwnerGuildFlag>
             <Type>          INT32                   </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </cityOwnerGuildFlag>
 
         <cityOwnerGuildUUID>
             <Type>          GUILD_UUID              </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </cityOwnerGuildUUID>
 
         <cityOwnerSchool>
             <Type>          SCHOOL                  </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </cityOwnerSchool>
 
         <cityOwnerSex>
             <Type>          SEX                     </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </cityOwnerSex>
         
         <cityMoney>
             <Type>          INT64                   </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </cityMoney>
         
         <dailyCumulativeTax>
             <Type>          INT64                   </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </dailyCumulativeTax>
         
         <lastDailyFinalTax>
             <Type>          INT64                   </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </lastDailyFinalTax>
         
         <cityOfficerDict>
             <Type>          PY_DICT                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       {}                      </Default>
         </cityOfficerDict>
 
         <cityRecentActivityList>
             <Type>          PY_LIST                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       []                      </Default>
         </cityRecentActivityList>
 
         <cityFundUseRecord>
             <Type>          PY_LIST                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       []                      </Default>
         </cityFundUseRecord>
 
         <orderRemainTimesDict>
             <Type>          PY_DICT                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       {}                      </Default>
         </orderRemainTimesDict>
 
         <occupyTime>
             <Type>          LONGTIME                </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </occupyTime>
 
         <lastSiegeWarEndTime>
             <Type>          LONGTIME                </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </lastSiegeWarEndTime>
     </Properties>

@@ -32,6 +32,8 @@ class PlayerInfo(int):
 class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterRefresh, iTimerEntityRefresh.ITimerEntityRefresh, iBoxGroupRefresh.IBoxGroupRefresh,
                 iShowMapEntityType.IShowMapEntityType):
 
+    BROADCAST_AVATARS_NUM_ONCE = 30
+
     def __init__(self):
         LOG_DBG('ISpaceMgr.__init__', self.id, self.spaceNo)
         self.initFlowController()
@@ -56,6 +58,22 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
             _playerEnt = KBEngine.entities.get(_pid)
             if _playerEnt:
                 func(_playerEnt)
+
+    def _doBatchlySyncPlayer(self, sendList, func):
+        for entId in sendList:
+            _playerEnt = KBEngine.entities.get(entId)
+            if not _playerEnt:
+                continue
+            func(_playerEnt)
+            yield utils.emptyFunc
+
+    def batchlySyncPlayer(self, func):
+        sendList = list(self.players.keys())
+        if len(sendList) <= 0:
+            return
+        self.batchlyCall(
+            self._doBatchlySyncPlayer(sendList, func),
+            self.BROADCAST_AVATARS_NUM_ONCE, 0.1)
 
     def initFlowController(self):
         pass
@@ -99,11 +117,12 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
             ent.startReportStatistics()
             ent.client.onLightPillarUpdate([value for value in self.lightPillarDict.values()], [True] * len(self.lightPillarDict))
 
-            # 修改玩家PK模式
+            # 矿战核心层开战期间不走地图活动模式，由 refreshPKByScene 强制杀戮
             mapId = formula.fetchMapId(self.spaceNo)
-            pkModel = GGD.datas.get(mapId, {}).get('pkModel', 0) - 1
-            if pkModel >= 0 and pkModel <= gameconst.PKModelEnum.MAX_PK:
-                ent.setPKModel(pkModel)
+            if not (formula.inMineWarScene(self.spaceNo) and getattr(ent, 'mineWarCanAttack', False)):
+                pkModel = GGD.datas.get(mapId, {}).get('pkModel', 0) - 1
+                if pkModel >= 0 and pkModel <= gameconst.PKModelEnum.MAX_PK:
+                    ent.setPKModel(pkModel)
 
     def onPlayerLeave(self, gbId, playerId, box):
         iShowMapEntityType.IShowMapEntityType.onPlayerLeave(self, gbId, playerId, box)
@@ -193,6 +212,8 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
         for tag in self.spaceEntitiesDic[entId]:
             tagList = self.tagEntities[tag]
             tagList.remove(entId)
+            if not tagList:
+                self.tagEntities.pop(tag, None)
 
         self.spaceEntitiesDic.pop(entId)
         if entId in self.lightPillarDict:

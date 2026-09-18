@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	base.Init("mapleConf.json", &mapleApp.MapleConfig, func() common.IApp {
+	base.Init(&mapleApp.MapleConfig, func() common.IApp {
 		return mapleApp.NewMapleApp()
 	})
 }

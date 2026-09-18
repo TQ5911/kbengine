@@ -9,6 +9,7 @@ class ImpRaidDungeon(object):
         dungeonPlayMode = extraData['dungeonPlayMode']
         errno = gameconst.RaidDunErrno.ENUM_RAIDDUN_REWARD_NUM_CHECK_FAIL
         if dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+            self.onTryAddUseCoinTimesFreeTicket(gameconst.RecoveryTicketSubType.CHIEF)
             LOG_INFO("createAndEnterRaidDungeonMemberPreCheck 2 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)
             if self.chiefInfo.isCanTakeReward():
                 LOG_INFO("createAndEnterRaidDungeonMemberPreCheck 3 ", srcPlayerBox, raidUUID, dungeonNo, dungeonSrc, extraData)

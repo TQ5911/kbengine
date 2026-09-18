@@ -33,6 +33,9 @@ class IFriendship(object):
 
     # ------------------------------- load start -------------------------------
     def _loadFriendReq(self, *args):
+        if self.isCrossServer:
+            return
+
         LOG_DBG("IFriendship::_loadFriendReq", args)
         gamesql.loadFriends(self.gbID, self._onLoadFriends)
 
@@ -144,6 +147,10 @@ class IFriendship(object):
         self._notifyFriendsImOnline()
 
     def _sendFriendInfoToClient(self, *args):
+        if self.isCrossServerInOtherServer:
+            self.syncMethodCallToLocalServerBase('_sendFriendInfoToClient', ())
+            return
+
         if not self.friendInitStatus:
             self.registerTempEvent(gameconst.EntityPropsEnum.friendInitEvent, '_sendFriendInfoToClient', ())
             return
@@ -153,7 +160,7 @@ class IFriendship(object):
             while _data:
                 _sendData = _data[:gameconst.SEND_INIT_PACK_NUM]
                 _data = _data[gameconst.SEND_INIT_PACK_NUM:]
-                self.client.onUpdateFriendsFull(_sendData)
+                self.localCrossClient.onUpdateFriendsFull(_sendData)
 
             yield True
 
@@ -161,7 +168,7 @@ class IFriendship(object):
             while _data:
                 _sendData = _data[:gameconst.SEND_INIT_PACK_NUM]
                 _data = _data[gameconst.SEND_INIT_PACK_NUM:]
-                self.client.onFriendRequests(_sendData)
+                self.localCrossClient.onFriendRequests(_sendData)
 
             yield True
 
@@ -169,7 +176,7 @@ class IFriendship(object):
             while _data:
                 _sendData = _data[:gameconst.SEND_INIT_PACK_NUM]
                 _data = _data[gameconst.SEND_INIT_PACK_NUM:]
-                self.client.onUpdateBlocks(_sendData)
+                self.localCrossClient.onUpdateBlocks(_sendData)
 
             yield True
 
@@ -177,14 +184,14 @@ class IFriendship(object):
             while _data:
                 _sendData = _data[:gameconst.SEND_INIT_PACK_NUM]
                 _data = _data[gameconst.SEND_INIT_PACK_NUM:]
-                self.client.onUpdateStrangerData(_sendData)
+                self.localCrossClient.onUpdateStrangerData(_sendData)
 
             yield True
             _data = self.friendship.getRecentClientData()
             while _data:
                 _sendData = _data[:gameconst.SEND_INIT_PACK_NUM]
                 _data = _data[gameconst.SEND_INIT_PACK_NUM:]
-                self.client.onUpdateRecentData(_sendData)
+                self.localCrossClient.onUpdateRecentData(_sendData)
 
         self._addPacketSendTask(_iter())
 
@@ -1024,6 +1031,8 @@ class IFriendship(object):
                 'raidAmount': 0,
                 'bountyId': 0,
                 'offlineTime': fcVal.offlineTime,
+                'fromServerId': fcVal.serverId,
+                'curServerId': 0,
             })
         redisUtils.RedisUtils.getSingleUserInfo(_gbId, __tmp)
 
@@ -1031,7 +1040,14 @@ class IFriendship(object):
     @gamedecorator.checkGameconfigEnable('roleAuthorization')
     @AuthClsWraper.onlyHost
     def authorizeRole(self, exposed, gbId, days, authPermission):
-        LOG_INFO('authorizeRole', gbId)
+        LOG_INFO('authorizeRole', gbId, self.secondaryPwdVerityInfo.getBeEnable())
+        if not (self.secondaryPwdVerityInfo.getBeEnable() and self.getSecondaryPwdInfo().hasSecondaryPassword()):
+            self.onMessagePre(A_ACD.datas['secondPwdNotSet']['value'], [])
+            return
+
+        if self.checkPopupSecondaryPassword([(gameconst.SecondaryPasswordCheckType.AUTH,)]):
+            return
+
         if self.accountEntity.checkHasAuth(self.gbID):
             LOG_ERR('IFriends::authorizeRole already authorized')
             return
@@ -1062,6 +1078,7 @@ class IFriendship(object):
                 'st': gameconst.AuthState.NORMAL
             })
         _fVal.box.onRecvAuthRole(self.gbID, self.getRoleCacheAttr('name'))
+        self.client.onAuthorizeRoleStart(gbId)
 
     @AuthClsWraper.onlyHost
     def cancelAuthRole(self, exposed):

@@ -72,6 +72,16 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void addEnmity(UInt64 arg1)
+		{
+			Bundle pBundle = newCall("addEnmity", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			sendCall(null);
+		}
+
 		public void addSignInAwards(UInt32 arg1)
 		{
 			Bundle pBundle = newCall("addSignInAwards", 0);
@@ -154,7 +164,7 @@ namespace KBEngine
 
 			bundle.writeUint64(arg1);
 			bundle.writeUint8(arg2);
-			((DATATYPE_AUTH_PERMISSION_DATA_INFO)EntityDef.id2datatypes[365]).addToStreamEx(bundle, arg3);
+			((DATATYPE_AUTH_PERMISSION_DATA_INFO)EntityDef.id2datatypes[385]).addToStreamEx(bundle, arg3);
 			sendCall(null);
 		}
 
@@ -195,6 +205,17 @@ namespace KBEngine
 
 			bundle.writeUint64(arg1);
 			bundle.writeUint32(arg2);
+			sendCall(null);
+		}
+
+		public void buyItemsInCoinAuctionByAuctionItemUUIDs(AUCTIONID_LIST arg1, List<UInt32> arg2)
+		{
+			Bundle pBundle = newCall("buyItemsInCoinAuctionByAuctionItemUUIDs", 0);
+			if(pBundle == null)
+				return;
+
+			((DATATYPE_AUCTIONID_LIST)EntityDef.id2datatypes[25]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10030)EntityDef.id2datatypes[10030]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -255,7 +276,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHECK_TEXT_SECURITY_REQ)EntityDef.id2datatypes[488]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHECK_TEXT_SECURITY_REQ)EntityDef.id2datatypes[508]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -295,7 +316,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_GUILD_CREATE_DATA)EntityDef.id2datatypes[208]).addToStreamEx(bundle, arg1);
+			((DATATYPE_GUILD_CREATE_DATA)EntityDef.id2datatypes[225]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -647,6 +668,15 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint64(arg1);
+			sendCall(null);
+		}
+
+		public void getEnmityInfo()
+		{
+			Bundle pBundle = newCall("getEnmityInfo", 0);
+			if(pBundle == null)
+				return;
+
 			sendCall(null);
 		}
 
@@ -1153,7 +1183,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AUTH_PERMISSION_DATA_INFO)EntityDef.id2datatypes[365]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AUTH_PERMISSION_DATA_INFO)EntityDef.id2datatypes[385]).addToStreamEx(bundle, arg1);
 			bundle.writeUint8(arg2);
 			sendCall(null);
 		}
@@ -1215,7 +1245,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_GUILD_JOIN_COND_DATA_INFO)EntityDef.id2datatypes[207]).addToStreamEx(bundle, arg1);
+			((DATATYPE_GUILD_JOIN_COND_DATA_INFO)EntityDef.id2datatypes[224]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -1313,7 +1343,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10060)EntityDef.id2datatypes[10060]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10061)EntityDef.id2datatypes[10061]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -1440,6 +1470,17 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void recycleLingShouEquip(UInt32 arg1, Byte arg2)
+		{
+			Bundle pBundle = newCall("recycleLingShouEquip", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint32(arg1);
+			bundle.writeUint8(arg2);
+			sendCall(null);
+		}
+
 		public void recycleMultipleItems(Byte arg1, List<UInt16> arg2)
 		{
 			Bundle pBundle = newCall("recycleMultipleItems", 0);
@@ -1538,6 +1579,16 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint32(arg1);
+			sendCall(null);
+		}
+
+		public void removeEnmity(UInt64 arg1)
+		{
+			Bundle pBundle = newCall("removeEnmity", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
 			sendCall(null);
 		}
 
@@ -1740,6 +1791,15 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void reqClaimTestReward()
+		{
+			Bundle pBundle = newCall("reqClaimTestReward", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
 		public void reqCollect(Byte arg1, UInt16 arg2, UInt64 arg3, Byte arg4, UInt32 arg5, Byte arg6)
 		{
 			Bundle pBundle = newCall("reqCollect", 0);
@@ -1852,7 +1912,7 @@ namespace KBEngine
 
 			bundle.writeUint8(arg1);
 			bundle.writeUint8(arg2);
-			((DATATYPE_AnonymousArray_10098)EntityDef.id2datatypes[10098]).addToStreamEx(bundle, arg3);
+			((DATATYPE_AnonymousArray_10099)EntityDef.id2datatypes[10099]).addToStreamEx(bundle, arg3);
 			sendCall(null);
 		}
 
@@ -2017,7 +2077,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10058)EntityDef.id2datatypes[10058]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10059)EntityDef.id2datatypes[10059]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2081,7 +2141,7 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void reqLeaseShopItems(UInt32 arg1, UInt32 arg2, UInt32 arg3)
+		public void reqLeaseShopItems(UInt32 arg1, UInt32 arg2, UInt32 arg3, List<Byte> arg4, List<Byte> arg5)
 		{
 			Bundle pBundle = newCall("reqLeaseShopItems", 0);
 			if(pBundle == null)
@@ -2090,6 +2150,8 @@ namespace KBEngine
 			bundle.writeUint32(arg1);
 			bundle.writeUint32(arg2);
 			bundle.writeUint32(arg3);
+			((DATATYPE_AnonymousArray_10013)EntityDef.id2datatypes[10013]).addToStreamEx(bundle, arg4);
+			((DATATYPE_AnonymousArray_10013)EntityDef.id2datatypes[10013]).addToStreamEx(bundle, arg5);
 			sendCall(null);
 		}
 
@@ -2114,7 +2176,7 @@ namespace KBEngine
 			bundle.writeUint8(arg1);
 			bundle.writeUint8(arg2);
 			bundle.writeUint8(arg3);
-			((DATATYPE_AnonymousArray_10098)EntityDef.id2datatypes[10098]).addToStreamEx(bundle, arg4);
+			((DATATYPE_AnonymousArray_10099)EntityDef.id2datatypes[10099]).addToStreamEx(bundle, arg4);
 			sendCall(null);
 		}
 
@@ -2234,7 +2296,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint16(arg1);
-			((DATATYPE_AnonymousArray_10061)EntityDef.id2datatypes[10061]).addToStreamEx(bundle, arg2);
+			((DATATYPE_AnonymousArray_10062)EntityDef.id2datatypes[10062]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -2245,7 +2307,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUnicode(arg1);
-			((DATATYPE_SECONDARY_PWD_VERITY_INFO_CLIENT)EntityDef.id2datatypes[464]).addToStreamEx(bundle, arg2);
+			((DATATYPE_SECONDARY_PWD_VERITY_INFO_CLIENT)EntityDef.id2datatypes[484]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -2377,6 +2439,15 @@ namespace KBEngine
 		public void reqQueryRecharge()
 		{
 			Bundle pBundle = newCall("reqQueryRecharge", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
+		public void reqQueryTestReward()
+		{
+			Bundle pBundle = newCall("reqQueryTestReward", 0);
 			if(pBundle == null)
 				return;
 
@@ -2569,7 +2640,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10061)EntityDef.id2datatypes[10061]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10062)EntityDef.id2datatypes[10062]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2589,7 +2660,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10039)EntityDef.id2datatypes[10039]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10040)EntityDef.id2datatypes[10040]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2634,13 +2705,14 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void reqUpgradeSynthesis(UInt32 arg1)
+		public void reqUpgradeSynthesis(UInt32 arg1, Byte arg2)
 		{
 			Bundle pBundle = newCall("reqUpgradeSynthesis", 0);
 			if(pBundle == null)
 				return;
 
 			bundle.writeUint32(arg1);
+			bundle.writeUint8(arg2);
 			sendCall(null);
 		}
 
@@ -2763,17 +2835,18 @@ namespace KBEngine
 			sendCall(null);
 		}
 
-		public void searchCoinAuctionItemsByItemId(ITEMID_LIST arg1, UInt32 arg2, UInt32 arg3, UInt64 arg4, Byte arg5)
+		public void searchCoinAuctionItemsByItemId(ITEMID_LIST arg1, List<UInt16> arg2, List<UInt16> arg3, UInt32 arg4, UInt32 arg5, Byte arg6)
 		{
 			Bundle pBundle = newCall("searchCoinAuctionItemsByItemId", 0);
 			if(pBundle == null)
 				return;
 
 			((DATATYPE_ITEMID_LIST)EntityDef.id2datatypes[27]).addToStreamEx(bundle, arg1);
-			bundle.writeUint32(arg2);
-			bundle.writeUint32(arg3);
-			bundle.writeUint64(arg4);
-			bundle.writeUint8(arg5);
+			((DATATYPE_AnonymousArray_10005)EntityDef.id2datatypes[10005]).addToStreamEx(bundle, arg2);
+			((DATATYPE_AnonymousArray_10005)EntityDef.id2datatypes[10005]).addToStreamEx(bundle, arg3);
+			bundle.writeUint32(arg4);
+			bundle.writeUint32(arg5);
+			bundle.writeUint8(arg6);
 			sendCall(null);
 		}
 
@@ -2795,6 +2868,26 @@ namespace KBEngine
 				return;
 
 			bundle.writeUnicode(arg1);
+			sendCall(null);
+		}
+
+		public void sendAllianceChatMsg(CHAT_MSG_DATA arg1)
+		{
+			Bundle pBundle = newCall("sendAllianceChatMsg", 0);
+			if(pBundle == null)
+				return;
+
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[124]).addToStreamEx(bundle, arg1);
+			sendCall(null);
+		}
+
+		public void sendCrossTeamChatMsg(CHAT_MSG_DATA arg1)
+		{
+			Bundle pBundle = newCall("sendCrossTeamChatMsg", 0);
+			if(pBundle == null)
+				return;
+
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[124]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2825,7 +2918,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[124]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2835,7 +2928,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[124]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2846,7 +2939,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeInt32(arg1);
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg2);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[124]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -2857,7 +2950,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint64(arg1);
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg2);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[124]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -2881,7 +2974,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[124]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2892,7 +2985,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint64(arg1);
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg2);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[124]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -2916,7 +3009,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[124]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -2978,7 +3071,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_INSTANT_POTION_DATA_INFO)EntityDef.id2datatypes[349]).addToStreamEx(bundle, arg1);
+			((DATATYPE_INSTANT_POTION_DATA_INFO)EntityDef.id2datatypes[366]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -3130,7 +3223,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10081)EntityDef.id2datatypes[10081]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10082)EntityDef.id2datatypes[10082]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -3406,6 +3499,31 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void applyBecomeCrossCaptain(UInt64 arg1)
+		{
+			Bundle pBundle = newCall("applyBecomeCrossCaptain", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			sendCall(null);
+		}
+
+		public void applyCreateCrossTeam(Byte arg1, UInt32 arg2, UInt32 arg3, string arg4, string arg5, Byte arg6)
+		{
+			Bundle pBundle = newCall("applyCreateCrossTeam", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			bundle.writeUint32(arg2);
+			bundle.writeUint32(arg3);
+			bundle.writeString(arg4);
+			bundle.writeUnicode(arg5);
+			bundle.writeUint8(arg6);
+			sendCall(null);
+		}
+
 		public void applyCreateTeam(Byte arg1, UInt32 arg2, UInt32 arg3, string arg4, string arg5, Byte arg6)
 		{
 			Bundle pBundle = newCall("applyCreateTeam", 0);
@@ -3418,6 +3536,15 @@ namespace KBEngine
 			bundle.writeUnicode(arg4);
 			bundle.writeString(arg5);
 			bundle.writeUint8(arg6);
+			sendCall(null);
+		}
+
+		public void applyDisbandCrossTeam()
+		{
+			Bundle pBundle = newCall("applyDisbandCrossTeam", 0);
+			if(pBundle == null)
+				return;
+
 			sendCall(null);
 		}
 
@@ -3437,6 +3564,15 @@ namespace KBEngine
 				return;
 
 			bundle.writeInt32(arg1);
+			sendCall(null);
+		}
+
+		public void applyExitCrossCrusade()
+		{
+			Bundle pBundle = newCall("applyExitCrossCrusade", 0);
+			if(pBundle == null)
+				return;
+
 			sendCall(null);
 		}
 
@@ -3466,6 +3602,17 @@ namespace KBEngine
 				return;
 
 			bundle.writeInt32(arg1);
+			sendCall(null);
+		}
+
+		public void applyInviteCrossTeam(UInt64 arg1, string arg2)
+		{
+			Bundle pBundle = newCall("applyInviteCrossTeam", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			bundle.writeUnicode(arg2);
 			sendCall(null);
 		}
 
@@ -3504,6 +3651,18 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void applyJoinCrossTeam(UInt64 arg1, string arg2, SByte arg3)
+		{
+			Bundle pBundle = newCall("applyJoinCrossTeam", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			bundle.writeString(arg2);
+			bundle.writeInt8(arg3);
+			sendCall(null);
+		}
+
 		public void applyJoinRaidLonely(UInt64 arg1, string arg2, SByte arg3)
 		{
 			Bundle pBundle = newCall("applyJoinRaidLonely", 0);
@@ -3538,6 +3697,16 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void applyKickCrossTeamMember(UInt64 arg1)
+		{
+			Bundle pBundle = newCall("applyKickCrossTeamMember", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			sendCall(null);
+		}
+
 		public void applyKickTeamMember(UInt64 arg1)
 		{
 			Bundle pBundle = newCall("applyKickTeamMember", 0);
@@ -3545,6 +3714,15 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint64(arg1);
+			sendCall(null);
+		}
+
+		public void applyLeaveCrossTeam()
+		{
+			Bundle pBundle = newCall("applyLeaveCrossTeam", 0);
+			if(pBundle == null)
+				return;
+
 			sendCall(null);
 		}
 
@@ -3566,6 +3744,15 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void applyStartCrossCrusade()
+		{
+			Bundle pBundle = newCall("applyStartCrossCrusade", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
 		public void applySwitchLine(UInt16 arg1)
 		{
 			Bundle pBundle = newCall("applySwitchLine", 0);
@@ -3579,6 +3766,16 @@ namespace KBEngine
 		public void applyTransferCaptain(UInt64 arg1)
 		{
 			Bundle pBundle = newCall("applyTransferCaptain", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			sendCall(null);
+		}
+
+		public void applyTransferCrossCaptain(UInt64 arg1)
+		{
+			Bundle pBundle = newCall("applyTransferCrossCaptain", 0);
 			if(pBundle == null)
 				return;
 
@@ -3680,6 +3877,16 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
+			sendCall(null);
+		}
+
+		public void buyRefugeTime(Byte arg1)
+		{
+			Bundle pBundle = newCall("buyRefugeTime", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
 			sendCall(null);
 		}
 
@@ -3787,6 +3994,15 @@ namespace KBEngine
 		public void clearApplyJoinDic()
 		{
 			Bundle pBundle = newCall("clearApplyJoinDic", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
+		public void clearCrossApplyJoinDic()
+		{
+			Bundle pBundle = newCall("clearCrossApplyJoinDic", 0);
 			if(pBundle == null)
 				return;
 
@@ -4390,6 +4606,15 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void openRefuge()
+		{
+			Bundle pBundle = newCall("openRefuge", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
 		public void queryLineInfo(Int32 arg1)
 		{
 			Bundle pBundle = newCall("queryLineInfo", 0);
@@ -4441,6 +4666,41 @@ namespace KBEngine
 		public void replyBecomeCaptain(UInt64 arg1, Byte arg2)
 		{
 			Bundle pBundle = newCall("replyBecomeCaptain", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			bundle.writeUint8(arg2);
+			sendCall(null);
+		}
+
+		public void replyBecomeCrossCaptain(UInt64 arg1, Byte arg2)
+		{
+			Bundle pBundle = newCall("replyBecomeCrossCaptain", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			bundle.writeUint8(arg2);
+			sendCall(null);
+		}
+
+		public void replyCrossTeamInvite(UInt64 arg1, Byte arg2, UInt64 arg3, Byte arg4)
+		{
+			Bundle pBundle = newCall("replyCrossTeamInvite", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			bundle.writeUint8(arg2);
+			bundle.writeUint64(arg3);
+			bundle.writeUint8(arg4);
+			sendCall(null);
+		}
+
+		public void replyCrossTeamJoin(UInt64 arg1, Byte arg2)
+		{
+			Bundle pBundle = newCall("replyCrossTeamJoin", 0);
 			if(pBundle == null)
 				return;
 
@@ -4532,6 +4792,21 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void reqAddCrossMarkMember(Byte arg1, Byte arg2, string arg3, UInt64 arg4, Int32 arg5, Vector3 arg6)
+		{
+			Bundle pBundle = newCall("reqAddCrossMarkMember", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			bundle.writeUint8(arg2);
+			bundle.writeUnicode(arg3);
+			bundle.writeUint64(arg4);
+			bundle.writeInt32(arg5);
+			bundle.writeVector3(arg6);
+			sendCall(null);
+		}
+
 		public void reqAddMarkMember(Byte arg1, Byte arg2, string arg3, UInt64 arg4, Int32 arg5, Vector3 arg6)
 		{
 			Bundle pBundle = newCall("reqAddMarkMember", 0);
@@ -4562,6 +4837,19 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void reqAdjustCrossTeamMemberPos(UInt64 arg1, Byte arg2, UInt64 arg3, Byte arg4)
+		{
+			Bundle pBundle = newCall("reqAdjustCrossTeamMemberPos", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			bundle.writeUint8(arg2);
+			bundle.writeUint64(arg3);
+			bundle.writeUint8(arg4);
+			sendCall(null);
+		}
+
 		public void reqCaptainFollowInfo()
 		{
 			Bundle pBundle = newCall("reqCaptainFollowInfo", 0);
@@ -4578,7 +4866,17 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
-			((DATATYPE_ABYSS_SWITCH)EntityDef.id2datatypes[237]).addToStreamEx(bundle, arg2);
+			((DATATYPE_ABYSS_SWITCH)EntityDef.id2datatypes[254]).addToStreamEx(bundle, arg2);
+			sendCall(null);
+		}
+
+		public void reqChangeCrossOnlyCaptain(Byte arg1)
+		{
+			Bundle pBundle = newCall("reqChangeCrossOnlyCaptain", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
 			sendCall(null);
 		}
 
@@ -4589,7 +4887,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
-			((DATATYPE_CUBE_SWITCH)EntityDef.id2datatypes[235]).addToStreamEx(bundle, arg2);
+			((DATATYPE_CUBE_SWITCH)EntityDef.id2datatypes[252]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -4620,7 +4918,7 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
-			((DATATYPE_WONDER_LAND_SWITCH)EntityDef.id2datatypes[236]).addToStreamEx(bundle, arg2);
+			((DATATYPE_WONDER_LAND_SWITCH)EntityDef.id2datatypes[253]).addToStreamEx(bundle, arg2);
 			sendCall(null);
 		}
 
@@ -4643,6 +4941,27 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint8(arg1);
+			sendCall(null);
+		}
+
+		public void reqCrossTeamMatch(Byte arg1)
+		{
+			Bundle pBundle = newCall("reqCrossTeamMatch", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			sendCall(null);
+		}
+
+		public void reqDelCrossMarkMember(Byte arg1, Byte arg2)
+		{
+			Bundle pBundle = newCall("reqDelCrossMarkMember", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			bundle.writeUint8(arg2);
 			sendCall(null);
 		}
 
@@ -4742,6 +5061,32 @@ namespace KBEngine
 			((DATATYPE_AnonymousArray_10029)EntityDef.id2datatypes[10029]).addToStreamEx(bundle, arg5);
 			((DATATYPE_AnonymousArray_10013)EntityDef.id2datatypes[10013]).addToStreamEx(bundle, arg6);
 			bundle.writeUint8(arg7);
+			sendCall(null);
+		}
+
+		public void reqEquipGlyphWashingConfirm(Byte arg1, UInt16 arg2, Byte arg3, UInt64 arg4)
+		{
+			Bundle pBundle = newCall("reqEquipGlyphWashingConfirm", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			bundle.writeUint16(arg2);
+			bundle.writeUint8(arg3);
+			bundle.writeUint64(arg4);
+			sendCall(null);
+		}
+
+		public void reqEquipGlyphWashingDiscard(Byte arg1, UInt16 arg2, Byte arg3, UInt64 arg4)
+		{
+			Bundle pBundle = newCall("reqEquipGlyphWashingDiscard", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			bundle.writeUint16(arg2);
+			bundle.writeUint8(arg3);
+			bundle.writeUint64(arg4);
 			sendCall(null);
 		}
 
@@ -4845,6 +5190,35 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void reqGetCrossTeamApplyList()
+		{
+			Bundle pBundle = newCall("reqGetCrossTeamApplyList", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
+		public void reqGetCrossTeamList(Byte arg1)
+		{
+			Bundle pBundle = newCall("reqGetCrossTeamList", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			sendCall(null);
+		}
+
+		public void reqGetCrossTeamPreview(UInt64 arg1)
+		{
+			Bundle pBundle = newCall("reqGetCrossTeamPreview", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			sendCall(null);
+		}
+
 		public void reqGetRaidList(UInt32 arg1, Byte arg2)
 		{
 			Bundle pBundle = newCall("reqGetRaidList", 0);
@@ -4884,6 +5258,17 @@ namespace KBEngine
 
 			bundle.writeUint32(arg1);
 			bundle.writeUint8(arg2);
+			sendCall(null);
+		}
+
+		public void reqJoinCrossTeam(UInt64 arg1, string arg2)
+		{
+			Bundle pBundle = newCall("reqJoinCrossTeam", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			bundle.writeString(arg2);
 			sendCall(null);
 		}
 
@@ -4990,6 +5375,51 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void reqSetCrossTeamAutoMatch(Byte arg1)
+		{
+			Bundle pBundle = newCall("reqSetCrossTeamAutoMatch", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
+			sendCall(null);
+		}
+
+		public void reqSetCrossTeamDeputy(UInt64 arg1)
+		{
+			Bundle pBundle = newCall("reqSetCrossTeamDeputy", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			sendCall(null);
+		}
+
+		public void reqSetCrossTeamMemberMicBlock(UInt64 arg1, Byte arg2)
+		{
+			Bundle pBundle = newCall("reqSetCrossTeamMemberMicBlock", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			bundle.writeUint8(arg2);
+			sendCall(null);
+		}
+
+		public void reqSetCrossTeamSettings(UInt32 arg1, UInt32 arg2, string arg3, Byte arg4, string arg5)
+		{
+			Bundle pBundle = newCall("reqSetCrossTeamSettings", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint32(arg1);
+			bundle.writeUint32(arg2);
+			bundle.writeUnicode(arg3);
+			bundle.writeUint8(arg4);
+			bundle.writeString(arg5);
+			sendCall(null);
+		}
+
 		public void reqSetEquipSuitHide(Byte arg1)
 		{
 			Bundle pBundle = newCall("reqSetEquipSuitHide", 0);
@@ -5031,6 +5461,15 @@ namespace KBEngine
 				return;
 
 			bundle.writeUint32(arg1);
+			sendCall(null);
+		}
+
+		public void reqStopCrossTeamMatch()
+		{
+			Bundle pBundle = newCall("reqStopCrossTeamMatch", 0);
+			if(pBundle == null)
+				return;
+
 			sendCall(null);
 		}
 
@@ -5078,6 +5517,17 @@ namespace KBEngine
 
 			bundle.writeUint32(arg1);
 			bundle.writeUint32(arg2);
+			sendCall(null);
+		}
+
+		public void reqUpdateCrossTeamVoiceRoomState(UInt64 arg1, Byte arg2)
+		{
+			Bundle pBundle = newCall("reqUpdateCrossTeamVoiceRoomState", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint64(arg1);
+			bundle.writeUint8(arg2);
 			sendCall(null);
 		}
 
@@ -5174,6 +5624,15 @@ namespace KBEngine
 		public void sendAllMemberFollowAsk()
 		{
 			Bundle pBundle = newCall("sendAllMemberFollowAsk", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
+		public void sendCrossAllMemberFollowAsk()
+		{
+			Bundle pBundle = newCall("sendCrossAllMemberFollowAsk", 0);
 			if(pBundle == null)
 				return;
 
@@ -5332,7 +5791,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_SIEGEWAR_MINIMAP_SIGNAL_VAL)EntityDef.id2datatypes[259]).addToStreamEx(bundle, arg1);
+			((DATATYPE_SIEGEWAR_MINIMAP_SIGNAL_VAL)EntityDef.id2datatypes[276]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -5361,6 +5820,16 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
+			sendCall(null);
+		}
+
+		public void switchCrossTeamMicsMode(Byte arg1)
+		{
+			Bundle pBundle = newCall("switchCrossTeamMicsMode", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint8(arg1);
 			sendCall(null);
 		}
 
@@ -5543,6 +6012,15 @@ namespace KBEngine
 			sendCall(null);
 		}
 
+		public void turnOffCrossTeamMics()
+		{
+			Bundle pBundle = newCall("turnOffCrossTeamMics", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
 		public void turnOffRaidMics()
 		{
 			Bundle pBundle = newCall("turnOffRaidMics", 0);
@@ -5555,6 +6033,15 @@ namespace KBEngine
 		public void turnOffTeamMics()
 		{
 			Bundle pBundle = newCall("turnOffTeamMics", 0);
+			if(pBundle == null)
+				return;
+
+			sendCall(null);
+		}
+
+		public void turnOnCrossTeamMics()
+		{
+			Bundle pBundle = newCall("turnOnCrossTeamMics", 0);
 			if(pBundle == null)
 				return;
 

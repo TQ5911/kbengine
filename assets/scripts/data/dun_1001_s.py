@@ -8368,9 +8368,9 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 16000096,
           "ID": 10018061,
-          "PosX": 335.8544,
-          "PosY": 0.359022,
-          "PosZ": 67.31911,
+          "PosX": 323.82,
+          "PosY": 0.35,
+          "PosZ": 74.95,
           "Props": {
             "ChestGroupID": "",
             "IsOnGround": 1,
@@ -8530,8 +8530,10 @@ datas ={
           "PosY": 0.4333332,
           "PosZ": 347.1805,
           "Props": {
+            "ChestGroupID": "",
             "IsOnGround": 1,
             "IsOpen": 1,
+            "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
@@ -8860,6 +8862,52 @@ datas ={
         "PosZ": 93.61855,
         "Props": {
           "Remark": "",
+          "ShowInSceneMap": 1
+        }
+      }
+    },
+    "CustomFuncPos": {
+      "10018084": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "CustomFuncPos",
+        "ClassNameType": 10,
+        "CustomID": "",
+        "Dir": 0.0,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 0,
+        "ID": 10018084,
+        "PosX": 0.0,
+        "PosY": 0.0,
+        "PosZ": 0.0,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "RefreshTimedID": 0,
+          "Remark": "86010257",
+          "ShowInSceneMap": 1
+        }
+      },
+      "10018085": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "CustomFuncPos",
+        "ClassNameType": 10,
+        "CustomID": "",
+        "Dir": 0.0,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 0,
+        "ID": 10018085,
+        "PosX": 352.4017,
+        "PosY": 20.28558,
+        "PosZ": 260.5036,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "RefreshTimedID": 0,
+          "Remark": "86050020",
           "ShowInSceneMap": 1
         }
       }

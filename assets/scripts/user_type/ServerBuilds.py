@@ -217,7 +217,7 @@ class Build(userType.UserSingleType):
     def levelUp(self, owner, skillId, oldSkillId, delta):
         LOG_INFO('levelUp ', skillId, oldSkillId, delta)
         if skillId not in self.skillLevels:
-            return False
+            return False, 0
 
         if delta != 1:
             LOG_ERR('levelUp delta must be 1', skillId, delta)
@@ -226,14 +226,17 @@ class Build(userType.UserSingleType):
         _morphBaseSkillId = dataUtils.getSkillIdByMorphState(skillId, gameconst.MORPH_BUILD_STATE)
         if delta > 0 and self.skillLevels[skillId] >= self.getMaxLevel(owner, _morphBaseSkillId, oldSkillId):
             LOG_DBG('skillLv reach max', owner.id, skillId, self.skillLevels)
-            return False
+            return False, 0
 
         if not owner.hasSkill(skillId):
             LOG_DBG('skill does not unlocked')
-            return False
+            return False, 0
 
         oldLevel = self.skillLevels[skillId]
-
+        t = self.skillLevels[oldSkillId]
+        if oldLevel < t:
+            oldLevel = t
+        LOG_INFO('levelUp 1 ', skillId, oldSkillId, delta, oldLevel)
         cfgData = SRSUD.datas.get(_morphBaseSkillId, None)
         if not cfgData:
             cfgData = SRSUD.datas[oldSkillId]
@@ -242,7 +245,7 @@ class Build(userType.UserSingleType):
         levelLimit = cfgData.get('levelLimit')[oldLevel-1]
         if selfLevel < levelLimit:
             LOG_ERR('level limit:', selfLevel, levelLimit)
-            return False
+            return False, 0
 
         costItemInfo = {}
         consumeItem = cfgData.get('consumeItem')[oldLevel-1]
@@ -258,7 +261,7 @@ class Build(userType.UserSingleType):
         res = owner.canDeductWealth(deductVal, sendMsg=True)
         if not res:
             LOG_WARN('   in levelUp, canDeductWealth fail:', skillId, delta, res())
-            return
+            return False, 0
 
         opUUID = KBEngine.genUUID64()
         src = AAC_AACDD.datas.BONUS_SRC_SKILL_UPGRADE
@@ -289,7 +292,7 @@ class Build(userType.UserSingleType):
             gameconst.AchieveType.LEVEL_UP_SKILL,
             actionContext.AchievementCtx(oldLevel=oldLevel, newLevel=newLevel))
         LogTrackingMgr.LogTrackingMgr.Skill_Upgrade(owner.gbID, owner.accountEntity.clientDistinctId, owner.gbID, skillId, list(costItemInfo.keys()), list(costItemInfo.values()), consumeMoney[0], consumeMoney[1], newLevel, opUUID)
-        return True
+        return True, opUUID
 
     def getSkillIds(self):
         slots = self.activeSkills

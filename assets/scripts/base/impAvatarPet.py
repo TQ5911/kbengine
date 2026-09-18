@@ -39,6 +39,7 @@ class ImpAvatarPet(object):
         self.cell.onInitPetProps(petIds, petLevels)
 
     def initNovicePetInfo(self):
+        LOG_INFO("initNovicePetInfo")
         petTeamNum = PDSD.datas['petTeamNum']['value']
         petMaxNum = PDUD.maxKey
         for i in range(petTeamNum):
@@ -307,6 +308,64 @@ class ImpAvatarPet(object):
         LOG_INFO('onLocalServerAddLingShouBase')
         self.addLingShouBase(abCtx)
 
+    def calculateRecycleConsume(self, itemId):
+        if itemId == 0:
+            return True
+        itemData = IDID.datas.get(itemId)
+        if not itemData:
+            LOG_ERR('calculateRecycleConsume, missing item:', itemId)
+            return False
+
+        cost = 0
+        quality = itemData['quality']
+        petGearRemoveCost = PDSD.datas['petGearRemoveCost']['value']
+        petGearRemoveItem = PDSD.datas['petGearRemoveItem']['value']
+        if not petGearRemoveCost or not petGearRemoveItem:
+            LOG_ERR('calculateRecycleConsume, missing pet gear remove cfg:', itemId)
+            return False
+        for d in petGearRemoveCost:
+            q, c = d
+            if q == quality:
+                cost = c
+                break
+        if cost > 0:
+            deductWealthVal = dropAward.DeductWealthVal()
+            deductWealthVal.addWealthByItemId(petGearRemoveItem, cost)
+            ret = self.canDeductWealth(deductWealthVal)
+            if not ret:
+                LOG_ERR('calculateRecycleConsume, item is not enough:', itemId)
+                return False
+            srcType = AAC_AACDD.datas.BONUS_SRC_PET_DROP_EQUIP
+            opUUID = KBEngine.genUUID64()
+            detail = gameclass.AwardDetailCls(itemId=petGearRemoveItem, itemNum=cost)
+            self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+        return True
+
+    @gamedecorator.checkGameconfigEnable('pet')
+    @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
+    @gamedecorator.crossServer
+    def recycleLingShouEquip(self, exposed, petId, slotId):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('_recycleLingShouEquip', (petId, slotId))
+        else:
+            self._recycleLingShouEquip(petId, slotId)
+
+    def _recycleLingShouEquip(self, petId, slotId):
+        LOG_INFO("_recycleLingShouEquip ", petId, slotId)
+        pet = self.lingShouInfo.getLingShouByPetId(petId)
+        if not pet:
+            return
+        oldItemId = pet.getPetEquip(slotId)
+        if not self.calculateRecycleConsume(oldItemId):
+            return
+        self.removePetEquipNumByPet(pet)
+        pet.modifyPetEquip(self, slotId, 0)
+        self.addPetEquipNumByPet(pet)
+        
+        self.syncMethodCallToCrossServerBase('onLocalServerRecycleLingShouEquip', (petId, slotId))
+
+        return True
+    
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     @gamedecorator.crossServer
@@ -323,7 +382,7 @@ class ImpAvatarPet(object):
             return
 
         item = self.petBag.getItemObjByGridId(gridId)
-        if not item:
+        if not item or item.itemNum < 0:
             LOG_ERR('useLingShouEquip item not found', gridId)
             return
 
@@ -331,20 +390,17 @@ class ImpAvatarPet(object):
         if not dataUtils.isLingShouItem(itemId):
             LOG_ERR('useLingShouEquip not lingShou item', itemId)
             return
-
+        
         if not pet.canReplaceEquip(self, slotId, itemId):
             LOG_ERR('useLingShouEquip not canReplaceEquip', slotId, itemId)
             return
-
-        deductWealthVal = dropAward.DeductWealthVal().addWealthByObjList([item])
-        LOG_INFO('useLingShouEquip itemId:', itemId)
-        if not self.canDeductWealth(deductWealthVal, sendMsg=True):
-            return False
-
+        oldItemId = pet.getPetEquip(slotId)
+        if not self.calculateRecycleConsume(oldItemId):
+            return
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_PETGEAR_DRESS
-        detail = gameclass.AwardDetailCls(petId=petId)
-        self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+        detail = gameclass.AwardDetailCls(petId=petId, itemId=itemId)
+        self.petBag.deductItemsByGridId(self, {gridId:1}, opUUID, srcType, detail)
 
         self.removePetEquipNumByPet(pet)
         pet.modifyPetEquip(self, slotId, itemId)
@@ -362,6 +418,11 @@ class ImpAvatarPet(object):
         LOG_INFO('onLocalServerUseLingShouEquip')
         if not self._useLingShouEquip(gridId, petId, slotId):
             gameengine.panicStack('onLocalServerUseLingShouEquip failed', gridId, petId, slotId)
+
+    def onLocalServerRecycleLingShouEquip(self, petId, slotId):
+        LOG_INFO('onLocalServerRecycleLingShouEquip')
+        if not self._recycleLingShouEquip(petId, slotId):
+            gameengine.panicStack('onLocalServerRecycleLingShouEquip failed', petId, slotId)
 
     def addLingShouBase(self, addContext):
         LOG_INFO("addLingShouBase ", addContext.__dict__)
@@ -424,7 +485,7 @@ class ImpAvatarPet(object):
             return
         # 总的经验
         totalExp = 0
-        deductItems = []
+        deductItems = {}
         for gridId in gridIds:
             itemObj = self.petBag.getItemObjByGridId(gridId)
             if not itemObj:
@@ -434,7 +495,9 @@ class ImpAvatarPet(object):
             if not itemData:
                 LOG_ERR('levelUpPet item not found', itemObj.itemId)
                 return
-            
+            if itemObj.itemNum < 1:
+                LOG_ERR('levelUpPet item not enough', itemObj.itemId)
+                return
             # 秘宝类型
             itemType = itemData['type']
             itemSubType = itemData['subType']
@@ -456,18 +519,12 @@ class ImpAvatarPet(object):
                 LOG_ERR('levelUpPet invalid pet gear exp', itemObj.itemId)
                 return
             totalExp += datas['claimExp']
-            deductItems.append(itemObj)
-        # 扣除材料    
-        deductWealthVal = dropAward.DeductWealthVal().addWealthByObjList(deductItems)
-        res = self.canDeductWealth(deductWealthVal, sendMsg=True)
-        if not res:
-            LOG_WARN('levelUpPet can not deduct items', deductItems, petId, res())
-            return False
-
+            deductItems[gridId] = 1
+        # 扣除材料
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_PET_LEVEL_UP
         detail = gameclass.AwardDetailCls(petId=petId)
-        self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+        self.petBag.deductItemsByGridId(self, deductItems, opUUID, srcType, detail)
         
         topExps = leveUpExps[curLevel - 1:]
         LOG_INFO("levelUpPet begin:", petId, curLevel, curExp, totalExp, leveUpExps, topExps)
@@ -489,7 +546,7 @@ class ImpAvatarPet(object):
         # 设置宠物新的等级和经验
         oldScore = pet.baseScore
         oldLevel = pet.level
-        pet.setLevelAndExp(oldLevel, curLevel, curExp, self)
+        pet.setLevelAndExp(oldLevel, curLevel, curExp, self, opUUID)
         newScore = pet.baseScore - oldScore
         LogTrackingMgr.LogTrackingMgr.pet_levelup(self.gbID, self.accountEntity.clientDistinctId, self.gbID, opUUID, pet.petId, pet.quality, oldLevel, pet.level, pet.equipList, newScore)
         LOG_INFO("levelUpPet end:", petId, curLevel, curExp, totalExp, isTopLevel)

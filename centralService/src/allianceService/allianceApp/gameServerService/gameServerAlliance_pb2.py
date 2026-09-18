@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='AllianceService',
   syntax='proto3',
   serialized_options=_b('Z\024../gameServerService\220\001\001'),
-  serialized_pb=_b('\n\x18gameServerAlliance.proto\x12\x0f\x41llianceService\"\x06\n\x04Void\"\xeb\x02\n\x0c\x41llianceInfo\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65\x63laration\x18\x03 \x01(\t\x12\x15\n\rleaderGuildId\x18\x04 \x01(\x04\x12\x16\n\x0eleaderServerId\x18\x05 \x01(\r\x12\x17\n\x0fleaderGuildName\x18\x06 \x01(\t\x12\x13\n\x0b\x61pproveType\x18\x07 \x01(\r\x12\x0c\n\x04\x66und\x18\t \x01(\x04\x12\x13\n\x0bmemberCount\x18\n \x01(\r\x12\x12\n\ntotalScore\x18\x0b \x01(\x04\x12\x10\n\x08serverId\x18\x0e \x01(\r\x12\x11\n\tcreatedAt\x18\x0f \x01(\r\x12\x12\n\nleaderGbId\x18\x10 \x01(\x04\x12\x12\n\nleaderName\x18\x11 \x01(\t\x12\x13\n\x0bleaderLevel\x18\x12 \x01(\r\x12\x18\n\x10leaderProfession\x18\x13 \x01(\x05\x12\x14\n\x0cleaderGender\x18\x14 \x01(\r\"\xd6\x01\n\x11\x41llianceBasicInfo\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x13\n\x0b\x64\x65\x63laration\x18\x02 \x01(\t\x12\x13\n\x0b\x61pproveType\x18\x03 \x01(\r\x12\x12\n\nleaderName\x18\x04 \x01(\t\x12\x14\n\x0cleaderGender\x18\x05 \x01(\r\x12\x13\n\x0bleaderLevel\x18\x06 \x01(\r\x12\x16\n\x0eleaderServerId\x18\x07 \x01(\r\x12\x18\n\x10leaderProfession\x18\x08 \x01(\x05\x12\x12\n\nleaderGbId\x18\t \x01(\x04\"=\n\x19GetLeagueBasicInfoRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"k\n\x18GetLeagueBasicInfoResult\x12\x30\n\x04info\x18\x01 \x01(\x0b\x32\".AllianceService.AllianceBasicInfo\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\\\n\x12LeagueSimpleMember\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x11\n\tguildIcon\x18\x03 \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x04 \x01(\r\"~\n\x10LeagueSimpleInfo\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x12\n\ntotalScore\x18\x03 \x01(\x04\x12\x34\n\x07members\x18\x04 \x03(\x0b\x32#.AllianceService.LeagueSimpleMember\">\n\x1aGetLeagueSimpleInfoRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"k\n\x19GetLeagueSimpleInfoResult\x12/\n\x04info\x18\x01 \x01(\x0b\x32!.AllianceService.LeagueSimpleInfo\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"I\n\x17\x43heckGuildExistsRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\x12\x0f\n\x07\x63heckCD\x18\x03 \x01(\x08\"|\n\x16\x43heckGuildExistsResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x11\n\tguildName\x18\x03 \x01(\t\x12\x0e\n\x06\x65xists\x18\x04 \x01(\x08\x12\x0f\n\x07guildCD\x18\x05 \x01(\r\x12\x0f\n\x07\x63heckCD\x18\x06 \x01(\x08\"\x8f\x01\n\x0fGuildSimpleInfo\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x11\n\tguildIcon\x18\x03 \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x04 \x01(\r\x12\r\n\x05score\x18\x05 \x01(\x04\x12\x12\n\nguildLevel\x18\x06 \x01(\r\x12\x11\n\tmemberCnt\x18\x07 \x01(\r\"L\n\x19GetGuildSimpleInfoRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"i\n\x18GetGuildSimpleInfoResult\x12.\n\x04info\x18\x01 \x01(\x0b\x32 .AllianceService.GuildSimpleInfo\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\x90\x01\n\x0eNewApplyNotify\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x11\n\tguildIcon\x18\x03 \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x04 \x01(\r\x12\r\n\x05power\x18\x05 \x01(\x04\x12\x12\n\nleaderGbId\x18\x06 \x01(\x04\x12\x11\n\tapplyTime\x18\x07 \x01(\x04\"\xc2\x01\n\x14\x41pplyCancelledNotify\x12\x0f\n\x07\x61pplyId\x18\x01 \x01(\x04\x12\x12\n\nallianceId\x18\x02 \x01(\x04\x12\x0f\n\x07guildId\x18\x03 \x01(\x04\x12\x11\n\tguildName\x18\x04 \x01(\t\x12\x10\n\x08serverId\x18\x05 \x01(\r\x12\x35\n\x06reason\x18\x06 \x01(\x0e\x32%.AllianceService.ApplyCancelledReason\x12\x18\n\x10joinedAllianceId\x18\x07 \x01(\x04\"\xbd\x01\n\x1aSelfAppliesCancelledNotify\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x18\n\x10joinedAllianceId\x18\x02 \x01(\x04\x12\x35\n\x06reason\x18\x03 \x01(\x0e\x32%.AllianceService.ApplyCancelledReason\x12=\n\x10\x63\x61ncelledApplies\x18\x04 \x03(\x0b\x32#.AllianceService.ApplyCancelledItem\"u\n\x12\x41pplyCancelledItem\x12\x0f\n\x07\x61pplyId\x18\x01 \x01(\x04\x12\x12\n\nallianceId\x18\x02 \x01(\x04\x12\x14\n\x0c\x61llianceName\x18\x03 \x01(\t\x12\x10\n\x08serverId\x18\x04 \x01(\r\x12\x12\n\ntotalScore\x18\x05 \x01(\x04\"\xce\x02\n\x12\x41llianceMemberInfo\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x12\n\nguildScore\x18\x04 \x01(\x04\x12\x13\n\x0bmemberCount\x18\x05 \x01(\r\x12\x0c\n\x04role\x18\x06 \x01(\r\x12\x10\n\x08joinTime\x18\x07 \x01(\r\x12\x11\n\tguildIcon\x18\x08 \x01(\r\x12\x12\n\nguildLevel\x18\t \x01(\r\x12\x0f\n\x07\x64spFlag\x18\n \x01(\r\x12\x14\n\x0cmaxMemberNum\x18\x0b \x01(\r\x12\x12\n\nleaderGbId\x18\x0c \x01(\x04\x12\x12\n\nleaderName\x18\r \x01(\t\x12\x13\n\x0bleaderLevel\x18\x0e \x01(\r\x12\x18\n\x10leaderProfession\x18\x0f \x01(\r\x12\x14\n\x0cleaderGender\x18\x10 \x01(\r\"\x8c\x03\n\x11\x41llianceApplyInfo\x12\x0f\n\x07\x61pplyId\x18\x01 \x01(\x04\x12\x12\n\nallianceId\x18\x02 \x01(\x04\x12\x0f\n\x07guildId\x18\x03 \x01(\x04\x12\x11\n\tguildName\x18\x04 \x01(\t\x12\x12\n\nguildScore\x18\x05 \x01(\x04\x12\x10\n\x08serverId\x18\x06 \x01(\r\x12\x0e\n\x06status\x18\x07 \x01(\r\x12\x11\n\tcreatedAt\x18\x08 \x01(\r\x12\x15\n\rleaderGuildId\x18\t \x01(\x04\x12\x11\n\tguildIcon\x18\n \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x0b \x01(\r\x12\x13\n\x0bmemberCount\x18\x0c \x01(\r\x12\x12\n\nguildLevel\x18\r \x01(\r\x12\x14\n\x0cmaxMemberNum\x18\x0e \x01(\r\x12\x12\n\nleaderGbId\x18\x0f \x01(\x04\x12\x12\n\nleaderName\x18\x10 \x01(\t\x12\x13\n\x0bleaderLevel\x18\x11 \x01(\r\x12\x18\n\x10leaderProfession\x18\x12 \x01(\r\x12\x14\n\x0cleaderGender\x18\x13 \x01(\r\"\xb7\x01\n\x18\x41llianceInviteMemberInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x12\n\nguildScore\x18\x03 \x01(\x04\x12\x11\n\tguildIcon\x18\x04 \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x05 \x01(\r\x12\x12\n\nguildLevel\x18\x06 \x01(\r\x12\x13\n\x0bmemberCount\x18\x07 \x01(\r\x12\x14\n\x0cmaxMemberNum\x18\x08 \x01(\r\"\xe1\x01\n\x12\x41llianceInviteInfo\x12\x10\n\x08inviteId\x18\x01 \x01(\x04\x12\x12\n\nallianceId\x18\x02 \x01(\x04\x12\x14\n\x0c\x61llianceName\x18\x03 \x01(\t\x12\x10\n\x08serverId\x18\x04 \x01(\r\x12\x11\n\tcreatedAt\x18\x05 \x01(\r\x12\r\n\x05power\x18\x06 \x01(\x04\x12\x0e\n\x06status\x18\x07 \x01(\r\x12\x0f\n\x07guildId\x18\x08 \x01(\x04\x12:\n\x07members\x18\t \x03(\x0b\x32).AllianceService.AllianceInviteMemberInfo\"]\n\x11\x41llianceEventInfo\x12\x0f\n\x07\x65ventId\x18\x01 \x01(\x04\x12\x11\n\teventType\x18\x02 \x01(\r\x12\x11\n\teventArgs\x18\x03 \x03(\t\x12\x11\n\tcreatedAt\x18\x04 \x01(\r\"\xa0\x01\n\x11\x41llianceEnemyInfo\x12\x12\n\nattackType\x18\x01 \x01(\r\x12\x10\n\x08\x61ttackId\x18\x02 \x01(\x04\x12\x16\n\x0e\x61ttackServerId\x18\x03 \x01(\r\x12\x12\n\ntargetType\x18\x04 \x01(\r\x12\x10\n\x08targetId\x18\x05 \x01(\x04\x12\x16\n\x0etargetServerId\x18\x06 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x07 \x01(\r\"\x80\x01\n\x13\x41llianceChatMessage\x12\x15\n\rsenderGuildId\x18\x01 \x01(\x04\x12\x17\n\x0fsenderGuildName\x18\x02 \x01(\t\x12\x16\n\x0esenderServerId\x18\x03 \x01(\r\x12\x0f\n\x07\x63ontent\x18\x04 \x01(\t\x12\x10\n\x08sendTime\x18\x05 \x01(\r\"-\n\x19RegisterGameServerRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\"\x81\x01\n\x11\x41llianceListEntry\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x38\n\x07members\x18\x04 \x03(\x0b\x32\'.AllianceService.AllianceListMemberInfo\"\x81\x01\n\x16\x41llianceListMemberInfo\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x11\n\tguildIcon\x18\x03 \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x04 \x01(\r\x12\x10\n\x08serverId\x18\x05 \x01(\r\x12\r\n\x05score\x18\x06 \x01(\x04\"\xa1\x03\n\x13\x43reateLeagueRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65\x63laration\x18\x04 \x01(\t\x12\x13\n\x0b\x61pproveType\x18\x05 \x01(\r\x12\x12\n\nplayerGbId\x18\x06 \x01(\x04\x12\x0c\n\x04uuid\x18\x07 \x01(\x04\x12\x12\n\nleaderName\x18\x08 \x01(\t\x12\x13\n\x0bleaderLevel\x18\t \x01(\r\x12\x12\n\nallianceId\x18\n \x01(\x04\x12\x16\n\x0eleaderServerId\x18\x0b \x01(\r\x12\x18\n\x10leaderProfession\x18\x0c \x01(\x05\x12\x14\n\x0cleaderGender\x18\r \x01(\r\x12\x11\n\tguildName\x18\x0e \x01(\t\x12\x0f\n\x07\x64spFlag\x18\x0f \x01(\r\x12\x11\n\tguildIcon\x18\x10 \x01(\r\x12\x12\n\nguildScore\x18\x11 \x01(\x04\x12\x12\n\nguildLevel\x18\x12 \x01(\r\x12\x13\n\x0bmemberCount\x18\x13 \x01(\r\x12\x14\n\x0cmaxMemberNum\x18\x14 \x01(\r\"\xae\x01\n\x12\x43reateLeagueResult\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\r\x12/\n\x08\x61lliance\x18\x04 \x01(\x0b\x32\x1d.AllianceService.AllianceInfo\x12\x34\n\x07members\x18\x05 \x03(\x0b\x32#.AllianceService.AllianceMemberInfo\"L\n\x14\x44isbandLeagueRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x12\n\nplayerGbId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"4\n\x13\x44isbandLeagueResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\"\x87\x01\n\x17ModifyLeagueInfoRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x12\n\nplayerGbId\x18\x02 \x01(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65\x63laration\x18\x04 \x01(\t\x12\x13\n\x0b\x61pproveType\x18\x05 \x01(\r\x12\x0c\n\x04uuid\x18\x06 \x01(\x04\"7\n\x16ModifyLeagueInfoResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\"[\n\x14GetLeagueListRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x11\n\tpageIndex\x18\x02 \x01(\r\x12\x10\n\x08pageSize\x18\x03 \x01(\r\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"~\n\x13GetLeagueListResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x11\n\tpageIndex\x18\x02 \x01(\r\x12\x11\n\ttotalPage\x18\x03 \x01(\r\x12\x33\n\x07\x65ntries\x18\x04 \x03(\x0b\x32\".AllianceService.AllianceListEntry\"F\n\x13SearchLeagueRequest\x12\x0f\n\x07keyword\x18\x01 \x01(\t\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"W\n\x12SearchLeagueResult\x12\x33\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\".AllianceService.AllianceListEntry\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\":\n\x16GetLeagueDetailRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\x9d\x01\n\x15GetLeagueDetailResult\x12/\n\x08\x61lliance\x18\x01 \x01(\x0b\x32\x1d.AllianceService.AllianceInfo\x12\x34\n\x07members\x18\x02 \x03(\x0b\x32#.AllianceService.AllianceMemberInfo\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x04 \x01(\r\"\xe4\x02\n\x12\x41pplyToJoinRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x12\n\nguildScore\x18\x04 \x01(\x04\x12\x11\n\tguildName\x18\x05 \x01(\t\x12\x12\n\nplayerGbId\x18\x06 \x01(\x04\x12\x0c\n\x04uuid\x18\x07 \x01(\x04\x12\x13\n\x0bmemberCount\x18\x08 \x01(\r\x12\x11\n\tguildIcon\x18\t \x01(\r\x12\x12\n\nguildLevel\x18\n \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x0b \x01(\r\x12\x14\n\x0cmaxMemberNum\x18\x0c \x01(\r\x12\x12\n\nleaderGbId\x18\r \x01(\x04\x12\x12\n\nleaderName\x18\x0e \x01(\t\x12\x13\n\x0bleaderLevel\x18\x0f \x01(\r\x12\x18\n\x10leaderProfession\x18\x10 \x01(\r\x12\x14\n\x0cleaderGender\x18\x11 \x01(\r\"s\n\x11\x41pplyToJoinResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x12\n\nallianceId\x18\x03 \x01(\x04\x12\x14\n\x0c\x61llianceName\x18\x04 \x01(\t\x12\x15\n\ralliancePower\x18\x05 \x01(\x04\"[\n\x12\x41pproveJoinRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x12\n\nplayerGbId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\x12\x0f\n\x07guildId\x18\x04 \x01(\x04\"Z\n\x11\x41pproveJoinResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x15\n\rjoinedGuildId\x18\x03 \x01(\x04\x12\x0f\n\x07guildCD\x18\x04 \x01(\r\"F\n\x11RejectJoinRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x12\n\nplayerGbId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"J\n\x10RejectJoinResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x17\n\x0frejectedGuildId\x18\x03 \x01(\x04\"G\n\x12\x43\x61ncelApplyRequest\x12\x12\n\nleagueUUID\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"F\n\x11\x43\x61ncelApplyResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x12\n\nallianceId\x18\x03 \x01(\x04\"y\n\x12InviteGuildRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x15\n\rtargetGuildId\x18\x02 \x01(\x04\x12\x16\n\x0etargetServerId\x18\x03 \x01(\r\x12\x12\n\nplayerGbId\x18\x04 \x01(\x04\x12\x0c\n\x04uuid\x18\x05 \x01(\x04\"Z\n\x11InviteGuildResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x15\n\rtargetGuildId\x18\x03 \x01(\x04\x12\x0f\n\x07guildCD\x18\x04 \x01(\r\"\xe5\x02\n\x13\x41\x63\x63\x65ptInviteRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x12\n\nguildScore\x18\x04 \x01(\x04\x12\x11\n\tguildName\x18\x05 \x01(\t\x12\x12\n\nplayerGbId\x18\x06 \x01(\x04\x12\x0c\n\x04uuid\x18\x07 \x01(\x04\x12\x13\n\x0bmemberCount\x18\x08 \x01(\r\x12\x11\n\tguildIcon\x18\t \x01(\r\x12\x12\n\nguildLevel\x18\n \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x0b \x01(\r\x12\x14\n\x0cmaxMemberNum\x18\x0c \x01(\r\x12\x12\n\nleaderGbId\x18\r \x01(\x04\x12\x12\n\nleaderName\x18\x0e \x01(\t\x12\x13\n\x0bleaderLevel\x18\x0f \x01(\r\x12\x18\n\x10leaderProfession\x18\x10 \x01(\r\x12\x14\n\x0cleaderGender\x18\x11 \x01(\r\"G\n\x12\x41\x63\x63\x65ptInviteResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x12\n\nallianceId\x18\x03 \x01(\x04\"\\\n\x13RejectInviteRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x12\n\nplayerGbId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\x12\x12\n\nallianceId\x18\x04 \x01(\x04\"G\n\x12RejectInviteResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x12\n\nallianceId\x18\x03 \x01(\x04\"`\n\x11KickMemberRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x15\n\rtargetGuildId\x18\x02 \x01(\x04\x12\x12\n\nplayerGbId\x18\x03 \x01(\x04\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"1\n\x10KickMemberResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\"[\n\x12LeaveLeagueRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x12\n\nplayerGbId\x18\x03 \x01(\x04\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"2\n\x11LeaveLeagueResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\"d\n\x15TransferLeaderRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x15\n\rtargetGuildId\x18\x02 \x01(\x04\x12\x12\n\nplayerGbId\x18\x03 \x01(\x04\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"f\n\x14TransferLeaderResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12/\n\x08\x61lliance\x18\x03 \x01(\x0b\x32\x1d.AllianceService.AllianceInfo\"7\n\x13GetApplyListRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"k\n\x12GetApplyListResult\x12\x33\n\x07\x61pplies\x18\x01 \x03(\x0b\x32\".AllianceService.AllianceApplyInfo\x12\x12\n\ntotalCount\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"5\n\x14GetInviteListRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"m\n\x13GetInviteListResult\x12\x34\n\x07invites\x18\x01 \x03(\x0b\x32#.AllianceService.AllianceInviteInfo\x12\x12\n\ntotalCount\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"6\n\x15GetSentAppliesRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"i\n\x14GetSentAppliesResult\x12/\n\x07\x61pplies\x18\x01 \x03(\x0b\x32\x1e.AllianceService.SentApplyItem\x12\x12\n\ntotalCount\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\x93\x01\n\rSentApplyItem\x12\x0f\n\x07\x61pplyId\x18\x01 \x01(\x04\x12\x12\n\nallianceId\x18\x02 \x01(\x04\x12\x14\n\x0c\x61llianceName\x18\x03 \x01(\t\x12\x10\n\x08serverId\x18\x04 \x01(\r\x12\x12\n\ntotalScore\x18\x05 \x01(\x04\x12\x11\n\tcreatedAt\x18\x06 \x01(\r\x12\x0e\n\x06status\x18\x07 \x01(\r\"\xbc\x01\n\x11\x44\x65\x63lareWarRequest\x12\x11\n\tguildName\x18\x01 \x01(\t\x12\x12\n\nattackType\x18\x02 \x01(\r\x12\x10\n\x08\x61ttackId\x18\x03 \x01(\x04\x12\x12\n\ntargetType\x18\x04 \x01(\r\x12\x10\n\x08targetId\x18\x05 \x01(\x04\x12\x16\n\x0etargetServerId\x18\x06 \x01(\r\x12\x12\n\nplayerGbId\x18\x07 \x01(\x04\x12\x0e\n\x06\x61mount\x18\x08 \x01(\x04\x12\x0c\n\x04uuid\x18\t \x01(\x04\"B\n\x10\x44\x65\x63lareWarResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x03 \x01(\r\"4\n\x13GetEnemyListRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"4\n\x13GetUnionListRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"2\n\x0e\x45nemyGuildInfo\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0f\n\x07\x65ndTime\x18\x02 \x01(\r\"T\n\x12GetEnemyListResult\x12\x30\n\x07\x65nemies\x18\x01 \x03(\x0b\x32\x1f.AllianceService.EnemyGuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\x9b\x01\n\x0c\x45nemyRowInfo\x12\x10\n\x08\x61ttackId\x18\x01 \x01(\x04\x12\x12\n\nattackType\x18\x02 \x01(\r\x12\x16\n\x0e\x61ttackServerId\x18\x03 \x01(\r\x12\x10\n\x08targetId\x18\x04 \x01(\x04\x12\x12\n\ntargetType\x18\x05 \x01(\r\x12\x16\n\x0etargetServerId\x18\x06 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x07 \x01(\r\"P\n\x1bGetEnemyAllianceListRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"Z\n\x1aGetEnemyAllianceListResult\x12.\n\x07\x65nemies\x18\x01 \x03(\x0b\x32\x1d.AllianceService.EnemyRowInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"!\n\x0eUnionGuildInfo\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\"S\n\x12GetUnionListResult\x12/\n\x06unions\x18\x01 \x03(\x0b\x32\x1f.AllianceService.UnionGuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"C\n\x13WarStartedBroadcast\x12,\n\x05\x65nemy\x18\x01 \x01(\x0b\x32\x1d.AllianceService.EnemyRowInfo\"_\n\x11WarEndedBroadcast\x12\x12\n\nattackType\x18\x01 \x01(\r\x12\x10\n\x08\x61ttackId\x18\x02 \x01(\x04\x12\x12\n\ntargetType\x18\x03 \x01(\r\x12\x10\n\x08targetId\x18\x04 \x01(\x04\"s\n\x11GuildRelationInfo\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x14\n\x0crelationType\x18\x03 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x04 \x01(\r\x12\x0f\n\x07version\x18\x05 \x01(\r\"^\n\x14GuildRelationAllInfo\x12\x35\n\trelations\x18\x01 \x03(\x0b\x32\".AllianceService.GuildRelationInfo\x12\x0f\n\x07version\x18\x02 \x01(\r\"R\n\x17GuildRelationRemoveInfo\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x0f\n\x07version\x18\x03 \x01(\r\"N\n\x1a\x43heckLeagueRelationRequest\x12\x10\n\x08guildId1\x18\x01 \x01(\x04\x12\x10\n\x08guildId2\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"U\n\x19\x43heckLeagueRelationResult\x12\x16\n\x0eisSameAlliance\x18\x01 \x01(\x08\x12\x12\n\nallianceId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"8\n\x17GetGuildAllianceRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"K\n\x16GetGuildAllianceResult\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"z\n\x11\x44onateFundRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x0e\n\x06itemId\x18\x03 \x01(\r\x12\x0e\n\x06\x61mount\x18\x04 \x01(\x04\x12\x12\n\nplayerGbId\x18\x05 \x01(\x04\x12\x0c\n\x04uuid\x18\x06 \x01(\x04\"[\n\x10\x44onateFundResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x14\n\x0c\x61llianceFund\x18\x03 \x01(\x04\x12\x12\n\nallianceId\x18\x04 \x01(\x04\"\x92\x01\n\x12\x41idResourceRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x13\n\x0b\x66romGuildId\x18\x02 \x01(\x04\x12\x11\n\ttoGuildId\x18\x03 \x01(\x04\x12\x0e\n\x06itemId\x18\x04 \x01(\r\x12\x0e\n\x06\x61mount\x18\x05 \x01(\x04\x12\x12\n\nplayerGbId\x18\x06 \x01(\x04\x12\x0c\n\x04uuid\x18\x07 \x01(\x04\"2\n\x11\x41idResourceResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\"8\n\x14GetLeagueFundRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"1\n\x13GetLeagueFundResult\x12\x0c\n\x04\x66und\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"7\n\x13GetEventListRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"V\n\x12GetEventListResult\x12\x32\n\x06\x65vents\x18\x01 \x03(\x0b\x32\".AllianceService.AllianceEventInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"l\n\x11NewEventBroadcast\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x31\n\x05\x65vent\x18\x02 \x01(\x0b\x32\".AllianceService.AllianceEventInfo\x12\x10\n\x08guildIds\x18\x03 \x03(\x04\"\x93\x01\n\x16SendChatMessageRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x15\n\rsenderGuildId\x18\x02 \x01(\x04\x12\x17\n\x0fsenderGuildName\x18\x03 \x01(\t\x12\x16\n\x0esenderServerId\x18\x04 \x01(\r\x12\x0f\n\x07\x63ontent\x18\x05 \x01(\t\x12\x0c\n\x04uuid\x18\x06 \x01(\x04\"6\n\x15SendChatMessageResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\"a\n\x14\x43hatMessageBroadcast\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x35\n\x07message\x18\x02 \x01(\x0b\x32$.AllianceService.AllianceChatMessage\"H\n\x15GetChatHistoryRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\r\n\x05limit\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\\\n\x14GetChatHistoryResult\x12\x36\n\x08messages\x18\x01 \x03(\x0b\x32$.AllianceService.AllianceChatMessage\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"L\n\x17ReportGuildScoreRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x12\n\nguildScore\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"7\n\x16ReportGuildScoreResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\"\xae\x02\n\x14SyncGuildInfoRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x11\n\tguildIcon\x18\x03 \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x04 \x01(\r\x12\x12\n\nguildLevel\x18\x05 \x01(\r\x12\x13\n\x0bmemberCount\x18\x06 \x01(\r\x12\x16\n\x0emaxMemberCount\x18\x07 \x01(\r\x12\x12\n\nguildScore\x18\x08 \x01(\x04\x12\x12\n\nleaderGbId\x18\t \x01(\x04\x12\x12\n\nleaderName\x18\n \x01(\t\x12\x13\n\x0bleaderLevel\x18\x0b \x01(\r\x12\x18\n\x10leaderProfession\x18\x0c \x01(\r\x12\x14\n\x0cleaderGender\x18\r \x01(\r\x12\x0c\n\x04uuid\x18\x0e \x01(\x04\"4\n\x13SyncGuildInfoResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\";\n\x13\x44isbandLeagueNotify\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x10\n\x08guildIds\x18\x02 \x03(\x04\"`\n\x15NewMemberJoinedNotify\x12\x12\n\nplayerGbId\x18\x01 \x01(\x04\x12\x33\n\x06member\x18\x02 \x01(\x0b\x32#.AllianceService.AllianceMemberInfo\"=\n\x14JoinToAllianceNotify\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x11\n\tguildUUID\x18\x02 \x01(\x04\"\\\n\x15ReturnGuildFundNotify\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0f\n\x07srcType\x18\x02 \x01(\r\x12\x10\n\x08itemType\x18\x03 \x01(\r\x12\x0f\n\x07itemNum\x18\x04 \x01(\x04\"]\n\x16GuildAidResourceNotify\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0f\n\x07srcType\x18\x02 \x01(\r\x12\x10\n\x08itemType\x18\x03 \x01(\r\x12\x0f\n\x07itemNum\x18\x04 \x01(\x04\";\n\x10LeagueGuildLeave\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x16\n\x0ememberGuildIds\x18\x02 \x03(\x04\"\'\n\rLeagueDisband\x12\x16\n\x0ememberGuildIds\x18\x01 \x03(\x04\"K\n\x10LeagueGuildEvent\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x11\n\tmessageId\x18\x02 \x01(\r\x12\x13\n\x0bmessageArgs\x18\x03 \x03(\t\"M\n\x12LeagueGuildMessage\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x11\n\tmessageId\x18\x02 \x01(\r\x12\x13\n\x0bmessageArgs\x18\x03 \x03(\t\"@\n\x16LeagueBroadCastMessage\x12\x11\n\tmessageId\x18\x01 \x01(\r\x12\x13\n\x0bmessageArgs\x18\x02 \x03(\t\">\n\x1aRecruitLeagueMemberRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x12\n\nleagueUUID\x18\x02 \x01(\x04\"N\n\x19RecruitLeagueMemberResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x12\n\nleagueUUID\x18\x02 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\r\"_\n\x16\x43heckLeaveGuildRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x12\n\nleagueUUID\x18\x02 \x01(\x04\x12\x0f\n\x07guildId\x18\x03 \x01(\x04\x12\x12\n\nplayerGbId\x18\x04 \x01(\x04\"W\n\x15\x43heckLeaveGuildResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x12\n\nplayerGbId\x18\x03 \x01(\x04\x12\x0b\n\x03ret\x18\x04 \x01(\x08\"7\n\x16QueryLeagueUUIDRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\"W\n\x15QueryLeagueUUIDResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x12\n\nleagueUUID\x18\x03 \x01(\x04\x12\x0b\n\x03ret\x18\x04 \x01(\x08*p\n\x14\x41pplyCancelledReason\x12#\n\x1f\x41PPLY_CANCEL_REASON_UNSPECIFIED\x10\x00\x12\x33\n/APPLY_CANCEL_REASON_GUILD_JOINED_OTHER_ALLIANCE\x10\x01\x32\x9b\x1b\n\x0f\x41llianceService\x12W\n\x12registerGameServer\x12*.AllianceService.RegisterGameServerRequest\x1a\x15.AllianceService.Void\x12:\n\nactiveTick\x12\x15.AllianceService.Void\x1a\x15.AllianceService.Void\x12K\n\x0c\x63reateLeague\x12$.AllianceService.CreateLeagueRequest\x1a\x15.AllianceService.Void\x12M\n\rdisbandLeague\x12%.AllianceService.DisbandLeagueRequest\x1a\x15.AllianceService.Void\x12S\n\x10modifyLeagueInfo\x12(.AllianceService.ModifyLeagueInfoRequest\x1a\x15.AllianceService.Void\x12M\n\rgetLeagueList\x12%.AllianceService.GetLeagueListRequest\x1a\x15.AllianceService.Void\x12K\n\x0csearchLeague\x12$.AllianceService.SearchLeagueRequest\x1a\x15.AllianceService.Void\x12Q\n\x0fgetLeagueDetail\x12\'.AllianceService.GetLeagueDetailRequest\x1a\x15.AllianceService.Void\x12W\n\x12getLeagueBasicInfo\x12*.AllianceService.GetLeagueBasicInfoRequest\x1a\x15.AllianceService.Void\x12I\n\x0b\x61pplyToJoin\x12#.AllianceService.ApplyToJoinRequest\x1a\x15.AllianceService.Void\x12I\n\x0b\x61pproveJoin\x12#.AllianceService.ApproveJoinRequest\x1a\x15.AllianceService.Void\x12Z\n\x18onCheckGuildExistsResult\x12\'.AllianceService.CheckGuildExistsResult\x1a\x15.AllianceService.Void\x12G\n\nrejectJoin\x12\".AllianceService.RejectJoinRequest\x1a\x15.AllianceService.Void\x12I\n\x0b\x63\x61ncelApply\x12#.AllianceService.CancelApplyRequest\x1a\x15.AllianceService.Void\x12I\n\x0binviteGuild\x12#.AllianceService.InviteGuildRequest\x1a\x15.AllianceService.Void\x12K\n\x0c\x61\x63\x63\x65ptInvite\x12$.AllianceService.AcceptInviteRequest\x1a\x15.AllianceService.Void\x12K\n\x0crejectInvite\x12$.AllianceService.RejectInviteRequest\x1a\x15.AllianceService.Void\x12G\n\nkickMember\x12\".AllianceService.KickMemberRequest\x1a\x15.AllianceService.Void\x12I\n\x0bleaveLeague\x12#.AllianceService.LeaveLeagueRequest\x1a\x15.AllianceService.Void\x12O\n\x0etransferLeader\x12&.AllianceService.TransferLeaderRequest\x1a\x15.AllianceService.Void\x12K\n\x0cgetApplyList\x12$.AllianceService.GetApplyListRequest\x1a\x15.AllianceService.Void\x12M\n\rgetInviteList\x12%.AllianceService.GetInviteListRequest\x1a\x15.AllianceService.Void\x12O\n\x0egetSentApplies\x12&.AllianceService.GetSentAppliesRequest\x1a\x15.AllianceService.Void\x12G\n\ndeclareWar\x12\".AllianceService.DeclareWarRequest\x1a\x15.AllianceService.Void\x12K\n\x0cgetEnemyList\x12$.AllianceService.GetEnemyListRequest\x1a\x15.AllianceService.Void\x12[\n\x14getEnemyAllianceList\x12,.AllianceService.GetEnemyAllianceListRequest\x1a\x15.AllianceService.Void\x12Y\n\x13getLeagueSimpleInfo\x12+.AllianceService.GetLeagueSimpleInfoRequest\x1a\x15.AllianceService.Void\x12W\n\x12getGuildSimpleInfo\x12*.AllianceService.GetGuildSimpleInfoRequest\x1a\x15.AllianceService.Void\x12`\n\x1conCheckGuildSimpleInfoResult\x12).AllianceService.GetGuildSimpleInfoResult\x1a\x15.AllianceService.Void\x12Y\n\x13\x63heckLeagueRelation\x12+.AllianceService.CheckLeagueRelationRequest\x1a\x15.AllianceService.Void\x12S\n\x10getGuildAlliance\x12(.AllianceService.GetGuildAllianceRequest\x1a\x15.AllianceService.Void\x12G\n\ndonateFund\x12\".AllianceService.DonateFundRequest\x1a\x15.AllianceService.Void\x12I\n\x0b\x61idResource\x12#.AllianceService.AidResourceRequest\x1a\x15.AllianceService.Void\x12M\n\rgetLeagueFund\x12%.AllianceService.GetLeagueFundRequest\x1a\x15.AllianceService.Void\x12K\n\x0cgetEventList\x12$.AllianceService.GetEventListRequest\x1a\x15.AllianceService.Void\x12Q\n\x0fsendChatMessage\x12\'.AllianceService.SendChatMessageRequest\x1a\x15.AllianceService.Void\x12O\n\x0egetChatHistory\x12&.AllianceService.GetChatHistoryRequest\x1a\x15.AllianceService.Void\x12S\n\x10reportGuildScore\x12(.AllianceService.ReportGuildScoreRequest\x1a\x15.AllianceService.Void\x12M\n\rsyncGuildInfo\x12%.AllianceService.SyncGuildInfoRequest\x1a\x15.AllianceService.Void\x12K\n\x0cgetUnionList\x12$.AllianceService.GetUnionListRequest\x1a\x15.AllianceService.Void\x12Y\n\x13recruitLeagueMember\x12+.AllianceService.RecruitLeagueMemberRequest\x1a\x15.AllianceService.Void\x12Q\n\x0f\x63heckLeaveGuild\x12\'.AllianceService.CheckLeaveGuildRequest\x1a\x15.AllianceService.Void\x12Q\n\x0fqueryLeagueUUID\x12\'.AllianceService.QueryLeagueUUIDRequest\x1a\x15.AllianceService.Void2\xe7(\n\nGameClient\x12\x42\n\x12\x61\x63tiveTickCallback\x12\x15.AllianceService.Void\x1a\x15.AllianceService.Void\x12R\n\x14onCreateLeagueResult\x12#.AllianceService.CreateLeagueResult\x1a\x15.AllianceService.Void\x12T\n\x15onDisbandLeagueResult\x12$.AllianceService.DisbandLeagueResult\x1a\x15.AllianceService.Void\x12Z\n\x18onModifyLeagueInfoResult\x12\'.AllianceService.ModifyLeagueInfoResult\x1a\x15.AllianceService.Void\x12Q\n\x12onLeagueListResult\x12$.AllianceService.GetLeagueListResult\x1a\x15.AllianceService.Void\x12R\n\x14onSearchLeagueResult\x12#.AllianceService.SearchLeagueResult\x1a\x15.AllianceService.Void\x12U\n\x14onLeagueDetailResult\x12&.AllianceService.GetLeagueDetailResult\x1a\x15.AllianceService.Void\x12^\n\x1aonGetLeagueBasicInfoResult\x12).AllianceService.GetLeagueBasicInfoResult\x1a\x15.AllianceService.Void\x12P\n\x13onApplyToJoinResult\x12\".AllianceService.ApplyToJoinResult\x1a\x15.AllianceService.Void\x12P\n\x13onApproveJoinResult\x12\".AllianceService.ApproveJoinResult\x1a\x15.AllianceService.Void\x12S\n\x10\x63heckGuildExists\x12(.AllianceService.CheckGuildExistsRequest\x1a\x15.AllianceService.Void\x12N\n\x12onRejectJoinResult\x12!.AllianceService.RejectJoinResult\x1a\x15.AllianceService.Void\x12P\n\x13onCancelApplyResult\x12\".AllianceService.CancelApplyResult\x1a\x15.AllianceService.Void\x12P\n\x13onInviteGuildResult\x12\".AllianceService.InviteGuildResult\x1a\x15.AllianceService.Void\x12R\n\x14onAcceptInviteResult\x12#.AllianceService.AcceptInviteResult\x1a\x15.AllianceService.Void\x12R\n\x14onRejectInviteResult\x12#.AllianceService.RejectInviteResult\x1a\x15.AllianceService.Void\x12N\n\x12onKickMemberResult\x12!.AllianceService.KickMemberResult\x1a\x15.AllianceService.Void\x12P\n\x13onLeaveLeagueResult\x12\".AllianceService.LeaveLeagueResult\x1a\x15.AllianceService.Void\x12V\n\x16onTransferLeaderResult\x12%.AllianceService.TransferLeaderResult\x1a\x15.AllianceService.Void\x12O\n\x11onApplyListResult\x12#.AllianceService.GetApplyListResult\x1a\x15.AllianceService.Void\x12Q\n\x12onInviteListResult\x12$.AllianceService.GetInviteListResult\x1a\x15.AllianceService.Void\x12S\n\x13onSentAppliesResult\x12%.AllianceService.GetSentAppliesResult\x1a\x15.AllianceService.Void\x12N\n\x12onDeclareWarResult\x12!.AllianceService.DeclareWarResult\x1a\x15.AllianceService.Void\x12O\n\x11onEnemyListResult\x12#.AllianceService.GetEnemyListResult\x1a\x15.AllianceService.Void\x12_\n\x19onEnemyAllianceListResult\x12+.AllianceService.GetEnemyAllianceListResult\x1a\x15.AllianceService.Void\x12`\n\x1bonGetLeagueSimpleInfoResult\x12*.AllianceService.GetLeagueSimpleInfoResult\x1a\x15.AllianceService.Void\x12Y\n\x14\x63heckGuildSimpleInfo\x12*.AllianceService.GetGuildSimpleInfoRequest\x1a\x15.AllianceService.Void\x12^\n\x1aonGetGuildSimpleInfoResult\x12).AllianceService.GetGuildSimpleInfoResult\x1a\x15.AllianceService.Void\x12`\n\x1bonCheckLeagueRelationResult\x12*.AllianceService.CheckLeagueRelationResult\x1a\x15.AllianceService.Void\x12Z\n\x18onGetGuildAllianceResult\x12\'.AllianceService.GetGuildAllianceResult\x1a\x15.AllianceService.Void\x12N\n\x12onDonateFundResult\x12!.AllianceService.DonateFundResult\x1a\x15.AllianceService.Void\x12P\n\x13onAidResourceResult\x12\".AllianceService.AidResourceResult\x1a\x15.AllianceService.Void\x12Q\n\x12onLeagueFundResult\x12$.AllianceService.GetLeagueFundResult\x1a\x15.AllianceService.Void\x12O\n\x11onEventListResult\x12#.AllianceService.GetEventListResult\x1a\x15.AllianceService.Void\x12X\n\x17onSendChatMessageResult\x12&.AllianceService.SendChatMessageResult\x1a\x15.AllianceService.Void\x12S\n\x13onChatHistoryResult\x12%.AllianceService.GetChatHistoryResult\x1a\x15.AllianceService.Void\x12Z\n\x18onReportGuildScoreResult\x12\'.AllianceService.ReportGuildScoreResult\x1a\x15.AllianceService.Void\x12T\n\x15onSyncGuildInfoResult\x12$.AllianceService.SyncGuildInfoResult\x1a\x15.AllianceService.Void\x12K\n\x0conWarStarted\x12$.AllianceService.WarStartedBroadcast\x1a\x15.AllianceService.Void\x12G\n\nonWarEnded\x12\".AllianceService.WarEndedBroadcast\x1a\x15.AllianceService.Void\x12G\n\nonNewEvent\x12\".AllianceService.NewEventBroadcast\x1a\x15.AllianceService.Void\x12M\n\ronChatMessage\x12%.AllianceService.ChatMessageBroadcast\x1a\x15.AllianceService.Void\x12T\n\x15onDisbandLeagueNotify\x12$.AllianceService.DisbandLeagueNotify\x1a\x15.AllianceService.Void\x12J\n\x10onNewApplyNotify\x12\x1f.AllianceService.NewApplyNotify\x1a\x15.AllianceService.Void\x12O\n\x11onNewInviteNotify\x12#.AllianceService.AllianceInviteInfo\x1a\x15.AllianceService.Void\x12R\n\x12onGuildRelationAll\x12%.AllianceService.GuildRelationAllInfo\x1a\x15.AllianceService.Void\x12X\n\x1bonBroadcastAddGuildRelation\x12\".AllianceService.GuildRelationInfo\x1a\x15.AllianceService.Void\x12\x61\n\x1eonBroadcastRemoveGuildRelation\x12(.AllianceService.GuildRelationRemoveInfo\x1a\x15.AllianceService.Void\x12R\n\x11onNewMemberJoined\x12&.AllianceService.NewMemberJoinedNotify\x1a\x15.AllianceService.Void\x12V\n\x16onJoinToAllianceNotify\x12%.AllianceService.JoinToAllianceNotify\x1a\x15.AllianceService.Void\x12O\n\x11onUnionListResult\x12#.AllianceService.GetUnionListResult\x1a\x15.AllianceService.Void\x12X\n\x17onReturnGuildFundNotify\x12&.AllianceService.ReturnGuildFundNotify\x1a\x15.AllianceService.Void\x12Z\n\x18onGuildAidResourceNotify\x12\'.AllianceService.GuildAidResourceNotify\x1a\x15.AllianceService.Void\x12N\n\x12onLeagueGuildLeave\x12!.AllianceService.LeagueGuildLeave\x1a\x15.AllianceService.Void\x12H\n\x0fonLeagueDisband\x12\x1e.AllianceService.LeagueDisband\x1a\x15.AllianceService.Void\x12T\n\x18onLeagueGuildEventNotify\x12!.AllianceService.LeagueGuildEvent\x1a\x15.AllianceService.Void\x12X\n\x1aonLeagueGuildMessageNotify\x12#.AllianceService.LeagueGuildMessage\x1a\x15.AllianceService.Void\x12`\n\x1eonLeagueBroadCastMessageNotify\x12\'.AllianceService.LeagueBroadCastMessage\x1a\x15.AllianceService.Void\x12`\n\x1bonRecruitLeagueMemberResult\x12*.AllianceService.RecruitLeagueMemberResult\x1a\x15.AllianceService.Void\x12X\n\x17onCheckLeaveGuildResult\x12&.AllianceService.CheckLeaveGuildResult\x1a\x15.AllianceService.Void\x12X\n\x17onQueryLeagueUUIDResult\x12&.AllianceService.QueryLeagueUUIDResult\x1a\x15.AllianceService.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x18gameServerAlliance.proto\x12\x0f\x41llianceService\"\x06\n\x04Void\"\xd9\x02\n\x0c\x41llianceInfo\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65\x63laration\x18\x03 \x01(\t\x12\x15\n\rleaderGuildId\x18\x04 \x01(\x04\x12\x16\n\x0eleaderServerId\x18\x05 \x01(\r\x12\x17\n\x0fleaderGuildName\x18\x06 \x01(\t\x12\x13\n\x0b\x61pproveType\x18\x07 \x01(\r\x12\x0c\n\x04\x66und\x18\t \x01(\x04\x12\x13\n\x0bmemberCount\x18\n \x01(\r\x12\x12\n\ntotalScore\x18\x0b \x01(\x04\x12\x11\n\tcreatedAt\x18\x0f \x01(\r\x12\x12\n\nleaderGbId\x18\x10 \x01(\x04\x12\x12\n\nleaderName\x18\x11 \x01(\t\x12\x13\n\x0bleaderLevel\x18\x12 \x01(\r\x12\x18\n\x10leaderProfession\x18\x13 \x01(\x05\x12\x14\n\x0cleaderGender\x18\x14 \x01(\r\"\xd6\x01\n\x11\x41llianceBasicInfo\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x13\n\x0b\x64\x65\x63laration\x18\x02 \x01(\t\x12\x13\n\x0b\x61pproveType\x18\x03 \x01(\r\x12\x12\n\nleaderName\x18\x04 \x01(\t\x12\x14\n\x0cleaderGender\x18\x05 \x01(\r\x12\x13\n\x0bleaderLevel\x18\x06 \x01(\r\x12\x16\n\x0eleaderServerId\x18\x07 \x01(\r\x12\x18\n\x10leaderProfession\x18\x08 \x01(\x05\x12\x12\n\nleaderGbId\x18\t \x01(\x04\"=\n\x19GetLeagueBasicInfoRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"k\n\x18GetLeagueBasicInfoResult\x12\x30\n\x04info\x18\x01 \x01(\x0b\x32\".AllianceService.AllianceBasicInfo\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\\\n\x12LeagueSimpleMember\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x11\n\tguildIcon\x18\x03 \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x04 \x01(\r\"~\n\x10LeagueSimpleInfo\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x12\n\ntotalScore\x18\x03 \x01(\x04\x12\x34\n\x07members\x18\x04 \x03(\x0b\x32#.AllianceService.LeagueSimpleMember\">\n\x1aGetLeagueSimpleInfoRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"k\n\x19GetLeagueSimpleInfoResult\x12/\n\x04info\x18\x01 \x01(\x0b\x32!.AllianceService.LeagueSimpleInfo\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"I\n\x17\x43heckGuildExistsRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\x12\x0f\n\x07\x63heckCD\x18\x03 \x01(\x08\"|\n\x16\x43heckGuildExistsResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x11\n\tguildName\x18\x03 \x01(\t\x12\x0e\n\x06\x65xists\x18\x04 \x01(\x08\x12\x0f\n\x07guildCD\x18\x05 \x01(\r\x12\x0f\n\x07\x63heckCD\x18\x06 \x01(\x08\"\x8f\x01\n\x0fGuildSimpleInfo\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x11\n\tguildIcon\x18\x03 \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x04 \x01(\r\x12\r\n\x05score\x18\x05 \x01(\x04\x12\x12\n\nguildLevel\x18\x06 \x01(\r\x12\x11\n\tmemberCnt\x18\x07 \x01(\r\"L\n\x19GetGuildSimpleInfoRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"i\n\x18GetGuildSimpleInfoResult\x12.\n\x04info\x18\x01 \x01(\x0b\x32 .AllianceService.GuildSimpleInfo\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\x90\x01\n\x0eNewApplyNotify\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x11\n\tguildIcon\x18\x03 \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x04 \x01(\r\x12\r\n\x05power\x18\x05 \x01(\x04\x12\x12\n\nleaderGbId\x18\x06 \x01(\x04\x12\x11\n\tapplyTime\x18\x07 \x01(\x04\"\xc2\x01\n\x14\x41pplyCancelledNotify\x12\x0f\n\x07\x61pplyId\x18\x01 \x01(\x04\x12\x12\n\nallianceId\x18\x02 \x01(\x04\x12\x0f\n\x07guildId\x18\x03 \x01(\x04\x12\x11\n\tguildName\x18\x04 \x01(\t\x12\x10\n\x08serverId\x18\x05 \x01(\r\x12\x35\n\x06reason\x18\x06 \x01(\x0e\x32%.AllianceService.ApplyCancelledReason\x12\x18\n\x10joinedAllianceId\x18\x07 \x01(\x04\"\xbd\x01\n\x1aSelfAppliesCancelledNotify\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x18\n\x10joinedAllianceId\x18\x02 \x01(\x04\x12\x35\n\x06reason\x18\x03 \x01(\x0e\x32%.AllianceService.ApplyCancelledReason\x12=\n\x10\x63\x61ncelledApplies\x18\x04 \x03(\x0b\x32#.AllianceService.ApplyCancelledItem\"u\n\x12\x41pplyCancelledItem\x12\x0f\n\x07\x61pplyId\x18\x01 \x01(\x04\x12\x12\n\nallianceId\x18\x02 \x01(\x04\x12\x14\n\x0c\x61llianceName\x18\x03 \x01(\t\x12\x10\n\x08serverId\x18\x04 \x01(\r\x12\x12\n\ntotalScore\x18\x05 \x01(\x04\"\xce\x02\n\x12\x41llianceMemberInfo\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x12\n\nguildScore\x18\x04 \x01(\x04\x12\x13\n\x0bmemberCount\x18\x05 \x01(\r\x12\x0c\n\x04role\x18\x06 \x01(\r\x12\x10\n\x08joinTime\x18\x07 \x01(\r\x12\x11\n\tguildIcon\x18\x08 \x01(\r\x12\x12\n\nguildLevel\x18\t \x01(\r\x12\x0f\n\x07\x64spFlag\x18\n \x01(\r\x12\x14\n\x0cmaxMemberNum\x18\x0b \x01(\r\x12\x12\n\nleaderGbId\x18\x0c \x01(\x04\x12\x12\n\nleaderName\x18\r \x01(\t\x12\x13\n\x0bleaderLevel\x18\x0e \x01(\r\x12\x18\n\x10leaderProfession\x18\x0f \x01(\r\x12\x14\n\x0cleaderGender\x18\x10 \x01(\r\"\x8c\x03\n\x11\x41llianceApplyInfo\x12\x0f\n\x07\x61pplyId\x18\x01 \x01(\x04\x12\x12\n\nallianceId\x18\x02 \x01(\x04\x12\x0f\n\x07guildId\x18\x03 \x01(\x04\x12\x11\n\tguildName\x18\x04 \x01(\t\x12\x12\n\nguildScore\x18\x05 \x01(\x04\x12\x10\n\x08serverId\x18\x06 \x01(\r\x12\x0e\n\x06status\x18\x07 \x01(\r\x12\x11\n\tcreatedAt\x18\x08 \x01(\r\x12\x15\n\rleaderGuildId\x18\t \x01(\x04\x12\x11\n\tguildIcon\x18\n \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x0b \x01(\r\x12\x13\n\x0bmemberCount\x18\x0c \x01(\r\x12\x12\n\nguildLevel\x18\r \x01(\r\x12\x14\n\x0cmaxMemberNum\x18\x0e \x01(\r\x12\x12\n\nleaderGbId\x18\x0f \x01(\x04\x12\x12\n\nleaderName\x18\x10 \x01(\t\x12\x13\n\x0bleaderLevel\x18\x11 \x01(\r\x12\x18\n\x10leaderProfession\x18\x12 \x01(\r\x12\x14\n\x0cleaderGender\x18\x13 \x01(\r\"\xb7\x01\n\x18\x41llianceInviteMemberInfo\x12\x11\n\tguildUUID\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x12\n\nguildScore\x18\x03 \x01(\x04\x12\x11\n\tguildIcon\x18\x04 \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x05 \x01(\r\x12\x12\n\nguildLevel\x18\x06 \x01(\r\x12\x13\n\x0bmemberCount\x18\x07 \x01(\r\x12\x14\n\x0cmaxMemberNum\x18\x08 \x01(\r\"\xe1\x01\n\x12\x41llianceInviteInfo\x12\x10\n\x08inviteId\x18\x01 \x01(\x04\x12\x12\n\nallianceId\x18\x02 \x01(\x04\x12\x14\n\x0c\x61llianceName\x18\x03 \x01(\t\x12\x10\n\x08serverId\x18\x04 \x01(\r\x12\x11\n\tcreatedAt\x18\x05 \x01(\r\x12\r\n\x05power\x18\x06 \x01(\x04\x12\x0e\n\x06status\x18\x07 \x01(\r\x12\x0f\n\x07guildId\x18\x08 \x01(\x04\x12:\n\x07members\x18\t \x03(\x0b\x32).AllianceService.AllianceInviteMemberInfo\"]\n\x11\x41llianceEventInfo\x12\x0f\n\x07\x65ventId\x18\x01 \x01(\x04\x12\x11\n\teventType\x18\x02 \x01(\r\x12\x11\n\teventArgs\x18\x03 \x03(\t\x12\x11\n\tcreatedAt\x18\x04 \x01(\r\"\xa0\x01\n\x11\x41llianceEnemyInfo\x12\x12\n\nattackType\x18\x01 \x01(\r\x12\x10\n\x08\x61ttackId\x18\x02 \x01(\x04\x12\x16\n\x0e\x61ttackServerId\x18\x03 \x01(\r\x12\x12\n\ntargetType\x18\x04 \x01(\r\x12\x10\n\x08targetId\x18\x05 \x01(\x04\x12\x16\n\x0etargetServerId\x18\x06 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x07 \x01(\r\"\xa8\x01\n\x13\x41llianceChatMessage\x12\x15\n\rsenderGuildId\x18\x01 \x01(\x04\x12\x17\n\x0fsenderGuildName\x18\x02 \x01(\t\x12\x16\n\x0esenderServerId\x18\x03 \x01(\r\x12\x12\n\navatarInfo\x18\x04 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x05 \x01(\t\x12\x10\n\x08sendTime\x18\x06 \x01(\r\x12\x12\n\nsenderType\x18\x07 \x01(\r\"-\n\x19RegisterGameServerRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\"\x81\x01\n\x11\x41llianceListEntry\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x38\n\x07members\x18\x04 \x03(\x0b\x32\'.AllianceService.AllianceListMemberInfo\"\x81\x01\n\x16\x41llianceListMemberInfo\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x11\n\tguildIcon\x18\x03 \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x04 \x01(\r\x12\x10\n\x08serverId\x18\x05 \x01(\r\x12\r\n\x05score\x18\x06 \x01(\x04\"\xa1\x03\n\x13\x43reateLeagueRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65\x63laration\x18\x04 \x01(\t\x12\x13\n\x0b\x61pproveType\x18\x05 \x01(\r\x12\x12\n\nplayerGbId\x18\x06 \x01(\x04\x12\x0c\n\x04uuid\x18\x07 \x01(\x04\x12\x12\n\nleaderName\x18\x08 \x01(\t\x12\x13\n\x0bleaderLevel\x18\t \x01(\r\x12\x12\n\nallianceId\x18\n \x01(\x04\x12\x16\n\x0eleaderServerId\x18\x0b \x01(\r\x12\x18\n\x10leaderProfession\x18\x0c \x01(\x05\x12\x14\n\x0cleaderGender\x18\r \x01(\r\x12\x11\n\tguildName\x18\x0e \x01(\t\x12\x0f\n\x07\x64spFlag\x18\x0f \x01(\r\x12\x11\n\tguildIcon\x18\x10 \x01(\r\x12\x12\n\nguildScore\x18\x11 \x01(\x04\x12\x12\n\nguildLevel\x18\x12 \x01(\r\x12\x13\n\x0bmemberCount\x18\x13 \x01(\r\x12\x14\n\x0cmaxMemberNum\x18\x14 \x01(\r\"\xae\x01\n\x12\x43reateLeagueResult\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\r\x12/\n\x08\x61lliance\x18\x04 \x01(\x0b\x32\x1d.AllianceService.AllianceInfo\x12\x34\n\x07members\x18\x05 \x03(\x0b\x32#.AllianceService.AllianceMemberInfo\"L\n\x14\x44isbandLeagueRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x12\n\nplayerGbId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"4\n\x13\x44isbandLeagueResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\"\x87\x01\n\x17ModifyLeagueInfoRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x12\n\nplayerGbId\x18\x02 \x01(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65\x63laration\x18\x04 \x01(\t\x12\x13\n\x0b\x61pproveType\x18\x05 \x01(\r\x12\x0c\n\x04uuid\x18\x06 \x01(\x04\"7\n\x16ModifyLeagueInfoResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\"[\n\x14GetLeagueListRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x11\n\tpageIndex\x18\x02 \x01(\r\x12\x10\n\x08pageSize\x18\x03 \x01(\r\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"~\n\x13GetLeagueListResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x11\n\tpageIndex\x18\x02 \x01(\r\x12\x11\n\ttotalPage\x18\x03 \x01(\r\x12\x33\n\x07\x65ntries\x18\x04 \x03(\x0b\x32\".AllianceService.AllianceListEntry\"F\n\x13SearchLeagueRequest\x12\x0f\n\x07keyword\x18\x01 \x01(\t\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"W\n\x12SearchLeagueResult\x12\x33\n\x07\x65ntries\x18\x01 \x03(\x0b\x32\".AllianceService.AllianceListEntry\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\":\n\x16GetLeagueDetailRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\x9d\x01\n\x15GetLeagueDetailResult\x12/\n\x08\x61lliance\x18\x01 \x01(\x0b\x32\x1d.AllianceService.AllianceInfo\x12\x34\n\x07members\x18\x02 \x03(\x0b\x32#.AllianceService.AllianceMemberInfo\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x04 \x01(\r\"\xe4\x02\n\x12\x41pplyToJoinRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x12\n\nguildScore\x18\x04 \x01(\x04\x12\x11\n\tguildName\x18\x05 \x01(\t\x12\x12\n\nplayerGbId\x18\x06 \x01(\x04\x12\x0c\n\x04uuid\x18\x07 \x01(\x04\x12\x13\n\x0bmemberCount\x18\x08 \x01(\r\x12\x11\n\tguildIcon\x18\t \x01(\r\x12\x12\n\nguildLevel\x18\n \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x0b \x01(\r\x12\x14\n\x0cmaxMemberNum\x18\x0c \x01(\r\x12\x12\n\nleaderGbId\x18\r \x01(\x04\x12\x12\n\nleaderName\x18\x0e \x01(\t\x12\x13\n\x0bleaderLevel\x18\x0f \x01(\r\x12\x18\n\x10leaderProfession\x18\x10 \x01(\r\x12\x14\n\x0cleaderGender\x18\x11 \x01(\r\"s\n\x11\x41pplyToJoinResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x12\n\nallianceId\x18\x03 \x01(\x04\x12\x14\n\x0c\x61llianceName\x18\x04 \x01(\t\x12\x15\n\ralliancePower\x18\x05 \x01(\x04\"[\n\x12\x41pproveJoinRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x12\n\nplayerGbId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\x12\x0f\n\x07guildId\x18\x04 \x01(\x04\"Z\n\x11\x41pproveJoinResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x15\n\rjoinedGuildId\x18\x03 \x01(\x04\x12\x0f\n\x07guildCD\x18\x04 \x01(\r\"F\n\x11RejectJoinRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x12\n\nplayerGbId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"J\n\x10RejectJoinResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x17\n\x0frejectedGuildId\x18\x03 \x01(\x04\"G\n\x12\x43\x61ncelApplyRequest\x12\x12\n\nleagueUUID\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"F\n\x11\x43\x61ncelApplyResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x12\n\nallianceId\x18\x03 \x01(\x04\"y\n\x12InviteGuildRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x15\n\rtargetGuildId\x18\x02 \x01(\x04\x12\x16\n\x0etargetServerId\x18\x03 \x01(\r\x12\x12\n\nplayerGbId\x18\x04 \x01(\x04\x12\x0c\n\x04uuid\x18\x05 \x01(\x04\"Z\n\x11InviteGuildResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x15\n\rtargetGuildId\x18\x03 \x01(\x04\x12\x0f\n\x07guildCD\x18\x04 \x01(\r\"\xe5\x02\n\x13\x41\x63\x63\x65ptInviteRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x12\n\nguildScore\x18\x04 \x01(\x04\x12\x11\n\tguildName\x18\x05 \x01(\t\x12\x12\n\nplayerGbId\x18\x06 \x01(\x04\x12\x0c\n\x04uuid\x18\x07 \x01(\x04\x12\x13\n\x0bmemberCount\x18\x08 \x01(\r\x12\x11\n\tguildIcon\x18\t \x01(\r\x12\x12\n\nguildLevel\x18\n \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x0b \x01(\r\x12\x14\n\x0cmaxMemberNum\x18\x0c \x01(\r\x12\x12\n\nleaderGbId\x18\r \x01(\x04\x12\x12\n\nleaderName\x18\x0e \x01(\t\x12\x13\n\x0bleaderLevel\x18\x0f \x01(\r\x12\x18\n\x10leaderProfession\x18\x10 \x01(\r\x12\x14\n\x0cleaderGender\x18\x11 \x01(\r\"G\n\x12\x41\x63\x63\x65ptInviteResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x12\n\nallianceId\x18\x03 \x01(\x04\"\\\n\x13RejectInviteRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x12\n\nplayerGbId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\x12\x12\n\nallianceId\x18\x04 \x01(\x04\"G\n\x12RejectInviteResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x12\n\nallianceId\x18\x03 \x01(\x04\"`\n\x11KickMemberRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x15\n\rtargetGuildId\x18\x02 \x01(\x04\x12\x12\n\nplayerGbId\x18\x03 \x01(\x04\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"1\n\x10KickMemberResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\"[\n\x12LeaveLeagueRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x12\n\nplayerGbId\x18\x03 \x01(\x04\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"2\n\x11LeaveLeagueResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\"d\n\x15TransferLeaderRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x15\n\rtargetGuildId\x18\x02 \x01(\x04\x12\x12\n\nplayerGbId\x18\x03 \x01(\x04\x12\x0c\n\x04uuid\x18\x04 \x01(\x04\"f\n\x14TransferLeaderResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12/\n\x08\x61lliance\x18\x03 \x01(\x0b\x32\x1d.AllianceService.AllianceInfo\"7\n\x13GetApplyListRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"k\n\x12GetApplyListResult\x12\x33\n\x07\x61pplies\x18\x01 \x03(\x0b\x32\".AllianceService.AllianceApplyInfo\x12\x12\n\ntotalCount\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"5\n\x14GetInviteListRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"m\n\x13GetInviteListResult\x12\x34\n\x07invites\x18\x01 \x03(\x0b\x32#.AllianceService.AllianceInviteInfo\x12\x12\n\ntotalCount\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"6\n\x15GetSentAppliesRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"i\n\x14GetSentAppliesResult\x12/\n\x07\x61pplies\x18\x01 \x03(\x0b\x32\x1e.AllianceService.SentApplyItem\x12\x12\n\ntotalCount\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\x93\x01\n\rSentApplyItem\x12\x0f\n\x07\x61pplyId\x18\x01 \x01(\x04\x12\x12\n\nallianceId\x18\x02 \x01(\x04\x12\x14\n\x0c\x61llianceName\x18\x03 \x01(\t\x12\x10\n\x08serverId\x18\x04 \x01(\r\x12\x12\n\ntotalScore\x18\x05 \x01(\x04\x12\x11\n\tcreatedAt\x18\x06 \x01(\r\x12\x0e\n\x06status\x18\x07 \x01(\r\"\xbc\x01\n\x11\x44\x65\x63lareWarRequest\x12\x11\n\tguildName\x18\x01 \x01(\t\x12\x12\n\nattackType\x18\x02 \x01(\r\x12\x10\n\x08\x61ttackId\x18\x03 \x01(\x04\x12\x12\n\ntargetType\x18\x04 \x01(\r\x12\x10\n\x08targetId\x18\x05 \x01(\x04\x12\x16\n\x0etargetServerId\x18\x06 \x01(\r\x12\x12\n\nplayerGbId\x18\x07 \x01(\x04\x12\x0e\n\x06\x61mount\x18\x08 \x01(\x04\x12\x0c\n\x04uuid\x18\t \x01(\x04\"B\n\x10\x44\x65\x63lareWarResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x03 \x01(\r\"4\n\x13GetEnemyListRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"4\n\x13GetUnionListRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"2\n\x0e\x45nemyGuildInfo\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0f\n\x07\x65ndTime\x18\x02 \x01(\r\"T\n\x12GetEnemyListResult\x12\x30\n\x07\x65nemies\x18\x01 \x03(\x0b\x32\x1f.AllianceService.EnemyGuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"\x9b\x01\n\x0c\x45nemyRowInfo\x12\x10\n\x08\x61ttackId\x18\x01 \x01(\x04\x12\x12\n\nattackType\x18\x02 \x01(\r\x12\x16\n\x0e\x61ttackServerId\x18\x03 \x01(\r\x12\x10\n\x08targetId\x18\x04 \x01(\x04\x12\x12\n\ntargetType\x18\x05 \x01(\r\x12\x16\n\x0etargetServerId\x18\x06 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x07 \x01(\r\"P\n\x1bGetEnemyAllianceListRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"Z\n\x1aGetEnemyAllianceListResult\x12.\n\x07\x65nemies\x18\x01 \x03(\x0b\x32\x1d.AllianceService.EnemyRowInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"!\n\x0eUnionGuildInfo\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\"S\n\x12GetUnionListResult\x12/\n\x06unions\x18\x01 \x03(\x0b\x32\x1f.AllianceService.UnionGuildInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"C\n\x13WarStartedBroadcast\x12,\n\x05\x65nemy\x18\x01 \x01(\x0b\x32\x1d.AllianceService.EnemyRowInfo\"_\n\x11WarEndedBroadcast\x12\x12\n\nattackType\x18\x01 \x01(\r\x12\x10\n\x08\x61ttackId\x18\x02 \x01(\x04\x12\x12\n\ntargetType\x18\x03 \x01(\r\x12\x10\n\x08targetId\x18\x04 \x01(\x04\"s\n\x11GuildRelationInfo\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x14\n\x0crelationType\x18\x03 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x04 \x01(\r\x12\x0f\n\x07version\x18\x05 \x01(\r\"^\n\x14GuildRelationAllInfo\x12\x35\n\trelations\x18\x01 \x03(\x0b\x32\".AllianceService.GuildRelationInfo\x12\x0f\n\x07version\x18\x02 \x01(\r\"R\n\x17GuildRelationRemoveInfo\x12\x12\n\nguildUUID1\x18\x01 \x01(\x04\x12\x12\n\nguildUUID2\x18\x02 \x01(\x04\x12\x0f\n\x07version\x18\x03 \x01(\r\"\xa0\x01\n\x11\x45nemyRelationInfo\x12\x12\n\nattackType\x18\x01 \x01(\r\x12\x10\n\x08\x61ttackId\x18\x02 \x01(\x04\x12\x16\n\x0e\x61ttackServerId\x18\x03 \x01(\r\x12\x12\n\ntargetType\x18\x04 \x01(\r\x12\x10\n\x08targetId\x18\x05 \x01(\x04\x12\x16\n\x0etargetServerId\x18\x06 \x01(\r\x12\x0f\n\x07\x65ndTime\x18\x07 \x01(\r\"^\n\x14\x45nemyRelationAllInfo\x12\x35\n\trelations\x18\x01 \x03(\x0b\x32\".AllianceService.EnemyRelationInfo\x12\x0f\n\x07version\x18\x02 \x01(\r\"N\n\x1a\x43heckLeagueRelationRequest\x12\x10\n\x08guildId1\x18\x01 \x01(\x04\x12\x10\n\x08guildId2\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"U\n\x19\x43heckLeagueRelationResult\x12\x16\n\x0eisSameAlliance\x18\x01 \x01(\x08\x12\x12\n\nallianceId\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"8\n\x17GetGuildAllianceRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"K\n\x16GetGuildAllianceResult\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"z\n\x11\x44onateFundRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x0e\n\x06itemId\x18\x03 \x01(\r\x12\x0e\n\x06\x61mount\x18\x04 \x01(\x04\x12\x12\n\nplayerGbId\x18\x05 \x01(\x04\x12\x0c\n\x04uuid\x18\x06 \x01(\x04\"[\n\x10\x44onateFundResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\x12\x14\n\x0c\x61llianceFund\x18\x03 \x01(\x04\x12\x12\n\nallianceId\x18\x04 \x01(\x04\"\x92\x01\n\x12\x41idResourceRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x13\n\x0b\x66romGuildId\x18\x02 \x01(\x04\x12\x11\n\ttoGuildId\x18\x03 \x01(\x04\x12\x0e\n\x06itemId\x18\x04 \x01(\r\x12\x0e\n\x06\x61mount\x18\x05 \x01(\x04\x12\x12\n\nplayerGbId\x18\x06 \x01(\x04\x12\x0c\n\x04uuid\x18\x07 \x01(\x04\"2\n\x11\x41idResourceResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\"8\n\x14GetLeagueFundRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"1\n\x13GetLeagueFundResult\x12\x0c\n\x04\x66und\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"7\n\x13GetEventListRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"V\n\x12GetEventListResult\x12\x32\n\x06\x65vents\x18\x01 \x03(\x0b\x32\".AllianceService.AllianceEventInfo\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"l\n\x11NewEventBroadcast\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x31\n\x05\x65vent\x18\x02 \x01(\x0b\x32\".AllianceService.AllianceEventInfo\x12\x10\n\x08guildIds\x18\x03 \x03(\x04\"\xa7\x01\n\x16SendChatMessageRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x15\n\rsenderGuildId\x18\x02 \x01(\x04\x12\x17\n\x0fsenderGuildName\x18\x03 \x01(\t\x12\x16\n\x0esenderServerId\x18\x04 \x01(\r\x12\x12\n\navatarInfo\x18\x05 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x06 \x01(\t\x12\x0c\n\x04uuid\x18\x07 \x01(\x04\"6\n\x15SendChatMessageResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\"a\n\x14\x43hatMessageBroadcast\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x35\n\x07message\x18\x02 \x01(\x0b\x32$.AllianceService.AllianceChatMessage\"H\n\x15GetChatHistoryRequest\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\r\n\x05limit\x18\x02 \x01(\r\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"\\\n\x14GetChatHistoryResult\x12\x36\n\x08messages\x18\x01 \x03(\x0b\x32$.AllianceService.AllianceChatMessage\x12\x0c\n\x04uuid\x18\x02 \x01(\x04\"L\n\x17ReportGuildScoreRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x12\n\nguildScore\x18\x02 \x01(\x04\x12\x0c\n\x04uuid\x18\x03 \x01(\x04\"7\n\x16ReportGuildScoreResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\"\xae\x02\n\x14SyncGuildInfoRequest\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x11\n\tguildName\x18\x02 \x01(\t\x12\x11\n\tguildIcon\x18\x03 \x01(\r\x12\x0f\n\x07\x64spFlag\x18\x04 \x01(\r\x12\x12\n\nguildLevel\x18\x05 \x01(\r\x12\x13\n\x0bmemberCount\x18\x06 \x01(\r\x12\x16\n\x0emaxMemberCount\x18\x07 \x01(\r\x12\x12\n\nguildScore\x18\x08 \x01(\x04\x12\x12\n\nleaderGbId\x18\t \x01(\x04\x12\x12\n\nleaderName\x18\n \x01(\t\x12\x13\n\x0bleaderLevel\x18\x0b \x01(\r\x12\x18\n\x10leaderProfession\x18\x0c \x01(\r\x12\x14\n\x0cleaderGender\x18\r \x01(\r\x12\x0c\n\x04uuid\x18\x0e \x01(\x04\"4\n\x13SyncGuildInfoResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x02 \x01(\r\";\n\x13\x44isbandLeagueNotify\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x10\n\x08guildIds\x18\x02 \x03(\x04\"`\n\x15NewMemberJoinedNotify\x12\x12\n\nplayerGbId\x18\x01 \x01(\x04\x12\x33\n\x06member\x18\x02 \x01(\x0b\x32#.AllianceService.AllianceMemberInfo\"=\n\x14JoinToAllianceNotify\x12\x12\n\nallianceId\x18\x01 \x01(\x04\x12\x11\n\tguildUUID\x18\x02 \x01(\x04\"\\\n\x15ReturnGuildFundNotify\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0f\n\x07srcType\x18\x02 \x01(\r\x12\x10\n\x08itemType\x18\x03 \x01(\r\x12\x0f\n\x07itemNum\x18\x04 \x01(\x04\"]\n\x16GuildAidResourceNotify\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x0f\n\x07srcType\x18\x02 \x01(\r\x12\x10\n\x08itemType\x18\x03 \x01(\r\x12\x0f\n\x07itemNum\x18\x04 \x01(\x04\";\n\x10LeagueGuildLeave\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x16\n\x0ememberGuildIds\x18\x02 \x03(\x04\"\'\n\rLeagueDisband\x12\x16\n\x0ememberGuildIds\x18\x01 \x03(\x04\"K\n\x10LeagueGuildEvent\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x11\n\tmessageId\x18\x02 \x01(\r\x12\x13\n\x0bmessageArgs\x18\x03 \x03(\t\"M\n\x12LeagueGuildMessage\x12\x0f\n\x07guildId\x18\x01 \x01(\x04\x12\x11\n\tmessageId\x18\x02 \x01(\r\x12\x13\n\x0bmessageArgs\x18\x03 \x03(\t\"`\n\x16LeagueBroadCastMessage\x12\x0f\n\x07\x66romUID\x18\x01 \x01(\x04\x12\r\n\x05toUID\x18\x02 \x01(\x04\x12\x11\n\tmessageId\x18\x03 \x01(\r\x12\x13\n\x0bmessageArgs\x18\x04 \x03(\t\">\n\x1aRecruitLeagueMemberRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x12\n\nleagueUUID\x18\x02 \x01(\x04\"N\n\x19RecruitLeagueMemberResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x12\n\nleagueUUID\x18\x02 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\r\"_\n\x16\x43heckLeaveGuildRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x12\n\nleagueUUID\x18\x02 \x01(\x04\x12\x0f\n\x07guildId\x18\x03 \x01(\x04\x12\x12\n\nplayerGbId\x18\x04 \x01(\x04\"W\n\x15\x43heckLeaveGuildResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x12\n\nplayerGbId\x18\x03 \x01(\x04\x12\x0b\n\x03ret\x18\x04 \x01(\x08\"7\n\x16QueryLeagueUUIDRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\"W\n\x15QueryLeagueUUIDResult\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x12\n\nleagueUUID\x18\x03 \x01(\x04\x12\x0b\n\x03ret\x18\x04 \x01(\x08\"M\n\x0f\x45ventTipsNotify\x12\x12\n\nleagueUUID\x18\x01 \x01(\x04\x12\x11\n\tmessageId\x18\x02 \x01(\r\x12\x13\n\x0bmessageArgs\x18\x03 \x03(\t\";\n\x1aRemoveEnemyRelationRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\"M\n\x1bRemoveEnemyRelationResponse\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07guildId\x18\x02 \x01(\x04\x12\x0f\n\x07\x65rrCode\x18\x03 \x01(\r*p\n\x14\x41pplyCancelledReason\x12#\n\x1f\x41PPLY_CANCEL_REASON_UNSPECIFIED\x10\x00\x12\x33\n/APPLY_CANCEL_REASON_GUILD_JOINED_OTHER_ALLIANCE\x10\x01\x32\xf6\x1b\n\x0f\x41llianceService\x12W\n\x12registerGameServer\x12*.AllianceService.RegisterGameServerRequest\x1a\x15.AllianceService.Void\x12:\n\nactiveTick\x12\x15.AllianceService.Void\x1a\x15.AllianceService.Void\x12K\n\x0c\x63reateLeague\x12$.AllianceService.CreateLeagueRequest\x1a\x15.AllianceService.Void\x12M\n\rdisbandLeague\x12%.AllianceService.DisbandLeagueRequest\x1a\x15.AllianceService.Void\x12S\n\x10modifyLeagueInfo\x12(.AllianceService.ModifyLeagueInfoRequest\x1a\x15.AllianceService.Void\x12M\n\rgetLeagueList\x12%.AllianceService.GetLeagueListRequest\x1a\x15.AllianceService.Void\x12K\n\x0csearchLeague\x12$.AllianceService.SearchLeagueRequest\x1a\x15.AllianceService.Void\x12Q\n\x0fgetLeagueDetail\x12\'.AllianceService.GetLeagueDetailRequest\x1a\x15.AllianceService.Void\x12W\n\x12getLeagueBasicInfo\x12*.AllianceService.GetLeagueBasicInfoRequest\x1a\x15.AllianceService.Void\x12I\n\x0b\x61pplyToJoin\x12#.AllianceService.ApplyToJoinRequest\x1a\x15.AllianceService.Void\x12I\n\x0b\x61pproveJoin\x12#.AllianceService.ApproveJoinRequest\x1a\x15.AllianceService.Void\x12Z\n\x18onCheckGuildExistsResult\x12\'.AllianceService.CheckGuildExistsResult\x1a\x15.AllianceService.Void\x12G\n\nrejectJoin\x12\".AllianceService.RejectJoinRequest\x1a\x15.AllianceService.Void\x12I\n\x0b\x63\x61ncelApply\x12#.AllianceService.CancelApplyRequest\x1a\x15.AllianceService.Void\x12I\n\x0binviteGuild\x12#.AllianceService.InviteGuildRequest\x1a\x15.AllianceService.Void\x12K\n\x0c\x61\x63\x63\x65ptInvite\x12$.AllianceService.AcceptInviteRequest\x1a\x15.AllianceService.Void\x12K\n\x0crejectInvite\x12$.AllianceService.RejectInviteRequest\x1a\x15.AllianceService.Void\x12G\n\nkickMember\x12\".AllianceService.KickMemberRequest\x1a\x15.AllianceService.Void\x12I\n\x0bleaveLeague\x12#.AllianceService.LeaveLeagueRequest\x1a\x15.AllianceService.Void\x12O\n\x0etransferLeader\x12&.AllianceService.TransferLeaderRequest\x1a\x15.AllianceService.Void\x12K\n\x0cgetApplyList\x12$.AllianceService.GetApplyListRequest\x1a\x15.AllianceService.Void\x12M\n\rgetInviteList\x12%.AllianceService.GetInviteListRequest\x1a\x15.AllianceService.Void\x12O\n\x0egetSentApplies\x12&.AllianceService.GetSentAppliesRequest\x1a\x15.AllianceService.Void\x12G\n\ndeclareWar\x12\".AllianceService.DeclareWarRequest\x1a\x15.AllianceService.Void\x12K\n\x0cgetEnemyList\x12$.AllianceService.GetEnemyListRequest\x1a\x15.AllianceService.Void\x12[\n\x14getEnemyAllianceList\x12,.AllianceService.GetEnemyAllianceListRequest\x1a\x15.AllianceService.Void\x12Y\n\x13getLeagueSimpleInfo\x12+.AllianceService.GetLeagueSimpleInfoRequest\x1a\x15.AllianceService.Void\x12W\n\x12getGuildSimpleInfo\x12*.AllianceService.GetGuildSimpleInfoRequest\x1a\x15.AllianceService.Void\x12`\n\x1conCheckGuildSimpleInfoResult\x12).AllianceService.GetGuildSimpleInfoResult\x1a\x15.AllianceService.Void\x12Y\n\x13\x63heckLeagueRelation\x12+.AllianceService.CheckLeagueRelationRequest\x1a\x15.AllianceService.Void\x12S\n\x10getGuildAlliance\x12(.AllianceService.GetGuildAllianceRequest\x1a\x15.AllianceService.Void\x12G\n\ndonateFund\x12\".AllianceService.DonateFundRequest\x1a\x15.AllianceService.Void\x12I\n\x0b\x61idResource\x12#.AllianceService.AidResourceRequest\x1a\x15.AllianceService.Void\x12M\n\rgetLeagueFund\x12%.AllianceService.GetLeagueFundRequest\x1a\x15.AllianceService.Void\x12K\n\x0cgetEventList\x12$.AllianceService.GetEventListRequest\x1a\x15.AllianceService.Void\x12Q\n\x0fsendChatMessage\x12\'.AllianceService.SendChatMessageRequest\x1a\x15.AllianceService.Void\x12O\n\x0egetChatHistory\x12&.AllianceService.GetChatHistoryRequest\x1a\x15.AllianceService.Void\x12S\n\x10reportGuildScore\x12(.AllianceService.ReportGuildScoreRequest\x1a\x15.AllianceService.Void\x12M\n\rsyncGuildInfo\x12%.AllianceService.SyncGuildInfoRequest\x1a\x15.AllianceService.Void\x12K\n\x0cgetUnionList\x12$.AllianceService.GetUnionListRequest\x1a\x15.AllianceService.Void\x12Y\n\x13recruitLeagueMember\x12+.AllianceService.RecruitLeagueMemberRequest\x1a\x15.AllianceService.Void\x12Q\n\x0f\x63heckLeaveGuild\x12\'.AllianceService.CheckLeaveGuildRequest\x1a\x15.AllianceService.Void\x12Q\n\x0fqueryLeagueUUID\x12\'.AllianceService.QueryLeagueUUIDRequest\x1a\x15.AllianceService.Void\x12Y\n\x13removeEnemyRelation\x12+.AllianceService.RemoveEnemyRelationRequest\x1a\x15.AllianceService.Void2\x9e,\n\nGameClient\x12\x42\n\x12\x61\x63tiveTickCallback\x12\x15.AllianceService.Void\x1a\x15.AllianceService.Void\x12R\n\x14onCreateLeagueResult\x12#.AllianceService.CreateLeagueResult\x1a\x15.AllianceService.Void\x12T\n\x15onDisbandLeagueResult\x12$.AllianceService.DisbandLeagueResult\x1a\x15.AllianceService.Void\x12Z\n\x18onModifyLeagueInfoResult\x12\'.AllianceService.ModifyLeagueInfoResult\x1a\x15.AllianceService.Void\x12Q\n\x12onLeagueListResult\x12$.AllianceService.GetLeagueListResult\x1a\x15.AllianceService.Void\x12R\n\x14onSearchLeagueResult\x12#.AllianceService.SearchLeagueResult\x1a\x15.AllianceService.Void\x12U\n\x14onLeagueDetailResult\x12&.AllianceService.GetLeagueDetailResult\x1a\x15.AllianceService.Void\x12^\n\x1aonGetLeagueBasicInfoResult\x12).AllianceService.GetLeagueBasicInfoResult\x1a\x15.AllianceService.Void\x12P\n\x13onApplyToJoinResult\x12\".AllianceService.ApplyToJoinResult\x1a\x15.AllianceService.Void\x12P\n\x13onApproveJoinResult\x12\".AllianceService.ApproveJoinResult\x1a\x15.AllianceService.Void\x12S\n\x10\x63heckGuildExists\x12(.AllianceService.CheckGuildExistsRequest\x1a\x15.AllianceService.Void\x12N\n\x12onRejectJoinResult\x12!.AllianceService.RejectJoinResult\x1a\x15.AllianceService.Void\x12P\n\x13onCancelApplyResult\x12\".AllianceService.CancelApplyResult\x1a\x15.AllianceService.Void\x12P\n\x13onInviteGuildResult\x12\".AllianceService.InviteGuildResult\x1a\x15.AllianceService.Void\x12R\n\x14onAcceptInviteResult\x12#.AllianceService.AcceptInviteResult\x1a\x15.AllianceService.Void\x12R\n\x14onRejectInviteResult\x12#.AllianceService.RejectInviteResult\x1a\x15.AllianceService.Void\x12N\n\x12onKickMemberResult\x12!.AllianceService.KickMemberResult\x1a\x15.AllianceService.Void\x12P\n\x13onLeaveLeagueResult\x12\".AllianceService.LeaveLeagueResult\x1a\x15.AllianceService.Void\x12V\n\x16onTransferLeaderResult\x12%.AllianceService.TransferLeaderResult\x1a\x15.AllianceService.Void\x12O\n\x11onApplyListResult\x12#.AllianceService.GetApplyListResult\x1a\x15.AllianceService.Void\x12Q\n\x12onInviteListResult\x12$.AllianceService.GetInviteListResult\x1a\x15.AllianceService.Void\x12S\n\x13onSentAppliesResult\x12%.AllianceService.GetSentAppliesResult\x1a\x15.AllianceService.Void\x12N\n\x12onDeclareWarResult\x12!.AllianceService.DeclareWarResult\x1a\x15.AllianceService.Void\x12O\n\x11onEnemyListResult\x12#.AllianceService.GetEnemyListResult\x1a\x15.AllianceService.Void\x12_\n\x19onEnemyAllianceListResult\x12+.AllianceService.GetEnemyAllianceListResult\x1a\x15.AllianceService.Void\x12`\n\x1bonGetLeagueSimpleInfoResult\x12*.AllianceService.GetLeagueSimpleInfoResult\x1a\x15.AllianceService.Void\x12Y\n\x14\x63heckGuildSimpleInfo\x12*.AllianceService.GetGuildSimpleInfoRequest\x1a\x15.AllianceService.Void\x12^\n\x1aonGetGuildSimpleInfoResult\x12).AllianceService.GetGuildSimpleInfoResult\x1a\x15.AllianceService.Void\x12`\n\x1bonCheckLeagueRelationResult\x12*.AllianceService.CheckLeagueRelationResult\x1a\x15.AllianceService.Void\x12Z\n\x18onGetGuildAllianceResult\x12\'.AllianceService.GetGuildAllianceResult\x1a\x15.AllianceService.Void\x12N\n\x12onDonateFundResult\x12!.AllianceService.DonateFundResult\x1a\x15.AllianceService.Void\x12P\n\x13onAidResourceResult\x12\".AllianceService.AidResourceResult\x1a\x15.AllianceService.Void\x12Q\n\x12onLeagueFundResult\x12$.AllianceService.GetLeagueFundResult\x1a\x15.AllianceService.Void\x12O\n\x11onEventListResult\x12#.AllianceService.GetEventListResult\x1a\x15.AllianceService.Void\x12X\n\x17onSendChatMessageResult\x12&.AllianceService.SendChatMessageResult\x1a\x15.AllianceService.Void\x12S\n\x13onChatHistoryResult\x12%.AllianceService.GetChatHistoryResult\x1a\x15.AllianceService.Void\x12Z\n\x18onReportGuildScoreResult\x12\'.AllianceService.ReportGuildScoreResult\x1a\x15.AllianceService.Void\x12T\n\x15onSyncGuildInfoResult\x12$.AllianceService.SyncGuildInfoResult\x1a\x15.AllianceService.Void\x12K\n\x0conWarStarted\x12$.AllianceService.WarStartedBroadcast\x1a\x15.AllianceService.Void\x12G\n\nonWarEnded\x12\".AllianceService.WarEndedBroadcast\x1a\x15.AllianceService.Void\x12G\n\nonNewEvent\x12\".AllianceService.NewEventBroadcast\x1a\x15.AllianceService.Void\x12M\n\ronChatMessage\x12%.AllianceService.ChatMessageBroadcast\x1a\x15.AllianceService.Void\x12T\n\x15onDisbandLeagueNotify\x12$.AllianceService.DisbandLeagueNotify\x1a\x15.AllianceService.Void\x12J\n\x10onNewApplyNotify\x12\x1f.AllianceService.NewApplyNotify\x1a\x15.AllianceService.Void\x12O\n\x11onNewInviteNotify\x12#.AllianceService.AllianceInviteInfo\x1a\x15.AllianceService.Void\x12R\n\x12onGuildRelationAll\x12%.AllianceService.GuildRelationAllInfo\x1a\x15.AllianceService.Void\x12X\n\x1bonBroadcastAddGuildRelation\x12\".AllianceService.GuildRelationInfo\x1a\x15.AllianceService.Void\x12\x61\n\x1eonBroadcastRemoveGuildRelation\x12(.AllianceService.GuildRelationRemoveInfo\x1a\x15.AllianceService.Void\x12R\n\x12onEnemyAllRelation\x12%.AllianceService.EnemyRelationAllInfo\x1a\x15.AllianceService.Void\x12X\n\x1bonBroadcastAddEnemyRelation\x12\".AllianceService.EnemyRelationInfo\x1a\x15.AllianceService.Void\x12[\n\x1eonBroadcastRemoveEnemyRelation\x12\".AllianceService.EnemyRelationInfo\x1a\x15.AllianceService.Void\x12R\n\x11onNewMemberJoined\x12&.AllianceService.NewMemberJoinedNotify\x1a\x15.AllianceService.Void\x12V\n\x16onJoinToAllianceNotify\x12%.AllianceService.JoinToAllianceNotify\x1a\x15.AllianceService.Void\x12O\n\x11onUnionListResult\x12#.AllianceService.GetUnionListResult\x1a\x15.AllianceService.Void\x12X\n\x17onReturnGuildFundNotify\x12&.AllianceService.ReturnGuildFundNotify\x1a\x15.AllianceService.Void\x12Z\n\x18onGuildAidResourceNotify\x12\'.AllianceService.GuildAidResourceNotify\x1a\x15.AllianceService.Void\x12N\n\x12onLeagueGuildLeave\x12!.AllianceService.LeagueGuildLeave\x1a\x15.AllianceService.Void\x12H\n\x0fonLeagueDisband\x12\x1e.AllianceService.LeagueDisband\x1a\x15.AllianceService.Void\x12T\n\x18onLeagueGuildEventNotify\x12!.AllianceService.LeagueGuildEvent\x1a\x15.AllianceService.Void\x12X\n\x1aonLeagueGuildMessageNotify\x12#.AllianceService.LeagueGuildMessage\x1a\x15.AllianceService.Void\x12`\n\x1eonLeagueBroadCastMessageNotify\x12\'.AllianceService.LeagueBroadCastMessage\x1a\x15.AllianceService.Void\x12`\n\x1bonRecruitLeagueMemberResult\x12*.AllianceService.RecruitLeagueMemberResult\x1a\x15.AllianceService.Void\x12X\n\x17onCheckLeaveGuildResult\x12&.AllianceService.CheckLeaveGuildResult\x1a\x15.AllianceService.Void\x12X\n\x17onQueryLeagueUUIDResult\x12&.AllianceService.QueryLeagueUUIDResult\x1a\x15.AllianceService.Void\x12L\n\x11onEventTipsNotify\x12 .AllianceService.EventTipsNotify\x1a\x15.AllianceService.Void\x12\\\n\x15onRemoveEnemyRelation\x12,.AllianceService.RemoveEnemyRelationResponse\x1a\x15.AllianceService.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
 )
 
 _APPLYCANCELLEDREASON = _descriptor.EnumDescriptor(
@@ -42,8 +42,8 @@ _APPLYCANCELLEDREASON = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=13362,
-  serialized_end=13474,
+  serialized_start=13914,
+  serialized_end=14026,
 )
 _sym_db.RegisterEnumDescriptor(_APPLYCANCELLEDREASON)
 
@@ -155,49 +155,42 @@ _ALLIANCEINFO = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='serverId', full_name='AllianceService.AllianceInfo.serverId', index=10,
-      number=14, type=13, cpp_type=3, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='createdAt', full_name='AllianceService.AllianceInfo.createdAt', index=11,
+      name='createdAt', full_name='AllianceService.AllianceInfo.createdAt', index=10,
       number=15, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='leaderGbId', full_name='AllianceService.AllianceInfo.leaderGbId', index=12,
+      name='leaderGbId', full_name='AllianceService.AllianceInfo.leaderGbId', index=11,
       number=16, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='leaderName', full_name='AllianceService.AllianceInfo.leaderName', index=13,
+      name='leaderName', full_name='AllianceService.AllianceInfo.leaderName', index=12,
       number=17, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='leaderLevel', full_name='AllianceService.AllianceInfo.leaderLevel', index=14,
+      name='leaderLevel', full_name='AllianceService.AllianceInfo.leaderLevel', index=13,
       number=18, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='leaderProfession', full_name='AllianceService.AllianceInfo.leaderProfession', index=15,
+      name='leaderProfession', full_name='AllianceService.AllianceInfo.leaderProfession', index=14,
       number=19, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='leaderGender', full_name='AllianceService.AllianceInfo.leaderGender', index=16,
+      name='leaderGender', full_name='AllianceService.AllianceInfo.leaderGender', index=15,
       number=20, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -216,7 +209,7 @@ _ALLIANCEINFO = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=54,
-  serialized_end=417,
+  serialized_end=399,
 )
 
 
@@ -302,8 +295,8 @@ _ALLIANCEBASICINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=420,
-  serialized_end=634,
+  serialized_start=402,
+  serialized_end=616,
 )
 
 
@@ -340,8 +333,8 @@ _GETLEAGUEBASICINFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=636,
-  serialized_end=697,
+  serialized_start=618,
+  serialized_end=679,
 )
 
 
@@ -385,8 +378,8 @@ _GETLEAGUEBASICINFORESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=699,
-  serialized_end=806,
+  serialized_start=681,
+  serialized_end=788,
 )
 
 
@@ -437,8 +430,8 @@ _LEAGUESIMPLEMEMBER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=808,
-  serialized_end=900,
+  serialized_start=790,
+  serialized_end=882,
 )
 
 
@@ -489,8 +482,8 @@ _LEAGUESIMPLEINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=902,
-  serialized_end=1028,
+  serialized_start=884,
+  serialized_end=1010,
 )
 
 
@@ -527,8 +520,8 @@ _GETLEAGUESIMPLEINFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1030,
-  serialized_end=1092,
+  serialized_start=1012,
+  serialized_end=1074,
 )
 
 
@@ -572,8 +565,8 @@ _GETLEAGUESIMPLEINFORESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1094,
-  serialized_end=1201,
+  serialized_start=1076,
+  serialized_end=1183,
 )
 
 
@@ -617,8 +610,8 @@ _CHECKGUILDEXISTSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1203,
-  serialized_end=1276,
+  serialized_start=1185,
+  serialized_end=1258,
 )
 
 
@@ -683,8 +676,8 @@ _CHECKGUILDEXISTSRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1278,
-  serialized_end=1402,
+  serialized_start=1260,
+  serialized_end=1384,
 )
 
 
@@ -756,8 +749,8 @@ _GUILDSIMPLEINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1405,
-  serialized_end=1548,
+  serialized_start=1387,
+  serialized_end=1530,
 )
 
 
@@ -801,8 +794,8 @@ _GETGUILDSIMPLEINFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1550,
-  serialized_end=1626,
+  serialized_start=1532,
+  serialized_end=1608,
 )
 
 
@@ -846,8 +839,8 @@ _GETGUILDSIMPLEINFORESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1628,
-  serialized_end=1733,
+  serialized_start=1610,
+  serialized_end=1715,
 )
 
 
@@ -919,8 +912,8 @@ _NEWAPPLYNOTIFY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1736,
-  serialized_end=1880,
+  serialized_start=1718,
+  serialized_end=1862,
 )
 
 
@@ -992,8 +985,8 @@ _APPLYCANCELLEDNOTIFY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1883,
-  serialized_end=2077,
+  serialized_start=1865,
+  serialized_end=2059,
 )
 
 
@@ -1044,8 +1037,8 @@ _SELFAPPLIESCANCELLEDNOTIFY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2080,
-  serialized_end=2269,
+  serialized_start=2062,
+  serialized_end=2251,
 )
 
 
@@ -1103,8 +1096,8 @@ _APPLYCANCELLEDITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2271,
-  serialized_end=2388,
+  serialized_start=2253,
+  serialized_end=2370,
 )
 
 
@@ -1239,8 +1232,8 @@ _ALLIANCEMEMBERINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2391,
-  serialized_end=2725,
+  serialized_start=2373,
+  serialized_end=2707,
 )
 
 
@@ -1396,8 +1389,8 @@ _ALLIANCEAPPLYINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2728,
-  serialized_end=3124,
+  serialized_start=2710,
+  serialized_end=3106,
 )
 
 
@@ -1476,8 +1469,8 @@ _ALLIANCEINVITEMEMBERINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3127,
-  serialized_end=3310,
+  serialized_start=3109,
+  serialized_end=3292,
 )
 
 
@@ -1563,8 +1556,8 @@ _ALLIANCEINVITEINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3313,
-  serialized_end=3538,
+  serialized_start=3295,
+  serialized_end=3520,
 )
 
 
@@ -1615,8 +1608,8 @@ _ALLIANCEEVENTINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3540,
-  serialized_end=3633,
+  serialized_start=3522,
+  serialized_end=3615,
 )
 
 
@@ -1688,8 +1681,8 @@ _ALLIANCEENEMYINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3636,
-  serialized_end=3796,
+  serialized_start=3618,
+  serialized_end=3778,
 )
 
 
@@ -1722,15 +1715,29 @@ _ALLIANCECHATMESSAGE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='content', full_name='AllianceService.AllianceChatMessage.content', index=3,
+      name='avatarInfo', full_name='AllianceService.AllianceChatMessage.avatarInfo', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='sendTime', full_name='AllianceService.AllianceChatMessage.sendTime', index=4,
-      number=5, type=13, cpp_type=3, label=1,
+      name='content', full_name='AllianceService.AllianceChatMessage.content', index=4,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='sendTime', full_name='AllianceService.AllianceChatMessage.sendTime', index=5,
+      number=6, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='senderType', full_name='AllianceService.AllianceChatMessage.senderType', index=6,
+      number=7, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -1747,8 +1754,8 @@ _ALLIANCECHATMESSAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3799,
-  serialized_end=3927,
+  serialized_start=3781,
+  serialized_end=3949,
 )
 
 
@@ -1778,8 +1785,8 @@ _REGISTERGAMESERVERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3929,
-  serialized_end=3974,
+  serialized_start=3951,
+  serialized_end=3996,
 )
 
 
@@ -1830,8 +1837,8 @@ _ALLIANCELISTENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3977,
-  serialized_end=4106,
+  serialized_start=3999,
+  serialized_end=4128,
 )
 
 
@@ -1896,8 +1903,8 @@ _ALLIANCELISTMEMBERINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4109,
-  serialized_end=4238,
+  serialized_start=4131,
+  serialized_end=4260,
 )
 
 
@@ -2060,8 +2067,8 @@ _CREATELEAGUEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4241,
-  serialized_end=4658,
+  serialized_start=4263,
+  serialized_end=4680,
 )
 
 
@@ -2119,8 +2126,8 @@ _CREATELEAGUERESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4661,
-  serialized_end=4835,
+  serialized_start=4683,
+  serialized_end=4857,
 )
 
 
@@ -2164,8 +2171,8 @@ _DISBANDLEAGUEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4837,
-  serialized_end=4913,
+  serialized_start=4859,
+  serialized_end=4935,
 )
 
 
@@ -2202,8 +2209,8 @@ _DISBANDLEAGUERESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4915,
-  serialized_end=4967,
+  serialized_start=4937,
+  serialized_end=4989,
 )
 
 
@@ -2268,8 +2275,8 @@ _MODIFYLEAGUEINFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4970,
-  serialized_end=5105,
+  serialized_start=4992,
+  serialized_end=5127,
 )
 
 
@@ -2306,8 +2313,8 @@ _MODIFYLEAGUEINFORESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5107,
-  serialized_end=5162,
+  serialized_start=5129,
+  serialized_end=5184,
 )
 
 
@@ -2358,8 +2365,8 @@ _GETLEAGUELISTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5164,
-  serialized_end=5255,
+  serialized_start=5186,
+  serialized_end=5277,
 )
 
 
@@ -2410,8 +2417,8 @@ _GETLEAGUELISTRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5257,
-  serialized_end=5383,
+  serialized_start=5279,
+  serialized_end=5405,
 )
 
 
@@ -2455,8 +2462,8 @@ _SEARCHLEAGUEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5385,
-  serialized_end=5455,
+  serialized_start=5407,
+  serialized_end=5477,
 )
 
 
@@ -2493,8 +2500,8 @@ _SEARCHLEAGUERESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5457,
-  serialized_end=5544,
+  serialized_start=5479,
+  serialized_end=5566,
 )
 
 
@@ -2531,8 +2538,8 @@ _GETLEAGUEDETAILREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5546,
-  serialized_end=5604,
+  serialized_start=5568,
+  serialized_end=5626,
 )
 
 
@@ -2583,8 +2590,8 @@ _GETLEAGUEDETAILRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5607,
-  serialized_end=5764,
+  serialized_start=5629,
+  serialized_end=5786,
 )
 
 
@@ -2726,8 +2733,8 @@ _APPLYTOJOINREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5767,
-  serialized_end=6123,
+  serialized_start=5789,
+  serialized_end=6145,
 )
 
 
@@ -2785,8 +2792,8 @@ _APPLYTOJOINRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6125,
-  serialized_end=6240,
+  serialized_start=6147,
+  serialized_end=6262,
 )
 
 
@@ -2837,8 +2844,8 @@ _APPROVEJOINREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6242,
-  serialized_end=6333,
+  serialized_start=6264,
+  serialized_end=6355,
 )
 
 
@@ -2889,8 +2896,8 @@ _APPROVEJOINRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6335,
-  serialized_end=6425,
+  serialized_start=6357,
+  serialized_end=6447,
 )
 
 
@@ -2934,8 +2941,8 @@ _REJECTJOINREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6427,
-  serialized_end=6497,
+  serialized_start=6449,
+  serialized_end=6519,
 )
 
 
@@ -2979,8 +2986,8 @@ _REJECTJOINRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6499,
-  serialized_end=6573,
+  serialized_start=6521,
+  serialized_end=6595,
 )
 
 
@@ -3024,8 +3031,8 @@ _CANCELAPPLYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6575,
-  serialized_end=6646,
+  serialized_start=6597,
+  serialized_end=6668,
 )
 
 
@@ -3069,8 +3076,8 @@ _CANCELAPPLYRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6648,
-  serialized_end=6718,
+  serialized_start=6670,
+  serialized_end=6740,
 )
 
 
@@ -3128,8 +3135,8 @@ _INVITEGUILDREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6720,
-  serialized_end=6841,
+  serialized_start=6742,
+  serialized_end=6863,
 )
 
 
@@ -3180,8 +3187,8 @@ _INVITEGUILDRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6843,
-  serialized_end=6933,
+  serialized_start=6865,
+  serialized_end=6955,
 )
 
 
@@ -3323,8 +3330,8 @@ _ACCEPTINVITEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6936,
-  serialized_end=7293,
+  serialized_start=6958,
+  serialized_end=7315,
 )
 
 
@@ -3368,8 +3375,8 @@ _ACCEPTINVITERESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7295,
-  serialized_end=7366,
+  serialized_start=7317,
+  serialized_end=7388,
 )
 
 
@@ -3420,8 +3427,8 @@ _REJECTINVITEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7368,
-  serialized_end=7460,
+  serialized_start=7390,
+  serialized_end=7482,
 )
 
 
@@ -3465,8 +3472,8 @@ _REJECTINVITERESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7462,
-  serialized_end=7533,
+  serialized_start=7484,
+  serialized_end=7555,
 )
 
 
@@ -3517,8 +3524,8 @@ _KICKMEMBERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7535,
-  serialized_end=7631,
+  serialized_start=7557,
+  serialized_end=7653,
 )
 
 
@@ -3555,8 +3562,8 @@ _KICKMEMBERRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7633,
-  serialized_end=7682,
+  serialized_start=7655,
+  serialized_end=7704,
 )
 
 
@@ -3607,8 +3614,8 @@ _LEAVELEAGUEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7684,
-  serialized_end=7775,
+  serialized_start=7706,
+  serialized_end=7797,
 )
 
 
@@ -3645,8 +3652,8 @@ _LEAVELEAGUERESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7777,
-  serialized_end=7827,
+  serialized_start=7799,
+  serialized_end=7849,
 )
 
 
@@ -3697,8 +3704,8 @@ _TRANSFERLEADERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7829,
-  serialized_end=7929,
+  serialized_start=7851,
+  serialized_end=7951,
 )
 
 
@@ -3742,8 +3749,8 @@ _TRANSFERLEADERRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7931,
-  serialized_end=8033,
+  serialized_start=7953,
+  serialized_end=8055,
 )
 
 
@@ -3780,8 +3787,8 @@ _GETAPPLYLISTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8035,
-  serialized_end=8090,
+  serialized_start=8057,
+  serialized_end=8112,
 )
 
 
@@ -3825,8 +3832,8 @@ _GETAPPLYLISTRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8092,
-  serialized_end=8199,
+  serialized_start=8114,
+  serialized_end=8221,
 )
 
 
@@ -3863,8 +3870,8 @@ _GETINVITELISTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8201,
-  serialized_end=8254,
+  serialized_start=8223,
+  serialized_end=8276,
 )
 
 
@@ -3908,8 +3915,8 @@ _GETINVITELISTRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8256,
-  serialized_end=8365,
+  serialized_start=8278,
+  serialized_end=8387,
 )
 
 
@@ -3946,8 +3953,8 @@ _GETSENTAPPLIESREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8367,
-  serialized_end=8421,
+  serialized_start=8389,
+  serialized_end=8443,
 )
 
 
@@ -3991,8 +3998,8 @@ _GETSENTAPPLIESRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8423,
-  serialized_end=8528,
+  serialized_start=8445,
+  serialized_end=8550,
 )
 
 
@@ -4064,8 +4071,8 @@ _SENTAPPLYITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8531,
-  serialized_end=8678,
+  serialized_start=8553,
+  serialized_end=8700,
 )
 
 
@@ -4151,8 +4158,8 @@ _DECLAREWARREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8681,
-  serialized_end=8869,
+  serialized_start=8703,
+  serialized_end=8891,
 )
 
 
@@ -4196,8 +4203,8 @@ _DECLAREWARRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8871,
-  serialized_end=8937,
+  serialized_start=8893,
+  serialized_end=8959,
 )
 
 
@@ -4234,8 +4241,8 @@ _GETENEMYLISTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8939,
-  serialized_end=8991,
+  serialized_start=8961,
+  serialized_end=9013,
 )
 
 
@@ -4272,8 +4279,8 @@ _GETUNIONLISTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8993,
-  serialized_end=9045,
+  serialized_start=9015,
+  serialized_end=9067,
 )
 
 
@@ -4310,8 +4317,8 @@ _ENEMYGUILDINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9047,
-  serialized_end=9097,
+  serialized_start=9069,
+  serialized_end=9119,
 )
 
 
@@ -4348,8 +4355,8 @@ _GETENEMYLISTRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9099,
-  serialized_end=9183,
+  serialized_start=9121,
+  serialized_end=9205,
 )
 
 
@@ -4421,8 +4428,8 @@ _ENEMYROWINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9186,
-  serialized_end=9341,
+  serialized_start=9208,
+  serialized_end=9363,
 )
 
 
@@ -4466,8 +4473,8 @@ _GETENEMYALLIANCELISTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9343,
-  serialized_end=9423,
+  serialized_start=9365,
+  serialized_end=9445,
 )
 
 
@@ -4504,8 +4511,8 @@ _GETENEMYALLIANCELISTRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9425,
-  serialized_end=9515,
+  serialized_start=9447,
+  serialized_end=9537,
 )
 
 
@@ -4535,8 +4542,8 @@ _UNIONGUILDINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9517,
-  serialized_end=9550,
+  serialized_start=9539,
+  serialized_end=9572,
 )
 
 
@@ -4573,8 +4580,8 @@ _GETUNIONLISTRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9552,
-  serialized_end=9635,
+  serialized_start=9574,
+  serialized_end=9657,
 )
 
 
@@ -4604,8 +4611,8 @@ _WARSTARTEDBROADCAST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9637,
-  serialized_end=9704,
+  serialized_start=9659,
+  serialized_end=9726,
 )
 
 
@@ -4656,8 +4663,8 @@ _WARENDEDBROADCAST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9706,
-  serialized_end=9801,
+  serialized_start=9728,
+  serialized_end=9823,
 )
 
 
@@ -4715,8 +4722,8 @@ _GUILDRELATIONINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9803,
-  serialized_end=9918,
+  serialized_start=9825,
+  serialized_end=9940,
 )
 
 
@@ -4753,8 +4760,8 @@ _GUILDRELATIONALLINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9920,
-  serialized_end=10014,
+  serialized_start=9942,
+  serialized_end=10036,
 )
 
 
@@ -4798,8 +4805,119 @@ _GUILDRELATIONREMOVEINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=10016,
-  serialized_end=10098,
+  serialized_start=10038,
+  serialized_end=10120,
+)
+
+
+_ENEMYRELATIONINFO = _descriptor.Descriptor(
+  name='EnemyRelationInfo',
+  full_name='AllianceService.EnemyRelationInfo',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='attackType', full_name='AllianceService.EnemyRelationInfo.attackType', index=0,
+      number=1, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='attackId', full_name='AllianceService.EnemyRelationInfo.attackId', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='attackServerId', full_name='AllianceService.EnemyRelationInfo.attackServerId', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='targetType', full_name='AllianceService.EnemyRelationInfo.targetType', index=3,
+      number=4, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='targetId', full_name='AllianceService.EnemyRelationInfo.targetId', index=4,
+      number=5, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='targetServerId', full_name='AllianceService.EnemyRelationInfo.targetServerId', index=5,
+      number=6, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='endTime', full_name='AllianceService.EnemyRelationInfo.endTime', index=6,
+      number=7, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=10123,
+  serialized_end=10283,
+)
+
+
+_ENEMYRELATIONALLINFO = _descriptor.Descriptor(
+  name='EnemyRelationAllInfo',
+  full_name='AllianceService.EnemyRelationAllInfo',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='relations', full_name='AllianceService.EnemyRelationAllInfo.relations', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='version', full_name='AllianceService.EnemyRelationAllInfo.version', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=10285,
+  serialized_end=10379,
 )
 
 
@@ -4843,8 +4961,8 @@ _CHECKLEAGUERELATIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=10100,
-  serialized_end=10178,
+  serialized_start=10381,
+  serialized_end=10459,
 )
 
 
@@ -4888,8 +5006,8 @@ _CHECKLEAGUERELATIONRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=10180,
-  serialized_end=10265,
+  serialized_start=10461,
+  serialized_end=10546,
 )
 
 
@@ -4926,8 +5044,8 @@ _GETGUILDALLIANCEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=10267,
-  serialized_end=10323,
+  serialized_start=10548,
+  serialized_end=10604,
 )
 
 
@@ -4971,8 +5089,8 @@ _GETGUILDALLIANCERESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=10325,
-  serialized_end=10400,
+  serialized_start=10606,
+  serialized_end=10681,
 )
 
 
@@ -5037,8 +5155,8 @@ _DONATEFUNDREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=10402,
-  serialized_end=10524,
+  serialized_start=10683,
+  serialized_end=10805,
 )
 
 
@@ -5089,8 +5207,8 @@ _DONATEFUNDRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=10526,
-  serialized_end=10617,
+  serialized_start=10807,
+  serialized_end=10898,
 )
 
 
@@ -5162,8 +5280,8 @@ _AIDRESOURCEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=10620,
-  serialized_end=10766,
+  serialized_start=10901,
+  serialized_end=11047,
 )
 
 
@@ -5200,8 +5318,8 @@ _AIDRESOURCERESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=10768,
-  serialized_end=10818,
+  serialized_start=11049,
+  serialized_end=11099,
 )
 
 
@@ -5238,8 +5356,8 @@ _GETLEAGUEFUNDREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=10820,
-  serialized_end=10876,
+  serialized_start=11101,
+  serialized_end=11157,
 )
 
 
@@ -5276,8 +5394,8 @@ _GETLEAGUEFUNDRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=10878,
-  serialized_end=10927,
+  serialized_start=11159,
+  serialized_end=11208,
 )
 
 
@@ -5314,8 +5432,8 @@ _GETEVENTLISTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=10929,
-  serialized_end=10984,
+  serialized_start=11210,
+  serialized_end=11265,
 )
 
 
@@ -5352,8 +5470,8 @@ _GETEVENTLISTRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=10986,
-  serialized_end=11072,
+  serialized_start=11267,
+  serialized_end=11353,
 )
 
 
@@ -5397,8 +5515,8 @@ _NEWEVENTBROADCAST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=11074,
-  serialized_end=11182,
+  serialized_start=11355,
+  serialized_end=11463,
 )
 
 
@@ -5438,15 +5556,22 @@ _SENDCHATMESSAGEREQUEST = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='content', full_name='AllianceService.SendChatMessageRequest.content', index=4,
+      name='avatarInfo', full_name='AllianceService.SendChatMessageRequest.avatarInfo', index=4,
       number=5, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='uuid', full_name='AllianceService.SendChatMessageRequest.uuid', index=5,
-      number=6, type=4, cpp_type=4, label=1,
+      name='content', full_name='AllianceService.SendChatMessageRequest.content', index=5,
+      number=6, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='AllianceService.SendChatMessageRequest.uuid', index=6,
+      number=7, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -5463,8 +5588,8 @@ _SENDCHATMESSAGEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=11185,
-  serialized_end=11332,
+  serialized_start=11466,
+  serialized_end=11633,
 )
 
 
@@ -5501,8 +5626,8 @@ _SENDCHATMESSAGERESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=11334,
-  serialized_end=11388,
+  serialized_start=11635,
+  serialized_end=11689,
 )
 
 
@@ -5539,8 +5664,8 @@ _CHATMESSAGEBROADCAST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=11390,
-  serialized_end=11487,
+  serialized_start=11691,
+  serialized_end=11788,
 )
 
 
@@ -5584,8 +5709,8 @@ _GETCHATHISTORYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=11489,
-  serialized_end=11561,
+  serialized_start=11790,
+  serialized_end=11862,
 )
 
 
@@ -5622,8 +5747,8 @@ _GETCHATHISTORYRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=11563,
-  serialized_end=11655,
+  serialized_start=11864,
+  serialized_end=11956,
 )
 
 
@@ -5667,8 +5792,8 @@ _REPORTGUILDSCOREREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=11657,
-  serialized_end=11733,
+  serialized_start=11958,
+  serialized_end=12034,
 )
 
 
@@ -5705,8 +5830,8 @@ _REPORTGUILDSCORERESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=11735,
-  serialized_end=11790,
+  serialized_start=12036,
+  serialized_end=12091,
 )
 
 
@@ -5827,8 +5952,8 @@ _SYNCGUILDINFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=11793,
-  serialized_end=12095,
+  serialized_start=12094,
+  serialized_end=12396,
 )
 
 
@@ -5865,8 +5990,8 @@ _SYNCGUILDINFORESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=12097,
-  serialized_end=12149,
+  serialized_start=12398,
+  serialized_end=12450,
 )
 
 
@@ -5903,8 +6028,8 @@ _DISBANDLEAGUENOTIFY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=12151,
-  serialized_end=12210,
+  serialized_start=12452,
+  serialized_end=12511,
 )
 
 
@@ -5941,8 +6066,8 @@ _NEWMEMBERJOINEDNOTIFY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=12212,
-  serialized_end=12308,
+  serialized_start=12513,
+  serialized_end=12609,
 )
 
 
@@ -5979,8 +6104,8 @@ _JOINTOALLIANCENOTIFY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=12310,
-  serialized_end=12371,
+  serialized_start=12611,
+  serialized_end=12672,
 )
 
 
@@ -6031,8 +6156,8 @@ _RETURNGUILDFUNDNOTIFY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=12373,
-  serialized_end=12465,
+  serialized_start=12674,
+  serialized_end=12766,
 )
 
 
@@ -6083,8 +6208,8 @@ _GUILDAIDRESOURCENOTIFY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=12467,
-  serialized_end=12560,
+  serialized_start=12768,
+  serialized_end=12861,
 )
 
 
@@ -6121,8 +6246,8 @@ _LEAGUEGUILDLEAVE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=12562,
-  serialized_end=12621,
+  serialized_start=12863,
+  serialized_end=12922,
 )
 
 
@@ -6152,8 +6277,8 @@ _LEAGUEDISBAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=12623,
-  serialized_end=12662,
+  serialized_start=12924,
+  serialized_end=12963,
 )
 
 
@@ -6197,8 +6322,8 @@ _LEAGUEGUILDEVENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=12664,
-  serialized_end=12739,
+  serialized_start=12965,
+  serialized_end=13040,
 )
 
 
@@ -6242,8 +6367,8 @@ _LEAGUEGUILDMESSAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=12741,
-  serialized_end=12818,
+  serialized_start=13042,
+  serialized_end=13119,
 )
 
 
@@ -6255,15 +6380,29 @@ _LEAGUEBROADCASTMESSAGE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='messageId', full_name='AllianceService.LeagueBroadCastMessage.messageId', index=0,
-      number=1, type=13, cpp_type=3, label=1,
+      name='fromUID', full_name='AllianceService.LeagueBroadCastMessage.fromUID', index=0,
+      number=1, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='messageArgs', full_name='AllianceService.LeagueBroadCastMessage.messageArgs', index=1,
-      number=2, type=9, cpp_type=9, label=3,
+      name='toUID', full_name='AllianceService.LeagueBroadCastMessage.toUID', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='messageId', full_name='AllianceService.LeagueBroadCastMessage.messageId', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='messageArgs', full_name='AllianceService.LeagueBroadCastMessage.messageArgs', index=3,
+      number=4, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -6280,8 +6419,8 @@ _LEAGUEBROADCASTMESSAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=12820,
-  serialized_end=12884,
+  serialized_start=13121,
+  serialized_end=13217,
 )
 
 
@@ -6318,8 +6457,8 @@ _RECRUITLEAGUEMEMBERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=12886,
-  serialized_end=12948,
+  serialized_start=13219,
+  serialized_end=13281,
 )
 
 
@@ -6363,8 +6502,8 @@ _RECRUITLEAGUEMEMBERRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=12950,
-  serialized_end=13028,
+  serialized_start=13283,
+  serialized_end=13361,
 )
 
 
@@ -6415,8 +6554,8 @@ _CHECKLEAVEGUILDREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=13030,
-  serialized_end=13125,
+  serialized_start=13363,
+  serialized_end=13458,
 )
 
 
@@ -6467,8 +6606,8 @@ _CHECKLEAVEGUILDRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=13127,
-  serialized_end=13214,
+  serialized_start=13460,
+  serialized_end=13547,
 )
 
 
@@ -6505,8 +6644,8 @@ _QUERYLEAGUEUUIDREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=13216,
-  serialized_end=13271,
+  serialized_start=13549,
+  serialized_end=13604,
 )
 
 
@@ -6557,8 +6696,136 @@ _QUERYLEAGUEUUIDRESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=13273,
-  serialized_end=13360,
+  serialized_start=13606,
+  serialized_end=13693,
+)
+
+
+_EVENTTIPSNOTIFY = _descriptor.Descriptor(
+  name='EventTipsNotify',
+  full_name='AllianceService.EventTipsNotify',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='leagueUUID', full_name='AllianceService.EventTipsNotify.leagueUUID', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='messageId', full_name='AllianceService.EventTipsNotify.messageId', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='messageArgs', full_name='AllianceService.EventTipsNotify.messageArgs', index=2,
+      number=3, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=13695,
+  serialized_end=13772,
+)
+
+
+_REMOVEENEMYRELATIONREQUEST = _descriptor.Descriptor(
+  name='RemoveEnemyRelationRequest',
+  full_name='AllianceService.RemoveEnemyRelationRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='AllianceService.RemoveEnemyRelationRequest.uuid', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='guildId', full_name='AllianceService.RemoveEnemyRelationRequest.guildId', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=13774,
+  serialized_end=13833,
+)
+
+
+_REMOVEENEMYRELATIONRESPONSE = _descriptor.Descriptor(
+  name='RemoveEnemyRelationResponse',
+  full_name='AllianceService.RemoveEnemyRelationResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='AllianceService.RemoveEnemyRelationResponse.uuid', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='guildId', full_name='AllianceService.RemoveEnemyRelationResponse.guildId', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='errCode', full_name='AllianceService.RemoveEnemyRelationResponse.errCode', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=13835,
+  serialized_end=13912,
 )
 
 _GETLEAGUEBASICINFORESULT.fields_by_name['info'].message_type = _ALLIANCEBASICINFO
@@ -6585,6 +6852,7 @@ _GETENEMYALLIANCELISTRESULT.fields_by_name['enemies'].message_type = _ENEMYROWIN
 _GETUNIONLISTRESULT.fields_by_name['unions'].message_type = _UNIONGUILDINFO
 _WARSTARTEDBROADCAST.fields_by_name['enemy'].message_type = _ENEMYROWINFO
 _GUILDRELATIONALLINFO.fields_by_name['relations'].message_type = _GUILDRELATIONINFO
+_ENEMYRELATIONALLINFO.fields_by_name['relations'].message_type = _ENEMYRELATIONINFO
 _GETEVENTLISTRESULT.fields_by_name['events'].message_type = _ALLIANCEEVENTINFO
 _NEWEVENTBROADCAST.fields_by_name['event'].message_type = _ALLIANCEEVENTINFO
 _CHATMESSAGEBROADCAST.fields_by_name['message'].message_type = _ALLIANCECHATMESSAGE
@@ -6673,6 +6941,8 @@ DESCRIPTOR.message_types_by_name['WarEndedBroadcast'] = _WARENDEDBROADCAST
 DESCRIPTOR.message_types_by_name['GuildRelationInfo'] = _GUILDRELATIONINFO
 DESCRIPTOR.message_types_by_name['GuildRelationAllInfo'] = _GUILDRELATIONALLINFO
 DESCRIPTOR.message_types_by_name['GuildRelationRemoveInfo'] = _GUILDRELATIONREMOVEINFO
+DESCRIPTOR.message_types_by_name['EnemyRelationInfo'] = _ENEMYRELATIONINFO
+DESCRIPTOR.message_types_by_name['EnemyRelationAllInfo'] = _ENEMYRELATIONALLINFO
 DESCRIPTOR.message_types_by_name['CheckLeagueRelationRequest'] = _CHECKLEAGUERELATIONREQUEST
 DESCRIPTOR.message_types_by_name['CheckLeagueRelationResult'] = _CHECKLEAGUERELATIONRESULT
 DESCRIPTOR.message_types_by_name['GetGuildAllianceRequest'] = _GETGUILDALLIANCEREQUEST
@@ -6711,6 +6981,9 @@ DESCRIPTOR.message_types_by_name['CheckLeaveGuildRequest'] = _CHECKLEAVEGUILDREQ
 DESCRIPTOR.message_types_by_name['CheckLeaveGuildResult'] = _CHECKLEAVEGUILDRESULT
 DESCRIPTOR.message_types_by_name['QueryLeagueUUIDRequest'] = _QUERYLEAGUEUUIDREQUEST
 DESCRIPTOR.message_types_by_name['QueryLeagueUUIDResult'] = _QUERYLEAGUEUUIDRESULT
+DESCRIPTOR.message_types_by_name['EventTipsNotify'] = _EVENTTIPSNOTIFY
+DESCRIPTOR.message_types_by_name['RemoveEnemyRelationRequest'] = _REMOVEENEMYRELATIONREQUEST
+DESCRIPTOR.message_types_by_name['RemoveEnemyRelationResponse'] = _REMOVEENEMYRELATIONRESPONSE
 DESCRIPTOR.enum_types_by_name['ApplyCancelledReason'] = _APPLYCANCELLEDREASON
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -7295,6 +7568,20 @@ GuildRelationRemoveInfo = _reflection.GeneratedProtocolMessageType('GuildRelatio
   ))
 _sym_db.RegisterMessage(GuildRelationRemoveInfo)
 
+EnemyRelationInfo = _reflection.GeneratedProtocolMessageType('EnemyRelationInfo', (_message.Message,), dict(
+  DESCRIPTOR = _ENEMYRELATIONINFO,
+  __module__ = 'gameServerAlliance_pb2'
+  # @@protoc_insertion_point(class_scope:AllianceService.EnemyRelationInfo)
+  ))
+_sym_db.RegisterMessage(EnemyRelationInfo)
+
+EnemyRelationAllInfo = _reflection.GeneratedProtocolMessageType('EnemyRelationAllInfo', (_message.Message,), dict(
+  DESCRIPTOR = _ENEMYRELATIONALLINFO,
+  __module__ = 'gameServerAlliance_pb2'
+  # @@protoc_insertion_point(class_scope:AllianceService.EnemyRelationAllInfo)
+  ))
+_sym_db.RegisterMessage(EnemyRelationAllInfo)
+
 CheckLeagueRelationRequest = _reflection.GeneratedProtocolMessageType('CheckLeagueRelationRequest', (_message.Message,), dict(
   DESCRIPTOR = _CHECKLEAGUERELATIONREQUEST,
   __module__ = 'gameServerAlliance_pb2'
@@ -7561,6 +7848,27 @@ QueryLeagueUUIDResult = _reflection.GeneratedProtocolMessageType('QueryLeagueUUI
   ))
 _sym_db.RegisterMessage(QueryLeagueUUIDResult)
 
+EventTipsNotify = _reflection.GeneratedProtocolMessageType('EventTipsNotify', (_message.Message,), dict(
+  DESCRIPTOR = _EVENTTIPSNOTIFY,
+  __module__ = 'gameServerAlliance_pb2'
+  # @@protoc_insertion_point(class_scope:AllianceService.EventTipsNotify)
+  ))
+_sym_db.RegisterMessage(EventTipsNotify)
+
+RemoveEnemyRelationRequest = _reflection.GeneratedProtocolMessageType('RemoveEnemyRelationRequest', (_message.Message,), dict(
+  DESCRIPTOR = _REMOVEENEMYRELATIONREQUEST,
+  __module__ = 'gameServerAlliance_pb2'
+  # @@protoc_insertion_point(class_scope:AllianceService.RemoveEnemyRelationRequest)
+  ))
+_sym_db.RegisterMessage(RemoveEnemyRelationRequest)
+
+RemoveEnemyRelationResponse = _reflection.GeneratedProtocolMessageType('RemoveEnemyRelationResponse', (_message.Message,), dict(
+  DESCRIPTOR = _REMOVEENEMYRELATIONRESPONSE,
+  __module__ = 'gameServerAlliance_pb2'
+  # @@protoc_insertion_point(class_scope:AllianceService.RemoveEnemyRelationResponse)
+  ))
+_sym_db.RegisterMessage(RemoveEnemyRelationResponse)
+
 
 DESCRIPTOR._options = None
 
@@ -7570,8 +7878,8 @@ _ALLIANCESERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=13477,
-  serialized_end=16960,
+  serialized_start=14029,
+  serialized_end=17603,
   methods=[
   _descriptor.MethodDescriptor(
     name='registerGameServer',
@@ -7960,6 +8268,15 @@ _ALLIANCESERVICE = _descriptor.ServiceDescriptor(
     output_type=_VOID,
     serialized_options=None,
   ),
+  _descriptor.MethodDescriptor(
+    name='removeEnemyRelation',
+    full_name='AllianceService.AllianceService.removeEnemyRelation',
+    index=43,
+    containing_service=None,
+    input_type=_REMOVEENEMYRELATIONREQUEST,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
 ])
 _sym_db.RegisterServiceDescriptor(_ALLIANCESERVICE)
 
@@ -7972,8 +8289,8 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=16963,
-  serialized_end=22186,
+  serialized_start=17606,
+  serialized_end=23268,
   methods=[
   _descriptor.MethodDescriptor(
     name='activeTickCallback',
@@ -8408,9 +8725,36 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
+    name='onEnemyAllRelation',
+    full_name='AllianceService.GameClient.onEnemyAllRelation',
+    index=48,
+    containing_service=None,
+    input_type=_ENEMYRELATIONALLINFO,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='onBroadcastAddEnemyRelation',
+    full_name='AllianceService.GameClient.onBroadcastAddEnemyRelation',
+    index=49,
+    containing_service=None,
+    input_type=_ENEMYRELATIONINFO,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='onBroadcastRemoveEnemyRelation',
+    full_name='AllianceService.GameClient.onBroadcastRemoveEnemyRelation',
+    index=50,
+    containing_service=None,
+    input_type=_ENEMYRELATIONINFO,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
     name='onNewMemberJoined',
     full_name='AllianceService.GameClient.onNewMemberJoined',
-    index=48,
+    index=51,
     containing_service=None,
     input_type=_NEWMEMBERJOINEDNOTIFY,
     output_type=_VOID,
@@ -8419,7 +8763,7 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onJoinToAllianceNotify',
     full_name='AllianceService.GameClient.onJoinToAllianceNotify',
-    index=49,
+    index=52,
     containing_service=None,
     input_type=_JOINTOALLIANCENOTIFY,
     output_type=_VOID,
@@ -8428,7 +8772,7 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onUnionListResult',
     full_name='AllianceService.GameClient.onUnionListResult',
-    index=50,
+    index=53,
     containing_service=None,
     input_type=_GETUNIONLISTRESULT,
     output_type=_VOID,
@@ -8437,7 +8781,7 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onReturnGuildFundNotify',
     full_name='AllianceService.GameClient.onReturnGuildFundNotify',
-    index=51,
+    index=54,
     containing_service=None,
     input_type=_RETURNGUILDFUNDNOTIFY,
     output_type=_VOID,
@@ -8446,7 +8790,7 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onGuildAidResourceNotify',
     full_name='AllianceService.GameClient.onGuildAidResourceNotify',
-    index=52,
+    index=55,
     containing_service=None,
     input_type=_GUILDAIDRESOURCENOTIFY,
     output_type=_VOID,
@@ -8455,7 +8799,7 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onLeagueGuildLeave',
     full_name='AllianceService.GameClient.onLeagueGuildLeave',
-    index=53,
+    index=56,
     containing_service=None,
     input_type=_LEAGUEGUILDLEAVE,
     output_type=_VOID,
@@ -8464,7 +8808,7 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onLeagueDisband',
     full_name='AllianceService.GameClient.onLeagueDisband',
-    index=54,
+    index=57,
     containing_service=None,
     input_type=_LEAGUEDISBAND,
     output_type=_VOID,
@@ -8473,7 +8817,7 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onLeagueGuildEventNotify',
     full_name='AllianceService.GameClient.onLeagueGuildEventNotify',
-    index=55,
+    index=58,
     containing_service=None,
     input_type=_LEAGUEGUILDEVENT,
     output_type=_VOID,
@@ -8482,7 +8826,7 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onLeagueGuildMessageNotify',
     full_name='AllianceService.GameClient.onLeagueGuildMessageNotify',
-    index=56,
+    index=59,
     containing_service=None,
     input_type=_LEAGUEGUILDMESSAGE,
     output_type=_VOID,
@@ -8491,7 +8835,7 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onLeagueBroadCastMessageNotify',
     full_name='AllianceService.GameClient.onLeagueBroadCastMessageNotify',
-    index=57,
+    index=60,
     containing_service=None,
     input_type=_LEAGUEBROADCASTMESSAGE,
     output_type=_VOID,
@@ -8500,7 +8844,7 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onRecruitLeagueMemberResult',
     full_name='AllianceService.GameClient.onRecruitLeagueMemberResult',
-    index=58,
+    index=61,
     containing_service=None,
     input_type=_RECRUITLEAGUEMEMBERRESULT,
     output_type=_VOID,
@@ -8509,7 +8853,7 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onCheckLeaveGuildResult',
     full_name='AllianceService.GameClient.onCheckLeaveGuildResult',
-    index=59,
+    index=62,
     containing_service=None,
     input_type=_CHECKLEAVEGUILDRESULT,
     output_type=_VOID,
@@ -8518,9 +8862,27 @@ _GAMECLIENT = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='onQueryLeagueUUIDResult',
     full_name='AllianceService.GameClient.onQueryLeagueUUIDResult',
-    index=60,
+    index=63,
     containing_service=None,
     input_type=_QUERYLEAGUEUUIDRESULT,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='onEventTipsNotify',
+    full_name='AllianceService.GameClient.onEventTipsNotify',
+    index=64,
+    containing_service=None,
+    input_type=_EVENTTIPSNOTIFY,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='onRemoveEnemyRelation',
+    full_name='AllianceService.GameClient.onRemoveEnemyRelation',
+    index=65,
+    containing_service=None,
+    input_type=_REMOVEENEMYRELATIONRESPONSE,
     output_type=_VOID,
     serialized_options=None,
   ),

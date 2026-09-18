@@ -17,11 +17,69 @@ import gametimer
 import utils
 import cityBattle_firstTime as CBFT
 import cityBattle_config as CBC
+import cityBattle_privilege as CBP
 import gameengine
 import iCityOwnerMgr
 import iCycleEvent
 import calendar
 import gameglobal
+
+
+SIEGE_WAR_PERSISTENT_KEYS = (
+    'siegeWarState',
+    'siegeWarStateEndTime',
+    'declareWarTime',
+    'officialWarStartTime',
+    'nowBiddingCnt',
+    'firstBiddingPrice',
+    'firstBiddingGuildName',
+    'firstBiddingServerName',
+    'firstBiddingAvatarName',
+    'secondBiddingGuildName',
+    'firstBiddingGuildUUID',
+    'secondBiddingGuildUUID',
+    'avatarGBID',
+    'avatarServerID',
+    'avatarName',
+    'biddingGuildList',
+    'biddingNameList',
+    'biddingCntList',
+    'warOffensiveGuildUUID',
+    'warDefensiveGuildUUID',
+    'warOffensiveGuildName',
+    'warDefensiveGuildName',
+    'haveCityOwner',
+    'offensiveJunXuQiXieLevelData',
+    'defensiveJunXuQiXieLevelData',
+    'cityDefenseDeclaration',
+    'cityOffensiveDeclaration',
+    'cityOwnerServerId',
+    'cityOwnerId',
+    'cityOwnerName',
+    'cityOwnerServerName',
+    'cityOwnerGuildName',
+    'cityOwnerGuildIcon',
+    'cityOwnerGuildFlag',
+    'cityOwnerGuildUUID',
+    'cityOwnerSchool',
+    'cityOwnerSex',
+    'cityMoney',
+    'dailyCumulativeTax',
+    'lastDailyFinalTax',
+    'cityOfficerDict',
+    'cityRecentActivityList',
+    'cityFundUseRecord',
+    'orderRemainTimesDict',
+    'occupyTime',
+    'lastSiegeWarEndTime',
+    'tLastUpdateTime',
+    'tLastHourUpdateTimeDict',
+    'tLastDayUpdateTimeDict',
+    'tLastWeekUpdateTimeDict',
+    'tLastMonthUpdateTimeDict',
+    'signUpDelayTime',
+    'nextBiddingStartTime',
+)
 
 
 #城战
@@ -66,32 +124,50 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         #gm相关
         self.gmDisableStateAutoChange = False
 
-        #数据库初始值是0，要计算下当前状态
-        if self.siegeWarState == gameconst.SiegeWarState.NOT_OPEN:
-            self.updateSiegeWarStateAndEndTime()
+        self.siegeWarDataLoaded = False
+        self.siegeWarDataLoading = False
+        self.siegeWarLoadTimerId = 0
+        self.needSaveToCrossData = False
+
+        #跨服数据从crossDataServer加载后再计算状态
+        if not gameconfig.isCrossServer():
+            if self.siegeWarState == gameconst.SiegeWarState.NOT_OPEN:
+                self.updateSiegeWarStateAndEndTime()
 
         iCityOwnerMgr.ICityOwnerMgr.__init__(self)
         iCycleEvent.ICycleEventMixin.__init__(self)
 
         self.registerDailyEvent('_onCityOwnerDailyEvent')
-        self.onDailyEvent()
 
     def doNext(self):
         if gameconfig.isCrossServer():
-            crossSiegeWarServerInfo = gameconfig.crossSiegeWarServerInfo()
-            self.pyAddTimer(1, 1, gametimer.CROSS_SIEGE_WAR_STATE_CHECK)
-            LOG_DBG('[lj]do next', crossSiegeWarServerInfo)
+            self.tryLoadSiegeWarDataFromCrossData()
+            LOG_DBG('[lj]do next', gameconfig.crossSiegeWarServerInfo())
         super().doNext()
 
     def onTimer(self, timer, userData):
         self._onTimerTrigger(timer, userData)
-        if userData == gametimer.CROSS_SIEGE_WAR_STATE_CHECK:
+        if userData == gametimer.CROSS_SIEGE_WAR_LOAD_DATA:
+            self.siegeWarLoadTimerId = 0
+            if not self.siegeWarDataLoaded:
+                self.siegeWarDataLoading = False
+                self.tryLoadSiegeWarDataFromCrossData()
+        elif userData == gametimer.CROSS_SIEGE_WAR_STATE_CHECK:
+            if not self.siegeWarDataLoaded:
+                return
+            dirty = self.siegeWarStateChanged or self.cityDataChanged or self.needSaveToCrossData
             self.checkBroadcastBiddingData()
             self.checkBattleStart()
             self.cityOwnerMgrTick()
             self.onCrossSiegeWarStateCheck()
+            if dirty or self.needSaveToCrossData:
+                self.needSaveToCrossData = False
+                self.saveSiegeWarDataToCrossData()
         elif userData == gametimer.TIMER_CYCLE_EVENT_TICK_TIMER:
+            oldTime = self.tLastUpdateTime
             self.onCycleEventTick()
+            if self.tLastUpdateTime != oldTime:
+                self.needSaveToCrossData = True
 
     def getFirstMonthlyStartTime(self):
         y, m, d = time.strftime("%Y-%m-%d", time.localtime(self.limitTime)).split('-')
@@ -243,8 +319,8 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         self.updateSiegeWarStateAndEndTime()
         if self.siegeWarStateChanged or utils.curTS() % 60 == 0:
             if self.siegeWarStateChanged:
-                LOG_DBG('[lj]do write to db')
-                self.writeToDB()
+                LOG_DBG('[lj]do write to cross data')
+                self.needSaveToCrossData = True
             self.broadcastSiegeWarState()
             self.siegeWarStateChanged = False
 
@@ -320,6 +396,8 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         self.firstBiddingServerName = serverName
         LOG_DBG('[lj]first:', self.firstBiddingGuildName, self.firstBiddingGuildUUID, "second:", self.secondBiddingGuildName, self.secondBiddingGuildUUID)
         _stub.onBiddingResult(guildUUID, cnt, True, 0)
+
+        self.needSaveToCrossData = True
 
         #竞拍延时
         if self.siegeWarStateEndTime - utils.curTS() < self.biddingDelayInvokeTime:
@@ -498,6 +576,8 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             self.offensiveJunXuQiXieLevelData = offensiveData
         if defensiveData:
             self.defensiveJunXuQiXieLevelData = defensiveData
+        if offensiveData or defensiveData:
+            self.needSaveToCrossData = True
 
     def changeDeclaration(self, isDefense, srcGbId, declaration):
         if isDefense:
@@ -508,6 +588,105 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         else:
             self.cityOffensiveDeclaration = declaration
 
+        self.needSaveToCrossData = True
+
         for serverID in self.GroupServerList:
             _stub = iRouter.RemoteServerStubEntityCall(int(serverID), 'SiegeWarStub')
             _stub.changeDeclaration(isDefense, srcGbId, declaration)
+
+    def _cancelSiegeWarLoadTimer(self):
+        if self.siegeWarLoadTimerId:
+            self.pyDelTimer(self.siegeWarLoadTimerId, gametimer.CROSS_SIEGE_WAR_LOAD_DATA)
+            self.siegeWarLoadTimerId = 0
+
+    def _addSiegeWarLoadTimer(self, delay):
+        self._cancelSiegeWarLoadTimer()
+        self.siegeWarLoadTimerId = self.pyAddTimer(delay, 0, gametimer.CROSS_SIEGE_WAR_LOAD_DATA)
+
+    def tryLoadSiegeWarDataFromCrossData(self):
+        if not gameconfig.isCrossServer():
+            return
+        if self.siegeWarDataLoaded or self.siegeWarDataLoading:
+            return
+
+        stub = gameengine.getGlobalBase('CrossDataStub', reportErr=False)
+        if not stub:
+            LOG_WARN('[lj]tryLoadSiegeWarDataFromCrossData no CrossDataStub, retry')
+            self._addSiegeWarLoadTimer(1)
+            return
+
+        LOG_INFO('[lj]tryLoadSiegeWarDataFromCrossData')
+        self.siegeWarDataLoading = True
+        stub.loadSiegeWarData(self)
+        if self.siegeWarDataLoading and not self.siegeWarDataLoaded:
+            self._addSiegeWarLoadTimer(10)
+
+    def onLoadSiegeWarDataFromCrossData(self, success, data):
+        self.siegeWarDataLoading = False
+        self._cancelSiegeWarLoadTimer()
+        if self.siegeWarDataLoaded:
+            return
+        if not success:
+            LOG_WARN('[lj]onLoadSiegeWarDataFromCrossData failed, retry')
+            self._addSiegeWarLoadTimer(1)
+            return
+
+        LOG_INFO('[lj]onLoadSiegeWarDataFromCrossData success', bool(data), len(data) if data else 0)
+        if data:
+            self._applySiegeWarPersistentData(data)
+
+        if self.siegeWarState == gameconst.SiegeWarState.NOT_OPEN:
+            self.updateSiegeWarStateAndEndTime()
+
+        self.onDailyEvent()
+        self.siegeWarDataLoaded = True
+        self.cityDataChanged = True
+        self.pyAddTimer(1, 1, gametimer.CROSS_SIEGE_WAR_STATE_CHECK)
+
+    def saveSiegeWarDataToCrossData(self):
+        if not gameconfig.isCrossServer() or not self.siegeWarDataLoaded:
+            return
+
+        stub = gameengine.getGlobalBase('CrossDataStub', reportErr=False)
+        if not stub:
+            LOG_WARN('[lj]saveSiegeWarDataToCrossData no CrossDataStub')
+            self.needSaveToCrossData = True
+            return
+
+        stub.saveSiegeWarData(self._dumpSiegeWarPersistentData(), self)
+
+    def onSaveSiegeWarDataFromCrossData(self, success):
+        if not success:
+            LOG_WARN('[lj]onSaveSiegeWarDataFromCrossData failed')
+            self.needSaveToCrossData = True
+        else:
+            LOG_DBG('[lj]onSaveSiegeWarDataFromCrossData success')
+
+    def _dumpSiegeWarPersistentData(self):
+        data = {}
+        for key in SIEGE_WAR_PERSISTENT_KEYS:
+            val = getattr(self, key, None)
+            if isinstance(val, dict):
+                data[key] = dict(val)
+            elif isinstance(val, list):
+                data[key] = list(val)
+            else:
+                data[key] = val
+        return data
+
+    def _applySiegeWarPersistentData(self, data):
+        LOG_INFO('[lj]_applySiegeWarPersistentData', data)
+        for key in SIEGE_WAR_PERSISTENT_KEYS:
+            if key not in data:
+                continue
+            val = data[key]
+            if isinstance(val, dict):
+                setattr(self, key, dict(val))
+            elif isinstance(val, list):
+                setattr(self, key, list(val))
+            else:
+                setattr(self, key, val)
+
+        for key, value in CBP.datas.items():
+            if key not in self.orderRemainTimesDict:
+                self.orderRemainTimesDict[key] = [0, 0]

@@ -39,8 +39,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990121, 1),),
         "washConsumeMoney": None,
         "value": 64.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1001,)
     }),
@@ -68,8 +67,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990128, 1),),
         "washConsumeMoney": None,
         "value": 2000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1001,)
     }),
@@ -97,8 +95,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990135, 1),),
         "washConsumeMoney": None,
         "value": 57276.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1001,)
     }),
@@ -126,8 +123,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990142, 1),),
         "washConsumeMoney": None,
         "value": 1985138.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1001,)
     }),
@@ -155,8 +151,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990121, 1),),
         "washConsumeMoney": None,
         "value": 64.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1002,)
     }),
@@ -184,8 +179,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990128, 1),),
         "washConsumeMoney": None,
         "value": 2000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1002,)
     }),
@@ -213,8 +207,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990135, 1),),
         "washConsumeMoney": None,
         "value": 57276.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1002,)
     }),
@@ -242,8 +235,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990142, 1),),
         "washConsumeMoney": None,
         "value": 1985138.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1002,)
     }),
@@ -271,8 +263,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990121, 1),),
         "washConsumeMoney": None,
         "value": 64.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1003,)
     }),
@@ -300,8 +291,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990128, 1),),
         "washConsumeMoney": None,
         "value": 2000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1003,)
     }),
@@ -329,8 +319,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990135, 1),),
         "washConsumeMoney": None,
         "value": 57276.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1003,)
     }),
@@ -358,8 +347,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990142, 1),),
         "washConsumeMoney": None,
         "value": 1985138.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1003,)
     }),
@@ -387,8 +375,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990122, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1001,)
     }),
@@ -416,8 +403,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990129, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1001,)
     }),
@@ -445,8 +431,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990136, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1001,)
     }),
@@ -474,8 +459,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990143, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1001,)
     }),
@@ -503,8 +487,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990122, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1002,)
     }),
@@ -532,8 +515,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990129, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1002,)
     }),
@@ -561,8 +543,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990136, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1002,)
     }),
@@ -590,8 +571,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990143, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1002,)
     }),
@@ -619,8 +599,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990122, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1003,)
     }),
@@ -648,8 +627,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990129, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1003,)
     }),
@@ -677,8 +655,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990136, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1003,)
     }),
@@ -706,8 +683,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990143, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1003,)
     }),
@@ -735,8 +711,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1001,)
     }),
@@ -764,8 +739,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1001,)
     }),
@@ -793,8 +767,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1001,)
     }),
@@ -822,8 +795,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1001,)
     }),
@@ -851,8 +823,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1002,)
     }),
@@ -880,8 +851,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1002,)
     }),
@@ -909,8 +879,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1002,)
     }),
@@ -938,8 +907,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1002,)
     }),
@@ -967,8 +935,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1003,)
     }),
@@ -996,8 +963,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1003,)
     }),
@@ -1025,8 +991,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1003,)
     }),
@@ -1054,8 +1019,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1003,)
     }),
@@ -1083,8 +1047,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1001,)
     }),
@@ -1112,8 +1075,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1001,)
     }),
@@ -1141,8 +1103,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1001,)
     }),
@@ -1170,8 +1131,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1001,)
     }),
@@ -1199,8 +1159,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1002,)
     }),
@@ -1228,8 +1187,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1002,)
     }),
@@ -1257,8 +1215,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1002,)
     }),
@@ -1286,8 +1243,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1002,)
     }),
@@ -1315,8 +1271,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1003,)
     }),
@@ -1344,8 +1299,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1003,)
     }),
@@ -1373,8 +1327,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1003,)
     }),
@@ -1402,8 +1355,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1003,)
     }),
@@ -1431,8 +1383,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990124, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1003,)
     }),
@@ -1460,8 +1411,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990131, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1003,)
     }),
@@ -1489,8 +1439,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990138, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1003,)
     }),
@@ -1518,8 +1467,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990145, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1003,)
     }),
@@ -1547,8 +1495,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990124, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1001, 1002)
     }),
@@ -1576,8 +1523,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990131, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1001, 1002)
     }),
@@ -1605,8 +1551,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990138, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1001, 1002)
     }),
@@ -1634,8 +1579,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990145, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1001, 1002)
     }),
@@ -1663,8 +1607,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990124, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1003,)
     }),
@@ -1692,8 +1635,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990131, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1003,)
     }),
@@ -1721,8 +1663,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990138, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1003,)
     }),
@@ -1750,8 +1691,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990145, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1003,)
     }),
@@ -1779,8 +1719,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990124, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1001, 1002)
     }),
@@ -1808,8 +1747,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990131, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1001, 1002)
     }),
@@ -1837,8 +1775,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990138, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1001, 1002)
     }),
@@ -1866,8 +1803,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990145, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1001, 1002)
     }),
@@ -1895,8 +1831,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990124, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1003,)
     }),
@@ -1924,8 +1859,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990131, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1003,)
     }),
@@ -1953,8 +1887,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990138, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1003,)
     }),
@@ -1982,8 +1915,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990145, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1003,)
     }),
@@ -2011,8 +1943,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990124, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1001, 1002)
     }),
@@ -2040,8 +1971,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990131, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1001, 1002)
     }),
@@ -2069,8 +1999,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990138, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1001, 1002)
     }),
@@ -2098,8 +2027,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990145, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1001, 1002)
     }),
@@ -2127,8 +2055,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1001,)
     }),
@@ -2156,8 +2083,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1001,)
     }),
@@ -2185,8 +2111,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1001,)
     }),
@@ -2214,8 +2139,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1001,)
     }),
@@ -2243,8 +2167,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1002,)
     }),
@@ -2272,8 +2195,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1002,)
     }),
@@ -2301,8 +2223,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1002,)
     }),
@@ -2330,8 +2251,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1002,)
     }),
@@ -2359,8 +2279,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990123, 1),),
         "washConsumeMoney": None,
         "value": 32.0,
-        "returnTime": 2,
-        "redeemPrice": 50,
+        "returnTime": 3,
         "rentalPric": 50,
         "reqClass": (1003,)
     }),
@@ -2388,8 +2307,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990130, 1),),
         "washConsumeMoney": None,
         "value": 1000.0,
-        "returnTime": 2,
-        "redeemPrice": 100,
+        "returnTime": 3,
         "rentalPric": 100,
         "reqClass": (1003,)
     }),
@@ -2417,8 +2335,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990137, 1),),
         "washConsumeMoney": None,
         "value": 28638.0,
-        "returnTime": 2,
-        "redeemPrice": 200,
+        "returnTime": 3,
         "rentalPric": 200,
         "reqClass": (1003,)
     }),
@@ -2446,8 +2363,7 @@ datas = _tools.RODict({
         "washConsumeItem": ((30990144, 1),),
         "washConsumeMoney": None,
         "value": 992569.0,
-        "returnTime": 2,
-        "redeemPrice": 500,
+        "returnTime": 3,
         "rentalPric": 500,
         "reqClass": (1003,)
     })

@@ -1,10 +1,58 @@
 
 # -*- encoding:utf-8 -*-
 
+import functools
+
 from KBEDebug import *
 import KBEngine
 import userType
 import gameconst
+import utils
+
+
+def _onLoadSecondaryPasswordInfoFromDB(accountDbId, callback, ret, num, insertId, err):
+    if err:
+        ERROR_MSG('loadSecondaryPasswordInfoFromDB error:', err, accountDbId)
+        callback(None)
+        return
+
+    info = secondaryPasswordInfo()
+    if ret:
+        versionId, secondaryPassword, verityFailedCnt, lockedStep, lockedTimestamp, beEnable = ret[0]
+        info.versionId = int(versionId.decode('ascii')) if isinstance(versionId, bytes) else int(versionId)
+        info.secondaryPassword = secondaryPassword.decode('utf-8') if isinstance(secondaryPassword, bytes) else str(secondaryPassword)
+        info.verityFailedCnt = int(verityFailedCnt.decode('ascii')) if isinstance(verityFailedCnt, bytes) else int(verityFailedCnt)
+        info.lockedStep = int(lockedStep.decode('ascii')) if isinstance(lockedStep, bytes) else int(lockedStep)
+        info.lockedTimestamp = int(lockedTimestamp.decode('ascii')) if isinstance(lockedTimestamp, bytes) else int(lockedTimestamp)
+        info.beEnable = bool(int(beEnable.decode('ascii')) if isinstance(beEnable, bytes) else int(beEnable))
+
+    callback(info)
+
+def loadSecondaryPasswordInfoFromDB(accountDbId, callback):
+    # 策划需求变了，要求代理玩家上线不再受二级密码影响了
+    info = secondaryPasswordInfo()
+    callback(info)
+
+def loadSecondaryPasswordInfoFromDB_deprecated(accountDbId, callback):
+    """
+    从数据库读取二级密码信息，并返回 secondaryPasswordInfo 实例
+    @param accountName: 账号名
+    @param callback: 回调函数，签名为 callback(info)，
+                     info 为 secondaryPasswordInfo 实例；查询失败时 info 为 None，
+                     无记录时 info 为默认初始化的 secondaryPasswordInfo 实例
+    """
+    _sql = (
+        f'SELECT sm_secondaryPwdInfo_versionId, sm_secondaryPwdInfo_secondaryPassword, '
+        f'sm_secondaryPwdInfo_verityFailedCnt, sm_secondaryPwdInfo_lockedStep, '
+        f'sm_secondaryPwdInfo_lockedTimestamp, sm_secondaryPwdInfo_beEnable '
+        f'FROM tbl_Account WHERE id={accountDbId}'
+    )
+
+    KBEngine.executeRawDatabaseCommand(
+        _sql,
+        functools.partial(_onLoadSecondaryPasswordInfoFromDB, accountDbId, callback)
+    )
+
 
 class secondaryPasswordInfo(userType.UserSingleType):
     def __init__(self, versionId=0, secondaryPassword='', verityFailedCnt=0, lockedStep=0, lockedTimestamp=0, beEnable=False, checkLockedExpiredTimerId=0):
@@ -263,6 +311,8 @@ class secondaryPasswordVerityInfo(userType.UserSingleType):
             if len(checkInfo) <= 1:
                 return True
             return checkInfo[1] >= itemDisassemblyLimit
+        elif checkInfo[0] == gameconst.SecondaryPasswordCheckType.AUTH:
+            return True
 
         return False
 

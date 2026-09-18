@@ -150,7 +150,7 @@ class RedisUtils(object):
 
     @staticmethod
     def getTableName(gbId):
-        return 'AvatarInfo_' + str(gbId)
+        return '{}{}'.format(gameconst.RedisKey.AVATAR_INFO, gbId)
 
     @classmethod
     def getUsersInfo(cls, gbIdList, func):
@@ -443,6 +443,10 @@ class RedisUtils(object):
     @classmethod
     def getRechargeStageInfo(cls, accountName, cb):
         gameglobal.localBaseApp.getRedisClient().get(gameconst.RedisKey.RECHARGE_STAGE_INFO + accountName, cb)
+
+    @classmethod
+    def getQueuePass(cls, accountName, cb):
+        gameglobal.localBaseApp.getRedisClient().get(gameconst.RedisKey.QUEUE_PASS + accountName, cb)
 
 class FriendUtils(object):
     @classmethod
@@ -1408,10 +1412,7 @@ class RedBagUtils:
     def redbagRankKey(cls):
         return 'RB_RANK_{}'.format(gameconfig.serverId())
 
-    @classmethod
-    def redbagFetchKey(cls, redbagId):
-        return 'RB_FETCH_{}_{}'.format(gameconfig.serverId(), redbagId)
-
+    # 这个请求的代码改掉
     @classmethod
     def getRedBagRankList(cls, cb=None):
         gameglobal.localBaseApp.getRedisClient().getRange(
@@ -1429,6 +1430,7 @@ class RedBagUtils:
             return
         cb and cb(result)
 
+    # 这个请求的代码改掉
     @classmethod
     def createRedBagRank(cls, redbagId, timestamp, cb=None):
         key = cls.redbagRankKey()
@@ -1442,6 +1444,7 @@ class RedBagUtils:
 
         cb and cb(error)
 
+    # 这个请求的代码改掉
     @classmethod
     def removeRedBagRankData(cls, redbagIds, timestamp, cb=None):
         if type(redbagIds) == int:
@@ -1456,6 +1459,11 @@ class RedBagUtils:
             return
         cb and cb(error)
 
+    ###########################redbagRankKey 相关的请求都不用了##################################
+    
+    @classmethod
+    def redbagFetchKey(cls, redbagId):
+        return 'RB_FETCH_{}'.format(redbagId)
 
     @classmethod
     def getRedBagFetchInfo(cls, redbagId, cb=None):

@@ -4,14 +4,18 @@ import (
 	clientService "centralService/src/centralLogin/centralLoginApp/clientService"
 	"crypto/md5"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"math/rand"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/gomodule/redigo/redis"
 	"github.com/spf13/viper"
 )
 
@@ -40,11 +44,12 @@ func JoinToStr(args ...interface{}) string {
 	return ret
 }
 
-func GetConfig(configName string, config interface{}) error {
+func GetConfig(config interface{}) error {
 	if nil == cfg {
 		cfg = viper.New()
 	}
-	cfg.SetConfigFile(configName)
+	exeName := strings.ToLower(filepath.Base(filepath.Dir(os.Args[0])))
+	cfg.SetConfigFile(exeName + ".json")
 	err := cfg.ReadInConfig()
 	if err != nil {
 		return err
@@ -149,4 +154,42 @@ func GetNowTime() int64 {
 
 func GetServerCfg() *viper.Viper {
 	return cfg
+}
+
+// GetAvatarServerId: 从 Redis Hash `AvatarInfo_<gbId>` 中读 `serverId` 字段。
+//
+//   - playerInfoKey = "AvatarInfo_" + gbId, 是玩家档案的 Redis hash key
+//   - serverId 字段在该 hash 内,值是十进制字符串 (例如 "20110")
+//   - key 不存在、field 不存在、或 pool/gbId 为空, 都返回 (0, nil)
+//   - 真正的错误 (网络/解析) 才返回 (0, err), 调用方按 err != nil 处理
+//
+// 用 HGET 而不是 HGETALL, 只拉一个字段, 减少不必要的数据。
+func GetAvatarServerId(pool *redis.Pool, gbId string) (uint32, error) {
+	if pool == nil {
+		return 0, errors.New("getAvatarServerId: pool is nil")
+	}
+	if gbId == "" {
+		return 0, errors.New("getAvatarServerId: gbId is empty")
+	}
+
+	conn, err := GetRedisConn(pool, "utils.GetAvatarServerId")
+	if err != nil {
+		return 0, fmt.Errorf("getAvatarServerId: get conn: %w", err)
+	}
+	defer conn.Close()
+
+	val, err := redis.String(conn.Do("HGET", "AvatarInfo_"+gbId, "serverId"))
+	if err == redis.ErrNil {
+		// key 或 serverId 字段不存在, 视为"找不到", 不是错误
+		return 0, nil
+	}
+	if err != nil {
+		return 0, fmt.Errorf("getAvatarServerId: HGET: %w", err)
+	}
+
+	u, perr := strconv.ParseUint(val, 10, 32)
+	if perr != nil {
+		return 0, fmt.Errorf("getAvatarServerId: parse serverId %q: %w", val, perr)
+	}
+	return uint32(u), nil
 }

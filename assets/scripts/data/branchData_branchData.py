@@ -290,6 +290,17 @@ datas = _tools.RODict({
         "AddRequired": 100,
         "MergeRequired": 50
     }),
+    1113: _tools.RODict({
+        "ID": 1113,
+        "name": "流沙故城四层",
+        "subType": 1,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 100,
+        "MergeRequired": 50
+    }),
     1120: _tools.RODict({
         "ID": 1120,
         "name": "五毒石窟一层",

@@ -29,6 +29,7 @@
     <CellMethods>
         <onMeridianAward>
             <Arg>      ARRAY    <of>    UINT32  </of>     </Arg>
+            <Arg>      INT64                              </Arg>
         </onMeridianAward>
     </CellMethods>
 

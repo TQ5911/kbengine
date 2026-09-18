@@ -16838,30 +16838,6 @@ datas ={
       ]
     }
   },
-  "11208013": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Collection",
-    "ClassNameType": 3,
-    "CustomID": "",
-    "Dir": 147.7502,
-    "DisplayName": "",
-    "EliteCustomID": "",
-    "EntityID": 16000017,
-    "ID": 11208013,
-    "Name": "\u5929\u661f\u82b1",
-    "PosX": 356.9422,
-    "PosY": 157.6451,
-    "PosZ": 114.368,
-    "Props": {
-      "IsOpen": 1,
-      "Radius": 0.0,
-      "RefreshNum": 1,
-      "RefreshTime": 1,
-      "Remark": ""
-    }
-  },
   "11208015": {
     "ActivityID": 0,
     "AttachedGIDList": [],
@@ -16931,78 +16907,6 @@ datas ={
       "ShowInSceneMap": 1
     }
   },
-  "11208051": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Collection",
-    "ClassNameType": 3,
-    "CustomID": "",
-    "Dir": 291.3045,
-    "DisplayName": "",
-    "EliteCustomID": "",
-    "EntityID": 16000005,
-    "ID": 11208051,
-    "Name": "\u7ea2\u8272\u5b9d\u7bb1",
-    "PosX": 554.0819,
-    "PosY": 110.3653,
-    "PosZ": 237.3305,
-    "Props": {
-      "IsOpen": 1,
-      "Radius": 0.0,
-      "RefreshNum": 1,
-      "RefreshTime": 60.0,
-      "Remark": ""
-    }
-  },
-  "11208053": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Collection",
-    "ClassNameType": 3,
-    "CustomID": "",
-    "Dir": 314.4717,
-    "DisplayName": "",
-    "EliteCustomID": "",
-    "EntityID": 16000005,
-    "ID": 11208053,
-    "Name": "\u7ea2\u8272\u5b9d\u7bb1",
-    "PosX": 502.88,
-    "PosY": 123.7819,
-    "PosZ": 326.86,
-    "Props": {
-      "IsOpen": 1,
-      "Radius": 0.0,
-      "RefreshNum": 1,
-      "RefreshTime": 60.0,
-      "Remark": ""
-    }
-  },
-  "11208054": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Collection",
-    "ClassNameType": 3,
-    "CustomID": "",
-    "Dir": 13.54546,
-    "DisplayName": "",
-    "EliteCustomID": "",
-    "EntityID": 16000005,
-    "ID": 11208054,
-    "Name": "\u7ea2\u8272\u5b9d\u7bb1",
-    "PosX": 552.33,
-    "PosY": 107.9415,
-    "PosZ": 257.34,
-    "Props": {
-      "IsOpen": 1,
-      "Radius": 0.0,
-      "RefreshNum": 1,
-      "RefreshTime": 60.0,
-      "Remark": ""
-    }
-  },
   "11208055": {
     "ActivityID": 0,
     "AttachedGIDList": [],
@@ -17035,78 +16939,6 @@ datas ={
           10.0
         ]
       ]
-    }
-  },
-  "11208056": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Collection",
-    "ClassNameType": 3,
-    "CustomID": "",
-    "Dir": 17.39342,
-    "DisplayName": "",
-    "EliteCustomID": "",
-    "EntityID": 16000083,
-    "ID": 11208056,
-    "Name": "\u795e\u79d8\u836f\u8349",
-    "PosX": 243.1211,
-    "PosY": 168.9881,
-    "PosZ": 338.6116,
-    "Props": {
-      "IsOpen": 1,
-      "Radius": 0.0,
-      "RefreshNum": 1,
-      "RefreshTime": 1,
-      "Remark": ""
-    }
-  },
-  "11208057": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Collection",
-    "ClassNameType": 3,
-    "CustomID": "",
-    "Dir": 193.2245,
-    "DisplayName": "",
-    "EliteCustomID": "",
-    "EntityID": 16000084,
-    "ID": 11208057,
-    "Name": "\u795e\u79d8\u5730\u70b91\uff08\u65e0\u53e4\u8463\uff09",
-    "PosX": 499.3189,
-    "PosY": 145.2663,
-    "PosZ": 455.0546,
-    "Props": {
-      "IsOpen": 1,
-      "Radius": 0.0,
-      "RefreshNum": 1,
-      "RefreshTime": 1,
-      "Remark": ""
-    }
-  },
-  "11208058": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Collection",
-    "ClassNameType": 3,
-    "CustomID": "",
-    "Dir": 114.2038,
-    "DisplayName": "",
-    "EliteCustomID": "",
-    "EntityID": 16000082,
-    "ID": 11208058,
-    "Name": "\u795e\u79d8\u77ff\u77f3",
-    "PosX": 499.0383,
-    "PosY": 145.2782,
-    "PosZ": 455.1419,
-    "Props": {
-      "IsOpen": 1,
-      "Radius": 0.0,
-      "RefreshNum": 1,
-      "RefreshTime": 1,
-      "Remark": ""
     }
   },
   "11208062": {

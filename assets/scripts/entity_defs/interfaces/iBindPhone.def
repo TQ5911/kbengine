@@ -73,6 +73,7 @@
 
         <reqSMSServiceResReplay>
             <Arg>   UINT8           </Arg>
+            <Arg>   UINT16          </Arg>
         </reqSMSServiceResReplay>
 
         <notifyPopupSecondaryPassword>
@@ -86,5 +87,10 @@
         <sendSecondaryPasswordVerityInfo>
             <Arg>   SECONDARY_PWD_VERITY_INFO_CLIENT         </Arg>
         </sendSecondaryPasswordVerityInfo>
+
+        <onUpdatePhone>
+            <Arg>           UINT64          </Arg>
+            <Arg>           UINT16          </Arg>
+        </onUpdatePhone>
     </ClientMethods>
 </root>

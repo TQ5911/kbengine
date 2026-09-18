@@ -1,0 +1,26 @@
+{
+    "serverName":"orderService",
+    "serverId":1,
+    "gameServerServiceAddr": "0.0.0.0:2011",
+    "logPath":"orderService.log",
+    "logLevel":-1,
+    "logRotateSize":500,
+    "mysql":{
+    	"addr":"127.0.0.1:3306",
+    	"user":"fengyan",
+    	"password":"123456",
+    	"db":"transaction"
+    },
+    "redis":{
+    	"addr":"127.0.0.1:6379",
+    	"username":"",
+    	"password":"",
+    	"db":0
+    },
+    "reportAddr":"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5",
+    "httpAddr":"0.0.0.0:8888",
+    "apiSecret": "23c4537c13918583cd47f9305deb1e1e",
+    "orderDataSecret": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAujj/Zc6ET5h6n1eSsRUEiZyaEFR64ep9j8LCAAvSLGUJo3wYxm+mpATmh562aJMf6lrMgO77pUALO2AAfOdY+MV4Sz//TBtRL0qO4eTukvL+BQocpKPDwYNa0stfV0lq2P2yVf1uZlD6EvXb4Leshygu1AGCfM4E3TWGVa3zRyz6VFU4pjc1JTI13PdvTh4t7eJ6aPC2TSp3XNRvqgwLidH6KDFGvi51/9smZt2RO8LeQ1ph1ULF0N8AkQV/BnjyYVnAlmJrzk3GnAm1o/fRL1A/TMVOtGsYj/gHeZPJLIvEe9m70bD2aZF6Z9pO/Zm2H39ILx/Vc4RCRT+jYzO69wIDAQAB",
+    "payNotifyApi": "http://127.0.0.1/api/order/v1/app_pay_notify",
+    "payNotifySecret": "4aab25a8764f2d40e6309582209606c0"
+}

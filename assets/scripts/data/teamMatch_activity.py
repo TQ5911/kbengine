@@ -15,16 +15,6 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    0: _tools.RODict({
-        "ID": 0,
-        "value": "未设定目标",
-        "pareActivity": 0,
-        "minScore": 0,
-        "scene": 0,
-        "minLevel": 0,
-        "enterDunID": 0,
-        "isCrossServer": 0,
-    }),
     1: _tools.RODict({
         "ID": 1,
         "value": "自设目标",
@@ -34,16 +24,20 @@ datas = _tools.RODict({
         "minLevel": 0,
         "enterDunID": 0,
         "isCrossServer": 0,
+        "maxPlayer": 0,
+        "crossMaxPlayer": 5
     }),
-    2: _tools.RODict({
-        "ID": 2,
-        "value": "综合地区",
-        "pareActivity": 2,
+    10: _tools.RODict({
+        "ID": 10,
+        "value": "自设目标",
+        "pareActivity": 1,
         "minScore": 0,
         "scene": 0,
         "minLevel": 0,
         "enterDunID": 0,
         "isCrossServer": 0,
+        "maxPlayer": 0,
+        "crossMaxPlayer": 40
     }),
     101: _tools.RODict({
         "ID": 101,
@@ -54,6 +48,8 @@ datas = _tools.RODict({
         "minLevel": 19,
         "enterDunID": 2101,
         "isCrossServer": 0,
+        "maxPlayer": 0,
+        "crossMaxPlayer": 5
     }),
     102: _tools.RODict({
         "ID": 102,
@@ -64,6 +60,8 @@ datas = _tools.RODict({
         "minLevel": 40,
         "enterDunID": 2102,
         "isCrossServer": 0,
+        "maxPlayer": 0,
+        "crossMaxPlayer": 5
     }),
     103: _tools.RODict({
         "ID": 103,
@@ -74,6 +72,8 @@ datas = _tools.RODict({
         "minLevel": 30,
         "enterDunID": 2104,
         "isCrossServer": 0,
+        "maxPlayer": 0,
+        "crossMaxPlayer": 5
     }),
     104: _tools.RODict({
         "ID": 104,
@@ -83,7 +83,9 @@ datas = _tools.RODict({
         "scene": 0,
         "minLevel": 50,
         "enterDunID": 2103,
-        "isCrossServer": 0,
+        "isCrossServer": 1,
+        "maxPlayer": 0,
+        "crossMaxPlayer": 5
     }),
     151: _tools.RODict({
         "ID": 151,
@@ -94,6 +96,8 @@ datas = _tools.RODict({
         "minLevel": 25,
         "enterDunID": 2204,
         "isCrossServer": 0,
+        "maxPlayer": 10,
+        "crossMaxPlayer": 10
     }),
     152: _tools.RODict({
         "ID": 152,
@@ -104,6 +108,8 @@ datas = _tools.RODict({
         "minLevel": 35,
         "enterDunID": 2201,
         "isCrossServer": 0,
+        "maxPlayer": 15,
+        "crossMaxPlayer": 15
     }),
     153: _tools.RODict({
         "ID": 153,
@@ -114,6 +120,8 @@ datas = _tools.RODict({
         "minLevel": 45,
         "enterDunID": 2202,
         "isCrossServer": 0,
+        "maxPlayer": 15,
+        "crossMaxPlayer": 15
     }),
     154: _tools.RODict({
         "ID": 154,
@@ -123,8 +131,10 @@ datas = _tools.RODict({
         "scene": 0,
         "minLevel": 55,
         "enterDunID": 2203,
-        "isCrossServer": 0,
+        "isCrossServer": 1,
+        "maxPlayer": 15,
+        "crossMaxPlayer": 15
     })
 })
-minKey = 0
+minKey = 1
 maxKey = 154

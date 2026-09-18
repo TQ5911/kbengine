@@ -656,3 +656,6 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         now = utils.curTS()
         LOG_INFO("doUpdateFreeTicketNumConfig", now, subTypeList)
         self.broadcastToAllAvatar(gameconst.BASE, 'onUpdateFreeTicketNumConfig', (subTypeList,))
+
+    def setBaseAppData(self, key, val):
+        gameengine.setBaseAppData(key, val)

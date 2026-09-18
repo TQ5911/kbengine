@@ -40,7 +40,7 @@ class IGuildTrainCell(object):
         score = self.popTempMiscProp(gameconst.EntityPropsEnum.guildTrainInitScore, 0)
         self.onUpdateGuildTrainScore(score)
 
-    def onUpgradeTrainLevel(self, trainId, targetLevel, score):
+    def onUpgradeTrainLevel(self, trainId, targetLevel, score, opUUID):
         gtData = GT_GTD.datas[trainId]
         func = F_GFD.datas[gtData['valueFormula']]['serverFormula']
 
@@ -54,9 +54,9 @@ class IGuildTrainCell(object):
 
         LOG_INFO('onUpgradeTrainLevel:', propName, targetValue, curValue, trainId, targetLevel, score)
         self.addProp(propName, targetValue - curValue, gameconst.SourceType.SrcTpGuildTrain)
-        self.onUpdateGuildTrainScore(score)
+        self.onUpdateGuildTrainScore(score, opUUID)
 
-    def onResetGuildTrain(self, syncDic):
+    def onResetGuildTrain(self, syncDic, opUUID = 0):
         for trainId, level in syncDic.items():
             gtData = GT_GTD.datas[trainId]
             func = F_GFD.datas[gtData['valueFormula']]['serverFormula']
@@ -65,7 +65,7 @@ class IGuildTrainCell(object):
             self.addProp(propName, -propVal, gameconst.SourceType.SrcTpGuildTrainReset)
 
         self.client.onGuildTrainResetClient()
-        self.onUpdateGuildTrainScore(0)
+        self.onUpdateGuildTrainScore(0, opUUID)
 
     def gmAddGuildTrainLevelCell(self, trainId, curLevel, targetLevel):
         gtData = GT_GTD.datas[trainId]

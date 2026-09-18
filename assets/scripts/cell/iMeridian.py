@@ -13,8 +13,8 @@ class IMeridian(object):
         经脉系统接口
     """
     
-    def onMeridianAward(self, propIndexList):
-        LOG_DBG('onMeridianAward', propIndexList)
+    def onMeridianAward(self, propIndexList, opUUID = 0):
+        LOG_DBG('onMeridianAward', propIndexList, opUUID)
 
         propDict = {}
         for index in propIndexList:
@@ -33,9 +33,9 @@ class IMeridian(object):
                         propDict.setdefault(prop[0], 0)
                         propDict[prop[0]] += prop[1]
 
-        self._addAwardMeridianPropsCell(propDict)
+        self._addAwardMeridianPropsCell(propDict, opUUID)
 
-    def _addAwardMeridianPropsCell(self, syncPropDict):
+    def _addAwardMeridianPropsCell(self, syncPropDict, opUUID):
         addScore = 0
         for propName, val in syncPropDict.items():
             self.addProp(propName, val, gameconst.SourceType.SrcTpMeridianProp)
@@ -44,4 +44,4 @@ class IMeridian(object):
 
         newScore = self.scoresInfo.meridian + addScore
         LOG_DBG('add score by meridian', self.scoresInfo.meridian, ', val', addScore)
-        self.onUpdateMeridianScore(newScore)
+        self.onUpdateMeridianScore(newScore, opUUID)

@@ -17326,6 +17326,96 @@ datas ={
           "ShowInSceneMap": 1
         }
       }
+    },
+    "CustomFuncPos": {
+      "10358109": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "CustomFuncPos",
+        "ClassNameType": 10,
+        "CustomID": "",
+        "Dir": 183.9706,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 0,
+        "ID": 10358109,
+        "PosX": 269.614,
+        "PosY": 201.6538,
+        "PosZ": 538.0157,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "RefreshTimedID": 0,
+          "Remark": "86010309",
+          "ShowInSceneMap": 1
+        }
+      },
+      "10358110": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "CustomFuncPos",
+        "ClassNameType": 10,
+        "CustomID": "",
+        "Dir": 339.0005,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 0,
+        "ID": 10358110,
+        "PosX": 521.744,
+        "PosY": 149.5778,
+        "PosZ": 537.8468,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "RefreshTimedID": 0,
+          "Remark": "86010326",
+          "ShowInSceneMap": 1
+        }
+      },
+      "10358111": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "CustomFuncPos",
+        "ClassNameType": 10,
+        "CustomID": "",
+        "Dir": 69.05968,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 0,
+        "ID": 10358111,
+        "PosX": 561.765,
+        "PosY": 149.4388,
+        "PosZ": 573.7527,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "RefreshTimedID": 0,
+          "Remark": "86010352",
+          "ShowInSceneMap": 1
+        }
+      },
+      "10358112": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "CustomFuncPos",
+        "ClassNameType": 10,
+        "CustomID": "",
+        "Dir": 37.05486,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 0,
+        "ID": 10358112,
+        "PosX": 580.7499,
+        "PosY": 149.8616,
+        "PosZ": 577.9105,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "RefreshTimedID": 0,
+          "Remark": "86090204",
+          "ShowInSceneMap": 1
+        }
+      }
     }
   }
 }

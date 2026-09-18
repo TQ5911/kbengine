@@ -30,8 +30,8 @@ svn propset svn:executable on ./maple/game.sh
 svn propset svn:executable on ./router/router
 svn propset svn:executable on ./router/game.sh
 
-svn propset svn:executable on ./login/centralLogin
-svn propset svn:executable on ./login/game.sh
+svn propset svn:executable on ./centralLogin/centralLogin
+svn propset svn:executable on ./centralLogin/game.sh
 
 svn propset svn:executable on ./orderService/orderService
 svn propset svn:executable on ./orderService/game.sh
@@ -41,6 +41,9 @@ svn propset svn:executable on ./allianceService/game.sh
 
 svn propset svn:executable on ./leaseServer/leaseServer
 svn propset svn:executable on ./leaseServer/game.sh
+
+svn propset svn:executable on ./queueServer/queueServer
+svn propset svn:executable on ./queueServer/game.sh
 
 svn propset svn:executable on build_all_server.sh
 

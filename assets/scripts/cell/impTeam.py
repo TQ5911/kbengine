@@ -179,6 +179,11 @@ class ImpTeam(object):
     @gamedecorator.crossServer
     def applyCreateTeam(self, exposed, teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         LOG_INFO('applyCreateTeam', teamTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
+        if self.crossTeamId:
+            # 跨服组队与本服组队互斥
+            LOG_WARN("applyCreateTeam, already in cross team", self.crossTeamId)
+            return
+
         if utils.formula.inRaidDungeonScene(self.spaceNo):
             LOG_WARN("applyCreateTeam, current space check fail")
             return
@@ -272,6 +277,11 @@ class ImpTeam(object):
     @gamedecorator.crossServer
     def applyJoinTeam(self, exposed, teamId, password, applySource):
         LOG_INFO('applyJoinTeam::', teamId, password, applySource)
+        if self.crossTeamId:
+            # 跨服组队与本服组队互斥
+            LOG_WARN("applyJoinTeam, already in cross team", self.crossTeamId)
+            return
+
         if applySource not in gameconst.ApplySource.VALID_APPLY_SOURCE:
             LOG_WARN("applyJoinTeam not valid apply source", applySource)
             return
@@ -1101,22 +1111,24 @@ class ImpTeam(object):
             'id': self.id,
         }
 
-        # 【【任务】隐藏在线状态效果调整】
-        teamTarget = 0
-        if self.teamId > 0:
-            teamTarget = self.teamInfo.teamTarget
-
         _props.update({
             'teamId': self.teamId,
             'teamAmount': self.teamInfo.howManyMember(),
-            'teamTarget': teamTarget,
+            'teamTarget': 0,
+            'raidTarget': 0,
             'isRaidLeader': self.isRaidLeader(),
             'raidId': self.raidId,
             'raidAmount': self.raidInfo.raidPlayerNum,
             'guildName': self.guildName,
             'bountyId': self.cellPreyInfo.uuid if self.cellPreyInfo else 0,
+            'fromServerId': self.fromServerId,
+            'curServerId': gameconfig.serverId(),
         })
-
+        if self.teamId > 0:
+            _props['teamTarget'] = self.teamInfo.teamTarget
+        elif self.raidId > 0:
+            _props['raidTarget'] = self.raidInfo.raidTarget
+        LOG_DBG('onGetAvatarInterInfo ', _props)
         box.getInterInfoOnline(_props)
 
     #----------------------------------------------- 自动匹配 start ----------------------------------------------------

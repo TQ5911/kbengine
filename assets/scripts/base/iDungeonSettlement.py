@@ -69,6 +69,18 @@ class IDungeonSettlement(object):
 
     def onDungeonSettlement(self, playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra):
         LOG_INFO('onDungeonSettlement:: 1', playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
+        # 跨服 playMode（CROSS_CRUSADE/CROSS_CHIEF）只出现在跨服服（问题记录#6，D3-2 修订后
+        # 本服模式空间 playMode 直接落 CRUSADE/CHIEF，走下方本服结算链路，无需分发）：
+        # - 本机跨服服（跨服服上的镜像 Avatar 走到这里）：结算计算/展示标记/弹窗聚合在跨服本地闭环，
+        #   不再整体透传本服再等结果回传（任一成员本服结算异常会卡住全员结算面板）；
+        #   次数扣减/奖励发放等持久化副作用打包异步落本服（fire-and-forget，失败仅报错）
+        if playMode in gameconst.DungeonPlayModeEnum.COLL_CROSS:
+            if gameconfig.isCrossServer():
+                self._doCrossTeamDungeonSettlement(playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
+            else:
+                LOG_ERR('onDungeonSettlement:: cross play mode on local server', playMode, spaceNo, dungeonNo)
+            return
+
         if not self.checkDungeonPlayModeOpen(playMode):
             box.cell.onNotifySettlementResult(self, playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, [], [], [])
             LOG_INFO('onDungeonSettlement:: 2, play mode id closed, no reward ', playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra)
@@ -84,6 +96,176 @@ class IDungeonSettlement(object):
             self._doInnerDemonChallengeSettlement(spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra) 
         else:
             LOG_ERR('in onDungeonSettlement:: unknow play mod', playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
+
+    def onLocalServerCrossCrusadeSettlementApply(self, pack):
+        # 跨服讨伐发奖包落地（跨服服镜像完成结算计算与展示后异步送达，fire-and-forget）：
+        playMode = pack['playMode']
+        dungeonNo = pack['dungeonNo']
+        win = pack['win']
+        extra = pack['extra']
+        dungeonRewards = pack.get('dungeonRewards') or []
+        goldPassRewards = pack.get('goldPassRewards') or []
+        firstPassRewards = pack.get('firstPassRewards') or []
+        LOG_INFO('onLocalServerCrossCrusadeSettlementApply::', self.gbID, playMode, dungeonNo, win)
+        try:
+            if win:
+                if playMode == gameconst.DungeonPlayModeEnum.CROSS_CRUSADE:
+                    # 扣次数
+                    self.crusadeInfo.deductRewardNum()
+                    self.crusadeInfo = self.crusadeInfo
+
+                    # 发奖励
+                    for src, rewardId, rewards in pack['rewardList']:
+                        self._doAddWealthVal(pack['opUUId'], playMode, dungeonNo, win, 0, pack['uniqueId'], src, rewardId, rewards)
+
+                    # 首通
+                    if pack.get('firstPassEntryId', 0):
+                        self.crusadePassRecords.finishEntryStatus(firstPassEntryId)
+                        self.crusadePassRecords = self.crusadePassRecords
+
+                    # 成就
+                    self.achievementInfo.triggerAchieveByType(
+                        self,
+                        gameconst.AchieveType.CRUSADE,
+                        actionContext.AchievementCtx(dungeonNo=dungeonNo)
+                    )
+
+                elif playMode == gameconst.DungeonPlayModeEnum.CROSS_CHIEF:
+                    # 扣次数
+                    self.chiefInfo.deductRewardNum()
+                    self.chiefInfo = self.chiefInfo
+
+                    # 发奖励
+                    for src, rewardId, rewards in pack['rewardList']:
+                        self._doAddWealthVal(pack['opUUId'], playMode, dungeonNo, win, 0, pack['uniqueId'], src, rewardId, rewards)
+
+                    # 首通
+                    if pack.get('firstPassEntryId', 0):
+                        self.chiefPassRecords.finishEntryStatus(firstPassEntryId)
+                        self.chiefPassRecords = self.chiefPassRecords
+
+                    # 成就
+                    self.achievementInfo.triggerAchieveByType(
+                        self,
+                        gameconst.AchieveType.CHIEF,
+                        actionContext.AchievementCtx(dungeonNo=dungeonNo)
+                    )
+
+                else:
+                    LOG_ERR('onLocalServerCrossCrusadeSettlementApply playMode err:', playMode)
+
+                # 任务
+                self.taskCheckCounterTarget(TCCTD.couterTargetDic['CompleteACertainInstance'], (dungeonNo,))
+
+            self.sendDungeonFinishedMail(playMode, dungeonNo, pack['opUUId'], extra['gbId'], win)
+            LogTrackingMgr.LogTrackingMgr.Dungeon_Settlement(
+                self.gbID,
+                self.accountEntity.clientDistinctId,
+                extra['uniqueID'],
+                playMode,
+                dungeonNo,
+                extra['spaceUUID'],
+                pack['spaceNo'],
+                self.gbID,
+                True if dungeonRewards else False,
+                True if firstPassRewards else False,
+                extra['elaspedTime'],
+                win,
+                extra['completedReasonType'],
+                extra['playerCount'],
+                extra['deadCount'],
+                firstPassRewards if firstPassRewards else {},
+                dungeonRewards if dungeonRewards else {},
+                goldPassRewards if goldPassRewards else {},
+                extra['autoCombatTimes'],
+                self.getTotalScore(),
+                self.getRoleCacheAttr('level'),
+                extra['score']
+            )
+        except Exception:
+            import traceback
+            traceback.print_exc()
+            LOG_ERR('onLocalServerCrossCrusadeSettlementApply error::', self.gbID, pack)
+
+    # 跨服副本奖励等结算数据计算后传回本服落地
+    def _doCrossTeamDungeonSettlement(self, playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra):
+        if playMode == gameconst.DungeonPlayModeEnum.CROSS_CRUSADE:
+            dungeonInfo = self.crusadeInfo
+            passRecords = self.crusadePassRecords
+            biData = TDC_BI
+            srcDungeon = AAC_AACDD.datas.BONUS_SRC_TEAM_CLEAR_PASS_REWARD
+            srcGold = AAC_AACDD.datas.BONUS_SRC_TEAM_GOLD_PASS_REWARD
+            srcFirst = AAC_AACDD.datas.BONUS_SRC_TEAM_FIRST_PASS_REWARD
+        elif playMode == gameconst.DungeonPlayModeEnum.CROSS_CHIEF:
+            dungeonInfo = self.chiefInfo
+            passRecords = self.chiefPassRecords
+            biData = RBC_BI
+            srcDungeon = AAC_AACDD.datas.BONUS_SRC_RAID_CLEAR_PASS_REWARD
+            srcGold = AAC_AACDD.datas.BONUS_SRC_RAID_GOLD_PASS_REWARD
+            srcFirst = AAC_AACDD.datas.BONUS_SRC_RAID_FIRST_PASS_REWARD
+        else:
+            LOG_ERR('_doCrossTeamDungeonSettlement playerMode err:', playMode)
+            return
+
+        firstPassRewards = None
+        goldPassRewards = None
+        dungeonRewards = None
+        rewardList = []
+        firstPassEntryId = 0
+        try:
+            if win:
+                dungeonInfo.deductRewardNum()
+
+                dungeonRewardId = biData.clearPassRewardDic.get(dungeonNo, 0)
+                if dungeonRewardId > 0:
+                    ctx = self.getAvatarAwardCtx(dungeonRewardId, None)
+                    dungeonRewards = dropAward.getAwardOne(dungeonRewardId, ctx).toBriefList()
+                    LOG_INFO('in _doCrossTeamDungeonSettlement:: record dungeon reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
+                    rewardList.append((srcDungeon, dungeonRewardId, dungeonRewards))
+
+                if dungeonInfo.checkUsedTicketType(gameconst.DungeonTicketType.GOLD):
+                    goldRewardId = biData.goldPassRewardDic.get(dungeonNo, 0)
+                    if goldRewardId > 0:
+                        ctx = self.getAvatarAwardCtx(goldRewardId, None)
+                        goldPassRewards = dropAward.getAwardOne(goldRewardId, ctx).toBriefList()
+                        LOG_INFO('in _doCrossTeamDungeonSettlement:: record gold reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
+                        rewardList.append((srcGold, goldRewardId, goldPassRewards))
+
+                entryId = biData.dungeonIdxDic.get(dungeonNo)
+                if passRecords.checkEntryStatus(entryId):
+                    firstRewardId = biData.fistPassRewardDic.get(dungeonNo, 0)
+                    if firstRewardId > 0:
+                        firstPassEntryId = entryId
+                        ctx = self.getAvatarAwardCtx(firstRewardId, None)
+                        firstPassRewards = dropAward.getAwardOne(firstRewardId, ctx).toBriefList()
+                        LOG_INFO('in _doCrossTeamDungeonSettlement:: record first reward', spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
+                        rewardList.append((srcFirst, firstRewardId, firstPassRewards))
+        except Exception:
+            import traceback
+            traceback.print_exc()
+            LOG_ERR('_doCrossTeamDungeonSettlement error::', self.gbID, playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, extra)
+            # 兜底：单成员结算异常也回填空结果清 wait 标记，不阻塞全员结算面板；
+            # 发奖包不再发送，本服无次数扣减/奖励发放等副作用
+            box.cell.onNotifySettlementResult(self, playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, [], [], [])
+            return
+
+        box.cell.onNotifySettlementResult(self, playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, firstPassRewards if firstPassRewards else [], goldPassRewards if goldPassRewards else [], dungeonRewards if dungeonRewards else [])
+
+        _pack = {
+            'playMode': playMode,
+            'spaceNo': spaceNo,
+            'dungeonNo': dungeonNo,
+            'opUUId': opUUId,
+            'uniqueId': uniqueId,
+            'win': win,
+            'extra': extra,
+            'rewardList': rewardList,
+            'firstPassEntryId': firstPassEntryId,
+            'dungeonRewards': dungeonRewards if dungeonRewards else [],
+            'goldPassRewards': goldPassRewards if goldPassRewards else [],
+            'firstPassRewards': firstPassRewards if firstPassRewards else [],
+        }
+        self.syncMethodCallToLocalServerBase('onLocalServerCrossCrusadeSettlementApply', (_pack,))
 
     def _doChiefSettlement(self, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra):
         firstPassRewards = None
@@ -254,7 +436,7 @@ class IDungeonSettlement(object):
         awardCtx.addContextVar('eventTipId', dungeonNo)
         detail = gameclass.AwardDetailCls(awardIds = rewardId, playMode = playMode, dungeonNo = dungeonNo, win=win, rank=rank, uniqueId=uniqueId)
         self.addWealth(srcType, addWealthVal, opUUID, detail, awardCtx)
-        
+
     def checkGuildBossRewardRemainTimes(self, dungeonNo):
         return self.guildBossRewardWeeklyCount < int(GC_C.datas['guildRewardTimes']['value'])
     
@@ -263,10 +445,10 @@ class IDungeonSettlement(object):
 
     def sendDungeonFinishedMail(self, dungeonType, dungeonNo, opUUID, gbId, isWin):
         dungeonName = None
-        if dungeonType == gameconst.DungeonPlayModeEnum.CHIEF:
+        if dungeonType in (gameconst.DungeonPlayModeEnum.CHIEF, gameconst.DungeonPlayModeEnum.CROSS_CHIEF):
             entryId = RBC_BI.dungeonIdxDic.get(dungeonNo)
             dungeonName = RBC_BI.datas[entryId]['name']
-        elif dungeonType == gameconst.DungeonPlayModeEnum.CRUSADE:
+        elif dungeonType in (gameconst.DungeonPlayModeEnum.CRUSADE, gameconst.DungeonPlayModeEnum.CROSS_CRUSADE):
             entryId = TDC_BI.dungeonIdxDic.get(dungeonNo)
             dungeonName = TDC_BI.datas[entryId]['name']
         else:

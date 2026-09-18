@@ -75,15 +75,33 @@ def _34000013(e):
         result = 0.1
     return result
 def _34000014(e):
-    result = int(e.score * 2 * 0.1) + e.quality**2 * 10 + e.grade * 10
+    rate = 0
+    if e.equipType == 1:
+        rate = 2.8
+    elif e.equipType == 2:
+        rate = 2.8
+    elif e.equipType == 3:
+        rate = 1
+    elif e.equipType == 4:
+        rate = 1
+    elif e.equipType == 5:
+        rate = 1
+    elif e.equipType == 6:
+        rate = 0.8   
+    elif e.equipType == 7:
+        rate = 0.8 
+    elif e.equipType == 8:
+        rate = 1 
+    result = 0
+    result = (int(e.score * 2 * 0.1) + e.quality**2 * 10**e.quality * 2**(e.grade - 1))* rate * 0.025
     return result
 def _34000015(e):
     if e >5000:
         result = 50
     elif 2000 < e <= 5000:
-        result = 100
+        result = 0
     else:
-        result = 200
+        result = 0
 
     return result
 def _34000016(lv):
@@ -95,7 +113,7 @@ def _34000016(lv):
 def _34000017(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*3
+        a = i*2
         sum = a
     return sum
 def _34000018(lv):
@@ -107,7 +125,7 @@ def _34000018(lv):
 def _34000019(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*15
+        a = i*13
         sum = a
     return sum
 def _34000020(lv):
@@ -135,15 +153,15 @@ def _34010005(e):
 def _34010006(e):
     return int(e.level*10+30)
 def _34010007(e):
-    return 7
+    return 0
 def _34010008(e):
-    return 7
+    return 0
 def _34010009(e):
     return int(e.level*4+56)
 def _34010010(e):
-    return 6
+    return 0
 def _34010011(e):
-    return 6
+    return 0
 def _34010012(e):
     return int(e.level*2+ 25)
 def _34010013(e):
@@ -151,25 +169,25 @@ def _34010013(e):
 def _34010014(e):
     return int(e.level*4 + 56)
 def _34010015(e):
-    return 7
+    return 0
 def _34010016(e):
      return int(e.level*2 + 25)
 def _34010017(e):
     return int(e.level*2 + 25)
 def _34010018(e):
-    return 6
+    return 0
 def _34010019(e):
-    return int(e.level*0.5 + 8)
+    return int(e.level*1 + 10)
 def _34010020(e):
-    return int(e.level*0.5 + 8)
+    return int(e.level*1 + 10)
 def _34010021(e):
-    return int(e.level*0.5 + 8)
+    return int(e.level*1 + 10)
 def _34010022(e):
-    return int(e.level*0.5 + 8)
+    return int(e.level*1 + 10)
 def _34010023(e):
-    return int(e.level*0.5 + 8)
+    return int(e.level*1 + 10)
 def _34010024(e):
-     return int(e.level*0.5 + 8)
+     return int(e.level*1 + 10)
 def _34010025(e):
     return int(e.level/2*1+1)
 def _34010026(e):
@@ -177,27 +195,27 @@ def _34010026(e):
 def _34010027(e):
      return int(e.level/2*1+1)
 def _34010028(e):
-     return int(e.level/2*1+1)
+     return int(e.level/2*1+6)
 def _34010029(e):
-     return int(e.level/2*1+1)
+     return int(e.level/2*1+6)
 def _34010030(e):
-    return int(e.level/2*1+1)
+    return int(e.level/2*1+6)
 def _34010031(e):
-    return int(e.level*1 + 23)
+    return int(e.level*1.5 + 23)
 def _34010032(e):
-    return int(e.level*1 + 23)
+    return int(e.level*1.5 + 23)
 def _34010033(e):
-    return int(e.level*1 + 23)
+    return int(e.level*1.5 + 23)
 def _34010034(e):
-    return int(e.level*1 + 23)
+    return int(e.level*1.5 + 23)
 def _34010035(e):
-    return int(e.level*1 + 23)
+    return int(e.level*1.5 + 23)
 def _34010036(e):
-     return int(e.level*1 + 23)
+     return int(e.level*1.5 + 23)
 def _34010037(e):
-    return int(e.level*1)
+    return int(e.level*0)
 def _34010038(e):
-     return int(e.level*1)
+     return int(e.level*0)
 def _34010039(e):
     return min(int(e*1), 180)
 def _34990001(e):

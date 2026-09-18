@@ -87,6 +87,7 @@ class IWonderLandCell(object):
             LOG_ERR('IWonderLandCell::enterWonderLand: wonderLandQuota.quotaDurState == gameconst.QuotaDurStatus.ENTER')
             return
 
+        self.base.onTryAddUseCoinTimesFreeTicket(gameconst.RecoveryTicketSubType.WONDER_LAND)
         if self.wonderLandQuota.leftTime <= 0:
             self.base.checkAndEnterWonderLand(floor, bossMutexLine if bossMutexLine is not None else 0xFFFF)
             return
@@ -386,11 +387,11 @@ class IWonderLandCell(object):
         self.base.activityComplete(WL_CD.datas['wonderLandActID']['value'])
         self._startWonderLandTimer(gameconst.WONDER_LAND_DUR_RENEW)
 
-    def checkAddWonderLandDurationCondition(self, addType, itemId, itemNum, num, opUUID):
+    def checkAddWonderLandDurationCondition(self, addType, costList, num, opUUID):
         if not self._checkAddWonderLandDurationCondition():
             return
 
-        self.base.doAddWonderLandTicket(addType, itemId, itemNum, num, True, True, gameconst.WonderAddTicketReason.CHECK_COND, opUUID)
+        self.base.doAddWonderLandTicket(addType, costList, num, True, True, gameconst.WonderAddTicketReason.CHECK_COND, opUUID)
 
     def addWonderLandRewardRecord(self, rewardList):
         _dic = self.getTempMiscProp(gameconst.EntityPropsEnum.wonderLandRewardList, {})

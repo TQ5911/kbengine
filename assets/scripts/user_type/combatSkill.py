@@ -1029,7 +1029,8 @@ class SkillBaseClass(userType.UserSingleType):
         if not target:
             return []
 
-        _targetsList = owner.getTargets(target, target.id, self.getEffectTargetType(self.skillId), dist)
+        # 这里利用beginSkillPosition来实现在怪物周围找攻击目标的效果
+        _targetsList = owner.getTargets(target, target.id, self.getEffectTargetType(self.skillId), dist, beginSkillPos=target.position)
 
         _linkedTargets = [target.id]
         if len(_linkedTargets) >= count:
@@ -1773,9 +1774,12 @@ class SkillBaseClass(userType.UserSingleType):
                 self._cancelTempTimer(owner, gameconst.SkillTempDataKey.SKILL_DONE_TIMER, gametimer.TIMER_TAG_SKILL_DONE)
                 self.setTimerTempData(owner, gameconst.SkillTempDataKey.SKILL_DONE_TIMER, tid)
 
-    def useSkillDone(self, owner, targetId, skillArgs, isSucc=True, startActionFail=False, doRemoveState=True, forceResetSkill=False):
+    def useSkillDone(self, owner, targetId, skillArgs, isSucc=True, 
+                     startActionFail=False, doRemoveState=True, 
+                     forceResetSkill=False, 
+                     resetReason=gameconst.ResetSkillReason.ReasonSkillDone):
         self._cancelTempTimer(owner, gameconst.SkillTempDataKey.SKILL_DONE_TIMER, gametimer.TIMER_TAG_SKILL_DONE)
-        owner.debugCombatMsg('useSkillDone: skillId:%s, targetId:%s, isSucc:%s', self.skillId, targetId, isSucc)
+        owner.debugCombatMsg('useSkillDone: skillId:%s, targetId:%s, isSucc:%s, reset:%s', self.skillId, targetId, isSucc, resetReason)
         if doRemoveState:
             skillState = self.getSkillState()
             owner.removeState(skillState, removeReason=gameconst.RemoveStateReason.SKILL_DONE)
@@ -1787,7 +1791,7 @@ class SkillBaseClass(userType.UserSingleType):
             self.popTempData(gameconst.SkillTempDataKey.SKILL_ARGS)
 
         if self.needResetOnSkillDone(owner) or forceResetSkill:
-            self.resetSkill(owner, gameconst.ResetSkillReason.ReasonSkillDone, doRemoveState)
+            self.resetSkill(owner, resetReason, doRemoveState)
         else:
             self.isInSkill = False
             self.targetIds = []
@@ -2388,8 +2392,18 @@ class CastingSkillVal(CommonSkillVal):
         else:
             return time.time() - self.castingStartTime >= self.getCastingtimeMax(self.skillId) - delta
 
-    def useSkillDone(self, owner, targetId, skillArgs, isSucc=True, startActionFail=False, doRemoveState=True, forceResetSkill=False):
-        super(CastingSkillVal, self).useSkillDone(owner, targetId, skillArgs, isSucc, startActionFail, forceResetSkill=forceResetSkill)
+    def useSkillDone(self, owner, targetId, skillArgs, isSucc=True, 
+                     startActionFail=False, doRemoveState=True, 
+                     forceResetSkill=False, 
+                     resetReason=gameconst.ResetSkillReason.ReasonSkillDone):
+        super(CastingSkillVal, self).useSkillDone(
+            owner, 
+            targetId, 
+            skillArgs, 
+            isSucc, 
+            startActionFail, 
+            forceResetSkill=forceResetSkill, 
+            resetReason=resetReason)
         self.castingStartTime = 0
 
     def resetSkill(self, owner, reason=gameconst.ResetSkillReason.ReasonDefault, doRemoveState=True):
@@ -2514,7 +2528,7 @@ class StagedSkill(CommonSkillVal):
         ##阶段技能只有普通技能的第一段以及强化后的第一段可以给客户端提交相关数据
         stageSkillIds = self.getSkillCfg(self.skillId).get('mulSkillID')
         curTime = time.time()
-        stageSkillIds and owner.IsAvatar and owner.allClients.onUseStageSkill(rootSkillVal.skillId, clientStageIdx,
+        stageSkillIds and owner.IsAvatar and owner.client.onUseStageSkill(rootSkillVal.skillId, clientStageIdx,
                                                                                 curTime)
 
         return isSucc
@@ -2542,21 +2556,24 @@ class StagedSkill(CommonSkillVal):
         if endByTimeout:
             self.resetSkill(owner)
 
-    def useSkillDone(self, owner, targetId, skillArgs, isSucc=True, startActionFail=False, doRemoveState=True, forceResetSkill=False):
+    def useSkillDone(self, owner, targetId, skillArgs, isSucc=True, 
+                     startActionFail=False, doRemoveState=True, 
+                     forceResetSkill=False, 
+                     resetReason=gameconst.ResetSkillReason.ReasonSkillDone):
         rootSkillVal = self.getRootSkillVal()
         # 获取子技能列表一定要放前面，因为reset之后 tempData就变成空的了
         _children = self.childSkills()
-        CommonSkillVal.useSkillDone(self, owner, targetId, skillArgs, isSucc, startActionFail, forceResetSkill=forceResetSkill)
+        CommonSkillVal.useSkillDone(self, owner, targetId, skillArgs, isSucc, startActionFail, forceResetSkill=forceResetSkill, resetReason=resetReason)
         if forceResetSkill:
             # 如果是force情况下，一定是自上而下的
             if self is rootSkillVal:
                 for _child in _children:
-                    _child.useSkillDone(owner, targetId, skillArgs, isSucc, startActionFail, forceResetSkill=forceResetSkill)
+                    _child.useSkillDone(owner, targetId, skillArgs, isSucc, startActionFail, forceResetSkill=forceResetSkill, resetReason=resetReason)
 
         else:
             if self is not rootSkillVal and rootSkillVal.checkLastStage(owner):
             # 多段技能结束，通知父技能Done, 多段的技能不能设置force，不然可能会无限循环
-                rootSkillVal.useSkillDone(owner, targetId, skillArgs, isSucc, startActionFail, forceResetSkill=False)
+                rootSkillVal.useSkillDone(owner, targetId, skillArgs, isSucc, startActionFail, forceResetSkill=False, resetReason=resetReason)
 
     def needResetOnSkillDone(self, owner):
         # 如果技能使用成功且还有下一段就先不reset，否则被reset到第一段了,等着onStageEnd里去reset
@@ -2570,7 +2587,10 @@ class StagedSkill(CommonSkillVal):
         return True
 
     def resetSkill(self, owner, reason=gameconst.ResetSkillReason.ReasonDefault, doRemoveState=True):
-        if reason == gameconst.ResetSkillReason.ReasonTeleport or reason == gameconst.ResetSkillReason.ReasonTransform or reason == gameconst.ResetSkillReason.ReasonDuelComplete:
+        if reason == gameconst.ResetSkillReason.ReasonTeleport\
+                or reason == gameconst.ResetSkillReason.ReasonDuelComplete\
+                or reason == gameconst.ResetSkillReason.ReasonBreakByState\
+                or reason == gameconst.ResetSkillReason.ReasonGeneralSkillBreak:
             if self.stageIndex > 0:
                 self.doEnterCDTime(owner)
                 owner.client.onSetAddSkillCd(

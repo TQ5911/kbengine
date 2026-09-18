@@ -83,11 +83,6 @@
         <entireConstruct>
             <Arg>       SPACE_ID    </Arg>
         </entireConstruct>
-
-        <setBaseAppData>
-            <Arg>           STRING    </Arg>
-            <Arg>           PYTHON    </Arg>
-        </setBaseAppData>
     </BaseMethods>
 
     <CellMethods>

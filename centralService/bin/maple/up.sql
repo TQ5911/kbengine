@@ -31,3 +31,13 @@ CREATE TABLE IF NOT EXISTS `maple_kv` (
     `value` TEXT NOT NULL,
     PRIMARY KEY (`key`)
 );
+
+
+-- 和服映射: from_server_id 是被合入的服, to_server_id 是合入目标
+-- 每服最多一条出边, 由 PRIMARY KEY (from_server_id) 保证
+CREATE TABLE IF NOT EXISTS `maple_merge_server` (
+    `from_server_id` INT NOT NULL,
+    `to_server_id`   INT NOT NULL,
+    PRIMARY KEY (`from_server_id`),
+    INDEX `idx_to` (`to_server_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

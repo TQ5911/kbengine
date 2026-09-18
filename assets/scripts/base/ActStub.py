@@ -67,6 +67,10 @@ class ActStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         super().doNext()
         self.pyAddTimer(1, 2, gametimer.TIMER_CHECK_ANNOUNCEMENT)
 
+    def onCellappRelive(self, gorder):
+        INFO_MSG('onCellappRelive', gorder)
+        self._resetActData()
+
     def _resetActData(self):
         now = utils.curTS()
         actGlobalData = {}

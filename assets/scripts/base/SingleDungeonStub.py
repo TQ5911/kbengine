@@ -9,6 +9,7 @@ import gamebase
 import gametimer
 import gamesql
 import utils
+import gameconfig
 import userType
 import formula
 
@@ -28,14 +29,11 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
     def doNext(self):
         super(SingleDungeonStub, self).doNext()
         self.pyAddTimer(60, 60, gametimer.TIMER_DUNGEON_CHECK_DESTROY)
-        self.pyAddTimer(1, 0.1, gametimer.TIMER_DUNGEON_ENTITY_GENERATOR)
 
     def onTimer(self, tid, userArg):
         self._onTimerTrigger(tid, userArg)
         if userArg == gametimer.TIMER_DUNGEON_CHECK_DESTROY:
             self._checkDungeonSpaceDestroy()
-        elif userArg == gametimer.TIMER_DUNGEON_ENTITY_GENERATOR:
-            self.onTimerCreateEntity()
         else:
             super(SingleDungeonStub, self).onTimer(tid, userArg)
 
@@ -191,6 +189,10 @@ class SingleDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonS
         self.createDungeonSpaceRemote(playerBox, gbId, teamUUID, extraData)
 
     def _getDungeonSpaceWeight(self, enterNum=1) -> int:
+        # 针对新手第一个副本调大
+        if self.dungeonNo == gameconst.FIRST_NEWBIE_DUNGEON_NO:
+            enterNum = gameconfig.firstDungeonWeight()
+
         return utils.calcSpaceWeight(enterNum, False, gameconst.EntNumPerPlayerInAOI.singleDungeon)
 
     def _getDungeonSpaceVal(self, spaceNo, _, gbId, teamUUID, extra):

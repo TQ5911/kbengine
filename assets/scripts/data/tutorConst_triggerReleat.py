@@ -36,6 +36,9 @@ datas = _tools.RODict({
     241071: _tools.RODict({
         "triggerName": "UIMainCityPanel_Self",
     }),
+    241081: _tools.RODict({
+        "triggerName": "UIMainCityPanel_Self",
+    }),
     242031: _tools.RODict({
         "triggerName": "UIMainCityPanel_Self",
     }),

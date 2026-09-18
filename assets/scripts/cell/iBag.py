@@ -65,7 +65,12 @@ class IBag(object):
             if checkClass != 0 and checkClass != self.school:
                 LOG_WARN('   in reqUseItems, class check failed')
                 return
-
+        # 检查是否是n选n礼包
+        if itemData['Ncn'] == 1 or itemData['Ncn'] == 2:
+            ret, argsList = self.calculateNcnPackage(itemId, argsList)
+            if not ret:
+                LOG_WARN('   in reqUseItems, ncn check failed')
+                return
         if not itemData['use']:
             LOG_WARN('   in reqUseItems, item can not use')
             return
@@ -111,6 +116,118 @@ class IBag(object):
         else:
             self.base.baseUseItems(gridId, itemId, useNum, _useItemCtx, False)
 
+    def calculateNcnPackage(self, itemId, argList):
+        # 服务端校验 n 选 n 礼包：根据 itemId 读取道具配置，校验客户端上传的
+        # argList 是否符合 Ncn/Ctoplimit/content 的构成规则。
+        # 返回 True 表示构成合法允许继续使用，False 表示非法直接拒绝。
+        itemData = ID_IDD.datas.get(itemId, None)
+        if not itemData:
+            LOG_ERR('calculateNcnPackage: item %s not found' % itemId)
+            return False, None
+
+        ncn = itemData['Ncn']
+
+        content = itemData['content']
+        if not content:
+            LOG_ERR('calculateNcnPackage: item %s content empty' % itemId)
+            return False, None
+
+        limitSum = itemData['Ctoplimit']
+        if limitSum <= 0:
+            LOG_ERR('calculateNcnPackage: item %s Ctoplimit %s invalid' % (itemId, limitSum))
+            return False, None
+
+        if not argList:
+            LOG_ERR('calculateNcnPackage: item %s argList empty' % itemId)
+            return False, None
+
+        # 取 content 某一项的限制个数；(a,b) 二元组 b 即限制个数，
+        # 三元的 (a, base, limit) 取 limit；限制个数为 0 表示该项不允许被选取
+        def _getItemLimit(choiceId):
+            entry = content[choiceId]
+            return entry[0], entry[1]
+        
+        total = 0
+        picked = {}
+        if ncn == 1:
+            # 规则1：只能从 content 选 Ctoplimit 个不同种类的道具，每项限制个数不能为 0
+            if len(argList) != limitSum:
+                LOG_ERR('calculateNcnPackage: item %s Ncn=1 choice count %s != Ctoplimit %s' % (itemId, len(argList), limitSum))
+                return False, None
+            picked = {}
+            for choiceStr in argList:
+                parts = choiceStr.split(':')
+                if len(parts) != 2:
+                    LOG_ERR('calculateNcnPackage: item %s bad choice %s' % (itemId, choiceStr))
+                    return False, None
+                try:
+                    choiceId = int(parts[0])
+                    choiceNum = int(parts[1])
+                except (TypeError, ValueError):
+                    LOG_ERR('calculateNcnPackage: item %s bad choice %s' % (itemId, choiceStr))
+                    return False, None
+                if choiceId < 0 or choiceId >= len(content):
+                    LOG_ERR('calculateNcnPackage: item %s choice id %s out of range' % (itemId, choiceId))
+                    return False, None
+                if choiceId in picked:
+                    LOG_ERR('calculateNcnPackage: item %s choice id %s duplicated' % (itemId, choiceId))
+                    return False, None
+                _, choiceLimit = _getItemLimit(choiceId)
+                if choiceLimit <= 0:
+                    LOG_ERR('calculateNcnPackage: item %s choice id %s limit 0' % (itemId, choiceId))
+                    return False, None
+                if choiceNum < 1 or choiceNum > choiceLimit:
+                    LOG_ERR('calculateNcnPackage: item %s choice id %s num %s not in [1, %s]' % (itemId, choiceId, choiceNum, choiceLimit))
+                    return False, None
+                picked[choiceId] = choiceNum
+            # 判断种类
+            if len(picked) != limitSum:
+                LOG_ERR('calculateNcnPackage: item %s Ncn=1 picked %s != Ctoplimit %s' % (itemId, picked, limitSum))
+                return False, None
+            
+        elif ncn == 2:
+            # 规则2：Ncn=2，可从 content 重复获取道具（同一 id 用 个数>1 表达），
+            # 总获取个数必须等于 Ctoplimit，每项获取个数不能超过该项限制个数，
+            # 限制个数为 0 的项不允许选；同一下标在同一 argList 中不能重复出现
+            
+            for choiceStr in argList:
+                parts = choiceStr.split(':')
+                if len(parts) != 2:
+                    LOG_ERR('calculateNcnPackage: item %s bad choice %s' % (itemId, choiceStr))
+                    return False, None
+                try:
+                    choiceId = int(parts[0])
+                    choiceNum = int(parts[1])
+                except ValueError:
+                    LOG_ERR('calculateNcnPackage: item %s bad choice %s' % (itemId, choiceStr))
+                    return False, None
+                if choiceId < 0 or choiceId >= len(content):
+                    LOG_ERR('calculateNcnPackage: item %s choice id %s out of range' % (itemId, choiceId))
+                    return False, None
+                _, choiceLimit = _getItemLimit(choiceId)
+                if choiceLimit <= 0:
+                    LOG_ERR('calculateNcnPackage: item %s choice id %s limit 0' % (itemId, choiceId))
+                    return False, None
+                picked[choiceId] = picked.get(choiceId, 0) + choiceNum
+                curChoiceNum = picked.get(choiceId, 0)
+                if curChoiceNum < 1 or curChoiceNum > choiceLimit:
+                    LOG_ERR('calculateNcnPackage: item %s choice id %s num %s not in [1, %s]' % (itemId, choiceId, choiceNum, choiceLimit))
+                    return False, None
+                
+                total += choiceNum
+            # 判断数量
+            if total != limitSum:
+                LOG_ERR('calculateNcnPackage: item %s Ncn=2 total %s != Ctoplimit %s' % (itemId, total, limitSum))
+                return False, None
+        else:
+            return False, None
+        ret = {}
+        for choiceId, itemNum in picked.items():
+            itemId, _ = _getItemLimit(choiceId) 
+            ret[itemId] = itemNum
+        return True, ret
+
+
     def cachePendingCheckId(self, gridId, itemId, useNum, useItemCtx, isBaseAct=False):
         _pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, {})
         if _pendingIdDict:
@@ -146,7 +263,7 @@ class IBag(object):
     def onPendingCheckItemFinished(self, pendingId, checkResult):
         _pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingCheckUseItem, {})
         if pendingId not in _pendingIdDict:
-            LOG_ERR('invalid pending check id', pendingId, checkResult)
+            LOG_WARN('invalid pending check id', pendingId, checkResult)
             return
 
         _gridId, _itemId, useNum, useItemCtx, isBaseAct, tid = _pendingIdDict.pop(pendingId)
@@ -212,7 +329,7 @@ class IBag(object):
         LOG_INFO("onPendingUseItemFinished", pendingId, type(pendingId), useResult)
         _pendingIdDict = self.getTempMiscProp(gameconst.EntityPropsEnum.pendingUseItem, {})
         if pendingId not in _pendingIdDict:
-            LOG_ERR('invalid pending check id', pendingId)
+            LOG_WARN('invalid pending check id', pendingId)
             return
 
         useItemCtx, opUUID, tid = _pendingIdDict.pop(pendingId)
@@ -690,9 +807,9 @@ class IBag(object):
         for eid, isTarget, times in self.fbAOICacheList:
             targetClient = self.clientEntity(eid)
             if not targetClient:
+                unfinishList.append((eid, isTarget, times + 1))
                 continue
-            if not isinstance(targetClient, (utils.Swallower,)):
-                LOG_INFO("_doSyncIsFBTarget", eid, isTarget, targetClient)
+            if targetClient.syncIsFBTarget.__class__.__name__ == "ClientEntityMethod":
                 targetClient.syncIsFBTarget(isTarget)
             elif times < 5:
                 unfinishList.append((eid, isTarget, times + 1))
@@ -900,8 +1017,33 @@ class IBag(object):
         for cid in expired:
             self.pickedCollections.pop(cid)
 
+    def addCollPickBits(self, collectionId, ent):
+        _idx = NPD.collIdToIdx[collectionId]
+        self.pickedCollOnceBits.bset(_idx, True)
+        collData = NPD.datas[collectionId]
+        if collData.get('isDisappear', False):
+            ent.setWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_HIDE)
+
+    def getCollPickBits(self, collectionId):
+        # pickedCollOnceBits 是一个大比特数组，他保存了和collectionId的映射关系
+        # 如果某个bit为1，说明这个采集物被采集了一次，并且已经达到最大次数了
+        # 返回值会根据是否disappear来返回-1
+        _idx = NPD.collIdToIdx[collectionId]
+        if self.pickedCollOnceBits.isHasState(_idx):
+            collData = NPD.datas[collectionId]
+            if collData.get('isDisappear', False):
+                return -1
+            else:
+                return 1
+        else:
+            return 0
+
     def addPickedCollections(self, collectionEnt, maxPickTimes):
         collectionId = collectionEnt.collectionId
+        if collectionId in NPD.collIdToIdx:
+            self.addCollPickBits(collectionId, collectionEnt)
+            return
+
         # 这个二测先改成 200 吧，如果要考虑性能的话需要编码一下，这种就要跟策划沟通了
         if len(self.pickedCollections) >= 200 and collectionId not in self.pickedCollections:
             LOG_ERR('addPickedCollections: too many collections', collectionId)
@@ -913,16 +1055,10 @@ class IBag(object):
             collectionEnt.setWitnessType(self.id, gameconst.WitnessTypeEnum.WITNESS_ENUM_HIDE)
 
     def getCollectionAlreadyPickTime(self, collectionId):
-        return self.pickedCollections.get(collectionId, 0)
+        if collectionId in NPD.collIdToIdx:
+            return self.getCollPickBits(collectionId)
 
-    def sendAllPickedCollections(self):
-        collectionIds = []
-        nums = []
-        for cid, num in self.pickedCollections.items():
-            if num < 0:
-                continue
-            collectionIds.append(cid)
-            nums.append(num)
+        return self.pickedCollections.get(collectionId, 0)
 
     def checkUseTelToMainCity(self, itemId, *args):
         mapId = formula.fetchMapId(self.spaceNo)
@@ -1001,21 +1137,10 @@ class IBag(object):
         return gameconst.UseItemEnum.PENDING
 
     def onPendingUseRenameItemResult(self, success, pendingUseId, newName):
-        _oldName = self.name
-        self.name = newName
         if success:
             self.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.TRUE)
         else:
             self.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.FALSE)
-
-        self.base.delOldName(_oldName)
-        self.pyWriteToDB()
-        gameengine.getGlobalBase('PlayerStub').updateName(_oldName, newName, self, self.gbId)
-
-        if self.isInTeam():
-            gameengine.getTeamStub(self.teamId).modifyPlayerName(self.base, self.teamId, self.gbId, newName, _oldName)
-        elif self.inRaid():
-            gameengine.getRaidStub(self.raidUUID).modifyPlayerName(self.base, self.raidUUID, self.gbId, newName, _oldName)
 
     def bodyItemLock(self, equipIn, equipPos, itemId, uniqueId, lockStatus):
         LOG_INFO('in bodyItemLock::', equipIn, equipPos, itemId, uniqueId, lockStatus)

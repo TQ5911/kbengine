@@ -65,6 +65,7 @@ import antiAddictCategory_antiAddictCategory_def as AACA
 import currencyExchange_exchange as CE_EX
 import experience_config as EXPC
 import creep_base as CBD
+import creep_coefficient as C_CD
 import petData_set as PD_S
 import giftKey_msgLibrary as GKML
 import gearBase_gearBase as GBGBD
@@ -224,9 +225,38 @@ class AwardMixin(object):
 
         newItemWealth.itemsObjs = newItemObjs
 
+    def _getKillMonsterWorldLevelDropRatio(self, context):
+        extra = getattr(context, 'extra', None) or {}
+        monsterId = extra.get('monsterId', 0)
+        monsterLevel = getattr(context, 'level', 0) or getattr(getattr(context, 'args', None), 'lv', 0)
+        useCross = extra.get('isCrossServer', False) or getattr(self, 'isCrossServer', False)
+        return utils.getMonsterWorldLevelDropRatio(monsterId, monsterLevel, useCross)
+
+    def _fillGatherKillMonsterCtx(self, awardCtx, context):
+        if not awardCtx or not context:
+            return
+        extra = getattr(context, 'extra', None) or {}
+        monsterLevel = extra.get('level', 0)
+        if type(monsterLevel) is not int or monsterLevel <= 0:
+            monsterLevel = getattr(context, 'level', 0) or getattr(getattr(context, 'args', None), 'lv', 0)
+        if type(monsterLevel) is not int or monsterLevel <= 0:
+            return
+        awardCtx.addContextVar('srcType', AACA.datas.BONUS_SRC_KILL_MONSTER)
+        awardCtx.addContextVar('level', monsterLevel)
+        if hasattr(awardCtx, 'args'):
+            awardCtx.args.addArg('lv', monsterLevel)
+        if hasattr(awardCtx, 'level'):
+            awardCtx.level = monsterLevel
+        monsterId = extra.get('monsterId', 0)
+        if monsterId:
+            awardCtx.addContextVar('monsterId', monsterId)
+
     def _onKillMonsterAwardAdjust(self, award, context):
         if getattr(context, 'srcType', None) != AACA.datas.BONUS_SRC_KILL_MONSTER:
             return award
+        worldRatio = self._getKillMonsterWorldLevelDropRatio(context)
+        if worldRatio != 1.0:
+            award *= worldRatio
         noRevenueList = EXPC.datas.get('nameSuffixNoRevenue', {}).get('value', ())
         monsterId = context.extra.get('monsterId', 0)
         nameSuffixID = CBD.datas.get(monsterId, {}).get('nameSuffixID', 0)
@@ -243,7 +273,7 @@ class AwardMixin(object):
         rewardProp = config.get('rewardprop', 1)
         boundProp = config.get('boundprop', 0)
         newBindType = gameconst.ItemBindType.BIND if boundProp == 1 else gameconst.ItemBindType.NORMAL
-        # LOG_DBG('_onKillMonsterAwardAdjust before: ', monsterLevel, context.args.avatarLv, rewardProp, award.toClientDisplayVal())
+        LOG_DBG('_onKillMonsterAwardAdjust before: ', monsterLevel, context.args.avatarLv, rewardProp, award.toClientDisplayVal())
         oldAward = copy.deepcopy(award)
         # 非物品奖励直接乘系数
         award *= rewardProp
@@ -251,7 +281,7 @@ class AwardMixin(object):
         self._onKillMonsterItemWealthAdjust(oldAward.itemWealth, award.itemWealth, rewardProp, newBindType)
         self._onKillMonsterItemWealthAdjust(oldAward.petItemWealth, award.petItemWealth, rewardProp, newBindType)
 
-        # LOG_DBG('_onKillMonsterAwardAdjust after: ', monsterLevel, context.args.avatarLv, rewardProp, award.toClientDisplayVal())
+        LOG_DBG('_onKillMonsterAwardAdjust after: ', monsterLevel, context.args.avatarLv, rewardProp, award.toClientDisplayVal())
         return award
 
     # 掉落只支持印文铜贝和铜贝,物品，经验,装备
@@ -488,8 +518,8 @@ class AwardMixin(object):
             return
 
         #最先要扣除欠债的道具
-        awardVal.itemWealth.popDebtItemObjs(self)
-        awardVal.petItemWealth.popDebtItemObjs(self)
+        awardVal.itemWealth.popDebtItemObjs(self, srcType, opUUID, detail, self.bagData.bagType)
+        awardVal.petItemWealth.popDebtItemObjs(self, srcType, opUUID, detail, self.petBag.bagType)
 
         #跨服获取道具链路，在本服addwealth前将物品生成出来
         if self.isCrossServerInLocalServer:
@@ -663,7 +693,6 @@ class AwardMixin(object):
                 awardCtx.mailId, _ = dataUtils.getMailId(srcType, awardCtx.mailId)
             petMailId = PD_S.datas.get('petBagFullMail', {}).get('value', 0)
             _success, _inBagItemList, _bagLocked, _petLocked = self._addItems(itemsList, petItemList, awardCtx.mailId, petMailId, srcType, opUUID, detail, notify, srcSubType, idipSource)
-            
 
         if itemsList:
             self.checkEventTips(itemsList, srcType, awardCtx)
@@ -2012,6 +2041,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 awardCtx.addContextVar(dataUtils.addAwardsCallBackKey(), 'onGatherRewardResult')
                 if context and context.customAward:
                     awardCtx.addContextVar('customAward', context.customAward)
+                self._fillGatherKillMonsterCtx(awardCtx, context)
                 if gameconfig.isCrossServer():
                     LOG_ERR("giveGatherAwardBase cross server not support")
                     return
@@ -2032,6 +2062,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 awardCtx.addContextVar(dataUtils.addAwardsCallBackKey(), 'onGatherRewardResult')
                 if context and context.customAward:
                     awardCtx.addContextVar('customAward', context.customAward)
+                self._fillGatherKillMonsterCtx(awardCtx, context)
                 if pickData['type'] == gameconst.CollectionType.FIRST_BLOOD:
                     awardVal = dropAward.AwardVal()
                     for customAwardVal in context.customAward:
@@ -2120,13 +2151,13 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         if hasattr(srcCtx, 'args') and hasattr(srcCtx.args, 'awardList'):
             for _awardVal in srcCtx.args.awardList:
                 oneItemsList = _awardVal.itemWealth.getItemObjs()
-                self.sendEventTips(oneItemsList, srcType, _eventTipId, _message, srcCtx)
+                self.sendEventTips(oneItemsList, srcType, _eventTipId, _message, _tips, srcCtx)
             return
         else:
-            self.sendEventTips(itemList, srcType, _eventTipId, _message, srcCtx)
+            self.sendEventTips(itemList, srcType, _eventTipId, _message, _tips, srcCtx)
 
-    def sendEventTips(self, itemList, srcType, eventTipId, message, srcCtx):
-        LOG_INFO('sendEventTips', itemList, srcType, eventTipId, message)
+    def sendEventTips(self, itemList, srcType, eventTipId, message, _tips, srcCtx):
+        LOG_INFO('sendEventTips', srcType, eventTipId, message)
         _avatarName = gameglobal.roleCache[self.id]['name']
         _itemNumDic = {}
         for item in itemList:
@@ -2137,7 +2168,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 continue
 
             if srcType in (AAC_AAC_DD.datas.BONUS_SRC_GATHER_DROP, AAC_AAC_DD.datas.BONUS_SRC_GATHER,):
-                self.broadcastTips(message['crossServer'], message['ID'], [_avatarName, str(self.gbID), str(_itemId), str(0), str(_itemNum)])
+                self.broadcastTips(message['crossServer'], message['ID'], [_avatarName, str(self.gbID), str(_itemId), str(self.gbID), str(_itemNum)])
             elif srcType in (AAC_AAC_DD.datas.BONUS_SRC_KILL_MONSTER,):
                 mapId = formula.fetchMapId(self.baseSpaceNo)
                 mapData = GPGPD.datas.get(mapId, None)
@@ -2148,36 +2179,44 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 if not monsterData:
                     return
                 monsterName = monsterData['name'] or ''
-                self.broadcastTips(message['crossServer'], message['ID'], [_avatarName, str(self.gbID), str(mapName), str(monsterName), str(_itemId), str(0), str(_itemNum)])
+                self.broadcastTips(message['crossServer'], message['ID'], [_avatarName, str(self.gbID), str(mapName), str(monsterName), str(_itemId), str(self.gbID), str(_itemNum)])
             elif srcType in (AAC_AAC_DD.datas.BONUS_SRC_TEAM_FIRST_PASS_REWARD, AAC_AAC_DD.datas.BONUS_SRC_TEAM_CLEAR_PASS_REWARD, \
-                             AAC_AAC_DD.datas.BONUS_SRC_RAID_FIRST_PASS_REWARD, AAC_AAC_DD.datas.BONUS_SRC_RAID_CLEAR_PASS_REWARD):
+                             AAC_AAC_DD.datas.BONUS_SRC_RAID_FIRST_PASS_REWARD, AAC_AAC_DD.datas.BONUS_SRC_RAID_CLEAR_PASS_REWARD,
+                             AAC_AAC_DD.datas.BONUS_SRC_RAID_GOLD_PASS_REWARD, AAC_AAC_DD.datas.BONUS_SRC_TEAM_GOLD_PASS_REWARD):
                 mapId = formula.fetchMapId(self.baseSpaceNo)
                 mapData = GPGPD.datas.get(mapId, None)
                 if not mapData:
                     return
                 mapName = mapData['name'] or ''
-                self.broadcastTips(message['crossServer'], message['ID'], [_avatarName, str(self.gbID), str(mapName), str(_itemId), str(0), str(_itemNum)])
+                self.broadcastTips(message['crossServer'], message['ID'], [_avatarName, str(self.gbID), str(mapName), str(_itemId), str(self.gbID), str(_itemNum)])
             else:
-                self.broadcastTips(message['crossServer'], message['ID'], [_avatarName, str(self.gbID), str(eventTipId), str(0), str(_itemId), str(0), str(_itemNum)])
-                
+                self.broadcastTips(message['crossServer'], message['ID'], [_avatarName, str(self.gbID), str(eventTipId), str(self.gbID), str(_itemId), str(self.gbID), str(_itemNum)])
+        
+        for _itemId, _itemNum in _itemNumDic.items():
+            message = _tips.get(_itemId, None)
+            if not message:
+                continue
+            self.broadcastTips(message['crossServer'], message['ID'], [_avatarName, str(self.gbID), str(_itemId), str(self.gbID), str(_itemNum)])
+            break
+
     def broadcastTips(self, crossServerType, msgId, msgArgs):
-        LOG_INFO('broadcastTips', crossServerType, msgId, msgArgs)
+        LOG_INFO('broadcastTips', crossServerType, msgId, msgArgs, gameconfig.isCrossServer())
         if crossServerType == gameconst.EventTipCrossServerType.CrossAndSourceServer:
-            if self.isCrossServer:
+            if gameconfig.isCrossServer():
                 serverName = gameglobal.mapleServerInfo.get(int(self.baseFromServerId), {}).get('server_name', '')
                 msgArgs.insert(0, serverName)
                 gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips', (msgId, msgArgs)))
                 _stub = iRouter.RemoteServerStubEntityCall(int(self.baseFromServerId), 'CrossServerStub')
                 _stub.onGlobalEventTips(gameconst.EventTipCrossServerType.Default, msgId, msgArgs)
         elif crossServerType == gameconst.EventTipCrossServerType.CrossAllServer:
-            if self.isCrossServer:
-                serverName = gameglobal.mapleServerInfo.get(int(self.baseFromServerId), {}).get('server_name', '')
-                msgArgs.insert(0, serverName)
-                crossServerGroupID = gameglobal.mapleServerInfo.get(gameconfig.serverId(), {}).get('server_group', 0)
-                groupServerList = utils.group2ServerIds(crossServerGroupID)
-                for serverID in groupServerList:
-                    _stub = iRouter.RemoteServerStubEntityCall(int(serverID), 'CrossServerStub')
-                    _stub.onGlobalEventTips(gameconst.EventTipCrossServerType.Default, msgId, msgArgs)
+            # 所有cross all server类型的事件通知，全部有触发的玩家所在服，转发回到跨服去完成
+            if gameconfig.isCrossServer():
+                return
+            serverName = gameglobal.mapleServerInfo.get(int(gameconfig.serverId()), {}).get('server_name', '')
+            msgArgs.insert(0, serverName)
+            _stub = iRouter.RemoteServerStubEntityCall(int(gameconfig.getCrossServerId()), 'CrossServerStub')
+            _stub.onGlobalEventTips(crossServerType, msgId, msgArgs)
+
         else:
             gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips', (msgId, msgArgs)))
         
@@ -2829,7 +2868,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             if data['exchangeType'] == 1:
                 dailyLimit *= data['exchangeRate']
             if dailyUsed + cost > dailyLimit:
-                LOG_ERR("exchangeCurrency dailyLimit", cId, dailyUsed, dailyLimit)
+                LOG_WARN("exchangeCurrency dailyLimit", cId, dailyUsed, dailyLimit)
+                self.onMessagePre(M_M_DD.datas.currencyExchangeLack, [])
                 return
 
         #月卡用户才能购买
@@ -2869,14 +2909,13 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
         # 扣除货币
         opUUID = KBEngine.genUUID64()
-        detail = gameclass.AwardDetailCls(itemId=costItemId)
+        detail = gameclass.AwardDetailCls(costItemId=costItemId, costItemNum=cost, addItemId=addItemId, addItemNum=addNum)
         self.deductWealth(AAC_AAC_DD.datas.BONUS_SRC_CURRENCY_EXCHANGE_COST, deductWealthVal, opUUID, detail)
 
         if dailyLimit != -1:
             self.currencyRecordDic[cId] = dailyUsed + cost
 
         # 发放奖励
-        detail = gameclass.AwardDetailCls(itemId=addItemId)
         self.addWealth(AAC_AAC_DD.datas.BONUS_SRC_CURRENCY_EXCHANGE_GET, addWealthVal, opUUID, detail)
 
         LogTrackingMgr.LogTrackingMgr.Currency_Exchange(
@@ -2978,7 +3017,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             src,
             opUUID,
             detailStr,
-            equipData,
+            equipData
         )
 
     def getItemUniqueId(self, itemId):
@@ -3096,238 +3135,325 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
 
     @gamedecorator.checkGameconfigEnable('bag')
     def reqRandomSynthesis(self, exposed, bagType, itemInfoList, isAuto):
+        """随机合成：每 SYNTHESIS_ITEMS_PER_GROUP 个同种同品质材料合成一个随机物品。
+
+        流程：
+        1. 校验输入和背包
+        2. 收集材料并做合法性校验（锁定/装备/绑定）
+        3. 资源校验
+        4. 逐组合成（拆分出辅助方法）
+        5. 提交结果（扣/发资源、累计升级、客户端通知、广播、日志、成就）
+        """
         LOG_INFO("reqRandomSynthesis", bagType, itemInfoList, isAuto)
+
+        # 1. 入参 & 背包校验
         if not itemInfoList:
+            LOG_ERR('reqRandomSynthesis wrong item info list', bagType, itemInfoList, isAuto)
+            return
+        bag = self.getBagByType(bagType)
+        if not bag:
+            LOG_ERR('reqRandomSynthesis wrong bag type', bagType, itemInfoList, isAuto)
+            return
+        if self.bagData.isFull():
+            self.onMessagePre(M_M_DD.datas.bagFullGeneralMessage, [])
+            return
+        # 2. 收集材料并做单格校验
+        realItemInfoList = self._collectSynthesisRequestItems(bag, itemInfoList)
+        if realItemInfoList is None:
             return
 
-        itemIdList = []
-        costItemInfo = {}
-        getItemInfo = {}
-
-        srcType = AAC_AAC_DD.datas.BONUS_SRC_RANDOM_SYNTHESIS
-        detail = gameclass.AwardDetailCls()
+        # 3. 准备上下文，逐组合成
         opUUID = KBEngine.genUUID64()
 
-        deductVal = dropAward.DeductWealthVal()
+        result = self._runSynthesisGroups(realItemInfoList)
+        if result is None:
+            return  # 内部已通知客户端
+
+        # 4. 提交结果
+        self._commitSynthesisResult(opUUID, result)
+        self._applySynthesisUpgradeProgress(result)
+        self._notifySynthesisResult(result.itemIdList)
+        datas = [{'synthesisKey': k, 'upgradeNum': v}
+                for k, v in self.randomSynthesisDic.items()]
+        self.client.onUpdateSynthesisUpgradeNum(datas)
+
+        # 5. 广播 / 日志 / 成就
+        self.tryBroadcast(list(result.getItemInfo.keys()))
+        self._recordSynthesisLogs(result, isAuto, opUUID)
+        self._triggerSynthesisAchievement(result.getItemInfo)
+
+    # ------------------------------------------------------------------
+    # 随机合成相关辅助方法
+    # ------------------------------------------------------------------
+    def _notifySynthesisResult(self, itemIdList):
+        """统一的客户端结果通知。"""
+        self.client.onRandomSynthesis(itemIdList)
+
+    def _collectSynthesisRequestItems(self, bag, itemInfoList):
+        """按格收集参与合成的物品并做合法性校验。
+
+        返回:
+            (realItemInfoList, preCheckDeductVal) —— 成功
+            None                                  —— 失败（已通知客户端）
+        """
         realItemInfoList = []
+        preCheckDeductVal = dropAward.DeductWealthVal()
         for itemInfo in itemInfoList:
             gridId = itemInfo['gridId']
             itemNum = itemInfo['itemNumEx']
-            bag = self.getBagByType(bagType)
+
             item = bag.getItemObjByGridId(gridId)
             if not item:
                 LOG_ERR('reqRandomSynthesis not find item', gridId)
-                self.client.onRandomSynthesis(itemIdList)
-                return
-
+                self._notifySynthesisResult([])
+                return None
             if item.isLocked():
                 LOG_ERR('reqRandomSynthesis item is locked', gridId, item)
-                self.client.onRandomSynthesis(itemIdList)
-                return
+                self._notifySynthesisResult([])
+                return None
+            if item.isEquipmentItem() and not item.isGood(self.gbID):
+                LOG_ERR('reqRandomSynthesis item is equipment, not supported yet', gridId, item)
+                self._notifySynthesisResult([])
+                return None
 
-            itemId = item.itemId
-            bindType = item.bindType
-            realItemInfoList.append((itemId, itemNum, bindType))
-            deductVal.addWealthByItemId(itemId, itemNum, bindType)
+            realItemInfoList.append((item.itemId, itemNum, item.bindType))
+            preCheckDeductVal.addWealthByItemId(item.itemId, itemNum, item.bindType)
+        if not self.canDeductWealth(preCheckDeductVal, sendMsg=False):
+            self._notifySynthesisResult([])
+            LOG_WARN("reqRandomSynthesis cost not enough")
+            return None
+        return realItemInfoList
 
-        res = self.canDeductWealth(deductVal, sendMsg=False)
-        if not res:
-            self.client.onRandomSynthesis(itemIdList)
-            LOG_WARN("reqRandomSynthesis cost not enough", res())
-            return
+    def _runSynthesisGroups(self, realItemInfoList):
+        """逐组消耗材料并产出随机物品。
 
-        hasBindType = False
+        关键状态：``curItemNum`` 累计当前未凑齐一组的余料；
+        凑齐 SYNTHESIS_ITEMS_PER_GROUP 即触发一次合成。
+        组用尽时重置 mainType/subType/quality/normalItemNum，
+        这样下一组（不同种类）可重新开始计数。
+
+        返回:
+            _RandomSynthesisResult —— 成功
+            None                    —— 失败（已通知客户端）
+        """
+        result = _RandomSynthesisResult()
         curMainType = None
         curSubType = None
         curQuality = None
         curItemNum = 0
         curGroupInfoList = []
-        ranItemAddVal = dropAward.AwardVal()
-        synthesisUpgradeNumList = []
-        synthesisUpgradeKeySet = set()
         normalItemNum = 0
-        deductVal = dropAward.DeductWealthVal()
-        inItemInfos = []
-        outItemInfos = []
-        keyDict = {}
+
         for itemId, itemNum, bindType in realItemInfoList:
-            costItemInfo[itemId] = costItemInfo.get(itemId, 0) + itemNum
-            hasBindType = True if bindType == gameconst.ItemBindType.BIND else hasBindType
-            if bindType != gameconst.ItemBindType.BIND:
+            if bindType == gameconst.ItemBindType.NORMAL:
                 normalItemNum += itemNum
+
             itemData = dataUtils.getCommItemData(itemId)
-            if not itemData:
-                LOG_ERR("reqRandomSynthesis itemData not found", itemId)
-                self.client.onRandomSynthesis(itemIdList)
-                return
-            mainType = itemData['type']
-            subType = itemData['subType']
-            quality = itemData['quality']
-            if curMainType is not None and curMainType != mainType:
-                LOG_ERR("reqRandomSynthesis mainType not match", curMainType, mainType)
-                self.client.onRandomSynthesis(itemIdList)
-                return
-            curMainType = mainType
-            if curSubType is not None and curSubType != subType:
-                LOG_ERR("reqRandomSynthesis subType not match", curSubType, subType)
-                self.client.onRandomSynthesis(itemIdList)
-                return
-            curSubType = subType
-            if curQuality is not None and curQuality != quality:
-                LOG_ERR("reqRandomSynthesis quality not match", curQuality, quality)
-                self.client.onRandomSynthesis(itemIdList)
-                return
-            curQuality = quality
+            mainType, subType, quality = itemData['type'], itemData['subType'], itemData['quality']
 
-            synthesisKey = mainType * 1000 + subType
-            cfgData = RSSD.datas.get(synthesisKey, None)
-            if not cfgData:
-                LOG_ERR("reqRandomSynthesis cfgData not found", synthesisKey)
-                self.client.onRandomSynthesis(itemIdList)
-                return
+            # 同组合成要求所有输入材料 mainType/subType/quality 一致
+            if (curMainType is not None and curMainType != mainType) \
+                    or (curSubType is not None and curSubType != subType) \
+                    or (curQuality is not None and curQuality != quality):
+                LOG_ERR("reqRandomSynthesis mainType/subType/quality not match",
+                        curMainType, curSubType, curQuality, mainType, subType, quality)
+                self._notifySynthesisResult([])
+                return None
+            curMainType, curSubType, curQuality = mainType, subType, quality
 
-            isOpen = cfgData.get('isOpen', 0)
-            if not isOpen:
-                LOG_ERR("reqRandomSynthesis not open", synthesisKey)
-                self.client.onRandomSynthesis(itemIdList)
-                return
+            # 取配置并校验开关 / 品质
+            synthesisKey, cfgData = self._getSynthesisCfgData(mainType, subType, quality)
+            if cfgData is None:
+                return None
 
-            if not cfgData['qualityTypes'][quality]:
-                LOG_ERR("reqRandomSynthesis quality not match", quality)
-                self.client.onRandomSynthesis(itemIdList)
-                return
+            # 累积材料；凑齐一组就消耗并合成
             curItemNum += itemNum
-            curGroupInfoList.append((itemId, itemNum, bindType))
-            synthesisNeedNum = 4
-            while curItemNum >= synthesisNeedNum:
-                curItemNum -= synthesisNeedNum
-                curGroupDeductNum = 0
-                curGroupInfo = []
-                curGroupInfoListLen = len(curGroupInfoList)
-                for _ in range(curGroupInfoListLen):
-                    if len(curGroupInfoList) <=0:
-                        break
-                    if curGroupDeductNum >= synthesisNeedNum:
-                        break
-                    itemId, itemNum, bindType = curGroupInfoList[0]
-                    deductNum = min(synthesisNeedNum - curGroupDeductNum, itemNum)
-                    curGroupDeductNum += deductNum
-                    if deductNum < itemNum:
-                        itemNum -= deductNum
-                        curGroupInfoList[0] = (itemId, itemNum, bindType)
-                        curGroupInfo.append((itemId, deductNum, bindType))
-                    else:
-                        curGroupInfo.append(curGroupInfoList.pop(0))
-                if self.getRoleCacheAttr('level', 0) < cfgData['openLv'][quality]:
-                    LOG_WARN("reqRandomSynthesis level not enough", self.getRoleCacheAttr('level', 0), cfgData['openLv'][quality])
-                    itemIdList.append({'itemId': 0, 'itemNum': 0, 'bindType': 0})
-                    continue
-                prob = cfgData['probList'][quality]
-                if not prob:
-                    LOG_ERR("reqRandomSynthesis prob not found", quality)
-                    self.client.onRandomSynthesis(itemIdList)
-                    return
-                itemQuality = curQuality
-                if random.uniform(0, 1) <= prob:
-                    itemQuality += 1
-                school = self.getRoleCacheAttr('school')
-                ranItemIdList = list(IDIDS.categoryWithQualityDatas.get((mainType, subType, itemQuality, school), []))
-                ranItemIdList.extend(IDIDS.categoryWithQualityDatas.get((mainType, subType, itemQuality, 0), []))
-                rmItemIdList = []
-                for ranItemId in ranItemIdList:
-                    itemCfgData = ITEM_DATA.datas.get(ranItemId, None)
-                    if not itemCfgData:
-                        LOG_ERR("reqRandomSynthesis itemCfgData not found", ranItemId)
-                        self.client.onRandomSynthesis(itemIdList)
-                        continue
-                    rndSynNotAvail = itemCfgData.get('rndSynNotAvail', 0)
-                    if rndSynNotAvail:
-                        rmItemIdList.append(ranItemId)
-                        continue
-                for ranItemId in rmItemIdList:
-                   ranItemIdList.remove(ranItemId)
+            curGroupInfoList.append([itemId, itemNum, bindType])
+            while curItemNum >= gameconst.SynthesusDataKeys.SYNTHESIS_ITEMS_PER_GROUP:
+                curItemNum -= gameconst.SynthesusDataKeys.SYNTHESIS_ITEMS_PER_GROUP
+                curGroupInfo = self._consumeMaterialsForGroup(curGroupInfoList, gameconst.SynthesusDataKeys.SYNTHESIS_ITEMS_PER_GROUP)
 
-                if len(ranItemIdList) < 1:
-                    LOG_ERR("reqRandomSynthesis ranItemIdList not found", mainType, subType, itemQuality, school)
-                    self.client.onRandomSynthesis(itemIdList)
-                    return
-                ranItemId = random.choice(ranItemIdList)
-                #itemBindType = gameconst.ItemBindType.BIND if hasBindType else gameconst.ItemBindType.NORMAL
-                itemBindType = gameconst.ItemBindType.BIND
-                _randomCfg = RSCD.datas.get('synthesisUnboundProbability', {}).get('value', [])
-                curNormalNum = normalItemNum
-                if normalItemNum >= synthesisNeedNum:
-                    normalItemNum -= synthesisNeedNum
-                    curNormalNum = synthesisNeedNum
-                else:
-                    normalItemNum = 0
-                if curNormalNum > 0 and len(_randomCfg) > curNormalNum and random.randint(0, 100) <= _randomCfg[curNormalNum]:
-                    itemBindType = gameconst.ItemBindType.NORMAL
-                #LOG_INFO("reqRandomSynthesis, normalItemNum:", normalItemNum, curNormalNum)
-                inDaatas = []
-                outDatas = []
-                for (itemId, itemNum, bindType) in curGroupInfo:
-                    deductVal.addWealthByItemId(itemId, itemNum, bindType)
-                    inDaatas.append({'itemId': itemId, 'itemNum': itemNum, 'bindType': bindType})
-                
-                inItemInfos.append(inDaatas)
-                
-                randItem = itemFactory.ItemFactory.createItem(ranItemId, 1, itemBindType)
+                outputEntries, normalItemNum, upgraded = self._doOneSynthesisGroup(mainType, subType, quality, cfgData, normalItemNum)
+                if outputEntries is None:
+                    self._notifySynthesisResult([])
+                    return None
 
-                outData = {'itemId': ranItemId, 'itemNum': 1, 'bindType': itemBindType}
-                itemIdList.append(outData)
-                outDatas.append(outData)
-                outItemInfos.append(outDatas)
-                ranItemAddVal.addWealthByObjList([randItem])
-                getItemInfo[ranItemId] = getItemInfo.get(ranItemId, 0) + 1
-                key = synthesisKey * 10 + quality
-                if itemQuality == curQuality:
-                    keyDict[key] = keyDict.get(key, 0) + 1
-                    synthesisUpgradeKeySet.add(key)
+                result.addGroup(outputEntries, curGroupInfo)
+                # 升级累计：仅在产物未升档时计入（原行为）
+                if not upgraded:
+                    result.recordNonUpgrade(synthesisKey, quality)
+
+            # 一组清空时重置组状态（不同种类可重新开始计数）
             if curItemNum == 0:
-                hasBindType = False
                 curMainType = None
                 curSubType = None
                 curQuality = None
                 normalItemNum = 0
+        return result
 
-        self.deductWealth(srcType, deductVal, opUUID, detail)
-        _ctx = awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID)
-        self.addWealth(srcType, ranItemAddVal, opUUID, detail, notify=False, awardCtx=_ctx)
-        for key, num in keyDict.items():
+    def _getSynthesisCfgData(self, mainType, subType, quality):
+        """根据 mainType/subType 取合成配置，并校验开关。失败时已通知客户端。"""
+        synthesisKey = mainType * gameconst.SynthesusDataKeys.SYNTHESIS_KEY_MAIN_TYPE_FACTOR + subType
+        cfgData = RSSD.datas.get(synthesisKey, None)
+        if not cfgData:
+            LOG_ERR("reqRandomSynthesis cfgData not found", synthesisKey)
+            self._notifySynthesisResult([])
+            return None, None
+        if not cfgData.get('isOpen', 0):
+            LOG_ERR("reqRandomSynthesis not open", synthesisKey)
+            self._notifySynthesisResult([])
+            return None, None
+        if not cfgData['qualityTypes'][quality]:
+            LOG_ERR("reqRandomSynthesis quality not match", quality)
+            self._notifySynthesisResult([])
+            return None, None
+        return synthesisKey, cfgData
+
+    def _consumeMaterialsForGroup(self, curGroupInfoList, needNum):
+        """从累加的 [itemId, itemNum, bindType] 序列中扣 needNum 个，返回本组实际消耗明细。
+
+        序列被就地修改：剩余材料留在 ``curGroupInfoList``。
+        """
+        curGroupDeductNum = 0
+        curGroupInfo = []
+        while curGroupInfoList and curGroupDeductNum < needNum:
+            itemId, itemNum, bindType = curGroupInfoList[0]
+            deductNum = min(needNum - curGroupDeductNum, itemNum)
+            curGroupDeductNum += deductNum
+            if deductNum < itemNum:
+                curGroupInfoList[0] = [itemId, itemNum - deductNum, bindType]
+                curGroupInfo.append([itemId, deductNum, bindType])
+            else:
+                curGroupInfo.append(curGroupInfoList.pop(0))
+        return curGroupInfo
+
+    def _doOneSynthesisGroup(self, mainType, subType, inputQuality, cfgData, normalItemNum):
+        """执行一次合成：等级校验 → 概率升档 → 选物品 → 决定绑定类型。
+
+        返回:
+            (outputEntries, normalItemNumAfter, upgraded) —— 成功
+            None                                         —— 失败（已 LOG_ERR；通知由调用方统一发起）
+        """
+        # 1) 等级校验：不够则用空产出占位（原行为：append {0,0,0} 后 continue）
+        playerLevel = self.getRoleCacheAttr('level', 0)
+        if playerLevel < cfgData['openLv'][inputQuality]:
+            LOG_WARN("reqRandomSynthesis level not enough",
+                     playerLevel, cfgData['openLv'][inputQuality])
+            return None, normalItemNum, False
+
+        # 2) 概率升档
+        outputQuality = self._rollUpgradedQuality(cfgData, inputQuality)
+        if outputQuality is None:
+            LOG_ERR("reqRandomSynthesis prob not found", inputQuality)
+            return None, normalItemNum, False
+        upgraded = outputQuality != inputQuality
+
+        # 3) 选随机物品（用产出品质）
+        school = self.getRoleCacheAttr('school')
+        ranItemId = self._pickAvailableRandomItemId(
+            mainType, subType, outputQuality, school)
+        if ranItemId is None:
+            LOG_ERR("reqRandomSynthesis ranItemIdList not found",
+                    mainType, subType, outputQuality, school)
+            return None, normalItemNum, False
+
+        # 4) 决定绑定类型，并扣减本组消耗的 normal 数量
+        curNormalNum = min(normalItemNum, gameconst.SynthesusDataKeys.SYNTHESIS_ITEMS_PER_GROUP)
+        normalItemNumAfter = normalItemNum - curNormalNum
+        itemBindType = self._decideItemBindType(curNormalNum)
+
+        outEntry = {'itemId': ranItemId, 'itemNum': 1, 'bindType': itemBindType}
+        return [outEntry], normalItemNumAfter, upgraded
+
+    def _rollUpgradedQuality(self, cfgData, inputQuality):
+        """按 ``cfgData['probList'][quality]`` 概率决定产物是否升一档品质。配置缺失返回 None。"""
+        prob = cfgData['probList'][inputQuality]
+        if not prob:
+            return None
+        if random.uniform(0, 1) <= prob:
+            return inputQuality + 1
+        return inputQuality
+
+    def _filterAvailableRandomItemIds(self, mainType, subType, itemQuality, school):
+        """从 (type, subType, quality, school/0) 类别中过滤出可用的物品 ID 列表。
+
+        过滤规则：itemCfgData 缺失的记 LOG_ERR 并跳过；标记为 ``rndSynNotAvail`` 的也跳过。
+        """
+        candidates = list(IDIDS.categoryWithQualityDatas.get(
+            (mainType, subType, itemQuality, school), []))
+        candidates.extend(IDIDS.categoryWithQualityDatas.get(
+            (mainType, subType, itemQuality, 0), []))
+        validCandidates = []
+        for c in candidates:
+            itemCfgData = ITEM_DATA.datas.get(c, None)
+            if not itemCfgData:
+                LOG_ERR("reqRandomSynthesis itemCfgData not found", c)
+                continue
+            if itemCfgData.get('rndSynNotAvail', 0):
+                continue
+            validCandidates.append(c)
+        return validCandidates
+
+    def _pickAvailableRandomItemId(self, mainType, subType, itemQuality, school):
+        """从 ``_filterAvailableRandomItemIds`` 中随机选 1 个；无任何可用时返回 None。"""
+        candidates = self._filterAvailableRandomItemIds(
+            mainType, subType, itemQuality, school)
+        if not candidates:
+            return None
+        return random.choice(candidates)
+
+    def _decideItemBindType(self, normalNumInGroup):
+        """根据本组内普通（非绑定）材料数量决定产物绑定类型。"""
+        if normalNumInGroup <= 0:
+            return gameconst.ItemBindType.BIND
+        probCfg = RSCD.datas.get('synthesisUnboundProbability', {}).get('value', [])
+        if normalNumInGroup >= len(probCfg):
+            return gameconst.ItemBindType.BIND
+        if random.randint(0, 100) <= probCfg[normalNumInGroup]:
+            return gameconst.ItemBindType.NORMAL
+        return gameconst.ItemBindType.BIND
+
+    def _commitSynthesisResult(self, opUUID, result):
+        """扣减输入、发放产出。"""
+        detail = gameclass.AwardDetailCls()
+        srcType = AAC_AAC_DD.datas.BONUS_SRC_RANDOM_SYNTHESIS
+        self.deductWealth(srcType, result.deductVal, opUUID, detail)
+        awardCtx = awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID)
+        self.addWealth(srcType, result.ranItemAddVal, opUUID, detail,
+                       notify=False, awardCtx=awardCtx)
+
+    def _applySynthesisUpgradeProgress(self, result):
+        """把本次合成的升级累计写回 ``self.randomSynthesisDic``。"""
+        for key, num in result.upgradeKeyCount.items():
             self.randomSynthesisDic[key] = self.randomSynthesisDic.get(key, 0) + num
-        for key in synthesisUpgradeKeySet:
-            synthesisUpgradeNumList.append({'synthesisKey': key, 'upgradeNum': self.randomSynthesisDic.get(key, 0)})
-        self.client.onUpdateSynthesisUpgradeNum(synthesisUpgradeNumList)
-        self.client.onRandomSynthesis(itemIdList)
 
-        # 广播
-        self.tryBroadcast(list(getItemInfo.keys()))
-
-        compositeType = ''
-        getItemInfos = []
-        for itemId, itemCount in getItemInfo.items():
-            getItemInfos.append({'item_id':itemId, 'item_count':itemCount, 'item_quality':dataUtils.getItemQuality(itemId)})
-            if compositeType == '':
-                itemData = dataUtils.getCommItemData(itemId)
-                compositeType = '{}_{}'.format(itemData['type'], itemData['subType'])
-
-        totalRecordCount = len(inItemInfos)
-        for idx in range(0, totalRecordCount):
+    def _recordSynthesisLogs(self, result, isAuto, opUUID):
+        """逐条记录合成日志。"""
+        totalRecordCount = len(result.inItemInfos)
+        for idx in range(totalRecordCount):
+            inItemInfo = result.inItemInfos[idx]
+            itemData = dataUtils.getCommItemData(inItemInfo[0]['itemId'])
+            compositeType = '{}_{}'.format(itemData['type'], itemData['subType'])
             self.makeSynthesisLog(
                 self.gbID,
                 compositeType,
                 isAuto,
-                inItemInfos[idx],
-                outItemInfos[idx],
+                inItemInfo,
+                result.outItemInfos[idx],
                 'randomSynthesis',
                 opUUID
             )
 
-        self.triggerAchievementWithCtx(gameconst.AchieveType.SYNTHESIS, actionContext.AchievementCtx(
-            getNum=list(getItemInfo.values()),
-            getQuality=[dataUtils.getCommItemData(itemId)['quality'] for itemId in getItemInfo.keys()]
-        ))
+    def _triggerSynthesisAchievement(self, getItemInfo):
+        """触发合成相关成就。"""
+        self.triggerAchievementWithCtx(
+            gameconst.AchieveType.SYNTHESIS,
+            actionContext.AchievementCtx(
+                getNum=list(getItemInfo.values()),
+                getQuality=[dataUtils.getCommItemData(itemId)['quality']
+                            for itemId in getItemInfo.keys()]
+            )
+        )
 
     def tryBroadcast(self, itemList):
         avatarName = gameglobal.roleCache[self.id]['name']
@@ -3353,96 +3479,129 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         
 
     @gamedecorator.checkGameconfigEnable('bag')
-    def reqUpgradeSynthesis(self, exposed, key):
-        LOG_INFO("reqUpgradeSynthesis", key)
+    def reqUpgradeSynthesis(self, exposed, key, count):
+        """升级合成：每凑齐 upgradeNum 个同种合成累计，产出 1 个 quality+1 品质的随机物品。
+
+        ``key`` 编码：``synthesisKey * _SYNTHESIS_KEY_QUALITY_FACTOR + quality``。
+        """
+        LOG_INFO("reqUpgradeSynthesis", key, count)
+
+        # 1. 背包校验
         if self.bagData.isFull():
             self.onMessagePre(M_M_DD.datas.bagFullGeneralMessage, [])
             return
 
-        srcType = AAC_AAC_DD.datas.BONUS_SRC_UPGRADE_SYNTHESIS
-        detail = gameclass.AwardDetailCls()
-        opUUID = KBEngine.genUUID64()
-
-        costItemInfo = {}
-        getItemInfo = {}
-        synthesisKey = key // 10
-        quality = key % 10
-        mainType = synthesisKey // 1000
-        subType = synthesisKey % 1000
+        # 2. 解码 key 并校验配置 / 累计
+        synthesisKey, mainType, subType, quality = self._decodeSynthesisKey(key)
         cfgData = RSSD.datas.get(synthesisKey, None)
         if not cfgData:
             LOG_ERR("reqUpgradeSynthesis cfgData not found", synthesisKey)
             return
-
         upgradeNum = cfgData['upgradeNum'][quality]
         if not upgradeNum:
             LOG_ERR("reqUpgradeSynthesis upgradeNum not found", quality)
             return
-
-        if self.randomSynthesisDic.get(key, 0) < upgradeNum:
+        if self.randomSynthesisDic.get(key, 0) < upgradeNum * count:
             LOG_ERR("reqUpgradeSynthesis upgradeNum not enough", key)
             return
+
+        # 3. 选可用物品 ID 列表（一次确定，循环里反复用）
+        outputQuality = quality + 1
+        school = self.getRoleCacheAttr('school')
+        candidateList = self._filterAvailableRandomItemIds(
+            mainType, subType, outputQuality, school)
+        if not candidateList:
+            LOG_ERR("reqUpgradeSynthesis ranItemIdList not found",
+                    mainType, subType, outputQuality)
+            return
+
+        # 4. 循环消耗 + 产出
+        srcType = AAC_AAC_DD.datas.BONUS_SRC_UPGRADE_SYNTHESIS
+        detail = gameclass.AwardDetailCls()
+        opUUID = KBEngine.genUUID64()
         outItems = []
         ranItemAddVal = dropAward.AwardVal()
-        while(self.randomSynthesisDic.get(key, 0) >= upgradeNum):
-            costItemInfo[key] = costItemInfo.get(key, 0) + upgradeNum
-            self.randomSynthesisDic[key] -= upgradeNum
+        getItemInfo = {}
+
+        while self.randomSynthesisDic.get(key, 0) >= upgradeNum:
+            self._consumeUpgradeCount(key, upgradeNum)
+            outItems.append(self._pickOneUpgradeOutput(
+                candidateList, ranItemAddVal, getItemInfo))
+            if len(outItems) >= count:
+                break
+        # 5. 发奖 + 通知 + 广播 + 日志
+        self._awardWealth(srcType, opUUID, detail, ranItemAddVal)
+        self._notifyUpgradeNum(key)
+        self.tryBroadcast(list(getItemInfo.keys()))
+        self._recordUpgradeLogs(outItems, opUUID)
+
+    # ------------------------------------------------------------------
+    # 升级合成相关辅助方法
+    # ------------------------------------------------------------------
+    def _decodeSynthesisKey(self, key):
+        """把客户端 key 解码为 (synthesisKey, mainType, subType, quality)。"""
+        quality = key % gameconst.SynthesusDataKeys.SYNTHESIS_KEY_QUALITY_FACTOR
+        synthesisKey = key // gameconst.SynthesusDataKeys.SYNTHESIS_KEY_QUALITY_FACTOR
+        mainType = synthesisKey // gameconst.SynthesusDataKeys.SYNTHESIS_KEY_MAIN_TYPE_FACTOR
+        subType = synthesisKey % gameconst.SynthesusDataKeys.SYNTHESIS_KEY_MAIN_TYPE_FACTOR
+        return synthesisKey, mainType, subType, quality
+
+    def _consumeUpgradeCount(self, key, upgradeNum):
+        """从 ``self.randomSynthesisDic[key]`` 扣 ``upgradeNum``，归零时弹出。"""
+        self.randomSynthesisDic[key] = self.randomSynthesisDic.get(key, 0) - upgradeNum
+        if self.randomSynthesisDic[key] <= 0:
+            self.randomSynthesisDic.pop(key, None)
+
+    def _pickOneUpgradeOutput(self, candidateList, ranItemAddVal, getItemInfo):
+        """从候选中选 1 个物品 ID，构造产出、记入累计和财富。返回 ``[outEntry]``。"""
+        ranItemId = random.choice(candidateList)
+        randItem = itemFactory.ItemFactory.createItem(ranItemId, 1, gameconst.ItemBindType.BIND)
+        ranItemAddVal.addWealthByObjList([randItem])
+        getItemInfo[ranItemId] = getItemInfo.get(ranItemId, 0) + 1
+        return [{'itemId': ranItemId, 'itemNum': 1, 'bindType': gameconst.ItemBindType.BIND}]
+
+    def _awardWealth(self, srcType, opUUID, detail, ranItemAddVal):
+        """发放升级合成产出（共用 reqUpgradeSynthesis / reqRandomUpgradeSynthesis）。"""
+        awardCtx = awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID)
+        self.addWealth(srcType, ranItemAddVal, opUUID, detail, notify=True, awardCtx=awardCtx)
+
+    def _notifyUpgradeNum(self, key):
+        """通知客户端单个 key 的当前升级数。"""
+        self.client.onUpdateSynthesisUpgradeNum([{'synthesisKey': key, 'upgradeNum': self.randomSynthesisDic.get(key, 0)}])
+
+    def _deductAndNotifyUpgrades(self, costItemInfo):
+        """按 costItemInfo 扣 self.randomSynthesisDic，归零弹出，并对每个 key 通知客户端。"""
+        for key, num in costItemInfo.items():
+            if not num:
+                continue
+            self.randomSynthesisDic[key] -= num
             if self.randomSynthesisDic[key] == 0:
                 self.randomSynthesisDic.pop(key)
-            itemQuality = quality + 1
-            school = self.getRoleCacheAttr('school')
-            ranItemIdList = list(IDIDS.categoryWithQualityDatas.get((mainType, subType, itemQuality, school), []))
-            ranItemIdList.extend(IDIDS.categoryWithQualityDatas.get((mainType, subType, itemQuality, 0), []))
-            rmItemIdList = []
-            for ranItemId in ranItemIdList:
-                itemCfgData = ITEM_DATA.datas.get(ranItemId, None)
-                if not itemCfgData:
-                    LOG_ERR("reqUpgradeSynthesis itemCfgData not found", ranItemId)
-                    continue
-                rndSynNotAvail = itemCfgData.get('rndSynNotAvail', 0)
-                if rndSynNotAvail:
-                    rmItemIdList.append(ranItemId)
-                    continue
-            for ranItemId in rmItemIdList:
-                ranItemIdList.remove(ranItemId)
-            if len(ranItemIdList) < 1:
-                LOG_ERR("reqUpgradeSynthesis ranItemIdList not found", mainType, subType, itemQuality)
-                return
-            ranItemId = random.choice(ranItemIdList)
-            randItem = itemFactory.ItemFactory.createItem(ranItemId, 1, gameconst.ItemBindType.BIND)
-            ranItemAddVal.addWealthByObjList([randItem])
-            getItemInfo[ranItemId] = getItemInfo.get(ranItemId, 0) + 1
-            outItems.append([{'itemId': ranItemId, 'itemNum': 1, 'bindType': gameconst.ItemBindType.BIND}])
-            
-        _ctx = awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID)
-        self.addWealth(srcType, ranItemAddVal, opUUID, detail, notify=True, awardCtx=_ctx)
-        self.client.onUpdateSynthesisUpgradeNum([{'synthesisKey': key, 'upgradeNum': self.randomSynthesisDic.get(key, 0)}])
-        # self.client.onUpgradeSynthesis(ranItemId)
-        # 广播
-        self.tryBroadcast(list(getItemInfo.keys()))
+            self._notifyUpgradeNum(key)
 
-        compositeType = ''
-        getItemInfos = []
-        for itemId, itemCount in getItemInfo.items():
-            getItemInfos.append({'item_id':itemId, 'item_count':itemCount, 'item_quality':dataUtils.getItemQuality(itemId)})
-            if compositeType == '':
-                itemData = dataUtils.getCommItemData(itemId)
-                compositeType = '{}_{}'.format(itemData['type'], itemData['subType'])
-
+    def _recordUpgradeLogs(self, outItems, opUUID, desc='upgradeSynthesis'):
+        """逐条记录升级合成日志（无消耗材料，每条 outItem 单独记一条）。"""
         for outItem in outItems:
-            self.makeSynthesisLog(
-                self.gbID,
-                compositeType,
-                0,
-                [],
-                outItem,
-                'upgradeSynthesis',
-                opUUID
-            )
-    
+            itemData = dataUtils.getCommItemData(outItem[0]['itemId'])
+            compositeType = '{}_{}'.format(itemData['type'], itemData['subType'])
+            self.makeSynthesisLog(self.gbID, compositeType, 0, [], outItem, desc, opUUID)
+
     @gamedecorator.checkGameconfigEnable('bag')
     def reqRandomUpgradeSynthesis(self, exposed, infoList):
+        """随机升级合成：按 upgradeNum 比例消耗多组合成累计，产出 quality+1 的随机物品。
+
+        infoList 元素: ``{'key': int, 'num': int}``
+        key 编码：``synthesisKey * _SYNTHESIS_KEY_QUALITY_FACTOR + quality``
+
+        要求：
+        - 所有 info 的 subType 在同一合成池（``dataUtils.getSynthesPools()``）
+        - 所有 info 的 cfgData[\'refNumber\'] 相同
+        - 所有 info 的 quality 相同
+        - 所有 key 互不相同
+        - totalNum > 0 且能整除 upgradeNum
+        """
         LOG_INFO("reqRandomUpgradeSynthesis", infoList)
+
         if not infoList:
             return
         if self.bagData.isFull():
@@ -3453,140 +3612,139 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             LOG_ERR("reqRandomUpgradeSynthesis upgradeNum", upgradeNum)
             return
 
+        # 1. 校验并聚合 infoList
+        ctx = self._validateAndAggregateInfoList(infoList, upgradeNum)
+        if ctx is None:
+            return  # 内部已 LOG_ERR
+
+        if ctx.totalNum % upgradeNum != 0:
+            LOG_ERR("reqRandomUpgradeSynthesis totalNum, upgradeNum", ctx.totalNum, upgradeNum)
+            return
+        randNum = ctx.totalNum // upgradeNum
+
+        # 2. 选可用物品 ID（覆盖 pool 内所有 subType）
+        outputQuality = ctx.quality + 1
+        school = self.getRoleCacheAttr('school')
+        candidateList = self._collectAvailableRandomItemIdsInPool(
+            ctx.mainType, ctx.poolSubTypes, outputQuality, school)
+        if not candidateList:
+            LOG_ERR("reqRandomUpgradeSynthesis ranItemIdList not found", ctx.mainType, ctx.subTypeList, outputQuality, school)
+            return
+
+        # 3. 扣消耗并通知客户端
+        self._deductAndNotifyUpgrades(ctx.costItemInfo)
+
+        # 4. 循环产出
+        srcType = AAC_AAC_DD.datas.BONUS_SRC_UPGRADE_SYNTHESIS
+        detail = gameclass.AwardDetailCls()
+        opUUID = KBEngine.genUUID64()
+        outItems = []
+        ranItemAddVal = dropAward.AwardVal()
+        getItemInfo = {}
+        for _ in range(randNum):
+            outItems.append(self._pickOneUpgradeOutput(candidateList, ranItemAddVal, getItemInfo))
+
+        # 5. 发奖 + 广播 + 日志
+        self._awardWealth(srcType, opUUID, detail, ranItemAddVal)
+        self.tryBroadcast(list(getItemInfo.keys()))
+        self._recordUpgradeLogs(outItems, opUUID, desc='randomUpgrade')
+
+    # ------------------------------------------------------------------
+    # 随机升级合成相关辅助方法
+    # ------------------------------------------------------------------
+    def _validateAndAggregateInfoList(self, infoList, upgradeNum):
+        """聚合并校验 infoList。
+
+        校验项：
+        - 所有 info 的 subType 在同一合成池内
+        - cfgData 存在
+        - self.randomSynthesisDic[key] >= num
+        - 所有 info 的 refNumber 相同
+        - 所有 info 的 quality 相同
+        - 所有 key 互不相同（costItemInfo 大小 == len(infoList)）
+
+        返回 ``_RandomUpgradeContext`` 或 ``None``（已 LOG_ERR）
+        """
         totalNum = 0
         refNumSet = set()
         qualitySet = set()
         subTypeList = []
         costItemInfo = {}
-        _synPools = dataUtils.getSynthesPools()
-        _poolIdx = None
-        _mainType = None
+        firstKey = firstNum = synthesisKey = mainType = quality = poolSubTypes = None
+        poolIdx = None
+        synPools = dataUtils.getSynthesPools()
+
         for info in infoList:
             key = info['key']
             num = info['num']
-
             costItemInfo[key] = costItemInfo.get(key, 0) + num
 
-            synthesisKey = key // 10
-            quality = key % 10
-            mainType = synthesisKey // 1000
-            subType = synthesisKey % 1000
+            sk, mt, st, q = self._decodeSynthesisKey(key)
+            if firstKey is None:
+                firstKey, firstNum = key, num
+                synthesisKey, mainType, quality = sk, mt, q
 
-            # 校验subKey 是不是合法
-            if _poolIdx is None:
-                for _idx, _pool in enumerate(_synPools):
-                    if subType in _pool:
-                        _poolIdx = _idx
+            # 校验 subType 池
+            if poolIdx is None:
+                for idx, pool in enumerate(synPools):
+                    if st in pool:
+                        poolIdx = idx
+                        poolSubTypes = pool
                         break
-                else:
-                    LOG_ERR('reqRandomUpgradeSynthesis subType invalid:', subType, _synPools)
-
+                if poolIdx is None:
+                    LOG_ERR('reqRandomUpgradeSynthesis subType invalid:', st, synPools)
+                    return None
             else:
-                if subType not in _synPools[_poolIdx]:
-                    LOG_ERR('reqRandomUpgradeSynthesis subType invalid', subType, _poolIdx)
-                    return
+                if st not in poolSubTypes:
+                    LOG_ERR('reqRandomUpgradeSynthesis subType invalid', st, poolIdx)
+                    return None
 
-            cfgData = RSSD.datas.get(synthesisKey, None)
+            cfgData = RSSD.datas.get(sk, None)
             if not cfgData:
-                LOG_ERR("reqRandomUpgradeSynthesis cfgData not found", synthesisKey)
-                return
+                LOG_ERR("reqRandomUpgradeSynthesis cfgData not found", sk)
+                return None
             if self.randomSynthesisDic.get(key, 0) < num:
-                LOG_ERR("reqRandomUpgradeSynthesis upgradeNum not enough", key, self.randomSynthesisDic.get(key, 0), num)
-                return
-            
+                LOG_ERR("reqRandomUpgradeSynthesis upgradeNum not enough",
+                        key, self.randomSynthesisDic.get(key, 0), num)
+                return None
+
             totalNum += num
             refNumSet.add(cfgData['refNumber'])
-            qualitySet.add(quality)
-            subTypeList.append(subType)
-            _mainType = mainType
-            
+            qualitySet.add(q)
+            subTypeList.append(st)
+
         if len(refNumSet) != 1:
             LOG_ERR("reqRandomUpgradeSynthesis not same random synthesis")
-            return
+            return None
         if len(qualitySet) != 1:
             LOG_ERR("reqRandomUpgradeSynthesis not same quality")
-            return
+            return None
         if len(costItemInfo) != len(infoList):
             LOG_ERR("reqRandomUpgradeSynthesis has same key", totalNum, upgradeNum)
-            return
-        if totalNum % upgradeNum != 0:
-            LOG_ERR("reqRandomUpgradeSynthesis totalNum, upgradeNum", totalNum, upgradeNum)
-            return
+            return None
 
-        randNum = totalNum // upgradeNum
-        itemQuality = qualitySet.pop() + 1
-        school = self.getRoleCacheAttr('school')
-        # 获取可以随机的道具
-        ranItemIdSet = set()
-        for _subType in _synPools[_poolIdx]:
-            ranItemIdSet |= (IDIDS.categoryWithQualityDatas.get((_mainType, _subType, itemQuality, school), set()))
-            ranItemIdSet |= (IDIDS.categoryWithQualityDatas.get((_mainType, _subType, itemQuality, 0), set()))
+        return _RandomUpgradeContext(
+            firstKey=firstKey, firstNum=firstNum,
+            synthesisKey=synthesisKey, mainType=mainType, quality=quality,
+            subTypeList=subTypeList, poolSubTypes=poolSubTypes,
+            costItemInfo=costItemInfo, totalNum=totalNum,
+        )
 
-        LOG_DBG("reqRandomUpgradeSynthesis ranItemIdSet", ranItemIdSet)
+    def _collectAvailableRandomItemIdsInPool(self, mainType, subTypeList, outputQuality, school):
+        """跨多个 subType 收集可用物品 ID 列表（去重）。
 
-        ranItemIdList = list(ranItemIdSet)
-        rmItemIdList = []
-        for ranItemId in ranItemIdList:
-            itemCfgData = ITEM_DATA.datas.get(ranItemId, None)
-            if not itemCfgData:
-                LOG_ERR("reqRandomUpgradeSynthesis itemCfgData not found", ranItemId)
-                continue
-            rndSynNotAvail = itemCfgData.get('rndSynNotAvail', 0)
-            if rndSynNotAvail:
-                rmItemIdList.append(ranItemId)
-                continue
-        for ranItemId in rmItemIdList:
-            ranItemIdList.remove(ranItemId)
-        if len(ranItemIdList) < 1:
-            LOG_ERR("reqRandomUpgradeSynthesis ranItemIdList not found", _mainType, subTypeList, itemQuality, school)
-            return
+        在每个 subType 上调用 ``_filterAvailableRandomItemIds``，合并去重后返回。
+        """
+        seen = set()
+        result = []
+        for subType in subTypeList:
+            for c in self._filterAvailableRandomItemIds(
+                    mainType, subType, outputQuality, school):
+                if c not in seen:
+                    seen.add(c)
+                    result.append(c)
+        return result
 
-        for key, num in costItemInfo.items():
-            if not num:
-                continue
-            self.randomSynthesisDic[key] -= num
-            if self.randomSynthesisDic[key] == 0:
-                self.randomSynthesisDic.pop(key)
-            self.client.onUpdateSynthesisUpgradeNum([{'synthesisKey': key, 'upgradeNum': self.randomSynthesisDic.get(key, 0)}])
-        
-        outItems = []
-
-        getItemInfo = {}
-        srcType = AAC_AAC_DD.datas.BONUS_SRC_UPGRADE_SYNTHESIS
-        detail = gameclass.AwardDetailCls()
-        opUUID = KBEngine.genUUID64()
-        ranItemAddVal = dropAward.AwardVal()
-        for idx in range(randNum):
-            ranItemId = random.choice(ranItemIdList)
-            randItem = itemFactory.ItemFactory.createItem(ranItemId, 1, gameconst.ItemBindType.BIND)
-            ranItemAddVal.addWealthByObjList([randItem])
-            getItemInfo[ranItemId] = getItemInfo.get(ranItemId, 0) + 1
-            outItems.append([{'itemId': ranItemId, 'itemNum': 1, 'bindType': gameconst.ItemBindType.BIND}])
-
-        _ctx = awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID)
-        self.addWealth(srcType, ranItemAddVal, opUUID, detail, notify=True, awardCtx=_ctx)
-        self.tryBroadcast(list(getItemInfo.keys()))
-
-        compositeType = ''
-        getItemInfos = []
-        
-        for itemId, itemCount in getItemInfo.items():
-            getItemInfos.append({'item_id':itemId, 'item_count':itemCount, 'item_quality':dataUtils.getItemQuality(itemId)})
-            if compositeType == '':
-                itemData = dataUtils.getCommItemData(itemId)
-                compositeType = '{}_{}'.format(itemData['type'], itemData['subType'])
-
-        for outItem in outItems:
-            self.makeSynthesisLog(
-                self.gbID,
-                compositeType,
-                0,
-                [],
-                [outItem],
-                'randomUpgrade',
-                opUUID
-            )
-        
     def makeSynthesisLog(self, playerGbId, itemCompositeType, ifAuto, itemCost, itemGet, desc, opUUID):
         LogTrackingMgr.LogTrackingMgr.item_composite(
             self.gbID,
@@ -3605,9 +3763,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             self.cell.onPendingCheckItemFinished(pendingCheckId, gameconst.UseItemEnum.FALSE)
             return
 
-        gameglobal.localBaseApp.getRedisClient().hget(
-            gameconst.RedisKey.avatarNameTbl,
-            newName,
+        gameglobal.localBaseApp.getRedisClient().get(
+            utils.getAvatarNameRedisKey(newName),
             functools.partial(self._checkRenameBaseResult, pendingCheckId, newName)
         )
 
@@ -3625,9 +3782,8 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         self.cell.onPendingCheckItemFinished(pendingCheckId, gameconst.UseItemEnum.TRUE)
 
     def modifyNameBase(self, pendingUseId, newName):
-        gameglobal.localBaseApp.getRedisClient().hsetnx(
-            gameconst.RedisKey.avatarNameTbl,
-            newName,
+        gameglobal.localBaseApp.getRedisClient().setnx(
+            utils.getAvatarNameRedisKey(newName),
             self.accountEntity.nameRedisTableKey().encode('ascii'),
             functools.partial(self._modifyNameResult, newName, pendingUseId)
         )
@@ -3643,35 +3799,12 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             self.onMessagePre(TC_NCD.datas['cntAlert_NameError']['value'], [])
             return
 
-        oldName = self.getRoleCacheAttr('name', '')
         self.cell.onPendingUseRenameItemResult(True, pendingUseId, newName)
-        self.updateRoleCache({'name': newName})
-        self.guildBox and self.guildBox.onGuildMemberPropUpdate(self.gbID, 'name', newName)
-        self._modifyRedisAttr({
-            'name': newName
-        })
-        elasticUtils.ElasticUtils.addAvatarElasticInfo(newName, self.gbID, self.obId)
-        self.accountEntity.onCharacterInfoUpdated(
-            self.gbID,
-            newName,
-        )
-
-        #改名通知城战模块
-        self.onSiegeWarRename(newName)
-
-        # 角色改名埋点
-        LogTrackingMgr.LogTrackingMgr.role_rename(
-            self.gbID,
-            self.accountEntity.clientDistinctId if self.accountEntity else '',
-            utils.getNowTimeStr(),
-            oldName,
-            newName,
-        )
+        self._doModifyName(newName)
 
     def delOldName(self, oldName):
-        gameglobal.localBaseApp.getRedisClient().hdel(
-            gameconst.RedisKey.avatarNameTbl,
-            oldName,
+        gameglobal.localBaseApp.getRedisClient().deleteTable(
+            utils.getAvatarNameRedisKey(oldName),
             functools.partial(self._delOldNameResult, oldName)
         )
 
@@ -3917,6 +4050,9 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
     def doBagFnvHashCheck(self):
         self._doBagFnvHashCheck(gameconst.BagTypeEnum.BAG_TYPE_NORMAL)
         self._doBagFnvHashCheck(gameconst.BagTypeEnum.BAG_TYPE_LINGSHOU_PEN)
+        if self.cell:
+            self.cell.doBodyEquipFnvHashCheck()
+        self._doCurrencyFnvHashCheck()
 
     def _doBagFnvHashCheck(self, bagTp):
         if not self.isCrossServerInLocalServer:
@@ -3983,6 +4119,113 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         LOG_INFO('onSyncBagPickleData success', bag.calFnvHash())
         self.sendBagData()
 
+    _CURRENCY_FNV_ATTRS = (
+        ('coin', gameconst.ItemIdEnum.COIN),
+        ('coinFraction', None),
+        ('money', gameconst.ItemIdEnum.MONEY),
+        ('bindMoney', gameconst.ItemIdEnum.BIND_MONEY),
+        ('darkIron', gameconst.ItemIdEnum.DARK_IRON),
+        ('appearanceCoin', gameconst.ItemIdEnum.APPEARANCE_COIN),
+        ('guildContrib', gameconst.ItemIdEnum.GUILD_CONTRIB),
+    )
+
+    def _getCurrencyCheckData(self):
+        return {attr: getattr(self, attr) for attr, _ in self._CURRENCY_FNV_ATTRS}
+
+    def _calCurrencyFnvHash(self):
+        checkData = self._getCurrencyCheckData()
+        ordered = tuple((attr, checkData[attr]) for attr, _ in self._CURRENCY_FNV_ATTRS)
+        fnv = utils.FNV1a64()
+        fnv.update_str(str(ordered))
+        return fnv.digest_uint64(), checkData
+
+    @staticmethod
+    def _diffCurrencyCheckData(localCheckData, crossCheckData):
+        localCheckData = localCheckData or {}
+        crossCheckData = crossCheckData or {}
+        diffs = {}
+        for k in set(localCheckData) | set(crossCheckData):
+            localVal = localCheckData.get(k)
+            crossVal = crossCheckData.get(k)
+            if localVal != crossVal:
+                diffs[k] = {'local': localVal, 'cross': crossVal}
+        return diffs
+
+    def _doCurrencyFnvHashCheck(self):
+        if not self.isCrossServerInLocalServer:
+            return
+        res, checkData = self._calCurrencyFnvHash()
+        self.syncMethodCallToCrossServerBase('onCurrencyFnvCheck', (res, checkData))
+
+    def onCurrencyFnvCheck(self, res, localCheckData=None):
+        _res, checkData = self._calCurrencyFnvHash()
+        if res != _res:
+            diffs = self._diffCurrencyCheckData(localCheckData, checkData)
+            LOG_WARN('onCurrencyFnvCheck failed', res, _res, diffs, 'local', localCheckData, 'cross', checkData)
+            self.syncMethodCallToLocalServerBase('onCurrencyFnvCheckFailed', (res, _res, checkData))
+        else:
+            self.syncMethodCallToLocalServerBase('onCurrencyFnvCheckSuccess', ())
+
+    def onCurrencyFnvCheckFailed(self, res, _res, crossCheckData=None):
+        checkTp = gameconst.FnvCheckTypeEnum.CURRENCY
+        self.fnvCheckFailTimesDict.setdefault(checkTp, 0)
+        self.fnvCheckFailTimesDict[checkTp] += 1
+        LOG_WARN('onCurrencyFnvCheckFailed', self.fnvCheckFailTimesDict, res, _res)
+        if self.fnvCheckFailTimesDict[checkTp] < 3 and not self.fnvIsFirst(checkTp):
+            return
+        localCheckData = self._getCurrencyCheckData()
+        diffs = self._diffCurrencyCheckData(localCheckData, crossCheckData)
+        if self.fnvIsFirst(checkTp):
+            LOG_WARN('onCurrencyFnvCheck failed but is first', res, _res, diffs, 'local', localCheckData, 'cross', crossCheckData)
+        else:
+            LOG_ERR('onCurrencyFnvCheck failed', res, _res, diffs, 'local', localCheckData, 'cross', crossCheckData)
+        self.syncMethodCallToCrossServerBase('onSyncCurrencyData', (localCheckData,))
+
+    def onCurrencyFnvCheckSuccess(self):
+        checkTp = gameconst.FnvCheckTypeEnum.CURRENCY
+        self.fnvCheckFailTimesDict[checkTp] = 0
+        self.fnvFirstOverDict[checkTp] = True
+
+    def onSyncCurrencyData(self, currencyData):
+        LOG_INFO('onSyncCurrencyData', currencyData, self._getCurrencyCheckData())
+        changedItemIds = []
+        for attr, itemId in self._CURRENCY_FNV_ATTRS:
+            if attr not in currencyData:
+                continue
+            newVal = currencyData[attr]
+            if getattr(self, attr) == newVal:
+                continue
+            setattr(self, attr, newVal)
+            if itemId is not None:
+                changedItemIds.append(itemId)
+        if changedItemIds:
+            self.onItemCountChanged(changedItemIds)
+        LOG_INFO('onSyncCurrencyData success', self._calCurrencyFnvHash())
+
+    def _syncGmBagToCrossServer(self, bagTp):
+        if not self.isCrossServerInLocalServer:
+            return
+        bag = self.getBagByType(bagTp)
+        if not bag:
+            return
+        if bag.isLocked():
+            LOG_ERR('_syncGmBagToCrossServer pass, bag is locked', bagTp)
+            return
+        gridIdToGridObj, itemIdToGridIds = bag.getPickleBagData()
+        self.syncMethodCallToCrossServerBase('onLocalServerGmSyncBag', (gridIdToGridObj, itemIdToGridIds, bagTp))
+
+    def onLocalServerGmSyncBag(self, gridIdToGridObj, itemIdToGridIds, bagTp):
+        LOG_INFO('onLocalServerGmSyncBag', bagTp)
+        bag = self.getBagByType(bagTp)
+        if bag.isLocked():
+            LOG_ERR('onLocalServerGmSyncBag pass, bag is locked')
+            return
+        bag.forceInitFromBagData(gridIdToGridObj, itemIdToGridIds)
+        if bagTp == gameconst.BagTypeEnum.BAG_TYPE_NORMAL:
+            self.sendStreamBagData(bag, gameconst.StreamStringID.NORMAL_BAG_SORT_INFO)
+        else:
+            self.sendStreamBagData(bag, gameconst.StreamStringID.LINGSHOU_BAG_INFO)
+
     @gamedecorator.offlineCallback
     def gmDeductItem(self, itemId, bindNum, unbindNum, ignoreBindNum, debtBindNum, debtUnbindNum):
         if bindNum > 0:
@@ -3997,14 +4240,14 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             self._addDebtItem(itemId, debtUnbindNum, gameconst.ItemBindType.NORMAL)
 
     def _gmDeductItem(self, itemId, num, bindType, times=0):
-        #重试10次全都背包锁，则全部放入欠债
+        #重试10次全都背包或仓库锁，则全部放入欠债
         if times > 10:
             LOG_ERR('_gmDeductItem error:', itemId, num)
             self._addDebtItem(itemId, num, bindType)
             return
-        itemType = dataUtils.getCommItemData(itemId).get('type')
-        if itemType == gameconst.ItemEnum.Normal:
-            if self.bagData.isLocked():
+        itemType = (dataUtils.getCommItemData(itemId) or {}).get('type')
+        if itemType == gameconst.ItemEnum.Normal or dataUtils.isEquipItemByItemId(itemId):
+            if self.bagData.isLocked() or self.warehouse.isLocked():
                 self.addTimerCB(1, '_gmDeductItem', (itemId, num, bindType, times+1), gametimer.TIMER_TAG_GM_DEDUCT_ITEM)
                 return
             self._gmDeductItemContinue(self.bagData, itemId, num, bindType)
@@ -4018,6 +4261,18 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             LOG_ERR('_gmDeductItem error:', itemId, num, bindType)
 
     def _gmDeductItemContinue(self, bagData, itemId, num, bindType):
+        remainDeductNum = self._gmDeductItemFromBag(bagData, itemId, num, bindType)
+        bagDeducted = remainDeductNum < num
+        #背包没有找仓库
+        if remainDeductNum > 0 and bagData is self.bagData:
+            remainDeductNum = self._gmDeductItemFromBag(self.warehouse, itemId, remainDeductNum, bindType)
+        #欠债
+        self._addDebtItem(itemId, remainDeductNum, bindType)
+        if bagDeducted:
+            self._syncGmBagToCrossServer(bagData.bagType)
+        LOG_INFO('bagData _gmDeductItem success', itemId, num, remainDeductNum, bindType)
+
+    def _gmDeductItemFromBag(self, bagData, itemId, num, bindType):
         remainDeductNum = num
         bindCnt = bagData.getItemCount(self.gbID, itemId, gameconst.ItemBindType.BIND, True)
         unbindCnt = bagData.getItemCount(self.gbID, itemId, gameconst.ItemBindType.NORMAL, True)
@@ -4025,39 +4280,74 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             unbindCnt = 0
         elif bindType == gameconst.ItemBindType.NORMAL:
             bindCnt = 0
-            
+
         #先计算非绑定的数量
         deductUnbindNum = min(remainDeductNum, unbindCnt)
-        
-        #扣包中非绑道具
-        if self._gmDoDeductItem(itemId, deductUnbindNum, gameconst.ItemBindType.NORMAL):
+
+        #扣非绑道具
+        if self._gmDoDeductItem(bagData, itemId, deductUnbindNum, gameconst.ItemBindType.NORMAL):
             remainDeductNum -= deductUnbindNum
-        
+
         deductBindNum = min(remainDeductNum, bindCnt)
-        #扣包中绑定的数量
-        if self._gmDoDeductItem(itemId, deductBindNum, gameconst.ItemBindType.BIND):
+        #扣绑定的数量
+        if self._gmDoDeductItem(bagData, itemId, deductBindNum, gameconst.ItemBindType.BIND):
             remainDeductNum -= deductBindNum
+        LOG_INFO('_gmDeductItemFromBag', bagData.bagType, itemId, num, bindCnt, unbindCnt, remainDeductNum, bindType)
+        return remainDeductNum
 
-        #欠债
-        self._addDebtItem(itemId, remainDeductNum, bindType)
-        LOG_INFO('bagData _gmDeductItem success', itemId, num, bindCnt, unbindCnt, remainDeductNum, bindType)
-
-    def _gmDoDeductItem(self, itemId, deductNum, bindType):
+    def _gmDoDeductItem(self, bagData, itemId, deductNum, bindType):
         if deductNum <= 0:
             return False
+        _srcType = AAC_AAC_DD.datas.BONUS_SRC_GM_DEDUCT_ITEM
+        _detail = gameclass.AwardDetailCls()
+        opUUID = KBEngine.genUUID64()
+        if bagData is self.warehouse:
+            return self._gmDoDeductWarehouseItem(itemId, deductNum, bindType, opUUID, _srcType, _detail)
+
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(itemId, deductNum, bindType)
         if self.canDeductWealth(deductWealthVal, isCheck=False):
-            _srcType = AAC_AAC_DD.datas.BONUS_SRC_GATHER
-            _detail = gameclass.AwardDetailCls()
-            opUUID = KBEngine.genUUID64()
             self.deductWealth(_srcType, deductWealthVal, opUUID, _detail)
             return True
         LOG_ERR('_gmDoDeductItem error:', itemId, bindType)
         return False
 
+    def _gmDoDeductWarehouseItem(self, itemId, deductNum, bindType, opUUID, srcType, detail):
+        itemsDict = {itemId: {bindType: deductNum}}
+        deductPlan, planDic = self.warehouse.calcDeductItemsPlan(itemsDict)
+        if deductPlan != gameconst.BagOpPlan.OPERATE_BAG_OK:
+            LOG_ERR('_gmDoDeductWarehouseItem error:', itemId, bindType)
+            return False
+        deductItems = []
+        for gridId, num in planDic.items():
+            itemObj = self.warehouse.getItemObjByGridId(gridId)
+            deductItems.append((gridId, itemObj, num))
+        opStat, _ = self.warehouse.deductItemsWithPlan(self, itemsDict, None, opUUID, srcType, detail, planDic=planDic)
+        if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
+            LOG_ERR('_gmDoDeductWarehouseItem deduct error:', itemId, bindType, opStat)
+            return False
+        for gridId, itemObj, num in deductItems:
+            newCount = self.warehouse.getItemCount(self.gbID, itemObj.itemId, itemObj.bindType, True)
+            self.makeItemFlowLog(
+                self.warehouse.bagType,
+                itemObj.bindType,
+                itemObj.itemId,
+                itemObj.uniqueId,
+                -num,
+                opUUID,
+                srcType,
+                newCount,
+                detail,
+                itemObj.getRestoreData(),
+            )
+            if self.client:
+                self.client.onWarehouseOutItems(opStat, gridId, num)
+        if self.client:
+            self.sendWarehouseData()
+        return True
+
     def _addDebtItem(self, itemId, num, bindType):
-        if num == 0:
+        if num <= 0:
             return
         self.debtItemDict.setdefault(itemId, {})
         self.debtItemDict[itemId].setdefault(bindType, 0)
@@ -4065,17 +4355,39 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         LOG_INFO('_addDebtItem', self.debtItemDict)
         self._sendDebtItemData()
 
+    @gamedecorator.crossServer
     def reqDebtItemData(self, exposed):
         self._sendDebtItemData()
         
+    def _notifyDebtItemDeductMsg(self, popData):
+        if not popData:
+            return
+        for itemId, bindTypeDict in popData.items():
+            totalNum = sum(bindTypeDict.values())
+            if totalNum <= 0:
+                continue
+            self.onMessagePre(M_M_DD.datas.deductItemMsg, ['<#itemId=%s>*%s' % (itemId, totalNum)])
+
+    def _logDebtItemFlow(self, flowList, srcType, opUUID, detail, bagType):
+        # 欠债抵扣并未真正入包：补一条获得、一条扣除，便于对账
+        if not flowList:
+            return
+        bag = self.getBagByType(bagType) or self.bagData
+        deductSrc = AAC_AAC_DD.datas.BONUS_SRC_GM_DEDUCT_ITEM
+        for itemId, bindType, uniqueId, num, equipData in flowList:
+            if num <= 0:
+                continue
+            curCount = bag.getItemCount(self.gbID, itemId, bindType, True)
+            self.makeItemFlowLog(bag.bagType, bindType, itemId, uniqueId, num, opUUID, srcType, curCount + num, detail, equipData)
+            self.makeItemFlowLog(bag.bagType, bindType, itemId, uniqueId, -num, opUUID, deductSrc, curCount, detail, equipData)
+
     def _sendDebtItemData(self):
-        popList = []
-        for itemId, bindTypeDict in self.debtItemDict.items():
-            for bindType, num in bindTypeDict.items():
-                if num <= 0:
-                    popList.append((itemId, bindType))
-        for itemId, bindType in popList:
-            self.debtItemDict[itemId].pop(bindType)
+        for itemId, bindTypeDict in list(self.debtItemDict.items()):
+            for bindType in list(bindTypeDict.keys()):
+                if bindTypeDict[bindType] <= 0:
+                    bindTypeDict.pop(bindType)
+            if not bindTypeDict:
+                self.debtItemDict.pop(itemId)
         itemIds = []
         nums = []
         bindTypes = []
@@ -4084,11 +4396,27 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                 itemIds.append(itemId)
                 nums.append(num)
                 bindTypes.append(bindType)
-        self.client.onDebtItemData(itemIds, nums, bindTypes)
+        if self.client:
+            self.client.onDebtItemData(itemIds, nums, bindTypes)
+        self.syncMethodCallToCrossServerBase('onLocalServerDebtItemData', (copy.deepcopy(self.debtItemDict),))
+
+    def onLocalServerDebtItemData(self, debtItemDict):
+        LOG_INFO('onLocalServerDebtItemData', debtItemDict)
+        self.debtItemDict = debtItemDict
+        if self.client:
+            itemIds = []
+            nums = []
+            bindTypes = []
+            for itemId, bindTypeDict in self.debtItemDict.items():
+                for bindType, num in bindTypeDict.items():
+                    itemIds.append(itemId)
+                    nums.append(num)
+                    bindTypes.append(bindType)
+            self.client.onDebtItemData(itemIds, nums, bindTypes)
 
     def gmGetItemNum(self, su, itemId):
-        itemType = dataUtils.getCommItemData(itemId).get('type')
-        if itemType == gameconst.ItemEnum.Normal:
+        itemType = (dataUtils.getCommItemData(itemId) or {}).get('type')
+        if itemType == gameconst.ItemEnum.Normal or dataUtils.isEquipItemByItemId(itemId):
             self._gmGetItemNum(su, itemId, self.bagData)
         elif itemType == gameconst.ItemEnum.LingShou:
             self._gmGetItemNum(su, itemId, self.petBag)
@@ -4119,6 +4447,7 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
                     _srcType = AAC_AAC_DD.datas.BONUS_SRC_GM_DEDUCT_SPEC_ITEM
                     _detail = gameclass.AwardDetailCls()
                     self.bagData.cleanGridByGridId(self, gridId, itemId, opUUID, _srcType, _detail)
+                    self._syncGmBagToCrossServer(self.bagData.bagType)
                     su.onCommandResult(0, '', {"ec": 0})
                     return
 
@@ -4128,7 +4457,30 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             for gridId in gridIds:
                 gridItem = self.warehouse.getItemObjByGridId(gridId)
                 if gridItem.uniqueId == equipId:
-                    self.warehouse.cleanGridByGridId(self, gridId, itemId, opUUID, _srcType, _detail)
+                    opUUID = KBEngine.genUUID64()
+                    _srcType = AAC_AAC_DD.datas.BONUS_SRC_GM_DEDUCT_SPEC_ITEM
+                    _detail = gameclass.AwardDetailCls()
+                    deductNum = gridItem.itemNum
+                    bindType = gridItem.bindType
+                    uniqueId = gridItem.uniqueId
+                    restoreData = gridItem.getRestoreData()
+                    self.warehouse.cleanGridByGridId(self, gridId, itemId, opUUID, _srcType, _detail, sendClient=False)
+                    newCount = self.warehouse.getItemCount(self.gbID, itemId, bindType, True)
+                    self.makeItemFlowLog(
+                        self.warehouse.bagType,
+                        bindType,
+                        itemId,
+                        uniqueId,
+                        -deductNum,
+                        opUUID,
+                        _srcType,
+                        newCount,
+                        _detail,
+                        restoreData,
+                    )
+                    if self.client:
+                        self.client.onWarehouseOutItems(gameconst.BagOPStat.OPERATE_BAG_STAT_OK, gridId, deductNum)
+                        self.sendWarehouseData()
                     su.onCommandResult(0, '', {"ec": 0})
                     return
 
@@ -4184,6 +4536,40 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
             su.onCommandResult(-1, '执行失败, 道具不存在', {"ec": -1})
             return
 
+        # 先去cell检查身上是否有相同uniqueID的装备，无重复后由cell回调base继续处理
+        self.cell.cellGmCheckRestoreEquip(su, item.itemId, item.uniqueId, data, events)
+
+    def gmRestoreEquipContinue(self, su, data, events):
+        """
+        身上无重复时由cell回调，继续检查背包/仓库并下发装备
+        """
+        try:
+            savedDict = cPickle.loads(gzip.decompress(base64.b64decode(data)))
+            item = itemFactory.ItemFactory.createItemWithSavedDict(savedDict)
+        except Exception as e:
+            LOG_ERR('gmRestoreEquipContinue decode error:', e)
+            su.onCommandResult(-1, '执行失败, 装备数据解析失败', {"ec": -1})
+            return
+
+        if not item:
+            LOG_ERR('gmRestoreEquipContinue error, invalid item:', self.gbID)
+            su.onCommandResult(-1, '执行失败, 道具不存在', {"ec": -1})
+            return
+
+        equipId = item.uniqueId
+
+        # 检查背包
+        _, bagItem = self.bagData.getItemByUniqueId(equipId)
+        if bagItem:
+            su.onCommandResult(-1, '执行失败, 背包中已存在相同uniqueID的装备', {"ec": -4})
+            return
+
+        # 检查仓库
+        _, warehouseItem = self.warehouse.getItemByUniqueId(equipId)
+        if warehouseItem:
+            su.onCommandResult(-1, '执行失败, 仓库中已存在相同uniqueID的装备', {"ec": -4})
+            return
+
         if gameconst.RestoreEquipEvent.RESET_RETURN_INFO in events:
             item.resetOwnerInfo()
 
@@ -4192,10 +4578,166 @@ class IBag(AwardMixin, CoinBillMixin, ShareAwardMixin):
         awardCtx = self.getAvatarAwardCtx(item.itemId, None)
         wealthVal = dropAward.AwardVal().addWealthByObjList([item])
         if not self.canAddWealthVal(srcType, wealthVal, awardCtx):
-            LOG_WARN('gmRestoreEquip failed, cannot add:', self.gbID, savedDict)
+            LOG_WARN('gmRestoreEquipContinue failed, cannot add:', self.gbID, savedDict)
             su.onCommandResult(-1, '执行失败, 背包无法放入该装备', {"ec": -3})
             return
 
         LOG_INFO('gmRestoreEquip:', self.gbID, item.itemId, item.uniqueId)
         self.addWealth(srcType, wealthVal, opUUID, 'gm_cmd:$gmRestoreEquip', awardCtx)
         su.onCommandResult(0, '', {"ec": 0})
+
+    def doPreAddWealth(self, awardVal, itemType, itemSubType, opUUID, srcType, detail):
+        useItemCtx = actionContext.UseItemCtx(self.id)
+        # 特殊需要立即使用的物品类型
+        if itemType == gameconst.ItemEnum.Normal and itemSubType == gameconst.ItemSubEnum.AUTO_USE_OUT_OF_BAG:
+            remainItemObjs = []
+            itemsList = self._doOrderItemAction(gameconst.BagTypeEnum.BAG_TYPE_NORMAL, opUUID, srcType, detail, useItemCtx, awardVal)   
+            remainItemObjs.extend(itemsList)
+            itemsList = self._doOrderItemAction(gameconst.BagTypeEnum.BAG_TYPE_LINGSHOU_PEN, opUUID, srcType, detail, useItemCtx, awardVal)      
+            remainItemObjs.extend(itemsList)
+            # 剩余的塞回背包
+            if len(remainItemObjs) > 0:
+                awardVal.addWealthByObjList(remainItemObjs)
+
+    def _doOrderItemAction(self, bagType, opUUID, srcType, detail, useItemCtx, awardVal):
+        remainItemObjs = []
+        if bagType == gameconst.BagTypeEnum.BAG_TYPE_LINGSHOU_PEN:
+            itemList = awardVal.petItemWealth.getItemObjs(remove=True, extra={'school':self.getRoleCacheAttr('school')})
+        elif bagType == gameconst.BagTypeEnum.BAG_TYPE_NORMAL:
+            itemList = awardVal.itemWealth.getItemObjs(remove=True, extra={'school':self.getRoleCacheAttr('school')})
+        else:
+            return remainItemObjs
+            
+        for itemObj in itemList:
+            itemData = ITEM_DATA.datas.get(itemObj.itemId, None)
+            if not itemData:
+                continue
+            actionFunc = itemData['action']
+            if actionFunc:
+                try:
+                    actionFunc(self, -1, itemObj.itemId, itemObj.itemNum, opUUID, useItemCtx)
+                except Exception as e:
+                    # 使用异常不退回，action逻辑无法保证回滚
+                    LOG_ERR('_processDirectDelivery auto use item error:', self.gbID, bagType, srcType, detail, useItemCtx, itemObj.itemId, itemObj.itemNum, useItemCtx.usedCount, opUUID, e)
+                    break
+                usedCount = useItemCtx.usedCount
+                if usedCount > 0:
+                    curCount = self.getBagByType(bagType).getItemCount(self.gbID, itemObj.itemId, itemObj.bindType, True)
+                    self.makeItemFlowLog(bagType, itemObj.bindType, itemObj.itemId, itemObj.uniqueId, usedCount, opUUID, srcType, curCount + usedCount, detail)
+                    self.makeItemFlowLog(bagType, itemObj.bindType, itemObj.itemId, itemObj.uniqueId, -usedCount, opUUID, srcType, curCount, detail)
+                    
+                remainCount = itemObj.itemNum - usedCount
+                if remainCount > 0:
+                    itemObj.setItemNum(remainCount)
+                    remainItemObjs.append(itemObj)
+            else:
+                remainItemObjs.append(itemObj)
+        return remainItemObjs
+
+    def doNcnItem(self, opUUID, itemId, itemNum, useItemCtx):
+        # 是n选n道具，需要处理下额外的产出
+        srcType = AACA.datas.BONUS_SRC_FROM_ITEM
+        wealthVal = dropAward.AwardVal()
+        for _itemId, _itemNum in useItemCtx.argsList.items():
+            wealthVal.addWealthByItemId(_itemId, _itemNum, dataUtils.getItemDefaultBindType())
+        detail = gameclass.AwardDetailCls(itemId=itemId, itemNum=itemNum)
+        awardCtx = awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID)
+        self.addWealth(srcType, wealthVal, opUUID, detail, awardCtx)
+
+# 随机合成主循环的中间结果聚合。
+# 之所以放在模块级而不是 IBag 内部，避免和 IBag 已有方法（如 tryBroadcast）
+# 出现缩进/作用域混淆。
+
+class _RandomUpgradeContext(object):
+    """随机升级合成的聚合上下文。
+
+    字段：
+        firstKey       - infoList 第一个 info 的 key。
+        firstNum       - infoList 第一个 info 的 num。
+        synthesisKey   - 第一个 info 解码后的 synthesisKey。
+        mainType       - 第一个 info 解码后的 mainType。
+        quality        - 第一个 info 解码后的 quality。
+        subTypeList    - infoList 中所有 info 的 subType 序列。
+        poolSubTypes   - 合成池的 subType 列表。
+        costItemInfo   - {key: num} 累计。
+        totalNum       - 总 num。
+    """
+    __slots__ = (
+        'firstKey', 'firstNum', 'synthesisKey', 'mainType', 'quality',
+        'subTypeList', 'poolSubTypes', 'costItemInfo', 'totalNum',
+    )
+
+    def __init__(self, firstKey, firstNum, synthesisKey, mainType, quality,
+                 subTypeList, poolSubTypes, costItemInfo, totalNum):
+        self.firstKey = firstKey
+        self.firstNum = firstNum
+        self.synthesisKey = synthesisKey
+        self.mainType = mainType
+        self.quality = quality
+        self.subTypeList = subTypeList
+        self.poolSubTypes = poolSubTypes
+        self.costItemInfo = costItemInfo
+        self.totalNum = totalNum
+
+class _RandomSynthesisResult(object):
+    """随机合成主循环产出的中间结果聚合。
+
+    字段：
+        itemIdList         - 客户端通知的产出列表（按合成顺序）
+        inItemInfos        - 日志用：每组合成材料明细（list of list of dict）
+        outItemInfos       - 日志用：每组合成产出明细（list of list of dict）
+        getItemInfo        - 累计产出 {itemId: num}，用于广播/成就
+        ranItemAddVal      - 累计产出财富
+        deductVal          - 累计扣减财富
+        upgradeKeyCount    - 升级累计 {key: count}
+        upgradeKeySet      - 升级去重 key 集合
+    """
+
+    def __init__(self):
+        self.itemIdList = []
+        self.inItemInfos = []
+        self.outItemInfos = []
+        self.getItemInfo = {}
+        self.ranItemAddVal = dropAward.AwardVal()
+        self.deductVal = dropAward.DeductWealthVal()
+        self.upgradeKeyCount = {}
+        self.upgradeKeySet = set()
+
+    def addGroup(self, outputEntries, curGroupInfo):
+        """记录一次成功合成的输入/输出/扣/发。升级累计由调用方显式调用 ``recordNonUpgrade``。"""
+        # 扣减输入并组装日志材料明细
+        inDatas = []
+        for (itemId, itemNum, bindType) in curGroupInfo:
+            self.deductVal.addWealthByItemId(itemId, itemNum, bindType)
+            inDatas.append({'itemId': itemId, 'itemNum': itemNum, 'bindType': bindType})
+        self.inItemInfos.append(inDatas)
+
+        # 发放产出并组装日志产出明细
+        outDatas = []
+        for entry in outputEntries:
+            self.itemIdList.append(entry)
+            outDatas.append(entry)
+            randItem = itemFactory.ItemFactory.createItem(
+                entry['itemId'], 1, entry['bindType'])
+            self.ranItemAddVal.addWealthByObjList([randItem])
+            self.getItemInfo[entry['itemId']] = self.getItemInfo.get(entry['itemId'], 0) + 1
+        self.outItemInfos.append(outDatas)
+
+    def recordNonUpgrade(self, synthesisKey, inputQuality):
+        """记录一次"未升档"的合成到升级累计, 这里只记录有保底配置次数的情况。
+
+        原行为：``key = synthesisKey * 10 + quality; if itemQuality == curQuality: keyDict[key] += 1``
+        即仅在产物未升档时才计入升级数。
+        """
+        cfgData = RSSD.datas.get(synthesisKey, None)
+        if not cfgData:
+            LOG_ERR("reqUpgradeSynthesis cfgData not found", synthesisKey)
+            return
+        upgradeNum = cfgData['upgradeNum'][inputQuality]
+        if not upgradeNum:
+            return
+        key = synthesisKey * gameconst.SynthesusDataKeys.SYNTHESIS_KEY_QUALITY_FACTOR + inputQuality
+        self.upgradeKeyCount[key] = self.upgradeKeyCount.get(key, 0) + 1
+        self.upgradeKeySet.add(key)
+
+    

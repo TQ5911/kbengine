@@ -77,12 +77,12 @@ func (gss *GameServerService) Drop(in *gameServerService.DropRequest) (*gameServ
 			returnTime = 0
 		}
 		sql := `INSERT INTO drop_info 
-		(serverId, uniqueId, dropGbId, dropType, endTime, equipInfo, dropTime, takerGbId, takerServerId, collExpireTime, price, 
+		(serverId, uniqueId, dropGbId, dropType, endTime, equipInfo, dropTime, takerGbId, takerServerId, collExpireTime, price, maxPrice,
 		extraInfo, giveUpTime, collectionId, redeemWaitTime, hasRedeemPrice, hasPayment, returnTime, ownerGbId, ownerServerId, returnTimeBack) 
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
 		_, err := gss.app.db.Exec(sql, in.ServerId, in.UniqueId, in.DropGbId, TYPE_DROP, in.EndTime, in.EquipInfo, in.DropTime, 0, 0,
-			in.CollExpireTime, in.Price, in.ExtraInfo, 0, in.CollectionId, 0, 0, 0, returnTime, in.OwnerId, in.OwnerServerId, in.ReturnTime)
+			in.CollExpireTime, in.Price, in.MaxPrice, in.ExtraInfo, 0, in.CollectionId, 0, 0, 0, returnTime, in.OwnerId, in.OwnerServerId, in.ReturnTime)
 		if err != nil {
 			appLog.Error("Drop: insert drop info error: ", err.Error())
 			gss.Client.(*gameServerService.GameServerClient).OnDrop(&gameServerService.DropResponse{
@@ -152,7 +152,7 @@ func (gss *GameServerService) Take(in *gameServerService.TakeRequest) (*gameServ
 		gss.app.dropItemLock.Lock(in.UniqueId)
 		defer gss.app.dropItemLock.Unlock(in.UniqueId)
 
-		sql := "SELECT dropGbId, takerGbId, dropType, equipInfo, collExpireTime, endTime, price, returnTime, redeemWaitTime, ownerGbId, ownerServerId FROM drop_info WHERE uniqueId=?"
+		sql := "SELECT dropGbId, takerGbId, dropType, equipInfo, collExpireTime, endTime, maxPrice, price, returnTime, redeemWaitTime, ownerGbId, ownerServerId FROM drop_info WHERE uniqueId=?"
 
 		row := gss.app.db.QueryRow(sql, in.UniqueId)
 		var dropGbId uint64
@@ -162,11 +162,12 @@ func (gss *GameServerService) Take(in *gameServerService.TakeRequest) (*gameServ
 		var collExpireTime int64
 		var endTime int64
 		var price uint32
+		var maxPrice uint32
 		var returnTime int64
 		var redeemWaitTime int64
 		var ownerGbId uint64
 		var ownerServerId uint32
-		err := row.Scan(&dropGbId, &takerGbId, &dropType, &equipInfo, &collExpireTime, &endTime, &price, &returnTime, &redeemWaitTime, &ownerGbId, &ownerServerId)
+		err := row.Scan(&dropGbId, &takerGbId, &dropType, &equipInfo, &collExpireTime, &endTime, &maxPrice, &price, &returnTime, &redeemWaitTime, &ownerGbId, &ownerServerId)
 		if err != nil {
 			appLog.Error("Take: take drop info error: ", err.Error())
 			gss.Client.(*gameServerService.GameServerClient).OnTake(&gameServerService.TakeResponse{
@@ -175,6 +176,7 @@ func (gss *GameServerService) Take(in *gameServerService.TakeRequest) (*gameServ
 				EquipInfo:      equipInfo,
 				EndTime:        endTime,
 				Price:          price,
+				MaxPrice:       maxPrice,
 				RedeemWaitTime: redeemWaitTime,
 				ReturnTime:     returnTime,
 				Result:         gameServerService.DropResult_DropResult_NOT_FOUND,
@@ -192,6 +194,7 @@ func (gss *GameServerService) Take(in *gameServerService.TakeRequest) (*gameServ
 				EquipInfo:      equipInfo,
 				EndTime:        endTime,
 				Price:          price,
+				MaxPrice:       maxPrice,
 				RedeemWaitTime: redeemWaitTime,
 				ReturnTime:     returnTime,
 				Result:         gameServerService.DropResult_DropResult_EXPIRE,
@@ -206,6 +209,7 @@ func (gss *GameServerService) Take(in *gameServerService.TakeRequest) (*gameServ
 				EquipInfo:      equipInfo,
 				EndTime:        endTime,
 				Price:          price,
+				MaxPrice:       maxPrice,
 				RedeemWaitTime: redeemWaitTime,
 				ReturnTime:     returnTime,
 				Result:         gameServerService.DropResult_DropResult_HAS_TAKEN,
@@ -228,6 +232,7 @@ func (gss *GameServerService) Take(in *gameServerService.TakeRequest) (*gameServ
 					EquipInfo:      equipInfo,
 					EndTime:        endTime,
 					Price:          price,
+					MaxPrice:       maxPrice,
 					RedeemWaitTime: redeemWaitTime,
 					ReturnTime:     returnTime,
 					Result:         gameServerService.DropResult_DropResult_STATE_ERROR,
@@ -238,18 +243,18 @@ func (gss *GameServerService) Take(in *gameServerService.TakeRequest) (*gameServ
 
 		// 捡起自己掉落的
 		if dropGbId == in.TakerGbId {
-			gss._selfTake(in, equipInfo, endTime, price, redeemWaitTime, redeemWaitTime)
+			gss._selfTake(in, equipInfo, endTime, maxPrice, price, redeemWaitTime, redeemWaitTime)
 			return
 		}
 
 		redeemWaitTime = now + int64(in.RedeemWaitTime)
 		// 捡起别人掉落的
-		gss._otherTake(in, dropGbId, equipInfo, endTime, price, redeemWaitTime, returnTime, ownerGbId, ownerServerId)
+		gss._otherTake(in, dropGbId, equipInfo, endTime, maxPrice, price, redeemWaitTime, returnTime, ownerGbId, ownerServerId)
 	})
 	return nil, nil
 }
 
-func (gss *GameServerService) _selfTake(in *gameServerService.TakeRequest, equipInfo []byte, endTime int64, price uint32, redeemWaitTime int64, returnTime int64) (*gameServerService.Void, error) {
+func (gss *GameServerService) _selfTake(in *gameServerService.TakeRequest, equipInfo []byte, endTime int64, maxPrice uint32, price uint32, redeemWaitTime int64, returnTime int64) (*gameServerService.Void, error) {
 	sql := "UPDATE drop_info set dropType=? WHERE uniqueId=? AND dropType=?"
 	_, err := gss.app.db.Exec(sql, TYPE_TAKE_WAIT_DROP_GET, in.UniqueId, TYPE_DROP)
 	if err != nil {
@@ -260,6 +265,7 @@ func (gss *GameServerService) _selfTake(in *gameServerService.TakeRequest, equip
 			EquipInfo:      equipInfo,
 			EndTime:        endTime,
 			Price:          price,
+			MaxPrice:       maxPrice,
 			RedeemWaitTime: redeemWaitTime,
 			ReturnTime:     returnTime,
 			Result:         gameServerService.DropResult_DropResult_HAS_TAKEN,
@@ -273,6 +279,7 @@ func (gss *GameServerService) _selfTake(in *gameServerService.TakeRequest, equip
 		EquipInfo:      equipInfo,
 		EndTime:        endTime,
 		Price:          price,
+		MaxPrice:       maxPrice,
 		RedeemWaitTime: redeemWaitTime,
 		ReturnTime:     returnTime,
 		Result:         gameServerService.DropResult_DropResult_SUCCESS,
@@ -280,7 +287,7 @@ func (gss *GameServerService) _selfTake(in *gameServerService.TakeRequest, equip
 	return nil, nil
 }
 
-func (gss *GameServerService) _otherTake(in *gameServerService.TakeRequest, dropGbId uint64, equipInfo []byte, endTime int64, price uint32, redeemWaitTime int64, returnTime int64, ownerId uint64, ownerServerId uint32) (*gameServerService.Void, error) {
+func (gss *GameServerService) _otherTake(in *gameServerService.TakeRequest, dropGbId uint64, equipInfo []byte, endTime int64, maxPrice uint32, price uint32, redeemWaitTime int64, returnTime int64, ownerId uint64, ownerServerId uint32) (*gameServerService.Void, error) {
 	sql := "UPDATE drop_info SET takerGbId=?, takerServerId=?, dropType=?, redeemWaitTime=? WHERE uniqueId=? AND dropType=?"
 	_, err := gss.app.db.Exec(sql, in.TakerGbId, in.ServerId, TYPE_TAKE, redeemWaitTime, in.UniqueId, TYPE_DROP)
 	if err != nil {
@@ -291,6 +298,7 @@ func (gss *GameServerService) _otherTake(in *gameServerService.TakeRequest, drop
 			EquipInfo:      equipInfo,
 			EndTime:        endTime,
 			Price:          price,
+			MaxPrice:       maxPrice,
 			RedeemWaitTime: redeemWaitTime,
 			ReturnTime:     returnTime,
 			Result:         gameServerService.DropResult_DropResult_HAS_TAKEN,
@@ -309,6 +317,7 @@ func (gss *GameServerService) _otherTake(in *gameServerService.TakeRequest, drop
 		EquipInfo:      equipInfo,
 		EndTime:        endTime,
 		Price:          price,
+		MaxPrice:       maxPrice,
 		RedeemWaitTime: redeemWaitTime,
 		ReturnTime:     returnTime,
 		Result:         gameServerService.DropResult_DropResult_SUCCESS,
@@ -704,7 +713,7 @@ func (gss *GameServerService) GetDropInfo(in *gameServerService.GetDropInfoReque
 		// go gss._deleteDropInfo(deleteDropInfoList)
 
 		takerInfoList := make([]*gameServerService.TakerInfo, 0)
-		sql = "SELECT uniqueId, dropGbId, price, endTime, dropType, equipInfo, redeemWaitTime, hasRedeemPrice, returnTime FROM drop_info WHERE takerGbId=?"
+		sql = "SELECT uniqueId, dropGbId, price, maxPrice, endTime, dropType, equipInfo, redeemWaitTime, hasRedeemPrice, returnTime FROM drop_info WHERE takerGbId=?"
 		rows, err = gss.app.db.Query(sql, in.GbId)
 		if err != nil {
 			appLog.Error("GetDropInfo: query taker info error: ", err.Error())
@@ -718,13 +727,14 @@ func (gss *GameServerService) GetDropInfo(in *gameServerService.GetDropInfoReque
 			var uniqueId uint64
 			var dropGbId uint64
 			var price uint32
+			var maxPrice uint32
 			var endTime int64
 			var dropType uint32
 			var equipInfo []byte
 			var redeemWaitTime int64
 			var hasPrice bool
 			var returnTime int64
-			err = rows.Scan(&uniqueId, &dropGbId, &price, &endTime, &dropType, &equipInfo, &redeemWaitTime, &hasPrice, &returnTime)
+			err = rows.Scan(&uniqueId, &dropGbId, &price, &maxPrice, &endTime, &dropType, &equipInfo, &redeemWaitTime, &hasPrice, &returnTime)
 			if err != nil {
 				appLog.Error("GetDropInfo: scan taker info error: ", err.Error())
 				continue
@@ -744,6 +754,7 @@ func (gss *GameServerService) GetDropInfo(in *gameServerService.GetDropInfoReque
 				RedeemWaitTime: redeemWaitTime,
 				HasPrice:       hasPrice,
 				ReturnTime:     returnTime,
+				MaxPrice:       maxPrice,
 			})
 		}
 

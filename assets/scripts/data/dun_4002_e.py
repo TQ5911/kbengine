@@ -13,7 +13,11 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
-    "transition": {}
+    "transition": {
+      "finished": [
+        1297
+      ]
+    }
   },
   "1004": {
     "type": "delayLoop",
@@ -30,44 +34,15 @@ datas ={
     "type": "dunStart",
     "transition": {
       "finished": [
-        1010,
-        1009,
-        1014,
-        1138,
-        1035,
-        1115,
-        1031,
-        1059,
-        1066,
-        1058,
-        1060,
-        1064,
-        1061,
-        1088,
+        1318,
+        1123,
+        1322,
         1145,
-        1070,
-        1090,
-        1093,
-        1103,
-        1105,
-        1118,
-        1122,
-        1124,
-        1125,
-        1013,
-        1004,
-        1041,
-        1129,
-        1167,
-        1170,
-        1175,
-        1176,
-        1178,
-        1025,
-        1205,
-        1210,
+        1316,
         1276,
-        1208
+        1321,
+        1013,
+        1004
       ]
     }
   },
@@ -83,8 +58,7 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1024,
-        1150
+        1024
       ]
     }
   },
@@ -121,41 +95,11 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
-    "transition": {}
-  },
-  "1025": {
-    "type": "taskFinished",
-    "taskID": 86060003,
-    "checkNow": 0,
-    "checkOnce": 0,
     "transition": {
       "finished": [
-        1026
+        1288
       ]
     }
-  },
-  "1026": {
-    "type": "createMonster",
-    "entityID": [
-      40020019,
-      40020020,
-      40020021,
-      40020022,
-      40020023,
-      40020024,
-      40020077,
-      40020078
-    ],
-    "num": 1,
-    "lv": "1",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {}
   },
   "1028": {
     "type": "createMonster",
@@ -172,46 +116,18 @@ datas ={
     ],
     "num": 1,
     "lv": "1",
-    "initState": 0,
+    "initState": 2,
     "hp": 0,
     "minAtk": 0,
     "maxAtk": 0,
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1154
-      ]
-    }
+    "transition": {}
   },
   "1036": {
     "type": "createMonster",
     "entityID": [
-      40020086,
-      40020087,
-      40020088,
-      40020089,
-      40020090,
-      40020091,
-      40020092,
-      40020093,
-      40020094,
-      40020095,
-      40020096,
-      40020097,
-      40020098,
-      40020099,
-      40020100,
-      40020101,
-      40020102,
-      40020103,
-      40020104,
-      40020105,
-      40020106,
-      40020107,
-      40020108,
-      40020109,
       40020110,
       40020111,
       40020112,
@@ -288,20 +204,9 @@ datas ={
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1188,
         1230,
-        1253
-      ]
-    }
-  },
-  "1010": {
-    "type": "taskFinished",
-    "taskID": 86060053,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1151
+        1213,
+        1247
       ]
     }
   },
@@ -317,7 +222,6 @@ datas ={
       40024010,
       40024011,
       40024012,
-      40024013,
       40024014,
       40024015,
       40024017,
@@ -330,10 +234,10 @@ datas ={
       40024029,
       40024030,
       40024031,
-      40024032,
       40024033,
       40024034,
-      40024035
+      40024035,
+      40024036
     ],
     "num": 1,
     "lv": "1",
@@ -353,12 +257,10 @@ datas ={
   "1060": {
     "type": "createAirWall",
     "entityID": [
-      40028008,
-      40028009,
-      40028010,
       40028023,
       40028028,
-      40028029
+      40028029,
+      40028030
     ],
     "num": 1,
     "transition": {}
@@ -375,39 +277,6 @@ datas ={
     "lvlmt": -1,
     "duration": -1.0,
     "transition": {}
-  },
-  "1011": {
-    "type": "taskInProgress",
-    "taskID": 86060055,
-    "transition": {}
-  },
-  "1012": {
-    "type": "taskInProgress",
-    "taskID": 86060061,
-    "transition": {}
-  },
-  "1014": {
-    "type": "taskInProgress",
-    "taskID": 86060067,
-    "transition": {
-      "finished": [
-        1026
-      ]
-    }
-  },
-  "1041": {
-    "type": "taskFinished",
-    "taskID": 86060101,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1043,
-        1042,
-        1044,
-        1054
-      ]
-    }
   },
   "1042": {
     "type": "removeBuffFromAllPlayer",
@@ -437,51 +306,6 @@ datas ={
     ],
     "transition": {}
   },
-  "1054": {
-    "type": "castCinemaPlay",
-    "cinemaPlayID": 98010018,
-    "transition": {
-      "finished": [
-        1186
-      ]
-    }
-  },
-  "1064": {
-    "type": "createRebornPos",
-    "entityID": [
-      40028001
-    ],
-    "num": 1,
-    "transition": {}
-  },
-  "1018": {
-    "type": "monsterHp",
-    "monsterID": [
-      40020008
-    ],
-    "compare": 2,
-    "hpPercent": 50.0,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1135
-      ]
-    }
-  },
-  "1035": {
-    "type": "taskFinished",
-    "taskID": 86060146,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1036,
-        1089,
-        1259
-      ]
-    }
-  },
   "1067": {
     "type": "createMonster",
     "entityID": [
@@ -494,101 +318,18 @@ datas ={
     ],
     "num": 1,
     "lv": "1",
-    "initState": 0,
+    "initState": 2,
     "hp": 0,
     "minAtk": 0,
     "maxAtk": 0,
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1174
-      ]
-    }
-  },
-  "1068": {
-    "type": "createRebornPos",
-    "entityID": [
-      40028022
-    ],
-    "num": 1,
-    "transition": {}
-  },
-  "1031": {
-    "type": "taskFinished",
-    "taskID": 86060051,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1032,
-        1069
-      ]
-    }
-  },
-  "1032": {
-    "type": "createCollection",
-    "entityID": [
-      40028011
-    ],
-    "num": 1,
-    "randomCollectionNum": 0,
-    "checkHaveInFixed": 0,
-    "transition": {}
-  },
-  "1069": {
-    "type": "removeNPC",
-    "entityID": [
-      40024025
-    ],
-    "transition": {}
-  },
-  "1070": {
-    "type": "taskFinished",
-    "taskID": 86060053,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1071
-      ]
-    }
-  },
-  "1071": {
-    "type": "removeAirWall",
-    "entityID": [
-      40028023
-    ],
     "transition": {}
   },
   "1073": {
     "type": "stopAiTick",
     "entityID": [
-      40020086,
-      40020087,
-      40020088,
-      40020089,
-      40020090,
-      40020091,
-      40020092,
-      40020093,
-      40020094,
-      40020095,
-      40020096,
-      40020097,
-      40020098,
-      40020099,
-      40020100,
-      40020101,
-      40020102,
-      40020103,
-      40020104,
-      40020105,
-      40020106,
-      40020107,
-      40020108,
-      40020109,
       40020110,
       40020111,
       40020112,
@@ -636,15 +377,6 @@ datas ={
     ],
     "transition": {}
   },
-  "1088": {
-    "type": "taskInProgress",
-    "taskID": 86060086,
-    "transition": {
-      "finished": [
-        1067
-      ]
-    }
-  },
   "1089": {
     "type": "removeMonster",
     "entityID": [
@@ -657,124 +389,11 @@ datas ={
     ],
     "transition": {}
   },
-  "1066": {
-    "type": "createCreationInFixedPosition",
-    "monsterID": [
-      -1
-    ],
-    "entityID": [
-      40028025,
-      40028026,
-      40028024,
-      40028027,
-      40028032,
-      40028033,
-      40028034,
-      40028035
-    ],
-    "num": 1,
-    "transition": {}
-  },
-  "1090": {
-    "type": "taskFinished",
-    "taskID": 86060127,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1091
-      ]
-    }
-  },
-  "1091": {
-    "type": "createAirWall",
-    "entityID": [
-      40028031
-    ],
-    "num": 1,
-    "transition": {}
-  },
-  "1093": {
-    "type": "taskFinished",
-    "taskID": 86060056,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1092
-      ]
-    }
-  },
-  "1092": {
-    "type": "removeAirWall",
-    "entityID": [
-      40028028
-    ],
-    "transition": {}
-  },
-  "1103": {
-    "type": "taskFinished",
-    "taskID": 86060063,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1104,
-        1139,
-        1180
-      ]
-    }
-  },
-  "1104": {
-    "type": "removeAirWall",
-    "entityID": [
-      40028029
-    ],
-    "transition": {}
-  },
-  "1105": {
-    "type": "taskFinished",
-    "taskID": 86060067,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1106
-      ]
-    }
-  },
-  "1106": {
-    "type": "removeAirWall",
-    "entityID": [
-      40028030
-    ],
-    "transition": {}
-  },
-  "1115": {
-    "type": "taskInProgress",
-    "taskID": 86060053,
-    "transition": {
-      "finished": [
-        1032,
-        1161
-      ]
-    }
-  },
-  "1118": {
-    "type": "taskInProgress",
-    "taskID": 86060071,
-    "transition": {
-      "finished": [
-        1106
-      ]
-    }
-  },
   "1122": {
     "type": "taskInProgress",
     "taskID": 86060055,
     "transition": {
       "finished": [
-        1123,
         1168
       ]
     }
@@ -788,105 +407,24 @@ datas ={
     ],
     "transition": {}
   },
-  "1124": {
-    "type": "taskInProgress",
-    "taskID": 86060061,
-    "transition": {
-      "finished": [
-        1123,
-        1169
-      ]
-    }
-  },
-  "1125": {
-    "type": "taskInProgress",
-    "taskID": 86060071,
-    "transition": {
-      "finished": [
-        1123
-      ]
-    }
-  },
-  "1127": {
-    "type": "jumpCinemaPlay",
-    "cinemaPlayID": 98010015,
-    "exitTime": 21.0,
-    "transition": {
-      "finished": [
-        1038,
-        1201,
-        1202
-      ]
-    }
-  },
-  "1129": {
-    "type": "taskFinished",
-    "taskID": 86060053,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1130
-      ]
-    }
-  },
-  "1130": {
-    "type": "jumpCinemaPlay",
-    "cinemaPlayID": 98000063,
-    "exitTime": 20.0,
-    "transition": {
-      "finished": [
-        1123
-      ]
-    }
-  },
-  "1135": {
-    "type": "triggerGuide",
-    "triggerGuideID": 24100301,
-    "transition": {}
-  },
   "1138": {
     "type": "taskInProgress",
     "taskID": 86060080,
     "transition": {
       "finished": [
         1282,
-        1123,
-        1064
+        1028
       ]
     }
-  },
-  "1139": {
-    "type": "createAirWall",
-    "entityID": [
-      40028030
-    ],
-    "num": 1,
-    "transition": {}
   },
   "1143": {
     "type": "jumpCinemaPlay",
     "cinemaPlayID": 98010016,
-    "exitTime": 12.0,
+    "exitTime": 14.0,
     "transition": {
       "finished": [
-        1144
-      ]
-    }
-  },
-  "1144": {
-    "type": "transferToTheDesignatedMap",
-    "mapId": 4002,
-    "posX": 245.5437,
-    "posY": 90.26721,
-    "posZ": 348.6067,
-    "angle": 271,
-    "transition": {
-      "finished": [
-        1159,
-        1203,
-        1183,
-        1266
+        1187,
+        1281
       ]
     }
   },
@@ -897,81 +435,24 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1147,
+        1148,
         1067
       ]
     }
   },
-  "1147": {
-    "type": "jumpCinemaPlay",
-    "cinemaPlayID": 98010019,
-    "exitTime": 13.0,
-    "transition": {
-      "finished": [
-        1148
-      ]
-    }
-  },
   "1148": {
-    "type": "transferToTheDesignatedMap",
-    "mapId": 4002,
-    "posX": 459.0,
-    "posY": 81.0,
-    "posZ": 347.0,
-    "angle": 259,
+    "type": "integrationEvent",
     "transition": {
       "finished": [
-        1275
+        1038,
+        1036,
+        1089,
+        1202,
+        1201,
+        1313,
+        1314
       ]
     }
-  },
-  "1150": {
-    "type": "createBreakAwayStuckPos",
-    "entityID": [
-      40028037
-    ],
-    "num": 1,
-    "transition": {}
-  },
-  "1151": {
-    "type": "createBreakAwayStuckPos",
-    "entityID": [
-      40028036
-    ],
-    "num": 1,
-    "transition": {}
-  },
-  "1180": {
-    "type": "createBreakAwayStuckPos",
-    "entityID": [
-      40028038
-    ],
-    "num": 1,
-    "transition": {}
-  },
-  "1154": {
-    "type": "createBreakAwayStuckPos",
-    "entityID": [
-      40028039
-    ],
-    "num": 1,
-    "transition": {}
-  },
-  "1159": {
-    "type": "createBreakAwayStuckPos",
-    "entityID": [
-      40028041
-    ],
-    "num": 1,
-    "transition": {}
-  },
-  "1161": {
-    "type": "createBreakAwayStuckPos",
-    "entityID": [
-      40028042
-    ],
-    "num": 1,
-    "transition": {}
   },
   "1163": {
     "type": "addBuffToAllPlayer",
@@ -984,15 +465,6 @@ datas ={
     "duration": -1.0,
     "transition": {}
   },
-  "1167": {
-    "type": "taskInProgress",
-    "taskID": 86060001,
-    "transition": {
-      "finished": [
-        1161
-      ]
-    }
-  },
   "1168": {
     "type": "createBreakAwayStuckPos",
     "entityID": [
@@ -1001,65 +473,10 @@ datas ={
     "num": 1,
     "transition": {}
   },
-  "1169": {
-    "type": "createBreakAwayStuckPos",
-    "entityID": [
-      40028037
-    ],
-    "num": 1,
-    "transition": {}
-  },
-  "1170": {
-    "type": "taskInProgress",
-    "taskID": 86060128,
-    "transition": {
-      "finished": [
-        1171,
-        1123,
-        1064
-      ]
-    }
-  },
-  "1171": {
-    "type": "createBreakAwayStuckPos",
-    "entityID": [
-      40028038
-    ],
-    "num": 1,
-    "transition": {}
-  },
   "1174": {
     "type": "createBreakAwayStuckPos",
     "entityID": [
-      40028040
-    ],
-    "num": 1,
-    "transition": {}
-  },
-  "1175": {
-    "type": "taskInProgress",
-    "taskID": 86060146,
-    "transition": {
-      "finished": [
-        1174
-      ]
-    }
-  },
-  "1176": {
-    "type": "taskInProgress",
-    "taskID": 86060114,
-    "transition": {
-      "finished": [
-        1177,
-        1068,
-        1123
-      ]
-    }
-  },
-  "1177": {
-    "type": "createBreakAwayStuckPos",
-    "entityID": [
-      40028041
+      40028039
     ],
     "num": 1,
     "transition": {}
@@ -1071,7 +488,10 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1282
+        1282,
+        1312,
+        1174,
+        1028
       ]
     }
   },
@@ -1082,23 +502,13 @@ datas ={
     ],
     "transition": {}
   },
-  "1186": {
-    "type": "jumpCinemaPlay",
-    "cinemaPlayID": 98010018,
-    "exitTime": 19.0,
-    "transition": {
-      "finished": [
-        1187
-      ]
-    }
-  },
   "1187": {
     "type": "transferToTheDesignatedMap",
-    "mapId": 4001,
-    "posX": 167.0,
-    "posY": 63.0,
-    "posZ": 116.0,
-    "angle": 160,
+    "mapId": 1002,
+    "posX": 296.3204,
+    "posY": 17.83401,
+    "posZ": 50.41761,
+    "angle": 30,
     "transition": {}
   },
   "1188": {
@@ -1131,17 +541,6 @@ datas ={
     ],
     "transition": {}
   },
-  "1203": {
-    "type": "removeRebornPos",
-    "entityID": [
-      40028043
-    ],
-    "transition": {
-      "finished": [
-        1204
-      ]
-    }
-  },
   "1205": {
     "type": "taskFinished",
     "taskID": 86060055,
@@ -1149,6 +548,7 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
+        1168,
         1003
       ]
     }
@@ -1246,13 +646,7 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
-    "transition": {
-      "finished": [
-        1213,
-        1215,
-        1247
-      ]
-    }
+    "transition": {}
   },
   "1212": {
     "type": "castCinemaPlay",
@@ -1268,7 +662,7 @@ datas ={
     "monsterID": [
       40020085
     ],
-    "compare": 2,
+    "compare": 5,
     "hpPercent": 80.0,
     "checkNow": 0,
     "checkOnce": 0,
@@ -1461,7 +855,7 @@ datas ={
   "1241": {
     "type": "removeMonster",
     "entityID": [
-      40020085
+      40020074
     ],
     "transition": {}
   },
@@ -1490,13 +884,13 @@ datas ={
   },
   "1246": {
     "type": "dungeonTaskForceComplete",
-    "taskID": 86060087,
+    "taskID": 86060098,
     "transition": {}
   },
   "1247": {
     "type": "monsterHp",
     "monsterID": [
-      40020085
+      40020074
     ],
     "compare": 2,
     "hpPercent": 50.0,
@@ -1571,15 +965,6 @@ datas ={
     ],
     "dialogID": 19900516,
     "transition": {}
-  },
-  "1259": {
-    "type": "castCinemaPlay",
-    "cinemaPlayID": 98010015,
-    "transition": {
-      "finished": [
-        1127
-      ]
-    }
   },
   "1260": {
     "type": "addBuffToAllPlayer",
@@ -1701,14 +1086,6 @@ datas ={
       ]
     }
   },
-  "1204": {
-    "type": "createRebornPos",
-    "entityID": [
-      40028044
-    ],
-    "num": 1,
-    "transition": {}
-  },
   "1278": {
     "type": "castCinemaPlay",
     "cinemaPlayID": 98010016,
@@ -1716,7 +1093,11 @@ datas ={
       "finished": [
         1143,
         1280,
-        1281
+        1043,
+        1042,
+        1044,
+        1183,
+        1266
       ]
     }
   },
@@ -1814,8 +1195,276 @@ datas ={
     "exitTime": 6.1,
     "transition": {
       "finished": [
-        1028
+        1331,
+        1332
       ]
     }
+  },
+  "1288": {
+    "type": "taskFinished",
+    "taskID": 86060063,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1306,
+        1293
+      ]
+    }
+  },
+  "1291": {
+    "type": "createBreakAwayStuckPos",
+    "entityID": [
+      40028042
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1293": {
+    "type": "createBreakAwayStuckPos",
+    "entityID": [
+      40028038
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1294": {
+    "type": "removeAirWall",
+    "entityID": [
+      40028030
+    ],
+    "transition": {}
+  },
+  "1296": {
+    "type": "removeAirWall",
+    "entityID": [
+      40028028
+    ],
+    "transition": {}
+  },
+  "1297": {
+    "type": "taskFinished",
+    "taskID": 86060056,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1296,
+        1304
+      ]
+    }
+  },
+  "1301": {
+    "type": "taskFinished",
+    "taskID": 86060002,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1302
+      ]
+    }
+  },
+  "1302": {
+    "type": "removeAirWall",
+    "entityID": [
+      40028023
+    ],
+    "transition": {}
+  },
+  "1304": {
+    "type": "createBreakAwayStuckPos",
+    "entityID": [
+      40028037
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1305": {
+    "type": "taskInProgress",
+    "taskID": 86060061,
+    "transition": {
+      "finished": [
+        1304
+      ]
+    }
+  },
+  "1306": {
+    "type": "removeAirWall",
+    "entityID": [
+      40028029
+    ],
+    "transition": {}
+  },
+  "1308": {
+    "type": "taskFinished",
+    "taskID": 86060128,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1294,
+        1324
+      ]
+    }
+  },
+  "1310": {
+    "type": "taskInProgress",
+    "taskID": 86060080,
+    "transition": {
+      "finished": [
+        1174
+      ]
+    }
+  },
+  "1312": {
+    "type": "createRebornPos",
+    "entityID": [
+      40028001
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1313": {
+    "type": "createAirWall",
+    "entityID": [
+      40028031
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1314": {
+    "type": "createBreakAwayStuckPos",
+    "entityID": [
+      40028040
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1316": {
+    "type": "taskInProgress",
+    "taskID": 86060098,
+    "transition": {
+      "finished": [
+        1148
+      ]
+    }
+  },
+  "1318": {
+    "type": "integrationEvent",
+    "transition": {
+      "finished": [
+        1301,
+        1122,
+        1205,
+        1305,
+        1009,
+        1308,
+        1325
+      ]
+    }
+  },
+  "1321": {
+    "type": "integrationEvent",
+    "transition": {
+      "finished": [
+        1291,
+        1060,
+        1059,
+        1058,
+        1061
+      ]
+    }
+  },
+  "1322": {
+    "type": "integrationEvent",
+    "transition": {
+      "finished": [
+        1138,
+        1178,
+        1310,
+        1326
+      ]
+    }
+  },
+  "1324": {
+    "type": "createBreakAwayStuckPos",
+    "entityID": [
+      40028053
+    ],
+    "num": 1,
+    "transition": {}
+  },
+  "1325": {
+    "type": "taskFinished",
+    "taskID": 86060003,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1275
+      ]
+    }
+  },
+  "1326": {
+    "type": "taskFinished",
+    "taskID": 86060083,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1328
+      ]
+    }
+  },
+  "1328": {
+    "type": "castCinemaPlay",
+    "cinemaPlayID": 98010004,
+    "transition": {
+      "finished": [
+        1329
+      ]
+    }
+  },
+  "1329": {
+    "type": "jumpCinemaPlay",
+    "cinemaPlayID": 98010004,
+    "exitTime": 8.0,
+    "transition": {
+      "finished": [
+        1330
+      ]
+    }
+  },
+  "1330": {
+    "type": "createNPC",
+    "entityID": [
+      40024032
+    ],
+    "num": 1,
+    "lv": "",
+    "ifSetBoss": 0,
+    "transition": {}
+  },
+  "1331": {
+    "type": "monsterChangeInitState",
+    "entityID": [
+      40020026,
+      40020027,
+      40020028,
+      40020029,
+      40020030,
+      40020031,
+      40020032,
+      40020033,
+      40020034
+    ],
+    "initState": 0,
+    "transition": {}
+  },
+  "1332": {
+    "type": "taskUndertake",
+    "taskID": 86030032,
+    "transition": {}
   }
 }

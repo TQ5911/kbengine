@@ -27,10 +27,12 @@
             <Arg>       OBJECT_ID       </Arg>
             <Arg>       LEVEL           </Arg>
             <Arg>       SCORE           </Arg>
+            <Arg>       INT64           </Arg>
         </onUpgradeTrainLevel>
 
         <onResetGuildTrain>
             <Arg>       PYTHON          </Arg>
+            <Arg>       INT64           </Arg>
         </onResetGuildTrain>
     </CellMethods>
 

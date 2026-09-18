@@ -49,6 +49,23 @@ LEASE_INCOME_KEY_GOLD = 'gold'
 LEASE_INCOME_KEY_BIND_GOLD = 'bindGold'
 LEASE_INCOME_KEY_TIMETS = 'timets'
 
+# 查询过滤等级位掩码的位数（uint32，bit N 对应等级 N）
+LEASE_FILTER_MAX_LEVEL = 32
+
+
+def _levelListToMask(levelList):
+    """等级列表转 uint32 位掩码；存在越界等级时返回 None"""
+    if not levelList:
+        return 0xFFFFFFFF # 不过滤
+
+    mask = 0
+    for lv in levelList:
+        if not isinstance(lv, int) or isinstance(lv, bool) or lv < 0 or lv >= LEASE_FILTER_MAX_LEVEL:
+            LOG_ERR("_levelListToMask level out of range", lv)
+            return None
+        mask |= 1 << lv
+    return mask
+
 # 租赁服务错误码（与 leaseServer 保持一致）
 LEASE_OK = 0
 LEASE_NOT_FOUND = 1
@@ -227,6 +244,8 @@ class ILease(object):
             leaseInfo.get(RETURN_OWNER_TAG, 0),
             leaseInfo.get(RETURN_TIME_TAG, 0),
             leaseInfo.get(RETURN_REASON_TAG, 0),
+            item.equipAttr.enhanceLv,
+            item.equipAttr.grade,
             opUUID,
         )
 
@@ -715,18 +734,24 @@ class ILease(object):
 
     @gamedecorator.limitcall(0.5)
     @gamedecorator.checkGameconfigEnable('lease')
-    def reqLeaseShopItems(self, exposed, itemId, page, pageSize):
-        LOG_DBG("reqLeaseShopItems", itemId)
+    def reqLeaseShopItems(self, exposed, itemId, page, pageSize, gradeList, enhanceLvList):
+        LOG_DBG("reqLeaseShopItems", itemId, enhanceLvList, gradeList)
 
         if not self.leaseStub:
             LOG_ERR("reqLeaseShopItems leaseStub not found")
             return
-        
+
         if page < 0 or pageSize > 32:
             LOG_ERR("reqLeaseShopItems pagesize limit:", page, pageSize)
             return
 
-        self.leaseStub.getShopItems(itemId, page, pageSize, self.gbID)
+        enhanceLvMask = _levelListToMask(enhanceLvList)
+        gradeMask = _levelListToMask(gradeList)
+        if enhanceLvMask is None or gradeMask is None:
+            LOG_ERR("reqLeaseShopItems filter level out of range", enhanceLvList, gradeList)
+            return
+
+        self.leaseStub.getShopItems(itemId, page, pageSize, self.gbID, enhanceLvMask, gradeMask)
 
     def onLeaseShopItemsResp(self, itemId, page, pageSize, items):
         LOG_DBG("onLeaseShopItemsResp", itemId, page, pageSize, len(items))
@@ -1008,10 +1033,10 @@ class ILease(object):
         LOG_INFO("testQueryLeaseShopSummary", equipType, equipSubType)
         self.reqLeaseShopSummary(None, equipType, equipSubType)
 
-    def testQueryLeaseShopItems(self, itemId, page=1, pageSize=10):
+    def testQueryLeaseShopItems(self, itemId, page=1, pageSize=10, enhanceLvList=(), gradeList=()):
         """查询租赁商店某物品的列表"""
-        LOG_INFO("testQueryLeaseShopItems", itemId, page, pageSize)
-        self.reqLeaseShopItems(None, itemId, page, pageSize)
+        LOG_INFO("testQueryLeaseShopItems", itemId, page, pageSize, enhanceLvList, gradeList)
+        self.reqLeaseShopItems(None, itemId, page, pageSize, enhanceLvList, gradeList)
 
     def testQueryMyLeaseSaleInfo(self):
         """查询我的出租列表"""

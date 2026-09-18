@@ -51,7 +51,7 @@ func main() {
 		log.Print("maxOnlineNum: ", Queue.MaxOnlineNum, " limitPerSecond: ", Queue.LimitPerSecond)
 	})
 
-	base.Init("queueConf.json", &Queue.QueueConfig, func() common.IApp {
+	base.Init(&Queue.QueueConfig, func() common.IApp {
 		return Queue.NewQueueApp()
 	})
 }

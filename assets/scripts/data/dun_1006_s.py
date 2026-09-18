@@ -312,7 +312,10 @@ datas ={
           "PosY": 102.1951,
           "PosZ": 157.62,
           "Props": {
+            "ChestGroupID": "",
+            "IsOnGround": 1,
             "IsOpen": 1,
+            "MapEntityType": 0,
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
@@ -410,6 +413,30 @@ datas ={
         "PosY": 102.1951,
         "PosZ": 162.1168,
         "Props": {
+          "Remark": "",
+          "ShowInSceneMap": 1
+        }
+      }
+    },
+    "CustomFuncPos": {
+      "10068021": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "CustomFuncPos",
+        "ClassNameType": 10,
+        "CustomID": "",
+        "Dir": 222.9702,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 0,
+        "ID": 10068021,
+        "PosX": 153.0717,
+        "PosY": 102.1603,
+        "PosZ": 135.5963,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "RefreshTimedID": 0,
           "Remark": "",
           "ShowInSceneMap": 1
         }

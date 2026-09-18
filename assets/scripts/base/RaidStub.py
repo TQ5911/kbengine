@@ -553,8 +553,8 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return
 
         while raidMemberAttrsList:
-            _raidMemberAttrsList = raidMemberAttrsList[:gameconst.RAID_TEAM_MEMBER_MAX_NUM]
-            raidMemberAttrsList = raidMemberAttrsList[gameconst.RAID_TEAM_MEMBER_MAX_NUM:]
+            _raidMemberAttrsList = raidMemberAttrsList[:dataUtils.raidMaxTeamMemberCount()]
+            raidMemberAttrsList = raidMemberAttrsList[dataUtils.raidMaxTeamMemberCount():]
             srcPlayerBox.client.onGetRaidAllMembersAttrs(raidUUID, _raidMemberAttrsList)
 
     def _getRaidAllMembersAttrs(self, raidUUID, memberGBIDList):
@@ -604,7 +604,7 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def _createRaid(self, srcPlayerBox, srcPlayerGbId, raidUUID, capacity, memberPropsList, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition, extraProps):
         raidLeaderGBID = srcPlayerGbId
 
-        if not dataUtils.isRaidCapacityValidate(capacity):
+        if not dataUtils.isRaidCapacityValidate(extraProps['raidTarget'], capacity):
             return None, gameconst.RaidErrno.ENUM_RAID_UNKNOWN_CAPACITY.initkvbody(source='_createRaid',
                                                                               raidUUID=raidUUID,
                                                                               capacity=capacity)
@@ -1018,7 +1018,6 @@ class RaidStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
                             [playerGBID, ], 'onMessage',
                             (RAID_CONST.datas["raid_applyAcceptFail_raidFull_msg"]["value"], []),
                             None, '', ())
-            LOG_ERR('onReplyJoinRaidLonely:: failed, {}'.format(err))
             return
 
         _raidVal = self.raidDict[raidUUID]

@@ -35,6 +35,20 @@ namespace KBEngine
 
 		public bool connected = false;
 		
+		public enum ErrorType
+		{
+			None = 100000,
+			ReceiveError,
+			ConnectError,
+			TimeoutError,
+			SendError,
+			HelloAckMismatchError,
+			VersionMismatchError,
+			KcpConvError,
+			ExceptionError,
+			UnknownError,
+		}
+
 		public class ConnectState
 		{
 			// for connect
@@ -46,6 +60,7 @@ namespace KBEngine
 			public Socket socket = null;
 			public NetworkInterfaceBase networkInterface = null;
 			public string error = "";
+			public ErrorType errorType = ErrorType.None;
 		}
 		
 		public NetworkInterfaceBase()
@@ -106,7 +121,7 @@ namespace KBEngine
                 }
 				
 				_socket = null;
-                EventMgr.Instance.SendEvent(EventDef.EVENT_NET_LOST_CONNECTION);
+				
                 Event.fireAll(EventOutTypes.onDisconnected);
 			}
 
@@ -135,9 +150,20 @@ namespace KBEngine
 			return ((_socket != null) && (_socket.Connected == true));
 		}
 		
+		/// <summary>
+		/// 在主线程执行：连接状态回调
+		/// </summary>
 		public void _onConnectionState(ConnectState state)
 		{
 			KBEngine.Event.deregisterIn(this);
+
+			ThinkTracking_HotUpdate.TrackLogin("Login_NetworkConnetState", new Dictionary<string, object>()
+            {
+                {"ip", state.connectIP ?? string.Empty},
+                {"port", state.connectPort},
+                {"error", state.error ?? string.Empty},
+                {"type", state.userData ?? string.Empty},
+            });
 
 			bool success = (state.error == "" && valid());
 			if (success)
@@ -147,7 +173,7 @@ namespace KBEngine
 				_packetReceiver.startRecv();
 				connected = true;
 
-                EventMgr.Instance.SendEvent(EventDef.EVENT_NET_CONNECTED_SUCCESS);
+                // EventMgr.Instance.SendEvent(EventDef.EVENT_NET_CONNECTED_SUCCESS);
             }
 			else
 			{
@@ -155,13 +181,12 @@ namespace KBEngine
 				Dbg.ERROR_MSG(string.Format("NetworkInterfaceBase::_onConnectionState(), connect error! ip: {0}:{1}, err: {2}", state.connectIP, state.connectPort, state.error));
 			}
 
-            EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_CONNECTION_STATE, success, state);
+            //EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_CONNECTION_STATE, success, state);
 
             //Event.fireAll(EventOutTypes.onConnectionState, success);
 
-			if (state.connectCB != null)
-				state.connectCB(state.connectIP, state.connectPort, success, state.userData);
-		}
+            state.connectCB?.Invoke(state.connectIP, state.connectPort, success, state);
+        }
 
 		/// <summary>
 		/// 在非主线程执行：连接服务器
@@ -187,9 +212,12 @@ namespace KBEngine
 			onAsyncConnectCB(state);
 
 			Dbg.DEBUG_MSG(string.Format("NetworkInterfaceBase::_asyncConnectCB(), connect to '{0}:{1}' finish. error = '{2}'", state.connectIP, state.connectPort, state.error));
+    
 
-			// Call EndInvoke to retrieve the results.
-			state.caller.EndInvoke(ar);
+            // Call EndInvoke to retrieve the results.
+            state.caller.EndInvoke(ar);
+
+			//触发连接状态事件, 通知主线程连接结果
 			Event.fireIn("_onConnectionState", new object[] { state });
 		}
 
@@ -245,12 +273,20 @@ namespace KBEngine
 			state.caller = asyncConnectMethod;
 
 			Dbg.DEBUG_MSG("connect to " + ip + ":" + port + " ...");
-			connected = false;
+            ThinkTracking_HotUpdate.TrackLogin("Login_NetworkConnetTo", new Dictionary<string, object>()
+            {
+                {"ip", ip ?? string.Empty},
+                {"port", port},
+                {"AddressFamily", _socket.AddressFamily},
+                {"ProtocolType", _socket.ProtocolType},
+                {"type", state.userData ?? string.Empty},
+            });
+            connected = false;
 			
 			// 先注册一个事件回调，该事件在当前线程触发
 			Event.registerIn("_onConnectionState", this, "_onConnectionState");
 
-			asyncConnectMethod.BeginInvoke(state, new AsyncCallback(this._asyncConnectCB), state);
+           	IAsyncResult asyncResult = asyncConnectMethod.BeginInvoke(state, new AsyncCallback(this._asyncConnectCB), state);
 		}
 
 		public virtual bool send(MemoryStream stream)

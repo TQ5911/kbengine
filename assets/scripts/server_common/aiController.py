@@ -104,7 +104,7 @@ class EventTaskCtrl(object):
 
         pos = task.data['pos']
         extra = task.data['extra']
-        self.moveToPosition(pos, 0, extra)
+        self.moveToPosition(pos, 0, userData=extra)
 
     def doTaskAttack(self):
         self.executeRandomSkill()
@@ -703,7 +703,7 @@ class AuxFunc(object):
 
         return True
 
-    def moveToPosWithAngleDis(self, pos, radius, target):
+    def moveToPosWithAngleDis(self, pos, radius, target, extra):
         target.beHateCounter.addHateCnt(gameconst.HATE_CNT_TYPE_MOVE)
         if not self._checkNeedNav(pos):
             return True
@@ -715,13 +715,24 @@ class AuxFunc(object):
         else:
             _pos = self.getPositionWithinAngle(pos, radius, target)
             self.owner.actDefineVar(lastTag, _pos)
-        return self.moveToPosition(_pos, 0)
+        return self.moveToPosition(_pos, 0, extra=extra)
 
-    def moveToPosition(self, pos, distance=0, extra=None):
+    def moveToPosition(self, pos, distance=0, userData=None, extra=None):
         owner = self.owner
         if not owner or not pos or not owner.checkConflictState(C_C_DD.datas.move, False): return False
 
-        return owner.navigateToPosition(pos, distance, extra)
+        return owner.navigateToPosition(pos, distance, userData, extra)
+
+    def _isValidNav(self, skillRange, finalPos, targetPos):
+        if finalPos is None:
+            return False
+
+        _dx = targetPos.x - finalPos[0]
+        _dz = targetPos.z - finalPos[2]
+
+        _dis = _dx * _dx + _dz * _dz
+
+        return _dis < skillRange * skillRange
 
     def attackTarget(self, skill, target, msgid=0, moveOver=False):
         owner = self.owner
@@ -738,10 +749,14 @@ class AuxFunc(object):
             _needNavTime = True
             if self.stateMachine.moveable:
                 mDis = max(0.5, skillRange * 0.9)
-                if self.moveToPosWithAngleDis(target.position, mDis, target):
-                    _needNavTime = False
-                    # 可以寻路时，清除计时
-                    self.clearNavigationTimes()
+                _extra = {'finalPos': None}
+                if self.moveToPosWithAngleDis(target.position, mDis, target, _extra):
+                    if self._isValidNav(skillRange, _extra.get('finalPos'), target.position):
+                        # 只有有效寻路才会清除计时，比如玩家站在某个石头上，怪
+                        # 物能寻路到最近点，但是无法攻击到玩家，这就是无效寻路
+                        _needNavTime = False
+                        # 可以寻路时，清除计时
+                        self.clearNavigationTimes()
                 else:
                     self.targetId = 0
             else:
@@ -823,10 +838,11 @@ class AuxFunc(object):
         self.stateMachine.transform(self, StateEnum.ANGRY)
 
     def isAiAfk(self):
-        _last = self.owner.getTempMiscProp(gameconst.EntityPropsEnum.lastUseSkillTime, 0)
-        _last = max(_last, self.stateMachine.changeStateTime)
-        _dur = CONST.datas['monsterCannotAttackResetTimer']['value']
-        return utils.curTS() - _last > _dur
+        return False
+        # _last = self.owner.getTempMiscProp(gameconst.EntityPropsEnum.lastUseSkillTime, 0)
+        # _last = max(_last, self.stateMachine.changeStateTime)
+        # _dur = CONST.datas['monsterCannotAttackResetTimer']['value']
+        # return utils.curTS() - _last > _dur
 
     def getGoodPos(self, target, distance):
         owner = self.owner
@@ -1863,3 +1879,7 @@ class AIControllerCls(EventTaskCtrl, BehaveCtrl, AuxFunc, HateCtrl):
         buffId = owner.getAIParam().get('additionalParameter', 0)
 
         return owner.hasBuff(buffId)
+
+    def checkWaitAnimElapsedTime(self):
+        _dur = self.owner.getAIParam().get('MandatoryBirthDate', 5)
+        return self.stateMachine.elapsedTime() >= _dur

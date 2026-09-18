@@ -56,7 +56,14 @@ datas = _tools.RODict({
         "refreshInterval": 120,
         "EndRefresh": None,
         "RefreshType": 1
+    }),
+    7: _tools.RODict({
+        "ID": 7,
+        "initialRefresh": _tools.ROList([[[0], [0], [], [], [], []]]),
+        "refreshInterval": 5,
+        "EndRefresh": None,
+        "RefreshType": 1
     })
 })
 minKey = 1
-maxKey = 6
+maxKey = 7

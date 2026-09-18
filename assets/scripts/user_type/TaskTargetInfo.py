@@ -726,7 +726,9 @@ class TaskTargetCounter(BaseTarget):
         ids = {
             TCTTD.couterTargetDic['TaskCounterTargetUseItem'],
             TCTTD.couterTargetDic['MakeEquipmentOnce'],
-            TCTTD.couterTargetDic['CompleteACertainInstance']
+            TCTTD.couterTargetDic['CompleteACertainInstance'],
+            TCTTD.couterTargetDic['CompleteAGuideOnce'],
+            TCTTD.couterTargetDic['SkipSpecifiedTimeline'],
         }
         if tgtId in ids:
             if int(self.param) == param[0]:

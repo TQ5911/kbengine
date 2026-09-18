@@ -1,5 +1,6 @@
 #!/bin/bash
-binName='crossDataServer'
+export GOTRACEBACK=crash
+binName=$(basename "$PWD")
 binPath=`pwd`'/'$binName
 
 if [ -n "$2" ]; then
@@ -8,15 +9,17 @@ else
     INST_ID=0
 fi
 
-pidFileName="crossDataServer_${INST_ID}.pid"
+pidFileName="${binName}_${INST_ID}.pid"
 
-function stop_gameapp(){
+function stop_fileserver(){
     if [ -f ${pidFileName} ]; then
-        kill `cat ${pidFileName}`
+        kill `cat ${pidFileName} 2>/dev/null`
+    else
+        echo "$binName - missing pid file, $pidFileName"
     fi
 }
 
-function start_gameapp(){
+function start_fileserver(){
     if [ -f $pidFileName ]; then
         pid=`cat ${pidFileName} 2>/dev/null`
         if ! [[ "$pid" =~ ^[0-9]+$ ]]; then
@@ -50,15 +53,13 @@ function start_gameapp(){
 }
 
 case $1 in
-    start) start_gameapp
+    start) start_fileserver
     ;;
-    stop) stop_gameapp
+    stop) stop_fileserver
     ;;
     restart)
-    stop_gameapp
-    start_gameapp
+    stop_fileserver
+    start_fileserver
     ;;
     *) echo "(Arguments shuld be start|stop|restart,OK?!)" ;;
 esac
-
-

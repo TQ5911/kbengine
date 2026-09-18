@@ -28,6 +28,7 @@ datas = _tools.RODict({
         "summonLimit": 3,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305101: _tools.RODict({
         "ID": 305101,
@@ -42,6 +43,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305201: _tools.RODict({
         "ID": 305201,
@@ -56,6 +58,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305202: _tools.RODict({
         "ID": 305202,
@@ -70,6 +73,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305203: _tools.RODict({
         "ID": 305203,
@@ -84,6 +88,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305204: _tools.RODict({
         "ID": 305204,
@@ -98,6 +103,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305205: _tools.RODict({
         "ID": 305205,
@@ -112,6 +118,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305206: _tools.RODict({
         "ID": 305206,
@@ -126,6 +133,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305207: _tools.RODict({
         "ID": 305207,
@@ -140,6 +148,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305208: _tools.RODict({
         "ID": 305208,
@@ -154,6 +163,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305209: _tools.RODict({
         "ID": 305209,
@@ -168,6 +178,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305210: _tools.RODict({
         "ID": 305210,
@@ -182,6 +193,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305211: _tools.RODict({
         "ID": 305211,
@@ -196,6 +208,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305212: _tools.RODict({
         "ID": 305212,
@@ -210,6 +223,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305213: _tools.RODict({
         "ID": 305213,
@@ -224,6 +238,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305214: _tools.RODict({
         "ID": 305214,
@@ -238,6 +253,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305215: _tools.RODict({
         "ID": 305215,
@@ -252,6 +268,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305216: _tools.RODict({
         "ID": 305216,
@@ -266,6 +283,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305217: _tools.RODict({
         "ID": 305217,
@@ -280,6 +298,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305218: _tools.RODict({
         "ID": 305218,
@@ -294,6 +313,7 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 0,
         "additionalParameter": 0,
+        "MandatoryBirthDate": 0.0
     }),
     305301: _tools.RODict({
         "ID": 305301,
@@ -308,7 +328,278 @@ datas = _tools.RODict({
         "summonLimit": 0,
         "additionalParameterType": 1,
         "additionalParameter": 64004083,
+        "MandatoryBirthDate": 0.0
+    }),
+    305501: _tools.RODict({
+        "ID": 305501,
+        "name": "雕塑7001_90",
+        "bornAnimation": "born1",
+        "bornAnimationTime": 2.1,
+        "resetAnimation": "reset1",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305502: _tools.RODict({
+        "ID": 305502,
+        "name": "雕塑7001_90",
+        "bornAnimation": "born2",
+        "bornAnimationTime": 1.8,
+        "resetAnimation": "reset2",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305503: _tools.RODict({
+        "ID": 305503,
+        "name": "雕塑7001_91",
+        "bornAnimation": "born1",
+        "bornAnimationTime": 1.767,
+        "resetAnimation": "reset1",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305504: _tools.RODict({
+        "ID": 305504,
+        "name": "雕塑7001_91",
+        "bornAnimation": "born2",
+        "bornAnimationTime": 1.967,
+        "resetAnimation": "reset2",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305505: _tools.RODict({
+        "ID": 305505,
+        "name": "雕塑7001_92",
+        "bornAnimation": "born1",
+        "bornAnimationTime": 1.767,
+        "resetAnimation": "reset1",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305506: _tools.RODict({
+        "ID": 305506,
+        "name": "雕塑7001_92",
+        "bornAnimation": "born2",
+        "bornAnimationTime": 1.933,
+        "resetAnimation": "reset2",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305507: _tools.RODict({
+        "ID": 305507,
+        "name": "雕塑7002_90",
+        "bornAnimation": "born1",
+        "bornAnimationTime": 2.0,
+        "resetAnimation": "reset1",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305508: _tools.RODict({
+        "ID": 305508,
+        "name": "雕塑7002_90",
+        "bornAnimation": "born2",
+        "bornAnimationTime": 1.733,
+        "resetAnimation": "reset2",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305509: _tools.RODict({
+        "ID": 305509,
+        "name": "雕塑7002_91",
+        "bornAnimation": "born1",
+        "bornAnimationTime": 2.133,
+        "resetAnimation": "reset1",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305510: _tools.RODict({
+        "ID": 305510,
+        "name": "雕塑7002_91",
+        "bornAnimation": "born2",
+        "bornAnimationTime": 2.133,
+        "resetAnimation": "reset2",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305511: _tools.RODict({
+        "ID": 305511,
+        "name": "雕塑7002_92",
+        "bornAnimation": "born1",
+        "bornAnimationTime": 2.133,
+        "resetAnimation": "reset1",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305512: _tools.RODict({
+        "ID": 305512,
+        "name": "雕塑7002_92",
+        "bornAnimation": "born2",
+        "bornAnimationTime": 2.1,
+        "resetAnimation": "reset2",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305513: _tools.RODict({
+        "ID": 305513,
+        "name": "雕塑7003_90",
+        "bornAnimation": "born1",
+        "bornAnimationTime": 1.667,
+        "resetAnimation": "reset1",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305514: _tools.RODict({
+        "ID": 305514,
+        "name": "雕塑7003_90",
+        "bornAnimation": "born2",
+        "bornAnimationTime": 1.767,
+        "resetAnimation": "reset2",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305515: _tools.RODict({
+        "ID": 305515,
+        "name": "雕塑7003_91",
+        "bornAnimation": "born1",
+        "bornAnimationTime": 2.1,
+        "resetAnimation": "reset1",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305516: _tools.RODict({
+        "ID": 305516,
+        "name": "雕塑7003_91",
+        "bornAnimation": "born2",
+        "bornAnimationTime": 1.733,
+        "resetAnimation": "reset2",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305517: _tools.RODict({
+        "ID": 305517,
+        "name": "雕塑7003_92",
+        "bornAnimation": "born1",
+        "bornAnimationTime": 2.1,
+        "resetAnimation": "reset1",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
+    }),
+    305518: _tools.RODict({
+        "ID": 305518,
+        "name": "雕塑7003_92",
+        "bornAnimation": "born2",
+        "bornAnimationTime": 1.767,
+        "resetAnimation": "reset2",
+        "resetAnimationTime": 1.0,
+        "resetCdAfterCombat": 0.0,
+        "summonID": 0,
+        "summonCD": 0.0,
+        "summonLimit": 0,
+        "additionalParameterType": 0,
+        "additionalParameter": 0,
+        "MandatoryBirthDate": 3.0
     })
 })
 minKey = 305001
-maxKey = 305301
+maxKey = 305518

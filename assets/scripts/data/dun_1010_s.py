@@ -21350,6 +21350,31 @@ datas ={
             "TelY": 9.73374,
             "TelZ": 579.8956
           }
+        },
+        "10108078": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Teleporter",
+          "ClassNameType": 2,
+          "CustomID": "11108004",
+          "Dir": 94.60861,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 17120001,
+          "ID": 10108078,
+          "PosX": 130.2897,
+          "PosY": 45.19169,
+          "PosZ": 363.9406,
+          "Props": {
+            "CameraId": 0,
+            "GateType": 0,
+            "Remark": "",
+            "ShowInSceneMap": 1,
+            "TelDir": 345.9354,
+            "TelX": -79.93222,
+            "TelY": 33.13795,
+            "TelZ": -298.5937
+          }
         }
       },
       "Collection": {

@@ -127,7 +127,7 @@ class CubeQuotaVal(userType.UserSingleType):
             self.calcLeftTime(),
         )
 
-    def addAbyssLeftTime(self, avatar, delta):
+    def addAbyssLeftTime(self, avatar, delta, floor=None, mapId=None):
         LOG_INFO('addAbyssLeftTime: delta: {}'.format(delta))
         """abyss"""
         self.leftTime += delta
@@ -135,18 +135,12 @@ class CubeQuotaVal(userType.UserSingleType):
 
         avatar.client.onAbyssLeftTime(self.calcLeftTime() + utils.curTS())
 
-        _mapId = formula.fetchMapId(avatar.spaceNo)
-        _floor = cube_room.datas.get(_mapId, {}).get('floor', -1)
-        # TODO abyss
-        # LogTrackingMgr.LogTrackingMgr.Abyss_Info(
-            # avatar.gbId,
-            # avatar.clientDistinctIdCell,
-        #     avatar.gbId,
-        #     gameconfig.gameId(),
-        #     _floor,
-        #     gameconst.ABYSS_EVENT_ADDTIME,
-        #     self.calcLeftTime(),
-        # )
+        avatar._logAbyssInfo(
+            gameconst.ABYSS_EVENT_ADDTIME,
+            mapId=mapId,
+            floor=floor,
+            leftTime=self.calcLeftTime(),
+        )
 
     def changeProtect(self):
         LOG_DBG('changeProtect from ', self.quotaDurState)

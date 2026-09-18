@@ -41,6 +41,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
      
     def doNext(self):
         super().doNext()
+        self.rankInfo.sort()
 
     def onTimer(self, tid, userArg):
         self._onTimerTrigger(tid, userArg)
@@ -76,7 +77,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
     def getRankFromRedis(self):
         # 每次拉取数据都更新版本号
         self.version += 1
-        redisUtils.RedBagUtils.getRedBagRankList(functools.partial(self._onGetRedBagRankList, None, None, None))
+        self.getRedBagRankList(functools.partial(self._onGetRedBagRankList, None, None, None))
 
     # 获取顺序红包列表
     def doGetRedBagRankList(self, playerbox, guildUUID, pVersion, playerFetchList):
@@ -131,7 +132,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
             
         if len(delList) > 0:
             LOG_INFO('doGetRedBagRankList: delList={}'.format(delList))
-            redisUtils.RedBagUtils.removeRedBagRankData(delList, 0, None)
+            self.removeRedBagRankData(delList, 0, None)
         
         # LOG_INFO('doGetRedBagRankList: rankList={}'.format(rankList))
         #playerbox.client.onGetRedBagRankList(rankList)
@@ -164,8 +165,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         infoList = canFetchList + hasFetchList + emptyList
         if len(delList) > 0:
             LOG_INFO('doGetRedBagList: delList={}'.format(delList))
-            redisUtils.RedBagUtils.removeRedBagRankData(delList, 0, 
-                                                        functools.partial(self.onDelRedBagCache, playerbox, delList))
+            self.removeRedBagRankData(delList, 0, functools.partial(self.onDelRedBagCache, playerbox, delList))
 
         # LOG_INFO('doGetRedBagList: infoList={}'.format(infoList))
         playerbox.client.onGetRedBagMyList(infoList)
@@ -192,10 +192,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         self.redbagDict[redbagId] = _RbVal
         
         # 创建 rank 数据
-        redisUtils.RedBagUtils.createRedBagRank(redbagId, _RbVal.releaseTime,
-                                                functools.partial(self._onCreateRedBagRank, playerbox, _RbVal))
-        #
-        LogTrackingMgr.LogTrackingMgr.Release_RedBag('RedBagStub', '', playerGbId, redbagType, channel, num, gameconst.ItemIdEnum.MONEY, money, redbagId)
+        self.createRedBagRank(redbagId, _RbVal.releaseTime, functools.partial(self._onCreateRedBagRank, playerbox, _RbVal))
 
     def _onCreateRedBagRank(self, playerbox, _RbVal, error):
         LOG_INFO('_onCreateRedBagRank: redbagId={} error={}'.format(_RbVal.redbagId, error))
@@ -217,6 +214,8 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
 
         # 回调通知 box
         playerbox.onReleaseRedBag(_RbVal.redbagId, _RbVal.redbagType, _RbVal.channel, _RbVal.money, _RbVal.releaseTime, _RbVal.desc)
+        # 发送成功才埋点
+        LogTrackingMgr.LogTrackingMgr.Release_RedBag('RedBagStub', '', _RbVal.playerGbId, _RbVal.redbagType, _RbVal.channel, _RbVal.num, gameconst.ItemIdEnum.MONEY, _RbVal.money, _RbVal.redbagId)
 
     def onSave(self, ok, entity):
         LOG_DBG('in _onWriteToDB:', entity, entity.databaseID, self.databaseID)
@@ -332,7 +331,7 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         _RbVal = self.redbagDict[redbagId]
         if _RbVal.isExpire():
             LOG_INFO('redbag expire : redbagId={} is expire, player is {}, name is {}'.format(redbagId, _RbVal.playerGbId, _RbVal.playerName))
-            redisUtils.RedBagUtils.removeRedBagRankData(redbagId, 0, functools.partial(self._removeRankDataCallback, redbagId))
+            self.removeRedBagRankData(redbagId, 0, functools.partial(self._removeRankDataCallback, redbagId))
             return True
         return False
 
@@ -388,7 +387,20 @@ class RedBagStub(iBaseNoCell.IBaseNoCell, iGlobal.IGlobal, iTimer.ITimer):
         
         for redbagId, _FcVal in self.fetchCacheDict.items():
             LOG_INFO('fetchCacheDict: {}: {}'.format(redbagId, _FcVal.toStreamSaveDict()))
-            
-            
-        
-        
+
+    def createRedBagRank(self, redbagId, timestamp, cb=None):
+        LOG_INFO('createRedBagRank:', redbagId, timestamp)
+        self.rankInfo.insert(redbagId, timestamp)
+        self.rankInfo.sort()
+        cb and cb("")
+
+    def getRedBagRankList(self, cb=None):
+        LOG_INFO('getRedBagRankList:')
+        cb and cb(self.rankInfo.get())
+
+    def removeRedBagRankData(self, redbagIds, timestamp, cb=None):
+        LOG_INFO('removeRedBagRankData:', redbagIds, timestamp)
+        if type(redbagIds) == int:
+            redbagIds = [redbagIds]
+        self.rankInfo.remove(redbagIds)
+        cb and cb('')

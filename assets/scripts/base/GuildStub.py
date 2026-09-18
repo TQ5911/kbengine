@@ -13,7 +13,6 @@ import userType
 import utils
 import functools
 import GuildJoinCondInfo
-import redisUtils
 import gameglobal
 import gameengine
 import iCycleEvent
@@ -149,16 +148,6 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleE
             self._onTimerTrigger(tid, userArg)
 
     def doCreateGuild(self, createData, gbId, box, ctx):
-        gameglobal.localBaseApp.getRedisClient().sadd(
-            gameconst.RedisKey.GUILD_NAME_TBL,
-            [createData['guildName']],
-            functools.partial(self._onAddGuildName, createData, gbId, box, ctx))
-
-    def _onAddGuildName(self, createData, gbId, box, ctx, cid, err, result):
-        if err or not result:
-            box.onCreateGuildResult(gameconst.CreateGuildResult.NAME_DUPLICATE, ctx)
-            return
-
         _guildUUID = KBEngine.genUUID64()
         _cnt = 0
         while _guildUUID in self.guildDic:
@@ -168,6 +157,16 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleE
                 box.onCreateGuildResult(gameconst.CreateGuildResult.UUID_GEN_FAILED, ctx)
                 return
 
+        gameglobal.localBaseApp.getRedisClient().setnx(
+            utils.getGuildNameRedisKey(createData['guildName']),
+            str(_guildUUID),
+            functools.partial(self._onAddGuildName, _guildUUID, createData, gbId, box, ctx))
+
+    def _onAddGuildName(self, _guildUUID, createData, gbId, box, ctx, cid, err, result):
+        if err or not result:
+            box.onCreateGuildResult(gameconst.CreateGuildResult.NAME_DUPLICATE, ctx)
+            return
+
         gamesql.addGuildAvatar(
             _guildUUID,
             gbId,
@@ -176,7 +175,7 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleE
 
     def _createGuildAfterInsertAvatar(self, _guildUUID, gbId, createData, leaderBox, ctx, ret, num, insertId, err):
         if err:
-            redisUtils.SetUtils.srem(gameconst.RedisKey.GUILD_NAME_TBL, createData['guildName'])
+            gameglobal.localBaseApp.getRedisClient().deleteTable(utils.getGuildNameRedisKey(createData['guildName']))
             leaderBox.onCreateGuildResult(gameconst.CreateGuildResult.MAYBE_HAS_GUILD, ctx)
             return
 
@@ -227,7 +226,7 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleE
         LOG_INFO("GuildStub::_onCreateGuildBox:", guildBox)
         if not guildBox:
             LOG_ERR("GuildStub::_onCreateGuildBox: create guild guildBox failed.", createData, gbId, guildUUID)
-            redisUtils.SetUtils.srem(gameconst.RedisKey.GUILD_NAME_TBL, createData['guildName'])
+            gameglobal.localBaseApp.getRedisClient().deleteTable(utils.getGuildNameRedisKey(createData['guildName']))
             leaderBox.onCreateGuildResult(gameconst.CreateGuildResult.CREATE_GUILD_FAILED, ctx)
             return
 
@@ -256,7 +255,7 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleE
     def guildWillDestroy(self, guildUUID, guildBox):
         _gcVal = self.guildDic.pop(guildUUID, None)
         if _gcVal:
-            redisUtils.SetUtils.srem(gameconst.RedisKey.GUILD_NAME_TBL, _gcVal.guildName)
+            gameglobal.localBaseApp.getRedisClient().deleteTable(utils.getGuildNameRedisKey(_gcVal.guildName))
 
         guildBox.onStubRemoveSelf()
 
@@ -267,10 +266,30 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleE
 
             getattr(_gcVal.guildBox, func)(*args)
 
+    def broadcastToAllianceGuilds(self, allianceId, func, args):
+        LOG_DBG('broadcastToAllianceGuilds: allianceId', allianceId)
+        """
+        2026-08-24 联盟频道新增:
+          只对属于 allianceId 的帮会广播(本地按 Guild.leagueUUID 过滤),
+          区别于 broadcastToAllGuild 的"无差别全服所有帮会"语义。
+          用于联盟频道消息(援助/宣战/玩家发言)这类"只与特定联盟相关"的事件。
+          性能:O(n) 遍历本服所有帮会,n 为本服帮会数,通常 < 数百,可接受。
+        """
+        if not allianceId:
+            LOG_WARN('broadcastToAllianceGuilds: invalid allianceId', allianceId)
+            return
+        for _gcVal in self.guildDic.values():
+            _guildBox = _gcVal.guildBox
+            if utils.checkBoxOffline(_guildBox):
+                continue
+            if getattr(_gcVal, 'leagueUUID', 0) != allianceId:
+                continue
+            getattr(_guildBox, func)(*args)
+
     def checkGuildNameValid(self, guildBox, avatarBox, ctx, oldName):
-        gameglobal.localBaseApp.getRedisClient().sadd(
-            gameconst.RedisKey.GUILD_NAME_TBL,
-            [ctx['name']],
+        gameglobal.localBaseApp.getRedisClient().setnx(
+            utils.getGuildNameRedisKey(ctx['name']),
+            str(guildBox.guildUUID),
             functools.partial(self._onCheckGuildNameValid, guildBox, avatarBox, ctx, oldName)
         )
 
@@ -280,7 +299,7 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleE
             avatarBox.modifyGuildNameResult(False, ctx)
             return
 
-        redisUtils.SetUtils.srem(gameconst.RedisKey.GUILD_NAME_TBL, oldName)
+        gameglobal.localBaseApp.getRedisClient().deleteTable(utils.getGuildNameRedisKey(oldName))
         guildBox.renameGuild(avatarBox, ctx)
 
     def callOnGuild(self, guildUUID, func, args, failedBox, failedFunc, failedArgs):
@@ -380,3 +399,8 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleE
            _gcVal.guildBox.onCheckGuild(uniqueId, ret, checkCD)
         else:
             gameengine.getGlobalBase('AllianceStub').onCheckGuildResult(guildId, '', uniqueId, ret, 0, checkCD)
+
+    def updateLeagueIdByGuildId(self, guildId, leagueUUID):
+        _gcVal = self.guildDic.get(guildId)
+        if _gcVal:
+            _gcVal.leagueUUID = leagueUUID

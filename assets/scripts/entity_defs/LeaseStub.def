@@ -18,13 +18,16 @@
             <Arg>       PLAYER_GBID     </Arg>
             <Arg>       UNIQUE_ID       </Arg>
             <Arg>       UINT32          </Arg>
-            <Arg>       PYTHON          </Arg>
+            <Arg>       UNICODE         </Arg>
+            <Arg>       INT64           </Arg>
             <Arg>       UINT32          </Arg>
+            <Arg>       UINT32          </Arg>
+            <Arg>       PLAYER_GBID     </Arg>
             <Arg>       UINT32          </Arg>
             <Arg>       UINT8           </Arg>
-            <Arg>       LONGTIME        </Arg>
-            <Arg>       UNICODE         </Arg>
-            <Arg>       PYTHON          </Arg>
+            <Arg>       UINT8           </Arg>
+            <Arg>       UINT8           </Arg>
+            <Arg>       UNIQUE_ID       </Arg>
         </addItemPrepare>
 
         <addItemCommit>
@@ -65,13 +68,12 @@
         </getShopSummary>
 
         <getShopItems>
-            <Arg>       SERVER_ID       </Arg>
             <Arg>       ITEMID          </Arg>
-            <Arg>       UINT8           </Arg>
-            <Arg>       UINT8           </Arg>
             <Arg>       UINT32          </Arg>
             <Arg>       UINT32          </Arg>
             <Arg>       PLAYER_GBID     </Arg>
+            <Arg>       UINT8           </Arg>
+            <Arg>       UINT8           </Arg>
         </getShopItems>
 
         <getMySaleList>

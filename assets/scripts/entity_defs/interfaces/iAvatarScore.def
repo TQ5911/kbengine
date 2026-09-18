@@ -34,6 +34,7 @@
         </updateScoreToRedis>
 
         <baseScoreChanged>
+            <Arg>   INT64   </Arg>
             <Arg>   BOOL    </Arg>
             <Arg>   UNICODE </Arg>
             <Arg>   SCORE   </Arg>
@@ -54,10 +55,12 @@
 
         <onUpdatePetScore>
             <Arg>   SCORE   </Arg>
+            <Arg>   UINT64  </Arg>
         </onUpdatePetScore>
 
         <onUpdateSkillScore>
 			<Arg>   SCORE   </Arg>
+            <Arg>   UINT64  </Arg>
 		</onUpdateSkillScore>
     </CellMethods>
 

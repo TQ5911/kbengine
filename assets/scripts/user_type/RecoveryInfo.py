@@ -42,13 +42,13 @@ class ticketRecoveryItem(userType.UserSingleType):
         
         dateNumInfoStr = json.dumps(dateNumInfo)
         dataDict['dateNumInfo'] = dateNumInfoStr
-        LOG_DBG("ResourceRecoveryStub::toStreamSavedDic", dataDict)
+        LOG_DBG("ticketRecoveryItem::toStreamSavedDic", dataDict)
         return dataDict
 
     def update(self, now, subType, nowDateTime, curNum):
-        cfgData = W_RR.datas.get(subType + 1, {})
+        cfgData = W_RR.datas.get(subType, {})
         if not cfgData:
-            LOG_ERR("ticketRecoveryItem::update no cfg", subType + 1)
+            LOG_ERR("ticketRecoveryItem::update no cfg", subType)
             return False
         N = cfgData['time']
         LOG_INFO("ticketRecoveryItem::update", self.dateNumDeques[subType], now, subType, nowDateTime, curNum, N)
@@ -185,3 +185,82 @@ class resourceRecoveryInstance(object):
         return type(obj) is resourceRecoveryInfo
     
 resourceRecoveryInfoInstance = resourceRecoveryInstance()
+
+class useCoinTimesTicketItem(userType.UserSingleType):
+    def __init__(self, itemId=0, itemNum=0, discountType=0):
+        self.itemId = itemId
+        self.itemNum = itemNum
+        self.discountType = discountType
+
+    def initFromDict(self, dataDict):
+        self.itemId = dataDict['itemId']
+        self.itemNum = dataDict['itemNum']
+        self.discountType = dataDict['discountType']
+
+    def toStreamSavedDic(self):
+        return {
+            'itemId': self.itemId,
+            'itemNum': self.itemNum,
+            'discountType': self.discountType,
+        }
+    
+    def toStreamClientDic(self):
+        return {
+            'itemId': self.itemId,
+            'itemNum': self.itemNum,
+            'discountType': self.discountType,
+        }
+
+class useCoinTimesTicketInfo(userType.UserSingleType):
+    def __init__(self):
+        self.ticketInfoList = []
+
+    def initFromDict(self, dataDict):
+        for item in dataDict['coinTicketList']:
+            ticket = useCoinTimesTicketItem()
+            ticket.initFromDict(item)
+            self.ticketInfoList.append(ticket)
+
+    def toStreamSavedDic(self):
+        ticketList = []
+        for item in self.ticketInfoList:
+            ticketList.append(item.toStreamSavedDic())
+
+        dataDict = {
+            'coinTicketList': ticketList,
+        }
+        return dataDict
+    
+    def getClientDatas(self):
+        ticketList = []
+        for item in self.ticketInfoList:
+            ticketList.append(item.toStreamClientDic())
+        return ticketList
+
+    def clear(self):
+        self.ticketInfoList.clear()
+
+    def append(self, itemId, itemNum, discountType):
+        ticket = useCoinTimesTicketItem(itemId, itemNum, discountType)
+        self.ticketInfoList.append(ticket)
+
+    def getTicketInfo(self, times):
+        if times > len(self.ticketInfoList) or times <= 0:
+            return 0, 0, 0
+        idx = len(self.ticketInfoList) - times
+        item = self.ticketInfoList[idx]
+        return item.itemId, item.itemNum, item.discountType
+    
+class useCoinTimesTicketInstance(object):
+    def createObjFromDict(self, dataDict):
+        info = useCoinTimesTicketInfo()
+        info.initFromDict(dataDict)
+        return info
+    
+    def getDictFromObj(self, obj):
+        return obj.toStreamSavedDic()
+    
+    def isSameType(self, obj):
+        return type(obj) is useCoinTimesTicketInfo
+    
+useCoinTimesTicketInfoInstance = useCoinTimesTicketInstance()

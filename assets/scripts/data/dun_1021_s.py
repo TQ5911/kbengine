@@ -14700,6 +14700,52 @@ datas ={
           "ShowInSceneMap": 1
         }
       }
+    },
+    "CustomFuncPos": {
+      "10218047": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "CustomFuncPos",
+        "ClassNameType": 10,
+        "CustomID": "",
+        "Dir": 122.162,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 0,
+        "ID": 10218047,
+        "PosX": 343.289,
+        "PosY": 101.2863,
+        "PosZ": 237.1219,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "RefreshTimedID": 0,
+          "Remark": "86010241",
+          "ShowInSceneMap": 1
+        }
+      },
+      "10218048": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "CustomFuncPos",
+        "ClassNameType": 10,
+        "CustomID": "",
+        "Dir": 230.39,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 0,
+        "ID": 10218048,
+        "PosX": 383.3772,
+        "PosY": 100.0539,
+        "PosZ": 236.2245,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "RefreshTimedID": 0,
+          "Remark": "86010435",
+          "ShowInSceneMap": 1
+        }
+      }
     }
   }
 }

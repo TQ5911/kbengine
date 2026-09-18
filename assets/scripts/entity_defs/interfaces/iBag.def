@@ -27,6 +27,12 @@
             <Persistent>    true        </Persistent>
         </pickedCollections>
 
+        <pickedCollOnceBits>
+            <Type>          BIG_BIT_DATA_INFO       </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Persistent>    true                    </Persistent>
+        </pickedCollOnceBits>
+
         <darkIron>
             <Type>          DARK_IRON       </Type>
             <Flags>         BASE_AND_CLIENT </Flags>
@@ -392,6 +398,7 @@
 
         <reqUpgradeSynthesis><Exposed/>
             <Arg>       UINT32      </Arg>
+            <Arg>       UINT8       </Arg>
         </reqUpgradeSynthesis>
 
         <reqRandomUpgradeSynthesis><Exposed/>
@@ -500,6 +507,12 @@
             <Arg>       ITEM_ID     </Arg>
             <Arg>       UNIQUE_ID   </Arg>
         </gmDeductEquip>
+
+        <gmRestoreEquipContinue>
+            <Arg>       PYTHON      </Arg>
+            <Arg>       STRING      </Arg>
+            <Arg>       STRING      </Arg>
+        </gmRestoreEquipContinue>
 
         <reqDebtItemData> <Exposed/>
         </reqDebtItemData>

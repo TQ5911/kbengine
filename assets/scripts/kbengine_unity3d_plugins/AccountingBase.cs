@@ -122,7 +122,7 @@ namespace KBEngine
 					minorAccountConstraintTip(minorAccountConstraintTip_arg1);
 					break;
 				case 1172:
-					List<WAITMAP_CHARACTER> onGetAvataringCharacter_arg1 = ((DATATYPE_AnonymousArray_10121)method.args[0]).createFromStreamEx(stream);
+					List<WAITMAP_CHARACTER> onGetAvataringCharacter_arg1 = ((DATATYPE_AnonymousArray_10124)method.args[0]).createFromStreamEx(stream);
 					onGetAvataringCharacter(onGetAvataringCharacter_arg1);
 					break;
 				case 1167:

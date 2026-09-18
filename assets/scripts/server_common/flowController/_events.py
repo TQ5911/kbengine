@@ -433,10 +433,18 @@ class DungeonInnerDemonReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotRel
                     LOG_DBG("DungeonInnerDemonReleaseEvent genAvatarReplica mProps", k, v)
                 spaceMgr.getCurrentSpace().createCellLocally('AvatarReplica', position, direction, mProps)
             else:
-                stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
-                stub.spawnDungeonEntityByGameEntityId(spaceNo, innerDemonGIDs, 1, _ent.level,
-                                                     {'overwriteProps': overwriteProps, 'ifSetBoss': ifSetBoss,
-                                                      'initState': initState, 'eventId': self.id, 'cloneProps': cloneProps})
+                spaceMgr.doSpawnDunEntities(
+                    innerDemonGIDs, 
+                    1, 
+                    _ent.level,
+                    {
+                        'overwriteProps': overwriteProps, 
+                        'ifSetBoss': ifSetBoss,
+                        'initState': initState, 
+                        'eventId': self.id, 
+                        'cloneProps': cloneProps
+                    }
+                )
 
         super(DungeonInnerDemonReleaseEvent, self).handleProcessActivated(
             srcE, srcIdx, idx, obj, **refParams)
@@ -467,13 +475,21 @@ class DungeonMonsterReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReload
         overwriteProps = self.fetchArgument('overwriteProps', {})
         ifSetBoss = self.fetchArgument('ifSetBoss', False)
         initState = self.fetchArgument('initState', 0)
-        stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
         _id = self.id
-        stub.spawnDungeonEntityByGameEntityId(spaceNo, monsterGIDs, monsterNum, monsterLevel,
-                                                 {'overwriteProps': overwriteProps, 'ifSetBoss': ifSetBoss,
-                                                  'initState': initState, 'eventId': _id})
         super(DungeonMonsterReleaseEvent, self).handleProcessActivated(
             srcE, srcIdx, idx, obj, **refParams)
+        spaceMgr = self.controller.owner
+        spaceMgr.doSpawnDunEntities(
+            monsterGIDs, 
+            monsterNum, 
+            monsterLevel,
+            {
+                'overwriteProps': overwriteProps, 
+                'ifSetBoss': ifSetBoss,
+                'initState': initState, 
+                'eventId': _id
+            }
+        )
 
     def fetchWaitingKey(self, ctx):
         return self.getMonsterReleaseKey(self.id, self.fetchArgument('monsterGIDs', []))
@@ -499,11 +515,18 @@ class DungeonNPCReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReloadMixi
         npcNum = self.fetchArgument('npcNum', 1)
         npcLevel = self.fetchArgument('npcLevel', 0)
         ifSetBoss = self.fetchArgument('ifSetBoss', False)
-        stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
-        stub.spawnDungeonEntityByGameEntityId(spaceNo, npcGIDs, npcNum, npcLevel,
-                                                 {'ifSetBoss': ifSetBoss, 'eventId': self.id})
         super(DungeonNPCReleaseEvent, self).handleProcessActivated(
             srcE, srcIdx, idx, obj, **refParams)
+        spaceMgr = self.controller.owner
+        spaceMgr.doSpawnDunEntities(
+            npcGIDs, 
+            npcNum, 
+            npcLevel,
+            {
+                'ifSetBoss': ifSetBoss, 
+                'eventId': self.id
+            }
+        )
 
     def fetchWaitingKey(self, ctx):
         return self.getNpcReleaseKey(self.id, self.fetchArgument('npcGIDs', []))
@@ -543,11 +566,16 @@ class DungeonCollectionReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotRel
                 LOG_WARN("DungeonCollectionReleaseEvent not _collGIDs")
                 return
 
-        stub = gameengine.getDungeonStubBySpaceNo(_spaceNo)
-        stub.spawnDungeonEntityByGameEntityId(_spaceNo, _collGIDs, _collNum, 0,
-                                                 {'eventId': self.id})
         super(DungeonCollectionReleaseEvent, self).handleProcessActivated(
             srcE, srcIdx, idx, obj, **refParams)
+
+        spaceMgr = self.controller.owner
+        spaceMgr.doSpawnDunEntities(
+            _collGIDs, 
+            _collNum, 
+            0,
+            {'eventId': self.id}
+        )
 
     def fetchWaitingKey(self, ctx):
         return self.getCollReleaseKey(self.id, self.fetchArgument('collGIDs', []))
@@ -698,11 +726,17 @@ class DungeonAirWallReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotReload
         spaceNo = refParams['spaceNo']
         airWallGIDs = self.fetchArgument('airWallGIDs', [])
         airWallNum = self.fetchArgument('airWallNum', 1)
-        stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
-        stub.spawnDungeonEntityByGameEntityId(spaceNo, airWallGIDs, airWallNum, 0,
-                                                 {'eventId': self.id})
+
         super(DungeonAirWallReleaseEvent, self).handleProcessActivated(
             srcE, srcIdx, idx, obj, **refParams)
+
+        spaceMgr = self.controller.owner
+        spaceMgr.doSpawnDunEntities(
+            airWallGIDs, 
+            airWallNum, 
+            0,
+            {'eventId': self.id}
+        )
 
     def fetchWaitingKey(self, ctx):
         return self.getCollReleaseKey(self.id, self.fetchArgument('airWallGIDs', []))
@@ -729,11 +763,16 @@ class DungeonTeleporterReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotRel
         entityGID = self.fetchArgument('entityGID', -1)
         targetEntityGID = self.fetchArgument('targetEntityGID', 1)
         trapRange = self.fetchArgument('trapRange', 0)
-        stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
-        stub.spawnDungeonEntityByGameEntityId(spaceNo, [entityGID, ], 1, 0,
-                                                 {'targetEntityGID': targetEntityGID, 'trapRange': trapRange})
         super(DungeonTeleporterReleaseEvent, self).handleProcessActivated(
             srcE, srcIdx, idx, obj, **refParams)
+
+        spaceMgr = self.controller.owner
+        spaceMgr.doSpawnDunEntities(
+            [entityGID, ], 
+            1, 
+            0,
+            {'targetEntityGID': targetEntityGID, 'trapRange': trapRange}
+        )
 
     def fetchWaitingKey(self, ctx):
         return self.getCollReleaseKey(self.fetchArgument('entityGID', -1))
@@ -1464,11 +1503,16 @@ class DungeonRebornPosReleaseEvent(ep_ctrl.event.BaseAwaitEvent, _ElementHotRelo
         spaceNo = refParams['spaceNo']
         rebornPosGIDs = self.fetchArgument('rebornPosGIDs', [])
         rebornPosNum = self.fetchArgument('rebornPosNum', 1)
-        stub = gameengine.getDungeonStubBySpaceNo(spaceNo)
-        stub.spawnDungeonEntityByGameEntityId(spaceNo, rebornPosGIDs, rebornPosNum, 0,
-                                                 {'eventId': self.id})
         super(DungeonRebornPosReleaseEvent, self).handleProcessActivated(
             srcE, srcIdx, idx, obj, **refParams)
+
+        spaceMgr = self.controller.owner
+        spaceMgr.doSpawnDunEntities(
+            rebornPosGIDs, 
+            rebornPosNum, 
+            0,
+            {'eventId': self.id}
+        )
 
     def fetchWaitingKey(self, ctx):
         return self.getCollReleaseKey(self.id, self.fetchArgument('rebornPosGIDs', []))

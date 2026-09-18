@@ -18,20 +18,20 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "ID": 1,
         "rechargeRange": _tools.ROList([1, 5000]),
-        "goldRate": 100,
-        "boundGoldRate": 30
+        "goldRate": 10,
+        "boundGoldRate": 3
     }),
     2: _tools.RODict({
         "ID": 2,
         "rechargeRange": _tools.ROList([5001, 50000]),
-        "goldRate": 100,
-        "boundGoldRate": 20
+        "goldRate": 10,
+        "boundGoldRate": 2
     }),
     3: _tools.RODict({
         "ID": 3,
         "rechargeRange": _tools.ROList([50001]),
-        "goldRate": 100,
-        "boundGoldRate": 10
+        "goldRate": 10,
+        "boundGoldRate": 1
     })
 })
 minKey = 1

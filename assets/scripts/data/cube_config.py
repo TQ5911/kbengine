@@ -342,5 +342,9 @@ datas = _tools.RODict({
     "cube_freeIconPath": _tools.RODict({
         "ID": "cube_freeIconPath",
         "value": "Assets/Res/ui/texturenp/item/item_018.png",
+    }),
+    "cube_cowRoomRefreshMsg": _tools.RODict({
+        "ID": "cube_cowRoomRefreshMsg",
+        "value": 54003278,
     })
 })

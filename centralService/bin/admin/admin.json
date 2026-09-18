@@ -1,0 +1,25 @@
+{
+    "serverName":"adminServer",
+    "serverId":1,
+    "addressForGameServer": "0.0.0.0:2040",
+    "addressForGMT": "0.0.0.0:2050",
+    "AddreesForGRPC":"0.0.0.0:2051",
+    "addressForDebug":"localhost:9292",
+    "httpAPIAddress":"0.0.0.0:8080",
+    "MachinePort": 20099,
+    "transferAvatarSignSecret": "FCC81DFE52A45DEA476B4FFC408831B8",
+    "httpCmdSignKey":"3Pi0ZsIoRha8h0MG6jfHdxG1WLcE7XplB0kzhFitVIZzUNIbKc871DMEZnHGygno",
+    "centralLoginCmdAddressList":["localhost:8999"],
+    "logPath":"./admin.log",
+    "logLevel":0,
+    "logRotateSize":500,
+    "neteaseMusicRedirect":"https://s.xwindlab.com/h5_xf/index.html",
+    "httpSDKAddress":"0.0.0.0:8081",
+    "redisServer":{
+    	"addr":"192.168.10.12:6379",
+    	"username":"",
+    	"passwd":"",
+    	"db":""
+    },
+    "reportAddr":"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5"
+}

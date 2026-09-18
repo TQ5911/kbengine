@@ -206,5 +206,9 @@ datas = _tools.RODict({
     "paymentFailedKefu": _tools.RODict({
         "ID": "paymentFailedKefu",
         "value": 54002410,
+    }),
+    "paymentFailedClose": _tools.RODict({
+        "ID": "paymentFailedClose",
+        "value": 54002411,
     })
 })

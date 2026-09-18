@@ -2,6 +2,7 @@ from KBEDebug import *
 import gameconst
 import dungeonSrc
 import tutorConst_newbieStep as TCNSD
+import message_Message_def as MMD
 
 
 class INewbie(object):
@@ -18,6 +19,7 @@ class INewbie(object):
         lockNo = self.getNewbieStepDungeonNo()
         LOG_INFO('destroyFromNewbieDungeon', self.gbId, lockNo, dungeonNo, self.getNewbieStepCell())
         if lockNo:
+            self.client.onMessage(MMD.datas.gExitTheReplica, [])
             self.offline(self.id, gameconst.OFFLINE_REASON_NEWBIE_KICKOUT)
             return
 

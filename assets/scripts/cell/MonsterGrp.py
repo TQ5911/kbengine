@@ -153,3 +153,9 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
         if utils.isBelongTimerTag(userData):
             self._onTimerCallback(tid)
 
+    def _preSafeDestory(self):
+        super(MonsterGrp, self)._preSafeDestory()
+        spaceMgr = self.spaceMgr
+        if spaceMgr:
+            spaceMgr.removeEntById(self.id)
+

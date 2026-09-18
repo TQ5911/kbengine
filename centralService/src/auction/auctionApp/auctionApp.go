@@ -419,7 +419,7 @@ func (au *AuctionApp) GenUUID() uint64 {
 func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number uint32, extra string) (uint64, string, uint64, int64, uint32, uint32, error) {
 	appLog.Debugw("BuyItem", "playerGBID", playerGBID, "auctionItemUUID", auctionItemUUID, "number", number, "extra", extra)
 
-	auctionItem, ret := au.auctionMgr.CheckBuyItem(auctionItemUUID, number)
+	auctionItem, ret := au.auctionMgr.CheckBuyItem(auctionItemUUID, playerGBID, number)
 	if ret != AUCTION_OK {
 		switch ret {
 		case AUCTION_NOT_IN_AUCTION:
@@ -446,7 +446,7 @@ func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number 
 			return auctionItemUUID, extra, 0, 0, uint32(ret), 0, nil
 		}
 	} else {
-		getLock := auctionItem.lock(60, playerGBID, au, true)
+		getLock := auctionItem.lock(AUCTION_ITEM_LOCKED_TIME, playerGBID, au, true)
 		if !getLock {
 			appLog.Debugw("BuyItem: get lock failed", "auctionItemUUID", auctionItem.AuctionItemUUID)
 			ret = AUCTION_ITEM_IS_LOCKED
@@ -560,6 +560,129 @@ func (au *AuctionApp) DoBuyItem(auctionItemUUID uint64, playerGBID uint64, errno
 	return auctionItem, string(extraB), nil
 }
 
+// 批量购买(锁定阶段)。部分成功:成功项返回已锁定的交易行物品,失败项返回错误码。
+func (au *AuctionApp) BuyItems(playerGBID uint64, auctionItemUUIDs []uint64, auctionItemNumbers []uint32, extra string) ([]*gameServerService.BuyItemsResult, string, error) {
+	appLog.Debugw("BuyItems", "playerGBID", playerGBID, "auctionItemUUIDs", auctionItemUUIDs, "auctionItemNumbers", auctionItemNumbers, "extra", extra)
+
+	results := make([]*gameServerService.BuyItemsResult, 0, len(auctionItemUUIDs))
+	if len(auctionItemUUIDs) != len(auctionItemNumbers) {
+		return results, extra, nil
+	}
+	for idx := 0; idx < len(auctionItemUUIDs); idx++ {
+		auctionItemUUID := auctionItemUUIDs[idx]
+		auctionItemNumber := auctionItemNumbers[idx]
+		result := buyItemsResultPool.Get().(*gameServerService.BuyItemsResult)
+		result.Reset()
+		result.AuctionItemUUID = auctionItemUUID
+		result.AuctionItemNumber = auctionItemNumber
+
+		auctionItem, ret := au.auctionMgr.CheckBuyItems(auctionItemUUID, playerGBID, auctionItemNumber)
+		if ret != AUCTION_OK {
+			appLog.Warnw("BuyItems: check failed", "auctionItemUUID", auctionItemUUID, "ret", ret)
+			result.Code = uint32(ret)
+			results = append(results, result)
+			continue
+		}
+		getLock := auctionItem.lock(AUCTION_ITEM_LOCKED_TIME, playerGBID, au, true)
+		if !getLock {
+			appLog.Debugw("BuyItems: get lock failed", "auctionItemUUID", auctionItem.AuctionItemUUID)
+			result.Code = uint32(AUCTION_ITEM_IS_LOCKED)
+			results = append(results, result)
+			continue
+		}
+
+		result.Price = auctionItem.Price
+		result.Code = uint32(AUCTION_OK)
+		result.AuctionItemUUID = auctionItemUUID
+		result.AuctionItemNumber = auctionItemNumber
+		result.AuctionItemId = auctionItem.ItemData.ItemId
+		results = append(results, result)
+	}
+	return results, extra, nil
+}
+
+// 批量成交。部分成功:成功项继续,失败项返回错误码。
+func (au *AuctionApp) DoBuyItems(playerGBID uint64, errCode uint32, preFailUUIDs []uint64, preFailCodes []uint32, items []*gameServerService.DoBuyItemInfo, extraInfo string) ([]uint64, []*AuctionItem, []uint64, []uint32, string, error) {
+	appLog.Debugw("DoBuyItems", "playerGBID", playerGBID, "items", items, "errCode", errCode, "preFailUUIDs", preFailUUIDs, "preFailCodes", preFailCodes, "extraInfo", extraInfo)
+	if len(preFailCodes) != len(preFailUUIDs) {
+		return nil, nil, nil, nil, extraInfo, errors.New("args 1 error")
+	}
+	var m map[string]interface{}
+	err := json.Unmarshal([]byte(extraInfo), &m)
+	if err != nil {
+		appLog.Error("NewAuctionItem: Unmarshal err", err)
+		return nil, nil, nil, nil, extraInfo, errors.New("args 2 error")
+	}
+
+	successUUIDs := make([]uint64, 0, len(items))
+	successItems := make([]*AuctionItem, 0, len(items))
+
+	failUUIDs := make([]uint64, 0, len(items))
+	failCodes := make([]uint32, 0, len(items))
+
+	for idx := 0; idx < len(preFailUUIDs); idx++ {
+		failUUIDs = append(failUUIDs, preFailUUIDs[idx])
+		failCodes = append(failCodes, preFailCodes[idx])
+	}
+
+	for _, item := range items {
+		auctionItem, err := au.auctionMgr.GetAuctionItem(item.AuctionItemUUID)
+		if err != nil {
+			appLog.Errorw("DoBuyItems: GetAuctionItem err", "err", err, "auctionItemUUID", item.AuctionItemUUID)
+			failUUIDs = append(failUUIDs, item.AuctionItemUUID)
+			if errCode != AUCTION_OK {
+				failCodes = append(failCodes, errCode)
+			} else {
+				failCodes = append(failCodes, AUCTION_NOT_IN_AUCTION)
+			}
+			continue
+		}
+
+		if auctionItem.LockPlayerGBID > 0 && playerGBID != auctionItem.LockPlayerGBID {
+			appLog.Errorw("DoBuyItems: playerGBID != auctionItem.LockPlayerGBID", "playerGBID", playerGBID, "auctionItem.LockPlayerGBID", auctionItem.LockPlayerGBID, "auctionItemUUID", item.AuctionItemUUID)
+			failUUIDs = append(failUUIDs, item.AuctionItemUUID)
+			if errCode != AUCTION_OK {
+				failCodes = append(failCodes, errCode)
+			} else {
+				failCodes = append(failCodes, AUCTION_ITEM_IS_LOCKED)
+			}
+			continue
+		}
+		// 游戏服检查不通过，释放交易行物品
+		if errCode != AUCTION_OK {
+			auctionItem.unLock()
+			failUUIDs = append(failUUIDs, item.AuctionItemUUID)
+			failCodes = append(failCodes, errCode)
+			continue
+		}
+
+		_, err = au.auctionMgr.doBuyItem(auctionItem, item.AuctionItemNumber, playerGBID, m)
+		if err != nil {
+			auctionItem.unLock()
+			appLog.Errorw("DoBuyItems: doBuyItem err", "err", err, "auctionItemUUID", item.AuctionItemUUID)
+			failUUIDs = append(failUUIDs, item.AuctionItemUUID)
+			failCodes = append(failCodes, uint32(PARAM_ERROR))
+			continue
+		}
+		auctionItem.unLock()
+		if auctionItem.FromPlayerGBID != 0 {
+			gameServer := au.GetGameServer(auctionItem.ServerId, 0)
+			if gameServer == nil {
+				appLog.Errorw("DoBuyItems: gameServer == nil", "auctionItem", auctionItem, "playerGBID", playerGBID)
+			} else {
+				au.RefreshPlayerCoinAuctionData(auctionItem.FromPlayerGBID, gameServer.AuctionService.(*GameServerService))
+			}
+		}
+		au.auctionMgr.priceRecord.AddAvgPriceRecord(auctionItem.ItemData.ItemId, auctionItem.Price, item.AuctionItemNumber, au)
+		au.auctionMgr.priceRecord.AddLastPriceRecord(auctionItem.ItemData.ItemId, auctionItem.getEachPrice(), au.db)
+
+		successUUIDs = append(successUUIDs, item.AuctionItemUUID)
+		successItems = append(successItems, auctionItem)
+	}
+
+	return successUUIDs, successItems, failUUIDs, failCodes, extraInfo, nil
+}
+
 func (au *AuctionApp) onItemBeSaled(auctionItem *AuctionItem, buyNumber uint32, extra string, fromPlayerGBID uint64) {
 	appLog.Debugw("onItemBeSaled", "auctionItem", auctionItem, "buyNumber", buyNumber, "extra", extra, "fromPlayerGBID", fromPlayerGBID)
 	gameServer := au.GetGameServer(auctionItem.ServerId, 0)
@@ -619,7 +742,7 @@ func (au *AuctionApp) CancelSaleItem(playerGBID uint64, auctionItemUUID uint64, 
 		return auctionItem, string(extraB), ret, nil
 	}
 
-	if !auctionItem.lock(60, playerGBID, au, true) {
+	if !auctionItem.lock(AUCTION_ITEM_LOCKED_TIME, playerGBID, au, true) {
 		m["auctionItemUUID"] = auctionItemUUID
 		appLog.Warnw("CancelSaleItem lock failed", "ret", ret, "auctionItemUUID", auctionItemUUID)
 		extraB, er := json.Marshal(m)
@@ -670,8 +793,8 @@ func (au *AuctionApp) DoCancelSaleItem(auctionItemUUID uint64, playerGBID uint64
 	return auctionItem, extra, errno
 }
 
-func (au *AuctionApp) SearchItemsByItemId(playerGBID uint64, itemIds []uint32, limit uint32, offset uint32, isPublicity uint32, extra string) ([]*AuctionItem, uint32, error) {
-	auctionItems, allCount := au.auctionMgr.SearchItemByItemIds(itemIds, playerGBID, limit, offset, isPublicity)
+func (au *AuctionApp) SearchItemsByItemId(playerGBID uint64, itemIds []uint32, gradeLevles []int32, enhanceLevels []int32, limit uint32, offset uint32, isPublicity uint32, extraInfo string) ([]*AuctionItem, uint32, error) {
+	auctionItems, allCount := au.auctionMgr.SearchItemByItemIds(itemIds, gradeLevles, enhanceLevels, playerGBID, limit, offset, isPublicity)
 	appLog.Debugw("SearchItemsByItemId", "auctionItems", auctionItems, "allCount", allCount)
 	return auctionItems, allCount, nil
 }
@@ -679,7 +802,7 @@ func (au *AuctionApp) SearchItemsByItemId(playerGBID uint64, itemIds []uint32, l
 func (au *AuctionApp) GetCurrentSaleItemInfo(itemId uint32, playerGBID uint64, isPublicity uint32) ([]*AuctionItem, uint32, error) {
 	appLog.Debugw("GetCurrentSaleItemInfo", "playerGBID", playerGBID, "itemId", itemId, "isPublicity", isPublicity)
 	itemIds := []uint32{itemId}
-	auctionItems, allCount := au.auctionMgr.SearchItemByItemIds(itemIds, playerGBID, 3, 0, isPublicity)
+	auctionItems, allCount := au.auctionMgr.SearchItemByItemIds(itemIds, nil, nil, playerGBID, 3, 0, isPublicity)
 	appLog.Debugw("GetCurrentSaleItemInfo 2", "auctionItems", auctionItems, "allCount", allCount)
 	return auctionItems, allCount, nil
 }
@@ -1407,7 +1530,7 @@ func (au *AuctionApp) buyItemByItemId(playerGbId uint64, itemId uint32, num uint
 			return false
 		}
 
-		getLock := auctionItem.lock(60, playerGbId, au, false)
+		getLock := auctionItem.lock(AUCTION_ITEM_LOCKED_TIME, playerGbId, au, false)
 		if !getLock {
 			appLog.Debugw("buyItemByItemId: get lock failed", "auctionItemUUID", auctionItem.AuctionItemUUID)
 			return true
@@ -1556,7 +1679,7 @@ func (au *AuctionApp) getAuctionItemsByAuctionIds(auctionIds []uint64) ([]*Aucti
 	return auctionItems, nil
 }
 
-func (au *AuctionApp) getAllItemsPriceInfoList() []*gameServerService.ItemPriceInfo{
+func (au *AuctionApp) getAllItemsPriceInfoList() []*gameServerService.ItemPriceInfo {
 	return au.auctionMgr.getAllItemsPriceInfoList()
 }
 

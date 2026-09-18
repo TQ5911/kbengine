@@ -15,8 +15,9 @@ import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import dropAward
 import itemFactory
 import utils
+import dataUtils
+import gameconfig
 import _pickle as cPickle
-import itemData_itemData as IDID
 
 BASE, CELL, ALL, INSIDE, ALLSIDE = gameconst.BASE, gameconst.CELL,\
     gameconst.ALL, gmAdmin.INSIDE, gmAdmin.ALLSIDE
@@ -586,10 +587,12 @@ def finalScoreRushRank(su, force=0):
     su.onCommandResult(0, '', {})
     return True, 'command success'
 
-@gm_cmd('$gmDeductItem', (Player("gbId or Id", raw=True), Int("itemId"), Int("bindNum"), Int("unbindNum"), Int("ignoreBindNum"), Int("debtBindNum"), Int("debtUnbindNum")), RARG(0), BASE, '扣除道具，不够的可以欠债', ALLSIDE,
+@gm_cmd('$gmDeductItem', (Player("gbId or Id", raw=True), Int("itemId"), Int("bindNum"), Int("unbindNum"), Int("ignoreBindNum"), Int("debtBindNum"), Int("debtUnbindNum")), RARG(0), BASE, '扣除道具/装备，不够的可以欠债', ALLSIDE,
         GOD_GROUPS)
 def gmDeductItem(superUser, playerEnt, itemId, bindNum, unbindNum, ignoreBindNum, debtBindNum, debtUnbindNum):
-    if itemId not in IDID.datas:
+    if gameconfig.isCrossServer():
+        return False, '跨服禁止执行'
+    if not dataUtils.getCommItemData(itemId) and not dataUtils.isEquipItemByItemId(itemId):
         return False, '执行失败, 道具不存在'
 
     if gmCommand.isRawPlayer(playerEnt):
@@ -603,7 +606,9 @@ def gmDeductItem(superUser, playerEnt, itemId, bindNum, unbindNum, ignoreBindNum
 @gm_cmd('$gmDeductEquip', (Player("gbId or Id", raw=True), Int("itemId"), Int("EquipID"), ), RARG(0), BASE, '扣除装备，装身上的会卸下', ALLSIDE,
         GOD_GROUPS)
 def gmDeductEquip(superUser, playerEnt, itemId, equipId):
-    if gmCommand.isRawPlayer(playerEnt):
+    if gameconfig.isCrossServer():
+        superUser.onCommandResult(-1, '执行失败, 跨服禁止执行', {"ec": -3})
+    elif gmCommand.isRawPlayer(playerEnt):
         superUser.onCommandResult(-1, '执行失败, 玩家不在线', {"ec": -2})
     else:
         playerEnt.gmDeductEquip(superUser, itemId, equipId)
@@ -630,3 +635,50 @@ def gmRestoreEquip(su, playerEnt, equipData, events):
         su.onCommandResult(-1, '执行失败, 玩家不在线', {"ec": -2})
     else:
         playerEnt.gmRestoreEquip(su, equipData, events)
+
+@gm_cmd('$gmDeductMonthCard', (Player("gbId or Id", raw=True), Int("monthCardId 1大月卡2小月卡"), Int("seconds 扣除秒数")), RARG(0), BASE, '扣除月卡时间', ALLSIDE,
+        GOD_GROUPS)
+def gmDeductMonthCard(su, playerEnt, monthCardId, seconds):
+    LOG_INFO('gmDeductMonthCard', playerEnt, monthCardId, seconds)
+    if gameconfig.isCrossServer():
+        su.onCommandResult(-1, '执行失败, 跨服禁止执行', {"ec": -3})
+        return
+    if monthCardId not in gameconst.PremiumType.VALID_TYPES:
+        su.onCommandResult(-1, '执行失败, 月卡类型错误(1大月卡 2小月卡)', {"ec": -1, "monthCardId": monthCardId})
+        return
+    if seconds <= 0:
+        su.onCommandResult(-1, '执行失败, 扣除秒数必须大于0', {"ec": -1, "seconds": seconds})
+        return
+
+    if gmCommand.isRawPlayer(playerEnt):
+        gbId, name, accountName, dbId = playerEnt
+        gamesql.recordAvatarOfflineCallback(gbId, 'gmDeductMonthCard', (monthCardId, seconds))
+        su.onCommandResult(0, 'command success', {"ec": 0, "offline": 1, "gbId": gbId, "monthCardId": monthCardId, "seconds": seconds})
+    else:
+        ok, oldExpire, newExpire = playerEnt.gmDeductMonthCard(monthCardId, seconds)
+        if not ok:
+            su.onCommandResult(-1, '执行失败, 月卡已过期', {"ec": -4, "gbId": playerEnt.gbID, "monthCardId": monthCardId, "oldExpire": oldExpire})
+            return
+        su.onCommandResult(0, 'command success', {"ec": 0, "offline": 0, "gbId": playerEnt.gbID, "monthCardId": monthCardId, "seconds": seconds, "oldExpire": oldExpire, "newExpire": newExpire})
+
+@gm_cmd('$gmDeleteSafeBoxItem', (Player("gbId or Id", raw=True), Str('orderId')), RARG(0), BASE, '删除保险箱', ALLSIDE, DEVE_GROUPS)
+def gmDeleteSafeBoxItem(su, player, orderId):
+    LOG_INFO('deleteSafeBoxItem', player, orderId)
+    if gmCommand.isRawPlayer(player):
+        gbId, name, accountName, dbId = player
+        def onCheckSafeBoxExistsResult(ret, num, insertId, err, gbId, orderId):
+            if err:
+                su.onCommandResult(-1, 'db error', {"gbId":gbId, "orderId": orderId})
+                return
+            if ret:
+                su.onCommandResult(0, 'command success', {"gbId":gbId, "orderId": orderId})
+                gamesql.recordAvatarOfflineCallback(gbId, 'deleteSafeBoxItemOffline', (orderId, int(ret[0][0])))
+                return
+            su.onCommandResult(-2, 'order id is not existed', {"gbId":gbId, "orderId": orderId})
+        
+        gamesql.checkSafeBoxExists(
+            orderId,
+            lambda ret, num, insertId, err, gbId=gbId, orderId=orderId:
+                onCheckSafeBoxExistsResult(ret, num, insertId, err, gbId, orderId))
+    else:
+        player.gmDeleteSafeBoxItem(su, orderId)

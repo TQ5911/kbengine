@@ -26,11 +26,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43A1"
@@ -63,11 +60,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43A1"
@@ -100,11 +94,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43A1"
@@ -137,11 +128,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43A1"
@@ -174,11 +162,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43A2"
@@ -211,11 +196,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43A2"
@@ -248,11 +230,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43A2"
@@ -285,11 +264,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43A2"
@@ -322,11 +298,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43A3"
@@ -359,11 +332,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43A3"
@@ -396,11 +366,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43A3"
@@ -433,11 +400,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43B1"
@@ -470,11 +434,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43B1"
@@ -507,11 +468,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43B1"
@@ -544,11 +502,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43B1"
@@ -581,11 +536,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43B2"
@@ -618,11 +570,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43B2"
@@ -655,11 +604,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43B2"
@@ -692,11 +638,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43B2"
@@ -729,11 +672,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43C1"
@@ -766,11 +706,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43C1"
@@ -803,11 +740,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43C1"
@@ -840,11 +774,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43C1"
@@ -877,11 +808,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43C2"
@@ -914,11 +842,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43C2"
@@ -951,11 +876,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43C2"
@@ -988,11 +910,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43C2"
@@ -1025,11 +944,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43C3"
@@ -1062,11 +978,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43C3"
@@ -1099,11 +1012,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43C3"
@@ -1136,11 +1046,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43C3"
@@ -1173,11 +1080,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43D1"
@@ -1210,11 +1114,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43D1"
@@ -1247,11 +1148,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43D1"
@@ -1284,11 +1182,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43D1"
@@ -1321,11 +1216,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43D2"
@@ -1358,11 +1250,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43D2"
@@ -1395,11 +1284,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43D2"
@@ -1432,11 +1318,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43E1"
@@ -1469,11 +1352,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43E1"
@@ -1506,11 +1386,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43E1"
@@ -1543,11 +1420,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43E1"
@@ -1580,11 +1454,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43E2"
@@ -1617,11 +1488,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43E2"
@@ -1654,11 +1522,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43E2"
@@ -1691,11 +1556,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43E2"
@@ -1728,11 +1590,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43E3"
@@ -1765,11 +1624,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43E3"
@@ -1802,11 +1658,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43E3"
@@ -1839,11 +1692,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43E3"
@@ -1876,11 +1726,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43F1"
@@ -1913,11 +1760,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43F1"
@@ -1950,11 +1794,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43F1"
@@ -1987,11 +1828,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43F1"
@@ -2024,11 +1862,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43F2"
@@ -2061,11 +1896,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43F2"
@@ -2098,11 +1930,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43F2"
@@ -2135,11 +1964,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43G1"
@@ -2172,11 +1998,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43G1"
@@ -2209,11 +2032,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43G1"
@@ -2246,11 +2066,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43G1"
@@ -2283,11 +2100,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43G1"
@@ -2320,11 +2134,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43G1"
@@ -2357,11 +2168,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43G1"
@@ -2394,11 +2202,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43G1"
@@ -2431,11 +2236,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43G1"
@@ -2468,11 +2270,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43G1"
@@ -2505,11 +2304,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43G1"
@@ -2542,11 +2338,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "43G1"
@@ -2579,11 +2372,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44A1"
@@ -2616,11 +2406,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44A1"
@@ -2653,11 +2440,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44A1"
@@ -2690,11 +2474,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44A1"
@@ -2727,11 +2508,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44A2"
@@ -2764,11 +2542,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44A2"
@@ -2801,11 +2576,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44A2"
@@ -2838,11 +2610,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44A2"
@@ -2875,11 +2644,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44B1"
@@ -2912,11 +2678,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44B1"
@@ -2949,11 +2712,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44B1"
@@ -2986,11 +2746,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44B1"
@@ -3023,11 +2780,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44B2"
@@ -3060,11 +2814,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44B2"
@@ -3097,11 +2848,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44B2"
@@ -3134,11 +2882,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44B2"
@@ -3171,11 +2916,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44B3"
@@ -3208,11 +2950,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44B3"
@@ -3245,11 +2984,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44B3"
@@ -3282,11 +3018,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44B3"
@@ -3319,11 +3052,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44C1"
@@ -3356,11 +3086,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44C1"
@@ -3393,11 +3120,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44C1"
@@ -3430,11 +3154,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44C1"
@@ -3467,11 +3188,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44C2"
@@ -3504,11 +3222,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44C2"
@@ -3541,11 +3256,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44C2"
@@ -3578,11 +3290,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44C2"
@@ -3615,11 +3324,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44C2"
@@ -3652,11 +3358,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44D1"
@@ -3689,11 +3392,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44D1"
@@ -3726,11 +3426,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44D1"
@@ -3763,11 +3460,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44D1"
@@ -3800,11 +3494,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44D2"
@@ -3837,11 +3528,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44D2"
@@ -3874,11 +3562,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44D2"
@@ -3911,11 +3596,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44E1"
@@ -3948,11 +3630,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44E1"
@@ -3985,11 +3664,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44E1"
@@ -4022,11 +3698,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44E1"
@@ -4059,11 +3732,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44E2"
@@ -4096,11 +3766,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44E2"
@@ -4133,11 +3800,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44E2"
@@ -4170,11 +3834,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44E2"
@@ -4207,11 +3868,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44E3"
@@ -4244,11 +3902,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44E3"
@@ -4281,11 +3936,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44E3"
@@ -4318,11 +3970,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44E3"
@@ -4355,11 +4004,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44F1"
@@ -4392,11 +4038,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44F1"
@@ -4429,11 +4072,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44F1"
@@ -4466,11 +4106,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44F1"
@@ -4503,11 +4140,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44F2"
@@ -4540,11 +4174,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44F2"
@@ -4577,11 +4208,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44F2"
@@ -4614,11 +4242,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44F2"
@@ -4651,11 +4276,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44F3"
@@ -4688,11 +4310,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44F3"
@@ -4725,11 +4344,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44F3"
@@ -4762,11 +4378,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44F3"
@@ -4799,11 +4412,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44G1"
@@ -4836,11 +4446,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44G1"
@@ -4873,11 +4480,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44G1"
@@ -4910,11 +4514,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44G1"
@@ -4947,11 +4548,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44G2"
@@ -4984,11 +4582,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44G2"
@@ -5021,11 +4616,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44G2"
@@ -5058,11 +4650,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44H1"
@@ -5095,11 +4684,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44H1"
@@ -5132,11 +4718,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44H1"
@@ -5169,11 +4752,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44H1"
@@ -5206,11 +4786,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44H2"
@@ -5243,11 +4820,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44H2"
@@ -5280,11 +4854,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44H2"
@@ -5317,11 +4888,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44H2"
@@ -5354,11 +4922,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44I1"
@@ -5391,11 +4956,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44I1"
@@ -5428,11 +4990,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44I1"
@@ -5465,11 +5024,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44I1"
@@ -5502,11 +5058,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44I2"
@@ -5539,11 +5092,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44I2"
@@ -5576,11 +5126,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44I2"
@@ -5613,11 +5160,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44I2"
@@ -5650,11 +5194,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44I3"
@@ -5687,11 +5228,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44I3"
@@ -5724,11 +5262,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44I3"
@@ -5761,11 +5296,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "44I3"
@@ -5798,11 +5330,8 @@ datas ={
       "PathID": "",
       "Radius": 7.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45A1"
@@ -5835,11 +5364,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45A1"
@@ -5872,11 +5398,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45A1"
@@ -5909,11 +5432,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45A1"
@@ -5946,11 +5466,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45A1"
@@ -5983,11 +5500,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45B1"
@@ -6020,11 +5534,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45B1"
@@ -6057,11 +5568,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45B1"
@@ -6094,11 +5602,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45B1"
@@ -6131,11 +5636,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45B2"
@@ -6168,11 +5670,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45B2"
@@ -6205,11 +5704,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45B2"
@@ -6242,11 +5738,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45B2"
@@ -6279,11 +5772,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45C1"
@@ -6316,11 +5806,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45C1"
@@ -6353,11 +5840,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45C1"
@@ -6390,11 +5874,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45C1"
@@ -6427,11 +5908,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45C2"
@@ -6464,11 +5942,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45C2"
@@ -6501,11 +5976,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45C2"
@@ -6538,11 +6010,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45C2"
@@ -6575,11 +6044,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45C3"
@@ -6612,11 +6078,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45C3"
@@ -6649,11 +6112,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45C3"
@@ -6686,11 +6146,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45C3"
@@ -6723,11 +6180,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45D1"
@@ -6760,11 +6214,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45D1"
@@ -6797,11 +6248,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45D1"
@@ -6834,11 +6282,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45D1"
@@ -6871,11 +6316,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45D2"
@@ -6908,11 +6350,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45D2"
@@ -6945,11 +6384,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45D2"
@@ -6982,11 +6418,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45E1"
@@ -7019,11 +6452,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45E1"
@@ -7056,11 +6486,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45E1"
@@ -7093,11 +6520,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45E1"
@@ -7130,11 +6554,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45E2"
@@ -7167,11 +6588,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45E2"
@@ -7204,11 +6622,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45E2"
@@ -7241,11 +6656,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45E2"
@@ -7278,11 +6690,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45E3"
@@ -7315,11 +6724,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45E3"
@@ -7352,11 +6758,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45E3"
@@ -7389,11 +6792,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45E3"
@@ -7426,11 +6826,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45F1"
@@ -7463,11 +6860,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45F1"
@@ -7500,11 +6894,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45F1"
@@ -7537,11 +6928,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45F1"
@@ -7574,11 +6962,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45F2"
@@ -7611,11 +6996,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45F2"
@@ -7648,11 +7030,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45F2"
@@ -7685,11 +7064,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45G1"
@@ -7722,11 +7098,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45G1"
@@ -7759,11 +7132,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45G1"
@@ -7796,11 +7166,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45G1"
@@ -7833,11 +7200,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45G2"
@@ -7870,11 +7234,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45G2"
@@ -7907,11 +7268,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45G2"
@@ -7944,11 +7302,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45G2"
@@ -7981,11 +7336,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45G2"
@@ -8018,11 +7370,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45H1"
@@ -8055,11 +7404,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45H1"
@@ -8092,11 +7438,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45H1"
@@ -8129,11 +7472,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45H1"
@@ -8166,11 +7506,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45H2"
@@ -8203,11 +7540,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45H2"
@@ -8240,11 +7574,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45H2"
@@ -8277,11 +7608,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45H2"
@@ -8314,11 +7642,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45H3"
@@ -8351,11 +7676,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45H3"
@@ -8388,11 +7710,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45H3"
@@ -8425,11 +7744,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45H3"
@@ -8462,11 +7778,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45I1"
@@ -8499,11 +7812,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45I1"
@@ -8536,11 +7846,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45I1"
@@ -8573,11 +7880,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45I1"
@@ -8610,11 +7914,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45I2"
@@ -8647,11 +7948,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45I2"
@@ -8684,11 +7982,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "45I2"
@@ -8721,11 +8016,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46A1"
@@ -8758,11 +8050,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46A1"
@@ -8795,11 +8084,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46A1"
@@ -8832,11 +8118,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46A1"
@@ -8869,11 +8152,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46A2"
@@ -8906,11 +8186,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46A2"
@@ -8943,11 +8220,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46A2"
@@ -8980,11 +8254,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46A2"
@@ -9017,11 +8288,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46A3"
@@ -9054,11 +8322,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46A3"
@@ -9091,11 +8356,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46A3"
@@ -9128,11 +8390,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46A3"
@@ -9165,11 +8424,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46B1"
@@ -9202,11 +8458,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46B1"
@@ -9239,11 +8492,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46B1"
@@ -9276,11 +8526,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46B1"
@@ -9313,11 +8560,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46B2"
@@ -9350,11 +8594,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46B2"
@@ -9387,11 +8628,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46B2"
@@ -9424,11 +8662,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46B2"
@@ -9461,11 +8696,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46B2"
@@ -9498,11 +8730,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46C1"
@@ -9535,11 +8764,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46C1"
@@ -9572,11 +8798,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46C1"
@@ -9609,11 +8832,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46C1"
@@ -9646,11 +8866,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46C2"
@@ -9683,11 +8900,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46C2"
@@ -9720,11 +8934,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46C2"
@@ -9757,11 +8968,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46C2"
@@ -9794,11 +9002,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46C3"
@@ -9831,11 +9036,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46C3"
@@ -9868,11 +9070,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46C3"
@@ -9905,11 +9104,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46C3"
@@ -9942,11 +9138,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46D1"
@@ -9979,11 +9172,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46D1"
@@ -10016,11 +9206,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46D1"
@@ -10053,11 +9240,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46D1"
@@ -10090,11 +9274,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46D2"
@@ -10127,11 +9308,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46D2"
@@ -10164,11 +9342,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46D2"
@@ -10201,11 +9376,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46D2"
@@ -10238,11 +9410,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46E1"
@@ -10275,11 +9444,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46E1"
@@ -10312,11 +9478,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46E1"
@@ -10349,11 +9512,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46E1"
@@ -10386,11 +9546,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46E2"
@@ -10423,11 +9580,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46E2"
@@ -10460,11 +9614,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46E2"
@@ -10497,11 +9648,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46E2"
@@ -10534,11 +9682,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46E3"
@@ -10571,11 +9716,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46E3"
@@ -10608,11 +9750,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46E3"
@@ -10645,11 +9784,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46E3"
@@ -10682,11 +9818,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46F1"
@@ -10719,11 +9852,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46F1"
@@ -10756,11 +9886,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46F1"
@@ -10793,11 +9920,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46F1"
@@ -10830,11 +9954,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46F2"
@@ -10867,11 +9988,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46F2"
@@ -10904,11 +10022,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46F2"
@@ -10941,11 +10056,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46F2"
@@ -10978,11 +10090,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46F3"
@@ -11015,11 +10124,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46F3"
@@ -11052,11 +10158,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46F3"
@@ -11089,11 +10192,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46G1"
@@ -11126,11 +10226,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46G1"
@@ -11163,11 +10260,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46G1"
@@ -11200,11 +10294,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46G1"
@@ -11237,11 +10328,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46G2"
@@ -11274,11 +10362,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46G2"
@@ -11311,11 +10396,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46G2"
@@ -11348,11 +10430,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46G2"
@@ -11385,11 +10464,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46G3"
@@ -11422,11 +10498,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46G3"
@@ -11459,11 +10532,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46G3"
@@ -11496,11 +10566,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46G3"
@@ -11533,11 +10600,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46H1"
@@ -11570,11 +10634,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46H1"
@@ -11607,11 +10668,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46H1"
@@ -11644,11 +10702,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46H1"
@@ -11681,11 +10736,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46H2"
@@ -11718,11 +10770,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46H2"
@@ -11755,11 +10804,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46H2"
@@ -11792,11 +10838,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46H2"
@@ -11829,11 +10872,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46H3"
@@ -11866,11 +10906,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46H3"
@@ -11903,11 +10940,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46H3"
@@ -11940,11 +10974,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46H3"
@@ -11977,11 +11008,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46I1"
@@ -12014,11 +11042,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46I1"
@@ -12051,11 +11076,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46I1"
@@ -12088,11 +11110,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46I1"
@@ -12125,11 +11144,8 @@ datas ={
       "PathID": "",
       "Radius": 6.0,
       "RefreshNum": 0,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46I2"
@@ -12162,11 +11178,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46I2"
@@ -12199,11 +11212,8 @@ datas ={
       "PathID": "",
       "Radius": 0.0,
       "RefreshNum": 1,
-      "RefreshTime": [
-        285.0,
-        315.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 7,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": "46I2"
@@ -12270,11 +11280,8 @@ datas ={
         ]
       ],
       "RefreshNum": 1,
-      "RefreshTime": [
-        6900.0,
-        7200.0
-      ],
-      "RefreshTimedID": 0,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 6,
       "Remark": "",
       "ShowInSceneMap": 1,
       "ShowMonsterGroupID": ""

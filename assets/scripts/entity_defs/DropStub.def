@@ -26,6 +26,7 @@
             <Arg>       LONGTIME            </Arg>
             <Arg>       LONGTIME            </Arg>
             <Arg>       UINT32              </Arg>
+            <Arg>       UINT32              </Arg>
             <Arg>       SERVER_ID           </Arg>
             <Arg>       OBJECT_ID           </Arg>
             <Arg>       BOOL                </Arg>

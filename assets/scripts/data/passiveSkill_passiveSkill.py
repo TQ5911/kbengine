@@ -2446,7 +2446,7 @@ datas = _tools.RODict({
     }),
     87020004: _tools.RODict({
         "ID": 87020004,
-        "name": "伤害灵药",
+        "name": "苦涩灵药",
         "level": 0,
         "action": _87020004,
         "removeAction": _87020004_remove,
@@ -2556,7 +2556,7 @@ datas = _tools.RODict({
     }),
     87020015: _tools.RODict({
         "ID": 87020015,
-        "name": "假面之力",
+        "name": "图腾假面",
         "level": 0,
         "action": _87020015,
         "removeAction": _87020015_remove,
@@ -2576,7 +2576,7 @@ datas = _tools.RODict({
     }),
     87020017: _tools.RODict({
         "ID": 87020017,
-        "name": "赏金剑客",
+        "name": "万能通货",
         "level": 0,
         "action": _87020017,
         "removeAction": _87020017_remove,
@@ -2696,7 +2696,7 @@ datas = _tools.RODict({
     }),
     87020029: _tools.RODict({
         "ID": 87020029,
-        "name": "原始教义",
+        "name": "祖珂教义",
         "level": 0,
         "action": _87020029,
         "removeAction": _87020029_remove,
@@ -2736,7 +2736,7 @@ datas = _tools.RODict({
     }),
     87020033: _tools.RODict({
         "ID": 87020033,
-        "name": "大将之风",
+        "name": "将魂不息",
         "level": 0,
         "action": _87020033,
         "removeAction": _87020033_remove,
@@ -2746,7 +2746,7 @@ datas = _tools.RODict({
     }),
     87020034: _tools.RODict({
         "ID": 87020034,
-        "name": "熟能生巧",
+        "name": "开山之斧",
         "level": 0,
         "action": _87020034,
         "removeAction": _87020034_remove,
@@ -2906,7 +2906,7 @@ datas = _tools.RODict({
     }),
     87020050: _tools.RODict({
         "ID": 87020050,
-        "name": "杀戮皮肤",
+        "name": "虎魄御极",
         "level": 0,
         "action": _87020050,
         "removeAction": _87020050_remove,
@@ -3226,7 +3226,7 @@ datas = _tools.RODict({
     }),
     87020082: _tools.RODict({
         "ID": 87020082,
-        "name": "月影假面",
+        "name": "祭文假面",
         "level": 0,
         "action": _87020082,
         "removeAction": _87020082_remove,
@@ -3246,7 +3246,7 @@ datas = _tools.RODict({
     }),
     87020084: _tools.RODict({
         "ID": 87020084,
-        "name": "以守为攻",
+        "name": "第一剑客",
         "level": 0,
         "action": _87020084,
         "removeAction": _87020084_remove,
@@ -3276,7 +3276,7 @@ datas = _tools.RODict({
     }),
     87020087: _tools.RODict({
         "ID": 87020087,
-        "name": "金蛋守护",
+        "name": "金壳守护",
         "level": 0,
         "action": _87020087,
         "removeAction": _87020087_remove,
@@ -3376,7 +3376,7 @@ datas = _tools.RODict({
     }),
     87020097: _tools.RODict({
         "ID": 87020097,
-        "name": "恶魔契约",
+        "name": "始祖契约",
         "level": 0,
         "action": _87020097,
         "removeAction": _87020097_remove,
@@ -3446,7 +3446,7 @@ datas = _tools.RODict({
     }),
     87020104: _tools.RODict({
         "ID": 87020104,
-        "name": "虎魄御极",
+        "name": "玄虎之爪",
         "level": 0,
         "action": _87020104,
         "removeAction": _87020104_remove,

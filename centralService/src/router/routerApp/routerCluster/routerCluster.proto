@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package RouterCluster;
+option go_package = "../routerCluster";
+option py_generic_services = true;
+
+//由转发端发出，目标 router 节点收到后把 memoryStream 转交给本节点上
+//对应的 dstServerId/dstComponentId 游戏服。srcServerId/srcComponentId
+//用于目标游戏服识别消息来源，便于回包。
+message ClusterForwardRequest
+{
+    uint32 dstServerId    = 1;
+    uint32 dstComponentId = 2;
+    uint32 srcServerId    = 3;
+    uint32 srcComponentId = 4;
+    bytes  memoryStream   = 5;
+}
+
+//集群转发结果：当目标 router 在本节点上找不到目标游戏服时，
+//通过返回值告诉调用方，目标节点已不可达，调用方可以选择重试或丢弃。
+//注：当前 trpc 框架不把 handler 返回值真正回写到对端，
+//ClusterForwardResult 不再被使用，所有"未投递"的原因都改为在 handler 内日志输出。
+//保留 message 定义仅为兼容旧生成代码，新代码请直接返回 Void。
+//message ClusterForwardResult
+//{
+//    bool delivered = 1;
+//    string reason  = 2;
+//}
+
+//小 ID 一端主动连上来后定时 ping 一发，大 ID 一端回应 pong，
+//用于在 RpcChannel 空闲时维持链路活性（避免被中间网络设备老化）。
+message ClusterPing
+{
+    uint32 fromRouterId = 1;
+    uint64 timestamp    = 2;
+}
+
+message ClusterPong
+{
+    uint32 fromRouterId = 1;
+    uint64 timestamp    = 2;
+}
+
+// 占位返回值：当前 trpc 框架不把 handler 返回值回写到对端，
+// 所有 RPC 一律用 Void 表示"不需要回包"。
+message Void
+{
+}
+
+//Router 节点之间的服务，由 routerClusterAddr 端口承载
+service RouterNodeService
+{
+    //集群转发：把消息转交给本节点上指定 (dstServerId, dstComponentId) 的游戏服
+    rpc forwardToGameServer(ClusterForwardRequest) returns (Void);
+    //链路活性探测：小 ID 端定时 ping 一发
+    rpc ping(ClusterPing) returns (Void);
+    //链路活性回包：大 ID 端收到 ping 后用 request 的方式回一帧 pong,
+    //让对端（小 ID）RpcChannel 读循环收到一帧从而重置 20s 读超时。
+    //对端的 pong handler 只起"接收并刷新 deadline"的作用，不再回写，避免双向循环。
+    rpc pong(ClusterPong) returns (Void);
+}

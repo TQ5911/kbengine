@@ -1,7 +1,7 @@
 <root>
     <Properties>
         <wonderLandTicket>
-            <Type>          UINT8                       </Type>
+            <Type>          UINT32                      </Type>
             <Flags>         BASE_AND_CLIENT             </Flags>
             <Persistent>    True                        </Persistent>
             <Default>       0                           </Default>
@@ -32,6 +32,11 @@
             <Flags>         CELL_PRIVATE                </Flags>
             <Persistent>    True                        </Persistent>
         </wonderLandQuota>
+
+        <wonderLandCoinTicketData>
+            <Type>          COIN_TICKET_INFO_DATA   </Type>
+            <Flags>         BASE                    </Flags>
+        </wonderLandCoinTicketData>
     </Properties>
 
     <BaseMethods>
@@ -42,8 +47,7 @@
 
         <doAddWonderLandTicket>
             <Arg>          UINT8                        </Arg>
-            <Arg>          ITEM_ID                      </Arg>
-            <Arg>          UINT32                       </Arg>
+            <Arg>          PYTHON                       </Arg>
             <Arg>          UINT8                        </Arg>
             <Arg>          UINT8                        </Arg>
             <Arg>          UINT8                        </Arg>
@@ -60,8 +64,7 @@
         <addWonderLandDurFailed>
             <Arg>          OP_UUID                      </Arg>
             <Arg>          UINT8                        </Arg>
-            <Arg>          ITEM_ID                      </Arg>
-            <Arg>          UINT32                       </Arg>
+            <Arg>          PYTHON                       </Arg>
             <Arg>          UINT8                        </Arg>
         </addWonderLandDurFailed>
 
@@ -88,7 +91,9 @@
         </checkSummonWonderLandBossBase>
 
         <addWonderLandDurationFailedRewindTimes>
-            <Arg>          OP_UUID                      </Arg>
+            <Arg>           OP_UUID                     </Arg>
+            <Arg>           UINT16                      </Arg>
+            <Arg>           UINT16                      </Arg>
         </addWonderLandDurationFailedRewindTimes>
 
         <afterEnterWonderLandDeductTimes>
@@ -142,8 +147,7 @@
 
         <checkAddWonderLandDurationCondition>
             <Arg>           UINT8                       </Arg>
-            <Arg>           ITEM_ID                     </Arg>
-            <Arg>           UINT32                      </Arg>
+            <Arg>           PYTHON                      </Arg>
             <Arg>           UINT8                       </Arg>
             <Arg>           OP_UUID                     </Arg>
         </checkAddWonderLandDurationCondition>

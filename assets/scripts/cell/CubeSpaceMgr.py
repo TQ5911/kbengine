@@ -241,3 +241,10 @@ class CubeSpaceMgr(iCollectionBossForMgr.ICollectionBossForMgr, iStaticSpaceMgr.
 
         if lastCnt != self.fightingPlayersCnt:
             gameengine.getCubeStubBySpaceNo(self.spaceNo).onFightingPlayersCntSync(self.spaceNo, self.fightingPlayersCnt)
+
+    def callOnSpaceMgr(self, func, args):
+        getattr(self, func)(*args)
+
+    def onBroadcastTipCowRoomRefresh(self, *args):
+        LOG_DBG('CubeSpaceMgr::onBroadcastTipCowRoomRefresh', self.spaceNo, *args)
+        self.batchlySyncPlayer(lambda playerEnt: playerEnt.tipCowRoomRefresh(*args))

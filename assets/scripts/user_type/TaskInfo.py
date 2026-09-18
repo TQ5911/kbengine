@@ -819,15 +819,22 @@ class TaskInfo(userType.UserSingleType):
         self._taskEnterSpace(owner, task.taskId, claimTransData)
 
     def _taskEnterSpace(self, owner, taskId, transData):
+        LOG_INFO('_taskEnterSpace', taskId, transData)
         _dungeonNo = transData.get('MapId')
-        _useConfigPos = transData.get('UseConfigPos')
+        _entityId = transData.get('EntityId')
         _dstPos = None
         _dstDir = None
-        if _useConfigPos:
-            _dstPos = (transData['X'], transData['Y'], transData['Z'])
-            _dstDir = (0.0, 0.0, math.pi*transData.get('Dir', 0.0)/180)
-        else:
-            _dstPos, _dstDir = formula.getSpaceBornPosAndDir(_dungeonNo)
+        if _entityId:
+            _dstPos, _dstDir = formula.getDunEntityPosAndDir(_entityId)
+            if not _dungeonNo:
+                _dungeonNo = int(str(int(_entityId))[:4])
+            LOG_INFO('_taskEnterSpace, use entity pos', taskId, _entityId, _dungeonNo, _dstPos)
+        if not _dstPos:
+            if transData.get('UseConfigPos'):
+                _dstPos = (transData['X'], transData['Y'], transData['Z'])
+                _dstDir = (0.0, 0.0, math.pi * transData.get('Dir', 0.0) / 180)
+            else:
+                _dstPos, _dstDir = formula.getSpaceBornPosAndDir(_dungeonNo)
 
         owner.cell.taskPreEnterSpace(taskId, _dungeonNo, _dstPos, _dstDir)
         self.curTryEnterDunData = {'dungeonNo':_dungeonNo, 't':utils.curTS()}
@@ -861,6 +868,10 @@ class TaskInfo(userType.UserSingleType):
         taskData = dataUtils.getTaskCfg(taskId)
         if taskId in self.taskRecordDic:
             LOG_WARN('       in canClaimTask, taskId in taskRecordDic')
+            return gameclass.TaskCondResultCls(False)
+
+        if not dataUtils.isTaskUnlockDayReached(taskData):
+            LOG_WARN('       in canClaimTask, OpenCondUnlockDay not reached:', taskId)
             return gameclass.TaskCondResultCls(False)
 
         # 关联任务检查
@@ -1359,7 +1370,8 @@ class TaskInfo(userType.UserSingleType):
             LOG_WARN('in doTaskSubmit, already submit :', _task.stat)
             return
 
-        _task.setStat(owner, gameconst.TaskStatEnum.TASK_STAT_SUBMITTED)
+        opUUID = KBEngine.genUUID64()
+        _task.setStat(owner, gameconst.TaskStatEnum.TASK_STAT_SUBMITTED, opUUID)
         owner.flowCtrlOnTaskComplete(taskId)
         # flow controller notify
 
@@ -1379,10 +1391,10 @@ class TaskInfo(userType.UserSingleType):
 
         _task.alreadyCount += 1
         self.sendUpdatedTaskNow(owner, _task)
-        self._afterTaskSubmitted(owner, _task, popRewardUUID)
+        self._afterTaskSubmitted(owner, _task, popRewardUUID, opUUID)
         return True
 
-    def _afterTaskSubmitted(self, owner, task, popRewardUUID=0):
+    def _afterTaskSubmitted(self, owner, task, popRewardUUID=0, opUUID=0):
         LOG_INFO("_afterTaskSubmitted ", task, popRewardUUID)
         if task.taskId in V_VD.taskDic:
             owner.updateVisibleByList(V_VD.taskDic[task.taskId])
@@ -1393,7 +1405,8 @@ class TaskInfo(userType.UserSingleType):
         owner.checkAndUnlockWelfareSignIn(updateFlag = True)
         owner.checkUnlockBountyTask()
 
-        opUUID = KBEngine.genUUID64()
+        if not opUUID:
+            opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_COMPLETE_TASK
         self.doSubmitReward(owner, task.taskId, opUUID, srcType, popRewardUUID)
         self._autoClaimRoundTask(owner, task)
@@ -1479,7 +1492,12 @@ class TaskInfo(userType.UserSingleType):
         _taskData = dataUtils.getTaskCfg(taskId)
         rewardId = dataUtils.getTaskFieldVal(_taskData, 'FinRewardID')
         finRewardCountLimit = dataUtils.getTaskFieldVal(_taskData, 'FinRewardCountLimit')
+        #每日悬赏任务，会存在昨天领了今天做完的情况，所以默认值设为2，每日最多完成2次
+        if task.taskType == gameconst.TaskType.TASK_TYPE_HOOK_REWARD:
+            if RRTID.datas[taskId]['type'] == 0:
+                finRewardCountLimit = finRewardCountLimit or 2
         finRewardCountLimit = finRewardCountLimit or 1
+        LOG_INFO('doSubmitReward, taskId:', taskId, 'rewardId:', rewardId, 'finRewardCountLimit:', finRewardCountLimit)
         if rewardId and _rootTask.canAddRewardId(task.taskId, rewardId, finRewardCountLimit):
             # 道具和物品奖励
             _rootTask.recordSubmitTaskRewardId(taskId, rewardId)
@@ -1744,14 +1762,15 @@ class TaskInfo(userType.UserSingleType):
         if self.getTaskCurrentState(taskId) != gameconst.TaskStatEnum.TASK_STAT_FAILED:
             owner.flowCtrlOnTaskFailed(taskId)
 
+        opUUID = KBEngine.genUUID64()
         if not _rootTask:
             # 找不到根任务，这种情况只会出现在使用gm指令直接领取子任务的情况
-            task.setStat(owner, gameconst.TaskStatEnum.TASK_STAT_QUIT)
+            task.setStat(owner, gameconst.TaskStatEnum.TASK_STAT_QUIT, opUUID)
             self.addSendUpdatedTaskList([task])
-            self._afterTaskQuit(owner, [taskId], reason)
+            self._afterTaskQuit(owner, [taskId], reason, opUUID)
             gameengine.panicStack('in doQuitTask, no root task:', taskId, rootTaskId)
             return
-        _rootTask.setStat(owner, gameconst.TaskStatEnum.TASK_STAT_QUIT)
+        _rootTask.setStat(owner, gameconst.TaskStatEnum.TASK_STAT_QUIT, opUUID)
         _quitTaskIds = set()
         _quitTaskIds.add(rootTaskId)
         _uptaskList.append(_rootTask)
@@ -1763,7 +1782,7 @@ class TaskInfo(userType.UserSingleType):
                 continue
             if childTask.isStat(gameconst.TaskStatEnum.TASK_STAT_QUIT):
                 continue
-            childTask.setStat(owner, gameconst.TaskStatEnum.TASK_STAT_QUIT)
+            childTask.setStat(owner, gameconst.TaskStatEnum.TASK_STAT_QUIT, opUUID)
             _uptaskList.append(childTask)
             _quitTaskIds.add(childTaskId)
 
@@ -1778,12 +1797,13 @@ class TaskInfo(userType.UserSingleType):
                 LOG_INFO('do quit task, self.hookRewardTaskNum is ', self.hookRewardTaskNum)
 
         self.addSendUpdatedTaskList(_uptaskList)
-        self._afterTaskQuit(owner, _quitTaskIds, reason)
+        self._afterTaskQuit(owner, _quitTaskIds, reason, opUUID)
 
         return len(_quitTaskIds) > 0
 
-    def _afterTaskQuit(self, owner, quitTaskIds, reason):
-        opUUID = KBEngine.genUUID64()
+    def _afterTaskQuit(self, owner, quitTaskIds, reason, opUUID=0):
+        if not opUUID:
+            opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_ABANDON_TASK
         self._afterTaskUpdateRemoved(owner, quitTaskIds)
         for taskId in quitTaskIds:

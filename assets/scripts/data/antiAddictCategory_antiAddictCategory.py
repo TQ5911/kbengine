@@ -2074,7 +2074,37 @@ datas = _tools.RODict({
         "messageId": 0,
         "rewardMessage": None,
         "group": None
+    }),
+    207: _tools.RODict({
+        "ID": 207,
+        "name": "BONUS_SRC_WIPE_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    208: _tools.RODict({
+        "ID": 208,
+        "name": "BONUS_SRC_COIN_AUCTION_BUY_ITEMS",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
+    }),
+    209: _tools.RODict({
+        "ID": 209,
+        "name": "BONUS_SRC_PET_DROP_EQUIP",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": None
     })
 })
 minKey = 1
-maxKey = 206
+maxKey = 209

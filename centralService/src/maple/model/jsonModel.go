@@ -36,3 +36,16 @@ type GetAllServerResponse struct {
 	Zones   []ZoneData        `json:"zones"`
 	KV      map[string]string `json:"kv"`
 }
+
+// 和服映射: from_server_id 是被合入的服, to_server_id 是合入目标服
+type AddMergeRequest struct {
+	FromServerId int `json:"from_server_id"`
+	ToServerId   int `json:"to_server_id"`
+}
+
+// 拉取和服信息时的返回: 每条映射都"折叠"到最终的根服
+// 例如 raw: 10002->10003, 10003->10001
+// 输出 merge_map: {10002:10001, 10003:10001}
+type GetMergeServerResponse struct {
+	MergeMap map[int]int `json:"merge_map"`
+}

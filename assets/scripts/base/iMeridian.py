@@ -75,7 +75,7 @@ class IMeridian(object):
             if slotVal.hasEnhance:
                 indexList.append(slotIdx)
 
-            self.cell.onMeridianAward(indexList)
+            self.cell.onMeridianAward(indexList, 0)
             # LOG_INFO("IMeridian._refreshMeridianProperty: {}".format(indexList))
             indexList = []
 
@@ -121,25 +121,35 @@ class IMeridian(object):
             # self.client.onRespLevelUpMeridianPoint(False, slotIdx, pointIdx, 0)
             return
         
+        # 当前这条经脉对应的等级条件
+        slotConfig = self._getPropFromSlotConfig(slotIdx)
+        needLevel = slotConfig['needLevel']
+        playerLevel = gameglobal.roleCache[self.id]['level']
+        if playerLevel < needLevel:
+            LOG_WARN("IMeridian.reqLevelUpMeridianPoint: player is not enough {}, {}, {}, {}, {}".format(
+                slotIdx, pointIdx, slotConfig, playerLevel, needLevel))
+            return
+        
         config = self._getPropFromPointConfig(slotIdx, pointIdx, curLevel+1)
         pointItems = config.get('needItems', None)
         if pointItems is None:
             LOG_WARN("IMeridian.reqLevelUpMeridianPoint: point items not found {}, {}, {}".format(
                 slotIdx, pointIdx, config))
             return
+        
         pointCoins = config.get('needCoins', None)
         if pointCoins is None:
             LOG_WARN("IMeridian.reqLevelUpMeridianPoint: point coins not found {}, {}, {}".format(
                 slotIdx, pointIdx, config))
             return
-        pointItems = copy.deepcopy(pointItems._data)
-        pointItems.append(copy.deepcopy(pointCoins._data))
         
         needItems = {}
         for itemInfo in pointItems:
             itemId = itemInfo[0]
             itemNum = itemInfo[1]
             needItems[itemId] = needItems.get(itemId, 0) + itemNum
+        itemId, itemNum = pointCoins
+        needItems[itemId] = needItems.get(itemId, 0) + itemNum
 
         srcType = AAC_AACDD.datas.BONUS_SRC_LEVEL_UP_MERIDIAN
         deductVal = dropAward.DeductWealthVal()
@@ -159,7 +169,7 @@ class IMeridian(object):
         ret, newLevel = self.meridianData.levelUpPoint(slotIdx, pointIdx)
         LOG_INFO("IMeridian.reqLevelUpMeridianPoint: {}, {}, {}, {}".format(slotIdx, pointIdx, ret, newLevel))
         if ret:
-            self.cell.onMeridianAward([self.getConfigId(slotIdx, pointIdx, newLevel)])
+            self.cell.onMeridianAward([self.getConfigId(slotIdx, pointIdx, newLevel)], opUUID)
             self.client.onLeveUpMeridianPointTo(slotIdx, pointIdx, newLevel)
             
             self._syncMeridianDataToClient()
@@ -178,30 +188,42 @@ class IMeridian(object):
         if not self.checkMeridianLimit():
             LOG_WARN("IMeridian.reqEnhanceMeridianSlot: meridian system not init")
             return
+        
         if not self.meridianData.canEnhanceCurSlot(slotIdx):
             LOG_WARN("IMeridian.reqEnhanceMeridianSlot: can not enhance slot {}".format(slotIdx))
             # self.client.onRespEnhanceMeridianSlot(False, slotIdx)
             return
         
+        # 贯通静脉需要判断下一条静脉的开启条件
+        slotConfig = self._getPropFromSlotConfig(slotIdx + 1)
+        if slotConfig:
+            needLevel = slotConfig['needLevel']
+            playerLevel = gameglobal.roleCache[self.id]['level']
+            if playerLevel < needLevel:
+                LOG_WARN("IMeridian.reqEnhanceMeridianSlot: player level is not enough {}, {}, {}, {}".format(
+                    slotIdx, playerLevel, needLevel, slotConfig))
+                return
+            
         slotConfig = self._getPropFromSlotConfig(slotIdx)
-        slotItems = slotConfig.get('needItems', None)
-        if slotItems is None:
+        pointItems = slotConfig.get('needItems', None)
+        if pointItems is None:
             LOG_WARN("IMeridian.reqEnhanceMeridianSlot: slot items not found {}".format(
                 slotIdx))
             return
-        slotCoins = slotConfig.get('needCoins', None)
-        if slotCoins is None:
+        
+        pointCoins = slotConfig.get('needCoins', None)
+        if pointCoins is None:
             LOG_WARN("IMeridian.reqEnhanceMeridianSlot: slot coins not found {}".format(
                 slotIdx))
             return
-        slotItems = copy.deepcopy(slotItems._data)
-        slotItems.append(copy.deepcopy(slotCoins._data))
         
         needItems = {}
-        for itemInfo in slotItems:
+        for itemInfo in pointItems:
             itemId = itemInfo[0]
             itemNum = itemInfo[1]
             needItems[itemId] = needItems.get(itemId, 0) + itemNum
+        itemId, itemNum = pointCoins
+        needItems[itemId] = needItems.get(itemId, 0) + itemNum
 
         srcType = AAC_AACDD.datas.BONUS_SRC_ENHANCE_MERIDIAN
         deductVal = dropAward.DeductWealthVal()
@@ -221,7 +243,7 @@ class IMeridian(object):
         ret, newSlot = self.meridianData.doEnhanceCurSlot(slotIdx)
         LOG_INFO("IMeridian.reqEnhanceMeridianSlot: {}, {}, {}".format(slotIdx, ret, newSlot))
         if ret:
-            self.cell.onMeridianAward([slotIdx])
+            self.cell.onMeridianAward([slotIdx], opUUID)
             self.client.onEnhanceMeridian(slotIdx)
             
             self._syncMeridianDataToClient()
@@ -245,7 +267,7 @@ class IMeridian(object):
             ret, newLevel = self.meridianData.levelUpPoint(slotIdx, pointIdx)
             LOG_INFO("IMeridian.gmLevelUpMeridianPoint: {}, {}, {}, {}".format(slotIdx, pointIdx, ret, newLevel))
             if ret:
-                self.cell.onMeridianAward([self.getConfigId(slotIdx, pointIdx, newLevel)])
+                self.cell.onMeridianAward([self.getConfigId(slotIdx, pointIdx, newLevel)], 0)
                 self.client.onLeveUpMeridianPointTo(slotIdx, pointIdx, newLevel)
             else:
                 LOG_DBG("IMeridian.gmLevelUpMeridianPoint: level up failed {}, {}, {}".format(
@@ -263,7 +285,7 @@ class IMeridian(object):
         ret, newSlot = self.meridianData.doEnhanceCurSlot(slotIdx)
         LOG_INFO("IMeridian.gmLevelUpMeridianSlot: {}, {}, {}".format(slotIdx, ret, newSlot))
         if ret:
-            self.cell.onMeridianAward([slotIdx])
+            self.cell.onMeridianAward([slotIdx], 0)
             self.client.onEnhanceMeridian(slotIdx)
             
             if show:

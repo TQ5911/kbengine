@@ -30,7 +30,7 @@ def find_mysql_block(config):
     """
     Case-insensitive lookup for the mysql connection block. JSON keys are case
     sensitive in Python's json.load, but configs in this repo are inconsistent
-    ("mysql" in most, "Mysql" in leaseConf.json), so we accept any casing.
+    ("mysql" in most, "Mysql" in leaseServer.json), so we accept any casing.
     Returns the block dict if found, else None.
     """
     for key in ("mysql", "Mysql", "MYSQL"):

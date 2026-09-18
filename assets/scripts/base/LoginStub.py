@@ -7,6 +7,7 @@ import urllib.parse
 import collections
 import json
 import http
+import functools
 
 import gameconst
 import gamebase
@@ -25,6 +26,7 @@ import iCentralLogin
 import iTimer
 import LogTrackingMgr
 import redisUtils
+import proto.centralLogin_pb2 as centralLogin
 
 
 class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
@@ -168,6 +170,38 @@ class LoginStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         if gameconfig.enableCentralLogin():
             self.notifyCentralServerOnline(accountName, accountType, centralServerId, sessionIdStr, userInfoId)
+
+        self._checkQueuePass(accountName, accountType)
+
+    def _checkQueuePass(self, accountName, accountType):
+        if gameconfig.isWaitMapServer() or gameconfig.isCrossServer():
+            return
+        if accountType in (centralLogin.ACCOUNT_UNKNOW, centralLogin.ACCOUNT_BOT,
+                           centralLogin.ACCOUNT_CROSS_SERVER, centralLogin.ACCOUNT_PASSWD):
+            return
+        redisUtils.RedisUtils.getQueuePass(accountName, functools.partial(self._onCheckQueuePass, accountName))
+
+    def _onCheckQueuePass(self, accountName, cid, err, res):
+        LOG_INFO("_onCheckQueuePass", accountName, cid, err, res)
+        serverId = str(gameconfig.serverId())
+        if err:
+            LOG_WARN('checkQueuePass redis err', accountName, serverId, err)
+            return
+
+        passServerId = res.decode() if res else ''
+        if passServerId == serverId:
+            return
+
+        redisUtils.RedisUtils.getTagTypeFlag(accountName, functools.partial(
+            self._onCheckQueuePassTag, accountName, passServerId, serverId))
+
+    def _onCheckQueuePassTag(self, accountName, passServerId, serverId, cid, err, res):
+        LOG_INFO("_onCheckQueuePassTag", accountName, passServerId, serverId, cid, err, res)
+        if res:
+            tags = set(res.decode().split(','))
+            if str(gameconst.UserTagType.WHITE_LIST) in tags or str(gameconst.UserTagType.GREEN_CODE) in tags:
+                return
+        LOG_WARN('checkQueuePass failed', accountName, 'passServerId', passServerId, 'serverId', serverId)
 
     def onAccountCreated(self, accountName, devicePlatId, isNew, channelId):
         LOG_INFO("onAccountCreated::", accountName, devicePlatId, isNew, channelId)

@@ -36,7 +36,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHECK_TEXT_SECURITY_REQ)EntityDef.id2datatypes[488]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHECK_TEXT_SECURITY_REQ)EntityDef.id2datatypes[508]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 

@@ -4,7 +4,7 @@ from KBEDebug import *
 import KBEngine
 
 import collections
-
+import gameengine
 import gameconst
 import gametimer
 import formula
@@ -130,7 +130,8 @@ class ICrossServer(object):
         LOG_WARN("crossServerSyncOtherInitedDataFromLocalServerCell::", crossData)
         cellInitData = dict(
             scoresInfo=AvatarScores.avatarScoresInstance.getDictFromObj(self.scoresInfo),
-            totalScore=self.totalScore
+            totalScore=self.totalScore,
+            leagueUUID = self.leagueUUID
         )
         self.base.onCrossServerSyncOtherInitedDataFromLocalServer(crossData, cellInitData)
 
@@ -193,8 +194,12 @@ class ICrossServer(object):
                     savedBuffDic.setdefault(buffId, {})[buffSrcKey] = _buffVal
         
         self.syncMethodCallToCrossServerCell('_syncSaveBuffs', (savedBuffDic, ))
-        self.syncMethodCallToCrossServerCell('_syncLeagueUUID', (self.leagueUUID, ))
         self.syncMethodCallToCrossServerCell('_afterCrossServerSuc', ())
+
+        # 跨服组队副本：迁移已彻底完成（进本流程结束），本服幽灵回城
+        # （野外无客户端挂机防被打）；失败仅报错、幽灵留原地，不影响进本/回程
+        if reasonNo in (gameconst.CrossServerReasonNo.ENTER_CROSS_CRUSADE, gameconst.CrossServerReasonNo.ENTER_CROSS_CHIEF):
+            self.applyCrossGhostReturnCity()
 
     def _syncSaveBuffs(self, buffMgrDic):
         LOG_DBG('_syncSaveBuffs', buffMgrDic)
@@ -211,10 +216,16 @@ class ICrossServer(object):
                     _buffVal.onRestored(self)
         self.client.onUpdateBuffs(self.buffMgrDic.getClientData(self))
 
-    def _syncLeagueUUID(self, leagueUUID):
-        LOG_INFO('_syncLeagueUUID', leagueUUID)
-        self.leagueUUID = leagueUUID
-
     def _afterCrossServerSuc(self):
         LOG_INFO('_afterCrossServerSuc')
         self._checkAndAddTeleportProtectionBuff()
+
+    def onAllianceWarStarted(self, datas):
+        if self.guildUUID > 0:
+            self.client.onAllianceWarStarted(datas)
+            LOG_INFO('onAllianceWarStarted ', datas)
+
+    def onAllianceWarEnded(self, datas):
+        if self.guildUUID > 0:
+            self.client.onAllianceWarEnded(datas)
+            LOG_INFO('onAllianceWarEnded ', datas)

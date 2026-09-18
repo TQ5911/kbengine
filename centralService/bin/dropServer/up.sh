@@ -1,6 +1,6 @@
 #!/bin/bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIG_FILE="${SCRIPT_DIR}/dropConf.json"
+CONFIG_FILE="${SCRIPT_DIR}/dropServer.json"
 SQL_FILE="${SCRIPT_DIR}/drop.sql"
 
 if [ ! -f "$CONFIG_FILE" ]; then

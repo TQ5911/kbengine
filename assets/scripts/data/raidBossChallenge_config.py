@@ -65,7 +65,7 @@ datas = _tools.RODict({
     }),
     "sugMemberCnt": _tools.RODict({
         "ID": "sugMemberCnt",
-        "value": 12,
+        "value": 10,
     }),
     "raid_membersLow": _tools.RODict({
         "ID": "raid_membersLow",

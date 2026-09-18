@@ -12,6 +12,7 @@ import utils
 import math
 import formula
 import visible_visible as V_VD
+import taskClass_taskTarget as TCCTD
 
 
 class INewbie(object):
@@ -134,14 +135,16 @@ class INewbie(object):
 
     def _getNewbieEntrance(self, dungeonNo):
         dunSData = utils.getDunStructModData(dungeonNo)
+        dunData = utils.getDunModuleData(dungeonNo)
         _stepData = TCNSD.datas.get(self.newbieStep)
+        instId = _stepData.get('InstanceId')
         if _stepData and _stepData['taskTag']\
                 and not self.isTaskComplete(_stepData['taskTag'])\
-                and _stepData.get('bornPos'):
+                and instId and str(instId) in dunData:
 
             LOG_DBG('_getNewbieEntrance, step taskTag not complete:', _stepData)
-            _bornRotation = _stepData['bornRotation']
-            return _stepData.get('bornPos'), (0, 0, _bornRotation * math.pi / 180)
+            _bornRotation = dunData[str(instId)]['Dir']
+            return (dunData[str(instId)]['PosX'], dunData[str(instId)]['PosY'], dunData[str(instId)]['PosZ']), (0, 0, _bornRotation * math.pi / 180)
         elif 'BornPos' in dunSData:
             d, *_ = dunSData['BornPos'].values()
             return formula.bornPosFromDunData(d), (0, 0, d['Dir'] * math.pi / 180)
@@ -174,5 +177,8 @@ class INewbie(object):
             self.newbieGuideIds.append(newbieGuideId)
             self.newbieGuideVals.append(val)
 
+        # 引导全部进行完时，推进「完成一次引导」计次任务目标
+        if val:
+            self.taskCheckCounterTarget(TCCTD.couterTargetDic['CompleteAGuideOnce'], (newbieGuideId,))
 
         self.client.onNewbieGuideId(newbieGuideId, val)

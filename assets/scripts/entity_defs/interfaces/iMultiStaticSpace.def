@@ -15,9 +15,34 @@
             <Flags>         BASE            </Flags>
             <Default>       0               </Default>
         </doNextFlag>
+
+        <deadApps>
+            <Type>          PY_LIST         </Type>
+            <Flags>         BASE            </Flags>
+        </deadApps>
+
+        <relivedCellapps>
+            <Type>          PY_LIST         </Type>
+            <Flags>         BASE            </Flags>
+        </relivedCellapps>
+
+        <missedSpaces>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE            </Flags>
+        </missedSpaces>
     </Properties>
 
     <BaseMethods>
+        <broadcastAllSpaceMgrByTypes>
+            <Arg>       PYTHON          </Arg>
+            <Arg>       STRING          </Arg>
+            <Arg>       PYTHON          </Arg>
+        </broadcastAllSpaceMgrByTypes>
+
+        <onCellappRelive>
+            <Arg>       UINT8         </Arg>
+        </onCellappRelive>
+
         <onStaticSpaceReady>
             <Arg>       SPACE_NO        </Arg>
         </onStaticSpaceReady>
@@ -46,5 +71,9 @@
         <onSpaceCellAppDeath>
             <Arg>       SPACE_NO        </Arg>
         </onSpaceCellAppDeath>
+
+        <handleCellappDeath>
+            <Arg>       UINT8         </Arg>
+        </handleCellappDeath>
     </BaseMethods>
 </root>

@@ -6,55 +6,36 @@ def refreshCell():
     pass
 def refreshBase():
     import KBEngine
-    import gameclass
-    import dropAward
     import gameconst
-    import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
-    import message_Message_def as MMD
+    import json
+    import gameconfig
+    import proto.centralLogin_pb2 as centralLogin
+    import functools
     import gamedecorator
-    import iResourceRecovery
+    import AuthClsWraper
+    import iBindPhone
     @gamedecorator.limitcall(1)
-    @gamedecorator.checkGameconfigEnable('welfare_resourceRecovery')
-    def reqFreeTicketRecovery(self, exposed, subType, num, mainType):
-        LOG_INFO('IResourceRecovery::reqFreeTicketRecovery', num, mainType - 1, subType - 1)
-        mainType -= 1
-        if mainType not in gameconst.RecoveryTicketType.VALID_TYPE:
-            LOG_ERR('IResourceRecovery::reqFreeTicketRecovery error mainType', mainType)
+    @AuthClsWraper.onlyHost
+    def smsServiceVerifyCode(self, exposed, code, opType):
+        LOG_INFO('IBindPhone::smsServiceVerifyCode', code, opType, self.accountEntity.accountType, self.accountName, self.accountEntity.phone)
+        if self.accountEntity.accountType != centralLogin.ACCOUNT_OFFICIAL:
+            LOG_WARN('IBindPhone::smsServiceVerifyCode accountType error')
             return
-        subType -= 1
-        if subType not in gameconst.RecoveryTicketSubType.VALID_SUB_TYPE:
-            LOG_ERR('IResourceRecovery::reqFreeTicketRecovery error subType', subType)
+        if self.accountEntity.phone == 0:
+            LOG_WARN('IBindPhone::smsServiceVerifyCode bind phone first')
             return
-        if num <= 0:
-            LOG_WARN('IResourceRecovery::reqFreeTicketRecovery num', num)
+        if not self.checkValidVerifyCode(code):
             return
-        if not self.checkRRGameConfigEnable(subType):
+        if self.controlReqSMSServiceLimit(gameconst.EntityPropsEnum.verifySMSServiceTimestamp, 3):
             return
-        if not self.checkFreeTicketNumConfig(mainType, subType):
+        checkRes, typeStr = self.checkSMSOperationType(opType)
+        if not checkRes:
             return
-        deductWealthVal = dropAward.DeductWealthVal()
-        costInfo = []
-        leftNum = self.calFreeTicketRecovery(mainType, subType, num, deductWealthVal, costInfo, None)
-        if leftNum == num:
-            return
-        addNum = num - leftNum
-        res = self.canDeductWealth(deductWealthVal)
-        if not res:
-            LOG_INFO('IResourceRecovery::reqFreeTicketRecovery cannot deductWealth', costInfo, res())
-            if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
-                return
-            self.onMessagePre(MMD.datas.workShop_currencyLack, [])
-            return
-        detail = gameclass.AwardDetailCls()
-        opUUID = KBEngine.genUUID64()
-        self.deductWealth(AAC_AACDD.datas.BONUS_SRC_RECOVERY_TICKET, deductWealthVal, opUUID, detail)
-        LOG_DBG('IResourceRecovery::reqFreeTicketRecovery deductWealth', costInfo)
-        clientDataList = []
-        clientDataList.append({'subType': subType + 1, 'num': addNum, 'mainType': mainType + 1})
-        self.recoveryFreeTicket(mainType, subType, addNum, costInfo, opUUID)
-        LOG_INFO('IResourceRecovery::reqFreeTicketRecovery clientDataList', clientDataList)
-        self.client.onFreeTicketOneClickRecoveryInfo(clientDataList)
-    iResourceRecovery.IResourceRecovery.reqFreeTicketRecovery = reqFreeTicketRecovery
+        url = gameconfig.smsServiceVerifyUrl()
+        message = json.dumps({'phone': str(self.accountEntity.phone), 'gameId': str(gameconfig.gameId()), 'code': str(code), 'type': str(typeStr)})
+        LOG_INFO('IBindPhone::smsServiceVerifyCode url', url, message)
+        KBEngine.urlopenv2(url, functools.partial(self._smsServiceVerifyCodeResponse, opType), method='POST', postData=message.encode('utf-8'), headers={'Content-Type': 'application/json', 'satoken': self.accountEntity.webToken}, timeoutSec=5)
+    iBindPhone.IBindPhone.smsServiceVerifyCode = smsServiceVerifyCode
     # --auto genterate mark--
     pass
 def refreshInterface():

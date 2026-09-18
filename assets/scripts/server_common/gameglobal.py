@@ -97,6 +97,11 @@ cellAvatarCount = 0
 lastBroadcastCellAvatarCount = 0
 cellSpaceDungeonMap = {}
 
+# 本服世界等级，由 LeaderBoardStub 同步到 globalData，cell/base 均可读取
+worldLevel = 0
+# 跨服世界等级（跨服算出后广播到各服）
+crossWorldLevel = 0
+
 requiredClientVersion = {}
 
 def onLineEntityReady(spaceNo):
@@ -125,6 +130,17 @@ globalSiegeWarData = {
 guildRelationDic = {}
 # 帮会关系记录的版本
 guildRelationVersion = 0
+
+# 敌对立关系实体记录（entity-level）：
+#   key: (attackType, attackId, targetType, targetId) 稳定的战争行唯一键
+#   value: dict { 'attackType':.., 'attackId':.., 'attackServerId':..,
+#                 'targetType':.., 'targetId':.., 'targetServerId':.., 'endTime':.. }
+# 这是敌对关系的唯一权威来源。单个实体行（帮会↔帮会 / 帮会↔联盟 / 联盟↔联盟）
+# 不再展开成 N×M 的帮会↔帮会对；每个帮会当前的敌对集合以该行 + 实时联盟成员身份
+# 推导（见 utils.isEntityEnemy / isGuildRelationEnemy）。
+enemyRelationDic = {}
+# 敌对立关系记录的版本
+enemyRelationVersion = 0
 # 当前服务器别名
 curServerAlias = ''
 curServerName = ''
@@ -149,4 +165,7 @@ mineCanAttackBits = 0
 
 
 chatForbiddenSet = set()
+
+dunCreateTS = 0
+dunCreateNum = 0
 

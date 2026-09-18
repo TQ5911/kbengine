@@ -42,6 +42,7 @@ class ImpTeamDungeon(DungeonSheetMixin):
 
         if playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
             actId = gameconst.ACT_ID_CONST.ACTIVITY_CRUSADE_ID
+            self.onTryAddUseCoinTimesFreeTicket(gameconst.RecoveryTicketSubType.CRUSADE)
             canGetReward = self.crusadeInfo.isCanTakeReward()
 
         return actId, canGetReward

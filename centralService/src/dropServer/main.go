@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	base.Init("dropConf.json", &dropApp.DropConfig, func() common.IApp {
+	base.Init(&dropApp.DropConfig, func() common.IApp {
 		return dropApp.NewDropApp()
 	})
 }

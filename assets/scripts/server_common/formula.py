@@ -13,6 +13,8 @@ import decimal
 import KBEngine
 import mineBattle_miningArea as MBMA
 import experience_revenue as ERD
+import experience_revenueWorldLevel as ERWL
+import experience_bindWorldLevel as EBWL
 
 @functools.lru_cache(maxsize=1024)
 def fetchMapId(spaceNo):
@@ -99,6 +101,21 @@ def getSpaceBornPosAndDir(mapId):
 
     _data = random.choice(list(dunSData['BornPos'].values()))
     return bornPosFromDunData(_data), (0, 0, _data['Dir'] * math.pi / 180)
+
+
+def getDunEntityPosAndDir(entityId):
+    if not entityId:
+        return None, None
+    import utils
+    entityIdStr = str(int(entityId))
+    if len(entityIdStr) < 4:
+        return None, None
+    dunNo = int(entityIdStr[:4])
+    dunData = utils.getDunModuleData(dunNo)
+    entData = dunData.get(entityIdStr) if dunData else None
+    if not entData:
+        return None, None
+    return (entData['PosX'], entData['PosY'], entData['PosZ']), (0.0, 0.0, entData.get('Dir', 0.0) * math.pi / 180)
 
 
 def inStaticScene(spaceNo):
@@ -404,6 +421,30 @@ def getKillMonsterRewardConfig(monsterLevel, playerLevel):
 
     config = ERD.revenueLevelGapDic[levelDelta]
     return config
+
+def getKillMonsterWorldLevelDropRatio(monsterLevel, worldLevel):
+    """世界等级掉落系数。差值 = 世界等级 - 怪物等级，只处理世界等级高于怪物的情况。"""
+    if not monsterLevel or not worldLevel:
+        return 1.0
+    delta = int(worldLevel - monsterLevel)
+    if delta <= 0:
+        return 1.0
+    for i in range(ERWL.minKey, ERWL.maxKey + 1):
+        if delta <= -ERWL.datas[i]['levelgap']:
+            return ERWL.datas[i]['rewardprop']
+    return ERWL.datas[ERWL.maxKey]['rewardprop']
+
+def getKillMonsterWorldLevelBindRatio(monsterLevel, worldLevel):
+    """世界等级跨级绑定比例。差值 = 世界等级 - 怪物等级，只处理世界等级高于怪物的情况。"""
+    if not monsterLevel or not worldLevel:
+        return 0.0
+    delta = int(worldLevel - monsterLevel)
+    if delta <= 0:
+        return 0.0
+    for i in range(EBWL.minKey, EBWL.maxKey + 1):
+        if delta <= -EBWL.datas[i]['levelGap']:
+            return EBWL.datas[i]['rewardBind']
+    return EBWL.datas[EBWL.maxKey]['rewardBind']
 
 def _isArenaSpace(spaceNo):
     _mapId = fetchMapId(spaceNo)

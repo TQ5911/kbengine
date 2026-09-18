@@ -1,0 +1,891 @@
+syntax = "proto3";
+
+// 跨服组队协议：游戏服/跨服服 <-> 跨服组队中心 crossTeamServer
+// 连接管理照搬 gameServerCrossData.proto 模式：registerGameServer + 心跳 + 断线重连。
+// 中心为游戏服组（3~5 服）内单例，消息直达、无路由键；trpc 单向调用 + 反向回调。
+// 注意：本 proto 需与游戏服 assets/scripts/common/proto/gameServerCrossTeam.proto 保持一致，
+// Go 代码由 centralService/bin/proto/genproto.py 生成，Python 代码由 assets/build_proto.py 生成。
+//
+// 2026-09 客户端接口对齐（跨服组队客户端接口对齐梳理.md）：
+// MemberInfo 补 sex/picFrameId/语音四态/openId；CrossTeamInfo 补 isPublish/deputyGbId/
+// lastDungeonFinishedTime/autoMatchTime/memberNum；TeamListItem 补 intro/isPublish/autoMatchTime；
+// 聊天补完整 CHAT_MSG_DATA 内容与 avatarInfo 字段（语音消息修复）；
+// 新增语音状态同步、申请列表拉取/移除、匹配开始/停止推送；匹配入池携带 timeoutSeconds。
+// 2026-10 问题记录#4/#5：队伍列表改一波全量下发（去分页/版本号省流），
+// TeamListItem 删 captainName 改带 captain(MemberBasicInfo) 预览；MemberBasicInfo 补 level。
+// 2026-10 空接口补实现（执行清单"二-9"）：新增 reqJoin（免审批快速入队，本服 reqJoinTeam 对应）
+// 与 clearApplyList（队长一键清空申请列表，本服 clearApplyJoinDic 对应）。
+// 2026-10 副团长任命/取消（本服 transferRaidDeputy 对应）：新增 setDeputy（队长操作，
+// deputyGbId=0 取消，唯一名额直接覆盖）与 deputyChangePush（全队推送，触发游戏服 cell
+// onCrossTeamDeputyChange）；取消需当前有副团长（对齐本服 NOT_RAID_DEPUTY 校验，新错误码 27）。
+// 2026-09 标记三件套（执行清单 二-11，本服 reqAddMarkMember/reqDelMarkMember/reqChangeOnlyCaptain
+// 对应）：新增 addMark/delMark/setOnlyCaptainMark/markMonsterDead 上行与 markChangePush
+// 单条增量推送；标记数据存中心，变更只发队长当前所在服（标记仅副本内可用，打本时全队
+// 均在副本所在服，其他服无接收意义）；CrossTeamInfo 追加 playerMarks/sceneMarks/
+// onlyCaptainCanMark 全量字段。
+// 2026-09 跟随召集（执行清单 二-12，本服 sendAllMemberFollowAsk 对应）：跟随本体由客户端
+// 实现，服务端仅做召集转发——新增 followAsk 上行（队长发起，中心复核队长）与
+// followAskPush 下行（只发队长当前所在服，receiverGbIds 为全队除队长，游戏服 Stub
+// 按本服实有成员路由）；其余跟随预留接口（reqCrossCaptainFollowInfo 等 6 个）删除不做。
+
+package CrossTeamServer;
+option go_package = "../gameServerService";
+option py_generic_services = true;
+
+message Void {
+
+}
+
+message RegisterGameServerRequest
+{
+    uint32 serverId = 1;
+}
+
+// 成员基础信息（建队/申请/邀请/入队时携带，中心据此做展示与门槛校验）
+message MemberInfo {
+    uint64 gbId = 1;
+    uint32 serverId = 2;
+    string name = 3;
+    int32 level = 4;
+    int32 school = 5;
+    int32 score = 6;
+    int32 groupIdx = 7;  // 小组编号，1-based；服务端内部分组/排序用
+    int32 pos = 8;       // 组内顺序位置，1-based；允许稀疏，不严格限制 1~5；服务端内部使用
+    // ---- 客户端接口对齐补充（成员展示/语音状态） ----
+    int32 sex = 9;
+    int32 picFrameId = 10;
+    bool enableMics = 11;       // 麦克风开（客户端语音位图同步，中心只存不解读）
+    bool isBlockMics = 12;      // 被队长禁麦（由中心 blockedMembers 判定填充）
+    bool enableSpeaker = 13;
+    bool inVoiceRoom = 14;
+    string openId = 15;
+}
+
+// 成员基本身份信息（申请成为队长提示、队伍列表队长预览等只需展示身份的下行用，MemberInfo 的精简版）
+message MemberBasicInfo {
+    uint64 gbId = 1;
+    uint32 serverId = 2;
+    string name = 3;
+    int32 sex = 4;
+    int32 school = 5;
+    int32 score = 6;
+    int32 level = 7;
+}
+
+// 成员高频状态快照（3s 聚合上报/广播用）
+message MemberState {
+    uint64 gbId = 1;
+    int64 hp = 2;
+    int64 maxHp = 3;
+    int32 level = 4;
+    int32 score = 5;
+    int32 spaceNo = 6;
+    float posX = 7;
+    float posY = 8;
+    float posZ = 9;
+    uint32 routeServerId = 10;  // 成员当前实际所在服（跨服副本中为跨服服），客户端跟随判断依据
+}
+
+// 队伍标记单条数据（对齐客户端 CLIENT_TEAM_MARK_VAL 全字段；proto 无 VECTOR3，pos 拆三个 float）
+message MarkInfo {
+    int32 type = 1;         // 标记类型（对齐本服 TeamMarkType：1=队友 2=敌方/怪物 3=场景点）
+    int32 index = 2;        // 槽位 1~TEAM_MARK_MAX_SLOT(8)，同槽位新标记覆盖旧标记
+    string name = 3;        // 被标对象名字（纯展示，服务端不反查）
+    uint64 gbId = 4;        // 被标玩家 gbId（标怪物/场景点为 0；不再做本服 entId=gbId 覆盖，避免 INT32 溢出）
+    int32 entId = 5;        // 被标实体在目标服 cell 的实体 ID（标玩家时为 0，跨进程无意义）
+    float posX = 6;
+    float posY = 7;
+    float posZ = 8;         // 标记坐标（场景点标记用）
+    uint32 spaceNo = 9;     // 标记所在场景号（游戏服 cell 上行时填操作者当前 spaceNo）
+    uint32 serverId = 10;   // 被标对象所在服（标队友=其归属服；怪物/场景点=操作者当前服）
+}
+
+// 队伍全量数据（TeamDataResp 用，对应中心 CrossTeamInfo）
+message CrossTeamInfo {
+    uint64 teamId = 1;
+    int32 target = 2;           // 跨服组队目标（配表 ID）
+    int32 minLevel = 3;
+    int32 minScore = 4;
+    string password = 5;        // 非空 = 私密队伍
+    string intro = 6;
+    uint64 captainGbId = 7;
+    int32 maxNum = 8;
+    bool autoMatch = 9;
+    repeated MemberInfo members = 10;
+    bool inDungeon = 11;
+    int64 createTS = 12;
+    int64 updateTS = 13;
+    int32 micsMode = 14;            // 语音麦模式（关麦/自由麦/队长麦，语义沿用本服组队）
+    repeated uint64 blockedMembers = 15;    // 禁麦表
+    int32 dungeonMap = 16;          // 目标对应的讨伐副本（创建时带入，随快照持久化）
+    bool autoEnter = 17;            // 满员自动进入副本
+    // ---- 客户端接口对齐补充 ----
+    bool isPublish = 18;            // 公开队伍（= password 为空，冗余下发便于客户端展示）
+    uint64 deputyGbId = 19;         // 副团长（本轮仅字段占位，功能后做；0=无）
+    int64 lastDungeonFinishedTime = 20; // 重进 CD 截止时刻（crusadeFinished 写入 = 完成时刻 + 冷却 5s，对齐本服 refreshLastDungeonFinishedTime 口径；客户端按 value-now 倒计时屏蔽入口）
+    int64 autoMatchTime = 21;       // 本队开启自动匹配的时间（客户端匹配 UI 用）
+    int32 memberNum = 22;           // 成员数（中心组包时填充）
+    // ---- 本服链路（第三步） ----
+    bool isCross = 23;              // 队伍目标是否跨服（创建时固化，随快照持久化；旧快照缺省恢复为 true）
+    uint32 dunServer = 24;          // 副本创建目标服（创建时固化；旧快照缺省为 0，讨伐启动报错）
+    // ---- 队伍标记（第四步 标记三件套） ----
+    repeated MarkInfo playerMarks = 25; // 玩家/敌方标记（MARK_TEAMMATE/MARK_ENEMY）
+    repeated MarkInfo sceneMarks = 26;  // 场景点标记（MARK_SCENE）
+    bool onlyCaptainCanMark = 27;       // 仅队长可标记开关
+}
+
+// 队伍列表条目（GetTeamList 结果用；队长预览信息随列表下发，其余成员预览走 queryTeam(teamId) 按需查询）
+message TeamListItem {
+    uint64 teamId = 1;
+    int32 target = 2;
+    int32 minLevel = 3;
+    int32 minScore = 4;
+    int32 memberCnt = 6;
+    int32 maxNum = 7;
+    // ---- 客户端接口对齐补充 ----
+    string intro = 8;
+    bool isPublish = 9;
+    int64 autoMatchTime = 10;
+    MemberBasicInfo captain = 11;   // 队长预览（问题记录#4，替代原 captainName）
+}
+
+// 散人匹配档案（入池时携带）
+message MatchPlayerInfo {
+    uint64 gbId = 1;
+    uint32 serverId = 2;
+    string name = 3;
+    int32 level = 4;
+    int32 score = 5;
+}
+
+// 单条队伍聊天消息（方案B：携带完整 CHAT_MSG_DATA 内容与拼 avatarInfo 所需发送者信息）
+message ChatMsg {
+    uint64 senderGbId = 1;
+    string senderName = 2;
+    string content = 3;
+    int64 ts = 4;
+    int32 msgType = 5;
+    string voiceUrl = 6;
+    int32 code = 7;
+    int32 senderSchool = 8;
+    int32 senderLevel = 9;
+    int32 senderSex = 10;
+    int32 senderPicFrameId = 11;
+}
+
+// ---------------- 队伍操作（game -> center） ----------------
+
+message CreateTeamRequest {
+    uint64 uuid = 1;            // 异步回执关联 ID（同 crossData 惯例）
+    uint64 teamId = 2;          // 由游戏服 KBEngine.genUUID64() 生成
+    int32 target = 3;
+    int32 minLevel = 4;
+    int32 minScore = 5;
+    string password = 6;
+    string intro = 7;
+    bool autoMatch = 8;
+    int32 maxNum = 9;           // 由目标玩法决定，游戏服查表后传入
+    MemberInfo captain = 10;
+    int32 dungeonMap = 11;      // 目标对应的讨伐副本（游戏服查表带入，中心不再维护目标->副本映射）
+    bool autoEnter = 12;        // 满员自动进入副本
+    bool isCross = 13;          // 队伍目标是否跨服（游戏服读配表 teamMatch_activity.isCrossServer 带入）：
+                                // true=跨服走迁移链路，false=本服建空间本服进本
+    uint32 dunServer = 14;      // 副本创建目标服（isCross=跨服服 id；本服=本服 id）：
+                                // 中心与配置解耦仅识别字段；0=非法（讨伐启动报错）
+}
+
+message JoinApplyRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    string password = 3;
+    MemberInfo applicant = 4;
+    int32 applySource = 5;      // 申请来源（枚举复用本服 TeamJoinType）
+}
+
+// 免审批快速入队（本服 reqJoinTeam 对应）：不落地申请记录，中心校验通过直接入队，
+// 结果经 ReplyApplyNotifyMsg 主动通知申请人（applySource 下发 0，与审批流共用通道）
+message ReqJoinRequest {
+    uint64 uuid = 1;            // 保留字段（对齐其他请求格式；快速加入不走 uuid 回执）
+    uint64 teamId = 2;
+    string password = 3;
+    MemberInfo applicant = 4;
+}
+
+// 一键清空申请列表（本服 clearApplyJoinDic 对应，队长操作）：
+// 申请人逐个按"被拒绝"通知（对齐本服静默清空语义之上补的结果闭环），队长收空列表
+message ClearApplyListRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 captainGbId = 3; // 操作人队长，中心复核（本服缓存可能失效）
+}
+
+// 任命/取消副团长（本服 transferRaidDeputy 对应，队长操作）：
+// deputyGbId=0 表示取消；全队唯一名额，任命新副团长直接覆盖旧的；
+// 任命目标必须是本队成员且不能是队长本人，取消需当前确有副团长（对齐本服校验）
+message SetDeputyRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 captainGbId = 3; // 操作人队长，中心复核（本服缓存可能失效）
+    uint64 deputyGbId = 4;  // 新副团长 gbId；0=取消副团长
+}
+
+message ReplyApplyRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 captainGbId = 3;
+    uint64 applicantGbId = 4;
+    bool agree = 5;
+}
+
+// 添加标记（本服 reqAddMarkMember 对应，仅副本内可用）：uuid 为保留字段
+// （对齐其他请求格式；标记操作对齐本服静默语义，不走 uuid 回执）；
+// mark.spaceNo/serverId 由游戏服 cell 填好带入，中心只存不解读
+message AddMarkRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 operatorGbId = 3;    // 操作人（中心复核在队/仅队长开关）
+    MarkInfo mark = 4;
+}
+
+// 删除标记（本服 reqDelMarkMember 对应）：按 type+index 删除，静默语义同上
+message DelMarkRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 operatorGbId = 3;
+    int32 type = 4;
+    int32 index = 5;
+}
+
+// 仅队长可标记开关（本服 reqChangeOnlyCaptain 对应，队长操作），静默语义同上
+message SetOnlyCaptainMarkRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 captainGbId = 3;     // 操作人队长，中心复核（本服缓存可能失效）
+    bool onlyCaptain = 4;
+}
+
+// 召集（本服 sendAllMemberFollowAsk 对应，队长操作）：跟随本体由客户端实现，
+// 服务端仅把召集指令（队长当前场景/坐标）经中心广播到队长当前所在服；
+// 静默语义无回执（对齐本服：本地校验不过即丢弃，中心权威复核）
+message FollowAskRequest {
+    uint64 teamId = 1;
+    uint64 captainGbId = 2;     // 发起人队长，中心复核
+    uint32 spaceNo = 3;         // 队长当前场景号
+    float posX = 4;
+    float posY = 5;
+    float posZ = 6;             // 队长当前坐标（客户端据此寻路跟随）
+}
+
+message InviteRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 inviterGbId = 3;
+    uint64 inviteeGbId = 4;
+    uint32 inviteeServerId = 5;
+    int32 inviteType = 6;       // 邀请类型（枚举复用本服；帮会批量等后续支持）
+}
+
+message ReplyInviteRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    MemberInfo invitee = 3;
+    bool agree = 4;
+    int32 inviteType = 5;       // 邀请类型（客户端上行透传，语义记录用）
+}
+
+message LeaveTeamRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 gbId = 3;
+}
+
+message KickRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 kickedGbId = 3;
+    uint64 captainGbId = 4; // 操作人队长，中心复核（本服缓存可能失效）
+}
+
+message TransferCaptainRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 newCaptainGbId = 3;
+    uint64 captainGbId = 4; // 操作人队长，中心复核（本服缓存可能失效）
+}
+
+// 申请成为队长（本服 applyBecomeCaptain 对应）：成员发起，中心推送队长确认
+message ApplyBecomeCaptainRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 gbId = 3;        // 申请人（成员）
+}
+
+message ReplyBecomeCaptainRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 captainGbId = 3; // 操作人队长，中心复核（本服缓存可能失效）
+    uint64 applicantGbId = 4; // 申请人
+    bool agree = 5;
+}
+
+message DisbandRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 captainGbId = 3; // 操作人队长，中心复核（本服缓存可能失效）
+}
+
+// 修改队伍设置：门槛/介绍/满员自动进本/密码（队长操作）；autoMatch 修改频率高，已拆分到 SetAutoMatchRequest
+// 注：队伍目标创建后不可改，不在本接口范围内；password 空串 = 取消密码转公开队
+message SetTeamSettingsRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    int32 minLevel = 3;
+    int32 minScore = 4;
+    string intro = 5;
+    uint64 captainGbId = 6; // 操作人队长，中心复核（本服缓存可能失效）
+    bool autoEnter = 7;     // 满员自动进入副本
+    string password = 8;    // 密码（对齐补充，空串=取消）
+}
+
+// 自动匹配开关（队长操作，修改频率高，与队伍目标拆分）
+message SetAutoMatchRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    bool autoMatch = 3;
+    uint64 captainGbId = 4; // 操作人队长，中心复核（本服缓存可能失效）
+}
+
+// 语音麦模式切换（队长操作，队长身份校验由本服完成 -> 中心复核）
+message SetMicsModeRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    int32 micsMode = 3;
+    uint64 captainGbId = 4; // 操作人队长，中心复核（本服缓存可能失效）
+}
+
+// 禁麦/解除禁麦（队长操作）
+message BlockMicRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 targetGbId = 3;
+    bool blocked = 4;
+    uint64 captainGbId = 5; // 操作人队长，中心复核（本服缓存可能失效）
+}
+
+// 成员位置调整（队长操作）
+message AdjustMemberPosRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 captainGbId = 3; // 操作人队长，中心复核（本服缓存可能失效）
+    uint64 srcGbId = 4;     // 被移动/交换的成员
+    int32  srcGroupIdx = 5; // 操作前 src 所在小组（与推送对称，服务端校验用）
+    uint64 dstGbId = 6;     // 目标成员；0 表示移动到目标组末尾
+    int32  dstGroupIdx = 7; // dstGbId==0 时必填：目标小组
+}
+
+// 成员语音状态同步（游戏服 -> 中心）：客户端位图在游戏服侧解包后上传，
+// 中心只存不解读，全量下发与变更推送时原样带出
+message SetVoiceStateRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 gbId = 3;
+    bool enableMics = 4;
+    bool enableSpeaker = 5;
+    bool inVoiceRoom = 6;
+}
+
+// ---------------- 队伍列表（game -> center） ----------------
+
+message GetTeamListRequest {
+    uint64 uuid = 1;
+    int32 target = 2;
+    uint32 serverId = 5;        // 请求方本服 id（游戏服 Stub 填本机）：
+                                // 本服目标队伍（isCross=false）仅当 dunServer == serverId 时返回
+}
+
+// ---------------- 散人匹配（game -> center） ----------------
+
+message EnterMatchPoolRequest {
+    uint64 uuid = 1;
+    int32 target = 2;
+    MatchPlayerInfo player = 3;
+    int32 timeoutSeconds = 4;   // 匹配超时（决策 D5：游戏服读配表 maxMatchTime 带入，替代中心配置）
+}
+
+message LeaveMatchPoolRequest {
+    uint64 uuid = 1;
+    uint64 gbId = 2;
+}
+
+// 两段式入队第二段：游戏服权威复检通过后向中心确认入队
+message MatchJoinRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    int32 target = 3;
+    MemberInfo member = 4;
+}
+
+// ---------------- 成员状态（game -> center） ----------------
+
+// 本服 Stub 聚合上报包：每服每队伍 3s 一条
+message ReportMemberStateRequest {
+    uint64 teamId = 1;
+    uint32 serverId = 2;
+    repeated MemberState members = 3;
+    int64 reportTS = 4;
+}
+
+// ---------------- 队伍聊天（game -> center） ----------------
+
+// 上行携带完整 CHAT_MSG_DATA（msg/voiceUrl/msgType/code）与拼 avatarInfo 所需发送者信息
+message TeamChatMsgRequest {
+    uint64 teamId = 1;
+    uint64 senderGbId = 2;
+    string senderName = 3;
+    string content = 4;
+    int64 ts = 5;
+    int32 msgType = 6;
+    string voiceUrl = 7;
+    int32 code = 8;
+    int32 senderSchool = 9;
+    int32 senderLevel = 10;
+    int32 senderSex = 11;
+    int32 senderPicFrameId = 12;
+}
+
+// ---------------- 讨伐（game/cross -> center） ----------------
+
+message StartCrusadeRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 gbId = 3;    // 操作发起人（中心复核队长字段用）
+}
+
+message CrusadeCheckResultRequest {
+    uint64 teamId = 1;
+    uint64 gbId = 2;
+    bool ok = 3;
+    string reason = 4;
+}
+
+// 跨服服回报副本空间就绪
+message CrusadeSpaceReadyRequest {
+    uint64 teamId = 1;
+    string spaceUUID = 2;
+    bool ok = 3;
+}
+
+// 跨服服按需查询/校验队伍数据；gbId 非 0 时按玩家反查所在队伍（客户端主动全量查询用），
+// teamId 非 0 时按队伍直查（队伍预览 onCrossTeamPreview / 跨服进本前校验用）
+message QueryTeamRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 gbId = 3;
+}
+
+// 游戏服主动上报成员离线（本服检测到离线即报，中心直接移出队伍）
+message MemberOfflineRequest {
+    uint64 teamId = 1;
+    uint64 gbId = 2;
+}
+
+// 副本结束通知（中心复位 InDungeon）
+message CrusadeFinishedRequest {
+    uint64 teamId = 1;
+    int32 result = 2;
+}
+
+// 申请列表拉取（队长查看/断线重建；中心把列表单播回请求者）
+message GetApplyListRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 gbId = 3;        // 请求者（中心仅接受队长拉取）
+}
+
+// ---------------- 中心 -> 游戏服 推送/回执 ----------------
+
+// 队伍操作结果（uuid 与请求对应；uuid=0 为非回执主动推送——撮合入队作废/队长申请结果等
+// 异步事件，游戏服按 gbId 路由到本人 cell）
+message TeamOpResultMsg {
+    uint64 uuid = 1;
+    int32 resultCode = 2;
+    uint64 teamId = 3;
+    uint64 gbId = 4;            // 操作发起人
+    int32 target = 5;           // 队伍目标（队伍已不存在/未建成时为 0）
+}
+
+// 入队申请结果主动通知（发给申请人所在服；申请时与队长应答统一通道，
+// 携带目标/门槛/密码/申请来源供客户端失败交互，队伍已不存在时目标/门槛/密码为零值）
+message ReplyApplyNotifyMsg {
+    uint64 teamId = 1;
+    uint64 applicantGbId = 2;
+    int32 resultCode = 3;
+    int32 target = 4;           // 队伍目标
+    string password = 5;        // 队伍密码（对齐本服 onApplyJoinRaidLonelyFailed 下发口径）
+    int32 applySource = 6;      // 申请来源（枚举复用本服 TeamJoinType）
+    int32 requireLevel = 7;     // 队伍等级门槛
+    int32 requireScore = 8;     // 队伍战力门槛
+}
+
+// 创建队伍成功推送
+message TeamCreateSuccessPushMsg {
+    CrossTeamInfo team = 1;
+    repeated uint64 receiverGbIds = 2;
+}
+
+// 新成员加入队伍成功推送
+message TeamJoinSuccessPushMsg {
+    CrossTeamInfo team = 1;
+    repeated uint64 receiverGbIds = 2;
+}
+
+// 进队推送
+message MemberJoinPushMsg {
+    uint64 teamId = 1;
+    MemberInfo member = 2;
+    repeated uint64 receiverGbIds = 3; // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
+}
+
+// 离队 / 被踢 / 离线退出推送
+message MemberLeavePushMsg {
+    uint64 teamId = 1;
+    uint64 gbId = 2;
+    int32 reason = 3; // 1=主动离队, 2=被踢, 3=离线退出
+    repeated uint64 receiverGbIds = 4; // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
+}
+
+// 队长变更推送
+message CaptainChangePushMsg {
+    uint64 teamId = 1;
+    uint64 newCaptainGbId = 2;
+    repeated uint64 receiverGbIds = 3; // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
+}
+
+// 副团长变更推送（deputyGbId=0 表示取消；游戏服 cell 落地缓存并透传客户端）
+message DeputyChangePushMsg {
+    uint64 teamId = 1;
+    uint64 deputyGbId = 2;
+    repeated uint64 receiverGbIds = 3; // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
+}
+
+// 队伍标记变更推送（单条增量，对齐本服 onChangeTeamMark 的客户端落地语义）：
+// 只发队长当前所在服（标记仅副本内可用，打本时全队均在副本所在服，其他服无接收意义）；
+// changeType 对齐本服 TeamMarkChangeType（1=ADD 3=DELETE 4=CAPTAIN 开关变更）：
+// DELETE 时 mark 为被删标记的完整快照（客户端按 type/index 摘除，游戏服据 entId 清怪物记录）；
+// CAPTAIN 时 mark 为空、仅 onlyCaptainCanMark 有效；onlyCaptainCanMark 始终携带当前值供冗余校准
+message MarkChangePushMsg {
+    uint64 teamId = 1;
+    int32 changeType = 2;
+    MarkInfo mark = 3;
+    bool onlyCaptainCanMark = 4;
+    repeated uint64 receiverGbIds = 5; // 目标服上需接收本推送的成员 gbId 列表
+}
+
+// 召集推送（本服 onFollowTeamCaptainAsk 对应）：只发队长当前所在服
+// （与标记同一决策：跟随仅副本内使用，打本时全队均在副本所在服）；
+// 游戏服 cell 透传客户端 onCrossTeamFollowCaptainAsk(spaceNo, position)
+message FollowAskPushMsg {
+    uint64 teamId = 1;
+    uint32 spaceNo = 2;        // 队长当前场景号
+    float posX = 3;
+    float posY = 4;
+    float posZ = 5;            // 队长当前坐标
+    repeated uint64 receiverGbIds = 6; // 全队成员（不含队长本人），Stub 按本服实有成员路由
+}
+
+// 申请成为队长提示推送（推给队长，附申请人展示信息）
+message BecomeCaptainApplyPushMsg {
+    uint64 teamId = 1;
+    MemberBasicInfo applicant = 2;         // 申请人基本身份信息（serverId/gbId/name/sex/school/score）
+    repeated uint64 receiverGbIds = 3;     // 仅队长本人
+}
+
+// 解散推送
+message TeamDisbandPushMsg {
+    uint64 teamId = 1;
+    repeated uint64 receiverGbIds = 2; // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制，解散前快照）
+}
+
+// 修改队伍设置推送（autoMatch 已拆分到 TeamAutoMatchChangePushMsg）
+message TeamSettingsChangePushMsg {
+    uint64 teamId = 1;
+    int32 minLevel = 2;
+    int32 minScore = 3;
+    string intro = 4;
+    repeated uint64 receiverGbIds = 5; // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
+    bool autoEnter = 6;         // 满员自动进入副本
+    string password = 7;        // 密码（对齐补充）
+}
+
+// 自动匹配开关变更推送
+message TeamAutoMatchChangePushMsg {
+    uint64 teamId = 1;
+    bool autoMatch = 2;
+    repeated uint64 receiverGbIds = 3; // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
+}
+
+// 调整麦模式推送
+message TeamMicsModeChangePushMsg {
+    uint64 teamId = 1;
+    int32 micsMode = 2;
+    repeated uint64 receiverGbIds = 3; // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
+}
+
+// 禁麦 / 解除禁麦推送
+message MemberMicBlockPushMsg {
+    uint64 teamId = 1;
+    uint64 gbId = 2;
+    bool blocked = 3;
+    repeated uint64 receiverGbIds = 4; // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
+}
+
+// 成员语音状态变更推送（决策 2 独立推送；游戏服组位图下发客户端 onCrossTeamMemberVoiceState）
+message MemberVoiceStatePushMsg {
+    uint64 teamId = 1;
+    uint64 gbId = 2;
+    bool enableMics = 3;
+    bool enableSpeaker = 4;
+    bool inVoiceRoom = 5;
+    bool isBlockMics = 6;           // 中心按 blockedMembers 判定带出
+    repeated uint64 receiverGbIds = 7; // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
+}
+
+// 成员位置调整推送（不含 pos，客户端收到后刷新全量队伍信息；pos 已随成员数据结构下发）
+message AdjustMemberPosPushMsg {
+    uint64 teamId = 1;
+    uint64 srcGbId = 2;     // 被移动/交换的成员
+    int32  srcGroupIdx = 3; // 操作前 src 所在小组
+    uint64 dstGbId = 4;     // 目标成员；0 表示移动到目标组末尾
+    int32  dstGroupIdx = 5; // dstGbId==0 时为移动目标小组；否则为 dst 操作前所在小组
+    repeated uint64 receiverGbIds = 6; // 目标服上需接收本推送的成员 gbId 列表
+}
+
+message TeamListResultMsg {
+    uint64 uuid = 1;
+    repeated TeamListItem teams = 3;    // 一波全量下发（问题记录#5，去分页/版本号省流）
+    int32 target = 6;                   // 回包所属目标（请求方可能连续切换 target，客户端按此归位）
+}
+
+// 撮合结果通知散人所在服（两段式第一段）
+message MatchSuccessMsg {
+    uint64 teamId = 1;
+    int32 target = 2;
+    uint64 gbId = 3;
+}
+
+// 入池成功通知（客户端匹配 UI 开始倒计时；enterTS 为入池时间）
+message MatchStartMsg {
+    int32 target = 1;
+    uint64 gbId = 2;
+    int64 enterTS = 3;
+    int32 timeoutSeconds = 4;   // 本次入池生效的超时（决策 D5 客户端主读配表，此处冗余校准）
+}
+
+// 取消匹配确认通知（撮合成功/超时分别走 MatchSuccessMsg/MatchTimeoutMsg）
+message MatchStopMsg {
+    int32 target = 1;
+    uint64 gbId = 2;
+}
+
+message MatchTimeoutMsg {
+    int32 target = 1;
+    uint64 gbId = 2;
+}
+
+// 按队伍成员所在服分发的状态快照
+message BroadcastMemberStateMsg {
+    uint64 teamId = 1;
+    repeated MemberState members = 2;
+    int64 reportTS = 3;
+    repeated uint64 receiverGbIds = 4;  // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
+}
+
+// 0.5s 聚合后的聊天批量推送
+message TeamChatBatchMsg {
+    uint64 teamId = 1;
+    repeated ChatMsg msgs = 2;
+    repeated uint64 receiverGbIds = 3;  // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
+}
+
+// 中心向各成员所在服下发条件检查（无确认弹窗，检查通过即进本）
+// gbIds 为该连接所在服需要检查的本地成员
+message CrusadeCheckMsg {
+    uint64 teamId = 1;
+    int32 dungeonNo = 2;
+    int64 timeoutTS = 3;
+    repeated uint64 gbIds = 4;
+}
+
+// 全员检查通过：通知各服执行跨服迁移（context 由游戏服 pickle 编码透传）
+message CrusadeGoMsg {
+    uint64 teamId = 1;
+    uint32 crossServerId = 2;
+    string spaceUUID = 3;
+    bytes context = 4;
+    int32 maxNum = 5;               // 队伍最大人数（游戏服组 CrossCrusadeContext 用）
+    repeated MemberInfo members = 6;    // 全体成员（含 serverId，游戏服据此筛本服成员）
+}
+
+// 讨伐中止（有成员条件不满足/检查超时）
+message CrusadeAbortMsg {
+    uint64 teamId = 1;
+    int32 reason = 2;
+    repeated uint64 receiverGbIds = 3;  // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
+}
+
+// 中心经跨服服 CrossTeamStub 中转创建副本空间
+message CreateCrusadeSpaceMsg {
+    uint64 teamId = 1;
+    int32 dungeonNo = 2;
+    bytes context = 3;
+}
+
+// 入队申请到达通知（发给队长所在服）
+message JoinApplyNotifyMsg {
+    uint64 teamId = 1;
+    int32 target = 2;           // 队伍目标
+    MemberInfo applicant = 3;   // 申请人信息
+    uint64 captainGbId = 4;
+    int32 applySource = 5;      // 申请来源（枚举复用本服 TeamJoinType）
+}
+
+// 组队邀请通知（发给被邀请人所在服；客户端弹窗只需邀请人信息与队伍目标，不再携带全量队伍）
+message InviteNotifyMsg {
+    uint64 teamId = 1;
+    int32 target = 2;       // 队伍目标
+    MemberInfo inviter = 3; // 邀请人信息
+    uint64 inviteeGbId = 4;
+    int32 inviteType = 5;   // 邀请类型（枚举复用本服）
+}
+
+// 队伍数据查询应答（对应 QueryTeamRequest 中 gbId 反查路径：客户端主动全量查询）
+// 中心按 uuid 单播回请求来源连接，游戏服侧经 uuid 从 remoteCallCache 取出 box/method 原路回调。
+message TeamDataRespMsg {
+    uint64 uuid = 1;
+    bool success = 2;
+    CrossTeamInfo team = 3;
+}
+
+// 队伍数据查询应答（对应 QueryTeamRequest 中 teamId 直查路径：队伍预览 / 跨服进本前校验）
+// 与 TeamDataRespMsg 单拆，避免登录恢复广播影响单播 uuid 回调。
+message QueryTeamCrossRespMsg {
+    uint64 uuid = 1;
+    bool success = 2;
+    CrossTeamInfo team = 3;
+}
+
+// 申请列表条目（申请列表拉取/移除推送用）
+message ApplyInfo {
+    MemberInfo member = 1;
+    int32 applySource = 2;  // 申请来源（枚举复用本服 TeamJoinType）
+    int64 applyTS = 3;
+}
+
+// 申请列表应答（对应 GetApplyListRequest，单播回请求者所在连接）
+message ApplyListPushMsg {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 receiverGbId = 3;        // 请求者（游戏服据此路由到本人）
+    repeated ApplyInfo applicants = 4;
+}
+
+// 申请移除通知（申请被同意/拒绝/超时清理时发给队长所在服，客户端从申请列表移除）
+message ApplyRemoveNotifyMsg {
+    uint64 teamId = 1;
+    uint64 applicantGbId = 2;
+    repeated uint64 receiverGbIds = 3;  // 队长（副团长功能期扩展）
+}
+
+// 重进 CD 刷新推送（crusadeFinished 写入后按成员路由服下发；
+// lastDungeonFinishedTime 为 CD 截止时刻，客户端 value-now 倒计时屏蔽入口）
+message DungeonCDRefreshPushMsg {
+    uint64 teamId = 1;
+    int64 lastDungeonFinishedTime = 2;
+    repeated uint64 receiverGbIds = 3;
+}
+
+// 中心侧服务：游戏服/跨服服调用
+service CrossTeamServer
+{
+    rpc registerGameServer(RegisterGameServerRequest) returns (Void);
+    rpc activeTick(Void) returns(Void);
+    rpc createTeam(CreateTeamRequest) returns (Void);
+    rpc joinApply(JoinApplyRequest) returns (Void);
+    rpc reqJoin(ReqJoinRequest) returns (Void);
+    rpc clearApplyList(ClearApplyListRequest) returns (Void);
+    rpc setDeputy(SetDeputyRequest) returns (Void);
+    rpc replyApply(ReplyApplyRequest) returns (Void);
+    rpc invite(InviteRequest) returns (Void);
+    rpc replyInvite(ReplyInviteRequest) returns (Void);
+    rpc leaveTeam(LeaveTeamRequest) returns (Void);
+    rpc kick(KickRequest) returns (Void);
+    rpc transferCaptain(TransferCaptainRequest) returns (Void);
+    rpc applyBecomeCaptain(ApplyBecomeCaptainRequest) returns (Void);
+    rpc replyBecomeCaptain(ReplyBecomeCaptainRequest) returns (Void);
+    rpc disband(DisbandRequest) returns (Void);
+    rpc queryTeam(QueryTeamRequest) returns (Void);
+    rpc setTeamSettings(SetTeamSettingsRequest) returns (Void);
+    rpc setAutoMatch(SetAutoMatchRequest) returns (Void);
+    rpc getTeamList(GetTeamListRequest) returns (Void);
+    rpc enterMatchPool(EnterMatchPoolRequest) returns (Void);
+    rpc leaveMatchPool(LeaveMatchPoolRequest) returns (Void);
+    rpc matchJoin(MatchJoinRequest) returns (Void);
+    rpc reportMemberState(ReportMemberStateRequest) returns (Void);
+    rpc teamChatMsg(TeamChatMsgRequest) returns (Void);
+    rpc startCrusade(StartCrusadeRequest) returns (Void);
+    rpc crusadeCheckResult(CrusadeCheckResultRequest) returns (Void);
+    rpc crusadeSpaceReady(CrusadeSpaceReadyRequest) returns (Void);
+    rpc crusadeFinished(CrusadeFinishedRequest) returns (Void);
+    rpc memberOffline(MemberOfflineRequest) returns (Void);
+    rpc setMicsMode(SetMicsModeRequest) returns (Void);
+    rpc blockMic(BlockMicRequest) returns (Void);
+    rpc adjustMemberPos(AdjustMemberPosRequest) returns (Void);
+    rpc setVoiceState(SetVoiceStateRequest) returns (Void);
+    rpc getApplyList(GetApplyListRequest) returns (Void);
+    rpc addMark(AddMarkRequest) returns (Void);
+    rpc delMark(DelMarkRequest) returns (Void);
+    rpc setOnlyCaptainMark(SetOnlyCaptainMarkRequest) returns (Void);
+    rpc followAsk(FollowAskRequest) returns (Void);
+}
+
+// 游戏服/跨服服侧服务：中心反向回调
+service GameServer
+{
+    rpc activeTickCallback(Void) returns(Void);
+    rpc teamOpResult(TeamOpResultMsg) returns (Void);
+    rpc replyApplyNotify(ReplyApplyNotifyMsg) returns (Void);
+    rpc teamCreateSuccessPush(TeamCreateSuccessPushMsg) returns (Void);
+    rpc teamJoinSuccessPush(TeamJoinSuccessPushMsg) returns (Void);
+    rpc memberJoinPush(MemberJoinPushMsg) returns (Void);
+    rpc memberLeavePush(MemberLeavePushMsg) returns (Void);
+    rpc captainChangePush(CaptainChangePushMsg) returns (Void);
+    rpc deputyChangePush(DeputyChangePushMsg) returns (Void);
+    rpc becomeCaptainApplyPush(BecomeCaptainApplyPushMsg) returns (Void);
+    rpc teamDisbandPush(TeamDisbandPushMsg) returns (Void);
+    rpc teamSettingsChangePush(TeamSettingsChangePushMsg) returns (Void);
+    rpc teamAutoMatchChangePush(TeamAutoMatchChangePushMsg) returns (Void);
+    rpc teamMicsModeChangePush(TeamMicsModeChangePushMsg) returns (Void);
+    rpc memberMicBlockPush(MemberMicBlockPushMsg) returns (Void);
+    rpc adjustMemberPosPush(AdjustMemberPosPushMsg) returns (Void);
+    rpc teamListResult(TeamListResultMsg) returns (Void);
+    rpc matchSuccess(MatchSuccessMsg) returns (Void);
+    rpc matchTimeout(MatchTimeoutMsg) returns (Void);
+    rpc broadcastMemberState(BroadcastMemberStateMsg) returns (Void);
+    rpc teamChatBatch(TeamChatBatchMsg) returns (Void);
+    rpc crusadeCheck(CrusadeCheckMsg) returns (Void);
+    rpc crusadeGo(CrusadeGoMsg) returns (Void);
+    rpc crusadeAbort(CrusadeAbortMsg) returns (Void);
+    rpc createCrusadeSpace(CreateCrusadeSpaceMsg) returns (Void);
+    rpc teamDataResp(TeamDataRespMsg) returns (Void);
+    rpc queryTeamCrossResp(QueryTeamCrossRespMsg) returns (Void);
+    rpc joinApplyNotify(JoinApplyNotifyMsg) returns (Void);
+    rpc inviteNotify(InviteNotifyMsg) returns (Void);
+    rpc memberVoiceStatePush(MemberVoiceStatePushMsg) returns (Void);
+    rpc matchStart(MatchStartMsg) returns (Void);
+    rpc matchStop(MatchStopMsg) returns (Void);
+    rpc applyListPush(ApplyListPushMsg) returns (Void);
+    rpc applyRemoveNotify(ApplyRemoveNotifyMsg) returns (Void);
+    rpc dungeonCDRefreshPush(DungeonCDRefreshPushMsg) returns (Void);
+    rpc markChangePush(MarkChangePushMsg) returns (Void);
+    rpc followAskPush(FollowAskPushMsg) returns (Void);
+}

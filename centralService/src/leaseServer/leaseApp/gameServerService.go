@@ -113,6 +113,8 @@ func (gs *GameServerService) AddItemPrepare(in *gameServerService.LeaseAddItemPr
 		item := &LeaseMarketItem{
 			UniqueId:            in.UniqueId,
 			ItemId:              in.ItemId,
+			EnhanceLv:           in.EnhanceLv,
+			Grade:               in.Grade,
 			LeaseDay:            in.LeaseDays,
 			PricePerDay:         in.PricePerDay,
 			ReturnOwnerGbId:     in.ReturnOwner,
@@ -383,9 +385,9 @@ func (gs *GameServerService) GetShopSummary(in *gameServerService.LeaseShopSumma
 
 func (gs *GameServerService) GetShopItems(in *gameServerService.LeaseShopItemsReq) (*gameServerService.Void, error) {
 	SafeGo(func() {
-		appLog.Debugw("GetShopItems", "itemId", in.ItemId, "page", in.Page, "pageSize", in.PageSize)
+		appLog.Debugw("GetShopItems", "itemId", in.ItemId, "page", in.Page, "pageSize", in.PageSize, "enhanceLvMask", in.EnhanceLv, "gradeMask", in.Grade)
 
-		items := gs.app.leaseMgr.getShopItems(in.ItemId, in.Page, in.PageSize)
+		items := gs.app.leaseMgr.getShopItems(in.ItemId, in.Page, in.PageSize, in.EnhanceLv, in.Grade)
 
 		resp := replyShopItemsRespPool.Get().(*gameServerService.LeaseShopItemsResp)
 		resp.ItemId = in.ItemId

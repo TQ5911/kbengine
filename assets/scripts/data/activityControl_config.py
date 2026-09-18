@@ -46,5 +46,49 @@ datas = _tools.RODict({
     "crossServer_peopleFull": _tools.RODict({
         "ID": "crossServer_peopleFull",
         "value": 54003435,
+    }),
+    "activityTicket_newServe": _tools.RODict({
+        "ID": "activityTicket_newServe",
+        "value": "限时{0}天",
+    }),
+    "activityTicket_newServe2": _tools.RODict({
+        "ID": "activityTicket_newServe2",
+        "value": "新服免费",
+    }),
+    "activityTicket_newPlayer": _tools.RODict({
+        "ID": "activityTicket_newPlayer",
+        "value": "{0}折优惠",
+    }),
+    "activityTicket_newPlayer2": _tools.RODict({
+        "ID": "activityTicket_newPlayer2",
+        "value": "新人免费",
+    }),
+    "activityTicket_priceFree": _tools.RODict({
+        "ID": "activityTicket_priceFree",
+        "value": "免费",
+    }),
+    "activityTicket_enterText": _tools.RODict({
+        "ID": "activityTicket_enterText",
+        "value": "免费进入（{0}/{1}）",
+    }),
+    "cube_freeIconPath": _tools.RODict({
+        "ID": "cube_freeIconPath",
+        "value": "Assets/Res/ui/texturenp/item/item_018.png",
+    }),
+    "wonderLand_freeIconPath": _tools.RODict({
+        "ID": "wonderLand_freeIconPath",
+        "value": "Assets/Res/ui/texturenp/item/item_017.png",
+    }),
+    "abyss_freeIconPath": _tools.RODict({
+        "ID": "abyss_freeIconPath",
+        "value": "Assets/Res/ui/texturenp/item/item_0354.png",
+    }),
+    "raidBoss_freeIconPath": _tools.RODict({
+        "ID": "raidBoss_freeIconPath",
+        "value": "Assets/Res/ui/texturenp/item/item_0353.png",
+    }),
+    "teamDun_freeIconPath": _tools.RODict({
+        "ID": "teamDun_freeIconPath",
+        "value": "Assets/Res/ui/texturenp/item/item_0352.png",
     })
 })

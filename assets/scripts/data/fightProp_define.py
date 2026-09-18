@@ -171,7 +171,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "fullMp",
-        "perPropertyScore": 1.2
+        "perPropertyScore": 1.3
     }),
     "adjFullMp": _tools.RODict({
         "ID": "adjFullMp",
@@ -186,7 +186,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "fullMp",
-        "perPropertyScore": 1.2
+        "perPropertyScore": 1.3
     }),
     "adjFullMpAbs": _tools.RODict({
         "ID": "adjFullMpAbs",
@@ -201,7 +201,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "fullMp",
-        "perPropertyScore": 1.2
+        "perPropertyScore": 1.3
     }),
     "mulFullMp": _tools.RODict({
         "ID": "mulFullMp",
@@ -366,7 +366,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minPhysicalAtk",
-        "perPropertyScore": 7.0
+        "perPropertyScore": 5.0
     }),
     "adjMinPhysicalAtk": _tools.RODict({
         "ID": "adjMinPhysicalAtk",
@@ -381,7 +381,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minPhysicalAtk",
-        "perPropertyScore": 7.0
+        "perPropertyScore": 5.0
     }),
     "adjMinPhysicalAtkAbs": _tools.RODict({
         "ID": "adjMinPhysicalAtkAbs",
@@ -396,7 +396,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minPhysicalAtk",
-        "perPropertyScore": 7.0
+        "perPropertyScore": 5.0
     }),
     "mulMinPhysicalAtk": _tools.RODict({
         "ID": "mulMinPhysicalAtk",
@@ -441,7 +441,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxPhysicalAtk",
-        "perPropertyScore": 7.0
+        "perPropertyScore": 5.0
     }),
     "adjMaxPhysicalAtk": _tools.RODict({
         "ID": "adjMaxPhysicalAtk",
@@ -456,7 +456,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxPhysicalAtk",
-        "perPropertyScore": 7.0
+        "perPropertyScore": 5.0
     }),
     "adjMaxPhysicalAtkAbs": _tools.RODict({
         "ID": "adjMaxPhysicalAtkAbs",
@@ -471,7 +471,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxPhysicalAtk",
-        "perPropertyScore": 7.0
+        "perPropertyScore": 5.0
     }),
     "mulMaxPhysicalAtk": _tools.RODict({
         "ID": "mulMaxPhysicalAtk",
@@ -516,7 +516,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minMagicAtk",
-        "perPropertyScore": 7.0
+        "perPropertyScore": 5.0
     }),
     "adjMinMagicAtk": _tools.RODict({
         "ID": "adjMinMagicAtk",
@@ -531,7 +531,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minMagicAtk",
-        "perPropertyScore": 7.0
+        "perPropertyScore": 5.0
     }),
     "adjMinMagicAtkAbs": _tools.RODict({
         "ID": "adjMinMagicAtkAbs",
@@ -546,7 +546,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minMagicAtk",
-        "perPropertyScore": 7.0
+        "perPropertyScore": 5.0
     }),
     "mulMinMagicAtk": _tools.RODict({
         "ID": "mulMinMagicAtk",
@@ -591,7 +591,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxMagicAtk",
-        "perPropertyScore": 7.0
+        "perPropertyScore": 5.0
     }),
     "adjMaxMagicAtk": _tools.RODict({
         "ID": "adjMaxMagicAtk",
@@ -606,7 +606,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxMagicAtk",
-        "perPropertyScore": 7.0
+        "perPropertyScore": 5.0
     }),
     "adjMaxMagicAtkAbs": _tools.RODict({
         "ID": "adjMaxMagicAtkAbs",
@@ -621,7 +621,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxMagicAtk",
-        "perPropertyScore": 7.0
+        "perPropertyScore": 5.0
     }),
     "mulMaxMagicAtk": _tools.RODict({
         "ID": "mulMaxMagicAtk",
@@ -831,7 +831,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "ignoreArmor",
-        "perPropertyScore": 12500.0
+        "perPropertyScore": 10000.0
     }),
     "adjIgnoreArmor": _tools.RODict({
         "ID": "adjIgnoreArmor",
@@ -846,7 +846,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "ignoreArmor",
-        "perPropertyScore": 12500.0
+        "perPropertyScore": 10000.0
     }),
     "dmgArmor": _tools.RODict({
         "ID": "dmgArmor",
@@ -876,7 +876,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "dmgArmor",
-        "perPropertyScore": 12500.0
+        "perPropertyScore": 10000.0
     }),
     "adjDmgArmor": _tools.RODict({
         "ID": "adjDmgArmor",
@@ -891,7 +891,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "dmgArmor",
-        "perPropertyScore": 12500.0
+        "perPropertyScore": 10000.0
     }),
     "skillCD": _tools.RODict({
         "ID": "skillCD",
@@ -2121,7 +2121,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "drugsQuantity",
-        "perPropertyScore": 35.0
+        "perPropertyScore": 15.0
     }),
     "adjDrugsQuantity": _tools.RODict({
         "ID": "adjDrugsQuantity",
@@ -2136,7 +2136,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "drugsQuantity",
-        "perPropertyScore": 35.0
+        "perPropertyScore": 15.0
     }),
     "minPhysicalArmor": _tools.RODict({
         "ID": "minPhysicalArmor",
@@ -2166,7 +2166,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minPhysicalArmor",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 4.0
     }),
     "adjMinPhysicalArmor": _tools.RODict({
         "ID": "adjMinPhysicalArmor",
@@ -2181,7 +2181,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minPhysicalArmor",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 4.0
     }),
     "adjMinPhysicalArmorAbs": _tools.RODict({
         "ID": "adjMinPhysicalArmorAbs",
@@ -2196,7 +2196,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minPhysicalArmor",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 4.0
     }),
     "mulMinPhysicalArmor": _tools.RODict({
         "ID": "mulMinPhysicalArmor",
@@ -2241,7 +2241,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxPhysicalArmor",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 4.0
     }),
     "adjMaxPhysicalArmor": _tools.RODict({
         "ID": "adjMaxPhysicalArmor",
@@ -2256,7 +2256,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxPhysicalArmor",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 4.0
     }),
     "adjMaxPhysicalArmorAbs": _tools.RODict({
         "ID": "adjMaxPhysicalArmorAbs",
@@ -2271,7 +2271,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxPhysicalArmor",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 4.0
     }),
     "mulMaxPhysicalArmor": _tools.RODict({
         "ID": "mulMaxPhysicalArmor",
@@ -2316,7 +2316,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minMagicArmor",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 4.0
     }),
     "adjMinMagicArmor": _tools.RODict({
         "ID": "adjMinMagicArmor",
@@ -2331,7 +2331,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minMagicArmor",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 4.0
     }),
     "adjMinMagicArmorAbs": _tools.RODict({
         "ID": "adjMinMagicArmorAbs",
@@ -2346,7 +2346,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "minMagicArmor",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 4.0
     }),
     "mulMinMagicArmor": _tools.RODict({
         "ID": "mulMinMagicArmor",
@@ -2391,7 +2391,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxMagicArmor",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 4.0
     }),
     "adjMaxMagicArmor": _tools.RODict({
         "ID": "adjMaxMagicArmor",
@@ -2406,7 +2406,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxMagicArmor",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 4.0
     }),
     "adjMaxMagicArmorAbs": _tools.RODict({
         "ID": "adjMaxMagicArmorAbs",
@@ -2421,7 +2421,7 @@ datas = _tools.RODict({
         "propertiesType": 0,
         "isPercent": 0,
         "relatedKey": "maxMagicArmor",
-        "perPropertyScore": 5.0
+        "perPropertyScore": 4.0
     }),
     "mulMaxMagicArmor": _tools.RODict({
         "ID": "mulMaxMagicArmor",

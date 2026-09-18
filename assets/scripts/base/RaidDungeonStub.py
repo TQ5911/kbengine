@@ -83,14 +83,11 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         super(RaidDungeonStub, self).doNext()
         # add check destroy cycle tick
         self.pyAddTimer(30, 30, gametimer.TIMER_DUNGEON_CHECK_DESTROY)
-        self.pyAddTimer(1, 0.1, gametimer.TIMER_DUNGEON_ENTITY_GENERATOR)
 
     def onTimer(self, tid, userArg):
         self._onTimerTrigger(tid, userArg)
         if userArg == gametimer.TIMER_DUNGEON_CHECK_DESTROY:
             self._checkDungeonSpaceDestroy()
-        elif userArg == gametimer.TIMER_DUNGEON_ENTITY_GENERATOR:
-            self.onTimerCreateEntity()
         else:
             super(RaidDungeonStub, self).onTimer(tid, userArg)
 
@@ -134,8 +131,10 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
                 _spaceVal = self.spaces[spaceNo]
                 _spaceVal.cancelCompleteTimer(self, gametimer.TIMER_TAG_ON_SINGLE_DUNGEON_COMPLETED_CALLBACK)
                 _spaceVal.spaceMgr.cell.cancelCompleteDelayNotifyTimer(_spaceVal.spaceMgr.cell, gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
-                _raidStub = gameengine.getRaidStub(_spaceVal.raidUUID)
-                _raidStub.clearRaidDungeonInfo(_spaceVal.raidUUID, self.dungeonNo, spaceNo, _spaceVal.spaceUUID)
+                if not _spaceVal.isCrossDungeon():
+                    # 跨服讨伐空间无本服 RaidStub 联动，仅本地清理
+                    _raidStub = gameengine.getRaidStub(_spaceVal.raidUUID)
+                    _raidStub.clearRaidDungeonInfo(_spaceVal.raidUUID, self.dungeonNo, spaceNo, _spaceVal.spaceUUID)
 
                 self.cancelSpaceEntitiesLoadingProcess(spaceNo)
 
@@ -147,9 +146,10 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         LOG_INFO('destoryDungeonSpace::', spaceNo, spaceUUID, reason)
         _spaceVal, err = self._destroyRaidDungeonSpace(spaceNo, spaceUUID)
         if err == gameconst.RaidDunErrno.ENUM_RAIDDUN_OK:
-            # 强制清除raid中副本cache(如果有的话)
-            gameengine.getRaidStub(_spaceVal.raidUUID).clearRaidDungeonInfo(
-                _spaceVal.raidUUID, self.dungeonNo, spaceNo, spaceUUID)
+            if not _spaceVal.isCrossDungeon():
+                # 强制清除raid中副本cache(如果有的话)（跨服讨伐无本服 RaidStub 缓存）
+                gameengine.getRaidStub(_spaceVal.raidUUID).clearRaidDungeonInfo(
+                    _spaceVal.raidUUID, self.dungeonNo, spaceNo, spaceUUID)
 
         elif err == gameconst.RaidDunErrno.ENUM_RAIDDUN_FOUNDER_IN_DUNGEON:
             self._kickOutAllFounders(spaceNo)
@@ -194,8 +194,10 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             # 提前cancel的时机到markDestroy
             _spaceVal.cancelCompleteTimer(self, gametimer.TIMER_TAG_ON_RAID_DUNGEON_COMPLETED_CALLBACK)
             _spaceVal.spaceMgr.cell.cancelCompleteDelayNotifyTimer(_spaceVal.spaceMgr.cell, gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
-            gameengine.getRaidStub(_spaceVal.raidUUID).clearRaidDungeonInfo(
-                _spaceVal.raidUUID, self.dungeonNo, spaceNo, spaceUUID)
+            if not _spaceVal.isCrossDungeon():
+                # 跨服讨伐空间无本服 RaidStub 缓存可清
+                gameengine.getRaidStub(_spaceVal.raidUUID).clearRaidDungeonInfo(
+                    _spaceVal.raidUUID, self.dungeonNo, spaceNo, spaceUUID)
 
     def _kickOutAllFounders(self, spaceNo):
         LOG_INFO('RaidDungeonStub _kickOutAllFounders:: kickout', spaceNo)
@@ -251,6 +253,10 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         if founderVal:
             founderVal.onAvatarLeave(playerGbId, isOffline=True)
 
+        if sVal.isCrossDungeon():
+            # 跨服讨伐副本内掉线 = 离线退队（通知中心移除成员）；重连回本服不回副本
+            gameengine.getCrossTeamStub(sVal.raidUUID).memberOffline(sVal.raidUUID, playerGbId)
+
     def onReliveInDungeon(self, spaceNo, playerBox, playerGbId, reliveType, reliveHp):
         """玩家复活时回调"""
         self._onReliveInDungeon(spaceNo, playerBox, playerGbId, reliveType, reliveHp)
@@ -304,7 +310,9 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             LOG_WARN("_onRaidDungeonCompleted:: raidUUID not match", spaceNo, _sVal.raidUUID, raidUUID)
             return
         
-        gameengine.getRaidStub(raidUUID).setInDungeon(raidUUID, False)
+        _isCross = _sVal.isCrossDungeon()
+        if not _isCross:
+            gameengine.getRaidStub(raidUUID).setInDungeon(raidUUID, False)
         
         _sVal.spaceMgr.cell.destroyAllEntities()
         _sVal.completedReasonType = reasonType
@@ -322,9 +330,10 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         
         # 副本完成后倒计时
         if delay > 0:
-            lastDungeonFinishedTime = utils.curTS() + delay
-            _raidStub = gameengine.getRaidStub(_sVal.raidUUID)
-            _raidStub.refreshLastDungeonFinishedTime(_sVal.raidUUID, lastDungeonFinishedTime)
+            if not _isCross:
+                lastDungeonFinishedTime = utils.curTS() + delay
+                _raidStub = gameengine.getRaidStub(_sVal.raidUUID)
+                _raidStub.refreshLastDungeonFinishedTime(_sVal.raidUUID, lastDungeonFinishedTime)
             _sVal.completeDungeonTimer = self.addTimerCB(
                 delay, '_onRaidDungeonCompletedCallback',
                 (spaceNo, _sVal.spaceUUID, 'dungeon complete', win), gametimer.TIMER_TAG_ON_RAID_DUNGEON_COMPLETED_CALLBACK)
@@ -351,6 +360,10 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         sVal.completeDungeon(win)
         sVal.toDestoryDungeon()
         self._kickOutAllFounders(spaceNo)
+        if sVal.isCrossDungeon():
+            # 跨服讨伐：通知中心复位 InDungeon（队伍不解散），无本服 RaidStub 联动
+            gameengine.getCrossTeamStub(sVal.raidUUID).crusadeFinished(sVal.raidUUID, 1 if win else 0)
+            return
         gameengine.getRaidStub(sVal.raidUUID).onRaidDungeonCompletedCB(sVal.raidUUID, self.dungeonNo, spaceNo, sVal.spaceUUID)
 
     def applyCreateDungeon(self, box, gbId, raidUUID, extra):
@@ -364,6 +377,30 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
 
     def doEnterDungeon(self, box, gbId, raidUUID, spaceNo, extra):
         """玩家执行进入副本时调用"""
+        _spaceVal = self.spaces.get(spaceNo)
+        if _spaceVal and _spaceVal.isCrossDungeon():
+            # 跨服讨伐-首领巢穴（CROSS_CHIEF）：进本不经本服 RaidStub，由本 stub 直接进
+            if _spaceVal.isCompleted():
+                LOG_ERR('cross chief space already completed', spaceNo, _spaceVal.spaceUUID)
+                return
+
+            if _spaceVal.isToDestory():
+                LOG_ERR('cross chief space destroying', spaceNo)
+                return
+
+            _spaceVal.spaceMgr.cell.enterRaidDunDirectly(
+                box,
+                gbId,
+                _spaceVal.spaceUUID,
+                _spaceVal.spaceBox,
+                None,
+                extra
+            )
+            return
+        if extra and extra.get('crossTeamId'):
+            # 跨服讨伐-首领巢穴进本失败（空间不存在/归属不符），仅记录（镜像由中心中止/超时流程回收）
+            LOG_ERR('cross chief doEnterDungeon space not found', spaceNo, raidUUID)
+            return
         raise DeprecationWarning('In raid dungeon, doEnterDungeon logic move to raidStub')
 
     def getDungeonSpaceRange(self):
@@ -377,6 +414,11 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
             spaceBox=None, 
             raidUUID=raidUUID, 
             spaceLevel=extra.get('spaceLevel', 1))
+        # 跨服讨伐（CROSS_CHIEF）：playMode 记到 SpaceVal 供各回调分支判断
+        # （founders 复用 RaidDungeonSpaceVal 自带容器）
+        _playMode = extra.get('dungeonPlayMode')
+        if _playMode and _playMode.playMode in gameconst.DungeonPlayModeEnum.COLL_CROSS:
+            spaceVal.playMode = _playMode.playMode
         return spaceVal
 
     def _getDungeonSpaceWeight(self, enterNum=40) -> int:
@@ -386,6 +428,18 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         """团队副本准备完毕后回调"""
         LOG_INFO('onLoadDungeonSpaceReady::')
         _spaceVal = self.spaces[spaceNo]
+        if _spaceVal.isCrossDungeon():
+            # 跨服讨伐：回报 CrossTeamStub（更新簿记并上报中心），不走本服 RaidStub；
+            # spaceBox/spaceMgrBox 随簿记保存（镜像登录直进副本建 cell 用）
+            gameengine.getCrossTeamStub(raidUUID).onCrossCrusadeSpaceReady(
+                raidUUID,
+                spaceNo,
+                _spaceVal.spaceUUID,
+                True,
+                _spaceVal.spaceBox,
+                _spaceVal.spaceMgr
+            )
+            return
         spaceUUID = _spaceVal.spaceUUID
         spaceBox = _spaceVal.spaceBox
         _spaceMgrBox = _spaceVal.spaceMgr
@@ -396,12 +450,14 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
     def enterDungeonSpaceSuccess(self, spaceNo, playerBox, playerGbId, raidUUID, extra):
         """团队成员进入副本成功后回调"""
         LOG_INFO('enterDungeonSpaceSuccess::', spaceNo, playerBox, playerGbId, raidUUID, extra)
-        _src = extra.pop('src')  # 这里一定要有dungeonSrc
+        _src = extra.pop('src', None)  # 本服进本一定带 dungeonSrc；跨服讨伐无 src（资格已由中心协调检查）
         founderVal, err = self._enterDungeonSpaceSucc(spaceNo, playerBox, playerGbId, raidUUID, _src)
         if err != gameconst.RaidDunErrno.ENUM_RAIDDUN_OK:
             LOG_ERR('enterDungeonSpaceSuccess:: failed, {}'.format(err))
             # NOTE: 进入团队副本后出现问题, 执行离开逻辑
-            playerBox.cell.leaveRaidDungeon()
+            # （跨服讨伐无本服回退链路，仅记录；镜像由中心中止/超时流程回收）
+            if not extra.get('crossTeamId'):
+                playerBox.cell.leaveRaidDungeon()
         else:
             founderVal.playerName = extra.pop('playerName', '')
 
@@ -438,14 +494,29 @@ class RaidDungeonStub(iDungeonStub.IDungeonStub, iDungeonStubMonster.IDungeonStu
         dungeonVal, founderVla, err = self._leaveDungeonSpaceSucc(spaceNo, playerBox, playerGbId, raidUUID)
         if err != gameconst.RaidDunErrno.ENUM_RAIDDUN_OK:
             LOG_ERR('leaveDungeonSpaceSucc:: failed, {}'.format(err))
+            return
+
+        _isCross = dungeonVal.isCrossDungeon()
         src = extra.get('src', None)
         # 来自客户端的主动退出
         if src and src.srcId==gameconst.DunSrcEnum.FROM_CLIENT:
             # 副本还在进行中退出的，直接退出队伍
             if dungeonVal.completedReasonType == gameconst.DunegonCompleteReasonType.DEFAULT:
-                # 退出团队
-                extraProps = {'leaveDungen':True}
-                gameengine.getRaidStub(raidUUID).leaveRaid(playerBox, playerGbId, raidUUID, extraProps)
+                if _isCross:
+                    # 跨服讨伐：进行中主动退出 = 退出跨服小队（通知中心）
+                    gameengine.getCrossTeamStub(raidUUID).leaveTeam(playerBox, raidUUID, playerGbId)
+                else:
+                    # 退出团队
+                    extraProps = {'leaveDungen':True}
+                    gameengine.getRaidStub(raidUUID).leaveRaid(playerBox, playerGbId, raidUUID, extraProps)
+
+        if _isCross:
+            # 跨服讨伐：最后一人离开自动完成副本；退出副本后返回本服（队伍不解散）
+            # 用 ENUM_NONE：onCrossServerEnd 对 ENUM_BASE 会直接 getattr(self, '') 分发，
+            # 空方法名会抛 AttributeError（归墟回程即用 ENUM_NONE 无回调形态）
+            if dungeonVal.isActive() and dungeonVal.founders.isNoFounders():
+                self.completeRaidDungeon(spaceNo, raidUUID, False, 0, gameconst.DunegonCompleteReasonType.LEAVE)
+            playerBox.gobackServer(gameconst.CrossServerCBComponent.ENUM_NONE, '', ())
 
     def _leaveDungeonSpaceSucc(self, spaceNo, playerBox, playerGBID, raidUUID):
         if spaceNo not in self.spaces:

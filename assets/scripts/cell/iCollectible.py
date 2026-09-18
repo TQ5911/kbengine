@@ -13,14 +13,16 @@ import collect_details as  PDETAIL
 class ICollectible(object):
     def onCollectAward(self, propIndexList, opUUID):
         LOG_DBG('onCollectAward', propIndexList, opUUID)
+        syncPropDict = {}
         for propIndex in propIndexList:
             propList = PDETAIL.datas.get(propIndex, {}).get('propList', {})
-            propChange = self._addAwardCollectPropsCell(propList)
-            
+            for propName, val in propList.items():
+                syncPropDict[propName] = syncPropDict.get(propName, 0) + val
             coType = PDETAIL.datas.get(propIndex, {}).get('type', '')
             self.collectibleSimpleClientData.setdefault(coType, {}).setdefault(propIndex, True)
-            if not opUUID:
-                continue
+
+        propChange = self._addAwardCollectPropsCell(syncPropDict, opUUID)
+        if opUUID:
             LogTrackingMgr.LogTrackingMgr.collectible_detail(
                 self.gbId,
                 self.clientDistinctIdCell,
@@ -30,7 +32,7 @@ class ICollectible(object):
                 opUUID,
             )
 
-    def _addAwardCollectPropsCell(self, syncPropDict):
+    def _addAwardCollectPropsCell(self, syncPropDict, opUUID):
         addScore = 0
         propChange = {}
         for propName, val in syncPropDict.items():
@@ -44,6 +46,6 @@ class ICollectible(object):
         if addScore:
             newScore = self.scoresInfo.rewardFightProp + addScore
             LOG_DBG('add score by collect', self.scoresInfo.rewardFightProp, ', val', addScore)
-            self.onUpdateRewardFightProp(newScore)
+            self.onUpdateRewardFightProp(newScore, opUUID)
 
         return propChange

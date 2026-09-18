@@ -69,6 +69,8 @@ const (
 type LeaseMarketItem struct {
 	UniqueId            uint64 // 装备全局唯一 ID
 	ItemId              uint32 // 装备配置 ID
+	EnhanceLv           uint32 // 强化等级（游戏服协议传入，列表过滤用）
+	Grade               uint32 // 装备阶数（游戏服协议传入，列表过滤用）
 	ReturnOwnerGbId     uint64 // 最终归还目标玩家 gbId（链条顶端原主人）
 	ReturnOwnerServerId uint32 // 最终归还目标玩家所在服 ID
 	ReturnEndTime       uint32 // 归还/到期截止时间
@@ -843,7 +845,7 @@ func (lm *LeaseMgr) getShopSummary(itemIds []uint32) []*gameServerService.LeaseS
 	return result
 }
 
-func (lm *LeaseMgr) getShopItems(itemId uint32, page uint32, pageSize uint32) []*LeaseMarketItem {
+func (lm *LeaseMgr) getShopItems(itemId uint32, page uint32, pageSize uint32, enhanceLvMask uint32, gradeMask uint32) []*LeaseMarketItem {
 	t, ok := lm.itemIdIndex.Get(itemId)
 	if !ok {
 		return nil
@@ -862,6 +864,14 @@ func (lm *LeaseMgr) getShopItems(itemId uint32, page uint32, pageSize uint32) []
 			return true
 		}
 		if item.ReturnEndTime > 0 && item.ReturnEndTime < now+uint32(lm.auctionConst.RentalTimelimit)*86400 {
+			return true
+		}
+		// 强化等级与装备阶数按位过滤：掩码 bit N 置位表示匹配等级 N；
+		// 全 1 自然匹配全部（即不限制），0 则所有物品都不匹配，无需特判；不匹配的不计入分页
+		if enhanceLvMask&(uint32(1)<<item.EnhanceLv) == 0 {
+			return true
+		}
+		if gradeMask&(uint32(1)<<item.Grade) == 0 {
 			return true
 		}
 

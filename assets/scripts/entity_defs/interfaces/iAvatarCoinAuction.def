@@ -80,11 +80,12 @@
         <!-- API: 通过物品ID搜索具体交易物品信息 -->
         <searchCoinAuctionItemsByItemId>
             <Exposed/>
-            <Arg> ITEMID_LIST </Arg>
-            <Arg> RESTFUL_LIMIT      </Arg>
-            <Arg> RESTFUL_OFFSET      </Arg>
-            <Arg> AUCTION_ITEM_UUID   </Arg>
-            <Arg> UINT8 </Arg>
+            <Arg> ITEMID_LIST               </Arg>
+            <Arg> ARRAY <of> UINT16 </of>   </Arg>
+            <Arg> ARRAY <of> UINT16 </of>   </Arg>
+            <Arg> RESTFUL_LIMIT             </Arg>
+            <Arg> RESTFUL_OFFSET            </Arg>
+            <Arg> UINT8                     </Arg>
         </searchCoinAuctionItemsByItemId>
 
         <onSearchCoinAuctionItemsByItemId>
@@ -137,6 +138,27 @@
             <Arg> MONEY </Arg>
             <Arg> PYTHON </Arg>
         </onBuyItemInCoinAuctionByAuctionItemUUID>
+
+        <!-- API: 根据交易物品UUID列表批量购买CoinAuction中物品(整格购买) -->
+        <buyItemsInCoinAuctionByAuctionItemUUIDs>
+            <Exposed/>
+            <Arg> AUCTIONID_LIST            </Arg>
+            <Arg> ARRAY <of> UINT32 </of>   </Arg>
+        </buyItemsInCoinAuctionByAuctionItemUUIDs>
+
+        <doBuyItemsInCoinAuctionByAuctionItemUUIDs>
+            <Arg> PYTHON </Arg>
+            <Arg> PYTHON </Arg>
+        </doBuyItemsInCoinAuctionByAuctionItemUUIDs>
+
+        <onBuyItemsInCoinAuctionByAuctionItemUUIDs>
+            <Arg> AUCTION_ITEM_LIST </Arg>
+            <Arg> AUCTIONID_LIST </Arg>
+            <Arg> ARRAY <of> UINT32 </of> </Arg>
+            <Arg> PYTHON </Arg>
+            <Arg> UINT64 </Arg>
+            <Arg> BOOL   </Arg>
+        </onBuyItemsInCoinAuctionByAuctionItemUUIDs>
 
         <onPlayerGlobalAuctionItemBeSaled>
             <Arg> AUCTION_ITEM </Arg>
@@ -371,5 +393,10 @@
             <Arg> ARRAY <of> UNICODE </of> </Arg>
             <Arg> ARRAY <of> UNICODE </of> </Arg>
         </onGetAuctionItemsByAuctionIdsResp>
+
+        <onBuyItemsByAuctionItemUUIDsResult>
+            <Arg>   ARRAY <of>  AUCTION_ITEM_UUID  </of>      </Arg>
+            <Arg>   ARRAY <of>  AUCTION_ITEM_UUID  </of>      </Arg>
+        </onBuyItemsByAuctionItemUUIDsResult>
     </ClientMethods>
 </root>

@@ -65,11 +65,12 @@ message DropRequest {
     bytes extraInfo = 7;
     uint32 collectionId = 8;
     uint32 price = 9;
-    int64 collExpireTime = 10; // 采集物过期时间，如果规定时间内没有拾取，则判定为系统拾取
-    uint64 ownerId = 11;
-    int64 returnTime = 12;
-    uint32 ownerServerId = 13;
-    bool isFirst = 14;
+    uint32 maxPrice = 10;
+    int64 collExpireTime = 11; // 采集物过期时间，如果规定时间内没有拾取，则判定为系统拾取
+    uint64 ownerId = 12;
+    int64 returnTime = 13;
+    uint32 ownerServerId = 14;
+    bool isFirst = 15;
 }
 
 // 掉落响应
@@ -92,9 +93,10 @@ message TakeResponse {
     DropResult result = 3;
     bytes equipInfo = 4;
     int64 endTime = 5;
-    uint32 price = 6;
-    int64 redeemWaitTime = 7;
-    int64 returnTime = 8;
+    uint32 maxPrice = 6;
+    uint32 price = 7;
+    int64 redeemWaitTime = 8;
+    int64 returnTime = 9;
 }
 
 // 拾取者放弃拾取的掉落装备
@@ -202,12 +204,13 @@ message DropInfo {
 message TakerInfo {
     uint64 uniqueId = 1;
     uint32 price = 2;
-    int64 endTime = 3;
-    uint32 dropType = 4;
-    bytes equipInfo = 5;
-    int64 redeemWaitTime = 6;
-    bool hasPrice = 7;
-    int64 returnTime = 8;
+    uint32 maxPrice = 3;
+    int64 endTime = 4;
+    uint32 dropType = 5;
+    bytes equipInfo = 6;
+    int64 redeemWaitTime = 7;
+    bool hasPrice = 8;
+    int64 returnTime = 9;
 }
 
 message ReturnInfo {

@@ -146,7 +146,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.basePushAnti = C_CDD.datas[self.school].get('basePushAnti', 0)
         self.baseFrozenAnti = C_CDD.datas[self.school].get('baseFrozenAnti', 0)
         self.baseSlowAnti = C_CDD.datas[self.school].get('baseSlowAnti', 0)
-
+        self.baseFatal = C_CDD.datas[self.school].get('baseFatal', 0)
+        self.baseAccuracy = C_CDD.datas[self.school].get('baseAccuracy', 0)
+        self.baseEvasion = C_CDD.datas[self.school].get('baseEvasion', 0)
 
     def restoreBuffs(self):
         LOG_DBG('restoreBuffs')
@@ -240,7 +242,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if not killer.guildUUID:
             return True
 
-        _relationType = utils.getGuildRelation(self.guildUUID, killer.guildUUID)
+        _relationType = utils.getEntityGuildRelation(self, killer)
         if _relationType == gameconst.GuildRelationType.ENEMY:
             return False
 
@@ -279,7 +281,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         if _hostIsAvatar:
             self._onDeadPenalty(host.gbId, host.name, killer.id, creationId, srcType)
             if host.gbId != self.gbId and self._checkAddEnemy(host):
-                if not isSiegeWar:
+                if not isSiegeWar and not gameconfig.isCrossServer():
                     self.base.onDeadAddEnemy(host.gbId, host.name, host.school, host.level, self.spaceNo, host.sex, host.totalScore)
         else:
             self._onDeadPenalty(0, killer.name, killer.id, creationId, srcType)
@@ -700,7 +702,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         #     str(detail),
         # )
 
-    def makeUpdateExpLog(self, deltaVal, modifyVal, opUUID, src, detail):
+    def makeUpdateExpLog(self, deltaVal, modifyVal, opUUID, src, detail, expBefore):
         LogTrackingMgr.LogTrackingMgr.Update_Exp(
             self.gbId,
             self.clientDistinctIdCell, 
@@ -712,7 +714,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             self.spaceNo,
             self.level,
             str(detail),
-            self.exp
+            self.exp,
+            expBefore
         )
 
     def _modifyExp(self, expVal, opUUID, src, detail, chaseExp=0, srcSubType=0, idipSource=0, local2Cross=False):
@@ -724,13 +727,13 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         befExpVal = self.exp
         if expVal <= 0:
             self.exp = max(0, self.exp + expVal)
-            self.makeUpdateExpLog(expVal, self.exp - befExpVal, opUUID, src, detail)
+            self.makeUpdateExpLog(expVal, self.exp - befExpVal, opUUID, src, detail, befExpVal)
             return
 
         exp = self.exp + expVal
         if exp <= 0:
             self.exp = 0
-            self.makeUpdateExpLog(expVal, self.exp - befExpVal, opUUID, src, detail)
+            self.makeUpdateExpLog(expVal, self.exp - befExpVal, opUUID, src, detail, befExpVal)
             return
 
         level = self.level
@@ -759,7 +762,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             )
             self.levelUp(level, opUUID, src, detail)
         self.exp = int(exp)
-        self.makeUpdateExpLog(expVal, expVal, opUUID, src, detail)
+        self.makeUpdateExpLog(expVal, expVal, opUUID, src, detail, befExpVal)
         self._updateExpRateToBase()
         self.syncMethodCallToCrossServerCell("onLocalServerModifyExp", (expVal, opUUID, src, detail))
 
@@ -792,7 +795,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         oldLevel = self.level
 
         self.setProp('level', level, gameconst.SourceType.SrcTpLevelUp)
-        self.updateSelfLevelScore()
+        self.updateSelfLevelScore(opUUID)
         self.base.updateRoleCache({'name': self.name, 'level': self.level})
         _newFullHp = self.fullHp
         self.modifyHP(_newFullHp - oldFullHp, self.id, gameconst.SourceType.SrcTpDefault, 0)
@@ -1228,7 +1231,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         for skill in self.skillDic.values():
             skill.clearCD(self)
 
-    def addAwardFightPropsCell(self, syncPropList):
+    def addAwardFightPropsCell(self, syncPropList, opUUID):
         _addScore = 0
         for propName, val in syncPropList:
             self.addProp(propName, val, gameconst.SourceType.SrcTpawardFightProp)
@@ -1236,7 +1239,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         if _addScore:
             newScore = self.scoresInfo.rewardFightProp + _addScore
-            self.onUpdateRewardFightProp(newScore)
+            self.onUpdateRewardFightProp(newScore, opUUID)
 
     def initAwardFightProps(self):
         propList = self.getTempMiscProp(gameconst.EntityPropsEnum.initAwardFightPropsKey, [])

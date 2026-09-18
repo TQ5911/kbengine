@@ -293,7 +293,26 @@
             <Arg>       UINT64                      </Arg>
             <Arg>       UINT32                      </Arg>
         </onGetGuildAllianceResult>
+
+        <onBroadcastMessage>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </onBroadcastMessage>
+
+        <onAllianceMessagePre>
+            <Arg>        UINT64                       </Arg>
+            <Arg>        UINT64                       </Arg>
+            <Arg>        INT32                        </Arg>
+            <Arg>        ARRAY <of> UNICODE </of>     </Arg>
+        </onAllianceMessagePre>
+
+        <onCheckGuildOccupationResult>
+            <Arg>    BOOL    </Arg>
+        </onCheckGuildOccupationResult>
     </BaseMethods>
+    
+    <CellMethods>
+    </CellMethods>
 
     <ClientMethods>
         <onGetLeagueBasicInfoResult>
@@ -443,5 +462,15 @@
         <onApproveLeagueJoinResult>
             <Arg>   GUILD_UUID  </Arg>
         </onApproveLeagueJoinResult>
+
+        <onSendChatMessageResult>
+            <Arg>       UINT32              </Arg>
+        </onSendChatMessageResult>
+
+        <onAllianceMessage>
+            <Arg>        ARRAY <of> UINT64  </of>     </Arg>
+            <Arg>        INT32                        </Arg>
+            <Arg>        ARRAY <of> UNICODE </of>     </Arg>
+        </onAllianceMessage>
     </ClientMethods>
 </root>

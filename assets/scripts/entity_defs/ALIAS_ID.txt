@@ -62,6 +62,8 @@ Avatar property coin 17
 Avatar property commonFlagCell 114
 Avatar property copper 149
 Avatar property crossServerState 156
+Avatar property crossTeamId 4
+Avatar property crossTeamMatchTarget 123
 Avatar property crusadeInfo 39
 Avatar property crusadePassRecords 14
 Avatar property cubePrayTimes 22
@@ -161,6 +163,10 @@ Avatar property qixieAssistTimes 147
 Avatar property raidId 33
 Avatar property realDmg 140
 Avatar property realDmgDef 141
+Avatar property refugeConsumeStart 122
+Avatar property refugeDailyUsed 126
+Avatar property refugeOpen 127
+Avatar property refugeTime 128
 Avatar property remainHangupMinutes 8
 Avatar property reportCnt 53
 Avatar property saleItemBindMoney 107

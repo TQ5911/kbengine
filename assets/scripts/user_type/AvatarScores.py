@@ -4,12 +4,13 @@ import KBEngine
 
 import math
 
+import gameconst
 import userType
-
+import LogTrackingMgr
 
 class AvatarScores(userType.UserSingleType):
 
-    __attrs__ = ("equipments", "level", "rewardFightProp", 'mount', 'pet', 'skill', 'guildtrain', 'meridian')
+    __attrs__ = gameconst.PlayerScoreKeyDatas.INIT
 
     def __repr__(self):
         return '{}({})'.format(
@@ -47,10 +48,22 @@ class AvatarScores(userType.UserSingleType):
         totalScores = sum(scores)
         return totalScores
 
-    def updateScore(self, scoreKey, newScoreVal):
+    def getAllScore(self):
+        score = 0
+        for scoreKey in gameconst.PlayerScoreKeyDatas.ALL:
+            score += getattr(self, scoreKey)
+        return score
+
+    def updateScore(self, owner, isInited, opUUID, scoreKey, newScoreVal):
+        oldScore = self.getAllScore()
         _crtScoreVal = getattr(self, scoreKey)
         _newScoreVal = math.floor(newScoreVal)
         setattr(self, scoreKey, _newScoreVal)
+        newScore = self.getAllScore()
+        if isInited:
+            delta = newScore - oldScore
+            if delta != 0:
+                LogTrackingMgr.LogTrackingMgr.power_change(owner.gbID, owner.accountEntity.clientDistinctId, newScore, oldScore, newScore - oldScore, opUUID, scoreKey)
         return _crtScoreVal, _newScoreVal
 
 
@@ -60,15 +73,15 @@ class AvatarScoresInfo(userType.ABCInfo):
 
     def getDictFromObj(self, obj: AvatarScores):
         return {
-            'level': math.floor(obj.level),
-            'equipments': math.floor(obj.equipments),
-            'rewardFightProp': math.floor(obj.rewardFightProp),
-            'mount': math.floor(obj.mount),
-            'pet': math.floor(obj.pet),
-            'skill': math.floor(obj.skill),
-            'guildtrain': math.floor(obj.guildtrain),
-            'meridian': math.floor(obj.meridian),
-            'bless': math.floor(obj.bless),
+            gameconst.PlayerScoreKeyDatas.Level:            math.floor(obj.level),
+            gameconst.PlayerScoreKeyDatas.Equipments:       math.floor(obj.equipments),
+            gameconst.PlayerScoreKeyDatas.RewardFightProp:  math.floor(obj.rewardFightProp),
+            gameconst.PlayerScoreKeyDatas.Mount:            math.floor(obj.mount),
+            gameconst.PlayerScoreKeyDatas.Pet:              math.floor(obj.pet),
+            gameconst.PlayerScoreKeyDatas.Skill:            math.floor(obj.skill),
+            gameconst.PlayerScoreKeyDatas.Guildtrain:       math.floor(obj.guildtrain),
+            gameconst.PlayerScoreKeyDatas.Meridian:         math.floor(obj.meridian),
+            gameconst.PlayerScoreKeyDatas.Bless:            math.floor(obj.bless),
         }
 
     def isSameType(self, obj):

@@ -66,6 +66,15 @@
             <Arg>       BOOL                    </Arg>
             <Arg>       PYTHON                  </Arg>
         </doOnCrossGuildBack>
+
+        <saveSiegeWarData>
+            <Arg>       PYTHON                  </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </saveSiegeWarData>
+
+        <loadSiegeWarData>
+            <Arg>       ENTITYCALL              </Arg>
+        </loadSiegeWarData>
     </BaseMethods>
 </root>
 

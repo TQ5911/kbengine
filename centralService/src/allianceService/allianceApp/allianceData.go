@@ -750,57 +750,171 @@ func (c *guildEnemyAllianceCacheType) remove(guildId, allianceId uint64) {
 	}
 }
 
-// expandToGuildPairSides resolves the two sides of a war row into a
-// concrete list of guildIds. The DB row may point at an alliance or a
-// guild on each side; the per-guild cache is keyed by guildId only, so
-// we have to enumerate the member set for the alliance sides. The
-// caller already holds the alliance cache's lock (or is on a code path
-// that doesn't need it — e.g. DisbandLeague) and we accept the read here.
-//
-// Returns nil on either side if the referenced alliance is missing or
-// has no members at expansion time. The DB row is treated as a no-op
-// in that case (caller skips insertion).
-func (ad *AllianceData) expandToGuildPairSides(AttackType, targetType uint32, AttackId, targetId uint64) ([]uint64, []uint64) {
-	var attackerGuilds []uint64
-	if AttackType == WarAttackTypeAlliance {
-		attackerGuilds = ad.getMemberGuildIDs(AttackId)
-	} else {
-		attackerGuilds = []uint64{AttackId}
+// entitySideInvolvesGuild reports whether `guildId` is on `sideType` of a
+// war row. A guild is involved when it is the row's entity directly (a guild
+// on that side) or when it is currently a member of the alliance named as
+// the entity on that side.
+func (ad *AllianceData) entitySideInvolvesGuild(sideType uint32, entityId, guildId uint64, cache *AllianceCache) bool {
+	if sideType == WarAttackTypeAlliance || sideType == WarTargetTypeAlliance {
+		// The side names an alliance; only a current member is involved.
+		if nil != cache && cache.info.AllianceId == entityId {
+			_, ok := cache.members[guildId]
+			return ok
+		}
+		cache, ok := ad.alliances.Get(entityId)
+		if !ok {
+			return false
+		}
+		cache.RLock()
+		_, ok = cache.members[guildId]
+		cache.RUnlock()
+		return ok
 	}
-	var targetGuilds []uint64
-	if targetType == WarTargetTypeAlliance {
-		targetGuilds = ad.getMemberGuildIDs(targetId)
-	} else {
-		targetGuilds = []uint64{targetId}
-	}
-	return attackerGuilds, targetGuilds
+	return entityId == guildId
 }
 
-// addEnemyPairs expands one war row to N×M guild↔guild pairs and
-// maintains TWO views:
-//
-//   - guildRelationCache: per-pair state, fed via
-//     guildRelationCache.AddRelation(..., GuildRelationEnemy, ...).
-//     This is the source of truth for "is X hostile to Y" lookups
-//     and the data GetEnemyList reads. AddRelation also maintains
-//     its per-guild inverse index (byGuild) for O(K) lookups.
-//
-//   - enemiesCache.byRow: the original (AttackType, targetType,
-//     endTime) row metadata, used by checkAndRemoveExpiredWars and
-//     the OnWarEnded broadcast (which need the original row shape).
-//
-// Both writes happen inside this single function so callers don't
-// have to remember to update both views. The per-guild inverse index
-// in guildRelationCache is updated atomically by AddRelation under
-// its own lock; the byRow write happens under enemiesCache's lock.
-// Alliance member expansion is done outside both locks.
-func (ad *AllianceData) addEnemyPairs(AttackType, targetType uint32, AttackId, targetId uint64, endTime, attackerServerId, targetServerId uint32) {
-	attackerGuilds, targetGuilds := ad.expandToGuildPairSides(AttackType, targetType, AttackId, targetId)
-	if len(attackerGuilds) == 0 || len(targetGuilds) == 0 {
-		return
+// resolveOppositeSideGuilds expands the side `sideType` of a war row into the
+// concrete list of guildIds on that side (a single element for a guild entity,
+// the current member set for an alliance entity). Used for query derivation.
+func (ad *AllianceData) resolveOppositeSideGuilds(sideType uint32, entityId uint64) []uint64 {
+	if sideType == WarAttackTypeAlliance || sideType == WarTargetTypeAlliance {
+		return ad.getMemberGuildIDs(entityId)
 	}
-	key := enemyKey(AttackType, AttackId, targetType, targetId)
+	return []uint64{entityId}
+}
 
+// getEnemyRelationsForGuild derives the list of guilds that `guildId` is
+// currently hostile toward (slash at war with) from the entity-level war rows
+// in enemiesCache.byRow plus current alliance membership.
+//
+// For each war row, if `guildId` is a participant on either side (directly as
+// a guild or via its current alliance membership), every guild on the opposite
+// side — resolved to concrete guilds — is an enemy of `guildId` (excluding
+// `guildId` itself). This recomputes from live state each call, so a guild that
+// leaves an alliance immediately stops inheriting that alliance's wars while
+// its own direct guild-vs-guild wars remain (those rows are independent).
+func (ad *AllianceData) getEnemyRelationsForGuild(guildId uint64) []uint64 {
+	seen := make(map[uint64]struct{})
+	var out []uint64
+	enemiesCache.RLock()
+	defer enemiesCache.RUnlock()
+	for _, row := range enemiesCache.byRow {
+		attackerInvolved := ad.entitySideInvolvesGuild(row.AttackType, row.AttackId, guildId, nil)
+		targetInvolved := ad.entitySideInvolvesGuild(row.TargetType, row.TargetId, guildId, nil)
+		if attackerInvolved {
+			for _, eg := range ad.resolveOppositeSideGuilds(row.TargetType, row.TargetId) {
+				if eg != 0 && eg != guildId {
+					if _, dup := seen[eg]; !dup {
+						seen[eg] = struct{}{}
+						out = append(out, eg)
+					}
+				}
+			}
+		}
+		if targetInvolved {
+			for _, eg := range ad.resolveOppositeSideGuilds(row.AttackType, row.AttackId) {
+				if eg != 0 && eg != guildId {
+					if _, dup := seen[eg]; !dup {
+						seen[eg] = struct{}{}
+						out = append(out, eg)
+					}
+				}
+			}
+		}
+	}
+	return out
+}
+
+// getEnemyRelationsForAlliance derives the list of guilds that `allianceId`
+// (as a whole) is at war with. Scans every entity row touching the alliance on
+// either side and resolves the opposite side to concrete guilds. Used to answer
+// "which guilds is this alliance fighting" independently of any single member.
+func (ad *AllianceData) getEnemyRelationsForAlliance(allianceId uint64) []uint64 {
+	seen := make(map[uint64]struct{})
+	var out []uint64
+	enemiesCache.RLock()
+	defer enemiesCache.RUnlock()
+	for _, row := range enemiesCache.byRow {
+		if row.AttackType == WarAttackTypeAlliance && row.AttackId == allianceId {
+			for _, eg := range ad.resolveOppositeSideGuilds(row.TargetType, row.TargetId) {
+				if eg != 0 {
+					if _, dup := seen[eg]; !dup {
+						seen[eg] = struct{}{}
+						out = append(out, eg)
+					}
+				}
+			}
+		}
+		if row.TargetType == WarTargetTypeAlliance && row.TargetId == allianceId {
+			for _, eg := range ad.resolveOppositeSideGuilds(row.AttackType, row.AttackId) {
+				if eg != 0 {
+					if _, dup := seen[eg]; !dup {
+						seen[eg] = struct{}{}
+						out = append(out, eg)
+					}
+				}
+			}
+		}
+	}
+	return out
+}
+
+// hasEntityEnemies reports whether `guildId` is currently involved in any war,
+// either directly as a guild entity or indirectly as a member of an alliance
+// that is a war party. Replaces the old per-pair GuildRelationCache.HasEnemies
+// gate used before entity-level hostility: a guild cannot join an alliance
+// while it is fighting (directly or via its current alliance).
+func (ad *AllianceData) hasEntityEnemies(guildId uint64, cache *AllianceCache) bool {
+	enemiesCache.RLock()
+	defer enemiesCache.RUnlock()
+	for _, row := range enemiesCache.byRow {
+		if ad.entitySideInvolvesGuild(row.AttackType, row.AttackId, guildId, cache) ||
+			ad.entitySideInvolvesGuild(row.TargetType, row.TargetId, guildId, cache) {
+			return true
+		}
+	}
+	return false
+}
+
+// getAllEnemyRelationsForSync returns every active entity-level war row plus
+// the current alliance-relation version, for the RegisterGameServer full-state
+// sync. Unlike GetAllRelations (which returns the per-pair guild cache), this
+// comes straight from the authoritative entity store enemiesCache.byRow.
+func (ad *AllianceData) getAllEnemyRelationsForSync() ([]*gameServerService.EnemyRelationInfo, uint32) {
+	enemiesCache.RLock()
+	defer enemiesCache.RUnlock()
+	out := make([]*gameServerService.EnemyRelationInfo, 0, len(enemiesCache.byRow))
+	for _, row := range enemiesCache.byRow {
+		out = append(out, &gameServerService.EnemyRelationInfo{
+			AttackType:     row.AttackType,
+			AttackId:       row.AttackId,
+			AttackServerId: row.AttackServerId,
+			TargetType:     row.TargetType,
+			TargetId:       row.TargetId,
+			TargetServerId: row.TargetServerId,
+			EndTime:        row.EndTime,
+		})
+	}
+	guildRelationCache.RLock()
+	version := guildRelationCache.version
+	guildRelationCache.RUnlock()
+	return out, version
+}
+
+// addEnemyPairs records ONE entity-level war row in enemiesCache.byRow
+// and NOTHING else.
+//
+// Before the entity-level refactor this function expanded the war row into
+// N×M guild↔guild pairs written into guildRelationCache (as
+// GuildRelationEnemy) plus a guildEnemyAllianceCache inverse index. That
+// flattened model is gone: guildRelationCache now carries UNION only, and
+// per-guild hostility is DERIVED at runtime from the entity rows + current
+// alliance membership (see getEnemyRelationsForGuild / hasEntityEnemies).
+//
+// `attackerServerId`/`targetServerId` are carried on the row so downstream
+// consumers (broadcast, register sync) can route correctly.
+func (ad *AllianceData) addEnemyPairs(AttackType, targetType uint32, AttackId, targetId uint64, endTime, attackerServerId, targetServerId uint32) {
+	key := enemyKey(AttackType, AttackId, targetType, targetId)
 	enemiesCache.Lock()
 	enemiesCache.byRow[key] = &gameServerService.AllianceEnemyInfo{
 		AttackType:     AttackType,
@@ -812,72 +926,19 @@ func (ad *AllianceData) addEnemyPairs(AttackType, targetType uint32, AttackId, t
 		EndTime:        endTime,
 	}
 	enemiesCache.Unlock()
-
-	for _, ag := range attackerGuilds {
-		for _, tg := range targetGuilds {
-			if ag == 0 || tg == 0 {
-				continue
-			}
-			guildRelationCache.AddRelation(ag, tg, GuildRelationEnemy, endTime)
-		}
-	}
-
-	// Maintain per-guild enemy alliance inverse index.
-	if targetType == WarTargetTypeAlliance {
-		for _, ag := range attackerGuilds {
-			if ag != 0 {
-				guildEnemyAllianceCache.add(ag, targetId, endTime)
-			}
-		}
-	}
-	if AttackType == WarAttackTypeAlliance {
-		for _, tg := range targetGuilds {
-			if tg != 0 {
-				guildEnemyAllianceCache.add(tg, AttackId, endTime)
-			}
-		}
-	}
 }
 
-// removeEnemyPairs is the inverse of addEnemyPairs — strips both
-// the per-pair relation from guildRelationCache (via RemoveRelation,
-// which also clears the inverse index) AND the byRow entry. Used by
-// CancelWar, checkAndRemoveExpiredWars, and DisbandLeague.
+// removeEnemyPairs is the inverse of addEnemyPairs — it drops the single
+// entity-level war row from enemiesCache.byRow. Used by CancelWar,
+// checkAndRemoveExpiredWars, and DisbandLeague. It never touches
+// guildRelationCache (UNION-only) and never removes any other war row, so a
+// guild's unrelated direct guild-vs-guild war survives if an alliance it was
+// once part of is disbanded.
 func (ad *AllianceData) removeEnemyPairs(AttackType, targetType uint32, AttackId, targetId uint64) {
-	attackerGuilds, targetGuilds := ad.expandToGuildPairSides(AttackType, targetType, AttackId, targetId)
 	key := enemyKey(AttackType, AttackId, targetType, targetId)
-
 	enemiesCache.Lock()
 	delete(enemiesCache.byRow, key)
 	enemiesCache.Unlock()
-
-	if len(attackerGuilds) == 0 || len(targetGuilds) == 0 {
-		return
-	}
-	for _, ag := range attackerGuilds {
-		for _, tg := range targetGuilds {
-			if ag == 0 || tg == 0 {
-				continue
-			}
-			guildRelationCache.RemoveRelation(ag, tg)
-		}
-	}
-
-	// Clean up per-guild enemy alliance cache.
-	if targetType == WarTargetTypeAlliance {
-		for _, ag := range attackerGuilds {
-			if ag != 0 {
-				guildEnemyAllianceCache.remove(ag, targetId)
-			}
-		}
-	}
-	if AttackType == WarAttackTypeAlliance {
-		for _, tg := range targetGuilds {
-			if tg != 0 {
-				guildEnemyAllianceCache.remove(tg, AttackId)
-			}
-		}
-	}
 }
 
 // Guild relation types
@@ -1049,10 +1110,7 @@ func (grc *GuildRelationCache) GetAllRelations() ([]*gameServerService.GuildRela
 }
 
 func enemyKey(attackType uint32, attackId uint64, targetType uint32, targetId uint64) string {
-	if attackId <= targetId {
-		return fmt.Sprintf("%d_%d_%d_%d", attackType, attackId, targetType, targetId)
-	}
-	return fmt.Sprintf("%d_%d_%d_%d", targetType, targetId, attackType, attackId)
+	return fmt.Sprintf("%d_%d_%d_%d", attackType, attackId, targetType, targetId)
 }
 
 func NewAllianceData(db *sql.DB) *AllianceData {
@@ -1097,48 +1155,113 @@ func (ad *AllianceData) getMemberGuildIDs(allianceId uint64) []uint64 {
 	return ad.getMemberGuildIDsLocked(cache)
 }
 
+// addWarGuildRelations broadcasts ONE entity-level war relation to all
+// game servers when a war is created.
+//
+// Before the entity-level refactor this expanded the war into N×M
+// guild↔guild pairs and broadcast a GuildRelationEnemy pair per pair via
+// OnBroadcastAddGuildRelation. That flattening is gone: hostility is
+// derived from the entity row (see enemiesCache.byRow) + alliance
+// membership, so a single OnBroadcastAddEnemyRelation carrying the war
+// row is the complete signal.
 func (ad *AllianceData) addWarGuildRelations(app *AllianceApp, AttackType uint32, AttackId uint64, targetType uint32, targetId uint64) {
-	attackerGuilds, targetGuilds := ad.expandToGuildPairSides(AttackType, targetType, AttackId, targetId)
-	if len(attackerGuilds) == 0 || len(targetGuilds) == 0 {
-		return
+	var attackerServerId, targetServerId uint32
+	enemiesCache.RLock()
+	row := enemiesCache.byRow[enemyKey(AttackType, AttackId, targetType, targetId)]
+	enemiesCache.RUnlock()
+	if row != nil {
+		attackerServerId = row.AttackServerId
+		targetServerId = row.TargetServerId
 	}
-	guildRelationCache.RLock()
-	guildRelationVersion := guildRelationCache.version
-	guildRelationCache.RUnlock()
-	for _, attackerGuild := range attackerGuilds {
-		for _, targetGuild := range targetGuilds {
-			small, large := sortGuildIDs(attackerGuild, targetGuild)
-			app.BroadcastToGameServers(func(client *gameServerService.GameClientClient) {
-				client.OnBroadcastAddGuildRelation(&gameServerService.GuildRelationInfo{
-					GuildUUID1:   small,
-					GuildUUID2:   large,
-					RelationType: GuildRelationEnemy,
-					Version:      guildRelationVersion,
-				})
-			})
-		}
-	}
+	app.BroadcastToGameServers(func(client *gameServerService.GameClientClient) {
+		client.OnBroadcastAddEnemyRelation(&gameServerService.EnemyRelationInfo{
+			AttackType:     AttackType,
+			AttackId:       AttackId,
+			AttackServerId: attackerServerId,
+			TargetType:     targetType,
+			TargetId:       targetId,
+			TargetServerId: targetServerId,
+		})
+	})
 }
 
 func (ad *AllianceData) removeWarGuildRelations(app *AllianceApp, AttackType uint32, AttackId uint64, targetType uint32, targetId uint64) {
-	attackerGuilds, targetGuilds := ad.expandToGuildPairSides(AttackType, targetType, AttackId, targetId)
-	if len(attackerGuilds) == 0 || len(targetGuilds) == 0 {
-		return
+	var attackerServerId, targetServerId uint32
+	enemiesCache.RLock()
+	row := enemiesCache.byRow[enemyKey(AttackType, AttackId, targetType, targetId)]
+	enemiesCache.RUnlock()
+	if row != nil {
+		attackerServerId = row.AttackServerId
+		targetServerId = row.TargetServerId
 	}
-	guildRelationCache.RLock()
-	guildRelationVersion := guildRelationCache.version
-	guildRelationCache.RUnlock()
-	for _, attackerGuild := range attackerGuilds {
-		for _, targetGuild := range targetGuilds {
-			small, large := sortGuildIDs(attackerGuild, targetGuild)
-			app.BroadcastToGameServers(func(client *gameServerService.GameClientClient) {
-				client.OnBroadcastRemoveGuildRelation(&gameServerService.GuildRelationRemoveInfo{
-					GuildUUID1: small,
-					GuildUUID2: large,
-					Version:    guildRelationVersion,
-				})
-			})
+	app.BroadcastToGameServers(func(client *gameServerService.GameClientClient) {
+		client.OnBroadcastRemoveEnemyRelation(&gameServerService.EnemyRelationInfo{
+			AttackType:     AttackType,
+			AttackId:       AttackId,
+			AttackServerId: attackerServerId,
+			TargetType:     targetType,
+			TargetId:       targetId,
+			TargetServerId: targetServerId,
+		})
+	})
+}
+
+// broadcastRemoveEnemyRelation pushes an OnBroadcastRemoveEnemyRelation to every
+// game server so it drops the given entity-level war row from its
+// enemyRelationDic. Used by the disband paths (DisbandLeague / disbandAlliance)
+// where a disbanded alliance's rows are deleted from the Go cache + DB — the
+// game servers must also be told, otherwise they retain a stale row. Those rows
+// are inert under membership-based derivation (no guild is a member after
+// disband and every member's leagueUUID is reset to 0), but cleaning them keeps
+// enemyRelationDic consistent with the authoritative Go store.
+func (ad *AllianceData) broadcastRemoveEnemyRelation(app *AllianceApp, v *gameServerService.AllianceEnemyInfo) {
+	app.BroadcastToGameServers(func(client *gameServerService.GameClientClient) {
+		client.OnBroadcastRemoveEnemyRelation(&gameServerService.EnemyRelationInfo{
+			AttackType:     v.AttackType,
+			AttackId:       v.AttackId,
+			AttackServerId: v.AttackServerId,
+			TargetType:     v.TargetType,
+			TargetId:       v.TargetId,
+			TargetServerId: v.TargetServerId,
+			EndTime:        v.EndTime,
+		})
+	})
+}
+
+// removeAllEnemyRelationsForGuild dissolves every entity-level war row in which
+// `guildUUID` is a direct party — as a guild entity on the attack side or the
+// target side. Called when a guild is dissolved (RemoveGuildInfo): since the
+// guild no longer exists, each war it personally declared or that was declared
+// against it is cancelled.
+//
+// Scope note: league-scoped rows where the guild's (former) alliance is a party
+// are intentionally left intact. Those rows belong to the alliance and its
+// remaining members, not to the dissolved guild — the guild stops inheriting
+// them the moment it is removed from the alliance (its leagueUUID is cleared),
+// so leaving the rows does not keep the dissolved guild hostile.
+func (ad *AllianceData) removeAllEnemyRelationsForGuild(app *AllianceApp, db *sql.DB, guildUUID uint64, keepGuildToGuild bool) {
+	// Snapshot the rows under RLock to avoid mutating byRow during iteration;
+	// each removal below re-locks briefly.
+	enemiesCache.RLock()
+	var toRemove []*gameServerService.AllianceEnemyInfo
+	for _, row := range enemiesCache.byRow {
+		if keepGuildToGuild {
+			if row.AttackType == WarAttackTypeGuild && row.TargetType == WarTargetTypeGuild {
+				continue
+			}
 		}
+		if (row.AttackType == WarAttackTypeGuild && row.AttackId == guildUUID) ||
+			(row.TargetType == WarTargetTypeGuild && row.TargetId == guildUUID) {
+			toRemove = append(toRemove, row)
+		}
+	}
+	enemiesCache.RUnlock()
+
+	for _, row := range toRemove {
+		db.Exec("DELETE FROM alliance_enemy WHERE attacker_type = ? AND attacker_id = ? AND target_type = ? AND target_id = ?",
+			row.AttackType, row.AttackId, row.TargetType, row.TargetId)
+		ad.broadcastRemoveEnemyRelation(app, row)
+		ad.removeEnemyPairs(row.AttackType, row.TargetType, row.AttackId, row.TargetId)
 	}
 }
 
@@ -1181,76 +1304,6 @@ func (ad *AllianceData) removeAllianceMemberRelations(app *AllianceApp, cache *A
 					GuildUUID1: small,
 					GuildUUID2: large,
 					Version:    guildRelationVersion,
-				})
-			})
-		}
-	}
-}
-
-// addAllianceEnemyRelationsForNewMember inherits the alliance's active
-// enemy relations for a newly joined guild. Scans enemiesCache.byRow
-// for every war row that references this alliance on either side,
-// expands the opposite side to guild lists, and adds GuildRelationEnemy
-// between newGuildId and each enemy guild. Also maintains the
-// guildEnemyAllianceCache inverse index and broadcasts each new pair
-// to game servers.
-//
-// Must be called while the alliance cache is NOT held (this function
-// acquires enemiesCache.RLock and guildRelationCache.Lock internally).
-func (ad *AllianceData) addAllianceEnemyRelationsForNewMember(app *AllianceApp, cache *AllianceCache, newGuildId uint64) {
-	allianceId := cache.info.AllianceId
-	enemiesCache.RLock()
-	rows := make([]*gameServerService.AllianceEnemyInfo, 0, len(enemiesCache.byRow))
-	for _, row := range enemiesCache.byRow {
-		if (row.AttackType == WarAttackTypeAlliance && row.AttackId == allianceId) ||
-			(row.TargetType == WarTargetTypeAlliance && row.TargetId == allianceId) {
-			rows = append(rows, row)
-		}
-	}
-	enemiesCache.RUnlock()
-	guildRelationCache.RLock()
-	guildRelationVersion := guildRelationCache.version
-	guildRelationCache.RUnlock()
-	for _, row := range rows {
-		// Expand the ENEMY side (opposite to our alliance) to guild list.
-		var enemyGuilds []uint64
-		if row.AttackType == WarAttackTypeAlliance && row.AttackId == allianceId {
-			// Our alliance is the attacker → enemy is the target side
-			if row.TargetType == WarTargetTypeAlliance {
-				enemyGuilds = ad.getMemberGuildIDs(row.TargetId)
-			} else {
-				enemyGuilds = []uint64{row.TargetId}
-			}
-			// Maintain guildEnemyAllianceCache: new guild → enemy alliance
-			if row.TargetType == WarTargetTypeAlliance {
-				guildEnemyAllianceCache.add(newGuildId, row.TargetId, row.EndTime)
-			}
-		} else if row.TargetType == WarTargetTypeAlliance && row.TargetId == allianceId {
-			// Our alliance is the target → enemy is the attacker side
-			if row.AttackType == WarAttackTypeAlliance {
-				enemyGuilds = ad.getMemberGuildIDs(row.AttackId)
-			} else {
-				enemyGuilds = []uint64{row.AttackId}
-			}
-			// Maintain guildEnemyAllianceCache: new guild → enemy alliance
-			if row.AttackType == WarAttackTypeAlliance {
-				guildEnemyAllianceCache.add(newGuildId, row.AttackId, row.EndTime)
-			}
-		}
-
-		for _, enemyGuildId := range enemyGuilds {
-			if enemyGuildId == 0 || enemyGuildId == newGuildId {
-				continue
-			}
-			guildRelationCache.AddRelation(newGuildId, enemyGuildId, GuildRelationEnemy, row.EndTime)
-			// Broadcast the new enemy pair to game servers
-			small, large := sortGuildIDs(newGuildId, enemyGuildId)
-			app.BroadcastToGameServers(func(client *gameServerService.GameClientClient) {
-				client.OnBroadcastAddGuildRelation(&gameServerService.GuildRelationInfo{
-					GuildUUID1:   small,
-					GuildUUID2:   large,
-					RelationType: GuildRelationEnemy,
-					Version:      guildRelationVersion,
 				})
 			})
 		}
@@ -1805,6 +1858,10 @@ func (ad *AllianceData) DisbandLeague(db *sql.DB, app *AllianceApp, in *gameServ
 	}
 	enemiesCache.RUnlock()
 	for _, v := range rowKeysToRemove {
+		// Tell game servers to drop the row from their enemyRelationDic
+		// (matches "解散后取消所有与该联盟有关的敌对关系" at server level),
+		// then remove it from the authoritative Go cache.
+		ad.broadcastRemoveEnemyRelation(app, v)
 		ad.removeEnemyPairs(v.AttackType, v.TargetType, v.AttackId, v.TargetId)
 	}
 	cache.RLock()
@@ -1887,6 +1944,10 @@ func (ad *AllianceData) disbandAlliance(db *sql.DB, app *AllianceApp, allianceId
 	}
 	enemiesCache.Unlock()
 	for _, v := range rowKeysToRemove {
+		// Tell game servers to drop the row from their enemyRelationDic
+		// (matches "解散后取消所有与该联盟有关的敌对关系" at server level),
+		// then remove it from the authoritative Go cache.
+		ad.broadcastRemoveEnemyRelation(app, v)
 		ad.removeEnemyPairs(v.AttackType, v.TargetType, v.AttackId, v.TargetId)
 	}
 	cache.RLock()
@@ -2141,17 +2202,17 @@ func (ad *AllianceData) copyAllianceMember(in *gameServerService.AllianceMemberI
 
 func (ad *AllianceData) copyAllianceData(in *gameServerService.AllianceInfo) *gameServerService.AllianceInfo {
 	allianceInfo := &gameServerService.AllianceInfo{
-		AllianceId:       in.AllianceId,
-		Name:             in.Name,
-		Declaration:      in.Declaration,
-		LeaderGuildId:    in.LeaderGuildId,
-		LeaderServerId:   in.LeaderServerId,
-		LeaderGuildName:  in.LeaderGuildName,
-		ApproveType:      in.ApproveType,
-		Fund:             in.Fund,
-		MemberCount:      in.MemberCount,
-		TotalScore:       in.TotalScore,
-		ServerId:         in.ServerId,
+		AllianceId:      in.AllianceId,
+		Name:            in.Name,
+		Declaration:     in.Declaration,
+		LeaderGuildId:   in.LeaderGuildId,
+		LeaderServerId:  in.LeaderServerId,
+		LeaderGuildName: in.LeaderGuildName,
+		ApproveType:     in.ApproveType,
+		Fund:            in.Fund,
+		MemberCount:     in.MemberCount,
+		TotalScore:      in.TotalScore,
+		// 2026-08-26: AllianceInfo 去掉 ServerId 字段(冗余),已通过 LeaderServerId 传递
 		CreatedAt:        in.CreatedAt,
 		LeaderGbId:       in.LeaderGbId,
 		LeaderName:       in.LeaderName,
@@ -2380,7 +2441,7 @@ func (ad *AllianceData) ApplyToJoin(db *sql.DB, app *AllianceApp, in *gameServer
 		return ErrCodeApplyListFull, nil, allianceId, allianceName, alliancePower
 	}
 	// 宣战中的帮会不可以加入联盟
-	if guildRelationCache.HasEnemies(in.GuildId) {
+	if ad.hasEntityEnemies(in.GuildId, cache) {
 		return ErrCodeGuildInWar, nil, allianceId, allianceName, alliancePower
 	}
 
@@ -2427,8 +2488,6 @@ func (ad *AllianceData) ApplyToJoin(db *sql.DB, app *AllianceApp, in *gameServer
 		ad.notifyAllianceApplyMemberJoined(app, cache.info.AllianceId, memberInfo.GuildId, memberInfo.ServerId)
 		// 建立关系
 		ad.addAllianceMemberRelations(app, cache, memberInfo.GuildId)
-		// 继承联盟的敌对关系
-		ad.addAllianceEnemyRelationsForNewMember(app, cache, memberInfo.GuildId)
 
 		return ErrCodeSuccess, nil, allianceId, allianceName, alliancePower
 	}
@@ -2659,7 +2718,7 @@ func (ad *AllianceData) completeApproveJoin(db *sql.DB, app *AllianceApp, p *pen
 	}
 
 	// 宣战中的帮会不可以加入联盟
-	if guildRelationCache.HasEnemies(p.guildId) {
+	if ad.hasEntityEnemies(p.guildId, cache) {
 		cache.Unlock()
 		return ErrCodeGuildInWar, 0
 	}
@@ -2717,8 +2776,6 @@ func (ad *AllianceData) completeApproveJoin(db *sql.DB, app *AllianceApp, p *pen
 	ad.notifyAllianceApplyMemberJoined(app, cache.info.AllianceId, memberInfo.GuildId, memberInfo.ServerId)
 	// 建立关系
 	ad.addAllianceMemberRelations(app, cache, memberInfo.GuildId)
-	// 继承联盟的敌对关系
-	ad.addAllianceEnemyRelationsForNewMember(app, cache, memberInfo.GuildId)
 	cache.Unlock()
 	return ErrCodeSuccess, p.guildId
 }
@@ -2890,7 +2947,7 @@ func (ad *AllianceData) InviteGuild(db *sql.DB, app *AllianceApp, in *gameServer
 		InviteId:     0, // patched in completeInviteGuild
 		AllianceId:   cache.info.AllianceId,
 		AllianceName: cache.info.Name,
-		ServerId:     cache.info.ServerId,
+		ServerId:     cache.info.LeaderServerId, // 2026-08-26: AllianceInfo 去掉 serverId 后,改用 LeaderServerId (语义等价:联盟所在 server = 盟主所在 server)
 		CreatedAt:    nowTS(),
 		Power:        cache.info.TotalScore,
 	}
@@ -2986,7 +3043,7 @@ func (ad *AllianceData) completeInviteGuild(db *sql.DB, app *AllianceApp, p *pen
 	}
 	// 宣战中的帮会不可以加入联盟（邀请方在被邀请帮会进入宣战后仍可发邀请，
 	// 但 AcceptInvite 会在接受时拦截；此处提前拦截避免无谓的 DB 写入）。
-	if guildRelationCache.HasEnemies(p.targetGuildId) {
+	if ad.hasEntityEnemies(p.targetGuildId, cache) {
 		return ErrCodeGuildInWar
 	}
 
@@ -3012,7 +3069,7 @@ func (ad *AllianceData) completeInviteGuild(db *sql.DB, app *AllianceApp, p *pen
 	// Refresh inviter-side fields in case the cache mutated while
 	// we waited (member count / total score can shift).
 	stored.AllianceName = cache.info.Name
-	stored.ServerId = cache.info.ServerId
+	stored.ServerId = cache.info.LeaderServerId // 2026-08-26: AllianceInfo 去掉 serverId 后改用 LeaderServerId
 	stored.Power = cache.info.TotalScore
 	stored.GuildId = p.targetGuildId
 	stored.Members = make([]*gameServerService.AllianceInviteMemberInfo, 0)
@@ -3181,6 +3238,8 @@ func (ad *AllianceData) completeDeclareWar(db *sql.DB, app *AllianceApp, p *pend
 
 			app.BroadcastToGameServers(func(client *gameServerService.GameClientClient) {
 				client.OnLeagueBroadCastMessageNotify(&gameServerService.LeagueBroadCastMessage{
+					FromUID:     p.attackId,
+					ToUID:       p.targetId,
 					MessageId:   uint32(p.declareWarMsgIdAllianceToGuild),
 					MessageArgs: []string{attackAllianceName, p.toGuildName},
 				})
@@ -3190,6 +3249,8 @@ func (ad *AllianceData) completeDeclareWar(db *sql.DB, app *AllianceApp, p *pend
 			ad.NotifyGuildEvent(app, p.attackServerId, p.attackId, uint32(p.guildEventIdGuildAttackToGuildTarget), []string{p.toGuildName})
 			app.BroadcastToGameServers(func(client *gameServerService.GameClientClient) {
 				client.OnLeagueBroadCastMessageNotify(&gameServerService.LeagueBroadCastMessage{
+					FromUID:     p.attackId,
+					ToUID:       p.targetId,
 					MessageId:   uint32(p.declareWarMsgIdGuildToGuild),
 					MessageArgs: []string{p.fromGuildName, p.toGuildName},
 				})
@@ -3280,7 +3341,7 @@ func (ad *AllianceData) AcceptInvite(db *sql.DB, app *AllianceApp, in *gameServe
 	}
 
 	// 宣战中的帮会不可以加入联盟
-	if guildRelationCache.HasEnemies(in.GuildId) {
+	if ad.hasEntityEnemies(in.GuildId, cache) {
 		return ErrCodeGuildInWar, 0
 	}
 
@@ -3347,8 +3408,6 @@ func (ad *AllianceData) AcceptInvite(db *sql.DB, app *AllianceApp, in *gameServe
 	ad.notifyAllianceApplyMemberJoined(app, cache.info.AllianceId, memberInfo.GuildId, memberInfo.ServerId)
 	// 建立关系
 	ad.addAllianceMemberRelations(app, cache, memberInfo.GuildId)
-	// 继承联盟的敌对关系
-	ad.addAllianceEnemyRelationsForNewMember(app, cache, memberInfo.GuildId)
 
 	return ErrCodeSuccess, in.AllianceId
 }
@@ -3443,6 +3502,7 @@ func (ad *AllianceData) KickMember(db *sql.DB, app *AllianceApp, in *gameServerS
 	cache.Lock()
 	// Remove UNION relations between kicked member and all other members
 	ad.removeAllianceMemberRelations(app, cache, in.TargetGuildId)
+	ad.removeAllEnemyRelationsForGuild(app, db, in.TargetGuildId, true)
 	ad.addEventLocked(db, app, eventLimit, cache, messageId, fmt.Sprintf("%s|%s", member.GuildName, cache.info.Name))
 	serverIdWithMemberGuildIds := make(map[uint32][]uint64)
 	for _, m := range cache.members {
@@ -3560,6 +3620,7 @@ func (ad *AllianceData) doLeaveLeague(db *sql.DB, app *AllianceApp, allianceId u
 	// Remove UNION relations between leaving member and all other members
 	cache.Lock()
 	ad.removeAllianceMemberRelations(app, cache, guildId)
+	ad.removeAllEnemyRelationsForGuild(app, db, guildId, true)
 	ad.addEventLocked(db, app, eventLimit, cache, messageId, fmt.Sprintf("%s|%s", member.GuildName, cache.info.Name))
 	serverIdWithMemberGuildIds := make(map[uint32][]uint64)
 	for _, m := range cache.members {
@@ -3905,11 +3966,6 @@ func (ad *AllianceData) DeclareWar(db *sql.DB, app *AllianceApp, in *gameServerS
 		return ErrCodeNoGuildConstCfg, 0, false
 	}
 
-	// 注意！！！非同个服务器的联盟宣战，暂时禁止
-	if in.TargetServerId != requesterServerId {
-		return ErrCodeDifferentServerInDeclareWarIsForbidden, 0, false
-	}
-
 	if in.AttackId == in.TargetId {
 		return ErrCodeDeclareWarSameId, 0, false
 	}
@@ -3930,13 +3986,9 @@ func (ad *AllianceData) DeclareWar(db *sql.DB, app *AllianceApp, in *gameServerS
 	}
 	// 宣战目标是联盟，判断下联盟是否存在
 	if in.TargetType == WarAttackTypeAlliance {
-		targetAlliance, ok := ad.alliances.Get(in.TargetId)
+		_, ok := ad.alliances.Get(in.TargetId)
 		if !ok {
 			return ErrCodeAllianceNotFound, 0, false
-		}
-		// 注意！！！非同个服务器的联盟宣战，暂时禁止
-		if targetAlliance.info.ServerId != in.TargetServerId {
-			return ErrCodeWrongTargetServerIdInDeclareWar, 0, false
 		}
 	}
 	// 我的联盟宣战帮会，排除对方有联盟，排除联盟内宣战
@@ -4032,6 +4084,8 @@ func (ad *AllianceData) DeclareWar(db *sql.DB, app *AllianceApp, in *gameServerS
 			ad.NotifyGuildEvent(app, requesterServerId, in.AttackId, uint32(enmityDescOne), []string{toGuildName})
 			app.BroadcastToGameServers(func(client *gameServerService.GameClientClient) {
 				client.OnLeagueBroadCastMessageNotify(&gameServerService.LeagueBroadCastMessage{
+					FromUID:     in.AttackId,
+					ToUID:       in.TargetId,
 					MessageId:   uint32(declareWarMessageIdOne),
 					MessageArgs: []string{in.GuildName, toGuildName},
 				})
@@ -4143,6 +4197,8 @@ func (ad *AllianceData) DeclareWar(db *sql.DB, app *AllianceApp, in *gameServerS
 
 			app.BroadcastToGameServers(func(client *gameServerService.GameClientClient) {
 				client.OnLeagueBroadCastMessageNotify(&gameServerService.LeagueBroadCastMessage{
+					FromUID:     in.AttackId,
+					ToUID:       in.TargetId,
 					MessageId:   uint32(declareWarMessageIdThree),
 					MessageArgs: []string{attackAllianceName, targetAllianceName},
 				})
@@ -4157,6 +4213,8 @@ func (ad *AllianceData) DeclareWar(db *sql.DB, app *AllianceApp, in *gameServerS
 			targetCache.RUnlock()
 			app.BroadcastToGameServers(func(client *gameServerService.GameClientClient) {
 				client.OnLeagueBroadCastMessageNotify(&gameServerService.LeagueBroadCastMessage{
+					FromUID:     in.AttackId,
+					ToUID:       in.TargetId,
 					MessageId:   uint32(declareWarMessageIdTwo),
 					MessageArgs: []string{in.GuildName, targetAllianceName},
 				})
@@ -4170,47 +4228,67 @@ func (ad *AllianceData) DeclareWar(db *sql.DB, app *AllianceApp, in *gameServerS
 
 // ==== Diplomacy: Enemy List ====
 
-// GetEnemyList returns one EnemyGuildInfo per active war involving
-// `in.GuildId`. Reads from guildRelationCache.byGuild (the per-guild
-// inverse index maintained by AddRelation / RemoveRelation) and
-// filters for RelationType == GuildRelationEnemy. O(K) where K is
-// the number of relations this guild has, which for typical loads
-// is in the low single digits.
+// GetEnemyList returns one EnemyGuildInfo per guild that `in.GuildId` is
+// currently at war with, derived from the entity-level war rows in
+// enemiesCache.byRow plus current alliance membership. A guild is at war with
+// another when either is a direct entity of a war row or a current member of an
+// alliance that is a war party (see getEnemyRelationsForGuild). Because the
+// answer is derived from live membership on each call, a guild that leaves an
+// alliance immediately stops inheriting that alliance's wars while its own
+// direct guild-vs-guild wars remain.
 //
-// Each row's endTime comes from GuildRelationInfo.EndTime (the war
-// row's expiry). The list is sorted by guildId ASC for stable wire
-// output.
-//
-// The wire shape (EnemyGuildInfo) intentionally drops the original
-// (AttackType, targetType) row metadata — callers that need that
-// (OnWarEnded broadcast, expire sweep) read enemiesCache.byRow.
+// Each row's EndTime is the war row's expiry (0 = no expiry). The list is
+// sorted by guildId ASC for stable wire output.
 func (ad *AllianceData) GetEnemyList(in *gameServerService.GetEnemyListRequest) []*gameServerService.EnemyGuildInfo {
-	rels := guildRelationCache.getEnemyRelations(in.GuildId)
-	if len(rels) == 0 {
+	enemyGuilds := ad.getEnemyRelationsForGuild(in.GuildId)
+	if len(enemyGuilds) == 0 {
 		return []*gameServerService.EnemyGuildInfo{}
 	}
-	out := make([]*gameServerService.EnemyGuildInfo, 0, len(rels))
-	for _, r := range rels {
-		// Translate (GuildUUID1, GuildUUID2) to "this guild's
-		// enemy" — the other side of the pair from in.GuildId.
-		other := r.GuildUUID2
-		if r.GuildUUID2 == in.GuildId {
-			other = r.GuildUUID1
+	// Collect endTime per enemy guild; a guild may appear in more than one war
+	// row, keep the earliest (most restrictive) expiry.
+	endTimes := make(map[uint64]uint32, len(enemyGuilds))
+	enemiesCache.RLock()
+	for _, row := range enemiesCache.byRow {
+		attackerInvolved := ad.entitySideInvolvesGuild(row.AttackType, row.AttackId, in.GuildId, nil)
+		targetInvolved := ad.entitySideInvolvesGuild(row.TargetType, row.TargetId, in.GuildId, nil)
+		if attackerInvolved {
+			for _, eg := range ad.resolveOppositeSideGuilds(row.TargetType, row.TargetId) {
+				if eg != 0 && eg != in.GuildId {
+					if cur, ok := endTimes[eg]; !ok || (row.EndTime != 0 && (cur == 0 || row.EndTime < cur)) {
+						endTimes[eg] = row.EndTime
+					}
+				}
+			}
 		}
+		if targetInvolved {
+			for _, eg := range ad.resolveOppositeSideGuilds(row.AttackType, row.AttackId) {
+				if eg != 0 && eg != in.GuildId {
+					if cur, ok := endTimes[eg]; !ok || (row.EndTime != 0 && (cur == 0 || row.EndTime < cur)) {
+						endTimes[eg] = row.EndTime
+					}
+				}
+			}
+		}
+	}
+	enemiesCache.RUnlock()
+
+	out := make([]*gameServerService.EnemyGuildInfo, 0, len(enemyGuilds))
+	for _, eg := range enemyGuilds {
 		out = append(out, &gameServerService.EnemyGuildInfo{
-			GuildId: other,
-			EndTime: r.EndTime,
+			GuildId: eg,
+			EndTime: endTimes[eg],
 		})
 	}
 	sort.Slice(out, func(i, j int) bool { return out[i].GuildId < out[j].GuildId })
 	return out
 }
 
-// GetEnemyAllianceList returns one EnemyAllianceInfo per alliance the
-// requesting guild is at war with. Reads from guildEnemyAllianceCache
-// (the per-guild inverse index maintained by addEnemyPairs /
-// removeEnemyPairs). O(K) where K is the number of alliances warring
-// with this guild.
+// GetEnemyAllianceList returns the entity-level war rows that `in.GuildId`
+// (and/or `in.AllianceId`) is a party to. Reads enemiesCache.byRow directly —
+// the authoritative entity store — matching by the requesting guild entity or
+// its alliance entity. Note: a guild that is a member of an alliance is treated
+// as participating in that alliance's wars at query time, so this reflects the
+// current membership snapshot.
 func (ad *AllianceData) GetEnemyAllianceList(in *gameServerService.GetEnemyAllianceListRequest) []*gameServerService.EnemyRowInfo {
 	enemiesCache.RLock()
 	defer enemiesCache.RUnlock()
@@ -4447,6 +4525,13 @@ func (ad *AllianceData) AidResource(db *sql.DB, app *AllianceApp, in *gameServer
 		return ErrCodeNoMessageChatMessageCfg
 	}
 
+	chat3 := 0
+	if v := chatCfg.GetInt("guild_unionSupport3"); v > 0 {
+		chat3 = v
+	} else {
+		return ErrCodeNoMessageChatMessageCfg
+	}
+
 	itemName := ""
 	itemCfg, ok := ConfigStore.cfgVipers.Get(CFG_TYPE_ITEM_DATA)
 	if !ok {
@@ -4476,14 +4561,20 @@ func (ad *AllianceData) AidResource(db *sql.DB, app *AllianceApp, in *gameServer
 	if !fromExists || !toExists {
 		return ErrCodeNotInAlliance
 	}
-	if uint32(fromMember.JoinTime+uint32(aidRequirement)*86400) < nowTS() {
+	nowTime := nowTS()
+	gapTime := uint32(aidRequirement) * 86400
+	if uint32(fromMember.JoinTime+gapTime) >= nowTime {
+		return ErrCodeAidResourceFail
+	}
+	if uint32(toMember.JoinTime+gapTime) >= nowTime {
 		return ErrCodeAidResourceFail
 	}
 	ad.addEventLocked(db, app, eventLimit, cache, messageId3, fmt.Sprintf("%s|%s|%d|%d", fromMember.GuildName, toMember.GuildName, in.ItemId, in.Amount))
-	ad.NotifyGuildEvent(app, fromMember.ServerId, fromMember.GuildId, uint32(messageId1), []string{toMember.GuildName, strconv.Itoa(int(in.ItemId)), strconv.Itoa(int(in.Amount))})
-	ad.NotifyGuildEvent(app, toMember.ServerId, toMember.GuildId, uint32(messageId2), []string{fromMember.GuildName, strconv.Itoa(int(in.ItemId)), strconv.Itoa(int(in.Amount))})
-	ad.NotifyGuildMsg(app, fromMember.ServerId, fromMember.GuildId, uint32(chat1), []string{toMember.GuildName, strconv.Itoa(int(in.ItemId)), strconv.Itoa(int(in.Amount))})
-	ad.NotifyGuildMsg(app, toMember.ServerId, toMember.GuildId, uint32(chat2), []string{fromMember.GuildName, strconv.Itoa(int(in.ItemId)), strconv.Itoa(int(in.Amount))})
+
+	ad.NotifyGuildEvent(app, fromMember.ServerId, fromMember.GuildId, uint32(messageId1), []string{toMember.GuildName, strconv.Itoa(int(in.ItemId)), strconv.Itoa(0), strconv.Itoa(int(in.Amount))})
+	ad.NotifyGuildEvent(app, toMember.ServerId, toMember.GuildId, uint32(messageId2), []string{fromMember.GuildName, strconv.Itoa(int(in.ItemId)), strconv.Itoa(0), strconv.Itoa(int(in.Amount))})
+	ad.NotifyGuildMsg(app, fromMember.ServerId, fromMember.GuildId, uint32(chat1), []string{toMember.GuildName, strconv.Itoa(int(in.ItemId)), strconv.Itoa(0), strconv.Itoa(int(in.Amount))})
+	ad.NotifyGuildMsg(app, toMember.ServerId, toMember.GuildId, uint32(chat2), []string{fromMember.GuildName, strconv.Itoa(int(in.ItemId)), strconv.Itoa(0), strconv.Itoa(int(in.Amount))})
 	gs := app.getGameServer(toMember.ServerId)
 	if gs == nil {
 		return ErrCodeGameServerMissing
@@ -4500,7 +4591,33 @@ func (ad *AllianceData) AidResource(db *sql.DB, app *AllianceApp, in *gameServer
 		ItemNum:  in.Amount,
 	})
 
+	ad.DistributeEventTips(cache, app, uint32(chat3), []string{fromMember.GuildName, toMember.GuildName, strconv.Itoa(int(in.ItemId)), strconv.Itoa(int(fromMember.LeaderGbId)), strconv.Itoa(int(in.Amount))})
+
 	return ErrCodeSuccess
+}
+
+func (ad *AllianceData) DistributeEventTips(cache *AllianceCache, app *AllianceApp, messageId uint32, messageArgs []string) {
+	serverToGuilds := groupMembersByServer(cache)
+	if nil == serverToGuilds || len(serverToGuilds) == 0 {
+		// 联盟存在但没有任何成员(理论上不应发生),直接返回成功
+		return
+	}
+
+	for serverId := range serverToGuilds {
+		gs := app.getGameServer(serverId)
+		if gs == nil {
+			continue
+		}
+		client, ok := gs.GetClientEndPoint().(*gameServerService.GameClientClient)
+		if !ok || client == nil {
+			continue
+		}
+		client.OnEventTipsNotify(&gameServerService.EventTipsNotify{
+			LeagueUUID:  cache.info.AllianceId,
+			MessageId:   messageId,
+			MessageArgs: messageArgs,
+		})
+	}
 }
 
 // ==== Resource: Get League Fund ====
@@ -4624,7 +4741,7 @@ func (ad *AllianceData) broadcastNewEventToAlliance(app *AllianceApp, allianceId
 	}
 
 	serverToGuilds := groupMembersByServer(cache)
-	if len(serverToGuilds) == 0 {
+	if nil == serverToGuilds || len(serverToGuilds) == 0 {
 		return
 	}
 
@@ -4690,23 +4807,48 @@ func (ad *AllianceData) deleteEventsByID(db *sql.DB, ids []interface{}) {
 
 // ==== Chat ====
 
-func (ad *AllianceData) SendChatMessage(db *sql.DB, app *AllianceApp, in *gameServerService.SendChatMessageRequest) uint32 {
-	if _, ok := ad.alliances.Get(in.AllianceId); !ok {
+func (ad *AllianceData) SendChatMessage(app *AllianceApp, in *gameServerService.SendChatMessageRequest) uint32 {
+	// 2026-08-24 联盟频道改造: 只对属于该联盟的帮会广播
+	// 旧实现 BroadcastToGameServers 会推给所有 game server,浪费 RPC,也不符合"只对联盟下帮会"语义
+	// 新实现参照 broadcastNewEventToGuilds 的 groupMembersByServer 模式,
+	// 只给"该联盟有成员帮会"的 game server 推 ChatMessageBroadcast。
+	// game server 端 onChatMessage 还会再按 Guild.leagueUUID 本地过滤一次(纵深防御)。
+
+	cache, ok := ad.alliances.Get(in.AllianceId)
+	if !ok {
 		return ErrCodeAllianceNotFound
 	}
 
-	app.BroadcastToGameServers(func(client *gameServerService.GameClientClient) {
+	serverToGuilds := groupMembersByServer(cache)
+	if nil == serverToGuilds || len(serverToGuilds) == 0 {
+		// 联盟存在但没有任何成员(理论上不应发生),直接返回成功
+		return ErrCodeSuccess
+	}
+
+	chatMsg := &gameServerService.AllianceChatMessage{
+		SenderGuildId:   in.SenderGuildId,
+		SenderGuildName: in.SenderGuildName,
+		SenderServerId:  in.SenderServerId,
+		AvatarInfo:      in.AvatarInfo,
+		Content:         in.Content,
+		SendTime:        nowTS(),
+		SenderType:      0, // 玩家发言固定 0=PLAYER;援助/宣战的系统消息走单独路径(未来可定义 AllianceChatSenderType enum)
+	}
+
+	for serverId := range serverToGuilds {
+		gs := app.getGameServer(serverId)
+		if gs == nil {
+			continue
+		}
+		client, ok := gs.GetClientEndPoint().(*gameServerService.GameClientClient)
+		if !ok || client == nil {
+			continue
+		}
 		client.OnChatMessage(&gameServerService.ChatMessageBroadcast{
 			AllianceId: in.AllianceId,
-			Message: &gameServerService.AllianceChatMessage{
-				SenderGuildId:   in.SenderGuildId,
-				SenderGuildName: in.SenderGuildName,
-				SenderServerId:  in.SenderServerId,
-				Content:         in.Content,
-				SendTime:        nowTS(),
-			},
+			Message:    chatMsg,
 		})
-	})
+	}
 
 	return ErrCodeSuccess
 }
@@ -5049,6 +5191,8 @@ func (ad *AllianceData) RecruitLeagueMember(app *AllianceApp, leagueUUID uint64)
 	}
 	app.BroadcastToGameServers(func(client *gameServerService.GameClientClient) {
 		client.OnLeagueBroadCastMessageNotify(&gameServerService.LeagueBroadCastMessage{
+			FromUID:     leagueUUID,
+			ToUID:       leagueUUID,
 			MessageId:   uint32(recruitChatMessageId),
 			MessageArgs: []string{strconv.Itoa(int(cache.info.AllianceId)), cache.info.Name},
 		})
@@ -5073,4 +5217,9 @@ func (ad *AllianceData) QueryLeagueUUID(guildId uint64) (uint64, bool) {
 		return 0, true
 	}
 	return 0, false
+}
+
+func (ad *AllianceData) RemoveEnemyRelation(app *AllianceApp, db *sql.DB, guildId uint64) uint32 {
+	ad.removeAllEnemyRelationsForGuild(app, db, guildId, false)
+	return ErrCodeSuccess
 }

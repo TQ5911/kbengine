@@ -95,9 +95,17 @@ class ServerBuffs(userType.UserDictType):
         _buffIdsList = []
         for _buffId in self.keys():
             buffMap = self[_buffId]
+            _endTime = None
+            for _buffVal in buffMap.values():
+                _curBuffEndTime = _buffVal.getBuffEndTime()
+                if _endTime is None:
+                    _endTime = _curBuffEndTime
+                elif _endTime < _curBuffEndTime:
+                    _endTime = _curBuffEndTime
+
             buffIdVal = {
                 "buffId": _buffId,
-                "srcKeys": list(buffMap.keys())
+                "endTimeStamp": _endTime,
             }
             _buffIdsList.append(buffIdVal)
         return _buffIdsList

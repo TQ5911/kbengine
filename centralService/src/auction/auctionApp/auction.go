@@ -3,8 +3,8 @@ package Auction
 import (
 	"bytes"
 	"centralService/src/appLog"
-	cmap "centralService/src/common/concurrent_map"
 	gameServerService "centralService/src/auction/auctionApp/gameServerService"
+	cmap "centralService/src/common/concurrent_map"
 	"database/sql"
 	"encoding/json"
 	"errors"
@@ -84,6 +84,7 @@ type AuctionItem struct {
 	IsNeedRemove          bool                             `json:"-"`                // 是否需要从商品缓存列表中移除
 	EachPrice             float32                          `json:"-"`                // 单价
 	AddPublicityTime      uint32                           `json:"addPublicityTime"` // 公示时间
+	EquipExtraCache       map[string]int32                 `json:"-"`                // 装备特殊的缓存数据
 }
 
 func NewAuctionItem(auctionType uint8, auctionItemUUID uint64, addTime int64, itemData *ItemData, price uint64, number uint32, bagType uint8, source uint8, status uint8, locked uint64, extraInfo string, fromPlayerGBID uint64, addPublicityTime uint32) *AuctionItem {
@@ -103,6 +104,7 @@ func NewAuctionItem(auctionType uint8, auctionItemUUID uint64, addTime int64, it
 		FromPlayerGBID:   fromPlayerGBID,
 		mu:               &sync.RWMutex{},
 		AddPublicityTime: addPublicityTime,
+		EquipExtraCache:  make(map[string]int32),
 	}
 
 	var m map[string]interface{}
@@ -111,6 +113,9 @@ func NewAuctionItem(auctionType uint8, auctionItemUUID uint64, addTime int64, it
 		appLog.Error("NewAuctionItem: Unmarshal err", err)
 		return nil
 	}
+	auctionItem.EquipExtraCache[EQUIP_GRADE_LEVEL] = int32(m[EQUIP_GRADE_LEVEL].(float64))
+	auctionItem.EquipExtraCache[EQUIP_ENHANCE_LEVEL] = int32(m[EQUIP_ENHANCE_LEVEL].(float64))
+
 	auctionItem.ServerId = uint32(m["serverId"].(float64))
 	auctionItem.EachPrice = float32(auctionItem.Price) / float32(auctionItem.Number)
 	auctionItem.init()
@@ -287,6 +292,10 @@ func (a *AuctionItem) GetPublicityEndTime() int64 {
 	return a.AddTime + int64(a.AddPublicityTime)
 }
 
+func (a *AuctionItem) CheckInSelling() bool {
+	return a.Status == AUCTION_STATUS_SELLING
+}
+
 func (a *AuctionItem) CheckInSnatch() bool {
 	curTime := time.Now().Unix()
 	return a.GetPublicityEndTime()-a.getSnatchTime()-2 <= curTime && curTime <= a.GetPublicityEndTime()+2
@@ -388,10 +397,10 @@ func NewItemData(srcItemData *ItemData, itemNum uint32) *ItemData {
 }
 
 type DailyPrice struct {
-    Date  		string  	`json:"date"`
-    TotalPrice 	uint64 		`json:"totalPrice"`
-	Number 		uint64 		`json:"number"`
-	AvgPrice	float32		`json:"avgPrice"`
+	Date       string  `json:"date"`
+	TotalPrice uint64  `json:"totalPrice"`
+	Number     uint64  `json:"number"`
+	AvgPrice   float32 `json:"avgPrice"`
 }
 
 type AuctionItemAvgRecord struct {
@@ -564,10 +573,10 @@ func (a *AuctionPriceRecords) AddAvgPriceRecord(itemId uint32, price uint64, num
 	totalPrice := price
 	if !ok {
 		itemAvgPriceRecord = &AuctionItemAvgRecord{
-			itemId: itemId, 
-			totalPrice: totalPrice, 
-			number: uint64(number), 
-			avgPrice: 0.0,
+			itemId:       itemId,
+			totalPrice:   totalPrice,
+			number:       uint64(number),
+			avgPrice:     0.0,
 			recentPrices: make([]DailyPrice, 0),
 		}
 		a.itemAvgPriceRecords[itemId] = itemAvgPriceRecord
@@ -902,7 +911,7 @@ func (am *AuctionMgr) loadAuctionItemsFromDB(lastId int) ([]*AuctionItem, int, e
 	for rows.Next() {
 		var itemData = ItemData{}
 
-		var ai = AuctionItem{ItemData: &itemData, mu: &sync.RWMutex{}}
+		var ai = AuctionItem{ItemData: &itemData, mu: &sync.RWMutex{}, EquipExtraCache: make(map[string]int32)}
 		err := rows.Scan(&lastId, &ai.AuctionType, &ai.AuctionItemUUID, &ai.AddTime, &ai.ItemData.ItemId, &ai.ItemData.ItemNum, &ai.ItemData.CreateTime, &ai.ItemData.ExpireTime, &ai.ItemData.UniqueId, &ai.ItemData.BindType, &ai.ItemData.AttrJson, &ai.Price, &ai.Number, &ai.BagType, &ai.Source, &ai.Status, &ai.Locked, &ai.ExtraInfo, &ai.TCreate, &ai.FromPlayerGBID, &ai.AddPublicityTime)
 		if err != nil {
 			appLog.Error("loadAuctionItemsFromDB: Scan err", err)
@@ -923,6 +932,13 @@ func (am *AuctionMgr) loadAuctionItemsFromDB(lastId int) ([]*AuctionItem, int, e
 			appLog.Error("loadAuctionItemsFromDB: serverId is nil")
 			ai.ServerId = 0
 		}
+		if v, ok := m[EQUIP_GRADE_LEVEL]; ok {
+			ai.EquipExtraCache[EQUIP_GRADE_LEVEL] = int32(v.(float64))
+		}
+		if v, ok := m[EQUIP_ENHANCE_LEVEL]; ok {
+			ai.EquipExtraCache[EQUIP_ENHANCE_LEVEL] = int32(v.(float64))
+		}
+
 		ai.init()
 		am.auctionItems.Set(strconv.FormatUint(ai.AuctionItemUUID, 10), &ai)
 		auctionItems = append(auctionItems, &ai)
@@ -1016,7 +1032,7 @@ func (am *AuctionMgr) refreshItemPriceData() {
 				Date:       today,
 				TotalPrice: auctionItemRecord.totalPrice,
 				Number:     auctionItemRecord.number,
-				AvgPrice:	auctionItemRecord.avgPrice,
+				AvgPrice:   auctionItemRecord.avgPrice,
 			}
 			auctionItemRecord.totalPrice, auctionItemRecord.number = 0, 0
 			auctionItemRecord.recentPrices = append(auctionItemRecord.recentPrices, daily)
@@ -1473,10 +1489,14 @@ func (am *AuctionMgr) GetItemAvgPrice(itemId uint32) (float32, float32) {
 	return price, price7
 }
 
-func (am *AuctionMgr) CheckBuyItem(auctionItemUUID uint64, buyNumber uint32) (*AuctionItem, int) {
+func (am *AuctionMgr) CheckBuyItem(auctionItemUUID uint64, buyerGbId uint64, buyNumber uint32) (*AuctionItem, int) {
 	auctionItem, err := am.GetAuctionItem(auctionItemUUID)
 	if err != nil {
 		return auctionItem, AUCTION_NOT_IN_AUCTION
+	}
+
+	if auctionItem.FromPlayerGBID == buyerGbId {
+		return auctionItem, AUCTION_ITEM_IS_SELF_SALE
 	}
 
 	if auctionItem.Status == AUCTION_STATUS_EXPIRED {
@@ -1494,6 +1514,31 @@ func (am *AuctionMgr) CheckBuyItem(auctionItemUUID uint64, buyNumber uint32) (*A
 		if auctionItem.isLocked(0) {
 			return auctionItem, AUCTION_ITEM_IS_LOCKED
 		}
+	}
+
+	return auctionItem, AUCTION_OK
+}
+
+func (am *AuctionMgr) CheckBuyItems(auctionItemUUID uint64, buyerGbId uint64, buyNumber uint32) (*AuctionItem, int) {
+	auctionItem, err := am.GetAuctionItem(auctionItemUUID)
+	if err != nil {
+		return auctionItem, AUCTION_NOT_IN_AUCTION
+	}
+
+	if auctionItem.FromPlayerGBID == buyerGbId {
+		return auctionItem, AUCTION_ITEM_IS_SELF_SALE
+	}
+
+	if auctionItem.Status == AUCTION_STATUS_EXPIRED {
+		return auctionItem, AUCTION_IS_EXPIRED
+	}
+
+	if auctionItem.Number != buyNumber {
+		return auctionItem, AUCTION_BUY_ITEM_NOT_ENOUGH
+	}
+
+	if !auctionItem.CheckInSelling() {
+		return auctionItem, AUCTION_ITEM_IS_NOT_IN_SELLING
 	}
 
 	return auctionItem, AUCTION_OK
@@ -1600,13 +1645,20 @@ func (am *AuctionMgr) doCancelSaleItem(auctionItem *AuctionItem) error {
 	return nil
 }
 
-func (am *AuctionMgr) SearchItemByItemIds(itemIds []uint32, fromPlayerGBID uint64, limit uint32, offset uint32, isPublicity uint32) ([]*AuctionItem, uint32) {
+func (am *AuctionMgr) SearchItemByItemIds(itemIds []uint32, gradeLevels []int32, enhanceLevels []int32, fromPlayerGBID uint64, limit uint32, offset uint32, isPublicity uint32) ([]*AuctionItem, uint32) {
 	var auctionItems []*AuctionItem
 	var count uint32
 	var allCount uint32
-
+	hasGradeLevelFilter := false
+	hasEnhanceLevelFilter := false
+	if len(itemIds) == len(gradeLevels) {
+		hasGradeLevelFilter = true
+	}
+	if len(itemIds) == len(enhanceLevels) {
+		hasEnhanceLevelFilter = true
+	}
 	if isPublicity == 1 {
-		for _, itemId := range itemIds {
+		for pos, itemId := range itemIds {
 			innerMap, ok := am.auctionItemPublicityIndex.Get(INDEX_KEY_ITEMID)
 			if !ok {
 				continue
@@ -1619,14 +1671,29 @@ func (am *AuctionMgr) SearchItemByItemIds(itemIds []uint32, fromPlayerGBID uint6
 			if lockedBtree == nil {
 				continue
 			}
-			idx := 0
+			idx := uint32(0)
 			lockedBtree.mu.RLock()
 			lockedBtree.tree.Ascend(func(auctionItem *AuctionItem) bool {
+				if hasGradeLevelFilter {
+					if gradeLevels[pos] != EQUIP_DEFAULT_VALUE {
+						v, ok := auctionItem.EquipExtraCache[EQUIP_GRADE_LEVEL]
+						if !ok || v != gradeLevels[pos] {
+							return true
+						}
+					}
+				}
+				if hasEnhanceLevelFilter {
+					if enhanceLevels[pos] != EQUIP_DEFAULT_VALUE {
+						v, ok := auctionItem.EquipExtraCache[EQUIP_ENHANCE_LEVEL]
+						if !ok || v != enhanceLevels[pos] {
+							return true
+						}
+					}
+				}
 				if auctionItem.Status != AUCTION_STATUS_PUBLICITY {
 					return true
 				}
-
-				if uint32(idx) < offset {
+				if idx < offset {
 					idx++
 					return true
 				}
@@ -1641,7 +1708,7 @@ func (am *AuctionMgr) SearchItemByItemIds(itemIds []uint32, fromPlayerGBID uint6
 			lockedBtree.mu.RUnlock()
 		}
 	} else {
-		for _, itemId := range itemIds {
+		for pos, itemId := range itemIds {
 			innerMap, ok := am.auctionItemIndex.Get(INDEX_KEY_ITEMID)
 			if !ok {
 				continue
@@ -1654,14 +1721,30 @@ func (am *AuctionMgr) SearchItemByItemIds(itemIds []uint32, fromPlayerGBID uint6
 			if lockedBtree == nil {
 				continue
 			}
-			idx := 0
+			idx := uint32(0)
 			lockedBtree.mu.RLock()
 			lockedBtree.tree.Ascend(func(auctionItem *AuctionItem) bool {
+				if hasGradeLevelFilter {
+					if gradeLevels[pos] != EQUIP_DEFAULT_VALUE {
+						v, ok := auctionItem.EquipExtraCache[EQUIP_GRADE_LEVEL]
+						if !ok || v != gradeLevels[pos] {
+							return true
+						}
+					}
+				}
+				if hasEnhanceLevelFilter {
+					if enhanceLevels[pos] != EQUIP_DEFAULT_VALUE {
+						v, ok := auctionItem.EquipExtraCache[EQUIP_ENHANCE_LEVEL]
+						if !ok || v != enhanceLevels[pos] {
+							return true
+						}
+					}
+				}
 				if auctionItem.Status != AUCTION_STATUS_SELLING {
 					return true
 				}
 
-				if uint32(idx) < offset {
+				if idx < offset {
 					idx++
 					return true
 				}

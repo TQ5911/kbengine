@@ -281,7 +281,7 @@ datas = _tools.RODict({
     }),
     "equipRedeemWaitTime": _tools.RODict({
         "ID": "equipRedeemWaitTime",
-        "value": 1800,
+        "value": 86400,
     }),
     "equipReturnText": _tools.RODict({
         "ID": "equipReturnText",

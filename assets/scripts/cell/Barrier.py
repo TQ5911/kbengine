@@ -117,6 +117,10 @@ class Barrier(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace,
             LOG_INFO('removeAirwallAreas', self.spaceID, _area)
             KBEngine.removeAirwallAreas(self.spaceID, [_area])
 
+        spaceMgr = self.spaceMgr
+        if spaceMgr:
+            spaceMgr.removeEntById(self.id)
+
     def safeDestroy(self, forceDestroy=False):
         self.unsetBodySize()
         super(Barrier, self).safeDestroy(forceDestroy)

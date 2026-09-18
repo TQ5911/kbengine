@@ -65,7 +65,7 @@ datas = _tools.RODict({
     }),
     "rankWorldLevel": _tools.RODict({
         "ID": "rankWorldLevel",
-        "value": 300,
+        "value": 20,
     }),
     "offlineExpTime": _tools.RODict({
         "ID": "offlineExpTime",
@@ -86,5 +86,13 @@ datas = _tools.RODict({
     "petUpperLimitText": _tools.RODict({
         "ID": "petUpperLimitText",
         "value": "可出战<color=#d35a66>{0}</color>只{1}品质的精灵",
+    }),
+    "activateCrossWorldLevel": _tools.RODict({
+        "ID": "activateCrossWorldLevel",
+        "value": 8,
+    }),
+    "activateCrossWorldLevelMax": _tools.RODict({
+        "ID": "activateCrossWorldLevelMax",
+        "value": 3,
     })
 })

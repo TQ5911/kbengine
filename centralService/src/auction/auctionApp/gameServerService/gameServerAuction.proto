@@ -125,6 +125,63 @@ message DoBuyItemResp
   string extra = 3;
 }
 
+//批量购买-锁定阶段:一次请求锁定一批商品(部分成功)
+message BuyItemsReq
+{
+  uint64 playerGBID = 1;
+  repeated uint64 auctionItemUUIDs = 2;
+  repeated uint32 auctionItemNumbers = 3;
+  string extra = 4;
+}
+
+//批量购买单项锁定结果
+message BuyItemsResult
+{
+  uint64 auctionItemUUID = 1;
+  uint32 auctionItemNumber = 2;
+  uint32 auctionItemId = 3;
+  uint64 price = 4;
+  uint32 code = 5;
+}
+
+message BuyItemsResp
+{
+  uint64 playerGBID = 1;
+  repeated BuyItemsResult results = 2;
+  string extra = 3;
+}
+
+//批量购买-成交阶段:只携带锁定成功的项
+message DoBuyItemInfo
+{
+  uint64 auctionItemUUID = 1;
+  uint32 auctionItemNumber = 2;
+  uint32 errCode = 3;
+  uint64 price = 4;
+}
+
+message DoBuyItemsReq
+{
+  uint64 playerGBID = 1;
+  repeated uint64 preFailUUIDs = 2;
+  repeated uint32 preFailCodes = 3;
+  repeated DoBuyItemInfo items = 4;
+  uint32 errCode = 5;
+  uint64 opUUID = 6;
+  string extra = 7;
+}
+
+message DoBuyItemsResp
+{
+  uint64 playerGBID = 1;
+  repeated uint64 successUUIDs = 2;
+  repeated AuctionItem successItems = 3;
+  repeated uint64 failUUIDs = 4;
+  repeated uint32 failCodes = 5;
+  uint64 opUUID = 7;
+  string extra = 8;
+}
+
 message CancelSaleItemReq
 {
   uint64 playerGBID = 1;
@@ -158,10 +215,12 @@ message SearchItemsByItemIdReq
 {
   uint64 playerGBID = 1;
   repeated uint32 itemIds = 2;
-  uint32 limit = 3;
-  uint32 offset = 4;
-  uint32 isPublicity = 5;
-  string extra = 6;
+  repeated int32 gradeLevels = 3;
+  repeated int32 enhanceLevels = 4;
+  uint32 limit = 5;
+  uint32 offset = 6;
+  uint32 isPublicity = 7;
+  string extra = 8;
 }
 
 message SearchItemsByItemIdResp
@@ -376,6 +435,8 @@ service AuctionServer
   rpc buyItemByItemId(BuyItemByItemIdReq) returns(Void);
   rpc doBuyItemByItemId(DoBuyItemByItemIdReq) returns(Void);
   rpc getAuctionItemsByAuctionIds(GetAuctionItemByAuctionIdsReq) returns(Void);
+  rpc buyItems(BuyItemsReq) returns(Void);
+  rpc doBuyItems(DoBuyItemsReq) returns(Void);
 }
 
 //中心服向游戏服的rpc
@@ -401,4 +462,6 @@ service GameServer
   rpc replyDoBuyItemByItemId(DoBuyItemByItemIdResp) returns(Void);
   rpc replyGetAuctionItemsByAuctionIds(GetAuctionItemByAuctionIdsResp) returns(Void);
   rpc pushItemPriceInfoList(ItemPriceInfoList) returns(Void);
+  rpc replyBuyItems(BuyItemsResp) returns(Void);
+  rpc replyDoBuyItems(DoBuyItemsResp) returns(Void);
 }

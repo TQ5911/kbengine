@@ -217,5 +217,10 @@
             <Arg>       BOOL        </Arg>
             <Arg>       UINT8       </Arg>
         </onSetBaseAppLockResult>
+
+        <setBaseAppData>
+            <Arg>           STRING    </Arg>
+            <Arg>           PYTHON    </Arg>
+        </setBaseAppData>
     </BaseMethods>
 </root>

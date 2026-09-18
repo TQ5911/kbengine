@@ -10,17 +10,27 @@ import utils
 import gameglobal
 
 class LogTrackingMgr:
+    # 用户属性主号限定
+    @staticmethod
+    def Server_User_Set_Main(GBID, distinctId, player_gid, player_uid, **kwargs):
+        args = {}
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "user_set"
+        args["#event_name"] = "Server_User_Set_Main"
+        args["player_gid"] = str(player_gid)
+        args["player_uid"] = str(player_uid)
+        LogTrackingMgr.LOG(args, kwargs)
+
     # 用户属性通用
     @staticmethod
-    def Server_User_Set(GBID, distinctId, player_gid, player_obid, player_uid, channel, platform, server_id, gender, role_id, role_class, role_name, role_create_time, game_id, online, enemy_num, role_order, first_login_time, last_login_time, current_bind_yuanbao, current_copper, current_experience, current_guild_contribution, current_xuantie, current_yuanbao, current_guild_id, current_guild_name, current_level, current_map_id, current_power, current_level_rank, current_score_rank, current_achievement_rank, month_bcard_invoke, month_bcard_left, month_scard_invoke, month_scard_left, total_login_day, total_online_time, friends_num, **kwargs):
+    def Server_User_Set(GBID, distinctId, player_obid, channel, platform, server_id, gender, role_id, role_class, role_name, role_create_time, game_id, online, enemy_num, role_order, first_login_time, last_login_time, current_bind_yuanbao, current_copper, current_experience, current_guild_contribution, current_xuantie, current_yuanbao, current_guild_id, current_guild_name, current_level, current_map_id, current_power, current_level_rank, current_score_rank, current_achievement_rank, month_bcard_invoke, month_bcard_left, month_scard_invoke, month_scard_left, total_login_day, total_online_time, friends_num, last_login_out_time, **kwargs):
         args = {}
         args["#account_id"] = GBID
         args["#distinct_id"] = distinctId
         args["#type"] = "user_set"
         args["#event_name"] = "Server_User_Set"
-        args["player_gid"] = str(player_gid)
         args["player_obid"] = str(player_obid)
-        args["player_uid"] = str(player_uid)
         args["channel"] = str(channel)
         args["platform"] = str(platform)
         args["server_id"] = server_id
@@ -56,6 +66,7 @@ class LogTrackingMgr:
         args["total_login_day"] = total_login_day
         args["total_online_time"] = total_online_time
         args["friends_num"] = friends_num
+        args["last_login_out_time"] = last_login_out_time
         LogTrackingMgr.LOG(args, kwargs)
 
     # 充值完成事件
@@ -488,7 +499,7 @@ class LogTrackingMgr:
 
     # 公会信息事件
     @staticmethod
-    def Guild_Info(GBID, distinctId, guild_uuid, level, guild_exp, fund_num, gold_num, guild_commission, token_num, src, op_uuid, desc, **kwargs):
+    def Guild_Info(GBID, distinctId, guild_uuid, level, guild_exp, fund_num, gold_num, guild_commission, guild_iron_mine, token_num, src, op_uuid, desc, **kwargs):
         args = {}
         args["#account_id"] = GBID
         args["#distinct_id"] = distinctId
@@ -500,6 +511,7 @@ class LogTrackingMgr:
         args["fund_num"] = fund_num
         args["gold_num"] = gold_num
         args["guild_commission"] = guild_commission
+        args["guild_iron_mine"] = guild_iron_mine
         args["token_num"] = token_num
         args["src"] = src
         args["op_uuid"] = str(op_uuid)
@@ -652,6 +664,24 @@ class LogTrackingMgr:
         args["floor"] = floor
         args["wonder_land_event"] = wonder_land_event
         args["left_time"] = left_time
+        LogTrackingMgr.LOG(args, kwargs)
+
+    # 归墟事件
+    @staticmethod
+    def Abyss_Info(GBID, distinctId, gb_id, game_id, floor, map_id, abyss_event, left_time, from_server_id, cross_server_id, **kwargs):
+        args = {}
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "Abyss_Info"
+        args["gb_id"] = str(gb_id)
+        args["game_id"] = str(game_id)
+        args["floor"] = floor
+        args["map_id"] = map_id
+        args["abyss_event"] = abyss_event
+        args["left_time"] = left_time
+        args["from_server_id"] = from_server_id
+        args["cross_server_id"] = cross_server_id
         LogTrackingMgr.LOG(args, kwargs)
 
     # 成就事件
@@ -829,13 +859,14 @@ class LogTrackingMgr:
 
     # 装备铭文
     @staticmethod
-    def equip_glyph(GBID, distinctId, op_uuid, gb_id, unique_id, equip_id, equip_name, equip_type, equip_grade, equip_quality, equip_belong_to, equip_attrs, equip_attrs_after, consumed_item_bind_value, equip_power, glyph_ref_id, glyph_pos, bind_value_before, bind_value_after, is_auto, **kwargs):
+    def equip_glyph(GBID, distinctId, op_uuid, op_type, gb_id, unique_id, equip_id, equip_name, equip_type, equip_grade, equip_quality, equip_belong_to, equip_attrs, equip_attrs_after, consumed_item_bind_value, equip_power, glyph_ref_id, glyph_pos, bind_type_before, bind_type_after, is_auto, **kwargs):
         args = {}
         args["#account_id"] = GBID
         args["#distinct_id"] = distinctId
         args["#type"] = "track"
         args["#event_name"] = "equip_glyph"
         args["op_uuid"] = str(op_uuid)
+        args["op_type"] = op_type
         args["gb_id"] = str(gb_id)
         args["unique_id"] = str(unique_id)
         args["equip_id"] = equip_id
@@ -850,8 +881,8 @@ class LogTrackingMgr:
         args["equip_power"] = equip_power
         args["glyph_ref_id"] = glyph_ref_id
         args["glyph_pos"] = glyph_pos
-        args["bind_value_before"] = bind_value_before
-        args["bind_value_after"] = bind_value_after
+        args["bind_type_before"] = bind_type_before
+        args["bind_type_after"] = bind_type_after
         args["is_auto"] = is_auto
         LogTrackingMgr.LOG(args, kwargs)
 
@@ -1074,7 +1105,7 @@ class LogTrackingMgr:
 
     # 礼包购买
     @staticmethod
-    def Gift_Buy(GBID, distinctId, gb_id, buy_package__id, op_uuid, limit_type, limit_count, bought_count, **kwargs):
+    def Gift_Buy(GBID, distinctId, gb_id, buy_package__id, op_uuid, limit_type, limit_count, bought_count, currency_id, cost_num, **kwargs):
         args = {}
         args["#account_id"] = GBID
         args["#distinct_id"] = distinctId
@@ -1086,6 +1117,8 @@ class LogTrackingMgr:
         args["limit_type"] = limit_type
         args["limit_count"] = limit_count
         args["bought_count"] = bought_count
+        args["currency_id"] = currency_id
+        args["cost_num"] = cost_num
         LogTrackingMgr.LOG(args, kwargs)
 
     # 升级
@@ -1368,12 +1401,13 @@ class LogTrackingMgr:
 
     # 传送
     @staticmethod
-    def teleport(GBID, distinctId, from_map_id, to_map_id, **kwargs):
+    def teleport(GBID, distinctId, account_id, from_map_id, to_map_id, **kwargs):
         args = {}
         args["#account_id"] = GBID
         args["#distinct_id"] = distinctId
         args["#type"] = "track"
         args["#event_name"] = "teleport"
+        args["account_id"] = str(account_id)
         args["from_map_id"] = from_map_id
         args["to_map_id"] = to_map_id
         LogTrackingMgr.LOG(args, kwargs)
@@ -1394,7 +1428,7 @@ class LogTrackingMgr:
 
     # 任务状态变更
     @staticmethod
-    def Task_State_Change(GBID, distinctId, gb_id, task_id, task_state, task_type, task_map, player_level, **kwargs):
+    def Task_State_Change(GBID, distinctId, gb_id, task_id, task_state, task_type, task_map, player_level, op_uuid, **kwargs):
         args = {}
         args["#account_id"] = GBID
         args["#distinct_id"] = distinctId
@@ -1406,6 +1440,7 @@ class LogTrackingMgr:
         args["task_type"] = task_type
         args["task_map"] = task_map
         args["player_level"] = player_level
+        args["op_uuid"] = str(op_uuid)
         LogTrackingMgr.LOG(args, kwargs)
 
     # pc引流奖励
@@ -1534,7 +1569,7 @@ class LogTrackingMgr:
 
     # 更新经验
     @staticmethod
-    def Update_Exp(GBID, distinctId, gb_id, delta_val, modify_val, op_uuid, src, space_no, level, exp_sub_source, exp, **kwargs):
+    def Update_Exp(GBID, distinctId, gb_id, delta_val, modify_val, op_uuid, src, space_no, level, exp_sub_source, exp, exp_before, **kwargs):
         args = {}
         args["#account_id"] = GBID
         args["#distinct_id"] = distinctId
@@ -1549,6 +1584,7 @@ class LogTrackingMgr:
         args["level"] = level
         args["exp_sub_source"] = str(exp_sub_source)
         args["exp"] = exp
+        args["exp_before"] = exp_before
         LogTrackingMgr.LOG(args, kwargs)
 
     # 装备掉装
@@ -2043,7 +2079,7 @@ class LogTrackingMgr:
 
     # 删除保管箱记录
     @staticmethod
-    def delete_stash(GBID, distinctId, order_id, player_gbid, goods_id, record_deleted, record_deleted_time, **kwargs):
+    def delete_stash(GBID, distinctId, order_id, player_gbid, goods_id, record_deleted, record_deleted_time, is_gm, **kwargs):
         args = {}
         args["#account_id"] = GBID
         args["#distinct_id"] = distinctId
@@ -2054,6 +2090,7 @@ class LogTrackingMgr:
         args["goods_id"] = goods_id
         args["record_deleted"] = record_deleted
         args["record_deleted_time"] = record_deleted_time
+        args["is_gm"] = is_gm
         LogTrackingMgr.LOG(args, kwargs)
 
     # 装备返还
@@ -2376,12 +2413,13 @@ class LogTrackingMgr:
 
     # 魂魄镶嵌
     @staticmethod
-    def equip_soul(GBID, distinctId, unique_id, equip_id, equip_name, equip_type, equip_grade, equip_quality, equip_power, equip_attrs, soul_attrs_before, soul_attrs_after, cost_item_info, **kwargs):
+    def equip_soul(GBID, distinctId, op_uuid, unique_id, equip_id, equip_name, equip_type, equip_grade, equip_quality, equip_power, equip_attrs, soul_attrs_before, soul_attrs_after, cost_item_info, **kwargs):
         args = {}
         args["#account_id"] = GBID
         args["#distinct_id"] = distinctId
         args["#type"] = "track"
         args["#event_name"] = "equip_soul"
+        args["op_uuid"] = str(op_uuid)
         args["unique_id"] = str(unique_id)
         args["equip_id"] = equip_id
         args["equip_name"] = str(equip_name)
@@ -2475,6 +2513,40 @@ class LogTrackingMgr:
         args["main_account"] = str(main_account)
         args["sub_account"] = str(sub_account)
         args["type"] = type
+        LogTrackingMgr.LOG(args, kwargs)
+
+    # 战力变化
+    @staticmethod
+    def power_change(GBID, distinctId, curr_power, pre_power, power_change, op_uuid, power_change_reason, **kwargs):
+        args = {}
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "power_change"
+        args["curr_power"] = curr_power
+        args["pre_power"] = pre_power
+        args["power_change"] = power_change
+        args["op_uuid"] = str(op_uuid)
+        args["power_change_reason"] = str(power_change_reason)
+        LogTrackingMgr.LOG(args, kwargs)
+
+    # 装备栏变化日志
+    @staticmethod
+    def body_equip_flow(GBID, distinctId, op_uuid, server_id, account_id, game_id, item_id, change_num, body_equip_change_reason, unique_id, detail, **kwargs):
+        args = {}
+        args["#account_id"] = GBID
+        args["#distinct_id"] = distinctId
+        args["#type"] = "track"
+        args["#event_name"] = "body_equip_flow"
+        args["op_uuid"] = str(op_uuid)
+        args["server_id"] = server_id
+        args["account_id"] = str(account_id)
+        args["game_id"] = str(game_id)
+        args["item_id"] = item_id
+        args["change_num"] = change_num
+        args["body_equip_change_reason"] = body_equip_change_reason
+        args["unique_id"] = str(unique_id)
+        args["detail"] = str(detail)
         LogTrackingMgr.LOG(args, kwargs)
 
     def ms_timestamp_to_datetime(ms_ts):

@@ -10,6 +10,9 @@ import iDungeonStub
 import iDungeonStubMonster
 
 import dungeon
+import team
+
+import DungeonSettlement
 
 import formula
 import utils
@@ -24,15 +27,12 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
     def doNext(self):
         super(TeamDungeonStub, self).doNext()
         self.pyAddTimer(30, 30, gametimer.TIMER_DUNGEON_CHECK_DESTROY)
-        self.pyAddTimer(1, 0.1, gametimer.TIMER_DUNGEON_ENTITY_GENERATOR)
         return
 
     def onTimer(self, tid, userArg):
         self._onTimerTrigger(tid, userArg)
         if userArg == gametimer.TIMER_DUNGEON_CHECK_DESTROY:
             self._checkDungeonSpaceDestroy()
-        elif userArg == gametimer.TIMER_DUNGEON_ENTITY_GENERATOR:
-            self.onTimerCreateEntity()
         else:
             super(TeamDungeonStub, self).onTimer(tid, userArg)
 
@@ -53,6 +53,10 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             if _sVal.markDestroy:
                 if _sVal.markDestroy < now:
                     realDestroyList.append((spaceNo, _sVal.spaceUUID, 'time destory'))
+                continue
+
+            # 跨服讨伐空间无本服 TeamStub 队伍缓存可咨询，仅按完成/标记流程销毁
+            if _sVal.isCrossDungeon():
                 continue
 
             # extra kwargs in `team.TeamDungeonSpaceCacheVal.isDungeonSpaceCanBeDestoried`
@@ -79,8 +83,10 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
                 _sVal = self.spaces[spaceNo]
                 _sVal.cancelCompleteTimer(self, gametimer.TIMER_TAG_ON_TEAM_DUNGEON_COMPLETED_CALLBACK)
                 _sVal.spaceMgr.cell.cancelCompleteDelayNotifyTimer(_sVal.spaceMgr.cell, gametimer.TIMER_TAG_ON_DUNGEON_COMPLETED_DELAY_CALLBACK)
-                _teamStub = gameengine.getTeamStub(_sVal.teamUUID)
-                _teamStub.onDestroyTeamDungeon(_sVal.teamUUID, self.dungeonNo, spaceNo, _sVal.spaceUUID)
+                if not _sVal.isCrossDungeon():
+                    # 跨服讨伐空间无本服 TeamStub 联动，仅本地清理
+                    _teamStub = gameengine.getTeamStub(_sVal.teamUUID)
+                    _teamStub.onDestroyTeamDungeon(_sVal.teamUUID, self.dungeonNo, spaceNo, _sVal.spaceUUID)
 
                 self.cancelSpaceEntitiesLoadingProcess(spaceNo)
 
@@ -111,8 +117,10 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             _sVal.toDestoryDungeon()
 
             LOG_INFO('destoryDungeonSpace::space will be destroyed in next check,', spaceNo, _sVal.markDestroy)
-            _teamStub = gameengine.getTeamStub(_sVal.teamUUID)
-            _teamStub.onDestroyTeamDungeon(_sVal.teamUUID, self.dungeonNo, spaceNo, spaceUUID)
+            if not _sVal.isCrossDungeon():
+                # 跨服讨伐空间无本服 TeamStub 联动，仅本地清理
+                _teamStub = gameengine.getTeamStub(_sVal.teamUUID)
+                _teamStub.onDestroyTeamDungeon(_sVal.teamUUID, self.dungeonNo, spaceNo, spaceUUID)
             return
 
         # real destroy dungeon
@@ -120,6 +128,14 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
 
             # 【大量机器人新号登录后立刻下线后副本报错】
             self.cancelSpaceEntitiesLoadingProcess(spaceNo)
+
+            if _sVal.isCrossDungeon():
+                # 跨服讨伐：销毁前先把仍在副本内的成员逐个送回本服
+                # （否则镜像 cell 随空间销毁走 SPACE_GONE 离线，本服会进
+                # offlineFromCrossServer 的下线销毁流程，回程中的客户端登录失败）
+                for _gbId, _founderVal in _sVal.founders.items():
+                    if _founderVal.isEnter and _founderVal.playerBox:
+                        _founderVal.playerBox.gobackServer(gameconst.CrossServerCBComponent.ENUM_NONE, '', ())
 
             _sVal.spaceBox.doEntireDestroy(False, False)
             self.spaces.pop(spaceNo)
@@ -130,6 +146,10 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             LOG_ERR('leaveDungeonSpaceSucc::cannot get space', spaceNo)
             return
         sVal = self.spaces[spaceNo]
+
+        if sVal.isCrossDungeon():
+            self._leaveCrossDungeonSpaceSucc(spaceNo, playerBox, playerGbId, teamUUID, extra)
+            return
 
         leaveTeam = False
         src = extra.get('src', None)
@@ -142,12 +162,41 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
         _teamStub = gameengine.getTeamStub(sVal.teamUUID)
         _teamStub.leaveTeamDungeon(playerBox, playerGbId, sVal.teamUUID, self.dungeonNo, leaveTeam)
 
+    def _leaveCrossDungeonSpaceSucc(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
+        # 跨服讨伐离开副本（对照本服 TeamStub.leaveTeamDungeon 语义）：
+        # founders 离岗 + 进行中主动退出=退队（通知中心）+ 最后一人离开自动完成 + 返回本服
+        _sVal = self.spaces[spaceNo]
+        _founderVal = _sVal.founders.getFounderVal(playerGbId)
+        if _founderVal:
+            _founderVal.tLeave = utils.curTS()
+            _founderVal.isEnter = False
+            _founderVal.playerBox = None
+
+        src = (extra or {}).get('src', None)
+        if src and src.srcId == gameconst.DunSrcEnum.FROM_CLIENT:
+            if _sVal.completedReasonType == gameconst.DunegonCompleteReasonType.DEFAULT:
+                # 进行中主动退出 = 退出跨服小队（通知中心）
+                gameengine.getCrossTeamStub(teamUUID).leaveTeam(playerBox, teamUUID, playerGbId)
+
+        # 最后一人离开自动完成副本
+        if _sVal.isActive() and not any([_f.isEnter for _f in _sVal.founders.values()]):
+            self.completeTeamDungeon(spaceNo, teamUUID, False, 0, gameconst.DunegonCompleteReasonType.LEAVE)
+
+        # 退出副本后返回本服（队伍不解散）；
+        # 用 ENUM_NONE：onCrossServerEnd 对 ENUM_BASE 会直接 getattr(self, '') 分发，
+        # 空方法名会抛 AttributeError（归墟回程即用 ENUM_NONE 无回调形态）
+        playerBox.gobackServer(gameconst.CrossServerCBComponent.ENUM_NONE, '', ())
+
     def onAvatarOffline(self, spaceNo, playerGbId):
         LOG_INFO('onAvatarOffline::', spaceNo, playerGbId)
         if spaceNo not in self.spaces:
             LOG_ERR('onAvatarOffline::cannot get space', spaceNo)
             return
         _sVal = self.spaces[spaceNo]
+        if _sVal.isCrossDungeon():
+            # 跨服讨伐副本内掉线 = 离线退队（通知中心移除成员）；重连回本服不回副本
+            gameengine.getCrossTeamStub(_sVal.teamUUID).memberOffline(_sVal.teamUUID, playerGbId)
+            return
         _teamStub = gameengine.getTeamStub(_sVal.teamUUID)
         _teamStub.onAvatarOffline(playerGbId, _sVal.teamUUID, self.dungeonNo)
 
@@ -197,18 +246,22 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
             LOG_WARN("_onTeamDungeonCompleted:: taemUUID not match", spaceNo, _sVal.teamUUID, teamUUID)
             return
 
-        gameengine.getTeamStub(teamUUID).setInDungeon(teamUUID, False)
-        
+        _isCross = _sVal.isCrossDungeon()
+        if not _isCross:
+            gameengine.getTeamStub(teamUUID).setInDungeon(teamUUID, False)
+
         _sVal.spaceMgr.cell.destroyAllEntities()
         _sVal.completedReasonType = reasonType
         _sVal.spaceMgr.cell.onTeamDungeonCompleted(spaceNo, teamUUID, win, delay, _sVal.getElapsedTime(), 0, _sVal.completedReasonType)
-        if win:
+        # 跨服讨伐无本服公会副本任务联动
+        if win and not _isCross:
             _sVal.spaceMgr.cell.finishGuildDungeonTask()
 
         if delay:
-            lastDungeonFinishedTime = utils.curTS() + delay
-            _teamStub = gameengine.getTeamStub(_sVal.teamUUID)
-            _teamStub.refreshLastDungeonFinishedTime(_sVal.teamUUID, lastDungeonFinishedTime)
+            if not _isCross:
+                lastDungeonFinishedTime = utils.curTS() + delay
+                _teamStub = gameengine.getTeamStub(_sVal.teamUUID)
+                _teamStub.refreshLastDungeonFinishedTime(_sVal.teamUUID, lastDungeonFinishedTime)
             _sVal.completeDungeonTimer = self.addTimerCB(
                 delay, '_onTeamDungeonCompletedCallback',
                 (spaceNo, _sVal.spaceUUID, 'dungeon complete', win), gametimer.TIMER_TAG_ON_TEAM_DUNGEON_COMPLETED_CALLBACK)
@@ -236,6 +289,14 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
         _sVal.clearCompleteTimer()
 
         _sVal.completeDungeon(win)
+
+        if _sVal.isCrossDungeon():
+            # 跨服讨伐：通知中心复位 InDungeon（队伍不解散），空间销毁由本 stub 自行处理
+            # （本服线由 TeamStub.onTeamDungeonCompletedCB 负责后续销毁）
+            gameengine.getCrossTeamStub(_sVal.teamUUID).crusadeFinished(_sVal.teamUUID, 1 if win else 0)
+            self.destoryDungeonSpace(spaceNo, spaceUUID, reason)
+            return
+
         extra = {
             'tCreate': _sVal.tCreate,
             'tState': _sVal.state,
@@ -247,6 +308,9 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
     def doEnterDungeon(self, box, gbId, teamUUID, spaceNo, extra):
         if spaceNo not in self.spaces:
             LOG_ERR(f'spaceNo "{spaceNo}" not found in spaces')
+            if extra and extra.get('crossTeamId'):
+                # 跨服讨伐进本失败：无本服 TeamStub 可回退，仅记录（镜像由中心中止/超时流程回收）
+                return
             _teamStub = gameengine.getTeamStub(teamUUID)
             _teamStub.onEnterDungeonFailedSpaceNotFound(box, gbId, teamUUID, self.dungeonNo, spaceNo, extra)
             return
@@ -265,8 +329,27 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
         spaceMgr = _spaceVal.spaceMgr
         spaceMgr.cell.doEnterTeamDungeon(box, gbId, _spaceVal.spaceUUID, spaceBox, extra)
 
+    def enterDungeonSpaceSuccess(self, spaceNo, playerBox, playerGbId, teamUUID, extra):
+        # 本服 team 线成员登记由 TeamStub.onEnterTeamDungeon 完成（不走这里）；
+        # 仅跨服讨伐（CROSS_CRUSADE）需要：founders 簿记（最后一人离开自动完成用）
+        # + 结算数据登记（对照本服 DungeonSpaceMgr.doEnterTeamDungeon 的 notifyDungeonExtarData；
+        # 直进副本路径不经过 doEnterTeamDungeon，统一在这里补登记）
+        _sVal = self.spaces.get(spaceNo)
+        if not _sVal or not _sVal.isCrossDungeon():
+            return
+
+        _sVal.founders.addFounder(spaceNo, playerGbId, playerBox)
+        _founderVal = _sVal.founders.getFounderVal(playerGbId)
+        _founderVal.tEnter = utils.curTS()
+        _founderVal.tLeave = 0
+        _founderVal.isEnter = True
+
+        _data = DungeonSettlement.DungeonExtraData()
+        _data.loadDatas(extra or {})
+        _sVal.spaceMgr.cell.notifyDungeonExtarData(playerGbId, _data)
+
     def _getDungeonSpaceVal(self, spaceNo, playerBox, _, teamUUID, extra):
-        return dungeon.TeamDungeonSpaceVal(
+        _spaceVal = dungeon.TeamDungeonSpaceVal(
             spaceNo=spaceNo,
             spaceUUID=0, 
             spaceMgr=None,
@@ -277,6 +360,13 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
                 'maxLevel':extra['maxLevel'],
             }
         )
+        # 跨服讨伐（CROSS_CRUSADE）：playMode 记到 SpaceVal 供各回调分支判断；
+        # founders 簿记挂 SpaceVal（本服线 founders 在 TeamStub 侧，跨服无 TeamStub）
+        _playMode = extra.get('dungeonPlayMode')
+        if _playMode and _playMode.playMode in gameconst.DungeonPlayModeEnum.COLL_CROSS:
+            _spaceVal.playMode = _playMode.playMode
+            _spaceVal.founders = team.TeamDungeonFounders()
+        return _spaceVal
 
     def applyCreateDungeon(self, box, gbId, teamUUID, extra):
         self.createDungeonSpaceRemote(box, gbId, teamUUID, extra)
@@ -300,8 +390,21 @@ class TeamDungeonStub(iDungeonStubMonster.IDungeonStubMonster, iDungeonStub.IDun
 
     def onLoadDungeonSpaceReady(self, playerBox, spaceNo, teamUUID, extra):
         LOG_INFO('onLoadDungeonSpaceReady::')
+        _spaceVal = self.spaces[spaceNo]
+        if _spaceVal.isCrossDungeon():
+            # 跨服讨伐：回报 CrossTeamStub（更新簿记并上报中心），不走本服 TeamStub；
+            # spaceBox/spaceMgrBox 随簿记保存（镜像登录直进副本建 cell 用）
+            gameengine.getCrossTeamStub(teamUUID).onCrossCrusadeSpaceReady(
+                teamUUID,
+                spaceNo,
+                _spaceVal.spaceUUID,
+                True,
+                _spaceVal.spaceBox,
+                _spaceVal.spaceMgr
+            )
+            return
         _teamStub = gameengine.getTeamStub(teamUUID)
-        _teamStub.afterCreateTeamDungeon(teamUUID, self.dungeonNo, spaceNo, self.spaces[spaceNo].spaceUUID, playerBox, extra)
+        _teamStub.afterCreateTeamDungeon(teamUUID, self.dungeonNo, spaceNo, _spaceVal.spaceUUID, playerBox, extra)
 
     def leaveTeamDungeon(self, spaceNo, teamID, src, playerBox):
         LOG_INFO("leaveTeamDungeon~ ", spaceNo, teamID, src, playerBox)

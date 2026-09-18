@@ -53,6 +53,47 @@
             <Flags>         CELL_PRIVATE            </Flags>
             <Persistent>    true                    </Persistent>
         </tSwitchPKModel>
+
+        <refugeTime>
+            <Type>          UINT32                  </Type>
+            <Flags>         OWN_CLIENT              </Flags>
+            <Persistent>    true                    </Persistent>
+            <Default>       0                       </Default>
+        </refugeTime>
+
+        <refugeDailyUsed>
+            <Type>          UINT32                  </Type>
+            <Flags>         OWN_CLIENT              </Flags>
+            <Persistent>    true                    </Persistent>
+            <Default>       0                       </Default>
+        </refugeDailyUsed>
+
+        <refugeOpen>
+            <Type>          UINT8                   </Type>
+            <Flags>         OWN_CLIENT              </Flags>
+            <Persistent>    true                    </Persistent>
+            <Default>       0                       </Default>
+        </refugeOpen>
+
+        <refugeConsumeStart>
+            <Type>          LONGTIME                </Type>
+            <Flags>         OWN_CLIENT              </Flags>
+            <Persistent>    true                    </Persistent>
+            <Default>       0                       </Default>
+        </refugeConsumeStart>
+
+        <refugeDailyRefreshTs>
+            <Type>          LONGTIME                </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Persistent>    true                    </Persistent>
+            <Default>       0                       </Default>
+        </refugeDailyRefreshTs>
+
+        <refugeExpireTimerId>
+            <Type>          TIMER_ID                </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       0                       </Default>
+        </refugeExpireTimerId>
     </Properties>
 
     <CellMethods>
@@ -72,6 +113,18 @@
         <declareWarToAvatar> <Exposed/>
             <Arg>           ENTITY_ID       </Arg>
         </declareWarToAvatar>
+
+        <buyRefugeTime> <Exposed/>
+            <Arg>           UINT8           </Arg>
+        </buyRefugeTime>
+
+        <openRefuge> <Exposed/>
+        </openRefuge>
+
+        <onBuyRefugeTimeCallback>
+            <Arg>           BOOL            </Arg>
+            <Arg>           PY_DICT         </Arg>
+        </onBuyRefugeTimeCallback>
     </CellMethods>
 
     <ClientMethods>

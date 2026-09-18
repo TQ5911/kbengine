@@ -39,14 +39,13 @@ class IGuildTrain(object):
         detail = gameclass.AwardDetailCls(costId=currency, costNum=amount)
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
 
-        self.resetGuildTrainAndGetBackMoney({}, AAC_AAC_DD.datas.BONUS_SRC_GUILDTRAIN_RESET, True)
+        self.resetGuildTrainAndGetBackMoney(opUUID, AAC_AAC_DD.datas.BONUS_SRC_GUILDTRAIN_RESET, True)
 
-    def resetGuildTrainAndGetBackMoney(self, context, src, isSyncCell=False):
+    def resetGuildTrainAndGetBackMoney(self, opUUID, src, isSyncCell=False):
         _trainInfo = list(self.trainDic.items())
         _trainInfo = sorted(_trainInfo, key=lambda x: x[1])
 
         _sumCont = 0
-        sumCoin = 0
 
         for trainId, level in _trainInfo:
             if level == 0:
@@ -58,26 +57,21 @@ class IGuildTrain(object):
                 curLevel += 1
                 data = GT_GTUD.datas[curLevel]
                 _sumCont += data['upgradeContributionCost']
-                sumCoin += data['upgradeCoinCost']
 
-        award = dropAward.AwardVal(coin=sumCoin, guildContrib=_sumCont)
-        if 'uuid' in context:
-            _opUUID = context['uuid']
-        else:
-            _opUUID = KBEngine.genUUID64()
+        award = dropAward.AwardVal(guildContrib=_sumCont)
 
-        self.addWealth(src, award, _opUUID, None)
+        self.addWealth(src, award, opUUID, None)
         oldTrain = self.trainDic.copy()
         self.trainDic = {}
 
         if isSyncCell:
-            self.cell.onResetGuildTrain(oldTrain)
+            self.cell.onResetGuildTrain(oldTrain, opUUID)
 
         LogTrackingMgr.LogTrackingMgr.Guild_Train_Reset(
             self.gbID,
             self.accountEntity.clientDistinctId, 
             self.gbID,
-            _opUUID,
+            opUUID,
         )
 
     def _checkCanUpgradeTrainLevel(self, trainId, targetLevel, gtuData):
@@ -156,7 +150,7 @@ class IGuildTrain(object):
 
         score = self._calcGuildTrainScore()
         LOG_INFO('onCheckUpgradeTrainLevelResult:', result, ctx, self.trainDic, score)
-        self.cell.onUpgradeTrainLevel(_trainId, _targetLevel, score)
+        self.cell.onUpgradeTrainLevel(_trainId, _targetLevel, score, opUUID)
         self.client.onUpdateGuildTrains([{
             'trainId': _trainId,
             'level': _targetLevel

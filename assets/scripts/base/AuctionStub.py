@@ -32,7 +32,7 @@ from proto.gameServerAuction_pb2 import (
     SaleItemReq, DoSaleItemReq, BuyItemReq, DoBuyItemReq, CancelSaleItemReq, DoCancelSaleItemReq,
     SearchItemsByItemIdReq, GetPlayerAuctionItemsReq, LoadPlayerAuctionItemReq, DoCommandReq,
     GetItemNumByCategoryIdReq, BuyItemByItemIdReq, DoBuyItemByItemIdReq, GetCurrentSaleItemInfoReq, 
-    GetAuctionItemByAuctionIdsReq, OnItemSalingInfo)
+    GetAuctionItemByAuctionIdsReq, OnItemSalingInfo, BuyItemsReq, DoBuyItemsReq, DoBuyItemInfo)
 
 import gameglobal
 import gameconst
@@ -49,6 +49,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.auctionService = None
         self.SNATCH_LOCK_TTL = AUC_CONST.datas['auctionLuckyBuyTime']['value'] * 2
         self.SNATCH_LOCK_PREFIX = 'auction:snatch:lock:'
+        self._needForceCacheAvgPrice = True
 
     def doNext(self):
         self._fullPrepare()
@@ -174,6 +175,45 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         self.auctionService.serviceStub.doBuyItem(None, request, None)
 
+    def buyItems(self, playerGBID, auctionItemUUIDs, auctionItemNumbers, extra):
+        if not self.isAuctionCenterActive():
+            LOG_INFO("buyItems auctionCenter is not active")
+            return
+
+        request = BuyItemsReq()
+        request.playerGBID = playerGBID
+        for auctionItemUUID in auctionItemUUIDs:
+            request.auctionItemUUIDs.append(auctionItemUUID)
+        for auctionItemNumber in auctionItemNumbers:
+            request.auctionItemNumbers.append(auctionItemNumber)
+        request.extra = json.dumps(extra)
+
+        self.auctionService.serviceStub.buyItems(None, request, None)
+
+    def doBuyItems(self, playerGBID, itemInfos, preFailUUIDs, preFailCodes, errCode, opUUID, extra):
+        if not self.isAuctionCenterActive(False):
+            LOG_INFO("doBuyItems auctionCenter is not active")
+            return
+
+        request = DoBuyItemsReq()
+        request.playerGBID = playerGBID
+        for preFailUUID in preFailUUIDs:
+            request.preFailUUIDs.append(preFailUUID)
+        for preFailCode in preFailCodes:
+            request.preFailCodes.append(preFailCode)
+        request.errCode = errCode
+        request.opUUID = opUUID
+        request.extra = json.dumps(extra)
+        for info in itemInfos:
+            item = DoBuyItemInfo()
+            item.auctionItemUUID = info['auctionItemUUID']
+            item.auctionItemNumber = info['auctionItemNumber']
+            item.price = info['price']
+            item.errCode = info['errCode']
+            request.items.extend([item])
+
+        self.auctionService.serviceStub.doBuyItems(None, request, None)
+
     def cancelSaleItem(self, playerGBID, auctionItemUUID, extra):
         if not self.isAuctionCenterActive():
             LOG_INFO("cancelSaleItem auctionCenter is not active")
@@ -198,7 +238,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         self.auctionService.serviceStub.doCancelSaleItem(None, request, None)
 
-    def searchItemsByItemId(self, playerGBID, itemIds, limit, offset, isPublicity, extra):
+    def searchItemsByItemId(self, playerGBID, itemIds, gradeLevels, enhanceLevels, limit, offset, isPublicity, extra):
         if not self.isAuctionCenterActive():
             LOG_INFO("searchItemsByItemId auctionCenter is not active")
             return
@@ -207,6 +247,10 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         request.playerGBID = playerGBID
         for itemId in itemIds:
             request.itemIds.append(itemId)
+        for gradeLevel in gradeLevels:
+            request.gradeLevels.append(gradeLevel)
+        for enhanceLevel in enhanceLevels:
+            request.enhanceLevels.append(enhanceLevel)
         request.limit = limit
         request.offset = offset
         request.isPublicity = isPublicity
@@ -333,8 +377,8 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         self.auctionService.serviceStub.getAuctionItemsByAuctionIds(None, request, None)
 
-    def _cacheAvgPrice(self):
-        if not utils.checkDiffDay(utils.curTS(), utils.curTS() - gameconst.ONE_MINUTE_COST_SECONDS, gameconst.GENERAL_CYCLE_TIME + gameconst.ONE_MINUTE_COST_SECONDS):
+    def _cacheAvgPrice(self, force=False):
+        if not force and not utils.checkDiffDay(utils.curTS(), utils.curTS() - gameconst.ONE_MINUTE_COST_SECONDS, gameconst.GENERAL_CYCLE_TIME + gameconst.ONE_MINUTE_COST_SECONDS):
             return
         LOG_INFO("cacheAvgPrice")
         for mallID in mall_coinPrice.type2ID[gameconst.MallItemType.DYNAMIC_PRICE]:
@@ -463,6 +507,9 @@ class AuctionStubService(GameServer):
 
     def on_connected(self):
         self._reportServerId()
+        if self.auctionStub._needForceCacheAvgPrice:
+            self.auctionStub._needForceCacheAvgPrice = False
+            self.auctionStub._cacheAvgPrice(force=True)
 
     def on_disconnected(self):
         LOG_INFO("disconnected from auction service:", self.address)
@@ -562,6 +609,25 @@ class AuctionStubService(GameServer):
                 [playerGBID], "doBuyItemInCoinAuctionByAuctionItemUUID", (auctionItemUUID, price, publicityEndTime, buyType, extra),
                 None, '', ())
 
+    def replyBuyItems(self, rpc_controller, request, done):
+        playerGBID = request.playerGBID
+        extra = json.loads(request.extra)
+        results = []
+        for result in request.results:
+            results.append({
+                'auctionItemUUID': result.auctionItemUUID,
+                'auctionItemNumber': result.auctionItemNumber,
+                'auctionItemId': result.auctionItemId,
+                'price': result.price,
+                'code': result.code,
+            })
+        LOG_INFO("replyBuyItems", playerGBID, len(results), extra)
+
+        if playerGBID != 0:
+            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                [playerGBID], "doBuyItemsInCoinAuctionByAuctionItemUUIDs", (results, extra),
+                None, '', ())
+
     def replyDoBuyItem(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
         extra = json.loads(request.extra)
@@ -588,6 +654,39 @@ class AuctionStubService(GameServer):
                     stub, 'recordOfflineCallback',
                     (playerGBID, 'onBuyItemInCoinAuctionByAuctionItemUUIDOffline', (auctionItem, price, extra)))
                 LogTrackingMgr.LogTrackingMgr.Auction_ItemBuy(playerGBID, '', playerGBID, opUUID, auctionItem.auctionItemUUID, auctionItem.itemId, number, price)
+
+    def replyDoBuyItems(self, rpc_controller, request, done):
+        playerGBID = request.playerGBID
+        extra = json.loads(request.extra)
+        successItems = []
+        for auctionItem in request.successItems:
+            item = self.transAuctionItem(auctionItem)
+            if item:
+                successItems.append(item)
+        failUUIDs = [auctionItemUUID for auctionItemUUID in request.failUUIDs]
+        failCodes = [code for code in request.failCodes]
+        opUUID = request.opUUID
+        LOG_INFO("replyDoBuyItems", playerGBID, opUUID, len(successItems), failUUIDs, failCodes, extra)
+
+        if playerGBID:
+            for auctionItem in successItems:
+                if not auctionItem:
+                    continue
+                number = auctionItem.number
+                price = auctionItem.price
+                if price > 0:
+                    now = utils.curTS()
+                    redisUtils.PlayerBuyAuctionItemRecord.recordMessage(
+                        now, playerGBID, auctionItem.itemId, number, price,
+                        auctionItem.itemData.toItemSavedDict(), opUUID)
+                LogTrackingMgr.LogTrackingMgr.Auction_ItemBuy(playerGBID, '', playerGBID, opUUID, auctionItem.auctionItemUUID, auctionItem.itemId, number, price)
+            stub = gameengine.getGlobalBase('PlayerStub')
+            stub.doOnOthersBase(
+                [playerGBID, ],
+                "onBuyItemsInCoinAuctionByAuctionItemUUIDs",
+                (successItems, failUUIDs, failCodes, extra, opUUID, False),
+                stub, 'recordOfflineCallback',
+                (playerGBID, 'onBuyItemsInCoinAuctionByAuctionItemUUIDs', (successItems, failUUIDs, failCodes, extra, opUUID, True)))
 
     def replyCancelSaleItem(self, rpc_controller, request, done):
         playerGBID = request.playerGBID

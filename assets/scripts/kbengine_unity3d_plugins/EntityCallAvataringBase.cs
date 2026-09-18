@@ -27,7 +27,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHECK_TEXT_SECURITY_REQ)EntityDef.id2datatypes[488]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHECK_TEXT_SECURITY_REQ)EntityDef.id2datatypes[508]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -37,7 +37,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[121]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHAT_MSG_DATA)EntityDef.id2datatypes[124]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 

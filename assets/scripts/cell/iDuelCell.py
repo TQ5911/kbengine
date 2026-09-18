@@ -11,6 +11,7 @@ import DuelAttrInfo
 import gametimer
 import gamedecorator
 import duel_config as D_CD
+import PKData_PKData as PKD_PKDD
 import conflict_conflict_def as C_C_DD
 import conflict_status_def as C_SD
 import gamePlay_gamePlay as GP_GPD
@@ -97,6 +98,7 @@ class IDuelCell(object):
     def changeToDuelReady(self, eid):
         self.duelAttr.readyDuel(eid)
         self.clearDuelRequest()
+        self.showMsg(PKD_PKDD.datas['PK_changeToDuelMode_msgID']['value'], [])
 
     def clearDuelRequest(self):
         self.duelRequestId = 0
@@ -355,7 +357,5 @@ class IDuelCell(object):
             return
 
         _duelFlag.setFinishReason(gameconst.DuelFinishReason.THIRD_DAMAGE)
-        if self.pkModel == gameconst.PKModelEnum.PEACE and not self.inRedName():
-            self._setPKModel(gameconst.PKModelEnum.JUSTICE, False, False)
         _duelFlag.onAvatarDuelFailed(self.id)
 

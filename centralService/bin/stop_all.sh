@@ -1,23 +1,25 @@
 #!/bin/bash
 
-# 定义所有服务目录
-SERVICES="login admin router maple dropServer leaseServer auction crossDataServer queueServer orderService alliance"
+# 排除的目录
+EXCLUDE_DIRS=" data proto "
 
-# 遍历每个目录
-for dir in $SERVICES; do
+# 遍历当前目录下的一级子目录
+for dir in */; do
+    dir=${dir%/}
+    # 排除 data 和 proto 目录
+    case "$EXCLUDE_DIRS" in
+        *" $dir "*) continue ;;
+    esac
+
     echo "Stopping service in $dir..."
-    if [ -d "$dir" ]; then
-        cd "$dir"
-        if [ -x "./game.sh" ] || [ -f "./game.sh" ]; then
-            ./game.sh stop
-        else
-            echo "Warning: game.sh not found in $dir"
-        fi
-        cd ..
+    cd "$dir"
+    if [ -f "./game.sh" ]; then
+        ./game.sh stop
     else
-        echo "Error: Directory $dir not found"
+        echo "Warning: game.sh not found in $dir"
     fi
+    cd ..
 done
 
 # 最后检查进程状态
-ps -ef | grep -v grep | grep -E 'centralLogin|admin|auction|router|maple|dropServer|leaseServer|crossDataServer|queueServer|orderService|allianceService'
+./check_all.sh

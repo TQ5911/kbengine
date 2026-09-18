@@ -93,13 +93,6 @@
             <Arg>       PLAYER_GBID   </Arg>
         </onAvatarOffline>
 
-        <onEntityCreated>
-            <Arg>        SPACE_NO       </Arg>
-            <Arg>        UUID           </Arg>
-            <Arg>        UINT32         </Arg>
-            <Arg>        UUID           </Arg>
-        </onEntityCreated>
-
         <onReliveInDungeon>
             <Arg>           SPACE_NO        </Arg>
             <Arg>           MAILBOX         </Arg>

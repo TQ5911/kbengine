@@ -12,6 +12,7 @@ import gameconfig
 import gameengine
 import iCentralStub
 import gameconst
+import json
 
 from proto.gameServerAlliance_pb2 import GameClient, \
     AllianceService_Stub, \
@@ -32,7 +33,8 @@ from proto.gameServerAlliance_pb2 import GameClient, \
     DonateFundRequest, AidResourceRequest, GetLeagueFundRequest, \
     GetEventListRequest, SendChatMessageRequest, GetChatHistoryRequest, \
     ReportGuildScoreRequest, SyncGuildInfoRequest, CheckLeaveGuildRequest, QueryLeagueUUIDRequest,\
-    GuildSimpleInfo, GetGuildSimpleInfoRequest, GetGuildSimpleInfoResult, RecruitLeagueMemberRequest
+    GuildSimpleInfo, GetGuildSimpleInfoRequest, GetGuildSimpleInfoResult, RecruitLeagueMemberRequest,\
+    RemoveEnemyRelationRequest
 
 
 class AllianceService(GameClient):
@@ -244,6 +246,21 @@ class AllianceService(GameClient):
     def onGuildRelationAll(self, rpc_controller, reply, done):
         self.mgr.onGuildRelationAll(reply)
 
+    def onEnemyAllRelation(self, rpc_controller, reply, done):
+        self.mgr.onEnemyAllRelation(reply)
+
+    def onBroadcastAddEnemyRelation(self, rpc_controller, reply, done):
+        self.mgr.onBroadcastAddEnemyRelation(reply)
+
+    def onBroadcastRemoveEnemyRelation(self, rpc_controller, reply, done):
+        self.mgr.onBroadcastRemoveEnemyRelation(reply)
+
+    def onEventTipsNotify(self, rpc_controller, reply, done):
+        self.mgr.onEventTipsNotify(reply)
+    
+    def onRemoveEnemyRelation(self, rpc_controller, reply, done):
+        self.mgr.onRemoveEnemyRelation(reply)
+        
 class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentralStub.ICentralStub):
     SERVICE_CLASS = AllianceService
 
@@ -948,13 +965,15 @@ class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCen
             _events.append(self._eventToFixedDict(e))
         _cache.get('box').onEventListResult(_events)
 
-    def sendChatMessage(self, allianceId, senderGuildId, senderGuildName, senderServerId, content, box):
+    def sendChatMessage(self, allianceId, senderGuildId, senderGuildName, senderServerId, avatarInfo, content, box):
+        LOG_DBG('sendChatMessage ', allianceId, senderGuildId, senderGuildName, senderServerId, avatarInfo, content, box)
         _req = SendChatMessageRequest()
         _req.allianceId = allianceId
         _req.senderGuildId = senderGuildId
         _req.senderGuildName = senderGuildName
         _req.senderServerId = senderServerId
-        _req.content = content
+        _req.avatarInfo = json.dumps(avatarInfo)
+        _req.content = json.dumps(content)
         self._call(lambda c, r, d: c.asStub.sendChatMessage(None, r, None), _req, {'box': box})
 
     def onSendChatMessageResult(self, reply):
@@ -1056,10 +1075,20 @@ class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCen
 
     # ---- Broadcasts (dispatched to all guilds) ----
     def onWarStarted(self, reply):
-        gameengine.getGlobalBase('GuildStub').broadcastToAllGuild('onAllianceWarStarted', (self._warEnemyToFixedDict(reply.enemy),))
+        if gameconfig.isCrossServer():
+            gameengine.broadcastBaseapp('broadcastToAllAvatar',
+                                        (gameconst.CELL, 'onAllianceWarStarted',
+                                         (self._warEnemyToFixedDict(reply.enemy),), ()))
+        else:
+            gameengine.getGlobalBase('GuildStub').broadcastToAllGuild('onAllianceWarStarted', (self._warEnemyToFixedDict(reply.enemy),))
 
     def onWarEnded(self, reply):
-        gameengine.getGlobalBase('GuildStub').broadcastToAllGuild('onAllianceWarEnded', (self._warEndedToFixedDict(reply),))
+        if gameconfig.isCrossServer():
+            gameengine.broadcastBaseapp('broadcastToAllAvatar',
+                                        (gameconst.CELL, 'onAllianceWarEnded',
+                                         (self._warEndedToFixedDict(reply),), ()))
+        else:
+            gameengine.getGlobalBase('GuildStub').broadcastToAllGuild('onAllianceWarEnded', (self._warEndedToFixedDict(reply),))
 
     # ---- Guild Relation Broadcasts (ported from CrossDataStub) ----
     def onGuildRelationAll(self, reply):
@@ -1093,7 +1122,58 @@ class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCen
         gameengine.getGlobalBase('GuildStub').broadcastGuildMemberClient(
             [reply.guildUUID2], 'onRemoveGuildRelationClient',
             (reply.guildUUID1,))
-        
+
+    # ---- Enemy (hostile) relation broadcasts ----
+    # 敌对关系以实体行下发：单个战争行（帮会↔帮会 / 帮会↔联盟 / 联盟↔联盟）
+    # 不再展开成 N×M 帮会对。cell 侧以 gameglobal.enemyRelationDic + 实时
+    # leagueUUID 推导每个帮会的敌对集合，因此这里只维护实体行本身。
+    def onEnemyAllRelation(self, reply):
+        LOG_INFO('AllianceStub onEnemyAllRelation', reply)
+        _relationDic = {}
+        for _row in reply.relations:
+            _key = gameengine.enemyRelationPairKey(
+                _row.attackType, _row.attackId, _row.targetType, _row.targetId)
+            _relationDic[_key] = {
+                'attackType': _row.attackType,
+                'attackId': _row.attackId,
+                'attackServerId': _row.attackServerId,
+                'targetType': _row.targetType,
+                'targetId': _row.targetId,
+                'targetServerId': _row.targetServerId,
+                'endTime': _row.endTime,
+            }
+        gameengine.callAllApps('gameengine.resetEnemyRelation', (_relationDic, reply.version))
+
+    def onBroadcastAddEnemyRelation(self, reply):
+        LOG_INFO('AllianceStub onBroadcastAddEnemyRelation', reply)
+        _row = {
+            'attackType': reply.attackType,
+            'attackId': reply.attackId,
+            'attackServerId': reply.attackServerId,
+            'targetType': reply.targetType,
+            'targetId': reply.targetId,
+            'targetServerId': reply.targetServerId,
+            'endTime': reply.endTime,
+        }
+        # EnemyRelationInfo 线上没有版本字段：增量同步时以自增方式推进
+        # guildRelationVersion 触发 cell 侧目标缓存失效，无需外部版本。
+        gameengine.callAllApps('gameengine.addEnemyRelation', (_row, 0))
+
+    def onBroadcastRemoveEnemyRelation(self, reply):
+        LOG_INFO('AllianceStub onBroadcastRemoveEnemyRelation', reply)
+        _row = {
+            'attackType': reply.attackType,
+            'attackId': reply.attackId,
+            'attackServerId': reply.attackServerId,
+            'targetType': reply.targetType,
+            'targetId': reply.targetId,
+            'targetServerId': reply.targetServerId,
+            'endTime': reply.endTime,
+        }
+        # EnemyRelationInfo 线上没有版本字段：增量同步时以自增方式推进
+        # guildRelationVersion 触发 cell 侧目标缓存失效，无需外部版本。
+        gameengine.callAllApps('gameengine.removeEnemyRelation', (_row, 0))
+
     def onNewEvent(self, reply):
         # central service 已按 serverId 预分组,reply.guildIds 仅为本服中属于
         # 该联盟的帮会;逐一 callOnGuild 转发,避免给无关帮会推事件
@@ -1106,7 +1186,9 @@ class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCen
             'allianceId': reply.allianceId,
             'message': self._chatMsgToFixedDict(reply.message),
         }
-        gameengine.getGlobalBase('GuildStub').broadcastToAllGuild('onAllianceChatMessage', (_d,))
+        # 2026-08-24 联盟频道改造: 只对属于该 allianceId 的帮会广播
+        # (旧实现 broadcastToAllGuild 会无差别推给本服所有帮会,会让非该联盟的帮会也收到联盟频道消息,是个 bug)
+        gameengine.getGlobalBase('GuildStub').broadcastToAllianceGuilds(reply.allianceId, 'onAllianceChatMessage', (_d,))
 
     def onDisbandLeagueNotify(self, reply):
         # 不缓存联盟数据,无需清理;仅通知 reply.guildIds 中的帮会
@@ -1228,6 +1310,8 @@ class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCen
         gameengine.getGlobalBase('GuildStub').callOnGuild(guildId, 'broadcastMsg', (messageId, messageArgs), None, '', ())
 
     def onLeagueBroadCastMessageNotify(self, reply):
+        fromUID = reply.fromUID
+        toUID = reply.toUID
         messageId = reply.messageId
         messageArgs = []
         for messageArg in reply.messageArgs:
@@ -1236,8 +1320,8 @@ class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCen
                     'broadcastToAllAvatar',
                     (
                         gameconst.BASE,
-                        'onMessagePre',
-                        (messageId, messageArgs),
+                        'onAllianceMessagePre',
+                        (fromUID, toUID, messageId, messageArgs),
                         (),
                     )
                 )
@@ -1259,6 +1343,13 @@ class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCen
         if not _cache:
             return
         gameengine.getGlobalBase('GuildStub').callOnGuild(reply.guildId, 'onQueryLeagueUUID', (reply.leagueUUID, reply.ret), None, '', ())
+
+    def onEventTipsNotify(self, reply):
+        messageArgs = []
+        for messageArg in reply.messageArgs:
+            messageArgs.append(messageArg)
+        messageId = reply.messageId
+        gameengine.getGlobalBase('GuildStub').broadcastToAllianceGuilds(reply.leagueUUID, 'onAllianceEventTips', (messageId, messageArgs))
 
     # ---- Broadcast Converter ----
     def _warEnemyToFixedDict(self, b):
@@ -1416,12 +1507,17 @@ class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCen
         }
 
     def _chatMsgToFixedDict(self, m):
+        # 2026-08-24 联盟频道新增: 新增 senderType 字段(0=玩家,1=系统)
+        # 兼容中央 service 老版本未带此字段的情况(默认 0=玩家)
+        _senderType = getattr(m, 'senderType', 0) or 0
         return {
             'senderGuildId': m.senderGuildId,
             'senderGuildName': m.senderGuildName,
             'senderServerId': m.senderServerId,
-            'content': m.content,
+            'avatarInfo': json.loads(m.avatarInfo),
+            'content': json.loads(m.content),
             'sendTime': m.sendTime,
+            'senderType': _senderType,
         }
 
     def _detailToFixedDict(self, d):
@@ -1443,7 +1539,6 @@ class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCen
                 'leaderProfession': 0,
                 'leaderGender': 0,
                 'createdAt': 0,
-                'serverId': 0,
             }
         else:
             return {
@@ -1463,7 +1558,7 @@ class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCen
                 'leaderProfession': d.leaderProfession,
                 'leaderGender': d.leaderGender,
                 'createdAt': d.createdAt,
-                'serverId': d.serverId,
+                # 2026-08-26: 去掉 serverId 字段(冗余,统一用 leaderServerId)
             }
 
     def _memberToFixedDict(self, members):
@@ -1505,3 +1600,15 @@ class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCen
                     'role': member.role,
                 }
     
+    def removeEnemyRelation(self, guildUUID):
+        _req = RemoveEnemyRelationRequest()
+        _req.guildId = guildUUID
+
+        _client = self.getRandomClient()
+        if not _client:
+            LOG_WARN('AllianceStub no client for call')
+            return None
+        self._call(lambda c, r, d: c.asStub.removeEnemyRelation(None, r, None), _req, {})
+
+    def onRemoveEnemyRelation(self, reply):
+        pass

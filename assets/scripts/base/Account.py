@@ -78,8 +78,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         self._hasLoadData = False # 先加载角色数据，再加载appearance数据
         self.loginTime = utils.curTS()
 
-        if not self.phone:
-            self.phone = self.otherData.get('phone', 0)
+        self.phone = self.otherData.get('phone', 0)
 
         stubs = gameengine.getLoginStubsByAccountName(self.__ACCOUNT_NAME__)
         gameclass.DuplicatedCallList(stubs).onAccountCreated(self.accountName, self.devicePlatId, self.isNewAccount,
@@ -452,15 +451,15 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         self.client.onCreateAvatarFailed(reason)
 
     def delAvatarName(self, name):
-        gameglobal.localBaseApp.getRedisClient().hdel(gameconst.RedisKey.avatarNameTbl, name.encode('utf-8'))
+        gameglobal.localBaseApp.getRedisClient().deleteTable(utils.getAvatarNameRedisKey(name))
 
     def nameRedisTableKey(self):
         return '%s:%s' % (gameconfig.serverId(), self.__ACCOUNT_NAME__)
 
     def checkNameDuplicate(self, props, callback):
         val = self.nameRedisTableKey()
-        gameglobal.localBaseApp.getRedisClient().hsetnx(
-            gameconst.RedisKey.avatarNameTbl, props['name'],
+        gameglobal.localBaseApp.getRedisClient().setnx(
+            utils.getAvatarNameRedisKey(props['name']),
             val.encode('ascii'),
             lambda cid, err, result: callback(props, cid, err, result))
 
@@ -904,23 +903,24 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         self.setPersistentMiscProp(gameconst.EntityPropsEnum.lastLoginTime, _now)
         clientData = self.getClientJsonData()
         appVersion = clientData.get('appVersion', '0.0.0.0')
-        LogTrackingMgr.LogTrackingMgr.Server_Login(
-            '',
-            self.clientDistinctId,
-            self.accountName,
-            self.devicePlatId,
-            self.clientIP,
-            self.operatingSystem,
-            self.accountType,
-            self.channelId,
-            self.packageSource,
-            self.deviceUniqueIdentifier,
-            lastLoginTime,
-            _now,
-            appVersion,
-            self.userInfoId,
-            _clientData.get('patch', '')
-        )
+        if not gameconfig.isCrossServer():
+            LogTrackingMgr.LogTrackingMgr.Server_Login(
+                '',
+                self.clientDistinctId,
+                self.accountName,
+                self.devicePlatId,
+                self.clientIP,
+                self.operatingSystem,
+                self.accountType,
+                self.channelId,
+                self.packageSource,
+                self.deviceUniqueIdentifier,
+                lastLoginTime,
+                _now,
+                appVersion,
+                self.userInfoId,
+                _clientData.get('patch', '')
+            )
 
     def cancelDeleteFlag(self):
         pass
@@ -1232,6 +1232,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         客户端对应实体已经销毁
         """
         if self.accountStatus == AccountStatus.normal:
+            if self.delayDestroyTimer:
+                self.cancelTimerCB(self.delayDestroyTimer, gametimer.TIMER_TAG_DELAY_DESTROY_ACCOUNT)
+                self.delayDestroyTimer = 0
+
             self.delayDestroyTimer = self.addTimerCB(10, 'destroyAccount',
                                                     (gameconst.OFFLINE_REASON_CLIENT_DEATH,),
                                                     gametimer.TIMER_TAG_DELAY_DESTROY_ACCOUNT, 'delayDestroyTimer')
@@ -1239,6 +1243,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             if self.avatar and not self.avatar.isDestroying and not self.avatar.isDestroyed:
                 self.avatar.startDestroyCountDown()
             else:
+                if self.delayDestroyTimer:
+                    self.cancelTimerCB(self.delayDestroyTimer, gametimer.TIMER_TAG_DELAY_DESTROY_ACCOUNT)
+                    self.delayDestroyTimer = 0
+
                 self.delayDestroyTimer = self.addTimerCB(300, 'destroyAccount',
                                                         (gameconst.OFFLINE_REASON_CLIENT_DEATH,),
                                                         gametimer.TIMER_TAG_DELAY_DESTROY_ACCOUNT, 'delayDestroyTimer')
@@ -1246,17 +1254,18 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         LOG_INFO("Account[%i].onClientDeath:", self.id, self.avatar, chn)
 
     def destroyAccount(self, reason=gameconst.OFFLINE_REASON_DESTORY):
-        LogTrackingMgr.LogTrackingMgr.Server_Logout(
-            '',
-            self.clientDistinctId,
-            self.accountName,
-            self.devicePlatId,
-            self.clientIP,
-            self.operatingSystem,
-            self.accountType,
-            self.packageSource,
-            utils.curTS() - self.loginTime,
-        )
+        if not gameconfig.isCrossServer():
+            LogTrackingMgr.LogTrackingMgr.Server_Logout(
+                '',
+                self.clientDistinctId,
+                self.accountName,
+                self.devicePlatId,
+                self.clientIP,
+                self.operatingSystem,
+                self.accountType,
+                self.packageSource,
+                utils.curTS() - self.loginTime,
+            )
         self.destroyAccountReason(reason)
 
     def destroyAccountReason(self, reason, subReason=0):
@@ -1886,6 +1895,13 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             return False
 
         return _cVal.parentID == self.databaseID
+
+    def getAuthHostParentID(self, gbId):
+        _cVal = self.characters.get(gbId)
+        if not _cVal:
+            return 0
+
+        return _cVal.parentID
 
     def getAccountHostType(self, gbId):
         if self.isCrossServer:

@@ -1,0 +1,21 @@
+{
+    "serverName":"routerServer",
+    "routerId": 1,
+    "gameServerServiceAddr": "0.0.0.0:2060",
+    "routerClusterAddr": "0.0.0.0:2061",
+    "routerClusterAdvertiseAddr": "192.168.10.133:2061",
+    "addressForDebug":"localhost:8989",
+    "logPath":"router.log",
+    "logLevel":0,
+    "logRotateSize":500,
+    "redisServer": {
+        "addr": "192.168.10.12:6379",
+        "username": "",
+        "passwd": "",
+        "db": "0",
+        "maxIdle": 16,
+        "maxActive": 100,
+        "idleTimeout": 100
+    },
+    "reportAddr":"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5"
+}

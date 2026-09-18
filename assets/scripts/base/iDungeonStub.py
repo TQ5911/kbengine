@@ -66,6 +66,20 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 break
         else:
             LOG_ERR('cannot createDungeonSpaceRemote', len(self.spaces))
+            self._onCreateDungeonSpaceFailed(dungeonUUID, extra)
+
+    def _onCreateDungeonSpaceFailed(self, dungeonUUID, extra):
+        # 建空间失败兜底：跨服组队副本需回报中心失败（本服各 stub 维持只记日志）；
+        # 判定认 extra['crossTeamId']（本服模式空间 playMode 已落本服枚举，认 playMode 会漏报）
+        if (extra or {}).get('crossTeamId'):
+            gameengine.getCrossTeamStub(dungeonUUID).onCrossCrusadeSpaceReady(
+                dungeonUUID,
+                0,
+                0,
+                False,
+                None,
+                None
+            )
 
     def _getDungeonSpaceWeight(self, enterNum=0) -> int:
         return enterNum
@@ -74,7 +88,8 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         raise Exception('not implemented')
 
     def _createSpaceRemote(self, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
-        LOG_INFO('zt: create home space', spaceNo, playerBox.id, playerGbId,dungeonUUID, extra)
+        # playerBox 可为 None（跨服讨伐由中心协调建空间，无发起玩家）
+        LOG_INFO('zt: create home space', spaceNo, playerBox.id if playerBox else 0, playerGbId,dungeonUUID, extra)
 
         self.spaces[spaceNo]=self._getDungeonSpaceVal(spaceNo, playerBox, playerGbId, dungeonUUID, extra)
 
@@ -92,10 +107,11 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                                       )
 
     def _onCreateSpaceRemote(self, spaceBox, spaceNo, playerBox, playerGbId, dungeonUUID, extra):
-        LOG_INFO('_onCreateSpaceRemote', spaceBox, spaceNo, playerBox.id, playerGbId, dungeonUUID, extra)
+        LOG_INFO('_onCreateSpaceRemote', spaceBox, spaceNo, playerBox.id if playerBox else 0, playerGbId, dungeonUUID, extra)
         if not spaceBox:
             if spaceNo in self.spaces:
                 self.spaces.pop(spaceNo)
+            self._onCreateDungeonSpaceFailed(dungeonUUID, extra)
         else:
             spaceUUID=KBEngine.genUUID64()
             _sVal=self.spaces[spaceNo]
@@ -189,24 +205,6 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def onAvatarOffline(self, spaceNo, playerGbId):
         raise NotImplementedError()
 
-    def onEntityCreated(self, spaceNo, spaceUUID, entId, gameEntityIdentifyID):
-        if spaceNo not in self.spaces:
-            LOG_ERR('zt: onEntityCreated cannot find space:', spaceNo, spaceUUID)
-            return
-
-        sVal = self.spaces[spaceNo]
-        if sVal.spaceUUID != spaceUUID:
-            LOG_ERR(f'onEntityCreated:: spaceUUID not match {spaceNo}, {sVal.spaceUUID}!={spaceUUID}')
-            return
-
-        _genVal = sVal.onDungeonEntityCreated(gameEntityIdentifyID)
-        if _genVal and _genVal.isAllEntityLoaded():
-            self._onDungeonEntitiesLoaded(spaceNo, _genVal.extra)
-
-        entNum = len(sVal.homeEnts)
-        if not entNum:
-            return
-
     def onReliveInDungeon(self, spaceNo, playerBox, playerGbId, reliveType, reliveHp):
         raise NotImplementedError()
 
@@ -291,7 +289,7 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 _spaceVal.spaceMgr.cell.onTeamDungeonCompleted(spaceNo, _spaceVal.teamUUID, not _spaceVal.isFailed(), 0,  _spaceVal.getElapsedTime(), gbId, _spaceVal.completedReasonType)
             elif _spaceVal.dungeonSpaceValType == gameconst.DungeonSpaceValType.SINGLE:
                 _spaceVal.spaceMgr.cell.onSingleDungeonCompleted(spaceNo, gbId, not _spaceVal.isFailed(), 0, _spaceVal.getElapsedTime())
-            elif _spaceVal.dungeonSpaceValType == gameconst.DungeonSpaceValType.SINGLE:
+            elif _spaceVal.dungeonSpaceValType == gameconst.DungeonSpaceValType.GUILD_BOSS:
                 _spaceVal.spaceMgr.cell.onGuildBossDungeonCompleted(spaceNo, _spaceVal.guildUUID, not _spaceVal.isFailed(), 0, _spaceVal.getElapsedTime(), gbId, _spaceVal.completedReasonType)
         box.client.changeDungeonRemainTime(spaceNo, endTime)
 

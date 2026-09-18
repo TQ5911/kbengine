@@ -162,5 +162,13 @@ datas = _tools.RODict({
     "awaitingAction": _tools.RODict({
         "ID": "awaitingAction",
         "value": "代理好友正在打开“{0}”，请等待操作",
+    }),
+    "secondPwdNotSet": _tools.RODict({
+        "ID": "secondPwdNotSet",
+        "value": 54000265,
+    }),
+    "cannotSwitchMode": _tools.RODict({
+        "ID": "cannotSwitchMode",
+        "value": 54000266,
     })
 })

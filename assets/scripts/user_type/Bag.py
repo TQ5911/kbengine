@@ -356,13 +356,12 @@ class Bag(BaseBag.BaseBag):
                 # 在base执行的action
                 useItemCtx.itemObj = gridObj
                 owner.doBaseUseItemAction(action, gridId, itemId, useNum, _opUUID, useItemCtx)
-                owner.afterUseItemDone(True, _opUUID)
+                owner.afterUseItemDone(True, _opUUID, True)
             else:
                 owner.cell.doAction(gridId, itemId, useNum, _opUUID, useItemCtx)
         else:
             self._useItemsSucc(owner, gridObj, gridId, useNum)
             self.unLockBag()
-
         return True
 
     def isUseItemsDailyLimit(self, itemId, useNum):
@@ -624,10 +623,9 @@ class Bag(BaseBag.BaseBag):
             detail = gameclass.AwardDetailCls(uniqueid=gridObj.uniqueId)
             self.addItemsToNewGrid(owner, equipItem, opUUID, _src, detail, _gridId, syncToClient=True)
 
-    def doBagUndressEquip(self, owner, bodyEquipDic):
+    def doBagUndressEquip(self, owner, opUUID, bodyEquipDic):
         LOG_INFO('in doBagUndressEquip')
         _equipItem = itemFactory.ItemFactory.createItemWithSavedDict(bodyEquipDic)
-        opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_EQUIP_DRESS
         detail = gameclass.AwardDetailCls(itemId=_equipItem.itemId)
         self.addItemsWithPlan(owner, [_equipItem],  opUUID, srcType, detail, notify=False, directly=False)

@@ -32,12 +32,25 @@ func (gss *GameServerService) RegisterGameServer(in *gameServerService.RegisterG
 	gss.serverId = in.ServerId
 	gss.app.addGameServer(gss)
 
-	// Send all guild relations (UNION + ENEMY) to the newly registered game server
+	// Send all guild relations to the newly registered game server.
+	// guildRelationCache now carries UNION pairs only — ENEMY hostility is
+	// derived from the entity-level war rows sent below.
 	relations, version := guildRelationCache.GetAllRelations()
 	if len(relations) > 0 {
 		gss.getClient().OnGuildRelationAll(&gameServerService.GuildRelationAllInfo{
 			Relations: relations,
 			Version:   version,
+		})
+	}
+
+	// Send the authoritative entity-level war rows (ENEMY) to the newly
+	// registered game server. Full-state sync so the newcomer can derive
+	// per-guild hostility from membership without any incremental history.
+	enemyRelations, enemyVersion := gss.app.allianceData.getAllEnemyRelationsForSync()
+	if len(enemyRelations) > 0 {
+		gss.getClient().OnEnemyAllRelation(&gameServerService.EnemyRelationAllInfo{
+			Relations: enemyRelations,
+			Version:   enemyVersion,
 		})
 	}
 
@@ -664,7 +677,7 @@ func (gss *GameServerService) GetEventList(in *gameServerService.GetEventListReq
 
 func (gss *GameServerService) SendChatMessage(in *gameServerService.SendChatMessageRequest) (*gameServerService.Void, error) {
 	common.ExecuteConcurrently(func() {
-		errCode := gss.app.allianceData.SendChatMessage(gss.app.db, gss.app, in)
+		errCode := gss.app.allianceData.SendChatMessage(gss.app, in)
 		gss.getClient().OnSendChatMessageResult(&gameServerService.SendChatMessageResult{
 			Uuid:    in.Uuid,
 			ErrCode: errCode,
@@ -806,6 +819,19 @@ func (gss *GameServerService) QueryLeagueUUID(in *gameServerService.QueryLeagueU
 			Ret:        ret,
 			LeagueUUID: leagueUUID,
 			GuildId:    in.GuildId,
+		})
+	})
+	return nil, nil
+}
+
+func (gss *GameServerService) RemoveEnemyRelation(in *gameServerService.RemoveEnemyRelationRequest) (*gameServerService.Void, error) {
+	common.ExecuteConcurrently(func() {
+		appLog.Info("alliance: remove enemy relation uuid", in.GuildId)
+		errCode := gss.app.allianceData.RemoveEnemyRelation(gss.app, gss.app.db, in.GuildId)
+		gss.getClient().OnRemoveEnemyRelation(&gameServerService.RemoveEnemyRelationResponse{
+			Uuid:    in.Uuid,
+			GuildId: in.GuildId,
+			ErrCode: errCode,
 		})
 	})
 	return nil, nil

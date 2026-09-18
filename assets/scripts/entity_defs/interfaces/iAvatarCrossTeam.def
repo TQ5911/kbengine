@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <Properties>
+        <!-- 玩家所在跨服队伍缓存（无队伍为空）；不持久化，离线即退队，
+             客户端可经 reqQueryCrossTeamInfo 主动向中心全量查询重建。
+             运行时类型为 CrossTeamCacheVal 对象，下行客户端时调用其 toStreamSavedDic() 序列化为 CROSS_TEAM_CACHE_VAL。 -->
+        <crossTeamInfo>
+            <Type>          PYTHON                  </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+        </crossTeamInfo>
+
+        <!-- 当前所在跨服队伍 teamId（0=无队），cell 入口互斥校验与状态同步用；
+             同步至 own client 供客户端直接读取当前队伍 id。 -->
+        <crossTeamId>
+            <Type>          TEAMID                  </Type>
+            <Flags>         ALL_CLIENTS             </Flags>
+            <WitnessName>   true                    </WitnessName>
+            <Default>       0                       </Default>
+        </crossTeamId>
+
+        <!-- 本服匹配中的目标（0=未匹配），本服匹配状态判重用（第一道拦截） -->
+        <crossTeamMatchTarget>
+            <Type>          TEAMTARGET              </Type>
+            <Flags>         OWN_CLIENT              </Flags>
+            <Default>       0                       </Default>
+        </crossTeamMatchTarget>
+
+        <!-- cell 侧跨服队伍状态同步定时器 -->
+        <crossTeamStateSyncTimer>
+            <Type>          TIMER_ID                </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       0                       </Default>
+        </crossTeamStateSyncTimer>
+
+        <!-- 跨服副本内队友 gbId 集合（跨服镜像 cell 的 AOI 队友识别/刷怪加成用） -->
+        <crossTeammateGbIds>
+            <Type>          PY_SET                  </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       set()                   </Default>
+        </crossTeammateGbIds>
+
+        <!-- 跨服队伍聊天上次发送时间（CD 控制，沿用本服队伍频道 CD） -->
+        <sendCrossTeamMsgTime>
+            <Type>          LONGTIME                </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </sendCrossTeamMsgTime>
+
+        <!-- base 侧跨服队伍 id 镜像（聊天等 base 方法用；由 cell 同步），
+             同步至 own client 供客户端在 base 侧直接读取。 -->
+        <crossTeamIdBase>
+            <Type>          TEAMID                  </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </crossTeamIdBase>
+    </Properties>
+
+    <BaseMethods>
+        <!-- 向中心全量查询自身跨服队伍数据（登录自愈/断连重连对账共用；cell 侧经
+             self.base 调用，回包经 Stub remoteCallCache 回调 cell.onCrossTeamInfoUpdate） -->
+        <queryCrossTeamInfo>
+        </queryCrossTeamInfo>
+
+        <!-- 客户端 -> base：跨服队伍聊天（敏感词/禁言/CD 检查在发送方本服完成后上行中心） -->
+        <sendCrossTeamChatMsg> <Exposed/>
+            <Arg>           CHAT_MSG_DATA           </Arg>
+        </sendCrossTeamChatMsg>
+
+        <!-- Stub -> base：跨服队伍聊天批量下行（base 收到后拆包逐条推送给客户端） -->
+        <onCrossTeamChatBatch>
+            <Arg>           CROSS_TEAM_CHAT_MSG_LIST </Arg>
+        </onCrossTeamChatBatch>
+
+        <!-- 讨伐：Stub -> base 条件检查（次数/门票在 base 检查，战斗/传送转 cell） -->
+        <checkCrossCrusadeCondition>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           UINT32                  </Arg>
+        </checkCrossCrusadeCondition>
+
+        <!-- 讨伐：Stub -> base 执行跨服迁移（extra 携带 CrossCrusadeContext） -->
+        <crossCrusadeGo>
+            <Arg>           PY_DICT                 </Arg>
+        </crossCrusadeGo>
+
+        <!-- 讨伐：跨服落地回调（跨服服上调用） -->
+        <onEnterCrossCrusadeSpaceRemotely>
+            <Arg>           UINT32                  </Arg>
+            <Arg>           PY_DICT                 </Arg>
+        </onEnterCrossCrusadeSpaceRemotely>
+
+        <!-- 讨伐：镜像登录直进副本（CrossTeamStub 查得簿记后回调镜像 base，
+             借 Space 实体直接建 cell 进副本克隆空间） -->
+        <enterCrusadeDungeonOnLogon>
+            <Arg>           ENTITYCALL              </Arg>
+            <Arg>           ENTITYCALL              </Arg>
+            <Arg>           SPACE_NO                </Arg>
+            <Arg>           PY_DICT                 </Arg>
+        </enterCrusadeDungeonOnLogon>
+
+        <!-- 讨伐：镜像登录直进副本失败兜底（CrossTeamStub -> 镜像 base，回退出生图落地） -->
+        <onCrossCrusadeLogonEnterFail>
+        </onCrossCrusadeLogonEnterFail>
+
+        <!-- 讨伐：发奖包落地入口（跨服服镜像完成结算计算与展示后 -> 本服 base，
+             经 syncMethodCallToLocalServerBase 动态分发；声明仅为接口留档，
+             实际传输走 beSyncMethodCallFromCrossServerBase 的 PYTHON fnargs）。
+             pack 结构见 iDungeonSettlement._doCrossTeamDungeonSettlement -->
+        <onLocalServerCrossCrusadeSettlementApply>
+            <Arg>           PY_DICT                 </Arg>
+        </onLocalServerCrossCrusadeSettlementApply>
+
+        <!-- 讨伐：本服幽灵回城落地完成（cell -> base），同步镜像的回程落点为主城 -->
+        <onCrossGhostReturnCityDone>
+            <Arg>           SPACE_NO                </Arg>
+        </onCrossGhostReturnCityDone>
+
+        <!-- 讨伐：回程落点改为主城（本服 base -> 跨服服镜像 base，
+             经 syncMethodCallToCrossServerBase 动态分发；声明仅为接口留档） -->
+        <setCrossGhostReturnSpaceNo>
+            <Arg>           SPACE_NO                </Arg>
+        </setCrossGhostReturnSpaceNo>
+
+        <!-- Stub 下行中继：playerBox 失效时经 PlayerStub 到 base 再转 cell（args=(method, args)） -->
+        <onCrossTeamCellRelay>
+            <Arg>           UNICODE                 </Arg>
+            <Arg>           PYTHON                  </Arg>
+        </onCrossTeamCellRelay>
+
+        <!-- cell -> base：同步跨服队伍 id 镜像（聊天等 base 方法用） -->
+        <syncCrossTeamIdToBase>
+            <Arg>           TEAMID                  </Arg>
+        </syncCrossTeamIdToBase>
+    </BaseMethods>
+
+    <CellMethods>
+        <!-- 客户端 -> cell 入口 -->
+        <applyCreateCrossTeam> <Exposed/>
+            <Arg>           TEAMTARGET              </Arg>
+            <Arg>           UINT32                  </Arg>
+            <Arg>           UINT32                  </Arg>
+            <Arg>           STRING                  </Arg>
+            <Arg>           UNICODE                 </Arg>
+            <Arg>           BOOL                    </Arg>
+        </applyCreateCrossTeam>
+
+        <applyJoinCrossTeam> <Exposed/>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           STRING                  </Arg>
+            <!-- 追加参数（对齐梳理 §2.3）：applySource 申请来源，枚举复用本服 TeamJoinType -->
+            <Arg>           INT8                    </Arg>
+        </applyJoinCrossTeam>
+
+        <replyCrossTeamJoin> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           BOOL                    </Arg>
+        </replyCrossTeamJoin>
+
+        <applyInviteCrossTeam> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+            <!-- 追加参数（对齐梳理 §2.3）：被邀请人名字（本服冗余下发，客户端免查） -->
+            <Arg>           UNICODE                 </Arg>
+        </applyInviteCrossTeam>
+
+        <replyCrossTeamInvite> <Exposed/>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           BOOL                    </Arg>
+            <!-- 追加参数（对齐梳理 §2.3）：邀请人 gbId、邀请类型（枚举复用本服） -->
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UINT8                   </Arg>
+        </replyCrossTeamInvite>
+
+        <applyLeaveCrossTeam> <Exposed/>
+        </applyLeaveCrossTeam>
+
+        <applyKickCrossTeamMember> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+        </applyKickCrossTeamMember>
+
+        <applyTransferCrossCaptain> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+        </applyTransferCrossCaptain>
+
+        <applyDisbandCrossTeam> <Exposed/>
+        </applyDisbandCrossTeam>
+
+        <!-- 修改队伍设置：门槛/介绍/满员自动进本/密码（队长操作，队长身份中心复核）；
+             目标创建后不可改，不在本接口范围内；autoMatch 修改频率高，已拆分到 reqSetCrossTeamAutoMatch -->
+        <reqSetCrossTeamSettings> <Exposed/>
+            <Arg>           UINT32                  </Arg>
+            <Arg>           UINT32                  </Arg>
+            <Arg>           UNICODE                 </Arg>
+            <Arg>           BOOL                    </Arg>
+            <!-- 追加参数（对齐梳理 §2.3）：密码（空串=取消密码转公开队） -->
+            <Arg>           STRING                  </Arg>
+        </reqSetCrossTeamSettings>
+
+        <!-- 自动匹配开关（队长操作，修改频率高，与队伍目标拆分） -->
+        <reqSetCrossTeamAutoMatch> <Exposed/>
+            <Arg>           BOOL                    </Arg>
+        </reqSetCrossTeamAutoMatch>
+
+        <reqCrossTeamMatch> <Exposed/>
+            <Arg>           TEAMTARGET              </Arg>
+        </reqCrossTeamMatch>
+
+        <reqStopCrossTeamMatch> <Exposed/>
+        </reqStopCrossTeamMatch>
+
+        <!-- Stub -> cell：撮合成功，cell 侧做二次检查并取玩家信息回调 Stub.doMatchJoin -->
+        <onCrossTeamMatchSuccess>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           TEAMTARGET              </Arg>
+        </onCrossTeamMatchSuccess>
+
+        <!-- 队伍列表查询（一波全量下发，问题记录#5）：回包不再走本协议，
+             由 Stub 经 base streamStringProxy（StreamStringID.CROSS_TEAM_LIST_DATA）分片下发 -->
+        <reqGetCrossTeamList> <Exposed/>
+            <Arg>           TEAMTARGET              </Arg>
+        </reqGetCrossTeamList>
+
+        <switchCrossTeamMicsMode> <Exposed/>
+            <Arg>           UINT8                   </Arg>
+        </switchCrossTeamMicsMode>
+
+        <!-- 禁麦/解除禁麦（队长操作）：block/unblock 合并为一个入口，blocked=True 禁麦 -->
+        <reqSetCrossTeamMemberMicBlock> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           BOOL                    </Arg>
+        </reqSetCrossTeamMemberMicBlock>
+
+        <!-- 成员位置调整（队长操作）：交换两个成员位置，或将 src 移动到 dst 组末尾 -->
+        <reqAdjustCrossTeamMemberPos> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UINT8                   </Arg>
+        </reqAdjustCrossTeamMemberPos>
+
+        <!-- ================ 客户端接口对齐补充（跨服组队客户端接口对齐梳理.md §2） ================ -->
+
+        <!-- 队伍预览（决策 D4）：按需查询指定队伍成员列表，不随列表下发；回包走 onCrossTeamPreview -->
+        <reqGetCrossTeamPreview> <Exposed/>
+            <Arg>           TEAMID                  </Arg>
+        </reqGetCrossTeamPreview>
+
+        <!-- 成员自己开/关麦（本服 turnOnTeamMics/turnOffTeamMics 对应） -->
+        <turnOnCrossTeamMics> <Exposed/>
+        </turnOnCrossTeamMics>
+
+        <turnOffCrossTeamMics> <Exposed/>
+        </turnOffCrossTeamMics>
+
+        <!-- 语音房状态位图同步（本服 reqUpdateTeamVoiceRoomState 对应） -->
+        <reqUpdateCrossTeamVoiceRoomState> <Exposed/>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           UINT8                   </Arg>
+        </reqUpdateCrossTeamVoiceRoomState>
+
+        <!-- 申请列表拉取（断线/换队长后重建）；回包走 onCrossTeamApplyList -->
+        <reqGetCrossTeamApplyList> <Exposed/>
+        </reqGetCrossTeamApplyList>
+
+        <!-- 队伍标记三件套：接口落地，本轮回"暂未开放"（功能线后续实现） -->
+        <reqAddCrossMarkMember> <Exposed/>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           UNICODE                 </Arg>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           ENTITY_ID               </Arg>
+            <Arg>           POSITION_ARG            </Arg>
+        </reqAddCrossMarkMember>
+        <reqDelCrossMarkMember> <Exposed/>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           UINT8                   </Arg>
+        </reqDelCrossMarkMember>
+        <reqChangeCrossOnlyCaptain> <Exposed/>
+            <Arg>           BOOL                    </Arg>
+        </reqChangeCrossOnlyCaptain>
+
+        <!-- 召集（本服 sendAllMemberFollowAsk 对应）：队长发起全员跟随确认，
+             跟随本体由客户端实现，服务端仅经中心把召集指令广播到队长当前所在服
+             （其余跟随预留接口已删除不做：reqCrossCaptainFollowInfo/cancelCrossAllMemberFollow/
+             applyFollowCrossCaptain/confirmFollowCrossCaptain/cancelFollowCrossCaptain/
+             replyFollowCrossCaptain） -->
+        <sendCrossAllMemberFollowAsk> <Exposed/>
+        </sendCrossAllMemberFollowAsk>
+
+        <!-- 副团长/申请队长/快速入队/清空申请列表（原决策 7/D6/D9 空接口，均已实现；
+             队禁言 reqUpdateCrossTeamSilentAttr / 自动接受申请 clientSetCrossAutoAskTeam
+             确认不做，预留接口已删除） -->
+        <!-- 任命/取消副团长（0=取消；决策 D9，唯一名额，权限细则功能期定） -->
+        <reqSetCrossTeamDeputy> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+        </reqSetCrossTeamDeputy>
+        <applyBecomeCrossCaptain> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+        </applyBecomeCrossCaptain>
+        <replyBecomeCrossCaptain> <Exposed/>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           BOOL                    </Arg>
+        </replyBecomeCrossCaptain>
+        <!-- 免审批快速加入公开队（本服 reqJoinTeam 对应） -->
+        <reqJoinCrossTeam> <Exposed/>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           STRING                  </Arg>
+        </reqJoinCrossTeam>
+        <clearCrossApplyJoinDic> <Exposed/>
+        </clearCrossApplyJoinDic>
+
+        <!-- 讨伐：队长发起（检查通过即进本，无确认弹窗） -->
+        <applyStartCrossCrusade> <Exposed/>
+        </applyStartCrossCrusade>
+
+        <!-- 讨伐：客户端主动退出跨服副本（返回本服；进行中退出=退跨服队，已结算退出仅回本服） -->
+        <applyExitCrossCrusade> <Exposed/>
+        </applyExitCrossCrusade>
+
+        <!-- base -> cell：讨伐条件检查的 cell 部分（战斗状态/传送条件） -->
+        <checkCrossCrusadeConditionCell>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           UINT32                  </Arg>
+            <Arg>           INT32                   </Arg>
+        </checkCrossCrusadeConditionCell>
+
+        <!-- 讨伐（本服链路）：本服模式本地进本驱动，内部方法不暴露客户端；
+             CrossTeamStub.onCrusadeGo 本服分支（crossServerId==本机 serverId）逐本服成员
+             经 base 调用（context 为 CrossCrusadeContext，含本服副本空间 spaceNo） -->
+        <onCrossCrusadeGoLocal>
+            <Arg>           PY_DICT                 </Arg>
+        </onCrossCrusadeGoLocal>
+
+        <!-- base -> cell：队伍镜像同步（cell 互斥校验/状态同步用） -->
+        <onCrossTeamIdChange>
+            <Arg>           TEAMID                  </Arg>
+        </onCrossTeamIdChange>
+
+        <!-- 跨服服侧：进入讨伐副本空间后构造跨服队友缓存 -->
+        <onCrossCrusadeSpaceEnter>
+            <Arg>           PY_DICT                 </Arg>
+        </onCrossCrusadeSpaceEnter>
+
+        <!-- CrossTeamStub -> Avatar cell 下行（优先 memberBoxes 直达，或经 base 中继转入） -->
+        <onCrossTeamInfoUpdate>
+            <Arg>           PY_DICT                 </Arg>
+        </onCrossTeamInfoUpdate>
+
+        <!-- 创建队伍成功：复用全量缓存，额外回调客户端 -->
+        <onCrossTeamCreateSuccess>
+            <Arg>           PY_DICT                 </Arg>
+        </onCrossTeamCreateSuccess>
+
+        <!-- 加入队伍成功：复用全量缓存，额外回调客户端 -->
+        <onCrossTeamJoinSuccess>
+            <Arg>           PY_DICT                 </Arg>
+        </onCrossTeamJoinSuccess>
+
+        <onCrossTeamOpResult>
+            <Arg>           INT32                   </Arg>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           TEAMTARGET              </Arg>
+        </onCrossTeamOpResult>
+
+        <onCrossTeamMatchTimeout>
+            <Arg>           TEAMTARGET              </Arg>
+        </onCrossTeamMatchTimeout>
+
+        <!-- CrossTeamStub -> Avatar cell 增量推送 -->
+        <onCrossTeamMemberAdd>
+            <Arg>           PY_DICT                 </Arg>
+        </onCrossTeamMemberAdd>
+
+        <onCrossTeamMemberRemove>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           INT32                   </Arg>
+        </onCrossTeamMemberRemove>
+
+        <!-- 自己被移出队伍：清空本地缓存并通知客户端离队原因 -->
+        <onCrossTeamLeave>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           INT32                   </Arg>
+        </onCrossTeamLeave>
+
+        <onCrossTeamCaptainChange>
+            <Arg>           PLAYER_GBID             </Arg>
+        </onCrossTeamCaptainChange>
+
+        <onCrossTeamSettingsChange>
+            <Arg>           PY_DICT                 </Arg>
+        </onCrossTeamSettingsChange>
+
+        <!-- CrossTeamStub -> Avatar cell 增量推送：自动匹配开关变更（autoMatch 已从目标推送拆分） -->
+        <onCrossTeamAutoMatchChange>
+            <Arg>           BOOL                    </Arg>
+        </onCrossTeamAutoMatchChange>
+
+        <onCrossTeamMicsModeChange>
+            <Arg>           UINT8                   </Arg>
+        </onCrossTeamMicsModeChange>
+
+        <onCrossTeamMicBlockChange>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           BOOL                    </Arg>
+        </onCrossTeamMicBlockChange>
+
+        <!-- CrossTeamStub -> Avatar cell 位置调整推送：参数与上行请求一致，客户端收到后刷新全量 -->
+        <onCrossTeamMemberPosChange>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UINT8                   </Arg>
+        </onCrossTeamMemberPosChange>
+
+        <onCrossTeamDisband>
+            <Arg>           TEAMID                  </Arg>
+        </onCrossTeamDisband>
+
+        <!-- ================ 接口对齐补充：Stub -> cell 下行（对齐梳理 §3） ================ -->
+        <onCrossTeamPreview>
+            <Arg>           PY_DICT                 </Arg>
+        </onCrossTeamPreview>
+
+        <onCrossTeamApplyList>
+            <Arg>           PYTHON                  </Arg>
+        </onCrossTeamApplyList>
+
+        <onCrossTeamApplyRemove>
+            <Arg>           PLAYER_GBID             </Arg>
+        </onCrossTeamApplyRemove>
+
+        <onCrossTeamMatchStart>
+            <Arg>           LONGTIME                </Arg>
+        </onCrossTeamMatchStart>
+
+        <onCrossTeamMatchStop>
+        </onCrossTeamMatchStop>
+
+        <onCrossTeamMemberVoiceState>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UINT8                   </Arg>
+        </onCrossTeamMemberVoiceState>
+
+        <onCrossTeamDeputyChange>
+            <Arg>           PLAYER_GBID             </Arg>
+        </onCrossTeamDeputyChange>
+
+        <!-- 队伍标记变更（单条增量下发客户端；changeType 对齐本服 TeamMarkChangeType：
+             1=ADD 3=DELETE 4=CAPTAIN 开关变更。DELETE 时 markInfo 为被删标记的完整快照
+             （客户端按 type/index 摘除即可）；CAPTAIN 时 markInfo 为空、仅 onlyCaptainCanMark
+             有效，且始终携带当前值供冗余校准） -->
+        <onCrossTeamMarkChange>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           CLIENT_TEAM_MARK_VAL    </Arg>
+            <Arg>           BOOL                    </Arg>
+            <Arg>           UINT64                  </Arg>
+        </onCrossTeamMarkChange>
+
+        <onCrossTeamFollowCaptainAsk>
+            <Arg>           SPACE_NO                </Arg>
+            <Arg>           POSITION_ARG            </Arg>
+        </onCrossTeamFollowCaptainAsk>
+
+        <onCrossTeamRefreshDungeonCD>
+            <Arg>           LONGTIME                </Arg>
+        </onCrossTeamRefreshDungeonCD>
+
+        <!-- 与中心断连重连后的对账入口（CrossTeamStub 经 broadcastToAllAvatar 广播）：
+             按 gbId 分片过滤后，在队且不在跨服副本中的玩家经 base 向中心重查队伍数据 -->
+        <onCrossTeamCenterReconnected>
+            <Arg>           UINT8                   </Arg>
+        </onCrossTeamCenterReconnected>
+    </CellMethods>
+
+    <ClientMethods>
+        <onCrossTeamInfoUpdate>
+            <Arg>           CROSS_TEAM_CACHE_VAL    </Arg>
+        </onCrossTeamInfoUpdate>
+
+        <onCrossTeamMemberState>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           CROSS_TEAM_MEMBER_STATE_LIST </Arg>
+        </onCrossTeamMemberState>
+
+        <!-- 【已废弃】聊天下行改走本服通用频道结构 onRecvChannelMsg（对齐梳理 1.7 方案B），
+             本接口保留仅为 SDK 兼容，服务端不再下发 -->
+        <onCrossTeamChatMsg>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UNICODE                 </Arg>
+            <Arg>           UNICODE                 </Arg>
+            <Arg>           UINT64                  </Arg>
+        </onCrossTeamChatMsg>
+
+        <onCrossTeamMatchTimeout>
+            <Arg>           TEAMTARGET              </Arg>
+        </onCrossTeamMatchTimeout>
+
+        <onCrossTeamJoinApply>
+            <Arg>           CROSS_TEAM_APPLY_VAL    </Arg>
+        </onCrossTeamJoinApply>
+
+        <onCrossTeamInvite>
+            <Arg>           CROSS_TEAM_INVITE_VAL   </Arg>
+        </onCrossTeamInvite>
+
+        <onCrossTeamOpResult>
+            <Arg>           INT32                   </Arg>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           TEAMTARGET              </Arg>
+        </onCrossTeamOpResult>
+
+        <!-- 入队申请结果（成功/失败统一）：游戏服 Stub 经 doOnOthersClient 直发客户端的专用协议，
+             字段口径对齐本服 onApplyJoinRaidLonelyFailed -->
+        <onCrossTeamApplyJoinResult>
+            <Arg>           INT32                   </Arg>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           TEAMTARGET              </Arg>
+            <Arg>           INT32                   </Arg>
+            <Arg>           INT32                   </Arg>
+            <Arg>           STRING                  </Arg>
+            <Arg>           INT32                   </Arg>
+        </onCrossTeamApplyJoinResult>
+
+        <onCrossTeamCreateSuccess>
+            <Arg>           CROSS_TEAM_CACHE_VAL    </Arg>
+        </onCrossTeamCreateSuccess>
+
+        <onCrossTeamJoinSuccess>
+            <Arg>           CROSS_TEAM_CACHE_VAL    </Arg>
+        </onCrossTeamJoinSuccess>
+
+        <onCrossCrusadeAbort>
+            <Arg>           INT32                   </Arg>
+        </onCrossCrusadeAbort>
+
+        <onCrossTeamMemberAdd>
+            <Arg>           CROSS_TEAM_MEMBER_CACHE_VAL </Arg>
+        </onCrossTeamMemberAdd>
+
+        <onCrossTeamMemberRemove>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           INT32                   </Arg>
+        </onCrossTeamMemberRemove>
+
+        <!-- 自己被移出队伍：附离队原因 -->
+        <onCrossTeamLeave>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           INT32                   </Arg>
+        </onCrossTeamLeave>
+
+        <onCrossTeamCaptainChange>
+            <Arg>           PLAYER_GBID             </Arg>
+        </onCrossTeamCaptainChange>
+
+        <!-- 申请成为队长提示（推给队长，附申请人基本身份信息；对齐本服 onApplyBecomeCaptainMsg） -->
+        <onCrossBecomeCaptainAsk>
+            <Arg>           CROSS_TEAM_BASIC_INFO_VAL   </Arg>
+        </onCrossBecomeCaptainAsk>
+
+        <onCrossTeamSettingsChange>
+            <Arg>           CROSS_TEAM_SETTINGS_VAL   </Arg>
+        </onCrossTeamSettingsChange>
+
+        <!-- 自动匹配开关变更推送：参数与上行请求一致 -->
+        <onCrossTeamAutoMatchChange>
+            <Arg>           BOOL                    </Arg>
+        </onCrossTeamAutoMatchChange>
+
+        <onCrossTeamMicsModeChange>
+            <Arg>           UINT8                   </Arg>
+        </onCrossTeamMicsModeChange>
+
+        <onCrossTeamMicBlockChange>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           BOOL                    </Arg>
+        </onCrossTeamMicBlockChange>
+
+        <!-- 位置调整推送：参数与上行请求一致，客户端收到后刷新全量队伍信息 -->
+        <onCrossTeamMemberPosChange>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UINT8                   </Arg>
+        </onCrossTeamMemberPosChange>
+
+        <onCrossTeamDisband>
+            <Arg>           TEAMID                  </Arg>
+        </onCrossTeamDisband>
+
+        <!-- ================ 客户端接口对齐补充推送（对齐梳理 §3） ================ -->
+        <!-- 队伍预览回包（决策 D4/注记 5）：复用 CROSS_TEAM_CACHE_VAL 结构 -->
+        <onCrossTeamPreview>
+            <Arg>           CROSS_TEAM_CACHE_VAL    </Arg>
+        </onCrossTeamPreview>
+
+        <onCrossTeamApplyList>
+            <Arg>   ARRAY <of> CROSS_TEAM_APPLY_VAL </of>    </Arg>
+        </onCrossTeamApplyList>
+
+        <onCrossTeamApplyRemove>
+            <Arg>           PLAYER_GBID             </Arg>
+        </onCrossTeamApplyRemove>
+
+        <onCrossTeamMatchStart>
+            <Arg>           LONGTIME                </Arg>
+        </onCrossTeamMatchStart>
+
+        <onCrossTeamMatchStop>
+        </onCrossTeamMatchStop>
+
+        <!-- 成员语音状态变更（决策 2 独立推送；UINT8 状态位图，语义同本服 reqUpdateVoiceRoomState） -->
+        <onCrossTeamMemberVoiceState>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UINT8                   </Arg>
+        </onCrossTeamMemberVoiceState>
+
+        <!-- 副团长变更（空接口配套占位） -->
+        <onCrossTeamDeputyChange>
+            <Arg>           PLAYER_GBID             </Arg>
+        </onCrossTeamDeputyChange>
+
+        <!-- 队伍标记变更（单条增量下发客户端；changeType 对齐本服 TeamMarkChangeType：
+             1=ADD 3=DELETE 4=CAPTAIN 开关变更。DELETE 时 markInfo 为被删标记的完整快照
+             （客户端按 type/index 摘除即可）；CAPTAIN 时 markInfo 为空、仅 onlyCaptainCanMark
+             有效，且始终携带当前值供冗余校准） -->
+        <onCrossTeamMarkChange>
+            <Arg>           UINT8                   </Arg>
+            <Arg>           CLIENT_TEAM_MARK_VAL    </Arg>
+            <Arg>           BOOL                    </Arg>
+        </onCrossTeamMarkChange>
+
+        <onCrossTeamFollowCaptainAsk>
+            <Arg>           SPACE_NO                </Arg>
+            <Arg>           POSITION_ARG            </Arg>
+        </onCrossTeamFollowCaptainAsk>
+
+        <onCrossTeamRefreshDungeonCD>
+            <Arg>           LONGTIME                </Arg>
+        </onCrossTeamRefreshDungeonCD>
+    </ClientMethods>
+
+</root>

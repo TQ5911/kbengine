@@ -22,6 +22,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -32,6 +33,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -42,6 +44,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 1
     }),
@@ -49,9 +52,10 @@ datas = _tools.RODict({
         "function": "ChangeTarget",
         "type": "changeTarget",
         "level": 0,
-        "task": 86010003,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 1
     }),
@@ -59,9 +63,10 @@ datas = _tools.RODict({
         "function": "UI_camera",
         "type": "UI_camera",
         "level": 0,
-        "task": 86010003,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -72,6 +77,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -82,6 +88,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -92,6 +99,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -102,6 +110,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -109,9 +118,10 @@ datas = _tools.RODict({
         "function": "QuickSettings",
         "type": "quickSettings",
         "level": 0,
-        "task": 86060115,
+        "task": 86060089,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -122,6 +132,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -129,9 +140,10 @@ datas = _tools.RODict({
         "function": "photograph",
         "type": "photograph",
         "level": 0,
-        "task": 86010003,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -139,9 +151,10 @@ datas = _tools.RODict({
         "function": "shareBtn",
         "type": "shareBtn",
         "level": 0,
-        "task": 86010003,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -149,9 +162,10 @@ datas = _tools.RODict({
         "function": "shareSystem",
         "type": "shareSystem",
         "level": 0,
-        "task": 86010003,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -162,6 +176,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -172,6 +187,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -179,9 +195,10 @@ datas = _tools.RODict({
         "function": "TenSign",
         "type": "welfare_tenSign",
         "level": 999,
-        "task": 86010003,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -192,6 +209,7 @@ datas = _tools.RODict({
         "task": 86030033,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -199,9 +217,10 @@ datas = _tools.RODict({
         "function": "Attention",
         "type": "welfare_attention",
         "level": 0,
-        "task": 86010003,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -209,9 +228,10 @@ datas = _tools.RODict({
         "function": "phoneBind",
         "type": "welfare_phoneBind",
         "level": 0,
-        "task": 86010003,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -219,9 +239,10 @@ datas = _tools.RODict({
         "function": "LevelReward",
         "type": "welfare_levelReward",
         "level": 0,
-        "task": 86010003,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -229,9 +250,10 @@ datas = _tools.RODict({
         "function": "Questionnaire",
         "type": "questionnaire",
         "level": 25,
-        "task": 86010003,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -239,9 +261,10 @@ datas = _tools.RODict({
         "function": "PcLoginReward",
         "type": "welfare_pcLogin",
         "level": 0,
-        "task": 86010082,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -249,9 +272,10 @@ datas = _tools.RODict({
         "function": "ResourceRecovery",
         "type": "welfare_resourceRecovery",
         "level": 0,
-        "task": 86010082,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -259,9 +283,10 @@ datas = _tools.RODict({
         "function": "UIActivitiesPanel",
         "type": "welfare",
         "level": 0,
-        "task": 86010082,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -269,9 +294,10 @@ datas = _tools.RODict({
         "function": "SevenSign",
         "type": "welfare_sevenSign",
         "level": 0,
-        "task": 86010082,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -282,16 +308,18 @@ datas = _tools.RODict({
         "task": 86030027,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
     "UIRewardTaskPanel": _tools.RODict({
         "function": "UIRewardTaskPanel",
         "type": "rewardTask",
-        "level": 0,
-        "task": 86030029,
+        "level": 19,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -299,9 +327,10 @@ datas = _tools.RODict({
         "function": "Stronger",
         "type": "stronger",
         "level": 0,
-        "task": 86010013,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -312,6 +341,7 @@ datas = _tools.RODict({
         "task": 86030030,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -322,6 +352,7 @@ datas = _tools.RODict({
         "task": 86030011,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -332,6 +363,7 @@ datas = _tools.RODict({
         "task": 86030009,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -342,6 +374,7 @@ datas = _tools.RODict({
         "task": 86030038,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -352,16 +385,18 @@ datas = _tools.RODict({
         "task": 86030028,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "UIEquipWashPanel": _tools.RODict({
         "function": "UIEquipWashPanel",
         "type": "equip_unbundle",
-        "level": 27,
+        "level": 29,
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -369,9 +404,10 @@ datas = _tools.RODict({
         "function": "UITaskInfoPanel",
         "type": "task",
         "level": 0,
-        "task": 86060104,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -379,9 +415,10 @@ datas = _tools.RODict({
         "function": "Team",
         "type": "team",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -389,9 +426,10 @@ datas = _tools.RODict({
         "function": "UIWarehousePanel",
         "type": "warehouse",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -399,9 +437,10 @@ datas = _tools.RODict({
         "function": "ExitDun",
         "type": "exitDun",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -412,6 +451,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -419,9 +459,10 @@ datas = _tools.RODict({
         "function": "UIFriendPanel",
         "type": "friend",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -429,9 +470,10 @@ datas = _tools.RODict({
         "function": "GrowthGuide",
         "type": "growth",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -439,9 +481,10 @@ datas = _tools.RODict({
         "function": "Chat",
         "type": "chat",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -449,9 +492,10 @@ datas = _tools.RODict({
         "function": "UIAchievementPanel",
         "type": "achievement",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -459,9 +503,10 @@ datas = _tools.RODict({
         "function": "Line",
         "type": "line",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -469,9 +514,10 @@ datas = _tools.RODict({
         "function": "UIMailPanel",
         "type": "mail",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -479,9 +525,10 @@ datas = _tools.RODict({
         "function": "UIMapPanel",
         "type": "map",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -489,9 +536,10 @@ datas = _tools.RODict({
         "function": "UIPayStorePanel",
         "type": "pay",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -499,9 +547,10 @@ datas = _tools.RODict({
         "function": "UIPKProtectPanel",
         "type": "pkProtect",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -509,9 +558,10 @@ datas = _tools.RODict({
         "function": "UIPortableSetPanel",
         "type": "quickSettings",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -519,9 +569,10 @@ datas = _tools.RODict({
         "function": "Raid",
         "type": "raid",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -529,9 +580,10 @@ datas = _tools.RODict({
         "function": "UIRankPanel",
         "type": "rank",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -539,9 +591,10 @@ datas = _tools.RODict({
         "function": "DeathDrop",
         "type": "deathDrop",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -549,19 +602,21 @@ datas = _tools.RODict({
         "function": "AutoCombat",
         "type": "autoCombat",
         "level": 0,
-        "task": 86060146,
+        "task": 86030032,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
     "AutoCollect": _tools.RODict({
         "function": "AutoCollect",
         "type": "autoCollect",
-        "level": 4,
-        "task": 86060115,
+        "level": 0,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -569,9 +624,10 @@ datas = _tools.RODict({
         "function": "UIRedPacketPanel",
         "type": "redPacket",
         "level": 9,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -579,9 +635,10 @@ datas = _tools.RODict({
         "function": "MonthCard",
         "type": "monthCard",
         "level": 9,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -589,9 +646,10 @@ datas = _tools.RODict({
         "function": "quickTips",
         "type": "quickTips",
         "level": 9,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -602,6 +660,7 @@ datas = _tools.RODict({
         "task": 86030033,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -612,46 +671,62 @@ datas = _tools.RODict({
         "task": 86030038,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "Guild": _tools.RODict({
         "function": "Guild",
         "type": "guild",
-        "level": 0,
-        "task": 86050035,
+        "level": 18,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "UIGuildPanel": _tools.RODict({
         "function": "UIGuildPanel",
         "type": "guild",
-        "level": 0,
-        "task": 86050035,
+        "level": 18,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "UIGuildLobbyPanel": _tools.RODict({
         "function": "UIGuildLobbyPanel",
         "type": "guild",
-        "level": 0,
-        "task": 86050035,
+        "level": 18,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "Union": _tools.RODict({
         "function": "Union",
         "type": "guild_union",
-        "level": 0,
-        "task": 86050035,
+        "level": 18,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
+        "switch": 1,
+        "demon": 0
+    }),
+    "UnionCrossServer": _tools.RODict({
+        "function": "UnionCrossServer",
+        "type": "guild_unionCrossServer",
+        "level": 999,
+        "task": 0,
+        "day": 0,
+        "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -662,16 +737,18 @@ datas = _tools.RODict({
         "task": 86010068,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "UISquarePanel": _tools.RODict({
         "function": "UISquarePanel",
         "type": "square",
-        "level": 0,
-        "task": 86030040,
+        "level": 20,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -679,29 +756,32 @@ datas = _tools.RODict({
         "function": "UICollectionPanel",
         "type": "collection",
         "level": 0,
-        "task": 86030038,
+        "task": 86030011,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "UISynthesisSystemPanel": _tools.RODict({
         "function": "UISynthesisSystemPanel",
         "type": "synthesis",
-        "level": 0,
-        "task": 86030021,
+        "level": 17,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "UIPropMakePanel": _tools.RODict({
         "function": "UIPropMakePanel",
         "type": "workshop",
-        "level": 0,
-        "task": 86030018,
+        "level": 16,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -709,29 +789,32 @@ datas = _tools.RODict({
         "function": "GuildBossChallenge",
         "type": "guildBossChallenge",
         "level": 0,
-        "task": 86030031,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "UIBusinessPanel": _tools.RODict({
         "function": "UIBusinessPanel",
         "type": "business",
-        "level": 0,
-        "task": 86010069,
+        "level": 20,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "UIEquipClassPage": _tools.RODict({
         "function": "UIEquipClassPage",
         "type": "equip_class",
-        "level": 0,
-        "task": 86030037,
+        "level": 21,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -742,46 +825,51 @@ datas = _tools.RODict({
         "task": 86030039,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "UIEquipEnchantingPage": _tools.RODict({
         "function": "UIEquipEnchantingPage",
         "type": "equip_spirit",
-        "level": 0,
-        "task": 86010079,
+        "level": 22,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "UICrusadeSystemPanel": _tools.RODict({
         "function": "UICrusadeSystemPanel",
         "type": "raidDungeon",
-        "level": 0,
-        "task": 86010077,
+        "level": 24,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "UIEquipRunePage": _tools.RODict({
         "function": "UIEquipRunePage",
         "type": "equip_weaponGlyph",
-        "level": 0,
-        "task": 86010422,
+        "level": 26,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "UIEquipBlessPage": _tools.RODict({
         "function": "UIEquipBlessPage",
         "type": "equip_bless",
-        "level": 0,
-        "task": 86010309,
+        "level": 27,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -789,9 +877,10 @@ datas = _tools.RODict({
         "function": "MineBattle",
         "type": "mineBattle",
         "level": 30,
-        "task": 86010418,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -799,9 +888,10 @@ datas = _tools.RODict({
         "function": "UIMineBattleManagePanel",
         "type": "mineBattle",
         "level": 30,
-        "task": 86010418,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -809,9 +899,10 @@ datas = _tools.RODict({
         "function": "UIRoleAuthorizationPanel",
         "type": "roleAuthorization",
         "level": 30,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 3,
+        "secondPwd": 1,
         "switch": 0,
         "demon": 0
     }),
@@ -822,6 +913,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -832,6 +924,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -842,6 +935,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -852,6 +946,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -862,6 +957,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -869,9 +965,10 @@ datas = _tools.RODict({
         "function": "Sprint",
         "type": "skill",
         "level": 0,
-        "task": 86060105,
+        "task": 86060003,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -882,6 +979,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -889,9 +987,10 @@ datas = _tools.RODict({
         "function": "Fly",
         "type": "skill",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -902,6 +1001,7 @@ datas = _tools.RODict({
         "task": 86060055,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -912,6 +1012,7 @@ datas = _tools.RODict({
         "task": 86060061,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -922,6 +1023,7 @@ datas = _tools.RODict({
         "task": 86060070,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -932,6 +1034,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -942,6 +1045,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -952,6 +1056,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -962,6 +1067,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -972,6 +1078,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -982,6 +1089,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -992,6 +1100,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1002,6 +1111,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1012,6 +1122,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1019,9 +1130,10 @@ datas = _tools.RODict({
         "function": "MageSkillUlt",
         "type": "skillMage",
         "level": 0,
-        "task": 86060087,
+        "task": 86060098,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1032,6 +1144,7 @@ datas = _tools.RODict({
         "task": 86060055,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1042,6 +1155,7 @@ datas = _tools.RODict({
         "task": 86060061,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1052,6 +1166,7 @@ datas = _tools.RODict({
         "task": 86060070,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1062,6 +1177,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1072,6 +1188,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1082,6 +1199,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1092,6 +1210,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1102,6 +1221,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1112,6 +1232,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1122,6 +1243,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1132,6 +1254,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1142,6 +1265,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1149,9 +1273,10 @@ datas = _tools.RODict({
         "function": "TaoistSkillUlt",
         "type": "skillTaoist",
         "level": 0,
-        "task": 86060087,
+        "task": 86060098,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1162,6 +1287,7 @@ datas = _tools.RODict({
         "task": 86060055,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1172,6 +1298,7 @@ datas = _tools.RODict({
         "task": 86060061,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1182,6 +1309,7 @@ datas = _tools.RODict({
         "task": 86060070,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1192,6 +1320,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1202,6 +1331,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1212,6 +1342,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1222,6 +1353,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1232,6 +1364,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1242,6 +1375,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1252,6 +1386,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1262,6 +1397,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1272,6 +1408,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1279,9 +1416,10 @@ datas = _tools.RODict({
         "function": "WarriorSkillUlt",
         "type": "skillWarrior",
         "level": 0,
-        "task": 86060087,
+        "task": 86060098,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1289,9 +1427,10 @@ datas = _tools.RODict({
         "function": "xinyuanchengopentask",
         "type": "mapTask",
         "level": 0,
-        "task": 86010024,
+        "task": 86060137,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1302,6 +1441,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1312,6 +1452,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1322,6 +1463,7 @@ datas = _tools.RODict({
         "task": 86010087,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1332,6 +1474,7 @@ datas = _tools.RODict({
         "task": 86010087,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1342,6 +1485,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1352,56 +1496,62 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "zuke1Fopentask": _tools.RODict({
         "function": "zuke1Fopentask",
         "type": "mapTask",
-        "level": 30,
+        "level": 28,
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "zuke2Fopentask": _tools.RODict({
         "function": "zuke2Fopentask",
         "type": "mapTask",
-        "level": 30,
+        "level": 28,
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "zuke3Fopentask": _tools.RODict({
         "function": "zuke3Fopentask",
         "type": "mapTask",
-        "level": 30,
+        "level": 28,
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "zuke4Fopentask": _tools.RODict({
         "function": "zuke4Fopentask",
         "type": "mapTask",
-        "level": 30,
+        "level": 28,
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "zuke5Fopentask": _tools.RODict({
         "function": "zuke5Fopentask",
         "type": "mapTask",
-        "level": 30,
+        "level": 28,
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1412,6 +1562,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1422,6 +1573,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1432,6 +1584,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1442,6 +1595,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1452,6 +1606,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1462,6 +1617,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1472,6 +1628,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1482,6 +1639,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1492,6 +1650,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1502,6 +1661,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1512,6 +1672,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1522,6 +1683,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1529,9 +1691,10 @@ datas = _tools.RODict({
         "function": "HotGift",
         "type": "pay_hotGift",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1539,9 +1702,10 @@ datas = _tools.RODict({
         "function": "HolidayGift",
         "type": "pay_holidayGift",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1549,9 +1713,10 @@ datas = _tools.RODict({
         "function": "Rmb",
         "type": "pay_rmb",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1559,9 +1724,10 @@ datas = _tools.RODict({
         "function": "UIGrowthGuidePanel",
         "type": "stronger",
         "level": 0,
-        "task": 86010013,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1569,9 +1735,10 @@ datas = _tools.RODict({
         "function": "PKStateArea",
         "type": "PKState",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -1579,9 +1746,10 @@ datas = _tools.RODict({
         "function": "UISocialPanel",
         "type": "chat",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1592,6 +1760,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1602,6 +1771,7 @@ datas = _tools.RODict({
         "task": 86010027,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1609,9 +1779,10 @@ datas = _tools.RODict({
         "function": "CardChangeBtn",
         "type": "pet",
         "level": 0,
-        "task": 86010037,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1619,9 +1790,10 @@ datas = _tools.RODict({
         "function": "UIDeathPunishmentPanel",
         "type": "deathDrop",
         "level": 0,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1632,6 +1804,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1642,6 +1815,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1652,7 +1826,8 @@ datas = _tools.RODict({
         "task": 0,
         "day": 1,
         "monthCard": 0,
-        "switch": 0,
+        "secondPwd": 0,
+        "switch": 1,
         "demon": 0
     }),
     "UIActivityNotice": _tools.RODict({
@@ -1662,6 +1837,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1672,16 +1848,18 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "UIEquipSoul": _tools.RODict({
         "function": "UIEquipSoul",
         "type": "equip_soul",
-        "level": 0,
-        "task": 86010291,
+        "level": 23,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1692,6 +1870,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1702,6 +1881,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 2,
         "demon": 0
     }),
@@ -1709,19 +1889,21 @@ datas = _tools.RODict({
         "function": "WorldTrumpet",
         "type": "chat",
         "level": 9,
-        "task": 86060115,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "UIRoleAppearancePanel": _tools.RODict({
         "function": "UIRoleAppearancePanel",
         "type": "appearance",
-        "level": 999,
+        "level": 0,
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1732,16 +1914,18 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
     "RefundRecharge": _tools.RODict({
         "function": "RefundRecharge",
         "type": "welfare_refundRecharge",
-        "level": 0,
-        "task": 86010003,
+        "level": 999,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1752,6 +1936,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1762,16 +1947,18 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
     "ModeChange": _tools.RODict({
         "function": "ModeChange",
         "type": "modeChange",
-        "level": 0,
-        "task": 86010095,
+        "level": 20,
+        "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1782,6 +1969,7 @@ datas = _tools.RODict({
         "task": 86030009,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 1,
         "demon": 0
     }),
@@ -1789,9 +1977,10 @@ datas = _tools.RODict({
         "function": "PowerRush",
         "type": "welfare_powerpankpanel",
         "level": 0,
-        "task": 86010003,
+        "task": 86010002,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1802,6 +1991,7 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     }),
@@ -1812,6 +2002,18 @@ datas = _tools.RODict({
         "task": 0,
         "day": 0,
         "monthCard": 0,
+        "secondPwd": 0,
+        "switch": 0,
+        "demon": 0
+    }),
+    "ReturnReward": _tools.RODict({
+        "function": "ReturnReward",
+        "type": "welfare_returnReward",
+        "level": 0,
+        "task": 86010002,
+        "day": 0,
+        "monthCard": 0,
+        "secondPwd": 0,
         "switch": 0,
         "demon": 0
     })
@@ -1880,122 +2082,124 @@ Guild = 58
 UIGuildPanel = 59
 UIGuildLobbyPanel = 60
 Union = 61
-UITeamDunPanel = 62
-UISquarePanel = 63
-UICollectionPanel = 64
-UISynthesisSystemPanel = 65
-UIPropMakePanel = 66
-GuildBossChallenge = 67
-UIBusinessPanel = 68
-UIEquipClassPage = 69
-UIWonderLandPanel = 70
-UIEquipEnchantingPage = 71
-UICrusadeSystemPanel = 72
-UIEquipRunePage = 73
-UIEquipBlessPage = 74
-MineBattle = 75
-UIMineBattleManagePanel = 76
-UIRoleAuthorizationPanel = 77
-CityBattle = 78
-UICityBattlePanel = 79
-UIAbyssPanel = 80
-GeneralAttack = 81
-Dodge = 82
-Sprint = 83
-Jump = 84
-Fly = 85
-MageSkill01 = 86
-MageSkill02 = 87
-MageSkill03 = 88
-MageSkill04 = 89
-MageSkill05 = 90
-MageSkill06 = 91
-MageSkill07 = 92
-MageSkill08 = 93
-MageSkill09 = 94
-MageSkill10 = 95
-MageSkill11 = 96
-MageSkill12 = 97
-MageSkillUlt = 98
-TaoistSkill01 = 99
-TaoistSkill02 = 100
-TaoistSkill03 = 101
-TaoistSkill04 = 102
-TaoistSkill05 = 103
-TaoistSkill06 = 104
-TaoistSkill07 = 105
-TaoistSkill08 = 106
-TaoistSkill09 = 107
-TaoistSkill10 = 108
-TaoistSkill11 = 109
-TaoistSkill12 = 110
-TaoistSkillUlt = 111
-WarriorSkill01 = 112
-WarriorSkill02 = 113
-WarriorSkill03 = 114
-WarriorSkill04 = 115
-WarriorSkill05 = 116
-WarriorSkill06 = 117
-WarriorSkill07 = 118
-WarriorSkill08 = 119
-WarriorSkill09 = 120
-WarriorSkill10 = 121
-WarriorSkill11 = 122
-WarriorSkill12 = 123
-WarriorSkillUlt = 124
-xinyuanchengopentask = 125
-tongxingguopentask = 126
-feishayaosaiopentask = 127
-jinglingcunopentask = 128
-jinglingbaodianopentask = 129
-shikuzoulangopentask = 130
-xinyuanchenjiaoopentask = 131
-zuke1Fopentask = 132
-zuke2Fopentask = 133
-zuke3Fopentask = 134
-zuke4Fopentask = 135
-zuke5Fopentask = 136
-zuke6Fopentask = 137
-yueguang1Fopentask = 138
-yueguang2Fopentask = 139
-yueguang3Fopentask = 140
-yueguang4Fopentask = 141
-yueguang5Fopentask = 142
-wudu1Fopentask = 143
-wudu2Fopentask = 144
-wudu3Fopentask = 145
-UISettingsPanel = 146
-UIRedeemCodePanel = 147
-UIMainMenu = 148
-HotGift = 149
-HolidayGift = 150
-Rmb = 151
-UIGrowthGuidePanel = 152
-PKStateArea = 153
-UISocialPanel = 154
-Hotkey = 155
-MountBtn = 156
-CardChangeBtn = 157
-UIDeathPunishmentPanel = 158
-UIMainLockPanel = 159
-CurrencyExchange = 160
-worldLevel = 161
-UIActivityNotice = 162
-UIWorldBoss = 163
-UIEquipSoul = 164
-Rental = 165
-UIReportPanel = 166
-WorldTrumpet = 167
-UIRoleAppearancePanel = 168
-UIBountyPanel = 169
-RefundRecharge = 170
-UIActionVideoPanel = 171
-Operation = 172
-ModeChange = 173
-UIPetReshapeTipPanel = 174
-PowerRush = 175
-VocabularyBlock = 176
-secondPwd = 177
+UnionCrossServer = 62
+UITeamDunPanel = 63
+UISquarePanel = 64
+UICollectionPanel = 65
+UISynthesisSystemPanel = 66
+UIPropMakePanel = 67
+GuildBossChallenge = 68
+UIBusinessPanel = 69
+UIEquipClassPage = 70
+UIWonderLandPanel = 71
+UIEquipEnchantingPage = 72
+UICrusadeSystemPanel = 73
+UIEquipRunePage = 74
+UIEquipBlessPage = 75
+MineBattle = 76
+UIMineBattleManagePanel = 77
+UIRoleAuthorizationPanel = 78
+CityBattle = 79
+UICityBattlePanel = 80
+UIAbyssPanel = 81
+GeneralAttack = 82
+Dodge = 83
+Sprint = 84
+Jump = 85
+Fly = 86
+MageSkill01 = 87
+MageSkill02 = 88
+MageSkill03 = 89
+MageSkill04 = 90
+MageSkill05 = 91
+MageSkill06 = 92
+MageSkill07 = 93
+MageSkill08 = 94
+MageSkill09 = 95
+MageSkill10 = 96
+MageSkill11 = 97
+MageSkill12 = 98
+MageSkillUlt = 99
+TaoistSkill01 = 100
+TaoistSkill02 = 101
+TaoistSkill03 = 102
+TaoistSkill04 = 103
+TaoistSkill05 = 104
+TaoistSkill06 = 105
+TaoistSkill07 = 106
+TaoistSkill08 = 107
+TaoistSkill09 = 108
+TaoistSkill10 = 109
+TaoistSkill11 = 110
+TaoistSkill12 = 111
+TaoistSkillUlt = 112
+WarriorSkill01 = 113
+WarriorSkill02 = 114
+WarriorSkill03 = 115
+WarriorSkill04 = 116
+WarriorSkill05 = 117
+WarriorSkill06 = 118
+WarriorSkill07 = 119
+WarriorSkill08 = 120
+WarriorSkill09 = 121
+WarriorSkill10 = 122
+WarriorSkill11 = 123
+WarriorSkill12 = 124
+WarriorSkillUlt = 125
+xinyuanchengopentask = 126
+tongxingguopentask = 127
+feishayaosaiopentask = 128
+jinglingcunopentask = 129
+jinglingbaodianopentask = 130
+shikuzoulangopentask = 131
+xinyuanchenjiaoopentask = 132
+zuke1Fopentask = 133
+zuke2Fopentask = 134
+zuke3Fopentask = 135
+zuke4Fopentask = 136
+zuke5Fopentask = 137
+zuke6Fopentask = 138
+yueguang1Fopentask = 139
+yueguang2Fopentask = 140
+yueguang3Fopentask = 141
+yueguang4Fopentask = 142
+yueguang5Fopentask = 143
+wudu1Fopentask = 144
+wudu2Fopentask = 145
+wudu3Fopentask = 146
+UISettingsPanel = 147
+UIRedeemCodePanel = 148
+UIMainMenu = 149
+HotGift = 150
+HolidayGift = 151
+Rmb = 152
+UIGrowthGuidePanel = 153
+PKStateArea = 154
+UISocialPanel = 155
+Hotkey = 156
+MountBtn = 157
+CardChangeBtn = 158
+UIDeathPunishmentPanel = 159
+UIMainLockPanel = 160
+CurrencyExchange = 161
+worldLevel = 162
+UIActivityNotice = 163
+UIWorldBoss = 164
+UIEquipSoul = 165
+Rental = 166
+UIReportPanel = 167
+WorldTrumpet = 168
+UIRoleAppearancePanel = 169
+UIBountyPanel = 170
+RefundRecharge = 171
+UIActionVideoPanel = 172
+Operation = 173
+ModeChange = 174
+UIPetReshapeTipPanel = 175
+PowerRush = 176
+VocabularyBlock = 177
+secondPwd = 178
+ReturnReward = 179
 
 
 
@@ -2062,122 +2266,124 @@ funcDic = _tools.RODict({
     "UIGuildPanel" : 59,
     "UIGuildLobbyPanel" : 60,
     "Union" : 61,
-    "UITeamDunPanel" : 62,
-    "UISquarePanel" : 63,
-    "UICollectionPanel" : 64,
-    "UISynthesisSystemPanel" : 65,
-    "UIPropMakePanel" : 66,
-    "GuildBossChallenge" : 67,
-    "UIBusinessPanel" : 68,
-    "UIEquipClassPage" : 69,
-    "UIWonderLandPanel" : 70,
-    "UIEquipEnchantingPage" : 71,
-    "UICrusadeSystemPanel" : 72,
-    "UIEquipRunePage" : 73,
-    "UIEquipBlessPage" : 74,
-    "MineBattle" : 75,
-    "UIMineBattleManagePanel" : 76,
-    "UIRoleAuthorizationPanel" : 77,
-    "CityBattle" : 78,
-    "UICityBattlePanel" : 79,
-    "UIAbyssPanel" : 80,
-    "GeneralAttack" : 81,
-    "Dodge" : 82,
-    "Sprint" : 83,
-    "Jump" : 84,
-    "Fly" : 85,
-    "MageSkill01" : 86,
-    "MageSkill02" : 87,
-    "MageSkill03" : 88,
-    "MageSkill04" : 89,
-    "MageSkill05" : 90,
-    "MageSkill06" : 91,
-    "MageSkill07" : 92,
-    "MageSkill08" : 93,
-    "MageSkill09" : 94,
-    "MageSkill10" : 95,
-    "MageSkill11" : 96,
-    "MageSkill12" : 97,
-    "MageSkillUlt" : 98,
-    "TaoistSkill01" : 99,
-    "TaoistSkill02" : 100,
-    "TaoistSkill03" : 101,
-    "TaoistSkill04" : 102,
-    "TaoistSkill05" : 103,
-    "TaoistSkill06" : 104,
-    "TaoistSkill07" : 105,
-    "TaoistSkill08" : 106,
-    "TaoistSkill09" : 107,
-    "TaoistSkill10" : 108,
-    "TaoistSkill11" : 109,
-    "TaoistSkill12" : 110,
-    "TaoistSkillUlt" : 111,
-    "WarriorSkill01" : 112,
-    "WarriorSkill02" : 113,
-    "WarriorSkill03" : 114,
-    "WarriorSkill04" : 115,
-    "WarriorSkill05" : 116,
-    "WarriorSkill06" : 117,
-    "WarriorSkill07" : 118,
-    "WarriorSkill08" : 119,
-    "WarriorSkill09" : 120,
-    "WarriorSkill10" : 121,
-    "WarriorSkill11" : 122,
-    "WarriorSkill12" : 123,
-    "WarriorSkillUlt" : 124,
-    "xinyuanchengopentask" : 125,
-    "tongxingguopentask" : 126,
-    "feishayaosaiopentask" : 127,
-    "jinglingcunopentask" : 128,
-    "jinglingbaodianopentask" : 129,
-    "shikuzoulangopentask" : 130,
-    "xinyuanchenjiaoopentask" : 131,
-    "zuke1Fopentask" : 132,
-    "zuke2Fopentask" : 133,
-    "zuke3Fopentask" : 134,
-    "zuke4Fopentask" : 135,
-    "zuke5Fopentask" : 136,
-    "zuke6Fopentask" : 137,
-    "yueguang1Fopentask" : 138,
-    "yueguang2Fopentask" : 139,
-    "yueguang3Fopentask" : 140,
-    "yueguang4Fopentask" : 141,
-    "yueguang5Fopentask" : 142,
-    "wudu1Fopentask" : 143,
-    "wudu2Fopentask" : 144,
-    "wudu3Fopentask" : 145,
-    "UISettingsPanel" : 146,
-    "UIRedeemCodePanel" : 147,
-    "UIMainMenu" : 148,
-    "HotGift" : 149,
-    "HolidayGift" : 150,
-    "Rmb" : 151,
-    "UIGrowthGuidePanel" : 152,
-    "PKStateArea" : 153,
-    "UISocialPanel" : 154,
-    "Hotkey" : 155,
-    "MountBtn" : 156,
-    "CardChangeBtn" : 157,
-    "UIDeathPunishmentPanel" : 158,
-    "UIMainLockPanel" : 159,
-    "CurrencyExchange" : 160,
-    "worldLevel" : 161,
-    "UIActivityNotice" : 162,
-    "UIWorldBoss" : 163,
-    "UIEquipSoul" : 164,
-    "Rental" : 165,
-    "UIReportPanel" : 166,
-    "WorldTrumpet" : 167,
-    "UIRoleAppearancePanel" : 168,
-    "UIBountyPanel" : 169,
-    "RefundRecharge" : 170,
-    "UIActionVideoPanel" : 171,
-    "Operation" : 172,
-    "ModeChange" : 173,
-    "UIPetReshapeTipPanel" : 174,
-    "PowerRush" : 175,
-    "VocabularyBlock" : 176,
-    "secondPwd" : 177,
+    "UnionCrossServer" : 62,
+    "UITeamDunPanel" : 63,
+    "UISquarePanel" : 64,
+    "UICollectionPanel" : 65,
+    "UISynthesisSystemPanel" : 66,
+    "UIPropMakePanel" : 67,
+    "GuildBossChallenge" : 68,
+    "UIBusinessPanel" : 69,
+    "UIEquipClassPage" : 70,
+    "UIWonderLandPanel" : 71,
+    "UIEquipEnchantingPage" : 72,
+    "UICrusadeSystemPanel" : 73,
+    "UIEquipRunePage" : 74,
+    "UIEquipBlessPage" : 75,
+    "MineBattle" : 76,
+    "UIMineBattleManagePanel" : 77,
+    "UIRoleAuthorizationPanel" : 78,
+    "CityBattle" : 79,
+    "UICityBattlePanel" : 80,
+    "UIAbyssPanel" : 81,
+    "GeneralAttack" : 82,
+    "Dodge" : 83,
+    "Sprint" : 84,
+    "Jump" : 85,
+    "Fly" : 86,
+    "MageSkill01" : 87,
+    "MageSkill02" : 88,
+    "MageSkill03" : 89,
+    "MageSkill04" : 90,
+    "MageSkill05" : 91,
+    "MageSkill06" : 92,
+    "MageSkill07" : 93,
+    "MageSkill08" : 94,
+    "MageSkill09" : 95,
+    "MageSkill10" : 96,
+    "MageSkill11" : 97,
+    "MageSkill12" : 98,
+    "MageSkillUlt" : 99,
+    "TaoistSkill01" : 100,
+    "TaoistSkill02" : 101,
+    "TaoistSkill03" : 102,
+    "TaoistSkill04" : 103,
+    "TaoistSkill05" : 104,
+    "TaoistSkill06" : 105,
+    "TaoistSkill07" : 106,
+    "TaoistSkill08" : 107,
+    "TaoistSkill09" : 108,
+    "TaoistSkill10" : 109,
+    "TaoistSkill11" : 110,
+    "TaoistSkill12" : 111,
+    "TaoistSkillUlt" : 112,
+    "WarriorSkill01" : 113,
+    "WarriorSkill02" : 114,
+    "WarriorSkill03" : 115,
+    "WarriorSkill04" : 116,
+    "WarriorSkill05" : 117,
+    "WarriorSkill06" : 118,
+    "WarriorSkill07" : 119,
+    "WarriorSkill08" : 120,
+    "WarriorSkill09" : 121,
+    "WarriorSkill10" : 122,
+    "WarriorSkill11" : 123,
+    "WarriorSkill12" : 124,
+    "WarriorSkillUlt" : 125,
+    "xinyuanchengopentask" : 126,
+    "tongxingguopentask" : 127,
+    "feishayaosaiopentask" : 128,
+    "jinglingcunopentask" : 129,
+    "jinglingbaodianopentask" : 130,
+    "shikuzoulangopentask" : 131,
+    "xinyuanchenjiaoopentask" : 132,
+    "zuke1Fopentask" : 133,
+    "zuke2Fopentask" : 134,
+    "zuke3Fopentask" : 135,
+    "zuke4Fopentask" : 136,
+    "zuke5Fopentask" : 137,
+    "zuke6Fopentask" : 138,
+    "yueguang1Fopentask" : 139,
+    "yueguang2Fopentask" : 140,
+    "yueguang3Fopentask" : 141,
+    "yueguang4Fopentask" : 142,
+    "yueguang5Fopentask" : 143,
+    "wudu1Fopentask" : 144,
+    "wudu2Fopentask" : 145,
+    "wudu3Fopentask" : 146,
+    "UISettingsPanel" : 147,
+    "UIRedeemCodePanel" : 148,
+    "UIMainMenu" : 149,
+    "HotGift" : 150,
+    "HolidayGift" : 151,
+    "Rmb" : 152,
+    "UIGrowthGuidePanel" : 153,
+    "PKStateArea" : 154,
+    "UISocialPanel" : 155,
+    "Hotkey" : 156,
+    "MountBtn" : 157,
+    "CardChangeBtn" : 158,
+    "UIDeathPunishmentPanel" : 159,
+    "UIMainLockPanel" : 160,
+    "CurrencyExchange" : 161,
+    "worldLevel" : 162,
+    "UIActivityNotice" : 163,
+    "UIWorldBoss" : 164,
+    "UIEquipSoul" : 165,
+    "Rental" : 166,
+    "UIReportPanel" : 167,
+    "WorldTrumpet" : 168,
+    "UIRoleAppearancePanel" : 169,
+    "UIBountyPanel" : 170,
+    "RefundRecharge" : 171,
+    "UIActionVideoPanel" : 172,
+    "Operation" : 173,
+    "ModeChange" : 174,
+    "UIPetReshapeTipPanel" : 175,
+    "PowerRush" : 176,
+    "VocabularyBlock" : 177,
+    "secondPwd" : 178,
+    "ReturnReward" : 179,
 })
 demonDic = _tools.RODict({
     "bag" : 1,
@@ -2258,228 +2464,262 @@ reverseFuncDic = _tools.RODict({
     59 : "UIGuildPanel",
     60 : "UIGuildLobbyPanel",
     61 : "Union",
-    62 : "UITeamDunPanel",
-    63 : "UISquarePanel",
-    64 : "UICollectionPanel",
-    65 : "UISynthesisSystemPanel",
-    66 : "UIPropMakePanel",
-    67 : "GuildBossChallenge",
-    68 : "UIBusinessPanel",
-    69 : "UIEquipClassPage",
-    70 : "UIWonderLandPanel",
-    71 : "UIEquipEnchantingPage",
-    72 : "UICrusadeSystemPanel",
-    73 : "UIEquipRunePage",
-    74 : "UIEquipBlessPage",
-    75 : "MineBattle",
-    76 : "UIMineBattleManagePanel",
-    77 : "UIRoleAuthorizationPanel",
-    78 : "CityBattle",
-    79 : "UICityBattlePanel",
-    80 : "UIAbyssPanel",
-    81 : "GeneralAttack",
-    82 : "Dodge",
-    83 : "Sprint",
-    84 : "Jump",
-    85 : "Fly",
-    86 : "MageSkill01",
-    87 : "MageSkill02",
-    88 : "MageSkill03",
-    89 : "MageSkill04",
-    90 : "MageSkill05",
-    91 : "MageSkill06",
-    92 : "MageSkill07",
-    93 : "MageSkill08",
-    94 : "MageSkill09",
-    95 : "MageSkill10",
-    96 : "MageSkill11",
-    97 : "MageSkill12",
-    98 : "MageSkillUlt",
-    99 : "TaoistSkill01",
-    100 : "TaoistSkill02",
-    101 : "TaoistSkill03",
-    102 : "TaoistSkill04",
-    103 : "TaoistSkill05",
-    104 : "TaoistSkill06",
-    105 : "TaoistSkill07",
-    106 : "TaoistSkill08",
-    107 : "TaoistSkill09",
-    108 : "TaoistSkill10",
-    109 : "TaoistSkill11",
-    110 : "TaoistSkill12",
-    111 : "TaoistSkillUlt",
-    112 : "WarriorSkill01",
-    113 : "WarriorSkill02",
-    114 : "WarriorSkill03",
-    115 : "WarriorSkill04",
-    116 : "WarriorSkill05",
-    117 : "WarriorSkill06",
-    118 : "WarriorSkill07",
-    119 : "WarriorSkill08",
-    120 : "WarriorSkill09",
-    121 : "WarriorSkill10",
-    122 : "WarriorSkill11",
-    123 : "WarriorSkill12",
-    124 : "WarriorSkillUlt",
-    125 : "xinyuanchengopentask",
-    126 : "tongxingguopentask",
-    127 : "feishayaosaiopentask",
-    128 : "jinglingcunopentask",
-    129 : "jinglingbaodianopentask",
-    130 : "shikuzoulangopentask",
-    131 : "xinyuanchenjiaoopentask",
-    132 : "zuke1Fopentask",
-    133 : "zuke2Fopentask",
-    134 : "zuke3Fopentask",
-    135 : "zuke4Fopentask",
-    136 : "zuke5Fopentask",
-    137 : "zuke6Fopentask",
-    138 : "yueguang1Fopentask",
-    139 : "yueguang2Fopentask",
-    140 : "yueguang3Fopentask",
-    141 : "yueguang4Fopentask",
-    142 : "yueguang5Fopentask",
-    143 : "wudu1Fopentask",
-    144 : "wudu2Fopentask",
-    145 : "wudu3Fopentask",
-    146 : "UISettingsPanel",
-    147 : "UIRedeemCodePanel",
-    148 : "UIMainMenu",
-    149 : "HotGift",
-    150 : "HolidayGift",
-    151 : "Rmb",
-    152 : "UIGrowthGuidePanel",
-    153 : "PKStateArea",
-    154 : "UISocialPanel",
-    155 : "Hotkey",
-    156 : "MountBtn",
-    157 : "CardChangeBtn",
-    158 : "UIDeathPunishmentPanel",
-    159 : "UIMainLockPanel",
-    160 : "CurrencyExchange",
-    161 : "worldLevel",
-    162 : "UIActivityNotice",
-    163 : "UIWorldBoss",
-    164 : "UIEquipSoul",
-    165 : "Rental",
-    166 : "UIReportPanel",
-    167 : "WorldTrumpet",
-    168 : "UIRoleAppearancePanel",
-    169 : "UIBountyPanel",
-    170 : "RefundRecharge",
-    171 : "UIActionVideoPanel",
-    172 : "Operation",
-    173 : "ModeChange",
-    174 : "UIPetReshapeTipPanel",
-    175 : "PowerRush",
-    176 : "VocabularyBlock",
-    177 : "secondPwd",
+    62 : "UnionCrossServer",
+    63 : "UITeamDunPanel",
+    64 : "UISquarePanel",
+    65 : "UICollectionPanel",
+    66 : "UISynthesisSystemPanel",
+    67 : "UIPropMakePanel",
+    68 : "GuildBossChallenge",
+    69 : "UIBusinessPanel",
+    70 : "UIEquipClassPage",
+    71 : "UIWonderLandPanel",
+    72 : "UIEquipEnchantingPage",
+    73 : "UICrusadeSystemPanel",
+    74 : "UIEquipRunePage",
+    75 : "UIEquipBlessPage",
+    76 : "MineBattle",
+    77 : "UIMineBattleManagePanel",
+    78 : "UIRoleAuthorizationPanel",
+    79 : "CityBattle",
+    80 : "UICityBattlePanel",
+    81 : "UIAbyssPanel",
+    82 : "GeneralAttack",
+    83 : "Dodge",
+    84 : "Sprint",
+    85 : "Jump",
+    86 : "Fly",
+    87 : "MageSkill01",
+    88 : "MageSkill02",
+    89 : "MageSkill03",
+    90 : "MageSkill04",
+    91 : "MageSkill05",
+    92 : "MageSkill06",
+    93 : "MageSkill07",
+    94 : "MageSkill08",
+    95 : "MageSkill09",
+    96 : "MageSkill10",
+    97 : "MageSkill11",
+    98 : "MageSkill12",
+    99 : "MageSkillUlt",
+    100 : "TaoistSkill01",
+    101 : "TaoistSkill02",
+    102 : "TaoistSkill03",
+    103 : "TaoistSkill04",
+    104 : "TaoistSkill05",
+    105 : "TaoistSkill06",
+    106 : "TaoistSkill07",
+    107 : "TaoistSkill08",
+    108 : "TaoistSkill09",
+    109 : "TaoistSkill10",
+    110 : "TaoistSkill11",
+    111 : "TaoistSkill12",
+    112 : "TaoistSkillUlt",
+    113 : "WarriorSkill01",
+    114 : "WarriorSkill02",
+    115 : "WarriorSkill03",
+    116 : "WarriorSkill04",
+    117 : "WarriorSkill05",
+    118 : "WarriorSkill06",
+    119 : "WarriorSkill07",
+    120 : "WarriorSkill08",
+    121 : "WarriorSkill09",
+    122 : "WarriorSkill10",
+    123 : "WarriorSkill11",
+    124 : "WarriorSkill12",
+    125 : "WarriorSkillUlt",
+    126 : "xinyuanchengopentask",
+    127 : "tongxingguopentask",
+    128 : "feishayaosaiopentask",
+    129 : "jinglingcunopentask",
+    130 : "jinglingbaodianopentask",
+    131 : "shikuzoulangopentask",
+    132 : "xinyuanchenjiaoopentask",
+    133 : "zuke1Fopentask",
+    134 : "zuke2Fopentask",
+    135 : "zuke3Fopentask",
+    136 : "zuke4Fopentask",
+    137 : "zuke5Fopentask",
+    138 : "zuke6Fopentask",
+    139 : "yueguang1Fopentask",
+    140 : "yueguang2Fopentask",
+    141 : "yueguang3Fopentask",
+    142 : "yueguang4Fopentask",
+    143 : "yueguang5Fopentask",
+    144 : "wudu1Fopentask",
+    145 : "wudu2Fopentask",
+    146 : "wudu3Fopentask",
+    147 : "UISettingsPanel",
+    148 : "UIRedeemCodePanel",
+    149 : "UIMainMenu",
+    150 : "HotGift",
+    151 : "HolidayGift",
+    152 : "Rmb",
+    153 : "UIGrowthGuidePanel",
+    154 : "PKStateArea",
+    155 : "UISocialPanel",
+    156 : "Hotkey",
+    157 : "MountBtn",
+    158 : "CardChangeBtn",
+    159 : "UIDeathPunishmentPanel",
+    160 : "UIMainLockPanel",
+    161 : "CurrencyExchange",
+    162 : "worldLevel",
+    163 : "UIActivityNotice",
+    164 : "UIWorldBoss",
+    165 : "UIEquipSoul",
+    166 : "Rental",
+    167 : "UIReportPanel",
+    168 : "WorldTrumpet",
+    169 : "UIRoleAppearancePanel",
+    170 : "UIBountyPanel",
+    171 : "RefundRecharge",
+    172 : "UIActionVideoPanel",
+    173 : "Operation",
+    174 : "ModeChange",
+    175 : "UIPetReshapeTipPanel",
+    176 : "PowerRush",
+    177 : "VocabularyBlock",
+    178 : "secondPwd",
+    179 : "ReturnReward",
 })
 levelDic = _tools.RODict({
     999 : _tools.ROList([
         14,
-        78,
+        62,
         79,
-        168,
+        80,
         171,
+        172,
     ]),
     25 : _tools.ROList([
         19,
-        93,
-        106,
-        119,
-        131,
+        94,
+        107,
+        120,
+        132,
     ]),
-    27 : _tools.ROList([
+    19 : _tools.ROList([
+        25,
+    ]),
+    29 : _tools.ROList([
         32,
-    ]),
-    4 : _tools.ROList([
-        52,
     ]),
     9 : _tools.ROList([
         53,
         54,
         55,
+        168,
+    ]),
+    18 : _tools.ROList([
+        58,
+        59,
+        60,
+        61,
+    ]),
+    20 : _tools.ROList([
+        64,
+        69,
+        93,
+        106,
+        119,
+        140,
+        162,
         167,
+        170,
+        174,
+    ]),
+    17 : _tools.ROList([
+        66,
+    ]),
+    16 : _tools.ROList([
+        67,
+    ]),
+    21 : _tools.ROList([
+        70,
+    ]),
+    22 : _tools.ROList([
+        72,
+    ]),
+    24 : _tools.ROList([
+        73,
+    ]),
+    26 : _tools.ROList([
+        74,
+    ]),
+    27 : _tools.ROList([
+        75,
     ]),
     30 : _tools.ROList([
-        75,
         76,
         77,
-        94,
-        107,
-        120,
-        132,
+        78,
+        95,
+        108,
+        121,
+        143,
+        163,
+        164,
+        166,
+    ]),
+    40 : _tools.ROList([
+        81,
+        97,
+        110,
+        123,
+        138,
+    ]),
+    6 : _tools.ROList([
+        90,
+        103,
+        116,
+    ]),
+    10 : _tools.ROList([
+        91,
+        104,
+        117,
+        139,
+    ]),
+    15 : _tools.ROList([
+        92,
+        105,
+        118,
+        160,
+    ]),
+    35 : _tools.ROList([
+        96,
+        109,
+        122,
+        128,
+        131,
+    ]),
+    48 : _tools.ROList([
+        98,
+        111,
+        124,
+        145,
+    ]),
+    28 : _tools.ROList([
         133,
         134,
         135,
         136,
-        142,
-        162,
-        163,
-        165,
-    ]),
-    40 : _tools.ROList([
-        80,
-        96,
-        109,
-        122,
         137,
-    ]),
-    6 : _tools.ROList([
-        89,
-        102,
-        115,
-    ]),
-    10 : _tools.ROList([
-        90,
-        103,
-        116,
-        138,
-    ]),
-    15 : _tools.ROList([
-        91,
-        104,
-        117,
-        159,
-    ]),
-    20 : _tools.ROList([
-        92,
-        105,
-        118,
-        139,
-        161,
-        166,
-        169,
-    ]),
-    35 : _tools.ROList([
-        95,
-        108,
-        121,
-        127,
-        130,
-    ]),
-    48 : _tools.ROList([
-        97,
-        110,
-        123,
-        144,
+        142,
     ]),
     23 : _tools.ROList([
-        140,
-    ]),
-    28 : _tools.ROList([
         141,
+        165,
     ]),
     45 : _tools.ROList([
-        143,
+        144,
     ]),
     51 : _tools.ROList([
-        145,
+        146,
     ]),
 })
 taskDic = _tools.RODict({
-    86010003 : _tools.ROList([
+    86010002 : _tools.ROList([
         1,
         2,
         9,
@@ -2490,11 +2730,12 @@ taskDic = _tools.RODict({
         17,
         18,
         19,
-        170,
-        175,
-    ]),
-    86060115 : _tools.ROList([
-        7,
+        20,
+        21,
+        22,
+        23,
+        26,
+        33,
         34,
         35,
         36,
@@ -2515,154 +2756,96 @@ taskDic = _tools.RODict({
         53,
         54,
         55,
-        77,
-        85,
-        149,
+        78,
+        86,
         150,
         151,
+        152,
         153,
         154,
-        158,
-        167,
+        155,
+        159,
+        168,
+        171,
+        176,
+        179,
+    ]),
+    86060089 : _tools.ROList([
+        7,
     ]),
     86030033 : _tools.ROList([
         15,
         56,
     ]),
-    86010082 : _tools.ROList([
-        20,
-        21,
-        22,
-        23,
-    ]),
     86030027 : _tools.ROList([
         24,
-    ]),
-    86030029 : _tools.ROList([
-        25,
-    ]),
-    86010013 : _tools.ROList([
-        26,
-        152,
     ]),
     86030030 : _tools.ROList([
         27,
     ]),
     86030011 : _tools.ROList([
         28,
+        65,
     ]),
     86030009 : _tools.ROList([
         29,
-        174,
+        175,
     ]),
     86030038 : _tools.ROList([
         30,
         57,
-        64,
     ]),
     86030028 : _tools.ROList([
         31,
     ]),
-    86060104 : _tools.ROList([
-        33,
-    ]),
-    86060146 : _tools.ROList([
+    86030032 : _tools.ROList([
         51,
     ]),
-    86050035 : _tools.ROList([
-        58,
-        59,
-        60,
-        61,
-    ]),
     86010068 : _tools.ROList([
-        62,
-    ]),
-    86030040 : _tools.ROList([
         63,
     ]),
-    86030021 : _tools.ROList([
-        65,
-    ]),
-    86030018 : _tools.ROList([
-        66,
-    ]),
-    86030031 : _tools.ROList([
-        67,
-    ]),
-    86010069 : _tools.ROList([
-        68,
-    ]),
-    86030037 : _tools.ROList([
-        69,
-    ]),
     86030039 : _tools.ROList([
-        70,
-    ]),
-    86010079 : _tools.ROList([
         71,
     ]),
-    86010077 : _tools.ROList([
-        72,
-    ]),
-    86010422 : _tools.ROList([
-        73,
-    ]),
-    86010309 : _tools.ROList([
-        74,
-    ]),
-    86010418 : _tools.ROList([
-        75,
-        76,
-    ]),
-    86060105 : _tools.ROList([
-        83,
+    86060003 : _tools.ROList([
+        84,
     ]),
     86060055 : _tools.ROList([
-        86,
-        99,
-        112,
-    ]),
-    86060061 : _tools.ROList([
         87,
         100,
         113,
     ]),
-    86060070 : _tools.ROList([
+    86060061 : _tools.ROList([
         88,
         101,
         114,
     ]),
-    86060087 : _tools.ROList([
-        98,
-        111,
-        124,
+    86060070 : _tools.ROList([
+        89,
+        102,
+        115,
     ]),
-    86010024 : _tools.ROList([
+    86060098 : _tools.ROList([
+        99,
+        112,
         125,
     ]),
+    86060137 : _tools.ROList([
+        126,
+    ]),
     86010087 : _tools.ROList([
-        128,
         129,
+        130,
     ]),
     86010027 : _tools.ROList([
-        156,
-    ]),
-    86010037 : _tools.ROList([
         157,
-    ]),
-    86010291 : _tools.ROList([
-        164,
-    ]),
-    86010095 : _tools.ROList([
-        173,
     ]),
 })
 dayDic = _tools.RODict({
     1 : _tools.ROList([
-        161,
+        162,
     ]),
 })
-maxBit = 177
+maxBit = 179
 
-typeToMain = {'UI_camera': 'UI', 'UI_cards': 'UI', 'UI_hp': 'UI', 'UI_level': 'UI', 'UI_score': 'UI', 'welfare_tenSign': 'welfare', 'welfare_attention': 'welfare', 'welfare_phoneBind': 'welfare', 'welfare_levelReward': 'welfare', 'welfare_pcLogin': 'welfare', 'welfare_resourceRecovery': 'welfare', 'welfare_sevenSign': 'welfare', 'equip_make': 'equip', 'equip_unbundle': 'equip', 'equip_strengthen': 'equip', 'guild_union': 'guild', 'equip_class': 'equip', 'equip_spirit': 'equip', 'equip_weaponGlyph': 'equip', 'equip_bless': 'equip', 'settings_giftKey': 'settings', 'pay_hotGift': 'pay', 'pay_holidayGift': 'pay', 'pay_rmb': 'pay', 'settings_hotKey': 'settings', 'equip_soul': 'equip', 'welfare_refundRecharge': 'welfare', 'settings_operation': 'settings', 'welfare_powerpankpanel': 'welfare', 'settings_secondPwd': 'settings'}
+typeToMain = {'UI_camera': 'UI', 'UI_cards': 'UI', 'UI_hp': 'UI', 'UI_level': 'UI', 'UI_score': 'UI', 'welfare_tenSign': 'welfare', 'welfare_attention': 'welfare', 'welfare_phoneBind': 'welfare', 'welfare_levelReward': 'welfare', 'welfare_pcLogin': 'welfare', 'welfare_resourceRecovery': 'welfare', 'welfare_sevenSign': 'welfare', 'equip_make': 'equip', 'equip_unbundle': 'equip', 'equip_strengthen': 'equip', 'guild_union': 'guild', 'guild_unionCrossServer': 'guild', 'equip_class': 'equip', 'equip_spirit': 'equip', 'equip_weaponGlyph': 'equip', 'equip_bless': 'equip', 'settings_giftKey': 'settings', 'pay_hotGift': 'pay', 'pay_holidayGift': 'pay', 'pay_rmb': 'pay', 'settings_hotKey': 'settings', 'equip_soul': 'equip', 'welfare_refundRecharge': 'welfare', 'settings_operation': 'settings', 'welfare_powerpankpanel': 'welfare', 'settings_secondPwd': 'settings', 'welfare_returnReward': 'welfare'}

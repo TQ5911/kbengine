@@ -19,7 +19,8 @@ message AllianceInfo {
     uint64 fund = 9;
     uint32 memberCount = 10;
     uint64 totalScore = 11;
-    uint32 serverId = 14;
+    // 2026-08-26 去掉冗余 serverId 字段(field 14),与 leaderServerId 语义重复
+    // 老客户端读 d.serverId 不会报错(返回默认值 0),新代码统一用 leaderServerId
     uint32 createdAt = 15;
     uint64 leaderGbId = 16;
     string leaderName = 17;
@@ -302,8 +303,13 @@ message AllianceChatMessage {
     uint64 senderGuildId = 1;
     string senderGuildName = 2;
     uint32 senderServerId = 3;
-    string content = 4;
-    uint32 sendTime = 5;
+    string avatarInfo = 4;
+    string content = 5;
+    uint32 sendTime = 6;
+    // 2026-08-24 联盟频道新增:消息来源类型
+    // 0=玩家发言(senderGuildId/Name 有效)
+    // 1=系统消息(援助/宣战等,以系统身份发送的频道文本,content 已格式化为最终展示文本)
+    uint32 senderType = 7;
 }
 
 message RegisterGameServerRequest {
@@ -729,6 +735,22 @@ message GuildRelationRemoveInfo {
     uint32 version = 3;
 }
 
+// Entity-level enemy relation (one side = guild or alliance).
+message EnemyRelationInfo {
+    uint32 attackType = 1;   // 1=alliance, 2=guild
+    uint64 attackId = 2;
+    uint32 attackServerId = 3;
+    uint32 targetType = 4;   // 1=alliance, 2=guild
+    uint64 targetId = 5;
+    uint32 targetServerId = 6;
+    uint32 endTime = 7;
+}
+
+message EnemyRelationAllInfo {
+    repeated EnemyRelationInfo relations = 1;
+    uint32 version = 2;
+}
+
 message CheckLeagueRelationRequest {
     uint64 guildId1 = 1;
     uint64 guildId2 = 2;
@@ -812,8 +834,9 @@ message SendChatMessageRequest {
     uint64 senderGuildId = 2;
     string senderGuildName = 3;
     uint32 senderServerId = 4;
-    string content = 5;
-    uint64 uuid = 6;
+    string avatarInfo = 5;
+    string content = 6;
+    uint64 uuid = 7;
 }
 message SendChatMessageResult {
     uint64 uuid = 1;
@@ -917,8 +940,10 @@ message LeagueGuildMessage {
 }
 
 message LeagueBroadCastMessage {
-    uint32 messageId = 1;
-    repeated string messageArgs = 2;
+    uint64 fromUID = 1;
+    uint64 toUID = 2;
+    uint32 messageId = 3;
+    repeated string messageArgs = 4;
 }
 
 message RecruitLeagueMemberRequest {
@@ -956,6 +981,23 @@ message QueryLeagueUUIDResult {
     uint64 guildId = 2;
     uint64 leagueUUID = 3;
     bool ret = 4;
+}
+
+message EventTipsNotify {
+    uint64 leagueUUID = 1;
+    uint32 messageId = 2;
+    repeated string messageArgs = 3;
+}
+
+message RemoveEnemyRelationRequest {
+    uint64 uuid = 1;
+    uint64 guildId = 2;
+}
+
+message RemoveEnemyRelationResponse {
+    uint64 uuid = 1;
+    uint64 guildId = 2;
+    uint32 errCode = 3;
 }
 
 service AllianceService
@@ -1005,6 +1047,8 @@ service AllianceService
     rpc checkLeaveGuild(CheckLeaveGuildRequest) returns (Void);
 
     rpc queryLeagueUUID(QueryLeagueUUIDRequest) returns (Void);
+
+    rpc removeEnemyRelation(RemoveEnemyRelationRequest) returns (Void);
 }
 
 service GameClient
@@ -1060,6 +1104,11 @@ service GameClient
     rpc onBroadcastAddGuildRelation(GuildRelationInfo) returns (Void);
     rpc onBroadcastRemoveGuildRelation(GuildRelationRemoveInfo) returns (Void);
 
+    // Entity-level enemy relation broadcasts (G↔G, G↔Alliance, A↔A)
+    rpc onEnemyAllRelation(EnemyRelationAllInfo) returns (Void);
+    rpc onBroadcastAddEnemyRelation(EnemyRelationInfo) returns (Void);
+    rpc onBroadcastRemoveEnemyRelation(EnemyRelationInfo) returns (Void);
+
     rpc onNewMemberJoined(NewMemberJoinedNotify) returns (Void);
 
     rpc onJoinToAllianceNotify(JoinToAllianceNotify) returns (Void);
@@ -1085,4 +1134,8 @@ service GameClient
     rpc onCheckLeaveGuildResult(CheckLeaveGuildResult) returns (Void);
 
     rpc onQueryLeagueUUIDResult(QueryLeagueUUIDResult) returns (Void);
+
+    rpc onEventTipsNotify(EventTipsNotify) returns (Void);
+
+    rpc onRemoveEnemyRelation(RemoveEnemyRelationResponse) returns (Void);
 }

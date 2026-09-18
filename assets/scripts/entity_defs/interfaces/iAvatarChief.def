@@ -8,6 +8,11 @@
             <Flags> BASE_AND_CLIENT  </Flags>
             <Persistent>true</Persistent>
         </chiefInfo>
+
+        <chiefCoinTicketData>
+            <Type>          COIN_TICKET_INFO_DATA   </Type>
+            <Flags>         BASE                    </Flags>
+        </chiefCoinTicketData>
     </Properties>
 
     <CellMethods>

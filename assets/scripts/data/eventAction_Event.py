@@ -243,6 +243,12 @@ datas = _tools.RODict({
         "sendType": 0,
         "npcId": None
     }),
+    "manualSendGuide": _tools.RODict({
+        "ID": "manualSendGuide",
+        "EventID": 10039,
+        "sendType": 1,
+        "npcId": None
+    }),
     "Gettask": _tools.RODict({
         "ID": "Gettask",
         "EventID": 20000,

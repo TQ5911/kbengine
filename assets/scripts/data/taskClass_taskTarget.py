@@ -58,10 +58,18 @@ datas = _tools.RODict({
     11: _tools.RODict({
         "ID": 11,
         "name": "MakeEquipmentOnce"
+    }),
+    12: _tools.RODict({
+        "ID": 12,
+        "name": "CompleteAGuideOnce"
+    }),
+    13: _tools.RODict({
+        "ID": 13,
+        "name": "SkipSpecifiedTimeline"
     })
 })
 minKey = 1
-maxKey = 11
+maxKey = 13
 
 couterTargetDic = _tools.RODict({ 
         'TaskCounterTargetSetHp':1,
@@ -75,4 +83,6 @@ couterTargetDic = _tools.RODict({
         'TaskCounterChangePk':9,
         'CompleteACertainInstance':10,
         'MakeEquipmentOnce':11,
+        'CompleteAGuideOnce':12,
+        'SkipSpecifiedTimeline':13,
 })

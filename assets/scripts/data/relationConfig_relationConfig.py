@@ -262,5 +262,21 @@ datas = _tools.RODict({
     "enemyReserachText2": _tools.RODict({
         "ID": "enemyReserachText2",
         "value": "持续探索中，每{0}秒探查一次仇敌位置",
+    }),
+    "hostileCurrentNum": _tools.RODict({
+        "ID": "hostileCurrentNum",
+        "value": "敌对：{0}/{1}",
+    }),
+    "hostileNumLimit": _tools.RODict({
+        "ID": "hostileNumLimit",
+        "value": 30,
+    }),
+    "hostileListMax": _tools.RODict({
+        "ID": "hostileListMax",
+        "value": 54000435,
+    }),
+    "hostileAddSuccess": _tools.RODict({
+        "ID": "hostileAddSuccess",
+        "value": 54000436,
     })
 })

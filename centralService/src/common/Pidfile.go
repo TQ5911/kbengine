@@ -3,7 +3,6 @@ package common
 import (
 	"centralService/src/appLog"
 	"flag"
-	"io/ioutil"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -27,7 +26,11 @@ func InitAndParseFlag() {
 }
 
 func GetPidFile() string {
-	return serverName + "_" + instID + ".pid"
+	exePath, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+	return filepath.Base(exePath) + "_" + instID + ".pid"
 }
 
 func GetServerName() string {
@@ -65,7 +68,7 @@ func WritePidFile() bool {
 	}
 
 	strByte := []byte(strconv.Itoa(pid))
-	err = ioutil.WriteFile(pidFilePath, strByte, 0644)
+	err = os.WriteFile(pidFilePath, strByte, 0644)
 	if err != nil {
 		appLog.Errorf("WritePidFile fail, pidFile write broken %s, err=%v\n", pidFilePath, err)
 		return false

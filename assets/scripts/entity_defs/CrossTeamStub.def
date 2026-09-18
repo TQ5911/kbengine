@@ -1,0 +1,380 @@
+<root>
+    <Interfaces>
+        <!-- 讨伐副本空间管理已拆回 per-dungeonNo 的 TeamDungeonStub/RaidDungeonStub，
+             本 Stub 只保留组队代理与中心 RPC 中转 -->
+        <Interface> iBaseNoCell                 </Interface>
+        <Interface> iGlobal                     </Interface>
+        <Interface> iTimerBase                  </Interface>
+    </Interfaces>
+
+    <Properties>
+        <!-- 分片索引：创建时由 iGameStart.py 注入，用于判断中心推流是否属于本分片 -->
+        <stubIdx>
+            <Type>          UINT8               </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       0                   </Default>
+        </stubIdx>
+
+        <!-- 本服队伍缓存已移除：Stub 为纯转发层，下行推送的本服成员路由由中心随推送
+             下发的 receiverGbIds / 全量成员列表（含 serverId）承担 -->
+
+        <!-- 本服成员状态聚合缓冲：{gbId: stateDict}，3s 定时上报中心 -->
+        <stateReportCache>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       {}                  </Default>
+        </stateReportCache>
+
+        <!-- 上行请求 uuid -> 上下文，回执路由用 -->
+        <remoteCallCache>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       {}                  </Default>
+        </remoteCallCache>
+
+        <!-- 讨伐上下文缓存：{teamId: dungeonNo}（CrusadeCheck 时记录，CrusadeGo 组装上下文用） -->
+        <crusadeDungeonCache>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       {}                  </Default>
+        </crusadeDungeonCache>
+
+        <!-- 跨服服侧讨伐空间簿记：{teamId: {dungeonNo, spaceNo, spaceUUID, isRaid}}
+             （空间本体由对应 dungeonNo 的 TeamDungeonStub/RaidDungeonStub 管理） -->
+        <crusadeSpaceCache>
+            <Type>          PY_DICT         </Type>
+            <Flags>         BASE                </Flags>
+            <Default>       {}                  </Default>
+        </crusadeSpaceCache>
+    </Properties>
+
+    <BaseMethods>
+        <createTeam>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       TEAMTARGET              </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       STRING                  </Arg>
+            <Arg>       UNICODE                 </Arg>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       DUNGEON_NO              </Arg>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       PY_DICT                 </Arg>
+        </createTeam>
+
+        <applyJoinTeam>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       STRING                  </Arg>
+            <Arg>       PY_DICT                 </Arg>
+            <!-- 追加参数（对齐梳理 §2.3）：applySource 申请来源，枚举复用本服 TeamJoinType -->
+            <Arg>       INT8                    </Arg>
+        </applyJoinTeam>
+
+        <!-- 免审批快速入队上行（对齐梳理 §2.2 reqJoinCrossTeam，本服 reqJoinTeam 对应） -->
+        <reqJoinTeam>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       STRING                  </Arg>
+            <Arg>       PY_DICT                 </Arg>
+        </reqJoinTeam>
+
+        <!-- 一键清空申请列表上行（对齐梳理 §2.2 clearCrossApplyJoinDic，本服 clearApplyJoinDic 对应，队长操作） -->
+        <clearApplyList>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </clearApplyList>
+
+        <!-- 任命/取消副团长上行（对齐梳理 §2.2 reqSetCrossTeamDeputy，本服 transferRaidDeputy 对应，队长操作；
+             deputyGbId=0 取消，唯一名额直接覆盖） -->
+        <reqSetDeputy>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </reqSetDeputy>
+
+        <replyJoinApply>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       BOOL                    </Arg>
+        </replyJoinApply>
+
+        <inviteMember>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT32                  </Arg>
+        </inviteMember>
+
+        <replyInvite>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PY_DICT                 </Arg>
+            <Arg>       BOOL                    </Arg>
+            <!-- 追加参数（对齐梳理 §2.3）：inviteType 邀请类型（客户端上行透传，语义记录用） -->
+            <Arg>       UINT8                   </Arg>
+        </replyInvite>
+
+        <leaveTeam>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </leaveTeam>
+
+        <kickMember>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </kickMember>
+
+        <transferCaptain>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </transferCaptain>
+
+        <!-- 申请成为队长：成员发起（gbId=申请人），中心推送队长确认 -->
+        <applyBecomeCaptain>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </applyBecomeCaptain>
+
+        <!-- 队长应答"申请成为队长"：参数为 操作人队长 gbId + 申请人 gbId + 是否同意 -->
+        <replyBecomeCaptain>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       BOOL                    </Arg>
+        </replyBecomeCaptain>
+
+        <disbandTeam>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </disbandTeam>
+
+        <!-- 修改队伍设置：门槛/介绍/满员自动进本/密码（目标创建后不可改，不在本接口范围内；
+             autoMatch 修改频率高，已拆分到 setAutoMatch；password 空串=取消密码转公开队） -->
+        <setTeamSettings>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       UNICODE                 </Arg>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <!-- 追加参数（对齐梳理 §2.3）：密码 -->
+            <Arg>       STRING                  </Arg>
+        </setTeamSettings>
+
+        <!-- 自动匹配开关（队长操作，修改频率高，与队伍目标拆分） -->
+        <setAutoMatch>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </setAutoMatch>
+
+        <!-- 队伍列表查询（一波全量，问题记录#5）：Stub 按 target 缓存数秒，
+             命中直接回缓存；回包经 base streamStringProxy 分片下发，不走实体协议 -->
+        <getTeamList>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMTARGET              </Arg>
+        </getTeamList>
+
+        <enterMatchPool>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMTARGET              </Arg>
+            <Arg>       PY_DICT                 </Arg>
+        </enterMatchPool>
+
+        <leaveMatchPool>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </leaveMatchPool>
+
+        <!-- 撮合成功：Avatar cell 检查完毕后回调 Stub 发 MatchJoin -->
+        <doMatchJoin>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       TEAMTARGET              </Arg>
+            <Arg>       PY_DICT                 </Arg>
+        </doMatchJoin>
+
+        <syncMemberState>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PY_DICT                 </Arg>
+        </syncMemberState>
+
+        <memberOffline>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </memberOffline>
+
+        <queryPlayerTeam>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </queryPlayerTeam>
+
+        <!-- 队伍预览（决策 D4）：queryTeam 的 teamId 直查路径，回包回调 cell.onCrossTeamPreview -->
+        <queryTeamById>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+        </queryTeamById>
+
+        <!-- 成员语音状态同步（cell 已把客户端位图解包为三态全量写） -->
+        <setVoiceState>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       BOOL                    </Arg>
+        </setVoiceState>
+
+        <!-- 申请列表拉取（仅队长；回包单播回调 cell.onCrossTeamApplyList） -->
+        <getApplyList>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </getApplyList>
+
+        <!-- 队伍聊天上行：完整 CHAT_MSG_DATA（msgData）+ 发送者展示信息（senderInfo） -->
+        <sendTeamChat>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UNICODE                 </Arg>
+            <Arg>       PY_DICT                 </Arg>
+            <Arg>       PY_DICT                 </Arg>
+        </sendTeamChat>
+
+        <setMicsMode>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </setMicsMode>
+
+        <blockMic>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </blockMic>
+
+        <!-- 成员位置调整（队长操作）：交换两个成员位置，或将 srcGbId 移动到 dstGroupIdx 组末尾 -->
+        <adjustMemberPos>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </adjustMemberPos>
+
+        <!-- 队伍标记三件套上行（本服 reqAddMarkMember/reqDelMarkMember/reqChangeOnlyCaptain 对应；
+             数据存中心，变更经中心 markChangePush 单条增量下发，只发队长当前所在服）：
+             reqAddCrossMark 参数 = box/teamId/operatorGbId/type/index/name/gbId/entId/pos/spaceNo/serverId
+             （operatorGbId=操作人，中心复核在队/仅队长开关；spaceNo=操作者当前 spaceNo；
+             serverId=被标队友归属服，怪物/场景点=本服 serverId，均由 cell 填好带入） -->
+        <reqAddCrossMark>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       UNICODE                 </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       ENTITY_ID               </Arg>
+            <Arg>       POSITION_ARG            </Arg>
+            <Arg>       SPACE_NO                </Arg>
+            <Arg>       SERVER_ID               </Arg>
+        </reqAddCrossMark>
+        <reqDelCrossMark>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       UINT8                   </Arg>
+        </reqDelCrossMark>
+        <reqChangeCrossOnlyCaptainMark>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       BOOL                    </Arg>
+        </reqChangeCrossOnlyCaptainMark>
+
+        <!-- 被标怪物死亡自动摘除上行（Monster.onDead -> 本 Stub，无操作者免校验） -->
+        <onCrossMarkMonsterDead>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       ENTITY_ID               </Arg>
+        </onCrossMarkMonsterDead>
+
+        <!-- 召集上行（本服 sendAllMemberFollowAsk 对应，队长操作；跟随本体由客户端实现，
+             服务端仅转发）：box/teamId/队长 gbId/队长当前 spaceNo/队长当前坐标，
+             中心复核队长后 followAskPush 广播队长当前所在服（全队除队长），静默语义无回执 -->
+        <askAllCrossTeamMemberFollow>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       SPACE_NO                </Arg>
+            <Arg>       POSITION_ARG            </Arg>
+        </askAllCrossTeamMemberFollow>
+
+        <startCrusade>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </startCrusade>
+
+        <crusadeCheckResult>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       INT32                   </Arg>
+        </crusadeCheckResult>
+
+        <enterCrusadeSpace>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PY_DICT                 </Arg>
+        </enterCrusadeSpace>
+
+        <crusadeFinished>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       INT32                   </Arg>
+        </crusadeFinished>
+
+        <!-- 跨服讨伐副本空间创建结果回报（per-dungeonNo 副本 stub -> 本 Stub，跨服服上；
+             spaceBox/spaceMgrBox 随簿记保存，镜像登录直进副本建 cell 用） -->
+        <onCrossCrusadeSpaceReady>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       SPACE_NO                </Arg>
+            <Arg>       UINT64                  </Arg>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       ENTITYCALL              </Arg>
+        </onCrossCrusadeSpaceReady>
+
+        <!-- 跨服讨伐镜像登录直进副本（镜像 base -> 本 Stub 查簿记，跨服服上） -->
+        <logonEnterCrusadeDungeon>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PY_DICT                 </Arg>
+        </logonEnterCrusadeDungeon>
+    </BaseMethods>
+
+</root>

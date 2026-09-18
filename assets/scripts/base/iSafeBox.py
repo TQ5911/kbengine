@@ -10,6 +10,7 @@ import awardContext
 import gamedecorator
 import LogTrackingMgr
 import mailAssistor
+import actionContext
 
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import itemData_itemData as ITEM_DATA
@@ -238,9 +239,15 @@ class ISafeBox(object):
     @gamedecorator.limitcall(0.2)
     def reqDeleteSafeBoxItem(self, exposed, safeBoxId):
         LOG_INFO("in reqDeleteSafeBoxItem ", safeBoxId)
+        self.doDeleteSafeBoxItem(safeBoxId)
+    
+    def doDeleteSafeBoxItem(self, safeBoxId, isGM = False):
         rec = self.safeBoxCache.get(safeBoxId)
-        if not rec or not rec['claimed']:
+        if not rec:
             return
+        if not isGM:
+            if not rec['claimed']:
+                return
         gamesql.deleteSafeBoxItem(safeBoxId)
         LogTrackingMgr.LogTrackingMgr.delete_stash(self.gbID,
             self.accountEntity.clientDistinctId if self.accountEntity else '',
@@ -248,10 +255,38 @@ class ISafeBox(object):
             self.gbID,
             rec['itemId'],
             2,
-            utils.curTS())
+            utils.curTS(),
+            isGM)
         self.safeBoxCache.pop(safeBoxId, None)
         self._buildSortedList()
         self.client.onSafeBoxItemDeleted(safeBoxId)
+    
+    @gamedecorator.offlineCallback
+    def deleteSafeBoxItemOffline(self, orderId, itemId):
+        LOG_INFO("in deleteSafeBoxItemOffline ", orderId, itemId)
+        gamesql.deleteSafeBoxItemByOrderId(orderId)
+        LogTrackingMgr.LogTrackingMgr.delete_stash(self.gbID,
+            self.accountEntity.clientDistinctId if self.accountEntity else '',
+            orderId,
+            self.gbID,
+            itemId,
+            2,
+            utils.curTS(),
+            True)
+        
+
+    def gmDeleteSafeBoxItem(self, su, orderId):
+        LOG_INFO("in gmDeleteSafeBoxItem ", orderId)
+        foundSafeBoxId = -1
+        for safeBoxId, record in self.safeBoxCache.items():
+            if record['orderId'] == orderId:
+                foundSafeBoxId = safeBoxId
+                break
+        if foundSafeBoxId > 0:
+            self.doDeleteSafeBoxItem(foundSafeBoxId, True)
+            su.onCommandResult(0, 'command success', {"gbId": self.gbID, "orderId": orderId})
+        else:
+            su.onCommandResult(-2, 'order id is not existed', {"gbId": self.gbID, "orderId": orderId})    
 
     def storePurchaseToSafeBox(self, orderId, orderTime, itemId, itemCount, itemPrice):
         LOG_INFO("in storePurchaseToSafeBox ", orderId, orderTime, itemId, itemCount, itemPrice)
@@ -317,17 +352,22 @@ class ISafeBox(object):
         if not rewardId:
             LOG_ERR("in _processDirectDelivery missing pickUpReward", itemId, itemCount)
             return
-        _ctx = self.getAvatarAwardCtx(rewardId, None)
-        _ctx.args.addArg('autoUse', True)
+        _ctx = self.getAvatarAwardCtx(rewardId, awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID))
         _awardVal = dropAward.getAward(rewardId, itemCount, _ctx)
         srcType = AAC_AACDD.datas.BONUS_SRC_BUYCREDIT
         opUUID = KBEngine.genUUID64()
+        detail = gameclass.AwardDetailCls(itemId=itemId, itemCount=itemCount, orderId=orderId)
+        
+        self.doPreAddWealth(_awardVal, itemData['type'], itemData['subType'], opUUID, srcType, detail)
+
+        if _awardVal.isEmpty():
+            return
+        
         if not self.canAddWealthVal(srcType, _awardVal, _ctx):
             LOG_ERR("in _processDirectDelivery bag is full", itemId, itemCount)
             mailAssistor.sendMailToPlayers([self.gbID], gameconst.MailConstEnum.REWARD_MAIL_ID, extraAttach=_awardVal, opUUID=opUUID,
                                        despArgs=(), srcType=AAC_AACDD.datas.BONUS_SRC_BUYCREDIT)
             return
+        self.addWealth(srcType, _awardVal, opUUID, detail=detail, awardCtx=_ctx)
 
-        detail = gameclass.AwardDetailCls(itemId=itemId, itemCount=itemCount, orderId=orderId)
-        ctx = self.getAvatarAwardCtx(0, awardContext.CommonContext(gameconst.MailConstEnum.REWARD_MAIL_ID))
-        self.addWealth(srcType, _awardVal, opUUID, detail=detail, awardCtx=ctx)
+    

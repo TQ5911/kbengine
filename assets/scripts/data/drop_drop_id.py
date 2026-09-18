@@ -5952,7 +5952,7 @@ datas = _tools.RODict({
     50039201: _tools.RODict({
         "dropID": 50039201,
         "dropPackage": 50039201,
-        "dropType": 1,
+        "dropType": 2,
         "dropCount": 1
     }),
     50100501: _tools.RODict({

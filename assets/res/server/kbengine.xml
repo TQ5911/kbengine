@@ -34,6 +34,7 @@
         <queryRechargeUrl> https://test.api.hzyunxingu.cn/user/api/order/v1/cumulative_recharge </queryRechargeUrl>
         <smsServiceReqUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/common/send-code </smsServiceReqUrl>
         <smsServiceVerifyUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/common/verify-code </smsServiceVerifyUrl>
+        <webServerDomain> https://test.api.hzyunxingu.cn </webServerDomain>
 
         <appVersion> 0.0.0.0 </appVersion>
         <patchVersion> 0.0.0.0 </patchVersion>
@@ -47,7 +48,7 @@
         </centralServersInfo>
 
         <routerServersInfo>
-            <item routerServerId='1' ip='192.168.10.13' port='2060'></item>
+            <item routerServerId='1' ip='192.168.10.13' port='2064'></item>
         </routerServersInfo>
 
         <dropServersInfo>
@@ -63,7 +64,7 @@
         <mapleAllServerUrl> http://192.168.10.13:9527/getAllServer </mapleAllServerUrl>
         
         <crossServerInfo>
-            <item crossServerId='10003'></item>
+            <item crossServerId='20808'></item>
         </crossServerInfo>
 
         <allianceServiceInfo>
@@ -82,6 +83,7 @@
         <elasticPort> 9200 </elasticPort>
 
         <leaseServerHost> 192.168.10.13:2015 </leaseServerHost>
+        <crossTeamServerHost> 192.168.10.13:2016 </crossTeamServerHost>
 
         <!-- 等待场景服配置 -->
         <isWaitMapServer> false </isWaitMapServer>

@@ -427,33 +427,6 @@ namespace KBEngine
 		}
 	}
 
-	public struct PYTHON
-	{
-		byte[] value;
-
-		PYTHON(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](PYTHON value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator PYTHON(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new PYTHON(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
-		}
-	}
-
 	public struct BLOB
 	{
 		byte[] value;
@@ -592,33 +565,6 @@ namespace KBEngine
 			{
 				return UInt64.MinValue;
 			}
-		}
-	}
-
-	public struct UID1
-	{
-		byte[] value;
-
-		UID1(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](UID1 value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator UID1(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new UID1(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
 		}
 	}
 
@@ -957,33 +903,6 @@ namespace KBEngine
 		{
 			string tvalue = (string)value;
 			return new METHOD_NAME(tvalue);
-		}
-	}
-
-	public struct METHOD_ARGS
-	{
-		byte[] value;
-
-		METHOD_ARGS(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](METHOD_ARGS value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator METHOD_ARGS(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new METHOD_ARGS(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
 		}
 	}
 
@@ -1455,33 +1374,6 @@ namespace KBEngine
 		{
 			string tvalue = (string)value;
 			return new PATH(tvalue);
-		}
-	}
-
-	public struct PY_SET
-	{
-		byte[] value;
-
-		PY_SET(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](PY_SET value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator PY_SET(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new PY_SET(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
 		}
 	}
 
@@ -2820,33 +2712,6 @@ namespace KBEngine
 		}
 	}
 
-	public struct ERROR
-	{
-		byte[] value;
-
-		ERROR(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](ERROR value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator ERROR(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new ERROR(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
-		}
-	}
-
 	public struct ERRNO
 	{
 		UInt32 value;
@@ -2881,33 +2746,6 @@ namespace KBEngine
 			{
 				return UInt32.MinValue;
 			}
-		}
-	}
-
-	public struct DUNGEON_SRC
-	{
-		byte[] value;
-
-		DUNGEON_SRC(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](DUNGEON_SRC value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator DUNGEON_SRC(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new DUNGEON_SRC(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
 		}
 	}
 
@@ -3426,33 +3264,6 @@ namespace KBEngine
 			{
 				return Int32.MinValue;
 			}
-		}
-	}
-
-	public struct CROSS_ENTITYCALL
-	{
-		byte[] value;
-
-		CROSS_ENTITYCALL(byte[] value)
-		{
-			this.value = value;
-		}
-
-		public static implicit operator byte[](CROSS_ENTITYCALL value)
-		{
-			return value.value;
-		}
-
-		public static implicit operator CROSS_ENTITYCALL(byte[] value)
-		{
-			byte[] tvalue = (byte[])value;
-			return new CROSS_ENTITYCALL(tvalue);
-		}
-
-		public Byte this[int ID]
-		{
-			get { return value[ID]; }
-			set { this.value[ID] = value; }
 		}
 	}
 
@@ -5876,6 +5687,8 @@ namespace KBEngine
 		public List<AFFIX_VAL> soulAffixes = new List<AFFIX_VAL>();
 		public UInt32 soulItemId = 0;
 		public List<CLI_GLYPH_INFO> glyphInfos = new List<CLI_GLYPH_INFO>();
+		public List<CLI_GLYPH_INFO> previewGlyphDatas = new List<CLI_GLYPH_INFO>();
+		public List<Byte> previewGlyphBindTypes = new List<Byte>();
 		public Byte glyphGroup = 0;
 		public Byte enhanceLv = 0;
 		public Byte maxBlessLv = 0;
@@ -5893,6 +5706,8 @@ namespace KBEngine
 		public UInt32 returnTime = 0;
 		public UInt64 ownerId = 0;
 		public Byte whyInMyBag = 0;
+		public List<UInt16> blessFailLevels = new List<UInt16>();
+		public List<UInt16> blessFailCounts = new List<UInt16>();
 
 	}
 
@@ -5981,7 +5796,7 @@ namespace KBEngine
 	public class CLIENT_BUFF_ID_VAL
 	{
 		public Int32 buffId = 0;
-		public List<UInt64> srcKeys = new List<UInt64>();
+		public double endTimeStamp = 0d;
 
 	}
 
@@ -6094,6 +5909,7 @@ namespace KBEngine
 		public Byte index = 0;
 		public string name = "";
 		public UInt64 gbId = 0;
+		public Int32 serverId = 0;
 		public Int32 entId = 0;
 		public Vector3 pos = new Vector3(0f, 0f, 0f);
 		public UInt32 spaceNo = 0;
@@ -6139,6 +5955,132 @@ namespace KBEngine
 		public UInt16 school = 0;
 		public Byte sex = 0;
 		public SByte applySource = 0;
+
+	}
+
+	public class CROSS_TEAM_MEMBER_CACHE_VAL
+	{
+		public UInt64 gbId = 0;
+		public UInt32 serverId = 0;
+		public string playerName = "";
+		public UInt32 level = 0;
+		public UInt16 school = 0;
+		public Int32 score = 0;
+		public Int64 hp = 0;
+		public Int64 maxHp = 0;
+		public UInt32 spaceNo = 0;
+		public Vector3 position = new Vector3(0f, 0f, 0f);
+		public Byte groupIdx = 0;
+		public Byte pos = 0;
+		public Byte sex = 0;
+		public Byte picFrameId = 0;
+		public Byte enableMics = 0;
+		public Byte isBlockMics = 0;
+		public Byte enableSpeaker = 0;
+		public Byte inVoiceRoom = 0;
+		public string openId = "";
+
+	}
+
+	public class CROSS_TEAM_BASIC_INFO_VAL
+	{
+		public UInt64 gbId = 0;
+		public UInt32 serverId = 0;
+		public string playerName = "";
+		public Byte sex = 0;
+		public UInt16 school = 0;
+		public Int32 score = 0;
+		public UInt32 level = 0;
+
+	}
+
+	public class CROSS_TEAM_GROUP_VAL
+	{
+		public Byte groupIdx = 0;
+		public List<CROSS_TEAM_MEMBER_CACHE_VAL> memberList = new List<CROSS_TEAM_MEMBER_CACHE_VAL>();
+
+	}
+
+	public class CROSS_TEAM_CACHE_VAL
+	{
+		public UInt64 teamId = 0;
+		public Byte target = 0;
+		public UInt64 captainGbId = 0;
+		public UInt32 minLevel = 0;
+		public Int32 minScore = 0;
+		public string intro = "";
+		public UInt32 maxNum = 0;
+		public Byte autoMatch = 0;
+		public Byte autoEnter = 0;
+		public Byte inDungeon = 0;
+		public Byte micsMode = 0;
+		public List<UInt64> blockedMembers = new List<UInt64>();
+		public List<CROSS_TEAM_GROUP_VAL> groupList = new List<CROSS_TEAM_GROUP_VAL>();
+		public Byte isPublish = 0;
+		public string password = "";
+		public UInt64 deputyGbId = 0;
+		public UInt32 lastDungeonFinishedTime = 0;
+		public UInt32 autoMatchTime = 0;
+		public Byte memberNum = 0;
+		public CLIENT_TEAM_MARK_INFO teamMarkInfo = new CLIENT_TEAM_MARK_INFO();
+
+	}
+
+	public class CROSS_TEAM_MEMBER_STATE_VAL
+	{
+		public UInt64 gbId = 0;
+		public Int64 hp = 0;
+		public Int64 maxHp = 0;
+		public UInt32 level = 0;
+		public Int32 score = 0;
+		public UInt32 spaceNo = 0;
+		public Vector3 position = new Vector3(0f, 0f, 0f);
+		public Int32 routeServerId = 0;
+
+	}
+
+	public class CROSS_TEAM_MEMBER_STATE_LIST : List<CROSS_TEAM_MEMBER_STATE_VAL>
+	{
+
+	}
+
+	public class CROSS_TEAM_INVITE_VAL
+	{
+		public UInt64 teamId = 0;
+		public Byte target = 0;
+		public UInt64 gbId = 0;
+		public UInt32 serverId = 0;
+		public string playerName = "";
+		public UInt16 school = 0;
+		public UInt32 level = 0;
+		public Int32 score = 0;
+		public Byte inviteType = 0;
+		public Byte sex = 0;
+
+	}
+
+	public class CROSS_TEAM_APPLY_VAL
+	{
+		public UInt64 teamId = 0;
+		public Byte target = 0;
+		public UInt64 gbId = 0;
+		public UInt32 serverId = 0;
+		public string playerName = "";
+		public UInt16 school = 0;
+		public UInt32 level = 0;
+		public Int32 score = 0;
+		public Byte sex = 0;
+		public SByte applySource = 0;
+
+	}
+
+	public class CROSS_TEAM_SETTINGS_VAL
+	{
+		public UInt32 minLevel = 0;
+		public Int32 minScore = 0;
+		public string intro = "";
+		public Byte autoEnter = 0;
+		public string password = "";
 
 	}
 
@@ -6287,6 +6229,7 @@ namespace KBEngine
 		public UInt32 level = 0;
 		public Byte teamAmount = 0;
 		public Byte teamTarget = 0;
+		public Byte raidTarget = 0;
 		public string guildName = "";
 		public Byte isRaidLeader = 0;
 		public UInt64 raidId = 0;
@@ -6296,6 +6239,8 @@ namespace KBEngine
 		public Byte raidAmount = 0;
 		public UInt32 offlineTime = 0;
 		public UInt64 bountyId = 0;
+		public UInt16 fromServerId = 0;
+		public UInt16 curServerId = 0;
 
 	}
 
@@ -6386,6 +6331,7 @@ namespace KBEngine
 		public UInt32 rewardItemNumber = 0;
 		public UInt32 rewardCoinNumber = 0;
 		public Byte ticketType = 0;
+		public UInt32 rewardCommonNumber = 0;
 
 	}
 
@@ -6397,6 +6343,7 @@ namespace KBEngine
 		public UInt32 rewardItemNumber = 0;
 		public UInt32 rewardCoinNumber = 0;
 		public Byte ticketType = 0;
+		public UInt32 rewardCommonNumber = 0;
 
 	}
 
@@ -6895,6 +6842,7 @@ namespace KBEngine
 		public UInt32 endTime = 0;
 		public Byte state = 0;
 		public UInt32 price = 0;
+		public UInt32 maxPrice = 0;
 		public UInt32 redeemWaitTime = 0;
 		public Byte hasPrice = 0;
 		public UInt32 returnTime = 0;
@@ -7540,7 +7488,6 @@ namespace KBEngine
 		public UInt32 leaderProfession = 0;
 		public UInt32 leaderGender = 0;
 		public UInt32 createdAt = 0;
-		public UInt32 serverId = 0;
 
 	}
 
@@ -7611,6 +7558,104 @@ namespace KBEngine
 		public Byte res = 0;
 		public UInt16 id = 0;
 		public string resp = "";
+
+	}
+
+	public class LEAGUE_MESSAGE_VAL
+	{
+		public UInt64 senderGuildId = 0;
+		public string senderGuildName = "";
+		public Int32 senderServerId = 0;
+		public CHAT_CHANNEL_AVATAR_INFO avatarInfo = new CHAT_CHANNEL_AVATAR_INFO();
+		public CHAT_MSG_DATA content = new CHAT_MSG_DATA();
+		public Int64 sendTime = 0;
+		public Byte senderType = 0;
+
+	}
+
+	public class LEAGUE_MESSAGE
+	{
+		public UInt64 allianceId = 0;
+		public LEAGUE_MESSAGE_VAL message = new LEAGUE_MESSAGE_VAL();
+
+	}
+
+	public class ENMITY_ITEM_CLIENT_VAL
+	{
+		public UInt64 gbId = 0;
+		public string name = "";
+		public UInt16 school = 0;
+		public UInt32 level = 0;
+		public Byte sex = 0;
+		public Int32 score = 0;
+		public UInt32 offlineTime = 0;
+		public UInt32 addTime = 0;
+
+	}
+
+	public class COIN_TICKET_CLIENT_VAL
+	{
+		public UInt32 itemId = 0;
+		public UInt32 itemNum = 0;
+		public Byte discountType = 0;
+
+	}
+
+	public class TEST_REWARD_AWARD_ITEM
+	{
+		public UInt32 awardId = 0;
+		public UInt32 count = 0;
+
+	}
+
+	public class TEST_REWARD_AWARD_LIST : List<TEST_REWARD_AWARD_ITEM>
+	{
+
+	}
+
+	public class TEST_REWARD_LEVEL_RANK_INFO
+	{
+		public Byte rewardType = 0;
+		public Byte claimed = 0;
+		public UInt32 ranking = 0;
+		public TEST_REWARD_AWARD_LIST awards = new TEST_REWARD_AWARD_LIST();
+
+	}
+
+	public class TEST_REWARD_RECHARGE_INFO
+	{
+		public Byte rewardType = 0;
+		public Byte claimed = 0;
+		public float rechargeAmount = 0f;
+		public TEST_REWARD_AWARD_LIST awards = new TEST_REWARD_AWARD_LIST();
+
+	}
+
+	public class TEST_REWARD_MINE_GUILD_INFO
+	{
+		public Byte rewardType = 0;
+		public Byte claimed = 0;
+		public Byte guildJob = 0;
+		public string guildName = "";
+		public TEST_REWARD_AWARD_LIST awards = new TEST_REWARD_AWARD_LIST();
+
+	}
+
+	public class TEST_REWARD_POWER_RANK_INFO
+	{
+		public Byte rewardType = 0;
+		public Byte claimed = 0;
+		public UInt32 ranking = 0;
+		public TEST_REWARD_AWARD_LIST awards = new TEST_REWARD_AWARD_LIST();
+
+	}
+
+	public class TEST_REWARD_OVERVIEW
+	{
+		public List<TEST_REWARD_LEVEL_RANK_INFO> levelRank = new List<TEST_REWARD_LEVEL_RANK_INFO>();
+		public List<TEST_REWARD_RECHARGE_INFO> recharge = new List<TEST_REWARD_RECHARGE_INFO>();
+		public List<TEST_REWARD_MINE_GUILD_INFO> mineGuild = new List<TEST_REWARD_MINE_GUILD_INFO>();
+		public List<TEST_REWARD_POWER_RANK_INFO> powerRank = new List<TEST_REWARD_POWER_RANK_INFO>();
 
 	}
 

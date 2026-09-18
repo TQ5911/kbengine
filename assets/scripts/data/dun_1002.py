@@ -9734,38 +9734,6 @@ datas ={
       "ShowInSceneMap": 1
     }
   },
-  "10024019": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Npc",
-    "ClassNameType": 1,
-    "CustomID": "",
-    "Dir": 0.0,
-    "DisplayName": "",
-    "EliteCustomID": "",
-    "EntityID": 18000019,
-    "ID": 10024019,
-    "Name": "\u94c1\u767e\u70bc",
-    "PosX": 411.4034,
-    "PosY": 9.42,
-    "PosZ": 143.0868,
-    "Props": {
-      "IsOpen": 1,
-      "MapEntityType": "12",
-      "Radius": 0.0,
-      "RefreshNum": 1,
-      "RefreshTime": 1,
-      "RefreshTimedID": 0,
-      "Remark": "",
-      "ShowInMap": 1,
-      "ShowInSceneMap": 1,
-      "TelDir": 0.0,
-      "TelX": 411.4034,
-      "TelY": 9.403305,
-      "TelZ": 143.0868
-    }
-  },
   "10024020": {
     "ActivityID": 0,
     "AttachedGIDList": [],
@@ -10507,12 +10475,12 @@ datas ={
     "ClassName": "Npc",
     "ClassNameType": 1,
     "CustomID": "",
-    "Dir": 326.0,
+    "Dir": 355.8076,
     "DisplayName": "",
     "EliteCustomID": "",
-    "EntityID": 18000032,
+    "EntityID": 18000019,
     "ID": 10024044,
-    "Name": "\u4e01\u94c3\u94db",
+    "Name": "\u94c1\u767e\u70bc",
     "PosX": 369.3261,
     "PosY": 7.55,
     "PosZ": 141.4607,
@@ -10560,34 +10528,6 @@ datas ={
       "TelX": 309.0181,
       "TelY": 17.71354,
       "TelZ": 84.11435
-    }
-  },
-  "10024049": {
-    "ActivityID": 0,
-    "AttachedGIDList": [],
-    "AttachedGIDListStr": "",
-    "ClassName": "Npc",
-    "ClassNameType": 1,
-    "CustomID": "",
-    "Dir": 280.0,
-    "DisplayName": "",
-    "EliteCustomID": "",
-    "EntityID": 18000018,
-    "ID": 10024049,
-    "Name": "\u94c1\u767e\u70bc",
-    "PosX": 438.3523,
-    "PosY": 22.70952,
-    "PosZ": 319.9125,
-    "Props": {
-      "IsOpen": 1,
-      "MapEntityType": 0,
-      "Radius": 0.0,
-      "RefreshNum": 1,
-      "RefreshTime": 1,
-      "RefreshTimedID": 0,
-      "Remark": "",
-      "ShowInSceneMap": 1,
-      "TelDir": 180.0
     }
   },
   "10024050": {
@@ -11764,6 +11704,30 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "10028143": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "CustomFuncPos",
+    "ClassNameType": 10,
+    "CustomID": "",
+    "Dir": 30.51784,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 0,
+    "ID": 10028143,
+    "Name": "\u81ea\u5b9a\u4e49\u529f\u80fd\u70b9",
+    "PosX": 296.3204,
+    "PosY": 17.83401,
+    "PosZ": 50.41761,
+    "Props": {
+      "Num": 0,
+      "Radius": 0.0,
+      "RefreshTimedID": 0,
+      "Remark": "86060115",
       "ShowInSceneMap": 1
     }
   }

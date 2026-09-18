@@ -86,7 +86,7 @@ def setBaseAppData(key, value):
         import game
         game.onBaseAppData(key, value)
     elif isCell():
-        gameglobal.staticCell.base.setBaseAppData(key, value)
+        utils.randomBaseApp().setBaseAppData(key, value)
 
 
 def getBaseAppData(key):
@@ -240,6 +240,9 @@ def getDungeonEnterTypeBySpaceNo(spaceNo):
 
 
 def getDungeonStubBySpaceNo(spaceNo):
+    # 副本空间归属每 dungeonNo 一个的副本 stub（跨服讨伐空间同样由对应 dungeonNo 的
+    # TeamDungeonStub/RaidDungeonStub 管理，跨服判定走空间 playMode，见
+    # DungeonSpaceVal.isCrossDungeon）
     et = getDungeonEnterTypeBySpaceNo(spaceNo)
     return getDungeonStubByDungeonNo(formula.fetchMapId(spaceNo), et)
 
@@ -424,6 +427,12 @@ def getTeamStub(teamId):
     teamStubName = 'TeamStub' + str(id)
     return getGlobalBase(teamStubName)
 
+def getCrossTeamStub(teamId):
+    # 跨服组队本服代理分片路由：teamId % M；无 teamId 的入口传 gbId
+    id = teamId % gameconst.CROSS_TEAMSTUB_CONF_NUM
+    crossTeamStubName = gameconst.GLOBAL_BASE_STUB_CROSSTEAMSTUB + str(id)
+    return getGlobalBase(crossTeamStubName)
+
 def getRaidStub(raidId):
     id = raidId % gameconst.RAIDSTUB_CONFIG_NUM
     raidStubName = gameconst.GLOBAL_BASE_STUB_RAIDSTUB + str(id)
@@ -501,6 +510,59 @@ def removeGuildRelation(guildUUID1, guildUUID2, version):
     _pair = utils.getGuildUUIDPair(guildUUID1, guildUUID2)
     gameglobal.guildRelationDic.pop(_pair, None)
     gameglobal.guildRelationVersion = version
+
+def enemyRelationPairKey(attackType, attackId, targetType, targetId):
+    # 与 centralService allianceData.enemyKey 一致的无序键，保证同一战争行幂等
+    if attackId <= targetId:
+        return (attackType, attackId, targetType, targetId)
+    return (targetType, targetId, attackType, attackId)
+
+# 敌对立关系变更后要刷新 cell 侧 Avatar 的目标类型缓存。缓存的失效走既有的
+# guildRelationVersion 惰性比对机制（utils.isEnemy 在每次判定时比较 avatar 的
+# guildRelationVersion 与全局版本，不一致则调 resetAllTargetTypeCache 清缓存）。
+# 因此这里除了维护 enemyRelationVersion 外，也要顺带推进 guildRelationVersion，
+# 让进/退联盟、宣战/结束等敌对关系变化能立刻反映到 PK 目标判定上。
+def _bumpGuildRelationVersion(version):
+    # 用外部版本覆盖（与 GuildRelationVersion 同步），若外部没有合理解则自增
+    if version is not None and version > 0:
+        gameglobal.guildRelationVersion = version
+    else:
+        gameglobal.guildRelationVersion += 1
+
+def resetEnemyRelation(relationDic, version):
+    # 全量同步：以 centralService 的实体战争行为权威整体替换
+    gameglobal.enemyRelationDic = relationDic
+    gameglobal.enemyRelationVersion = version
+    _bumpGuildRelationVersion(version)
+
+def addEnemyRelation(enemyInfo, version):
+    # 增量新增：enemyInfo 为 EnemyRelationInfo proto 的 dict
+    _attackType = enemyInfo.get('attackType', 0)
+    _attackId = enemyInfo.get('attackId', 0)
+    _targetType = enemyInfo.get('targetType', 0)
+    _targetId = enemyInfo.get('targetId', 0)
+    _key = enemyRelationPairKey(_attackType, _attackId, _targetType, _targetId)
+    gameglobal.enemyRelationDic[_key] = {
+        'attackType': _attackType,
+        'attackId': _attackId,
+        'attackServerId': enemyInfo.get('attackServerId', 0),
+        'targetType': _targetType,
+        'targetId': _targetId,
+        'targetServerId': enemyInfo.get('targetServerId', 0),
+        'endTime': enemyInfo.get('endTime', 0),
+    }
+    gameglobal.enemyRelationVersion = version
+    _bumpGuildRelationVersion(version)
+
+def removeEnemyRelation(enemyInfo, version):
+    _attackType = enemyInfo.get('attackType', 0)
+    _attackId = enemyInfo.get('attackId', 0)
+    _targetType = enemyInfo.get('targetType', 0)
+    _targetId = enemyInfo.get('targetId', 0)
+    _key = enemyRelationPairKey(_attackType, _attackId, _targetType, _targetId)
+    gameglobal.enemyRelationDic.pop(_key, None)
+    gameglobal.enemyRelationVersion = version
+    _bumpGuildRelationVersion(version)
 
 
 def setMapleServerInfo(serverInfo, alias, serverName):

@@ -50,7 +50,11 @@ datas = _tools.RODict({
     9: _tools.RODict({
         "ID": 9,
         "unlockID": "PowerRush",
+    }),
+    10: _tools.RODict({
+        "ID": 10,
+        "unlockID": "ReturnReward",
     })
 })
 minKey = 1
-maxKey = 9
+maxKey = 10

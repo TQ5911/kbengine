@@ -1,7 +1,7 @@
 <root>
     <Properties>
         <leftCubeTimes>
-            <Type>          UINT8                       </Type>
+            <Type>          UINT32                       </Type>
             <Flags>         BASE_AND_CLIENT             </Flags>
             <Persistent>    true                        </Persistent>
         </leftCubeTimes>
@@ -68,6 +68,11 @@
             <Flags>         CELL_PRIVATE                </Flags>
             <Persistent>    true                        </Persistent>
         </cubeRoomLeftTimeDic>
+
+        <cubeCoinTicketData>
+            <Type>          COIN_TICKET_INFO_DATA   </Type>
+            <Flags>         BASE                    </Flags>
+        </cubeCoinTicketData>
     </Properties>
 
     <BaseMethods>
@@ -84,8 +89,7 @@
 
         <useItemAddCubeTimes>
             <Arg>           UINT8                   </Arg>
-            <Arg>           ITEM_ID                 </Arg>
-            <Arg>           UINT32                  </Arg>
+            <Arg>           PYTHON                  </Arg>
             <Arg>           UINT8                   </Arg>
             <Arg>           BOOL                    </Arg>
             <Arg>           BOOL                    </Arg>
@@ -96,13 +100,14 @@
         <addRoomDurationFailed>
             <Arg>           OP_UUID                 </Arg>
             <Arg>           UINT8                   </Arg>
-            <Arg>           ITEM_ID                 </Arg>
-            <Arg>           UINT32                  </Arg>
+            <Arg>           PYTHON                  </Arg>
             <Arg>           UINT16                  </Arg>
         </addRoomDurationFailed>
 
         <addRoomDurationFailedRewindTimes>
             <Arg>           OP_UUID                 </Arg>
+            <Arg>           UINT16                  </Arg>
+            <Arg>           UINT16                  </Arg>
         </addRoomDurationFailedRewindTimes>
 
         <autoRenewCubeRoom>
@@ -158,8 +163,7 @@
 
         <checkAddCubeRoomDurationCondition>
             <Arg>           UINT8                   </Arg>
-            <Arg>           ITEM_ID                 </Arg>
-            <Arg>           UINT32                  </Arg>
+            <Arg>           PYTHON                  </Arg>
             <Arg>           UINT8                   </Arg>
             <Arg>           OP_UUID                 </Arg>
         </checkAddCubeRoomDurationCondition>

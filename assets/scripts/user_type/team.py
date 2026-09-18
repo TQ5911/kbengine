@@ -2,6 +2,7 @@ import KBEngine
 from KBEDebug import *
 
 import gameengine
+import gameconfig
 import gameconst
 import userType
 import formula
@@ -1563,11 +1564,13 @@ class TeamMarkMemberCacheVal(userType.UserSingleType):
         self.pos = pos
         
     def toClientData(self):
+        # serverId：CLIENT_TEAM_MARK_VAL 跨服补充字段，本服标记恒为本服 id
         return {
                 'type': self.type,
                 'index': self.index,
                 'name': self.name,
                 'gbId': self.gbId,
+                'serverId': gameconfig.serverId(),
                 'entId': self.entId,
                 'pos': self.pos,
                 'spaceNo': self.spaceNo,

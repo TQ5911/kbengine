@@ -60,6 +60,28 @@ class IAbyssCell(object):
         if self.isCrossServer:
             self.pyAddTimer(60, 60, gametimer.CROSSSERVER_ABYSS_TIME_SYNC)
 
+    def _logAbyssInfo(self, abyssEvent, mapId=None, floor=None, leftTime=None):
+        if mapId is None:
+            mapId = formula.fetchMapId(self.spaceNo)
+        if floor is None:
+            floor = AB_FD.id2floor.get(mapId, -1)
+        if leftTime is None:
+            leftTime = self.abyssQuota.calcLeftTime()
+
+        originServerId = self.fromServerId if self.fromServerId else gameconfig.serverId()
+        LogTrackingMgr.LogTrackingMgr.Abyss_Info(
+            self.gbId,
+            self.clientDistinctIdCell,
+            self.gbId,
+            gameconfig.gameId(),
+            floor,
+            mapId,
+            abyssEvent,
+            leftTime,
+            originServerId,
+            gameconfig.getCrossServerId(),
+        )
+
     def isAbyssBossFloor(self):
         return formula.fetchMapId(self.spaceNo) == 5204 or formula.fetchMapId(self.spaceNo) == 5205
 
@@ -325,11 +347,11 @@ class IAbyssCell(object):
         self._startAbyssTimer(gameconst.ABYSS_DUR_RENEW)
         self.doSyncAbyssData()
 
-    def checkAddAbyssDurationCondition(self, addType, itemId, itemNum, num, opUUID):
+    def checkAddAbyssDurationCondition(self, addType, costList, num, opUUID):
         if not self._checkAddAbyssDurationCondition():
             return
 
-        self.base.doAddAbyssTicket(addType, itemId, itemNum, num, True, True, gameconst.AbyssAddTicketReason.CHECK_COND, opUUID)
+        self.base.doAddAbyssTicket(addType, costList, num, True, True, gameconst.AbyssAddTicketReason.CHECK_COND, opUUID)
 
     def addAbyssRewardRecord(self, rewardList):
         _dic = self.getTempMiscProp(gameconst.EntityPropsEnum.abyssRewardList, {})
@@ -377,6 +399,7 @@ class IAbyssCell(object):
         gameengine.getAbyssStubBySpaceNo(self.spaceNo).onEnterAbyssSuccess(self.gbId, self.spaceNo)
         self.abyssQuota.setAbyssEnterTime(self, utils.curTS())
         self._startAbyssTimer(gameconst.ABYSS_DUR_RENEW)
+        self._logAbyssInfo(gameconst.ABYSS_EVENT_ENTER)
 
     @utils.isMyself
     @gamedecorator.crossServer
@@ -415,7 +438,12 @@ class IAbyssCell(object):
 
         #用票买时间
         if self.abyssQuota.leftTime <= 0:
-            self.abyssQuota.addAbyssLeftTime(self, AB_CD.datas['abyssNumTime']['value'] * 60)
+            self.abyssQuota.addAbyssLeftTime(
+                self,
+                AB_CD.datas['abyssNumTime']['value'] * 60,
+                floor=floor,
+                mapId=AB_FD.datas[floor]['ID'],
+            )
             self.base.afterEnterAbyssDeductTimes({'floor': floor})
         else:
             # 有剩余时间正常进入也记埋点（不扣票）
@@ -468,6 +496,8 @@ class IAbyssCell(object):
         self.spaceMgr.onPlayerLeave(self.gbId, self.id, self)
 
         self.base.onCrossServerAbyssLeave()
+
+        self._logAbyssInfo(gameconst.ABYSS_EVENT_EXIT)
 
         LogTrackingMgr.LogTrackingMgr.abyss_leave(
             self.gbId,

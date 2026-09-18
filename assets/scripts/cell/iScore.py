@@ -38,7 +38,7 @@ class IScore(object):
         LOG_INFO('onInitAvatarBaseScores::', data)
         data = data or {}
         for _k, v in data.items():
-            self._changeScore(_k, v)
+            self._changeScore(0, _k, v)
 
     def checkInitScoreTimeout(self):
         if self.scoreInitFinished:
@@ -99,7 +99,8 @@ class IScore(object):
     # --------------------------------------------------------------
     # UPDATE FUNC
 
-    def _changeScore(self, scoreKey, val):
+    def _changeScore(self, opUUID, scoreKey, val):
+        LOG_DBG('_changeScore:', opUUID, scoreKey, val)
         _oldTotalScore = self.totalScore
         setattr(self.scoresInfo, scoreKey, val)
         # 每次重新计算祝福评分
@@ -107,49 +108,49 @@ class IScore(object):
         blessScore = dataUtils.calcAvatarBlessScore(self)
         blessScore = math.floor(blessScore)
         if blessScore >= 0 and blessScore != oldBlessScore:
-            setattr(self.scoresInfo, 'bless', blessScore)
-            self.base.baseScoreChanged(self.scoreInitFinished, 'bless', blessScore)
+            setattr(self.scoresInfo, gameconst.PlayerScoreKeyDatas.Bless, blessScore)
+            self.base.baseScoreChanged(opUUID, self.scoreInitFinished, gameconst.PlayerScoreKeyDatas.Bless, blessScore)
         
         self.scoresInfo = self.scoresInfo
         self.totalScore = self.getTotalScore()
         if _oldTotalScore != self.totalScore:
-            self.base.baseScoreChanged(self.scoreInitFinished, scoreKey, val)
+            self.base.baseScoreChanged(opUUID, self.scoreInitFinished, scoreKey, val)
         self.markAvatarScoreBeInited(scoreKey)
 
     def _doOnScoreChange(self):
         pass
 
-    def updateEquipmentScore(self):
-        self._changeScore("equipments", math.floor(self.getTotalEquipmentsScore()))
+    def updateEquipmentScore(self, opUUID=0):
+        self._changeScore(opUUID, gameconst.PlayerScoreKeyDatas.Equipments, math.floor(self.getTotalEquipmentsScore()))
         self._doOnScoreChange()
         self.syncBodyEquipDressData()
 
-    def updateSelfLevelScore(self):
-        self._changeScore("level", math.floor(self.getSelfLevelScore()))
+    def updateSelfLevelScore(self, opUUID=0):
+        self._changeScore(opUUID, gameconst.PlayerScoreKeyDatas.Level, math.floor(self.getSelfLevelScore()))
         self._doOnScoreChange()
 
-    def onUpdateRewardFightProp(self, newScore):
-        self._changeScore("rewardFightProp", math.floor(newScore))
+    def onUpdateRewardFightProp(self, newScore, opUUID=0):
+        self._changeScore(opUUID, gameconst.PlayerScoreKeyDatas.RewardFightProp, math.floor(newScore))
         self._doOnScoreChange()
 
-    def onUpdateMountScore(self, newScore):
-        self._changeScore("mount", math.floor(newScore))
+    def onUpdateMountScore(self, newScore, opUUID=0):
+        self._changeScore(opUUID, gameconst.PlayerScoreKeyDatas.Mount, math.floor(newScore))
         self._doOnScoreChange()
 
-    def onUpdatePetScore(self, newScore):
-        self._changeScore("pet", math.floor(newScore))
+    def onUpdatePetScore(self, newScore, opUUID=0):
+        self._changeScore(opUUID, gameconst.PlayerScoreKeyDatas.Pet, math.floor(newScore))
         self._doOnScoreChange()
 
-    def onUpdateSkillScore(self, newScore):
-        self._changeScore("skill", math.floor(newScore))
+    def onUpdateSkillScore(self, newScore, opUUID=0):
+        self._changeScore(opUUID, gameconst.PlayerScoreKeyDatas.Skill, math.floor(newScore))
         self._doOnScoreChange()
 
-    def onUpdateGuildTrainScore(self, newScore):
-        self._changeScore("guildtrain", math.floor(newScore))
+    def onUpdateGuildTrainScore(self, newScore, opUUID=0):
+        self._changeScore(opUUID, gameconst.PlayerScoreKeyDatas.Guildtrain, math.floor(newScore))
         self._doOnScoreChange()
 
-    def onUpdateMeridianScore(self, newScore):
-        self._changeScore("meridian", math.floor(newScore))
+    def onUpdateMeridianScore(self, newScore, opUUID=0):
+        self._changeScore(opUUID, gameconst.PlayerScoreKeyDatas.Meridian, math.floor(newScore))
         self._doOnScoreChange()
     # --------------------------------------------------------------
 

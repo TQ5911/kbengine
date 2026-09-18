@@ -250,12 +250,13 @@
         </getEventList>
 
         <sendChatMessage>
-            <Arg>       UINT64                  </Arg>
-            <Arg>       GUILD_UUID              </Arg>
-            <Arg>       UNICODE                 </Arg>
-            <Arg>       UINT32                  </Arg>
-            <Arg>       UNICODE                 </Arg>
-            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       UINT64                      </Arg>
+            <Arg>       GUILD_UUID                  </Arg>
+            <Arg>       UNICODE                     </Arg>
+            <Arg>       UINT32                      </Arg>
+            <Arg>       PYTHON                      </Arg>
+            <Arg>       PYTHON                      </Arg>
+            <Arg>       ENTITYCALL                  </Arg>
         </sendChatMessage>
 
         <getChatHistory>
@@ -332,5 +333,10 @@
         <queryLeagueUUID>
             <Arg>   GUILD_UUID </Arg>
         </queryLeagueUUID>
+
+        <removeEnemyRelation>
+            <Arg>   GUILD_UUID </Arg>
+        </removeEnemyRelation>
+
     </BaseMethods>
 </root>

@@ -89,7 +89,7 @@ class EquipBlessUnit:
                 oldVal = equipItem.equipAttr.blessAffixes[0].affixVal
 
             try:
-                equipItem.doEquipBlessing(None)
+                equipItem.doEquipBlessing()
                 blessCount += 1
             except Exception as e:
                 LOG_ERR('_blessOneEquip doEquipBlessing error:', equipId, e)

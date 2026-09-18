@@ -2,11 +2,11 @@ package Router
 
 import (
 	"centralService/src/appLog"
+	"centralService/src/router/routerApp/gameServerService"
+	"centralService/src/router/routerApp/routerCluster"
 	"centralService/src/trpc"
 	"errors"
 	"fmt"
-
-	gameServerService "centralService/src/router/routerApp/gameServerService"
 )
 
 // 给游戏服务器提供的接口
@@ -47,18 +47,39 @@ func (self *GameServerService) RegisterBaseapp(in *gameServerService.BaseAppInfo
 
 func (self *GameServerService) DoOnOthersBase(in *gameServerService.OthersBaseRequest) (*gameServerService.Void, error) {
 	appLog.Debug("doOnOthersBase:", in.ServerId, in.DstServerId, in.ComponentId, in.MemoryStream)
-	otherBaseApp := self.app.getOtherBaseApp(in.DstServerId, in.ComponentId)
-	if otherBaseApp == nil {
-		appLog.Error("cannot find other baseapp", in.ServerId, in.ComponentId, in.DstServerId, in.ComponentId)
-		return nil, nil
-	}
 
 	//记录流量统计：按来源服务器和目标服务器分别累加请求数和字节数
 	self.app.recordTraffic(in.ServerId, in.DstServerId, uint64(len(in.MemoryStream)))
 
-	othersBaseRequest := gameServerService.OthersBaseRequest{ServerId: in.ServerId, DstServerId: in.DstServerId, ComponentId: in.ComponentId, MemoryStream: in.MemoryStream}
-	otherBaseApp.GetClientEndPoint().(*gameServerService.GameServerClient).OnRemoteCallFromOthersBase(&othersBaseRequest)
+	// 1) 本地优先
+	if otherBaseApp := self.app.getOtherBaseApp(in.DstServerId, in.ComponentId); otherBaseApp != nil {
+		othersBaseRequest := gameServerService.OthersBaseRequest{
+			ServerId:     in.ServerId,
+			DstServerId:  in.DstServerId,
+			ComponentId:  in.ComponentId,
+			MemoryStream: in.MemoryStream,
+		}
+		otherBaseApp.GetClientEndPoint().(*gameServerService.GameServerClient).OnRemoteCallFromOthersBase(&othersBaseRequest)
+		return nil, nil
+	}
 
+	// 2) 集群路由：查全局表，目标可能注册在另一个 router 上
+	if rid, ok := self.app.lookupClusterRoute(in.DstServerId); ok && rid != RouterConfig.RouterId {
+		req := &routerCluster.ClusterForwardRequest{
+			DstServerId:    in.DstServerId,
+			DstComponentId: in.ComponentId,
+			SrcServerId:    in.ServerId,
+			SrcComponentId: in.ComponentId,
+			MemoryStream:   in.MemoryStream,
+		}
+		if err := self.app.forwardToRemoteRouter(rid, req); err != nil {
+			appLog.Errorf("cluster forward to routerId=%d failed: %s", rid, err.Error())
+		} else {
+			return nil, nil
+		}
+	}
+
+	appLog.Error("cannot find other baseapp", in.ServerId, in.ComponentId, in.DstServerId, in.ComponentId)
 	return nil, nil
 }
 

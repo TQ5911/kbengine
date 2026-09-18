@@ -509,6 +509,13 @@
             <Arg>       PYTHON                  </Arg>
         </modifyGuildFund>
 
+        <modifyGuildIronMine>
+            <Arg>       INT32                   </Arg>
+            <Arg>       BONUS_SRC               </Arg>
+            <Arg>       UUID                    </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </modifyGuildIronMine>
+
         <modifyGuildCommission>
             <Arg>       INT32                   </Arg>
             <Arg>       BONUS_SRC               </Arg>
@@ -812,7 +819,6 @@
         </doAddGuildIronMineFromStub>
 
         <doGetGuildIronMine>
-            <Arg>       PLAYER_GBID         </Arg>
             <Arg>       ENTITYCALL          </Arg>
         </doGetGuildIronMine>
 
@@ -1087,10 +1093,10 @@
         </onGetEventList>
 
         <onSendChatMessage>
-            <Arg>       PLAYER_GBID             </Arg>
-            <Arg>       UINT64                  </Arg>
-            <Arg>       UNICODE                 </Arg>
-            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       PLAYER_GBID                     </Arg>
+            <Arg>       PYTHON                          </Arg>
+            <Arg>       PYTHON                          </Arg>
+            <Arg>       ENTITYCALL                      </Arg>
         </onSendChatMessage>
 
         <onGetChatHistory>
@@ -1176,5 +1182,27 @@
             <Arg>   LEAGUE_UUID </Arg>
             <Arg>   ENTITYCALL  </Arg>   
         </onGetLeagueSimpleInfo>
+
+        <gmModifyGuildBuildLv>
+            <Arg>       GUILD_BUILDING_ID       </Arg>
+            <Arg>       LEVEL                   </Arg>
+        </gmModifyGuildBuildLv>
+
+        <gmClearLeaveLeagueTS>
+        </gmClearLeaveLeagueTS>
+
+        <onAllianceChatMessage>
+            <Arg>   PYTHON  </Arg>
+        </onAllianceChatMessage>
+
+        <onAllianceEventTips>
+            <Arg>   UINT32  </Arg>
+            <Arg>   ARRAY   <of>        UNICODE     </of>       </Arg>
+        </onAllianceEventTips>
+
+        <getUnionAndEnemyInfo>
+            <Arg> PLAYER_GBID  </Arg>
+            <Arg> ENTITYCALL   </Arg>
+        </getUnionAndEnemyInfo>
     </BaseMethods>
 </root>

@@ -376,7 +376,7 @@ class UseItemCtx(object):
 
     def __init__(self, targetId=0, argsList=None, withMailId=0,\
                  bindType=gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED,
-                 itemObj=None):
+                 itemObj=None, usedCount = 0):
         self.targetId = targetId
         if argsList is None:
             self.argsList = []
@@ -387,6 +387,7 @@ class UseItemCtx(object):
         self.withMailId = withMailId
         self.bindType = bindType
         self.itemObj = itemObj
+        self.usedCount = usedCount
 
     def _lateReload(self):
         super(UseItemCtx, self)._lateReload()
@@ -579,7 +580,9 @@ class AchievementCtx(object):
 
 
 class DropEquipCtx(object):
-    def __init__(self, score=0, quality=0, grade=0):
+    def __init__(self, equipType=0, equipSubType=0, score=0, quality=0, grade=0):
+        self.equipType = equipType
+        self.equipSubType = equipSubType
         self.score = score
         self.quality = quality
         self.grade = grade

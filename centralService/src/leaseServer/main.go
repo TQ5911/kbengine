@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	base.Init("leaseConf.json", &LeaseApp.LeaseConfig, func() common.IApp {
+	base.Init(&LeaseApp.LeaseConfig, func() common.IApp {
 		return LeaseApp.NewLeaseApp()
 	})
 }

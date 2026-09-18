@@ -41,6 +41,7 @@ import aureole
 import NPC_Pick as NPD
 import skillRelevant_summonUnlock as SRSU
 import combatSkill
+import awardContext
 
 
 class AureoleMixin(object):
@@ -741,9 +742,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if not _releaseRole:
             return 0
 
-        if (hpValue > 0 and self.hp < self.fullHp) or (hpValue < 0 and self.hp > 0):
-            self.onEffectEventCall('onHPModify', releaseRoleId, self.id, effectEventCtx.HpEventCtx(hpValue))
-
         oldHp = self.hp
         _curHp = self.hp + hpValue
 
@@ -797,6 +795,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         hpDelta = self.hp - oldHp
         if hpDelta < 0 and realReleaseRole.IsAvatar:
             realReleaseRole.addDamageSetInFighting(self)
+
+        # 残血条件buff按当前血量加减，必须在hp实际更新后再派发
+        if (hpValue > 0 and oldHp < self.fullHp) or (hpValue < 0 and oldHp > 0):
+            self.onEffectEventCall('onHPModify', releaseRoleId, self.id, effectEventCtx.HpEventCtx(hpValue))
 
         if self.hp <= 0:
             self.goDie(_releaseRole, srcType, srcId, forceDead, context)
@@ -1109,7 +1111,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             elif _state == gameconst.StateEnum.Sprinting:
                 self.leaveSprintingState()
             elif _state == gameconst.StateEnum.Flying:
-                if byConflictState not in (gameconst.StateEnum.Fall, gameconst.StateEnum.speedFall):
+                if byConflictState not in (gameconst.StateEnum.Fall, gameconst.StateEnum.speedFall, CCDD.datas.doubleJump):
                     self.setState(gameconst.StateEnum.Fall)
                 self.addTimerCB(1, '_onRemoveFlyingState', (), gametimer.TIMER_TAG_ON_REMOVE_FLY_STATE)
 
@@ -1242,7 +1244,15 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
             sVal, tid = usingSkills[sid]
             if sVal.hasSkillTag(gameconst.SkillTagEnum.GeneralSkill):
-                sVal.useSkillDone(self, 0, [], isSucc=False, doRemoveState=True, forceResetSkill=True)
+                sVal.useSkillDone(
+                    self, 
+                    0, 
+                    [], 
+                    isSucc=False, 
+                    doRemoveState=True, 
+                    forceResetSkill=True,
+                    resetReason=gameconst.ResetSkillReason.ReasonGeneralSkillBreak
+                )
 
     def _useSkillBySkillObj(self, skill, actionCtx, compensateTime=0, isSetState=True, fixDir=None, ignoreReasons=0):
         skillId = skill.skillId
@@ -3280,6 +3290,15 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         super(SkillManager, self).onTimer(tid, userData)
 
+    def _attachDeathCollectionMonsterCtx(self, collection):
+        if not collection or collection.awardContext is not None:
+            return
+        if not getattr(self, 'IsMonster', False):
+            return
+        collection.awardContext = awardContext.CommonContext(0)
+        collection.awardContext.addContextVar('level', self.level)
+        collection.awardContext.addContextVar('monsterId', self.monsterId)
+
     def deathCreateCollection(self, radius, numProb, collectionIdProb, disappearTime, extra=None):
         numList = []
         numWeightList = []
@@ -3336,12 +3355,20 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                                 _props['fromMonsterId'] = extra.get('fromMonsterId', 0)
 
             LOG_INFO("deathCreateCollection", _props)
-            KBEngine.createEntity('Collection', self.spaceID, _pos, self.direction, _props)
+            collection = KBEngine.createEntity('Collection', self.spaceID, _pos, self.direction, _props)
+            self._attachDeathCollectionMonsterCtx(collection)
+
+    def _getValidPosFunc(self, pos):
+        _h = KBEngine.getPositionHeight(self.spaceID, pos, layer=1)
+        if _h is None:
+            return None
+
+        return (pos[0], _h, pos[2])
 
     def deathCreateCollectionByList(
             self, radius, collectionIdProb, 
             disappearTime, posType=gameconst.DEATH_COLL_POS_TYPE_SELF_POS, 
-            fixedPos=None):
+            fixedPos=None, gridSize=2):
 
         createNum = 0
         boxRadius = 0
@@ -3357,12 +3384,16 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             LOG_ERR('invalid pos type', posType)
             return
 
-        posList = self.getRandomPositionByBoxRadius(_targetPos, radius, boxRadius, createNum)
+        #posList = self.getRandomPositionByBoxRadius(_targetPos, radius, boxRadius, createNum)
+        posList = utils.collectAndShuffleValidPositions(_targetPos, radius, gridSize, self._getValidPosFunc, createNum)
+
+        if createNum > len(posList):
+            LOG_ERR('deathCreateCollectionByList', self.monsterId, self.spaceNo, self.position)
 
         idx = 0
         for (num, collectionId) in collectionIdProb:
             for i in range(num):
-                _pos = posList[idx] if i < len(posList) else self.position
+                _pos = posList[idx] if idx < len(posList) else self.position
                 idx += 1
                 _props = {
                     'collectionId': collectionId,
@@ -3375,7 +3406,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                     _props['spaceMgrId'] = self.spaceMgr.id
                     _props['spaceMgrBox'] = self.spaceMgr.base
 
-                KBEngine.createEntity('Collection', self.spaceID, _pos, self.direction, _props)
+                collection = KBEngine.createEntity('Collection', self.spaceID, _pos, self.direction, _props)
+                self._attachDeathCollectionMonsterCtx(collection)
 
     def breakSkillByState(self, ignoreTag=0):
         usingSkills = self.getTempMiscProp(gameconst.EntityPropsEnum.currentUseSkill, default={})
@@ -3387,7 +3419,15 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 continue
             
             sVal, tid = usingSkills[sid]
-            sVal.useSkillDone(self, 0, [], isSucc=False, doRemoveState=True, forceResetSkill=True)
+            sVal.useSkillDone(
+                self, 
+                0, 
+                [], 
+                isSucc=False, 
+                doRemoveState=True, 
+                forceResetSkill=True,
+                resetReason=gameconst.ResetSkillReason.ReasonBreakByState,
+            )
 
     def getAvatar(self):
         _host = utils.getHostEntity(self)

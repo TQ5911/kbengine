@@ -20,6 +20,7 @@ import message_Message_def as MMD
 import conflict_conflict_def as C_C_DD
 import const_const as CONST
 import gamePlay_gamePlay as GGD
+import gamePlay_singleSceneData as GPSSDD
 import branchData_set as BDS
 import gametimer
 
@@ -70,6 +71,50 @@ class ImpLine(object):
 
         self.applyEnterLineInternal(lineType, lineNo, enterPos, direction, {"telToMainCityWhenFull": False})
 
+    def applyCrossGhostReturnCity(self):
+        # 跨服组队副本：迁移成功后本服幽灵回城（野外无客户端挂机防被打）。
+        # 仅本服镜像（玩家在跨服）可执行；当前在野外（非安全区）分线图时，
+        # 按回城卷轴语义转入本图 returnMapID 对应主城的回城点（缺省回退出生点）。
+        # 进本流程完成后才触发（cell/iCrossServer.py onCrossServerSuc），
+        # 任何失败仅报错、幽灵留原地，不影响进本/回程流程
+        try:
+            if not self.isCrossServerInLocalServer:
+                LOG_ERR('applyCrossGhostReturnCity not to cross server')
+                return
+            # if not formula.inLineScene(self.spaceNo):
+            #     return
+            _mapId = formula.fetchMapId(self.spaceNo)
+            # _mapData = GGD.datas.get(_mapId)
+            # if not _mapData or _mapData.get('ifSafeArea'):
+            #     return
+            # _returnMapId = _mapData.get('returnMapID', 0)
+            _returnMapId = 1001
+            if not _returnMapId or _returnMapId == _mapId or not formula.checkWorldLineType(_returnMapId):
+                LOG_ERR('applyCrossGhostReturnCity invalid returnMapID', _mapId, _returnMapId)
+                return
+
+            _pos, _dir = None, self.direction
+            _sceneRes = GGD.datas[_returnMapId]['sceneRes']
+            _returnPosList = GPSSDD.datas.get(_sceneRes, {}).get('returnPos')
+            if _returnPosList:
+                _pos = random.choice(_returnPosList)
+            if not _pos:
+                _pos, _dir = formula.getSpaceBornPosAndDir(_returnMapId)
+
+            LOG_INFO('applyCrossGhostReturnCity', self.gbId, self.spaceNo, '->', _returnMapId, _pos)
+            # isForceEnter：主城满员时强选可用分线（对齐登录收容语义）
+            self.applyEnterLineInternal(
+                _returnMapId,
+                -1,
+                _pos,
+                _dir,
+                {'crossGhostTransfer': True, 'isForceEnter': True}
+            )
+        except Exception:
+            import traceback
+            traceback.print_exc()
+            LOG_ERR('applyCrossGhostReturnCity error', self.gbId, self.spaceNo)
+
     def applyEnterLineInternal(self, lineType, lineNo, position, direction, extra=None):
         LOG_INFO('zt: applyEnterLineInternal', lineType, lineNo, position, direction, extra)
         if formula.inDungeonScene(self.spaceNo):
@@ -80,7 +125,7 @@ class ImpLine(object):
 
         # BOSS 互斥组检查
         extra = extra or {}
-        if not extra.get('isLogin'):
+        if not extra.get('isLogin') and not extra.get('crossGhostTransfer'):
             if lineNo is not None and lineNo >= 0:
                 # 明确分线：同地图同分线放行，其余拦截
                 isBlocked, leftSec = self.checkBossMutexBlock(lineType, lineNo)
@@ -123,6 +168,26 @@ class ImpLine(object):
 
         if extraData.get('isLogin'):
             self._onEnterLine(0, lineType, lineNo, extraData)
+
+        elif extraData.get('crossGhostTransfer'):
+            # 跨服幽灵回城（无客户端）：BOSS 互斥/传送锁不适用，直接传送进目标分线
+            # 落地簿记（_onEnterLine）走引擎 onTeleportSuccess 回调链，与正常传送一致
+            if not self.isCrossServerInLocalServer:
+                LOG_ERR('beginEnterLine crossGhostTransfer but not ghost', self.gbId, self.spaceNo)
+                return
+
+            _fromSpaceNo = self.spaceNo
+            if formula.inWorldLineScene(_fromSpaceNo):
+                extraData['fromSpaceMgrBox'] = self.spaceMgr
+            self.teleportToCell(
+                spaceBox.cell,
+                formula.combineLineSpaceNo(lineType, lineNo),
+                position,
+                direction,
+                '_onEnterLine',
+                (_fromSpaceNo, lineType, lineNo, extraData)
+            )
+
         else:
             # BOSS 互斥兜底校验：自动选线落到非源分线时拦下并释放坑位
             _isBlocked, _leftSec = self.checkBossMutexBlock(lineType, lineNo)
@@ -177,6 +242,10 @@ class ImpLine(object):
 
         if formula.inLineScene(fromSpaceNo):
             self._clearLineState(fromSpaceNo)
+
+        if extra.get('crossGhostTransfer'):
+            # 跨服幽灵回城落地完成：同步镜像的回程落点为主城
+            self.base.onCrossGhostReturnCityDone(self.spaceNo)
 
         if formula.inDuelScene(self.spaceNo):
             ret = self.setPKModel(gameconst.PKModelEnum.PEACE)

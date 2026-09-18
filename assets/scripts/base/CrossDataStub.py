@@ -29,7 +29,9 @@ from proto.gameServerCrossData_pb2 import GameServer,\
     GetCrossServerGuildDetailRequest,\
     GetCrossServerGuildDetailFromOtherServer,\
     DoOnCrossGuildRequest,\
-    DoOnCrossGuildResultBack
+    DoOnCrossGuildResultBack,\
+    SaveSiegeWarDataRequest,\
+    LoadSiegeWarDataRequest
 
 
 class CrossDataService(GameServer):
@@ -68,6 +70,12 @@ class CrossDataService(GameServer):
 
     def onDoOnCrossGuildToGameServer(self, rpc_controller, reply, done):
         self.mgr.onDoOnCrossGuildToGameServer(reply)
+
+    def onSaveSiegeWarData(self, rpc_controller, reply, done):
+        self.mgr.onSaveSiegeWarData(reply)
+
+    def onLoadSiegeWarData(self, rpc_controller, reply, done):
+        self.mgr.onLoadSiegeWarData(reply)
 
 
 class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentralStub.ICentralStub):
@@ -117,6 +125,11 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
                 'clearCrossDataCache',
                 ()
             )
+
+        if gameconfig.isCrossServer():
+            _siegeStub = gameengine.getGlobalBase('CrossSiegeWarStub', reportErr=False)
+            if _siegeStub:
+                _siegeStub.tryLoadSiegeWarDataFromCrossData()
 
     def clearCache(self):
         _deleteCacheUUID = []
@@ -382,3 +395,69 @@ class CrossDataStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCe
             reply.uuid,
             reply.senderServerId,
         )
+
+    def saveSiegeWarData(self, data, box):
+        _req = SaveSiegeWarDataRequest()
+        _req.data = cPickle.dumps(data)
+        _req.uuid = KBEngine.genUUID64()
+
+        _client = self.getRandomClient()
+        if not (_client and _client.channel.dispatcher):
+            LOG_WARN('CrossDataStub saveSiegeWarData no client')
+            if box:
+                box.onSaveSiegeWarDataFromCrossData(False)
+            return
+
+        self.remoteCallCache[_req.uuid] = {
+            'box': box,
+            'ts': utils.curTS(),
+        }
+        _client.csStub.saveSiegeWarData(None, _req, None)
+
+    def onSaveSiegeWarData(self, reply):
+        _cache = self.remoteCallCache.pop(reply.uuid, None)
+        if not _cache:
+            LOG_ERR('CrossDataStub onSaveSiegeWarData no cache', reply.uuid)
+            return
+
+        _box = _cache.get('box')
+        if _box:
+            _box.onSaveSiegeWarDataFromCrossData(reply.success)
+
+    def loadSiegeWarData(self, box):
+        _req = LoadSiegeWarDataRequest()
+        _req.uuid = KBEngine.genUUID64()
+
+        _client = self.getRandomClient()
+        if not (_client and _client.channel.dispatcher):
+            LOG_WARN('CrossDataStub loadSiegeWarData no client')
+            if box:
+                box.onLoadSiegeWarDataFromCrossData(False, {})
+            return
+
+        self.remoteCallCache[_req.uuid] = {
+            'box': box,
+            'ts': utils.curTS(),
+        }
+        _client.csStub.loadSiegeWarData(None, _req, None)
+
+    def onLoadSiegeWarData(self, reply):
+        _cache = self.remoteCallCache.pop(reply.uuid, None)
+        if not _cache:
+            LOG_ERR('CrossDataStub onLoadSiegeWarData no cache', reply.uuid)
+            return
+
+        _box = _cache.get('box')
+        if not _box:
+            return
+
+        _data = {}
+        if reply.success and reply.data:
+            try:
+                _data = cPickle.loads(reply.data)
+            except Exception as e:
+                LOG_ERR('CrossDataStub onLoadSiegeWarData pickle error', e)
+                _box.onLoadSiegeWarDataFromCrossData(False, {})
+                return
+
+        _box.onLoadSiegeWarDataFromCrossData(reply.success, _data)

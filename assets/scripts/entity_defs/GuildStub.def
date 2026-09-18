@@ -132,5 +132,16 @@
             <Arg>   UUID        </Arg>
             <Arg>   BOOL        </Arg>
         </checkGuildExists>
+
+        <broadcastToAllianceGuilds>
+            <Arg>   LEAGUE_UUID </Arg>
+            <Arg>   PYTHON      </Arg>
+            <Arg>   PYTHON      </Arg>
+        </broadcastToAllianceGuilds>
+
+        <updateLeagueIdByGuildId>
+            <Arg>   GUILD_UUID  </Arg>
+            <Arg>   LEAGUE_UUID </Arg>
+        </updateLeagueIdByGuildId>
     </BaseMethods>
 </root>

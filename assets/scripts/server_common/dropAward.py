@@ -210,8 +210,9 @@ class WealthItem(WealthUnit):
                     soulList.extend(itemFactory.ItemFactory.createItemList(itemId, itemNum, bindType, extra=extra))
         return soulList
 
-    def popDebtItemObjs(self, owner):
+    def popDebtItemObjs(self, owner, srcType=0, opUUID=0, detail=None, bagType=None):
         popData = {}
+        flowList = []
         removeList = []
         beforeDatas = str(self.data) + ", " + str(self.itemsObjs)
         for it in self.itemsObjs:
@@ -220,11 +221,12 @@ class WealthItem(WealthUnit):
                     if bindType in owner.debtItemDict[it.itemId]:
                         deductNum = min(it.itemNum, owner.debtItemDict[it.itemId][bindType])
                         if deductNum > 0:
-                            it.itemNum -= deductNum
+                            it.setItemNum(it.itemNum - deductNum)
                             owner.debtItemDict[it.itemId][bindType] -= deductNum
                             popData.setdefault(it.itemId, {})
                             popData[it.itemId].setdefault(bindType, 0)
                             popData[it.itemId][bindType] += deductNum
+                            flowList.append((it.itemId, it.bindType, it.uniqueId, deductNum, it.getRestoreData()))
                             if it.itemNum <= 0:
                                 removeList.append(it)
                         
@@ -243,10 +245,13 @@ class WealthItem(WealthUnit):
                                 popData.setdefault(itemId, {})
                                 popData[itemId].setdefault(bindType, 0)
                                 popData[itemId][bindType] += deductNum
+                                flowList.append((itemId, itemBindType, 0, deductNum, ''))
 
         if popData:
             LOG_INFO('popDebtItemObjs:', popData, beforeDatas, str(self.data) + ", " + str(self.itemsObjs))
             owner._sendDebtItemData()
+            owner._notifyDebtItemDeductMsg(popData)
+            owner._logDebtItemFlow(flowList, srcType, opUUID, detail, bagType)
 
     def popExtractRewardItems(self):
         _extractRewardItemsDic = {}
@@ -768,8 +773,9 @@ class DeductWealthVal(WealthVal, AwardMixin):
                 awardItem.data += num
                 return self
 
-        itemType = dataUtils.getCommItemData(itemId).get('type')
-        if itemType == gameconst.ItemEnum.Normal:
+        itemData = dataUtils.getCommItemData(itemId) or {}
+        itemType = itemData.get('type')
+        if dataUtils.isEquipItemByItemId(itemId) or itemType == gameconst.ItemEnum.Normal:
             self.itemWealth.addAwardItem(itemId, num, bindType)
         elif itemType == gameconst.ItemEnum.LingShou:
             self.petItemWealth.addAwardItem(itemId, num, bindType)
@@ -1297,12 +1303,35 @@ def _getBindWeightRank(extra):
             break
     return bindWeightRank
 
-def _calFinalBindWeight(dropTargetData, monthCard, bindWeightRank):
+def _getWorldLevelRewardBind(context):
+    extra = getattr(context, 'extra', None) or {}
+    if 'worldLevelRewardBind' in extra:
+        return extra['worldLevelRewardBind']
+    monsterId = extra.get('monsterId', 0)
+    if not monsterId:
+        extra['worldLevelRewardBind'] = 0.0
+        return 0.0
+    monsterLevel = getattr(context, 'level', 0) or extra.get('level', 0)
+    if type(monsterLevel) is not int or monsterLevel <= 0:
+        args = getattr(context, 'args', None)
+        monsterLevel = getattr(args, 'lv', 0) if args else 0
+    useCross = extra.get('isCrossServer', False)
+    rewardBind = utils.getMonsterWorldLevelBindRatio(monsterId, monsterLevel, useCross)
+    extra['worldLevelRewardBind'] = rewardBind
+    if rewardBind:
+        LOG_INFO('worldLevel rewardBind', monsterId, monsterLevel, utils.getWorldLevel(useCross), rewardBind)
+    return rewardBind
+
+def _calFinalBindWeight(dropTargetData, monthCard, bindWeightRank, rewardBind=0):
     #非绑概率只受配表影响
     if dropTargetData.get('unactedWeight', 0) == 1:
-        return 10000 - dropTargetData.get('bindWeight', 10000)
-    #非绑概率还受月卡、rank影响
-    return 10000 - dropTargetData.get('bindWeight', 10000) - monthCard * dropTargetData.get('bindWeightMonth', 10000) - bindWeightRank
+        unbindWeight = dropTargetData.get('bindWeight', 10000)
+    else:
+        #非绑概率还受月卡、rank、世界等级影响
+        unbindWeight = dropTargetData.get('bindWeight', 10000) + monthCard * dropTargetData.get('bindWeightMonth', 10000) + bindWeightRank
+        if rewardBind:
+            unbindWeight -= int(rewardBind * 10000)
+    return 10000 - unbindWeight
 
 def _calSubPackDrop(dropTarget, times, context):
     #单次子包掉落与策划约定最大掉100次，如未来有需求更大得用numpy重构
@@ -1312,6 +1341,7 @@ def _calSubPackDrop(dropTarget, times, context):
 
     monthCard = 0 if context.extra['isMonthCardExpired'] else 1
     bindWeightRank = _getBindWeightRank(context.extra)
+    rewardBind = _getWorldLevelRewardBind(context)
 
     dropSubPackageData = DDS.dropPackageData.get(dropTarget)
     if dropSubPackageData:
@@ -1326,7 +1356,7 @@ def _calSubPackDrop(dropTarget, times, context):
         dropTargetList = [item['dropTarget'] for item in data]
         numMinList = [item['dropNumMin'] for item in data]
         numMaxList = [item['dropNumMax'] for item in data]
-        bindWeightList = [_calFinalBindWeight(item, monthCard, bindWeightRank) for item in data]
+        bindWeightList = [_calFinalBindWeight(item, monthCard, bindWeightRank, rewardBind) for item in data]
         gradeList = [item['grade'] for item in data]
         return dropTargetList, numMinList, numMaxList, bindWeightList, gradeList
     return [], [], [], [], []
@@ -1336,11 +1366,12 @@ def _calSubPackDrop(dropTarget, times, context):
 def _getRealDropTarget(dropTargetData, context):
     monthCard = 0 if context.extra['isMonthCardExpired'] else 1
     bindWeightRank = _getBindWeightRank(context.extra)
+    rewardBind = _getWorldLevelRewardBind(context)
 
     dropTargetList = [dropTargetData['dropTarget']]
     numMinList = [dropTargetData['dropNumMin']]
     numMaxList = [dropTargetData['dropNumMax']]
-    bindWeightList = [_calFinalBindWeight(dropTargetData, monthCard, bindWeightRank)]
+    bindWeightList = [_calFinalBindWeight(dropTargetData, monthCard, bindWeightRank, rewardBind)]
     gradeList = [dropTargetData['grade']]
     #子包
     if dropTargetData['dropType'] == gameconst.DropWayType.DROP_WAY_TYPE_2:

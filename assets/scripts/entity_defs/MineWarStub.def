@@ -97,5 +97,14 @@
             <Arg>          LINE_NO         </Arg>
             <Arg>          MAILBOX         </Arg>
         </doGetMineWarFlagHp>
+
+        <onCellappRelive>
+            <Arg>           UINT8           </Arg>
+        </onCellappRelive>
+
+        <checkGuildOccupation>
+            <Arg>           ENTITYCALL      </Arg>
+            <Arg>           GUILD_UUID      </Arg>
+        </checkGuildOccupation>
     </BaseMethods>
 </root>

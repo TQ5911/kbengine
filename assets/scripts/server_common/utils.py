@@ -75,11 +75,14 @@ import mineBattle_config as MBC
 import antiAddictionSystem_config as AASC
 import gameconst
 import experience_config as EC
+import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import experience_global_EXP_Multiplier as EGM
+import experience_fixedWorldLevel as EFWL
 import visible_visible as V_VD
 import mall_coinPrice as MCP
 import mall_mallConst as MMC
 import branchData_branchData as B_BD
+import activityControl_activityTicket as AC_AT
 import traceback
 import hmac
 import os
@@ -108,6 +111,15 @@ class Swallower(object):
 
 def curTS():
     return int(time.time())
+
+
+def getAvatarNameRedisKey(name):
+    return '%s%s' % (gameconst.RedisKey.AVATAR_NAME_KEY_PREFIX, name)
+
+
+def getGuildNameRedisKey(name):
+    return '%s%s' % (gameconst.RedisKey.GUILD_NAME_KEY_PREFIX, name)
+
 
 def getTimestamp64(t=None):
     t = t or time.time()
@@ -619,7 +631,7 @@ def checkBagLocked(fn):
 def getRaycastPosition(spaceId, srcPosition, dstPosition, includeFollowEdge=False):
     posList = KBEngine.raycast(spaceId, gameconst.SpaceLayer.DEFAULT, srcPosition, dstPosition)
     if not posList:
-        return dstPosition
+        return srcPosition
 
     for pos in posList:
         if sMath.postion3DTo2DCell(pos) == sMath.postion3DTo2DCell(dstPosition):
@@ -1259,6 +1271,8 @@ def fetchLineMaxNumber(lineType):
         .get(lineType, {})\
         .get('lineCount', 0)
 
+def randomBaseApp():
+    return random.choice(list(gameglobal.baseAppCache.values()))
 
 def isInWorldPKSafeAreaByAreaId(areaId):
     import worldConfig_Area
@@ -1584,11 +1598,12 @@ def getGuildUUIDPair(guildUUID1, guildUUID2):
 
 
 def isEnemyInPK(src, target):
-    if src.pkModel == gameconst.PKModelEnum.PEACE:
-        return False
-
     if utils.bhas(src.cellFlags, gameconst.CELL_FLAGS_PK_SAFE) or utils.bhas(target.cellFlags, gameconst.CELL_FLAGS_PK_SAFE):
         return False
+
+    # 防卫：按勾选攻击红名/敌对，不受杀戮保护勾选影响
+    if src.pkModel == gameconst.PKModelEnum.PEACE:
+        return src.canAttackInDefendPK(target)
 
     if src.inPKProtect(target):
         return False
@@ -1600,8 +1615,11 @@ def isEnemyInPK(src, target):
         if target.inRedName() or target.isGreyName():
             return True
 
-        _relation = getGuildRelation(src.guildUUID, target.guildUUID)
-        return _relation == gameconst.GuildRelationType.ENEMY
+        if src.inEnmityList(target.gbId):
+            return True
+
+        # 实体级敌对判定：帮忙会直接参战或其当前所属联盟参战均算敌对
+        return getEntityGuildRelation(src, target) == gameconst.GuildRelationType.ENEMY
 
     return True
 
@@ -1896,6 +1914,10 @@ def _entIsTeam(src, e, tgt):
         if src.teamId != 0 and src.teamId == tgt.teamId:
             return True
 
+        # 跨服讨伐队友（跨服镜像上本服 teamId 为 0，用跨服队伍 ID 判定）
+        if src.crossTeamId != 0 and src.crossTeamId == tgt.crossTeamId:
+            return True
+
     return False
 
 def _entIsRaid(src, e, tgt):
@@ -2065,8 +2087,15 @@ def doInitBaseProperties(entity, propCurveId=0):
     propId = creepData.get('propID')
     if propId:
         propType = creepData.get('propType')
+        _coefficientType = creepData.get('coefficientType', 0)
+        _coefficientDic = C_CD.datas.get(_coefficientType, {})
         if propType == 1:
-           propId = propId + entity.level - 1
+            attrLevel = entity.level
+            if _coefficientDic.get('propWorldLevel'):
+                worldLevel = getWorldLevel()
+                if worldLevel > attrLevel:
+                    attrLevel = min(worldLevel, getMaxPlayerLevel())
+            propId = propId + attrLevel - 1
         elif propType == 2:
             if formula.inSiegeWarScene(entity.spaceNo):
                 if entity.siegeWarMonsterPropId:
@@ -2080,9 +2109,6 @@ def doInitBaseProperties(entity, propCurveId=0):
         if propType != cfgPropType:
             LOG_ERR('doInitBaseProperties propType error', entity.creepbaseId, propType, cfgPropType)
             return
-
-        _coefficientType = creepData['coefficientType']
-        _coefficientDic = C_CD.datas.get(_coefficientType, {})
 
         propList = propData.get('propList')
         for prop, val in propList.items():
@@ -2150,10 +2176,55 @@ def getMoralLevel(moralValue):
     LOG_WARN('getMoralLevel, level not found:', moralValue)
     return 0
 
+def getWorldLevel(useCross=None):
+    if useCross is None:
+        useCross = gameconfig.isCrossServer()
+    if useCross:
+        worldLevel = getattr(gameglobal, 'crossWorldLevel', 0) or 0
+        if not worldLevel:
+            worldLevel = KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_CROSS_WORLD_LEVEL, 0) or 0
+            if worldLevel:
+                gameglobal.crossWorldLevel = worldLevel
+        if worldLevel:
+            return worldLevel
+    day = getSvrOpenDays()
+    if day in EFWL.datas:
+        return EFWL.datas[day]['worldLevel']
+    worldLevel = getattr(gameglobal, 'worldLevel', 0) or 0
+    if not worldLevel:
+        worldLevel = KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_WORLD_LEVEL, 0) or 0
+        if worldLevel:
+            gameglobal.worldLevel = worldLevel
+    return worldLevel
+
+def getMonsterWorldLevelDropRatio(monsterId, monsterLevel, useCross=None):
+    coefficientType = CBD.datas.get(monsterId, {}).get('coefficientType', 0)
+    if not C_CD.datas.get(coefficientType, {}).get('dropWorldLevel', 0):
+        return 1.0
+    if type(monsterLevel) is not int or monsterLevel <= 0:
+        return 1.0
+    worldLevel = getWorldLevel(useCross)
+    if not worldLevel:
+        return 1.0
+    return formula.getKillMonsterWorldLevelDropRatio(monsterLevel, worldLevel)
+
+def getMonsterWorldLevelBindRatio(monsterId, monsterLevel, useCross=None):
+    coefficientType = CBD.datas.get(monsterId, {}).get('coefficientType', 0)
+    if not C_CD.datas.get(coefficientType, {}).get('bindWorldLevel', 0):
+        return 0.0
+    if type(monsterLevel) is not int or monsterLevel <= 0:
+        return 0.0
+    worldLevel = getWorldLevel(useCross)
+    if not worldLevel:
+        return 0.0
+    return formula.getKillMonsterWorldLevelBindRatio(monsterLevel, worldLevel)
+
 def getWorldLevelRatio(playerLevel, worldLevelDelta, src):
     worldLevelRatio = 1.0
+    if gameconfig.isCrossServer():
+        worldLevelDelta = getWorldLevel(True) - playerLevel
     if getSvrOpenDays() < EC.datas["activateWorldLevel"]["value"] or src not in EC.datas["bonus_EXP_Sources"]["value"] \
-        or worldLevelDelta <= 0 or playerLevel < V_VD.datas["worldLevel"]["level"] or gameconfig.isCrossServer():
+        or worldLevelDelta <= 0 or playerLevel < V_VD.datas["worldLevel"]["level"]:
         worldLevelRatio = 1.0
     else:
         for i in range(1, EGM.maxKey+1):
@@ -2423,6 +2494,74 @@ def getSiegeWarItemExpireTime():
 def getGuildRelation(guildUUID1, guildUUID2):
     _pair = getGuildUUIDPair(guildUUID1, guildUUID2)
     return gameglobal.guildRelationDic.get(_pair, gameconst.GuildRelationType.NONE)
+
+
+# ---- Entity-level hostile (enemy) relation resolution ----
+#
+# 敌对关系以“实体行”为唯一权威（gameglobal.enemyRelationDic），一个战争行在
+# attack/target 两侧可能标注帮会(WarEntityType.GUILD)或联盟(WarEntityType.ALLIANCE)。
+# 不再把它展开成 N×M 的帮会↔帮会对；每个帮会是否对另一方敌对，用该帮会自身
+# guildUUID + 其当前所属联盟 leagueUUID 与所有战争行实时推导。
+
+def _entityInvolvesGuild(row, sideType, guildUUID, leagueUUID):
+    """判断 guildUUID（及其当前所属联盟 leagueUUID）是否在战争行 row 的某一侧。
+    sideType 取 'attack' 或 'target'。"""
+    if sideType == 'attack':
+        _type = row.get('attackType', 0)
+        _id = row.get('attackId', 0)
+    else:
+        _type = row.get('targetType', 0)
+        _id = row.get('targetId', 0)
+
+    if _type == gameconst.WarEntityType.ALLIANCE:
+        # 该侧标注的是联盟；仅当 guild 当前是该联盟成员时才算参与
+        return leagueUUID != 0 and _id == leagueUUID
+    # 该侧标注的是帮会
+    return _id == guildUUID
+
+
+def isGuildRelationEnemy(guildUUID1, leagueUUID1, guildUUID2, leagueUUID2):
+    """实体级敌对判定：guild1（及所属 league1）与 guild2（及所属 league2）是否
+    处于交战状态。扫描全部战争行 —— guild 直接参战、或其当前所属联盟参战都算。
+    依赖两个实体的 leagueUUID 实时值，故退盟后立刻不再继承联盟战争，而自身直接的
+    帮会↔帮会战争行仍保留。"""
+    if guildUUID1 == guildUUID2:
+        return False
+    for _row in gameglobal.enemyRelationDic.values():
+        _a1 = _entityInvolvesGuild(_row, 'attack', guildUUID1, leagueUUID1)
+        _t2 = _entityInvolvesGuild(_row, 'target', guildUUID2, leagueUUID2)
+        if _a1 and _t2:
+            return True
+        _a2 = _entityInvolvesGuild(_row, 'attack', guildUUID2, leagueUUID2)
+        _t1 = _entityInvolvesGuild(_row, 'target', guildUUID1, leagueUUID1)
+        if _a2 and _t1:
+            return True
+    return False
+
+
+def getEntityGuildRelation(src, tgt):
+    LOG_DBG("getEntityGuildRelation")
+    """兼容旧调用：返回 (src, tgt) 之间的敌对/中立关系，供原 ENEMY 判定点使用。
+    仅处理敌对：直接帮忙会/联盟敌对则返回 ENEMY，否则返回原 guildRelationDic 的值
+    （UNION 等仍走旧路径）。"""
+    _srcLeague = getattr(src, 'leagueUUID', 0) or 0
+    _tgtLeague = getattr(tgt, 'leagueUUID', 0) or 0
+    _srcGuild = getattr(src, 'guildUUID', 0) or 0
+    _tgtGuild = getattr(tgt, 'guildUUID', 0) or 0
+    if _srcGuild and _tgtGuild and isGuildRelationEnemy(_srcGuild, _srcLeague, _tgtGuild, _tgtLeague):
+        return gameconst.GuildRelationType.ENEMY
+    return getGuildRelation(_srcGuild, _tgtGuild)
+
+
+def notifyGuildRelationDataChanged():
+    """帮会/敌对关系数据（guildRelationDic / enemyRelationDic / 各自版本）更新后
+    调用，通知各 cellapp 上的 Avatar 刷新其目标类型缓存。实际的刷新通过
+    guildRelationVersion 的比对惰性触发（见 utils.isEnemy / SkillManager.
+    resetAllTargetTypeCache），这里留作显式触发点以应对需要即时刷新的场合。"""
+    # 遍历本进程内所有 Avatar cell，若其 guildRelationVersion 与全局不一致则由
+    # resetAllTargetTypeCache 负责刷新；此处无需额外操作。
+    return
+
 
 def getCustomIdAndGid(spaceNo, gameEntityId):
     _mapId = formula.fetchMapId(spaceNo)
@@ -3264,62 +3403,58 @@ def check4stageversion(verStr):
             return False
     return True
 
-def getCubeCoinCostByTimes(times):
-    costCfg = cube_config.datas['cubeNumCoinCost'].get('value', ())
-    totalCnt = cube_config.datas['cubeNumCoinDailyLimit']['value']
-    for costInfo in costCfg:
-        if totalCnt - times + 1 == costInfo[0]:
-            return costInfo[1], costInfo[2]
-    return 0, 0
+def getCoinCostInfo(avatar, subType, times, now, level):
+    if subType not in gameconst.RecoveryTicketSubType.VALID_SUB_TYPE:
+        return 0, 0, gameconst.TicketDiscountType.ORIGINAL
 
-def getCubeAddTimesTypeByitemId(itemId):
-    if itemId == cube_config.datas['cubeNumItem']['value']:
-        return gameconst.CUBE_ADD_TIMES_TYPE_ITEM
-    costCfg = cube_config.datas['cubeNumCoinCost'].get('value', ())
-    for costInfo in costCfg:
-        if itemId != costInfo[1]:
-            continue
-        return gameconst.CUBE_ADD_TIMES_TYPE_COIN
+    totalCnt = len(AC_AT.ticketIdDic.get(subType, []))
+    idx = totalCnt - times + 1
+    ticketId = subType * 100 + idx
+    cfg = AC_AT.datas.get(ticketId, None)
+    if not cfg:
+        return 0, 0, gameconst.TicketDiscountType.ORIGINAL
+
+    price = cfg.get('price', (0, 0))
+    newServePrice = cfg.get('newServePrice', None)
+    newPlayerPrice = cfg.get('newPlayerPrice', None)
+    if not newServePrice and not newPlayerPrice:
+        return price[0], price[1], gameconst.TicketDiscountType.ORIGINAL
+    serverOpenTimestamp = avatar.getServerOpenTimestamp()
+    if serverOpenTimestamp > now:
+        return price[0], price[1], gameconst.TicketDiscountType.ORIGINAL
     
-    return gameconst.CUBE_ADD_TIMES_TYPE_NULL
+    serverOpenDateTime = utils.getIntDateTime(serverOpenTimestamp)
+    serverOpenDateTimestamp = utils.getIntTimestamp(str(serverOpenDateTime) + gameconst.RESOURCE_RECOVER_TIME_POINT_STR)
+    diffDays = math.floor((now - serverOpenDateTimestamp) / 86400)
+    if newServePrice and diffDays + 1 <= newServePrice[0]:
+        return newServePrice[1], newServePrice[2], gameconst.TicketDiscountType.NEW_SERVE
 
-def getWonderLandCoinCostByTimes(times):
-    costCfg = wonderLand_config.datas['wonderLandNumCoinCost'].get('value', ())
-    totalCnt = wonderLand_config.datas['wonderLandNumCoinDailyLimit']['value']
-    for costInfo in costCfg:
-        if totalCnt - times + 1 == costInfo[0]:
-            return costInfo[1], costInfo[2]
-    return 0, 0
+    if newPlayerPrice and level <= newPlayerPrice[0]:
+        return newPlayerPrice[1], newPlayerPrice[2], gameconst.TicketDiscountType.NEW_PLAYER
 
-def getWonderLandAddTimesTypeByitemId(itemId):
-    if itemId == wonderLand_config.datas['wonderLandNumItem']['value']:
-        return gameconst.CUBE_ADD_TIMES_TYPE_ITEM
-    costCfg = wonderLand_config.datas['wonderLandNumCoinCost'].get('value', ())
-    for costInfo in costCfg:
-        if itemId != costInfo[1]:
-            continue
-        return gameconst.CUBE_ADD_TIMES_TYPE_COIN
-    
-    return gameconst.CUBE_ADD_TIMES_TYPE_NULL
+    return price[0], price[1], gameconst.TicketDiscountType.ORIGINAL
 
-def getAbyssCoinCostByTimes(times):
-    costCfg = abyss_config.datas['abyssNumCoinCost'].get('value', ())
-    totalCnt = abyss_config.datas['abyssNumCoinDailyLimit']['value']
-    for costInfo in costCfg:
-        if totalCnt - times + 1 == costInfo[0]:
-            return costInfo[1], costInfo[2]
-    return 0, 0
+def getOriginalCoinCostInfo(subType, times):
+    if subType not in gameconst.RecoveryTicketSubType.VALID_SUB_TYPE:
+        return 0, 0
 
-def getAbyssAddTimesTypeByitemId(itemId):
-    if itemId == abyss_config.datas['abyssNumItem']['value']:
-        return gameconst.CUBE_ADD_TIMES_TYPE_ITEM
-    costCfg = abyss_config.datas['abyssNumCoinCost'].get('value', ())
-    for costInfo in costCfg:
-        if itemId != costInfo[1]:
-            continue
-        return gameconst.CUBE_ADD_TIMES_TYPE_COIN
-    
-    return gameconst.CUBE_ADD_TIMES_TYPE_NULL
+    totalCnt = len(AC_AT.ticketIdDic.get(subType, []))
+    idx = totalCnt - times + 1
+    ticketId = subType * 100 + idx
+    cfg = AC_AT.datas.get(ticketId, None)
+    if not cfg:
+        return 0, 0
+    price = cfg.get('price', (0, 0))
+    return price[0], price[1]
+
+def isOriginaCoinCostBeFree(subType, times):
+    if subType not in gameconst.RecoveryTicketSubType.VALID_SUB_TYPE:
+        return False, False
+
+    totalCnt = len(AC_AT.ticketIdDic.get(subType, []))
+    idx = totalCnt - times + 1
+    ticketId = subType * 100 + idx
+    return True, ticketId in AC_AT.freeTicketDic.get(subType, [])
 
 def debugSoulData(data):
     LOG_DBG("debugSoulData:")
@@ -3555,3 +3690,49 @@ def verifyPassword(password, stored_hash):
     old_digest = combined[SALT_BYTE_SIZE:]
     new_digest = hashlib.pbkdf2_hmac(alg, password_bytes, salt, iterations)
     return hmac.compare_digest(new_digest, old_digest)
+
+
+"""
+    以 center 为中心、radius 为半径的圆内，按 gridSize 划分为方格，
+    取所有落在圆内的格子交点（中心）作为候选点，
+    调用 checkFunc(pos) 校验合法性后洗牌，返回最多 n 个候选点。
+    checkFunc 返回 None 视为不合法；否则将其返回值（合法 position）加入候选池。
+    若候选点不足 n 则全部返回。
+
+    @param center: tuple/list (x, y, z) 中心点
+    @param radius: float 最大半径
+    @param gridSize: float 格子边长（默认 2）
+    @param checkFunc: callable (pos) -> position|None，返回 None 表示不合法
+    @param n: int 需要的合法点数量上限
+    @return: list 长度 <= n 的合法点列表
+"""
+def collectAndShuffleValidPositions(center, radius, gridSize=2.0, checkFunc=None, n=1):
+    if not center or radius <= 0 or gridSize <= 0 or n <= 0:
+        return []
+
+    cx, cy, cz = center[0], center[1], center[2]
+    stepCount = int(math.ceil(radius / gridSize))
+    radius2 = radius * radius
+    validList = []
+
+    for i in range(-stepCount, stepCount + 1):
+        px = cx + i * gridSize
+        for j in range(-stepCount, stepCount + 1):
+            pz = cz + j * gridSize
+            dx = px - cx
+            dz = pz - cz
+            if dx * dx + dz * dz > radius2:
+                continue
+            pos = (px, cy, pz)
+            if checkFunc is None:
+                validList.append(pos)
+                continue
+            validPos = checkFunc(pos)
+            if validPos is not None:
+                validList.append(validPos)
+
+    if len(validList) <= n:
+        return validList
+
+    random.shuffle(validList)
+    return validList[:n]

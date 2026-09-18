@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	base.Init("allianceServiceConfig.json", &allianceApp.AllianceConfig, func() common.IApp {
+	base.Init(&allianceApp.AllianceConfig, func() common.IApp {
 		return allianceApp.NewAllianceApp()
 	})
 }

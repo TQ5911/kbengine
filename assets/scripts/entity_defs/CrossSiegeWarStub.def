@@ -11,177 +11,149 @@
         <siegeWarState>
             <Type>          INT32                   </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </siegeWarState>
 
         <siegeWarStateEndTime>
             <Type>          LONGTIME                </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </siegeWarStateEndTime>
 
         <declareWarTime>
             <Type>          LONGTIME                </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </declareWarTime>
 
         <officialWarStartTime>
             <Type>          LONGTIME                </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </officialWarStartTime>
 
         <nowBiddingCnt>
             <Type>          INT32                   </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </nowBiddingCnt>
 
         <firstBiddingPrice>
             <Type>          INT32                   </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </firstBiddingPrice>
 
         <firstBiddingGuildName>
             <Type>          UNICODE                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </firstBiddingGuildName>
 
         <firstBiddingServerName>
             <Type>          UNICODE                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </firstBiddingServerName>
 
         <firstBiddingAvatarName>
             <Type>          UNICODE                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </firstBiddingAvatarName>
 
         <secondBiddingGuildName>
             <Type>          UNICODE                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </secondBiddingGuildName>
 
         <firstBiddingGuildUUID>
             <Type>          GUILD_UUID              </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </firstBiddingGuildUUID>
 
         <secondBiddingGuildUUID>
             <Type>          GUILD_UUID              </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </secondBiddingGuildUUID>
 
         <avatarGBID>
             <Type>          PLAYER_GBID              </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </avatarGBID>
 
         <avatarServerID>
             <Type>          SERVER_ID               </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </avatarServerID>
 
         <avatarName>
             <Type>          UNICODE                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </avatarName>
 
         <biddingGuildList>
             <Type>          PY_LIST                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       []                      </Default>
         </biddingGuildList>
 
         <biddingNameList>
             <Type>          PY_LIST                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       []                      </Default>
         </biddingNameList>
 
         <biddingCntList>
             <Type>          PY_LIST                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       []                      </Default>
         </biddingCntList>
 
         <warOffensiveGuildUUID>
             <Type>          GUILD_UUID              </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </warOffensiveGuildUUID>
 
         <warDefensiveGuildUUID>
             <Type>          GUILD_UUID              </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       0                       </Default>
         </warDefensiveGuildUUID>
 
         <warOffensiveGuildName>
             <Type>           UNICODE                </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </warOffensiveGuildName>
 
         <warDefensiveGuildName>
             <Type>          UNICODE                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </warDefensiveGuildName>
 
         <haveCityOwner>
             <Type>          BOOL                    </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       false                   </Default>
         </haveCityOwner>
 
         <hasResetSpace>
             <Type>          BOOL                    </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	false					</Persistent>
         </hasResetSpace>
 
         <offensiveJunXuQiXieLevelData>
             <Type>          PY_DICT                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       {}                      </Default>
         </offensiveJunXuQiXieLevelData>
 
         <defensiveJunXuQiXieLevelData>
             <Type>          PY_DICT                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
             <Default>       {}                      </Default>
         </defensiveJunXuQiXieLevelData>
 
         <cityDefenseDeclaration>
             <Type>          UNICODE                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </cityDefenseDeclaration>
 
         <cityOffensiveDeclaration>
             <Type>          UNICODE                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>	true					</Persistent>
         </cityOffensiveDeclaration>
     </Properties>
 
@@ -243,6 +215,18 @@
             <Arg>           GUILD_UUID                  </Arg>
             <Arg>           UNICODE                     </Arg>
         </onGuildRename>
+
+        <tryLoadSiegeWarDataFromCrossData>
+        </tryLoadSiegeWarDataFromCrossData>
+
+        <onLoadSiegeWarDataFromCrossData>
+            <Arg>           BOOL                        </Arg>
+            <Arg>           PYTHON                      </Arg>
+        </onLoadSiegeWarDataFromCrossData>
+
+        <onSaveSiegeWarDataFromCrossData>
+            <Arg>           BOOL                        </Arg>
+        </onSaveSiegeWarDataFromCrossData>
     </BaseMethods>
 
     <CellMethods>

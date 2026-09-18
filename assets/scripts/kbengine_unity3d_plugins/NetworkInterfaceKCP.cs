@@ -158,66 +158,90 @@
 				//state.socket.Connect(state.connectIP, state.connectPort);
 
 				byte[] helloPacket = System.Text.Encoding.ASCII.GetBytes(UDP_HELLO);
-				state.socket.SendTo(helloPacket, helloPacket.Length, SocketFlags.None, new IPEndPoint(IPAddress.Parse(state.connectIP), state.connectPort));
-
-                ArrayList readList = new ArrayList();
-                readList.Add(state.socket);
-                Socket.Select(readList, null, null, 3000000);
-
-				if(readList.Count > 0)
+				
+				int retryTime = 3;
+				bool isSuccess = false;
+				for(int i = 0; i < retryTime; i++)
 				{
-					byte[] buffer = new byte[UDP_PACKET_MAX];
-					int length = state.socket.Receive(buffer);
+					Dbg.DEBUG_MSG($"NetworkInterfaceKCP::_asyncConnect(), connect to '{state.connectIP}:{state.connectPort}', retry {i}");
+					state.socket.SendTo(helloPacket, helloPacket.Length, SocketFlags.None, new IPEndPoint(IPAddress.Parse(state.connectIP), state.connectPort));
 
-                    if (length <= 0)
-                    {
-						Dbg.ERROR_MSG(string.Format("NetworkInterfaceKCP::_asyncConnect(), failed to connect to '{0}:{1}'! receive hello-ack error!", state.connectIP, state.connectPort));
-						state.error = "receive hello-ack error!";
+					ArrayList readList = new (){state.socket};
+					Socket.Select(readList, null, null, 3000000);
+
+					if(readList.Count > 0)
+					{
+						byte[] buffer = new byte[UDP_PACKET_MAX];
+						int length = state.socket.Receive(buffer);
+
+						if (length <= 0)
+						{
+							Dbg.ERROR_MSG($"NetworkInterfaceKCP::_asyncConnect(), failed to connect to '{state.connectIP}:{state.connectPort}'! receive hello-ack error!");
+							state.error = "receive hello-ack error!";
+							state.errorType = ErrorType.ReceiveError;
+						}
+						else
+						{
+							MemoryStream stream = new MemoryStream();
+							Array.Copy(buffer, 0, stream.data(), stream.wpos, length);
+							stream.wpos = length;
+							string helloAck = stream.readString();
+							string versionString = stream.readString();
+							uint conv = stream.readUint32();
+
+							if (helloAck != UDP_HELLO_ACK)
+							{
+								Dbg.ERROR_MSG($"NetworkInterfaceKCP::_asyncConnect(), failed to connect to '{state.connectIP}:{state.connectPort}'! receive hello-ack({helloAck}!={UDP_HELLO_ACK}) mismatch!");
+
+								state.error = "hello-ack mismatch!";
+								state.errorType = ErrorType.HelloAckMismatchError;
+							}
+							else if(KBEngineApp.app.serverVersion != versionString)
+							{
+								Dbg.ERROR_MSG($"NetworkInterfaceKCP::_asyncConnect(), failed to connect to '{state.connectIP}:{state.connectPort}'! version({versionString}!={KBEngineApp.app.serverVersion}) mismatch!");
+
+								state.error = "version mismatch!";
+								state.errorType = ErrorType.VersionMismatchError;
+							}
+							else if(conv == 0)
+							{
+								Dbg.ERROR_MSG($"NetworkInterfaceKCP::_asyncConnect(), failed to connect to '{state.connectIP}:{state.connectPort}'! conv is 0!");
+
+								state.error = "kcp conv error!";
+								state.errorType = ErrorType.KcpConvError;
+							}
+							else
+							{
+								isSuccess = true;
+							}
+							
+
+							((NetworkInterfaceKCP)state.networkInterface).connID = conv;
+
+							
+						}
 					}
-                    else
-                    {
-                        MemoryStream stream = new MemoryStream();
-                        Array.Copy(buffer, 0, stream.data(), stream.wpos, length);
-                        stream.wpos = length;
-                        string helloAck = stream.readString();
-                        string versionString = stream.readString();
-                        uint conv = stream.readUint32();
+					else
+					{
+						Dbg.ERROR_MSG($"NetworkInterfaceKCP::_asyncConnect(), connect to '{state.connectIP}:{state.connectPort}' timeout!");
+						state.error = "timeout!";
+						state.errorType = ErrorType.TimeoutError;
+					}
 
-                        if (helloAck != UDP_HELLO_ACK)
-                        {
-                            Dbg.ERROR_MSG(string.Format("NetworkInterfaceKCP::_asyncConnect(), failed to connect to '{0}:{1}'! receive hello-ack({2}!={3}) mismatch!",
-                                state.connectIP, state.connectPort, helloAck, UDP_HELLO_ACK));
-
-                            state.error = "hello-ack mismatch!";
-                        }
-						else if(KBEngineApp.app.serverVersion != versionString)
-						{
-                            Dbg.ERROR_MSG(string.Format("NetworkInterfaceKCP::_asyncConnect(), failed to connect to '{0}:{1}'! version({2}!={3}) mismatch!",
-                                state.connectIP, state.connectPort, versionString, KBEngineApp.app.serverVersion));
-
-                            state.error = "version mismatch!";
-						}
-						else if(conv == 0)
-						{
-                            Dbg.ERROR_MSG(string.Format("NetworkInterfaceKCP::_asyncConnect(), failed to connect to '{0}:{1}'! conv is 0!",
-                                state.connectIP, state.connectPort));
-
-                            state.error = "kcp conv error!";
-						}
-
-						((NetworkInterfaceKCP)state.networkInterface).connID = conv;
-                    }
+					if(isSuccess)
+					{
+						break;
+					}
 				}
-				else
-				{
-					Dbg.ERROR_MSG(string.Format("NetworkInterfaceKCP::_asyncConnect(), connect to '{0}:{1}' timeout!'", state.connectIP, state.connectPort));
-					state.error = "timeout!";
-				}
+
+				Dbg.DEBUG_MSG($"NetworkInterfaceKCP::_asyncConnect(), connect to '{state.connectIP}:{state.connectPort}' isSuccess={isSuccess} error = '{state.error}'");
+
 			}
 			catch (Exception e)
 			{
-				Dbg.ERROR_MSG(string.Format("NetworkInterfaceKCP::_asyncConnect(), connect to '{0}:{1}' fault! error = '{2}'", state.connectIP, state.connectPort, e));
+				Dbg.ERROR_MSG($"NetworkInterfaceKCP::_asyncConnect(), connect to '{state.connectIP}:{state.connectPort}' fault! error = '{e}'");
 				state.error = e.ToString();
+				state.errorType = ErrorType.ExceptionError;
 			}
 		}
 	}

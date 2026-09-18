@@ -1,6 +1,6 @@
 #!/bin/bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIG_FILE="${SCRIPT_DIR}/leaseConf.json"
+CONFIG_FILE="${SCRIPT_DIR}/leaseServer.json"
 SQL_FILE="${SCRIPT_DIR}/lease.sql"
 
 if [ ! -f "$CONFIG_FILE" ]; then

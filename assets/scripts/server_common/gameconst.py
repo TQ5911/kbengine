@@ -36,6 +36,8 @@ GLOBALDATA_KEY_TODAY_REG_NUM = 'kTodayRegAccountNum'
 GLOBALDATA_KEY_TOTAL_ONLINE_NUM = 'kAvatarNum'
 GLOBALDATA_KEY_CELLAPP_INITED = 'kCellappInited'
 GLOBALDATA_KEY_SVIP_ONLINE_NUM = 'kSVIPOnlineNum'
+GLOBALDATA_KEY_WORLD_LEVEL = 'kWorldLevel'
+GLOBALDATA_KEY_CROSS_WORLD_LEVEL = 'kCrossWorldLevel'
 
 gameUpdateHertz = 10
 
@@ -48,7 +50,6 @@ BASEAPP_STATE_LOCK_WAIT_FULL_PREPARE = 1
 GLOBAL_BASE_STUB_ARCHIVE = [
     'GlobalMailStub',
     'SiegeWarStub',
-    'CrossSiegeWarStub',
     'WorldBossStub',
     'RedBagStub',
     'MineWarStub',
@@ -69,6 +70,7 @@ GLOBAL_BASE_STUB_UNARCHIVE = [
     'WorldRefreshEntityStub',
     'AntiAddictionStub',
     'AllianceStub',
+    'CrossSiegeWarStub',
     ]
 GLOBAL_BASE_STUB_TEAMSTUB = 'TeamStub'
 
@@ -76,8 +78,14 @@ GLOBAL_BASE_STUB_RAIDSTUB = 'RaidStub'
 
 GLOBAL_BASE_STUB_STATISTICSTUB = 'StatisticStub'
 
+GLOBAL_BASE_STUB_CROSSTEAMSTUB = 'CrossTeamStub'
+
 SPACE_NO_DUNGEON_START = 1000
 SPACE_NO_DUNGEON_END = 4999
+
+
+FIRST_NEWBIE_DUNGEON_NO = 4002
+
 
 SPACE_NO_HOME_INTERVAL = 10000
 COPIED_SPACE_NO_START = 1*SPACE_NO_HOME_INTERVAL  #spaceNo in [1,1000] [1000*SPACE_NO_HOME_INTERVAL, 9999*SPACE_NO_HOME_INTERVAL]
@@ -216,6 +224,11 @@ AOI_EXIT_TRAP = 4
 LARGE_ENTITY_VISIBILITY_TRAP = 9
 LARGE_ENTITY_HYSTERESIS_TRAP = 10
 ESCORT_ROUTE_TRAP = 12
+
+
+USER_SET_SRC_INIT = 1
+USER_SET_SRC_LOG_OUT = 2
+USER_SET_SRC_TICK = 3
 
 
 class StateEnum(metaclass=UniqueIntEnum):
@@ -391,6 +404,8 @@ INIT_CLIENT_SEND = (
         ('sendAllRecoveryInfo', True),
         ('_sendGuildVoiceMembers', True),
         ('sendSafeBoxData', True),
+        ('sendAllEnmityDatas', True),
+        ('onSendUseCoinTimesTicketInfo', True),
 )
 
 class ItemEnum(object):
@@ -422,6 +437,8 @@ class ItemSubEnum(object):
     EQUIP_SOUL_BRACELET = 34
 
     ExtractReward = 52
+
+    AUTO_USE_OUT_OF_BAG = 53
 
     EQUIP_SOUL_TYPE = (EQUIP_SOUL_WEAPON, \
                        EQUIP_SOUL_CLOTHES, \
@@ -619,6 +636,8 @@ class EntityPropsEnum(metaclass=UniqueIntEnum):
     breakAutoCombatTime = 428
     lastUseSkillTime = 429
     crossServerExtra = 430
+    authSecondPwdInfo = 431 # 代理缓存下 号主人的二级密码信息
+    preMineWarPKState = 432 # 矿战核心层锁定前的 pkModel/pkProtect
 
 
 class TopSpeedType(object):
@@ -665,6 +684,7 @@ class ItemIdEnum(object):
     BIND_MONEY = IDSD.datas['itemID_bind_money']['value']
     APPEARANCE_COIN = IDSD.datas['itemID_appearanceCoin']['value']
     GUILD_COMMISSION = IDSD.datas['itemID_guildCommission']['value']
+    GUILD_DARK_IRON = IDSD.datas['itemID_guildDarkIron']['value']
 
     GM_MODIFY_CURRENCY_ITEMS = (MONEY, BIND_MONEY, COIN, DARK_IRON, GUILD_CONTRIB)
 
@@ -732,6 +752,7 @@ class StreamStringID(object):
     LEASE_SHOP_ITEMS = 30
     MY_LEASE_SALE_INFO = 31
     LEASE_RECORDS = 32
+    CROSS_TEAM_LIST_DATA = 33
 
 
 class UseItemEnum(object):
@@ -750,6 +771,10 @@ class BagTypeEnum(object):
     BAG_TYPE_NORMAL = 0
     BAG_TYPE_LINGSHOU_PEN = 1  # 宠物背包
     BAG_TYPE_WAREHOUSE = 2
+
+#不能和上面BagTypeEnum重复
+class FnvCheckTypeEnum(object):
+    CURRENCY = 100
 
 
 class BagOPStat(object):
@@ -1179,6 +1204,8 @@ class LogType(object):
 class RedisKey(object):
     IDIPMARQUEE_KEY = "__IDIPMARQUEE_KEY__"
     avatarNameTbl = 'global:avatar_names'
+    AVATAR_NAME_KEY_PREFIX = 'avatar_name:'
+    GUILD_NAME_KEY_PREFIX = 'guild_name:'
     LOGIN_ACCOUNT_GBID_KEY = "__LOGIN_ACCOUNT_GBID_KEY__"
     WP_WHITE_LSIT_KEY = "__WP_WHITE_LSIT_KEY__"
     GUILD_NAME_TBL = 'global:guild_names'
@@ -1193,6 +1220,8 @@ class RedisKey(object):
     WAITMAP_HEARTBEAT_KEY = 'waitmap:heartbeat'
     WAITMAP_FREE_PREFIX = 'waitmap:free:'
     RECHARGE_STAGE_INFO = 'recharfe:stage:'
+    QUEUE_PASS = 'queue:pass:'
+    AVATAR_INFO = 'AvatarInfo_'
 
 class ForbidType(object):
     SHORT_FORBID = 1  # 临时封禁
@@ -1621,12 +1650,13 @@ class RemoveTypeEnum(metaclass=UniqueIntEnum):
     RTEnumRestoreRemove = 7
 
 class PKModelEnum(object):
-    PEACE = 0
-    JUSTICE = 1
-    ENEMY = 2
-    ATTACK = 3
+    PEACE = 0       # 防卫
+    JUSTICE = 1     # 已废弃，兼容旧数据
+    ENEMY = 2       # 已废弃，兼容旧数据
+    ATTACK = 3      # 杀戮
     #GRAY = 3        #灰名模式
     MAX_PK = ATTACK
+    MANUAL_PK = (PEACE, ATTACK)
 
 class IsRelationEnum(object):
     TRUE = 1
@@ -1841,10 +1871,53 @@ TEAM_MEMBER_MAX_NUM = 5
 TEAM_APPLY_JOIN_MAX_NUM = 20
 TEAM_MAX_LIST_NUM = 15
 
+# CrossTeamStub个数（跨服组队本服代理分片数）
+CROSS_TEAMSTUB_CONF_NUM = 2
+
+
+
+
+
+# 跨服组队操作结果码（与 crossConst.go 逐值对齐）
+CROSS_TEAM_RESULT_SUCCESS = 0
+CROSS_TEAM_RESULT_COMMON = 1
+CROSS_TEAM_RESULT_TEAM_NOT_FOUND = 2
+CROSS_TEAM_RESULT_TEAM_FULL = 3
+CROSS_TEAM_RESULT_TEAM_IN_DUNGEON = 4
+CROSS_TEAM_RESULT_PASSWORD_WRONG = 5
+CROSS_TEAM_RESULT_LEVEL_NOT_ENOUGH = 6  # 等级不足（原 NOT_MEET_CONDITION 拆分）
+CROSS_TEAM_RESULT_APPLY_LIST_FULL = 7
+CROSS_TEAM_RESULT_NOT_CAPTAIN = 8
+CROSS_TEAM_RESULT_NOT_TEAM_MEMBER = 9
+CROSS_TEAM_RESULT_ALREADY_IN_TEAM = 10
+CROSS_TEAM_RESULT_INVALID_PARAM = 11
+CROSS_TEAM_RESULT_DUPLICATED_TEAM = 12
+CROSS_TEAM_RESULT_NOT_INVITED = 13
+CROSS_TEAM_RESULT_NOT_APPLIED = 14
+CROSS_TEAM_RESULT_APPLY_REJECTED = 15
+CROSS_TEAM_RESULT_MATCH_JOIN_INVALID = 16  # 撮合入队作废，需重新发起匹配
+CROSS_TEAM_RESULT_CRUSADE_RATE_LIMIT = 17  # 讨伐发起被限流
+CROSS_TEAM_RESULT_CRUSADE_IN_PROGRESS = 18  # 已有进行中的讨伐检查/副本
+CROSS_TEAM_RESULT_GROUP_FULL = 19  # 目标小组已满 5 人
+CROSS_TEAM_RESULT_INVALID_POS = 20  # 源/目标位置信息与中心不一致
+CROSS_TEAM_RESULT_SERVER_MISMATCH = 22  # 他服玩家不能加入本服目标队伍（本服链路，对齐中心 crossConst.go）
+CROSS_TEAM_RESULT_DUN_SERVER_INVALID = 23  # 副本目标服无效（含 dunServer=0 的存量队伍，对齐中心 crossConst.go）
+CROSS_TEAM_RESULT_BECOME_CAPTAIN_REJECTED = 24  # 申请成为队长被队长拒绝（对齐中心 crossConst.go）
+CROSS_TEAM_RESULT_NEED_PASSWORD = 25  # 需要密码（目标队伍设了密码而申请未携带，对齐中心 crossConst.go）
+CROSS_TEAM_RESULT_SCORE_NOT_ENOUGH = 26  # 战力不足（与 CROSS_TEAM_RESULT_LEVEL_NOT_ENOUGH=6 区分，对齐中心 crossConst.go）
+CROSS_TEAM_RESULT_NOT_DEPUTY = 27  # 无副团长可取消（setDeputy 取消校验，对齐本服 ENUM_RAID_NOT_RAID_DEPUTY 与中心 crossConst.go）
+
+# 跨服组队状态上报周期（秒）：本服 Stub 聚合成员状态定时上报中心
+CROSS_TEAM_REPORT_STATE_INTERVAL = 3
+
+# 跨服队伍列表 Stub 缓存时长（秒，问题记录#5）：一波全量回包按 target 缓存，
+# 命中期内查询直接回缓存数据；与中心快照刷新周期（TEAM_LIST_REFRESH_SECONDS=5）对齐
+CROSS_TEAM_LIST_CACHE_SECONDS = 5
+
 RAIDSTUB_CONFIG_NUM = 5
 RAID_TEAM_MEMBER_MAX_NUM = 5
 RAID_LSIT_MAX_NUM = 15
-RAID_MEMBER_MAX_NUM = 15
+RAID_MEMBER_MAX_NUM = 40
 RAID_APPLY_JOIN_MAX_NUM = 20
 STATISTICSTUB_CONFIG_NUM = 5
 
@@ -1876,6 +1949,7 @@ class TeamType(object):
     DEFAULT = 0
     TEAM = 1
     RAID = 2
+    CROSS_TEAM = 3  # 跨服组队（跨服队标记怪物的记录类型，Monster.crossTeamMarkDict）
     VALID_TYPES = (TEAM, RAID)
 
 TEAM_MARK_MAX_SLOT = 8
@@ -2079,6 +2153,8 @@ class PKProtectEnum(object):
     GROUP = 1
     GUILD = 2
     UNION = 3 # 同盟保护
+    ATTACK_RED = 4   # 防卫：攻击红名/灰名，默认不勾选
+    ATTACK_ENEMY = 5 # 防卫：攻击敌对列表/宣战帮会，新号默认勾选
 
 class PKMoralLevel(object):
     KINDNESS = 0
@@ -2103,11 +2179,18 @@ class ChatChannelEnum(object):
     RECRUIT = 8
     SIEGE_WAR = 9
     AUCTION = 10
-    MAX = 11
+    ALLIANCE = 11
+    MAX = 12
 
     initExcludeChannel = ()
     avatarChannel = (WORLD, GUILD, TEAM, NEARBY)
     voiceChannel = (WORLD, GUILD, TEAM, NEARBY)
+
+
+# 联盟频道消息来源类型,与 proto 中 AllianceChatMessage.senderType 对齐
+class AllianceChatSenderType(object):
+    PLAYER = 0    # 玩家发言
+    SYSTEM = 1    # 系统消息(援助/宣战等)
 
 class SilentSpeakScene(object):
     ENUM_FRIEND_CHAT = 1             #私聊
@@ -2133,9 +2216,15 @@ class DungeonPlayModeEnum(object):
     CHIEF = 2
     GUILD_BOSS = 3
     INNER_DEMON = 4
+    # 跨服讨伐：仅跨服服上的跨服组队空间使用（本服模式空间落本服 CRUSADE/CHIEF 枚举，
+    # 跨服队伍归属由 SpaceVal.crossTeamId 判定）；teamUUID/raidUUID 语义为跨服队伍 ID
+    CROSS_CRUSADE = 5
+    CROSS_CHIEF = 6
 
-    COLL_ALL = (CRUSADE, CHIEF, GUILD_BOSS, INNER_DEMON)
+    COLL_ALL = (CRUSADE, CHIEF, GUILD_BOSS, INNER_DEMON, CROSS_CRUSADE, CROSS_CHIEF)
     COLL_SYNC_SPACELEVEL = (CRUSADE, CHIEF, GUILD_BOSS)
+    # 跨服讨伐玩法集合（结算透传本服、退出/掉线通知中心等分支判断用）
+    COLL_CROSS = (CROSS_CRUSADE, CROSS_CHIEF)
 
 class DungeonTicketType(metaclass=UniqueIntEnum):
     # 常规使用
@@ -2144,6 +2233,8 @@ class DungeonTicketType(metaclass=UniqueIntEnum):
     GOLD = 2
     # 道具使用
     ITEM = 3
+    # 普通使用
+    COMMON = 4
 
 class DungeonSpaceMgrProps(object):
     DSMPEnumdungeonRewardBossID = 1000
@@ -3019,6 +3110,8 @@ class CrossServerReasonNo(object):
     DEFAULT = 0
     ENTER_CROSS_SIEGE_WAR = 1
     ENTER_CROSS_ABYSS = 2
+    ENTER_CROSS_CRUSADE = 3     # 跨服讨伐-魔物巢穴
+    ENTER_CROSS_CHIEF = 4       # 跨服讨伐-首领巢穴
 
 class CrossServerWaitClientInitTuple(object):
     DEFAULT = 0
@@ -3067,6 +3160,7 @@ WORLDLINE_ENTER_TIME_OUT_DUR = 60
 CUBE_ADD_TIMES_TYPE_NULL = 0
 CUBE_ADD_TIMES_TYPE_COIN = 1
 CUBE_ADD_TIMES_TYPE_ITEM = 2
+VALID_ADD_TIMES_TYPE = (CUBE_ADD_TIMES_TYPE_NULL, CUBE_ADD_TIMES_TYPE_COIN, CUBE_ADD_TIMES_TYPE_ITEM)
 
 MONSTER_BE_ATTACK_CLEAR_DUR = 5 * 60
 
@@ -3108,6 +3202,7 @@ class CubeAddTimesReason(object):
     RENEW_USE_ITEM = 2
     FROM_CLIENT = 3
     CHECK_COND = 4
+    ADD_FREE = 5
 
 class MailType(object):
     GLOBAL_MAIL_EXCLUDE_NEW_PLAYERS = 1     #全服邮件，只有在发送全服邮件时刻之前已经创建的角色才能收到
@@ -3231,8 +3326,11 @@ class _AuctionErrno(object):
     ERR_AUCTION_SALE_ITEM_ID_ERROR              = _errno(20045)     # 交易物品ID错误
     AUCTION_ITEM_IS_NOT_IN_SNATCH               = _errno(20046)     # 交易行物品正不在抢购期
     ERR_AUCTION_SOUL_WITH_EMPTY_ROLL_PROPS      = _errno(20047)     # 没有词条魂魄不允许上交易行
+    ERR_AUCTION_ITEM_IS_SELF_SALE               = _errno(20048)     # 自己的商品不能购买
     ERR_AUCTION_IDIP_GM_BAN                     = _errno(20100)     # IDIP禁止
     ERR_AUCTION_FAIL                            = _errno(20101)     # 通用失败
+    ERR_AUCTION_ITEM_IS_NOT_IN_SELLING          = _errno(20049)     # 交易行物品不在出售状态
+    
 
 AuctionErrno = _AuctionErrno()
 
@@ -3358,6 +3456,7 @@ class MoralType(object):
 
 MORAL_SRC_TYPE_KILL_PLAYER = 1 # 杀人
 MORAL_SRC_TYPE_KILL_MONSTER = 2 # 杀怪物
+MORAL_SRC_TYPE_TIME_RECOVER = 3 # 时间恢复
 
 
 class DungeonFlowMoveAni(object):
@@ -3491,6 +3590,14 @@ class GuildRelationType(object):
     UNION = 1
     ENEMY = 2
 
+# 敌对（宣战）实体类型 —— 与 centralService allianceData 的常量一致。
+# 一个战争行（enemyRelationDic 的 value）在 attack/target 两侧各自标注是
+# 帮会(GUILD)还是联盟(ALLIANCE)，用于实体级敌对推导（见 utils.isEntityEnemy）。
+class WarEntityType(object):
+    ALLIANCE = 1
+    GUILD = 2
+
+
 # WONDERLAND start
 MYSTIC_SUMMIT_FLOORS = [1, 2, 3]
 WONDERLAND_LINE_NO = 0
@@ -3516,6 +3623,7 @@ class WonderAddTicketReason(object):
     CHECK_COND = 2
     RENEW_USE_COIN = 3
     RENEW_USE_ITEM = 4
+    ADD_FREE = 5
 # WONDERLAND end
 
 WONDER_LAND_EVENT_ENTER = 1
@@ -3534,6 +3642,7 @@ class AbyssAddTicketReason(object):
     CHECK_COND = 2
     RENEW_USE_COIN = 3
     RENEW_USE_ITEM = 4
+    ADD_FREE = 5
 
 # 城战阶段
 class SiegeWarState(object):
@@ -3863,6 +3972,8 @@ class CubeRoomType(object):
     TIDE = 4 # 狂潮
 
     NeedKickTup = (COW, TIDE)
+    TipCowRoomRefresh1 = (READY,)
+    TipCowRoomRefresh2 = (NORMAL, COW, TIDE)
 
 
 class QuotaDurStatus(object):
@@ -3996,9 +4107,13 @@ class UIUIVisibleType(object):
 
 class AuctionConst(object):
     # 我的关注
-    ATTENTION_MY = 1
+    ATTENTION_MY        = 1
     # 商品关注
-    ATTENTION_GOODS = 100
+    ATTENTION_GOODS     = 100
+    EQUIP_DEFAULT_VALUE = -1
+    EQUIP_FLAG          = "equipment"
+    EQUIP_GRADE_LEVEL   = "gradeLv"
+    EQUIP_ENHANCE_LEVEL = "enhanceLv"
 
 TEAM_STATISTIC_TYPE_TO_LIST = {
     TeamStatisticType.DAMAGE: 'dmgList',
@@ -4218,8 +4333,10 @@ class DungeonAddRewardNumCountType(metaclass=UniqueIntEnum):
     ITEM_COUNT= 2
     # 金币次数
     COIN_COUNT= 3
+    # 通用次数
+    COMMON_COUNT= 4
     # 有效的类型
-    VALID_TYPE = (DEFAULT_COUNT, ITEM_COUNT, COIN_COUNT)
+    VALID_TYPE = (DEFAULT_COUNT, ITEM_COUNT, COIN_COUNT, COMMON_COUNT)
 
 class AntiAddictionDateType(object):
     WEEKEND = 0
@@ -4730,18 +4847,18 @@ class ResourceRecoveryType(object):
     PAID_TICKET = 2
 
 class RecoveryTicketType(object):
-    FREE_TICKET = 0
-    PAID_TICKET = 1
+    FREE_TICKET = 1
+    PAID_TICKET = 2
 
     VALID_TYPE = (FREE_TICKET, PAID_TICKET)
     MAX_CNT = PAID_TICKET + 1
 
 class RecoveryTicketSubType(object):
-    CUBE = 0
-    WONDER_LAND = 1
-    ABYSS = 2
-    CRUSADE = 3
-    CHIEF = 4
+    CUBE = 1
+    WONDER_LAND = 2
+    ABYSS = 3
+    CRUSADE = 4
+    CHIEF = 5
 
     VALID_SUB_TYPE = (CUBE, WONDER_LAND, ABYSS, CRUSADE, CHIEF)
     MAX_CNT = CHIEF + 1
@@ -4922,7 +5039,7 @@ class GuildMicsSwitch(object):
 
 class BindPhoneRes(object):
     BIND_SUCCESSED = 0
-    CHECK_CAPTCHA_VERIF = 1
+    CHECK_CAPTCHA_VERIFY = 1
     ALERADY_SENT = 2
 
 class SpecialVisibleType:
@@ -4966,12 +5083,16 @@ class SMSOperationType(object):
     SECONDARY_PWD_UPDATE = 1
     SECONDARY_PWD_DELETE = 2
     SECONDARY_PWD_ENABLE = 3
+    TAPTAP_UNBIND_PHONE = 5
 
     SECONDARY_PWD_VAILD_TYPE = (SECONDARY_PWD_SET, SECONDARY_PWD_UPDATE, SECONDARY_PWD_DELETE)
-    ALL_VAILD_TYPE = (SECONDARY_PWD_SET, SECONDARY_PWD_UPDATE, SECONDARY_PWD_DELETE)
+    TAPTAP_PHONE_VAILD_TYPE = (TAPTAP_UNBIND_PHONE,)
+    AUTO_PROCE_VAILD_TYPE = (TAPTAP_UNBIND_PHONE,)
+    ALL_VAILD_TYPE = (SECONDARY_PWD_SET, SECONDARY_PWD_UPDATE, SECONDARY_PWD_DELETE, TAPTAP_UNBIND_PHONE)
 
 class SMSOperationTypeStr(object):
     SECONDARY_PWD = 'second_password'
+    TAPTAP_UNBIND_PHONE = 'taptap_unbind'
 
 class SecondaryPasswordCheckType(object):
     USE_MONEY = 1
@@ -4980,8 +5101,9 @@ class SecondaryPasswordCheckType(object):
     RENTAL_ITEM = 4
     ITEM_WASH = 5
     ITEM_DISASSEMBLE = 6
+    AUTH = 7
 
-    VAILD_TYPE = (USE_MONEY, USE_BIND_MONEY, SALE_ITEM, RENTAL_ITEM, ITEM_WASH, ITEM_DISASSEMBLE, )
+    VAILD_TYPE = (USE_MONEY, USE_BIND_MONEY, SALE_ITEM, RENTAL_ITEM, ITEM_WASH, ITEM_DISASSEMBLE, AUTH)
 
 class NotifyPopupSecondaryPasswordType(object):
     TO_SET = 0
@@ -5149,6 +5271,11 @@ class SpeedCheckData(object):
 class GamePlayModeType(object):
     Dungeon = 4
 
+
+class PKValuePlayerType(object):
+    WHITE_OR_YELLOW = 1  # 白名或黄名
+    RED_OR_PURPLE = 2  # 红名或紫名
+
 class CanDeductWealthRes(object):
     TRUE = 0
     FALSE = 1
@@ -5164,3 +5291,92 @@ class EventTipCrossServerType(object):
     CrossAndSourceServer = 1
     # 跨服和所有服
     CrossAllServer = 2
+
+class SynthesusDataKeys(object):
+    #   每次合成消耗同种同品质材料数
+    SYNTHESIS_ITEMS_PER_GROUP = 4
+    #   合成 key 编码因子：synthesisKey = mainType * MAIN_TYPE_FACTOR + subType；
+    #   升级 key = synthesisKey * QUALITY_FACTOR + quality
+    SYNTHESIS_KEY_MAIN_TYPE_FACTOR = 1000
+    SYNTHESIS_KEY_QUALITY_FACTOR = 10
+
+class EnmityDatasType(object):
+    INIT = 0
+    ADD = 1
+    REMOVE = 2
+    UPDATE = 3
+
+class TicketDiscountType(object):
+    ORIGINAL = 0
+    NEW_SERVE = 1
+    NEW_PLAYER = 2
+
+class addTicketTimesType(object):
+    NULL = 0
+    RECOVERY = 1
+    TOKEN_ITEM = 2
+    COIN = 3
+
+class PlayerScoreKeyDatas:
+    Bless           = 'bless'
+    Equipments      = 'equipments'
+    Level           = 'level'
+    RewardFightProp = 'rewardFightProp'
+    Mount           = 'mount'
+    Pet             = 'pet'
+    Skill           = 'skill'
+    Guildtrain      = 'guildtrain'
+    Meridian        = 'meridian'
+
+    ALL = (Bless, Equipments, Level, RewardFightProp, Mount, Pet, Skill, Guildtrain, Meridian)
+    INIT = (Equipments, Level, RewardFightProp, Mount, Pet, Skill, Guildtrain, Meridian)
+
+class BodyEquipDressOpType:
+    # 玩家主动穿上
+    DRESS_SELF = 1
+    # 玩家替换穿上
+    DRESS_REPLACE = 2
+    # GM脱装备
+    UNDRESS_GM = 3
+    # 强化破碎
+    UNDRESS_ENHANCE_BROKEN = 4
+    # 掉落通知移除
+    UNDRESS_DROP_NOTIFY_REMOVE = 5
+    # 玩家主动移除
+    UNDRESS_SELF = 6
+    # 租赁到期主动移除
+    UNDRESS_LEASE_EXPIRE_REMOVE = 7
+    # 死亡掉落
+    UNDRESS_DEATH_DROP = 8
+    # 掉落消失
+    UNDRESS_DROP_DISAPPEAR = 9
+    # 玩家替换脱下
+    UNDRESS_DRESS_REPLACE = 10
+
+class SubType2TicketInfoIdx(object):
+    # 剩余次数信息属性
+    LEFT_USE_COIN_NUM_ATTR = 0
+    # 修改囤积票数量方法
+    MODIFY_TICKET_NUM_FUNC = 1
+    # 每日重置方法
+    DAILY_REFRESH_FUNC = 2
+    # 更新货币门票信息方法
+    UPDATE_USE_COIN_TICKET_INFO_FUNC = 3
+    # 尝试消耗免费门票方法
+    TRY_ADD_USE_COIN_FREE_TICKET_FUNC = 4
+    # 推送货币门票信息方法
+    SEND_USE_COIN_TICKET_INFO_FUNC = 5
+
+class BindPhoneWebCode(object):
+    QUERY_RECHARGE_SUCCESS = 0
+    SUCCESS = 200
+    SUCCESS_ASYNC = 202
+    PHONE_REPEAT = 1002
+    PHONE_REPEAT_ASYNC = 1003
+    CHECK_CAPTCHA_VERIFY1 = 4005
+    CHECK_CAPTCHA_VERIFY2 = 5005
+    COOL_DOWN_NO_BIND1 = 5006
+    COOL_DOWN_NO_BIND2 = 5011
+    TAPTAP_UNBIND_PARMS_INCOMPLETE = 5013
+    TAPTAP_UNBIND_ACCOUNT_FORBIDDEN = 5014
+    TAPTAP_UNBIND_PHONE_MISMATCH = 5015

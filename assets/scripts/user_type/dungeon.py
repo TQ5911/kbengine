@@ -38,9 +38,22 @@ class DungeonSpaceVal(userType.UserSingleType):
         self.dungeonSpaceValType = dungeonSpaceValType
         self.completedReasonType = gameconst.DunegonCompleteReasonType.DEFAULT
         self.challengeEndTime = 0
+        # 跨服组队队伍 ID（中心权威）：0=非跨服组队副本空间；
+        # 由副本 stub 建空间时按 extra['crossTeamId'] 记录（本服/跨服服两种模式均记录）。
+        # 空间的玩法枚举只在 DungeonSpaceMgr 侧的 dungeonPlayMode 上（本服模式落
+        # CRUSADE/CHIEF，跨服服落 CROSS_CRUSADE/CROSS_CHIEF），与队伍归属判定无关
+        self.crossTeamId = 0
 
     def isActive(self):
         return self.state == self.SPACE_STATUS_DURING
+
+    def isCrossDungeon(self):
+        # 跨服组队副本空间判定：队伍全量落在组队中心（本服/跨服之分只是业务形态），
+        # 归属唯一按 crossTeamId 识别（记录处见 CrossTeamDungeonStub._teamGetDungeonSpaceVal/
+        # _raidGetDungeonSpaceVal）；与空间 playMode（本服副本/跨服副本行为分支用）无关。
+        # 注：队伍中心化 + 旧链路客户端不可达后，CrossTeamDungeonStub 内本判定恒为 True——
+        # 它只是双轨期标记旧 TeamStub/RaidStub 联动分支的删除锚点，随旧系统下线一并塌缩删除
+        return self.crossTeamId > 0
 
     def completeDungeon(self, win=True):
         self.state = self.SPACE_STATUS_COMPLETE if win else self.SPACE_STATUS_FAILED
@@ -190,104 +203,12 @@ class DungeonEntityGeneratorVal(object):
         return _num
 
 
-class DungeonEntityGeneratorQueueMixin(object):
-    def __init__(self, dungeonEntityGenerateQueue=None):
-        if not dungeonEntityGenerateQueue:
-            self.dungeonEntityGenerateQueue = collections.OrderedDict()
-
-        self.dungeonEntityCreatingQueue = collections.OrderedDict()
-        self._gameEntityIdReversedDic = {}
-        self._gameEntityIdentifyIDReversedDict = {}
-
-    def isCreatingEntity(self):
-        for genVal in self.dungeonEntityCreatingQueue.values():
-            if genVal.getEntityStatusVal(gameconst.DungeonEntityLoadEnum.UNLOAD) > 0:
-                return True
-        return False
-
-    def isNeedCreateEntity(self):
-        if self.dungeonEntityGenerateQueue or self.dungeonEntityCreatingQueue:
-            return True
-        return False
-
-    def isFlagIdInEntityGenerator(self, flagId):
-        if flagId not in self._gameEntityIdReversedDic:
-            return False
-        if not self._gameEntityIdReversedDic[flagId]:
-            return False
-        return True
-
-    def clearEntityGeneratorQueue(self):
-        self.dungeonEntityCreatingQueue.clear()
-        self.dungeonEntityGenerateQueue.clear()
-        self._gameEntityIdReversedDic.clear()
-        self._gameEntityIdentifyIDReversedDict.clear()
-
-    def addEntityGeneratorVal(self, genVal: DungeonEntityGeneratorVal):
-        if genVal.genUUID in self.dungeonEntityGenerateQueue or genVal.genUUID in self.dungeonEntityCreatingQueue:
-            return
-
-        self.dungeonEntityGenerateQueue[genVal.genUUID] = genVal
-
-        for entVal in genVal.entityList:
-            self._gameEntityIdentifyIDReversedDict[entVal.entProps["gameEntityIdentifyID"]] = genVal.genUUID
-            _gid = utils.parseGidFromGameEntityId(entVal.entProps["gameEntityId"])
-            self._gameEntityIdReversedDic.setdefault(_gid, set()).add(genVal.genUUID)
-
-    def popEntityGeneratorVal(self, genUUID, default=None):
-        _isCreating = genUUID in self.dungeonEntityCreatingQueue
-        _isQue = genUUID in self.dungeonEntityGenerateQueue
-        if not (_isCreating or _isQue):
-            return default
-
-        if _isCreating:
-            _val = self.dungeonEntityCreatingQueue.pop(genUUID)
-
-        if _isQue:
-            _val = self.dungeonEntityGenerateQueue.pop(genUUID)
-
-        for entVal in _val.entityList:
-            self._gameEntityIdentifyIDReversedDict.pop(entVal.entProps["gameEntityIdentifyID"], None)
-            _gid = utils.parseGidFromGameEntityId(entVal.entProps["gameEntityId"])
-            self._gameEntityIdReversedDic.get(_gid, set()).discard(genUUID)
-        return _val
-
-
-    def makeNextEntityGeneratorValInCreatingQueue(self, default=None):
-        if not self.dungeonEntityGenerateQueue:
-            return default
-
-        genUUID, _val = self.dungeonEntityGenerateQueue.popitem(last=False)
-        self.dungeonEntityCreatingQueue[genUUID] = _val
-        return _val
-
-    def onDungeonEntityCreated(self, gameEntityIdentifyID):
-        if gameEntityIdentifyID not in self._gameEntityIdentifyIDReversedDict:
-            LOG_ERR("DungeonEntityGeneratorQueueMixin::onDungeonEntityCreated:: gameEntityIdentifyID not found",
-                      gameEntityIdentifyID, self._gameEntityIdentifyIDReversedDict)
-            return
-
-        genUUID = self._gameEntityIdentifyIDReversedDict[gameEntityIdentifyID]
-        if genUUID in self.dungeonEntityCreatingQueue:
-            _val = self.dungeonEntityCreatingQueue[genUUID]
-        else:
-            _val = self.dungeonEntityGenerateQueue[genUUID]
-
-        for entVal in _val.entityList:
-            if entVal.entProps["gameEntityIdentifyID"] == gameEntityIdentifyID:
-                entVal.loadStatus = gameconst.DungeonEntityLoadEnum.LOADED
-
-        if _val.isAllEntityLoaded():
-            self.popEntityGeneratorVal(genUUID)
-
-        return _val
 
 # ======================================================
 
 
 #----------------------------单人副本----------------------------------------------
-class SingleDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, 
-                            DungeonEntityGeneratorQueueMixin):
+class SingleDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin):
     def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, ownerGbId,\
                  spaceLevel=1, **kwargs):
         super(SingleDungeonSpaceVal, self).__init__(
@@ -384,7 +305,7 @@ class SingleDungeonFoundersInfo(userType.UserDictType):
 
 
 #----------------------------队伍副本--------------------------------------------------------
-class TeamDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, DungeonEntityGeneratorQueueMixin):
+class TeamDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin):
     def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, teamUUID,\
                  spaceLevel=1,extraDic={}, **kwargs):
 
@@ -405,7 +326,7 @@ class TeamDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, DungeonEnt
 # 团队副本
 # ----------------------------------------------------------------------
 
-class RaidDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, DungeonEntityGeneratorQueueMixin):
+class RaidDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin):
     """RaidStub 团队副本Space结构体"""
 
     def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, raidUUID,\
@@ -508,12 +429,11 @@ class BaseDungeonStatisticFoundersMixin(userType.UserSingleType):
     def _lateReload(self):
         self.statisticFounders.reloadScript()
     
-class GuildBossDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, DungeonEntityGeneratorQueueMixin, BaseDungeonFoundersMixin, BaseDungeonStatisticFoundersMixin):
+class GuildBossDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, BaseDungeonFoundersMixin, BaseDungeonStatisticFoundersMixin):
     def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, guildUUID, guildBox=None, spaceLevel=1,extraDic={},
                 school = 0, avatarLv = 0, avatarSex = 0, avatarGbId = 0, avatarId = 0):
         DungeonSpaceVal.__init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel, extraDic, dungeonSpaceValType=gameconst.DungeonSpaceValType.GUILD_BOSS)
         DungeonSpaceTimeLineMixin.__init__(self)
-        DungeonEntityGeneratorQueueMixin.__init__(self)
         BaseDungeonFoundersMixin.__init__(self)
         BaseDungeonStatisticFoundersMixin.__init__(self)
         self.guildUUID = guildUUID

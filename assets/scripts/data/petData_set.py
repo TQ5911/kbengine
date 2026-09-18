@@ -262,6 +262,38 @@ datas = _tools.RODict({
     "petTeamPkSwitchMsg": _tools.RODict({
         "ID": "petTeamPkSwitchMsg",
         "value": 54003432,
+    }),
+    "petGearRemoveMsg": _tools.RODict({
+        "ID": "petGearRemoveMsg",
+        "value": 54003522,
+    }),
+    "petGearReplaceMsg": _tools.RODict({
+        "ID": "petGearReplaceMsg",
+        "value": 54003523,
+    }),
+    "petGearRemoveItem": _tools.RODict({
+        "ID": "petGearRemoveItem",
+        "value": 30000013,
+    }),
+    "petGearRemoveCost": _tools.RODict({
+        "ID": "petGearRemoveCost",
+        "value": ((1, 0), (2, 300), (3, 7500), (4, 100000)),
+    }),
+    "petActivateCD": _tools.RODict({
+        "ID": "petActivateCD",
+        "value": 0.5,
+    }),
+    "petActivateCD_msgID": _tools.RODict({
+        "ID": "petActivateCD_msgID",
+        "value": 54000953,
+    }),
+    "petGearRemoveMsg2": _tools.RODict({
+        "ID": "petGearRemoveMsg2",
+        "value": 54003524,
+    }),
+    "petGearReplaceMsg2": _tools.RODict({
+        "ID": "petGearReplaceMsg2",
+        "value": 54006095,
     })
 })
 

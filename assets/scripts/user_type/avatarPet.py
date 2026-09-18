@@ -68,12 +68,12 @@ class LingShou(userType.UserSingleType):
             totalScore += levelAddScore
         return totalScore
 
-    def updateLingShouScore(self, owner):
+    def updateLingShouScore(self, owner, opUUID = 0):
         # oldValue = self.score
         newValue = self._getLingShouScore()
         self.score = newValue
 
-        owner.updatePetScore()
+        owner.updatePetScore(opUUID)
 
     def updateLingShouBaseScore(self):
         self.baseScore = self._getBaseLingShouScore()
@@ -171,13 +171,18 @@ class LingShou(userType.UserSingleType):
             return False
         return True
 
+    def getPetEquip(self, slotId):
+        return self.equipList[slotId]
+    
     def modifyPetEquip(self, owner, slotId, itemId):
+        oldItemId = self.equipList[slotId]
         self.equipList[slotId] = itemId
         self.updateLingShouScore(owner)
         owner.client.onUpdateLingShouEquip(self.petId, slotId, itemId)
         if owner.lingShouInfo.isInBattleList(owner, self.petId):
             petSlotId = owner.lingShouInfo.getSlotIdByPetId(self.petId, owner.battleIndex)
             owner.cell.onUpdateLingShouBattleList((self.petId, self.equipList), petSlotId)
+        return oldItemId
     
     def getLevel(self):
         return self.level
@@ -185,11 +190,11 @@ class LingShou(userType.UserSingleType):
     def getExp(self):
         return self.exp
     
-    def setLevelAndExp(self, oldLevel, level, exp, owner):
+    def setLevelAndExp(self, oldLevel, level, exp, owner, opUUID):
         self.level = level
         self.exp = exp
         self.updateLingShouBaseScore()
-        owner.updatePetScore()
+        owner.updatePetScore(opUUID)
         owner.cell.updateLevelProps(self.petId, oldLevel, self.level)
     
     @staticmethod
@@ -326,7 +331,7 @@ class LingShouInfo(userType.UserSingleType):
         owner.cell.onInitPetProps([pet.petId], [pet.level])
         owner.client.onUpdateLingShouData(self.toClientData([pet.petId]))
 
-        pet.updateLingShouScore(owner)
+        pet.updateLingShouScore(owner, addContext.extra['opUUID'])
         owner.onMessagePre(PDSD.datas['petUnlockTips']['value'], [str(IDIDS.petIndexDatas[pet.petId])])
 
         LogTrackingMgr.LogTrackingMgr.pet_get(owner.gbID, owner.accountEntity.clientDistinctId, owner.gbID, addContext.extra['opUUID'], pet.petId, pet.quality)

@@ -89,7 +89,7 @@ datas = _tools.RODict({
     }),
     "resourceRecoveryTimeDes": _tools.RODict({
         "ID": "resourceRecoveryTimeDes",
-        "value": "可找回<color=#038304>{0}</color>天内未使用的免费次数",
+        "value": "可找回<color=#038304>{0}</color>天内未使用的次数",
     }),
     "recoveryCostFree": _tools.RODict({
         "ID": "recoveryCostFree",
@@ -150,5 +150,129 @@ datas = _tools.RODict({
     "ScoreRankDeadLine": _tools.RODict({
         "ID": "ScoreRankDeadLine",
         "value": "202608172200",
+    }),
+    "resourceRecoveryText1": _tools.RODict({
+        "ID": "resourceRecoveryText1",
+        "value": "免费找回",
+    }),
+    "resourceRecoveryText2": _tools.RODict({
+        "ID": "resourceRecoveryText2",
+        "value": "绑元找回",
+    }),
+    "resourceRecoveryText3": _tools.RODict({
+        "ID": "resourceRecoveryText3",
+        "value": "元宝找回",
+    }),
+    "resourceRecoveryText4": _tools.RODict({
+        "ID": "resourceRecoveryText4",
+        "value": "免费找回次数：{0}",
+    }),
+    "resourceRecoveryText5": _tools.RODict({
+        "ID": "resourceRecoveryText5",
+        "value": "绑元找回次数：{0}",
+    }),
+    "resourceRecoveryText6": _tools.RODict({
+        "ID": "resourceRecoveryText6",
+        "value": "元宝找回次数：{0}",
+    }),
+    "tierReward": _tools.RODict({
+        "ID": "tierReward",
+        "value": ([5000, 40000206], [30000, 40000207]),
+    }),
+    "mineBattleReward": _tools.RODict({
+        "ID": "mineBattleReward",
+        "value": 40000205,
+    }),
+    "powerRushReward": _tools.RODict({
+        "ID": "powerRushReward",
+        "value": ([(51, 100), 40000203], [(101, 500), 40000204]),
+    }),
+    "roleNotFound": _tools.RODict({
+        "ID": "roleNotFound",
+        "value": 54001280,
+    }),
+    "rechargeNotFound": _tools.RODict({
+        "ID": "rechargeNotFound",
+        "value": 54001281,
+    }),
+    "notInWinnerGuildMember": _tools.RODict({
+        "ID": "notInWinnerGuildMember",
+        "value": 54001282,
+    }),
+    "receiveCurrentRole": _tools.RODict({
+        "ID": "receiveCurrentRole",
+        "value": 54001283,
+    }),
+    "rewardReceiveMail": _tools.RODict({
+        "ID": "rewardReceiveMail",
+        "value": 37000033,
+    }),
+    "rewardNotFound": _tools.RODict({
+        "ID": "rewardNotFound",
+        "value": 54001284,
+    }),
+    "rewardAlreadyReceived": _tools.RODict({
+        "ID": "rewardAlreadyReceived",
+        "value": 54001285,
+    }),
+    "roleNotFoundText": _tools.RODict({
+        "ID": "roleNotFoundText",
+        "value": "未查询到角色",
+    }),
+    "rechargeNotFoundText": _tools.RODict({
+        "ID": "rechargeNotFoundText",
+        "value": "未查询到充值",
+    }),
+    "rewardNotFoundText": _tools.RODict({
+        "ID": "rewardNotFoundText",
+        "value": "您未达到奖励领取条件",
+    }),
+    "notBindPhone": _tools.RODict({
+        "ID": "notBindPhone",
+        "value": "您当前账号尚未绑定手机号，请前往-【手机绑定】绑定后查询奖励",
+    }),
+    "needQuery": _tools.RODict({
+        "ID": "needQuery",
+        "value": "请先点击查询",
+    }),
+    "levelRankRewardText": _tools.RODict({
+        "ID": "levelRankRewardText",
+        "value": "您在【吉日首测】中，等级最高排名为：{0}",
+    }),
+    "powerRushRewardText": _tools.RODict({
+        "ID": "powerRushRewardText",
+        "value": "您在【炽焰测试】中，战力最高排名为：{0}",
+    }),
+    "mineBattleRewardText": _tools.RODict({
+        "ID": "mineBattleRewardText",
+        "value": "您在【炽焰测试】中，所属帮会获得胜利",
+    }),
+    "totalRechargeRewardText": _tools.RODict({
+        "ID": "totalRechargeRewardText",
+        "value": "您在【炽焰测试】中，账号累计充值为：\n{0}\n可领取：",
+    }),
+    "physicalReward": _tools.RODict({
+        "ID": "physicalReward",
+        "value": "实物奖励已发放",
+    }),
+    "clickReceive": _tools.RODict({
+        "ID": "clickReceive",
+        "value": "一键领取",
+    }),
+    "alreadyReceived": _tools.RODict({
+        "ID": "alreadyReceived",
+        "value": "已领取",
+    }),
+    "rankName": _tools.RODict({
+        "ID": "rankName",
+        "value": "第{0}名",
+    }),
+    "returnRewardReceived": _tools.RODict({
+        "ID": "returnRewardReceived",
+        "value": 54001291,
+    }),
+    "rmbFormat": _tools.RODict({
+        "ID": "rmbFormat",
+        "value": "￥{0}",
     })
 })

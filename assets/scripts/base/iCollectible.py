@@ -11,6 +11,8 @@ from avatarCollectInfo import collectItem
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import LogTrackingMgr
 import actionContext
+import collect_equipIndex as CEIDX
+import character_charData as CCDATA
 
 class ICollectible(object):
     def collectOnLogin(self):
@@ -26,7 +28,7 @@ class ICollectible(object):
                 continue
             if self._checkInUnavailableClass(info, collectId):
                 continue
-            equipment_len = len(info['equipment']) if info['equipment'] else 0
+            equipment_len = len(info['equip']) if info['equip'] else 0
             prop_len = len(info['props']) if info['props'] else 0
             if not collectData.isCompleteAll(equipment_len + prop_len):
                 continue
@@ -74,16 +76,32 @@ class ICollectible(object):
         if self._checkInUnavailableClass(info, collectID):
             return
 
-        # 由于策划分表，这里的 equipment + props 两个表共用了一个index (collectGridID)
-        equipment_len = len(info['equipment']) if info['equipment'] else 0
+        schoolIdx = 0
+        if self.getAvatarSchool() not in CCDATA.allSchoolList:
+            LOG_ERR('in reqCollect, school not exist in table, school :', self.getAvatarSchool())
+            return
+
+        schoolIdx = CCDATA.allSchoolList.index(self.getAvatarSchool())
+        # 由于策划分表，这里的 equip + props 两个表共用了一个index (collectGridID)
+        equipment_len = len(info['equip']) if info['equip'] else 0
         prop_len = len(info['props']) if info['props'] else 0
         propGridID = collectGridID - equipment_len
         if propGridID < 0:
-            itemID = info['equipment'][collectGridID][0]
-            enhanceLevel =  info['equipment'][collectGridID][1]
+            indexId = info['equip'][collectGridID]
+            equipInfo = CEIDX.datas.get(indexId, None)
+            if not equipInfo:
+                LOG_ERR('in reqCollect, indexId not exist in table, id :', propGridID, ' collectGridID: ', collectGridID)
+                return
+            if schoolIdx >= len(equipInfo['propList']):
+                LOG_ERR('in reqCollect, school not exist in table, id :', propGridID, ' collectGridID: ', collectGridID, ' schoolIdx: ', schoolIdx)
+                return
+            itemID = equipInfo['propList'][schoolIdx]
+            enhanceLevel = info['equipLevel'][collectGridID]
+            gradeLevel = info['equipGrade'][collectGridID]
         elif propGridID < prop_len:
             itemID = info['props'][propGridID]
             enhanceLevel =  None
+            gradeLevel = None
         else:
             LOG_WARN('in reqCollect, propGridID not exist in table, id :', propGridID, ' collectGridID: ', collectGridID)
             return
@@ -96,7 +114,7 @@ class ICollectible(object):
             return
         # 进行收集，扣除物品
         opUUID = KBEngine.genUUID64()
-        success = self._completeCollect(bagType, bagGridID, itemID, itemUniqueID, useBind, enhanceLevel, opUUID)
+        success = self._completeCollect(bagType, bagGridID, itemID, itemUniqueID, useBind, enhanceLevel, gradeLevel, opUUID)
         if not success:
             LOG_WARN('in reqCollect, _completeCollect not succeed, bagType', bagType, 'bagGridID', bagGridID, 'itemID', itemID, 'enhanceLevel', enhanceLevel)
             return
@@ -129,7 +147,8 @@ class ICollectible(object):
             actionContext.AchievementCtx()
         )
 
-    def _completeCollect(self, bagType, bagGridID, itemID, itemUniqueID, useBind, enhanceLevel, opUUID):
+    def _completeCollect(self, bagType, bagGridID, itemID, itemUniqueID, useBind, enhanceLevel, gradeLevel, opUUID):
+        LOG_INFO('in _completeCollect ', bagType, bagGridID, itemID, itemUniqueID, useBind, enhanceLevel, gradeLevel, opUUID)
         itemCount = 1
         # 检查需要物品itemID是否存在
         bag = self.getBagByType(bagType)
@@ -167,9 +186,18 @@ class ICollectible(object):
                 LOG_WARN('     in _completeCollect, item level is none:', bagGridID)
                 return False
 
+            if gradeLevel is None:
+                LOG_WARN('     in _completeCollect, item grade is none:', bagGridID)
+                return False
+
             if bagItem.getEnhanceLevel() != enhanceLevel:
                 LOG_WARN('     in _completeCollect, getEnhanceLevel() not matched:', bagItem.getEnhanceLevel(), ' item level', enhanceLevel)
                 return False
+
+            if bagItem.getGrade() != gradeLevel:
+                LOG_WARN('     in _completeCollect, getGrade() not matched:', bagItem.getGrade(), ' item grade', gradeLevel)
+                return False
+
             # 装备每个格子都只有一个
             if bagItem.itemNum != itemCount:
                 LOG_WARN('     in _completeCollect, bagItem.itemCount() not matched:', bagItem.itemNum, ' itemCount', itemCount)

@@ -60,6 +60,13 @@ func (self *HttpService) getOnlineNum(serverIdStr string) (int, error) {
 	return redis.Int(conn.Do("get", "g:normal_online_num"+serverIdStr))
 }
 
+func markQueuePass(conn redis.Conn, accountName string, serverId uint32) {
+	_, err := conn.Do("SET", "queue:pass:"+accountName, fmt.Sprintf("%d", serverId), "EX", 180)
+	if err != nil {
+		appLog.Error("markQueuePass failed", accountName, serverId, err.Error())
+	}
+}
+
 func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	var accountNameStr = strings.Join(r.Form["accountName"], "")
@@ -178,6 +185,7 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 					if client != nil {
 						client.isQueueSuc = true
 						client._replyQueueSuccess(gameServer.hostId, accountName)
+						markQueuePass(conn, accountName, gameServer.hostId)
 						hasGetTokenNoUse = false
 						break
 					}
@@ -197,6 +205,7 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 	//当前无需排队
 	if onlineNum < MaxOnlineNum && (hasGetTokenNoUse || gameServer.limiter.Allow()) {
 		appLog.Info("queue success")
+		markQueuePass(conn, accountNameStr, serverId)
 		self.doQueueReply(w, 1, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0, nil)
 		return
 	} else {
@@ -242,6 +251,13 @@ func (self *HttpService) handleGetQueueInfo(w http.ResponseWriter, r *http.Reque
 		client.OnRecv()
 		if client.IsQueueSuc() {
 			appLog.Info("handleStartQueue queue success ", accountName, " ", serverId)
+			conn, err := common.GetRedisConn(self.app.redisPool, "queue.handleGetQueueInfo")
+			if err != nil {
+				appLog.Error("handleGetQueueInfo get redis conn failed", accountNameStr, err.Error())
+			} else {
+				markQueuePass(conn, accountNameStr, serverId)
+				conn.Close()
+			}
 			response := QueueReply{}
 			response.QueueId = uint32(client.GetQueueId())
 			response.State = uint8(clientService.QueueReply_QUEUE_SUCCESS)

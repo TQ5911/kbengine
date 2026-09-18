@@ -93,6 +93,8 @@
             <Arg>   ITEMID      </Arg>
             <Arg>   UINT32      </Arg>
             <Arg>   UINT32      </Arg>
+            <Arg>   ARRAY <of> UINT8 </of>  </Arg>
+            <Arg>   ARRAY <of> UINT8 </of>  </Arg>
         </reqLeaseShopItems>
 
         <!-- 内部: 预上架回调 -->

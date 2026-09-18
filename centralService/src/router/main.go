@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	base.Init("routerConf.json", &Router.RouterConfig, func() common.IApp {
+	base.Init(&Router.RouterConfig, func() common.IApp {
 		return Router.NewRouterApp()
 	})
 }

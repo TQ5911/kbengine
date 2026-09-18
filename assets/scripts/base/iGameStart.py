@@ -137,6 +137,13 @@ class IGameStart(object):
                     self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
                     return False
 
+            for i in range(self._getMaxCrossTeamStubNum()):
+                stubName = gameconst.GLOBAL_BASE_STUB_CROSSTEAMSTUB + str(i)
+                if not KBEngine.globalData.get(stubName):
+                    LOG_INFO('still waiting for cross team stub', stubName)
+                    self.pyAddTimer(0.1, 0, gametimer.BASESTUB_TIMER_GLOBAL_WAIT_STUBS_HALF_PREPARE)
+                    return False
+
             for i in range(gameconst.RAIDSTUB_CONFIG_NUM):
                 _stubName = gameconst.GLOBAL_BASE_STUB_RAIDSTUB + str(i)
                 if not KBEngine.globalData.get(_stubName):
@@ -244,6 +251,11 @@ class IGameStart(object):
 
                 for _i in range(gameconst.TEAMSTUB_CONF_NUM):
                     _stubName = gameconst.GLOBAL_BASE_STUB_TEAMSTUB + str(_i)
+                    stub = gameengine.getGlobalBase(_stubName)
+                    stub.doNext()
+
+                for _i in range(self._getMaxCrossTeamStubNum()):
+                    _stubName = gameconst.GLOBAL_BASE_STUB_CROSSTEAMSTUB + str(_i)
                     stub = gameengine.getGlobalBase(_stubName)
                     stub.doNext()
 
@@ -455,6 +467,10 @@ class IGameStart(object):
             stubName = gameconst.GLOBAL_BASE_STUB_TEAMSTUB + str(i)
             random.choice(_baseApps).createUnarchiveStub(gameconst.GLOBAL_BASE_STUB_TEAMSTUB, {}, stubName)
 
+        for i, _baseApp in enumerate(random.sample(_baseApps, self._getMaxCrossTeamStubNum())):
+            stubName = gameconst.GLOBAL_BASE_STUB_CROSSTEAMSTUB + str(i)
+            _baseApp.createUnarchiveStub(gameconst.GLOBAL_BASE_STUB_CROSSTEAMSTUB, {'stubIdx': i}, stubName)
+
         for _i in range(gameconst.RAIDSTUB_CONFIG_NUM):
             _stubName = gameconst.GLOBAL_BASE_STUB_RAIDSTUB + str(_i)
             random.choice(_baseApps).createUnarchiveStub(gameconst.GLOBAL_BASE_STUB_RAIDSTUB, {}, _stubName)
@@ -480,8 +496,15 @@ class IGameStart(object):
             hasSpace = False
             if gameconst.DungeonTypeJudge.isTeamDungeon(_dungeonSpaceType, _dungeonEnterType):
                 globalName = formula.fetchDungeonStubGlobalName(_dungeonNo, gameconst.DungeonEnterTypeEnum.TEAM)
-                random.choice(_baseApps).createUnarchiveStub(
-                    'TeamDungeonStub', {'dungeonNo': _dungeonNo}, globalName, )
+                if gameconfig.enableCrossTeamDungeonStub():
+                    # 跨服组队全覆盖：以旧 stub 相同全局名注册 CrossTeamDungeonStub（小队线）
+                    random.choice(_baseApps).createUnarchiveStub(
+                        'CrossTeamDungeonStub',
+                        {'dungeonNo': _dungeonNo, 'dungeonEnterType': gameconst.DungeonEnterTypeEnum.TEAM},
+                        globalName, )
+                else:
+                    random.choice(_baseApps).createUnarchiveStub(
+                        'TeamDungeonStub', {'dungeonNo': _dungeonNo}, globalName, )
                 hasSpace = True
 
             if gameconst.DungeonTypeJudge.isSingleDungeon(_dungeonSpaceType, _dungeonEnterType):
@@ -492,8 +515,15 @@ class IGameStart(object):
 
             if gameconst.DungeonTypeJudge.isRaidDungeon(_dungeonSpaceType, _dungeonEnterType):
                 globalName = formula.fetchDungeonStubGlobalName(_dungeonNo, gameconst.DungeonEnterTypeEnum.RAID)
-                random.choice(_baseApps).createUnarchiveStub(
-                    'RaidDungeonStub', {'dungeonNo': _dungeonNo}, globalName, )
+                if gameconfig.enableCrossTeamDungeonStub():
+                    # 跨服组队全覆盖：以旧 stub 相同全局名注册 CrossTeamDungeonStub（团队线）
+                    random.choice(_baseApps).createUnarchiveStub(
+                        'CrossTeamDungeonStub',
+                        {'dungeonNo': _dungeonNo, 'dungeonEnterType': gameconst.DungeonEnterTypeEnum.RAID},
+                        globalName, )
+                else:
+                    random.choice(_baseApps).createUnarchiveStub(
+                        'RaidDungeonStub', {'dungeonNo': _dungeonNo}, globalName, )
                 hasSpace = True
 
             # 公会boss副本
@@ -598,4 +628,11 @@ class IGameStart(object):
 
         self.setMapleServerInfo(json.dumps(_dic))
         self.pyAddTimer(0.1, 0, gametimer.WAIT_GET_ALL_SERVER_INFO)
+
+    def _getMaxCrossTeamStubNum(self):
+        baseCount = len(gameengine.chooseGoodBaseApp())
+        if baseCount < gameconst.CROSS_TEAMSTUB_CONF_NUM:
+            LOG_ERR('_getMaxCrossTeamStubNum cross team stub conf num too large.')
+            return baseCount
+        return gameconst.CROSS_TEAMSTUB_CONF_NUM
 

@@ -83,6 +83,12 @@
             <Flags>         BASE                    </Flags>
             <Default>       0                       </Default>
         </goBackServerTimerId>
+
+        <serverOpenTime>
+            <Type>          LONGTIME                </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       0                       </Default>
+        </serverOpenTime>
     </Properties>
 
     <BaseMethods>
@@ -130,6 +136,16 @@
             <Arg>           PYTHON                  </Arg>
             <Arg>           PYTHON                  </Arg>
         </onCrossServerSyncOtherInitedDataFromLocalServer>
+
+        <syncMethodCallToCrossClient>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </syncMethodCallToCrossClient>
+
+        <beSyncMethodCallFromLocalClient>
+            <Arg>           METHOD_NAME             </Arg>
+            <Arg>           METHOD_ARGS             </Arg>
+        </beSyncMethodCallFromLocalClient>
 
         <syncMethodCallToLocalServerBase>
             <Arg>           METHOD_NAME             </Arg>
@@ -191,7 +207,11 @@
             <Arg>        LEVEL      </Arg>
             <Arg>        LEVEL      </Arg>
         </onAvatarLevelUp_localCrossClient>
-
+        
+        <onAfterSyncLeagueUUID>
+            <Arg>        LEAGUE_UUID      </Arg>
+            <Arg>        GUILD_UUID       </Arg>
+        </onAfterSyncLeagueUUID>
     </BaseMethods>
 
     <CellMethods>
@@ -236,6 +256,14 @@
             <Arg>           METHOD_NAME             </Arg>
             <Arg>           METHOD_ARGS             </Arg>
         </beSyncMethodCallFromLocalServerCell>
+
+        <onAllianceWarStarted>
+            <Arg>       LEAGUE_ENEMY_ROW_INFO                  </Arg>
+        </onAllianceWarStarted>
+
+        <onAllianceWarEnded>
+            <Arg>       LEAGUE_ENEMY_END_INFO                  </Arg>
+        </onAllianceWarEnded>
     </CellMethods>
 
     <ClientMethods>

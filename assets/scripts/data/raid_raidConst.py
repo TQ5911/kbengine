@@ -17,11 +17,15 @@ import crontab
 datas = _tools.RODict({ 
     "raidMemberLimit": _tools.RODict({
         "ID": "raidMemberLimit",
-        "value": 15,
+        "value": 40,
+    }),
+    "raidTeamMemberMaxCount": _tools.RODict({
+        "ID": "raidTeamMemberMaxCount",
+        "value": 5,
     }),
     "raidTeamLimit": _tools.RODict({
         "ID": "raidTeamLimit",
-        "value": 3,
+        "value": 8,
     }),
     "raidApplyLimit": _tools.RODict({
         "ID": "raidApplyLimit",
@@ -237,7 +241,7 @@ datas = _tools.RODict({
     }),
     "raidTeamTitle": _tools.RODict({
         "ID": "raidTeamTitle",
-        "value": ('小队一', '小队二', '小队三'),
+        "value": ('小队一', '小队二', '小队三', '小队四', '小队五', '小队六', '小队七', '小队八'),
     }),
     "raid_memberOffline": _tools.RODict({
         "ID": "raid_memberOffline",

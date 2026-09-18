@@ -166,6 +166,23 @@ def onCellAppDeath(addr, cid, groupOrder):
         for lineType in gameconst.lineStubMap():
             gameengine.getLineStub(lineType).handleCellappDeath(groupOrder)
 
+        # 通知 Cube/WonderLand/Abyss stub (multi-static space 系)
+        import cube_floor as C_FD
+        import wonderLand_floor as WL_FD
+        import abyss_floor as AB_FD
+        for _floorNo in C_FD.datas.keys():
+            _stub = gameengine.getGlobalBase('CubeStub%d' % _floorNo, reportErr=False)
+            if _stub:
+                _stub.handleCellappDeath(groupOrder)
+        for _floorNo in WL_FD.datas.keys():
+            _stub = gameengine.getGlobalBase('WonderLandStub%d' % _floorNo, reportErr=False)
+            if _stub:
+                _stub.handleCellappDeath(groupOrder)
+        for _floorNo in AB_FD.datas.keys():
+            _stub = gameengine.getGlobalBase('AbyssStub%d' % _floorNo, reportErr=False)
+            if _stub:
+                _stub.handleCellappDeath(groupOrder)
+
         gameglobal.localBaseApp.handleCellappDealth(groupOrder)
 
 
@@ -219,6 +236,10 @@ def onGlobalData(key, val):
                     gameglobal.localBaseApp.waitMapAddInitedCellapp(val)
                 else:
                     gameglobal.localBaseApp.addInitedCellapp(val)
+
+        elif key == gameconst.GLOBALDATA_KEY_WORLD_LEVEL:
+            gameglobal.worldLevel = val
+            LOG_INFO('onGlobalData worldLevel', val)
 
         if gameglobal.localBaseApp:
             gameglobal.localBaseApp.doGlobalDataCallback(key, val)

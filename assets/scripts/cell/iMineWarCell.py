@@ -57,6 +57,7 @@ class IMineWarCell(object):
                 self.spaceMgr.checkAndChangeCamp(self)
 
         self.mineWarCanAttack = state == gameconst.MINE_WAR_STATE.RUNNING
+        self.refreshPKByScene()
 
     def syncMineWarMonsterInfo(self):
         """
@@ -124,6 +125,7 @@ class IMineWarCell(object):
         
         LOG_INFO('iMineWarCell.onLeaveMineWarSpace called for player:', self.id, self.spaceNo)
         self.cancelMineWarScoreTimer()
+        self.refreshPKByScene()
 
     def mineWarPlayerGetScoreTick(self):
         """

@@ -482,6 +482,10 @@ class ImpRaid(object):
     def createRaidWithTeam(self, exposed, capacity):
         """API: 创建一个团队(小队)"""
         LOG_INFO('createRaidWithTeam::~', capacity)
+        if self.crossTeamId:
+            # 跨服组队与本服组团互斥
+            LOG_WARN("createRaidWithTeam, already in cross team", self.crossTeamId)
+            return
         _, _err = self._createRaidWithTeamCheck(capacity)
         if _err != gameconst.RaidErrno.ENUM_RAID_OK:
             if _err == gameconst.RaidErrno.ENUM_RAID_TEAM_MEMBER_OFFLINE:
@@ -529,7 +533,7 @@ class ImpRaid(object):
         if self.inRaid():
             return None, errno.ENUM_RAID_ALREADY_IN_RAID.initkvbody(source='_createRaidWithTeamCheck')
 
-        if not dataUtils.isRaidCapacityValidate(capacity):
+        if not dataUtils.isRaidCapacityValidate(0, capacity):
             return None, errno.ENUM_RAID_UNKNOWN_CAPACITY.initkvbody(source='_createRaidWithTeamCheck')
 
         if self.teamInfo.offlineMembers():
@@ -615,13 +619,17 @@ class ImpRaid(object):
     def createRaidLonely(self, exposed, capacity, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition):
         """API: 创建一个团队(单人)"""
         LOG_INFO('createRaidLonely::~', capacity, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
+        if self.crossTeamId:
+            # 跨服组队与本服组团互斥
+            LOG_WARN("createRaidLonely, already in cross team", self.crossTeamId)
+            return
         if utils.formula.inTeamDungeonScene(self.spaceNo):
             LOG_ERR("createRaidLonely, current space check fail")
             return
         if not dataUtils.checkTeamPassword(password):
             LOG_ERR("createRaidLonely, illegal password", password)
             return
-        _, err = self._createRaidLonelyCheck(capacity)
+        _, err = self._createRaidLonelyCheck(raidTarget, capacity)
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             LOG_ERR('createRaidLonely:: check failed, {}'.format(
                 err.initkvbody(source=self._createRaidLonelyCheck.__name__)))
@@ -655,13 +663,14 @@ class ImpRaid(object):
         leaderProps['joinType'] = gameconst.TeamJoinType.CREATE
         extraProps = {}
         extraProps['joinType'] = gameconst.TeamJoinType.CREATE
+        extraProps['raidTarget'] = raidTarget
         gameengine.getRaidStub(raidUUID).createRaidLonely(
             self.base, self.gbId, raidUUID, capacity, [leaderProps, ], extraProps, raidTarget, minLevel, minScore, recruitInfo, password, isAutoExpedition)
         return True
 
-    def _createRaidLonelyCheck(self, capacity):
+    def _createRaidLonelyCheck(self, raidTarget, capacity):
         errno = gameconst.RaidErrno
-        if not dataUtils.isRaidCapacityValidate(capacity):
+        if not dataUtils.isRaidCapacityValidate(raidTarget, capacity):
             return None, errno.ENUM_RAID_UNKNOWN_CAPACITY
 
         if self.inRaid():
@@ -707,6 +716,10 @@ class ImpRaid(object):
     def applyJoinRaidLonely(self, exposed, raidUUID, password, applySource):
         """API: 申请加入一个团队"""
         LOG_INFO('applyJoinRaidLonely::', raidUUID, password, applySource)
+        if self.crossTeamId:
+            # 跨服组队与本服组团互斥
+            LOG_WARN("applyJoinRaidLonely, already in cross team", self.crossTeamId)
+            return
         if applySource not in gameconst.ApplySource.VALID_APPLY_SOURCE:
             LOG_ERR("applyJoinRaidLonely:: not valid apply source", applySource)
             return
@@ -764,6 +777,10 @@ class ImpRaid(object):
     def applyJoinRaidWithTeam(self, exposed, raidUUID):
         """API: 申请加入一个团队(小队加入)"""
         LOG_INFO('applyJoinRaidWithTeam::', raidUUID)
+        if self.crossTeamId:
+            # 跨服组队与本服组团互斥
+            LOG_WARN("applyJoinRaidWithTeam, already in cross team", self.crossTeamId)
+            return
         _, err = self._applyJoinRaidWithTeamCheck(raidUUID)
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             LOG_WARN('applyJoinRaidWithTeam:: check failed, {}'.format(
@@ -1324,7 +1341,7 @@ class ImpRaid(object):
     def onReplyInviteRaidLonelyWithLonely(self, invitedPlayerBox, invitedPlayerGbId, invitedPlayerProps, extraProps):
         LOG_INFO('onReplyInviteRaidLonelyWithLonely::', invitedPlayerProps)
         inviteType = extraProps.get('inviteType', gameconst.InviteType.DEFAULT)
-        _, err = self._createRaidLonelyCheck(dataUtils.getRaidConstDataValue('raidMemberLimit'))
+        _, err = self._createRaidLonelyCheck(self.raidInfo.raidTarget, dataUtils.getRaidConstDataValue('raidMemberLimit'))
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             LOG_WARN('onReplyInviteRaidLonelyWithLonely:: check failed, {}'.format(
                 err.initkvbody(source=self._createRaidLonelyCheck.__name__)))
@@ -1337,8 +1354,10 @@ class ImpRaid(object):
         raidUUID = KBEngine.genUUID64()
         leaderProps = self._getAvatarPropsForRaid().toStreamSavedDic()
         leaderProps['joinType'] = gameconst.TeamJoinType.CREATE
+        extraProps = {}
+        extraProps['raidTarget'] = self.raidInfo.raidTarget
         gameengine.getRaidStub(raidUUID).createRaid(
-            self.base, self.gbId, raidUUID, dataUtils.getRaidConstDataValue('raidMemberLimit'), [leaderProps], {})
+            self.base, self.gbId, raidUUID, dataUtils.getRaidConstDataValue('raidMemberLimit'), [leaderProps], extraProps)
         gameengine.getRaidStub(raidUUID).replyInviteRaidLonely(
                 invitedPlayerBox, invitedPlayerGbId, invitedPlayerProps, self.gbId,
                 0, raidUUID, extraProps)

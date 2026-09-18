@@ -9,17 +9,14 @@ import copy
 import gameengine
 import gameconst
 import utils
+import dataUtils
 
 import userType
 import team
 
 import raid_raidConst as RAID_CONST
-import chatConfig_chatConfig as CC_CFG
 import teamMatch_matchConfig as TMMCD
-
-def calcRaidMaxTeamNum(capacity):
-    return RAID_CONST.datas["raidTeamLimit"]["value"]
-
+import teamMatch_activity as TMMA
 
 class RaidDungeonCacheVal(userType.UserSTSoleType):
 
@@ -121,7 +118,19 @@ class RaidVal(userType.UserSTSoleType):
 
     @property
     def maxTeamNum(self):
-        return calcRaidMaxTeamNum(self.raidCapacity)
+        data = TMMA.datas.get(self.raidTarget, None)
+        if not data:
+            return RAID_CONST.datas["raidTeamLimit"]["value"]
+        maxPlayer = data['maxPlayer']
+        if maxPlayer > 0:
+            raidMaxTeamMemberCount = dataUtils.raidMaxTeamMemberCount()
+            if maxPlayer <= raidMaxTeamMemberCount:
+                return 1
+            teamCount = maxPlayer // raidMaxTeamMemberCount
+            if maxPlayer > teamCount * raidMaxTeamMemberCount:
+                teamCount += 1
+            return teamCount
+        return RAID_CONST.datas["raidTeamLimit"]["value"]
 
     @property
     def memberNum(self):
@@ -586,7 +595,7 @@ class RaidVal(userType.UserSTSoleType):
         memberValDic = {}
         memberNum = self.memberNum
         teamMemberLen = len(teamMemberList)
-        raidTeamMaxNum = gameconst.RAID_TEAM_MEMBER_MAX_NUM
+        raidTeamMaxNum = dataUtils.raidMaxTeamMemberCount()
         if teamMemberLen > raidTeamMaxNum:
             return None, gameconst.RaidErrno.ENUM_RAID_NOT_RAID_UNKNOWN_TEAM_MEMBER.initkvbody(source='addNewTeamMembers')
         if teamMemberLen + memberNum > self.raidCapacity:
@@ -1392,7 +1401,7 @@ class RaidTeamVal(userType.UserSTSoleType):
         return self.memberNum <= 0
 
     def isRaidFull(self):
-        return self.memberNum >= gameconst.RAID_TEAM_MEMBER_MAX_NUM
+        return self.memberNum >= dataUtils.raidMaxTeamMemberCount()
 
     def hasActivePlayer(self, excepted=()):
         return any(_i.bOnline and _i.playerGbId not in excepted

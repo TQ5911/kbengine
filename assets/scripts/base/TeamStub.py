@@ -457,13 +457,14 @@ class _RaidMixin(object):
         LOG_INFO('createRaidWithTeam::', srcPlayerBox, srcPlayerGbId, teamUUID, raidUUID, capacity, extraProps)
         if extraProps is None:
             extraProps = {}
-
-        def _createRaid():
+        # 从队伍转成团队的，默认目标就给未设定目标0
+        extraProps['raidTarget'] = 0
+        def _createRaid(extraProps):
             if teamUUID not in self.teamDict:
                 return None, gameconst.RaidErrno.ENUM_RAID_TEAM_NOT_FOUND.initkvbody(source='createRaidWithTeam',
                                                                                 teamId=teamUUID)
 
-            if not dataUtils.isRaidCapacityValidate(capacity):
+            if not dataUtils.isRaidCapacityValidate(extraProps['raidTarget'], capacity):
                 return None, gameconst.RaidErrno.ENUM_RAID_UNKNOWN_CAPACITY.initkvbody(source='createRaidWithTeam')
 
             teamVal = self.teamDict[teamUUID]
@@ -489,7 +490,7 @@ class _RaidMixin(object):
             _memberDataList = []
             for memberVal in teamVal.teamPlayerDict.values():
                 _memberDataList.append(memberVal.toRaidTransDict())
-
+            
             gameengine.getRaidStub(raidUUID).createRaid(
                 captainBox, captainGBID, raidUUID, capacity, _memberDataList, extraProps)
 
@@ -510,7 +511,7 @@ class _RaidMixin(object):
 
             return None, gameconst.RaidErrno.ENUM_RAID_OK
 
-        _, err = _createRaid()
+        _, err = _createRaid(extraProps)
         if err != gameconst.RaidErrno.ENUM_RAID_OK:
             LOG_ERR('createRaidWithTeam:: failed, {}'.format(err))
             return

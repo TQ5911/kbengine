@@ -218,3 +218,75 @@ class RedBagDataInfo(object):
     
 RedBagDataInfoInstance = RedBagDataInfo()
     
+class RedBagDataRankVal(userType.UserSingleType):
+    def __init__(self, redbagId=0, releaseTime=0):
+        self.redbagId = redbagId
+        self.releaseTime = releaseTime
+
+    def initFromDict(self, dataDict):
+        self.redbagId = dataDict['redbagId']
+        self.releaseTime = dataDict['releaseTime']
+
+    def toStreamSaveDict(self):
+        return {
+            'redbagId': self.redbagId,
+            'releaseTime': self.releaseTime,
+        }
+
+class RedBagDataRankInfo(userType.UserSingleType):
+    """RED_BAG_DATA_RANK_INFO"""
+    def __init__(self):
+        LOG_DBG('RedBagDataRankInfo::__init__')
+        self.rankList = []
+
+    def initFromDict(self, dataDict):
+        for rankValData in dataDict['rankList']:
+            rankVal = RedBagDataRankVal()
+            rankVal.initFromDict(rankValData)
+            self.rankList.append(rankVal)
+        return self
+
+    def toStreamSaveDict(self):
+        dataDict = {}
+        infoList = []
+        for rankVal in self.rankList:
+            infoList.append(rankVal.toStreamSaveDict())
+        dataDict = {
+            'rankList': infoList,
+        }
+        return dataDict
+
+    def insert(self, redbagId, timestamp):
+        rankVal = RedBagDataRankVal(redbagId, timestamp)
+        self.rankList.append(rankVal)
+
+    def sort(self):
+        self.rankList.sort(key=lambda x: (-x.releaseTime, -x.redbagId))
+
+    def get(self):
+        idList = []
+        for rankVal in self.rankList[0:100]:
+            idList.append(rankVal.redbagId)
+        return idList if idList else None
+    
+    def remove(self, redbagIds):
+        for redbagId in redbagIds:
+            for idx, item in enumerate(self.rankList):
+                if item.redbagId != redbagId:
+                    continue
+                del self.rankList[idx]
+                break
+
+class RedBagDataRankInfoInst(object):
+    def createObjFromDict(self, dataDict):
+        obj = RedBagDataRankInfo()
+        obj.initFromDict(dataDict)
+        return obj
+
+    def getDictFromObj(self, obj):
+        return obj.toStreamSaveDict()
+
+    def isSameType(self, obj):
+        return type(obj) is RedBagDataRankInfo
+
+RedBagDataRankInfoInstance = RedBagDataRankInfoInst()

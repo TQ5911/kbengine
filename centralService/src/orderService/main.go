@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	base.Init("orderServiceConfig.json", &OrderApp.OrderServiceConfig, func() common.IApp {
+	base.Init(&OrderApp.OrderServiceConfig, func() common.IApp {
 		return OrderApp.NewOrderApp()
 	})
 }

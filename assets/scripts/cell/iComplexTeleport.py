@@ -755,7 +755,10 @@ class IComplexTeleport(object):
         _extra['totalNum'] = self.raidInfo.raidPlayerNum
         _extra['joinType'] = self.joinType
         
-        if self.spaceMgr.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+        # 跨服组队首领巢穴（crossTeamId 标记）不走本服 CHIEF 进本回调
+        # （raidId/totalNum 取不到本服 Raid 数据；本服模式空间 playMode 亦落 CHIEF，需排除）
+        if (self.spaceMgr.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CHIEF
+                and not _extra.get('crossTeamId')):
             self.base.onEnterChiefDungeon(self.spaceMgr.dungeonPlayMode.spaceUUID, self.spaceNo, dungeonNo, spaceMgrBox, _extra)
         else:
             self.base.onEnterDungeon(self.spaceNo, spaceMgrBox, _extra)
@@ -771,6 +774,13 @@ class IComplexTeleport(object):
         # callback raidDungeonStub
         _extra = _extra or {}
         _extra.update({'src': _src, 'playerName': self.name})
+        if _extra.get('crossTeamId'):
+            # 跨服讨伐：补齐结算展示字段（本服链路在上游已带；DungeonExtraData.loadDatas 消费）
+            _extra.setdefault('name', self.name)
+            _extra.setdefault('sex', self.sex)
+            _extra.setdefault('school', self.school)
+            _extra.setdefault('level', self.level)
+            _extra.setdefault('eId', self.id)
         _dungeonStub = gameengine.getDungeonStubBySpaceNo(toSpaceNo)
         _dungeonStub.enterDungeonSpaceSuccess(toSpaceNo, self.base, self.gbId, self.raidUUID, _extra)
         return True
@@ -1078,7 +1088,10 @@ class IComplexTeleport(object):
         if endTime:
             self.client.changeDungeonRemainTime(toSpaceNo, endTime)
 
-        if self.spaceMgr.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
+        # 跨服组队副本（crossTeamId 标记）不走本服 CRUSADE 进本回调
+        # （teamUUID/totalNum 取不到本服 Team 数据；本服模式空间 playMode 亦落 CRUSADE，需排除）
+        if (self.spaceMgr.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CRUSADE
+                and not extra.get('crossTeamId')):
             _kwargs = dict(
                 GameSvrId=None, dtEventTime=None, vGameAppid=None,
                 iBattleID=dungeonNo,
@@ -1096,7 +1109,22 @@ class IComplexTeleport(object):
 
         self.enableAutoCombatAfterEnterSpace(dungeonNo)
 
-        gameengine.getTeamStub(self.teamId).onEnterTeamDungeon(self.base, self.gbId, self.teamId, dungeonNo, toSpaceNo)
+        if (self.spaceMgr.dungeonPlayMode.playMode in gameconst.DungeonPlayModeEnum.COLL_CROSS
+                or extra.get('crossTeamId')):
+            # 跨服组队副本：无本服队伍，改经副本 stub 做 founders 簿记
+            # （本服 team 线由 TeamStub.onEnterTeamDungeon 登记）；
+            # 跨服服空间认 CROSS playMode，本服模式空间 playMode 落本服枚举、认 crossTeamId
+            # 顺带补齐结算展示字段（本服链路在上游已带，跨服链路在此补；DungeonExtraData.loadDatas 消费）
+            extra['spaceUUID'] = self.spaceMgr.dungeonPlayMode.spaceUUID
+            extra.setdefault('name', self.name)
+            extra.setdefault('sex', self.sex)
+            extra.setdefault('school', self.school)
+            extra.setdefault('level', self.level)
+            extra.setdefault('eId', self.id)
+            gameengine.getDungeonStubBySpaceNo(toSpaceNo).enterDungeonSpaceSuccess(
+                toSpaceNo, self.base, self.gbId, extra.get('teamUUID', 0), extra)
+        else:
+            gameengine.getTeamStub(self.teamId).onEnterTeamDungeon(self.base, self.gbId, self.teamId, dungeonNo, toSpaceNo)
         return True
 
     def _beforeLeave_teamDungeon(self, fromSpaceNo, toSpaceNo, options, context):
@@ -1546,6 +1574,8 @@ class IComplexTeleport(object):
         self._dealWithAbyssTimer(fromSpaceNo, toSpaceNo)
 
         _mapId = formula.fetchMapId(toSpaceNo)
+        if not formula.inAbyssScene(fromSpaceNo):
+            self._logAbyssInfo(gameconst.ABYSS_EVENT_ENTER, mapId=_mapId)
         return True
 
     def _beforeLeave_abyss(self, fromSpaceNo, toSpaceNo, options, context):
@@ -1577,6 +1607,8 @@ class IComplexTeleport(object):
             self._dealWithAbyssTimer(fromSpaceNo, toSpaceNo)
 
         _mapId = formula.fetchMapId(fromSpaceNo)
+        if not formula.inAbyssScene(toSpaceNo):
+            self._logAbyssInfo(gameconst.ABYSS_EVENT_EXIT, mapId=_mapId)
 
         LogTrackingMgr.LogTrackingMgr.abyss_leave(
             self.gbId,

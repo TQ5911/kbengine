@@ -51,6 +51,8 @@ import impTask
 import iAvatarVariable
 import impCombat
 import impTeam
+import iCrossTeamBase
+import impCrossTeamDungeonBase
 import IScore
 import iChat
 import iFlowController
@@ -80,6 +82,7 @@ import iActivityBase
 import iWelfareSignIn
 import impRaidDungeon
 import iLeague
+import iEnmity
 
 import json
 import gzip
@@ -101,6 +104,7 @@ import iDungeonSettlement
 import iGuildBossChallenge
 import impStatistics
 import iBindPhone
+import iTestReward
 import gamePlay_gamePlay as GP_GPD
 import const_const as CONST
 import YiDunUtils
@@ -114,6 +118,7 @@ import iSafeBox
 import iMallStore
 import uuid
 import math
+import SecondaryPasswordInfo
 
 import cube_room
 from datetime import datetime
@@ -132,8 +137,10 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
              iWelfareSignIn.IWelfareSignIn, iChief.IChief, iCrossServer.ICrossServer, impRaidDungeon.ImpRaidDungeon, iWorkshop.IWorkshop,
              iRedBag.IRedBag, iDateData.IDateData, iMeridian.IMeridian, iMonthCard.IMonthCard, iMineWarBase.IMineWarBase, iDungeonSettlement.IDungeonSettlement,
              iGuildBossChallenge.IGuildBossChallenge, impStatistics.IStatistics, iBindPhone.IBindPhone, iWorldLevelBase.IWorldLevelBase,
-              iLease.ILease, iResourceRecovery.IResourceRecovery, iReport.IReport, iAbyssBase.IAbyssBase,iLeague.ILeague,
-               iSafeBox.ISafeBox, iMallStore.IMallStore, metaclass=ExposedWrapper.ExposedWrapperMetaClass):
+             iTestReward.ITestReward,
+              iLease.ILease, iResourceRecovery.IResourceRecovery, iReport.IReport, iAbyssBase.IAbyssBase,iLeague.ILeague, iEnmity.IEnmity,
+               iSafeBox.ISafeBox, iMallStore.IMallStore, iCrossTeamBase.ICrossTeamBase, impCrossTeamDungeonBase.ImpCrossTeamDungeonBase,
+               metaclass=ExposedWrapper.ExposedWrapperMetaClass):
     """
     角色实体
 
@@ -161,6 +168,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         iGuildBossChallenge.IGuildBossChallenge.__init__(self)
         iWelfareSignIn.IWelfareSignIn.__init__(self)
         iBindPhone.IBindPhone.__init__(self)
+        iTestReward.ITestReward.__init__(self)
         iRedBag.IRedBag.__init__(self)
         iEnemy.IEnemy.__init__(self)
         iBounty.IBounty.__init__(self)
@@ -172,6 +180,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         iSafeBox.ISafeBox.__init__(self)
         iMallStore.IMallStore.__init__(self)
         impEquipment.ImpEquipment.__init__(self)
+        iEnmity.IEnmity.__init__(self)
+        iCrossServer.ICrossServer.__init__(self)
         LOG_INFO('Avatar::__init__ :%s' % self.id)
 
         self.initRoleCache()
@@ -184,6 +194,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         if utils.checkDiffDay(self.tLoginBase, utils.curTS(), gameconst.GENERAL_CYCLE_TIME):
             self.totalLoginDay += 1
         self.tLoginBase = utils.curTS()
+        self.tLoginTmpTime = utils.curTS()
         if not self.firstLoginTime:
             self.firstLoginTime = utils.curTS()
         self.initFirst()
@@ -216,6 +227,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
 
         self._modifyRedisAttr({
             'isOnline': 1,
+            'serverId': gameconfig.serverId(),
         })
 
         if gameconfig.isCrossServer():
@@ -295,6 +307,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         self.clientIP = self.clientAddr(chn)[0]
         self.sendClientAuthState(chn)
 
+        self.queryCrossTeamInfo()
+
         self.updateRoleCache({"ip": self.getClientIp()})
 
     def getAccountByChn(self, chn):
@@ -329,7 +343,6 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         self.welfareSignInOnLogin()
         self.drawCardOnLogin()
         self.bindPhoneOnLogin()
-        self.safeBoxOnLogin()
         self.bountyOnLogin()
         self.resourceRecoveryOnLogin()
         self.reportOnLogin()
@@ -366,14 +379,14 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
             self.setTempMiscProp(gameconst.EntityPropsEnum.gameLengthMarkTime, now)
             return
 
-        self.gameLength += now - markTime
+        self.gameLength += max(0, now - markTime)
         self.setTempMiscProp(gameconst.EntityPropsEnum.gameLengthMarkTime, now)
 
     def _getGameLength(self):
         self._recordGameLength()
         return self.gameLength
 
-    # -------------------------------- game length end -----------------------------------
+    # -------------------------------- game length end ----------------------------------
     def backCubeRestoreOutsideRecord(self, cellData, mapId, spaceNo, logonEnterType):
         outRecordDic = self.getCellData('miscProps', {}).get(gameconst.EntityPropsEnum.outsideRecords, None)
         LOG_INFO('Avatar.backCubeRestoreOutsideRecord:', outRecordDic, mapId, spaceNo)
@@ -500,6 +513,14 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         _lockDun = self.getNewbieLockDun()
         if _lockDun and not self.isCrossServer:
             if self._enterNewbieDungeon():
+                _cellData['lastSpaceNo'] = spaceNo
+                self._doAfterCreateCell(_cellData, spaceNo)
+                return
+
+        if gameconfig.isCrossServer():
+            # 跨服讨伐镜像：副本空间先于迁移创建，直接落副本克隆空间
+            # （跳过出生图分线落地，照 _enterNewbieDungeon 的异步落地模式）
+            if self._logonEnterCrossCrusadeDungeon():
                 _cellData['lastSpaceNo'] = spaceNo
                 self._doAfterCreateCell(_cellData, spaceNo)
                 return
@@ -683,7 +704,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         elif userArg == gametimer.CHECK_EQUIPMENT_RETURN_EXPIRE:
             self._checkEquipExpire()
         elif userArg == gametimer.TIMER_LOG_USER_SET:
-            self.logUserSet(1)
+            self.logUserSet(gameconst.USER_SET_SRC_TICK)
         else:
             super(Avatar, self).onTimer(tid, userArg)
 
@@ -817,15 +838,19 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
                     _num = 0
                     _delay += 0.1
 
+            
             self.sendHotfix(gameconfig.hotfixVersion())
             if isRelogin:
+                if not gameconfig.isCrossServer():
+                    if self.guildBox:
+                        self.guildBox.getUnionAndEnemyInfo(self.gbID, self)
                 self.addTimerCB(_delay, 'sendAllMailList', (), gametimer.TIMER_TAG_SEND_MAIL_LIST)
-                pass
 
             gameconfig.sendClientConfig(self)
 
             if not isRelogin:
                 self.onAvatarLoginForAuth()
+                
 
         except Exception as e:
             gameengine.panicStack('EEEEEEEError!!! in doInitClientBase:', e)
@@ -938,7 +963,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         self.popRoleCacheTimer = self.addTimerCB(3, 'onPopRoleCacheCB', (reason,),
                                                 gametimer.TIMER_TAG_ON_POP_ROLECACHECB, 'popRoleCacheTimer')
         self.makeOfflineRoleLog(reason)
-        self.logUserSet(0)
+        self.logUserSet(gameconst.USER_SET_SRC_LOG_OUT)
         roleInfo = gameglobal.roleCache.pop(self.id, None)
         if roleInfo:
             self.eraseAvatarBase(roleInfo['name'], reason)
@@ -1002,7 +1027,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
                 self.getClient(gameconst.ClientCallChannel.SUB_CHANNEL).onBackSelectCharacter()
 
             self.tsLastOfflineBase = utils.curTS()
-            self.totalOnlineTime += self.tsLastOfflineBase - self.tLoginBase
+            self.totalOnlineTime += self.tsLastOfflineBase - self.tLoginTmpTime
 
             spaceNo = self.baseSpaceNo
             teamId = self.getCellData('teamId', 0)
@@ -1035,7 +1060,10 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
 
             elif formula.inDungeonScene(spaceNo):
                 if not KBEngine.isShuttingDown():
-                    gameengine.getDungeonStubBySpaceNo(spaceNo).onAvatarOffline(spaceNo, self.gbID)
+                    # 跨服讨伐回程的镜像销毁（OFFLINE_REASON_END_CROSS_SERVER）不算副本内掉线：
+                    # 跨服副本 stub 的 onAvatarOffline 语义是"离线即退队"，正常回程不应退队
+                    if self.offlineReason != gameconst.OFFLINE_REASON_END_CROSS_SERVER:
+                        gameengine.getDungeonStubBySpaceNo(spaceNo).onAvatarOffline(spaceNo, self.gbID)
 
             elif formula.inWonderLandScene(spaceNo):
                 gameengine.getWonderLandStubBySpaceNo(spaceNo).onLeaveWonderLand(self.gbID)
@@ -1156,6 +1184,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         """
         self.removeTimeoutBanMail()
         self.mailOnLogin()
+        # 离线时间处理完了之后，再加载保险箱数据
+        self.safeBoxOnLogin()
 
     def removeTimeoutBanMail(self):
         """
@@ -1340,9 +1370,18 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
     # -------------------------------------------------------------------------------------------------------------------
 
     def onMessagePre(self, msgId, args):
+        LOG_DBG('onMessagePre ', msgId, args)
+        self.dispatchMessage(msgId, args)
+
+    def onAllianceMessagePre(self, fromUID, toUID, msgId, args):
+        LOG_DBG('onAllianceMessagePre ', fromUID, toUID, msgId, args)
+        self.dispatchMessage(msgId, args, [fromUID, toUID])
+
+    def dispatchMessage(self, msgId, args, uIDs = None):
+        LOG_DBG('dispatchMessage ', uIDs, msgId, args)
         _mcData = MCMD.datas.get(msgId)
         if _mcData is None:
-            self.client.onMessage(msgId, args)
+            self._doOnMessage(msgId, args, uIDs)
             return
 
         channelIDs = _mcData['channelID']
@@ -1353,6 +1392,13 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
             channelIDs.remove(97)
 
         if channelIDs:
+            self._doOnMessage(msgId, args, uIDs)
+            
+    def _doOnMessage(self, msgId, args, uIDs = None):
+        LOG_DBG('_doOnMessage ', uIDs, msgId, args)
+        if uIDs and len(uIDs) > 0:
+            self.client.onAllianceMessage(uIDs, msgId, args)
+        else:
             self.client.onMessage(msgId, args)
 
     # 用来存储只有客户端用到的数据
@@ -1468,6 +1514,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         return True
 
     def IDIPModifyName(self, newName):
+        LOG_INFO('IDIPModifyName:', newName)
         props = {"name": newName}
         self.accountEntity.checkNameDuplicate(props, self.onAvatarCheckNameDuplicate)
 
@@ -1487,28 +1534,41 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         if props.get("pendingCheckId"):
             self.cell.onPendingCheckItemFinished(props["pendingCheckId"], gameconst.UseItemEnum.TRUE)
         else:
-            self.cell.IDIPModifyNameCell(props["name"])
+            # gm 会走这里
+            self._doModifyName(props["name"])
 
-    def afterModifyNameWithItem(self, oldName, name, pendingUseId, opUUID):
-        LOG_DBG('afterModifyNameWithItem:', oldName, name, self.getRoleCacheAttr('name'))
-        self.pyWriteToDB(functools.partial(self._afterModifyNameWriteToDB, oldName, name, pendingUseId, True, opUUID))
+    # 要求已经检查过了，这里执行改名
+    def _doModifyName(self, newName):
+        LOG_DBG('_doModifyName:', newName)
+        oldName = self.getRoleCacheAttr('name', '')
+        self.updateRoleCache({'name': newName})
+        self.accountEntity.onCharacterInfoUpdated(
+            self.gbID,
+            newName,
+        )
 
-    def _afterModifyNameWriteToDB(self, oldName, name, pendingUseId, isFromItem, opUUID, isSuccess, avatar):
-        LOG_INFO('_afterModifyNameWriteToDB', oldName, name, pendingUseId, isFromItem, opUUID, isSuccess)
-        if not isSuccess:
-            LOG_ERR('_afterModifyNameWriteToDB but write to db failed')
-            self.cell.modifyNameFailedRestore(oldName)
-            if isFromItem:
-                self.cell.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.FALSE)
-            return
+        self.delOldName(oldName)
+        self._modifyRedisAttr({
+            'name': newName
+        })
+        elasticUtils.ElasticUtils.addAvatarElasticInfo(newName, self.gbID, self.obId)
+        gameengine.getGlobalBase('PlayerStub').updateName(oldName, newName, self, self.gbID)
 
-        self.accountEntity.delAvatarName(oldName)
-        self.updateRoleCache({'name': name})
-        if isFromItem:
-            self.cell.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.TRUE)
+        self.guildBox and self.guildBox.onGuildMemberPropUpdate(self.gbID, 'name', newName)
+        #改名通知城战模块
+        self.onSiegeWarRename(newName)
 
-        # TODO 改名后的其他notify逻辑
-        gameengine.getGlobalBase('PlayerStub').updateName(oldName, name, self, self.gbID)
+        # 通知 cell
+        self.cell.afterModifyName(newName)
+
+        # 角色改名埋点
+        LogTrackingMgr.LogTrackingMgr.role_rename(
+            self.gbID,
+            self.accountEntity.clientDistinctId if self.accountEntity else '',
+            utils.getNowTimeStr(),
+            oldName,
+            newName,
+        )
 
     def onIDIPModifyAvatarInfo(self, modifyType, uniqueId, text):
         LOG_DBG('onIDIPModifyAvatarInfo:', modifyType, uniqueId, text)
@@ -1565,8 +1625,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         self.initNoviceSkills()
         self.initNovicePetInfo()
         self.initNoviceHookRewardTask()
-        self._initWonderLandFirst()
-        self._initAbyssFirst()
+        self._wonderLandRefreshDaily()
+        self._abyssRefreshDaily()
         self._cubeDailyRefresh()
 
 
@@ -1752,6 +1812,10 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
     def accountEntity(self):
         return KBEngine.entities.get(self.mainAccountCache.eid)
 
+    def _onLoadSecondPwdInfo(self, pwdInfo):
+        LOG_INFO('_onLoadSecondPwdInfo', pwdInfo)
+        self.setTempMiscProp(gameconst.EntityPropsEnum.authSecondPwdInfo, pwdInfo)
+
     def setAccountInfo(self, eid, accountHostType):
         self.mainAccountCache.eid = eid
         self.mainAccountCache.actHostType = accountHostType
@@ -1761,6 +1825,17 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
             self.crossServerState = gameconst.CrossServerState.ENUM_IN_CROSS_SERVER if self.accountEntity.isCrossServer \
                 else gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER
             self.otherServerAvatarBox = self.accountEntity.otherServerAvatarBox
+
+        if self.accountEntity\
+                and accountHostType == gameconst.AccountHostType.AUTH:
+            # 走到这里说明是代理上了main client了
+
+            _parentID = self.accountEntity.getAuthHostParentID(self.gbID)
+            if _parentID:
+                SecondaryPasswordInfo.loadSecondaryPasswordInfoFromDB(
+                    _parentID,
+                    self._onLoadSecondPwdInfo,
+                )
 
     def getAccountChn(self, accountEid):
         if accountEid == self.mainAccountCache.eid:
@@ -2050,19 +2125,28 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
                     gametimer.TIMER_TAG_LOG_USER_SET_INIT)
                 return
 
-        self.logUserSet(1)
+        self.logUserSet(gameconst.USER_SET_SRC_INIT)
 
-    def logUserSet(self, online):
+    def logUserSet(self, logSrc):
         if gameconfig.isCrossServer():
             return
 
         _account = self.accountEntity
+        if logSrc == gameconst.USER_SET_SRC_INIT and self.accountEntity.isAuthHost(self.gbID):
+            LogTrackingMgr.LogTrackingMgr.Server_User_Set_Main(
+                self.gbID,
+                0,
+                _account.accountName,
+                _account.userInfoId,
+            )
+
+        _now = utils.curTS()
+        self.totalOnlineTime += max(0, _now - self.tLoginTmpTime)
+        self.tLoginTmpTime = _now
         LogTrackingMgr.LogTrackingMgr.Server_User_Set(
             self.gbID,
             0,
-            _account.accountName,
             self.obId,
-            _account.userInfoId,
             _account.channelId,
             self.accountEntity.operatingSystem,
             gameconfig.serverId(),
@@ -2072,7 +2156,7 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
             self.getRoleCacheAttr('name'),
             self.birthInDB,
             gameconfig.gameId(),
-            online,
+            1 if logSrc != gameconst.USER_SET_SRC_LOG_OUT else 0,
             self.enemyMgr.getEnemyCount(),
             self.creationOrder,
             self.firstLoginTime,
@@ -2097,7 +2181,8 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
             max(0, self.monthCardExpireTime - utils.curTS()),
             self.totalLoginDay,
             self.totalOnlineTime,
-            len(self.friendship.friendsDict)
+            len(self.friendship.friendsDict),
+            self.tsLastOfflineBase
         )
 
     def onGetFullPlayerInfo(self, data, src, isCross):
@@ -2287,7 +2372,11 @@ class Avatar(KBEngine.Proxy, iTimer.ITimer, iBag.IBag, iCycleEvent.ICycleEventMi
         self.totalAFKTime += psTime
 
     def _crossServerMapCheck(self):
-        mapID = formula.parseLineType(self.baseSpaceNo)
+        # 用 fetchMapId 而非 parseLineType：跨服讨伐等副本空间不是分线场景，
+        # parseLineType 恒返回 0 会把玩家误判踢回本服；
+        # fetchMapId 对克隆空间（mapId*10000+n）与落地时的裸 mapId 形态都兼容，
+        # 对既有跨服分线场景（深渊）结果不变
+        mapID = formula.fetchMapId(self.baseSpaceNo)
         if mapID not in GP_GPD.datas:
             LOG_WARN("crossServerMapCheck mapID not in GP_GPD.datas", mapID)
             self.crossServerMapCheckFailTimes += 1

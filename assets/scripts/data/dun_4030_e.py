@@ -180,19 +180,13 @@ datas ={
     }
   },
   "1067": {
-    "type": "createMonster",
+    "type": "createCollection",
     "entityID": [
-      40300019
+      40308006
     ],
     "num": 0,
-    "lv": "20",
-    "initState": 0,
-    "hp": 0,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
+    "randomCollectionNum": 0,
+    "checkHaveInFixed": 0,
     "transition": {}
   }
 }

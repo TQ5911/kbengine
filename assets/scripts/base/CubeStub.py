@@ -26,6 +26,7 @@ import cube_config
 import branchData_branchData as B_BD
 import iLinePlayersStub
 import branchData_set
+import gameengine
 
 class RandomRoomVal(object):
     def __init__(self, mapId):
@@ -80,6 +81,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         _delay += cube_config.datas['cube_cowRoomEntranceTime']['value']
         _delay *= 60
         self.addTimerCB(_delay, '_doRandomTeleporter', (), gametimer.TIMER_TAG_CUBE_TELEPORTER_REFRESH)
+        LOG_INFO("CubeStub::_startRefreshCowRefreshTimer", utils.curTS() + _delay)
 
     def _doRandomTeleporter(self):
         if not self.randomTeleporterPool:
@@ -97,17 +99,18 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             lineCnt = gameconst.getBranchLineCnt(_mapId) if _mapId in B_BD.datas else 1
             for _lineNo in range(lineCnt):
                 _spaceNo = formula.combineLineSpaceNo(_mapId, _lineNo)
-                _spaceVal = self.staticSpaces[_spaceNo]
+                _spaceVal = self.staticSpaces.get(_spaceNo)
+                if not _spaceVal:
+                    continue
+
+                if not _spaceVal.spaceMgrBoxCell:
+                    continue
+
                 _spaceVal.spaceMgrBoxCell.createTeleporterToCow(num)
 
         self._startRefreshCowRefreshTimer()
-
-    def _removeRandomInfos(self, mapId):
-        for _idx, _room in enumerate(self.randomRooms):
-            if _room.mapId == mapId:
-                self.randomRooms.pop(_idx)
-                self.randomWeights.pop(_idx)
-                break
+        self.broadcastAllSpaceMgrByTypes(gameconst.CubeRoomType.TipCowRoomRefresh1, 'onBroadcastTipCowRoomRefresh', (self.cubeNo, ))
+        gameengine.getCubeStub(1).broadcastAllSpaceMgrByTypes(gameconst.CubeRoomType.TipCowRoomRefresh2, 'onBroadcastTipCowRoomRefresh', (self.cubeNo, ))
 
     def _addRandomInfos(self, mapId):
         # if mapId == self.readyRoomMapId():
@@ -233,12 +236,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             LOG_ERR('onAvatarOffline: player not found: {}'.format(gbId))
             return
 
-        curMapId = formula.fetchMapId(_playerVal.curSpaceNo)
-        _oldCanEnter = self.canMapEnter(curMapId)
         self.removePlayer(gbId)
-
-        if _oldCanEnter != self.canMapEnter(curMapId):
-            self._addRandomInfos(curMapId)
 
     def logonEnterCube(self, box, gbId, extra):
         _enterSpaceNo = self._getAvailableReadyRoom()
@@ -257,14 +255,6 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return _curNum < B_BD.datas[_mapId]['N1']
         return super().canSpaceEnter(spaceNo)
 
-    def canMapEnter(self, mapId):
-        lineCnt = gameconst.getBranchLineCnt(mapId) if mapId in B_BD.datas else 1
-        for _lineNo in range(lineCnt):
-            _spaceNo = formula.combineLineSpaceNo(mapId, _lineNo)
-            if self.canSpaceEnter(_spaceNo):
-                return True
-        return False
-
     def enterRandomRoom(self, box, fromSpaceNo, gbId, extra, curSpaceNo, filterTypes):
         mapId = self._getRandomMapId(curSpaceNo, filterTypes)
         if mapId is None:
@@ -280,10 +270,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             return
 
         _spaceNo = formula.combineLineSpaceNo(mapId, _lineNo)
-
         self._doAvatarEnterCubeRoom(fromSpaceNo, _spaceNo, box, gbId, extra)
-        if not self.canMapEnter(mapId):
-            self._removeRandomInfos(formula.fetchMapId(_spaceNo))
 
     def _doAvatarEnterCubeRoom(self, fromSpaceNo, spaceNo, box, gbId, extra):
         playerVal = self.allPlayers.get(gbId)
@@ -306,10 +293,6 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             LOG_ERR('CubeStub::onEnterCubeSuccess: player not found: {}'.format(gbId))
             return
 
-        _oldSpaceNo = _playerVal.curSpaceNo
-        _oldMapId = formula.fetchMapId(_oldSpaceNo)
-        _oldCanEnter = self.canMapEnter(_oldMapId)
-
         if _playerVal.playerStatus == linePlayers.LinePlayerVal.ENTERING:
             _playerVal.playerStatus = linePlayers.LinePlayerVal.INLINE
 
@@ -318,9 +301,6 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
 
         else:
             self.switchStaticSpace(gbId, spaceNo)
-
-        if _oldCanEnter != self.canMapEnter(_oldMapId):
-            self._addRandomInfos(_oldMapId)
 
     def onLeaveCube(self, gbId, fromSpaceNo, curSpaceNo):
         LOG_INFO('onLeaveCube: {} {} {}'.format(gbId, fromSpaceNo, curSpaceNo))
@@ -350,8 +330,6 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     # ------------------ 神秘商人 start -----------------------------------
     def onLoadEntitiesEnd(self, spaceNo):
         super(CubeStub, self).onLoadEntitiesEnd(spaceNo)
-        if not self.loadWaitSet and not self.curChapManMapId:
-            pass
 
     def _doCreateChapMan(self):
         self._createAndDestroyChapMan()
@@ -385,6 +363,14 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
             _infos.append((_mapId, (_x, _y, _z), _dir))
 
         return random.choice(_infos)
+
+    def getStaticSpaceType(self, spaceNo):
+        _mapId = formula.fetchMapId(spaceNo)
+        _cubeData = cube_room.datas.get(_mapId, None)
+        if not _cubeData:
+            return 0
+
+        return _cubeData['type']
 
     # ------------------ 神秘商人 end -----------------------------------
 

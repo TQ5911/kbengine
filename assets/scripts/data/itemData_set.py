@@ -59,6 +59,10 @@ datas = _tools.RODict({
         "ID": "itemID_guildCommission",
         "value": 30000023,
     }),
+    "itemID_guildDarkIron": _tools.RODict({
+        "ID": "itemID_guildDarkIron",
+        "value": 30000016,
+    }),
     "itemID_unionMoney": _tools.RODict({
         "ID": "itemID_unionMoney",
         "value": 30000022,
@@ -326,5 +330,17 @@ datas = _tools.RODict({
     "itemOnlyShowInCornor": _tools.RODict({
         "ID": "itemOnlyShowInCornor",
         "value": (30770100,),
+    }),
+    "ctopLimit": _tools.RODict({
+        "ID": "ctopLimit",
+        "value": "可选数量：（{0}）",
+    }),
+    "selectNotEnough": _tools.RODict({
+        "ID": "selectNotEnough",
+        "value": 54000294,
+    }),
+    "selectLimitReached": _tools.RODict({
+        "ID": "selectLimitReached",
+        "value": 54000315,
     })
 })

@@ -17,8 +17,8 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "lowerLimit": 3000,
-        "upperLimit": 5000,
+        "lowerLimit": -199,
+        "upperLimit": 0,
         "PVPDmgReduced": 0.0,
         "DmgFromOtherPVPIncreased": 0.0,
         "ExpGainReduced": 0.0,
@@ -28,7 +28,7 @@ datas = _tools.RODict({
     2: _tools.RODict({
         "ID": 2,
         "lowerLimit": -499,
-        "upperLimit": 2999,
+        "upperLimit": -200,
         "PVPDmgReduced": 0.0,
         "DmgFromOtherPVPIncreased": 0.0,
         "ExpGainReduced": 0.0,
@@ -37,34 +37,14 @@ datas = _tools.RODict({
     }),
     3: _tools.RODict({
         "ID": 3,
-        "lowerLimit": -1999,
+        "lowerLimit": -5000,
         "upperLimit": -500,
-        "PVPDmgReduced": 0.1,
-        "DmgFromOtherPVPIncreased": 0.1,
-        "ExpGainReduced": 0.1,
-        "PotionEffReduced": 0.1,
-        "cantUseTransItem": 0,
-    }),
-    4: _tools.RODict({
-        "ID": 4,
-        "lowerLimit": -3999,
-        "upperLimit": -2000,
         "PVPDmgReduced": 0.3,
         "DmgFromOtherPVPIncreased": 0.3,
         "ExpGainReduced": 0.3,
         "PotionEffReduced": 0.3,
         "cantUseTransItem": 1,
-    }),
-    5: _tools.RODict({
-        "ID": 5,
-        "lowerLimit": -5000,
-        "upperLimit": -4000,
-        "PVPDmgReduced": 0.5,
-        "DmgFromOtherPVPIncreased": 0.5,
-        "ExpGainReduced": 0.5,
-        "PotionEffReduced": 0.5,
-        "cantUseTransItem": 1,
     })
 })
 minKey = 1
-maxKey = 5
+maxKey = 3

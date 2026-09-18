@@ -788,7 +788,7 @@ datas ={
     "EliteCustomID": "",
     "EntityID": 16000163,
     "ID": 40048003,
-    "Name": "\u7a7a\u767d\u7ef3\u5b50\uff08\u9752\u7537\uff09",
+    "Name": "\u7a7a\u767d\u7ef3\u5b50\uff08\u9752\u7537\u526f\u672c\uff09",
     "PosX": 451.7,
     "PosY": 123.3348,
     "PosZ": 223.5,
@@ -802,6 +802,30 @@ datas ={
       "RefreshTime": 1,
       "RefreshTimedID": 0,
       "Remark": "",
+      "ShowInSceneMap": 1
+    }
+  },
+  "40048004": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "CustomFuncPos",
+    "ClassNameType": 10,
+    "CustomID": "",
+    "Dir": 185.479,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 0,
+    "ID": 40048004,
+    "Name": "\u81ea\u5b9a\u4e49\u529f\u80fd\u70b9",
+    "PosX": 507.038,
+    "PosY": 124.3155,
+    "PosZ": 249.95,
+    "Props": {
+      "Num": 0,
+      "Radius": 0.0,
+      "RefreshTimedID": 0,
+      "Remark": "86060145",
       "ShowInSceneMap": 1
     }
   }

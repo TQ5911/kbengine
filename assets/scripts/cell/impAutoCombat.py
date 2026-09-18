@@ -823,10 +823,10 @@ class ImpAutoCombat(object):
                 if entity.IsCombatUnit and utils.checkCachedTargetType('Enemy', self, entity):
                     targetsList.append(entity)
                     _val = (
-                        # 1.仇恨目标
-                        1 if eId in _hateRecord else 0,
-                        # 2.任务目标
+                        # 1.任务目标
                         1 if entity.IsMonster and priorityTargetEnemyIds and entity.monsterId in priorityTargetEnemyIds else 0,
+                        # 2.仇恨目标
+                        1 if eId in _hateRecord else 0,
                         # 3.队伍目标
                         1 if eId in _teamTargetIds else 0,
                         # 4.距离

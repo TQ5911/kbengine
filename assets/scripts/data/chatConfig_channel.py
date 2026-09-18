@@ -74,7 +74,13 @@ datas = _tools.RODict({
         "channelDefaultSet": 1,
         "channelCD": 15,
         "channelMinLevel": 15,
+    }),
+    11: _tools.RODict({
+        "ID": 11,
+        "channelDefaultSet": 1,
+        "channelCD": 5,
+        "channelMinLevel": 1,
     })
 })
 minKey = 1
-maxKey = 10
+maxKey = 11

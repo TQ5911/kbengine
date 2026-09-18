@@ -88,6 +88,7 @@ class ICityOwnerMgr(object):
         self.cityRecentActivityList = []
         for key, value in CBP.datas.items():
             self.orderRemainTimesDict[key] = [0, 0]
+        self.cityDataChanged = True
 
     def gmAddCityMoney(self, money):
         LOG_DBG('[lj]gm addCityMoney', money)
@@ -185,6 +186,7 @@ class ICityOwnerMgr(object):
         if officerType in self.cityOfficerDict:
             tarGbid, name, sex, school = self.cityOfficerDict.pop(officerType)
             removeOfficerList.append((tarGbid, officerType))
+            self.cityDataChanged = True
 
         for serverID in self.GroupServerList:
             _stub = iRouter.RemoteServerStubEntityCall(int(serverID), 'SiegeWarStub')
@@ -213,6 +215,7 @@ class ICityOwnerMgr(object):
 
         self.cityOfficerDict[officerType] = (officerId, officerName, sex, school)
         addOfficerList.append((officerId, officerType))
+        self.cityDataChanged = True
 
         #msg type , data
         self.cityRecentActivityList.append({
@@ -380,6 +383,7 @@ class ICityOwnerMgr(object):
             self.cityFundUseRecord.pop(0)
 
         _stub.onChangeCityMoneyToGuildMoneyResult(True, srcGuildUUID, srcGbId, srcBox, val, self.cityMoney)
+        self.cityDataChanged = True
         self.syncCityData()
         LOG_DBG('[lj]changeCityMoneyToGuildMoney', srcGbId, srcGuildUUID, 'success', val, self.cityMoney, self.cityFundUseRecord)
 

@@ -44,6 +44,8 @@ import EventMgr
 import iComplexTeleport
 import impTeam
 import impRaid
+import iCrossTeamCell
+import impCrossTeamDungeonCell
 import impAutoCombat
 import iScore
 import impAvatarPK
@@ -80,6 +82,8 @@ import iGuildBossChallenge
 import impStatistics
 import iDungeonSettlement
 import iSpeedCheck
+import iEnmity
+import iLeague
 
 import LogTrackingMgr
 
@@ -113,8 +117,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
              iCollectible.ICollectible, iDuelCell.IDuelCell, iSiegeWarCell.ISiegeWarCell, iChief.IChief, iBounty.IBounty, iEmote.IEmote,
              iNewbie.INewbie, iCrossServer.ICrossServer, iMeridian.IMeridian, iMonthCard.IMonthCard, iMineWarCell.IMineWarCell,
              iGuildBossChallenge.IGuildBossChallenge, impStatistics.IStatistics, iDungeonSettlement.IDungeonSettlement,
-             iWorldLevel.IWorldLevel, iSpeedCheck.ISpeedCheck, iAbyssCell.IAbyssCell,
-             iBossMutexCell.IBossMutexCell, metaclass=ExposedWrapper.ExposedWrapperMetaClass):
+             iWorldLevel.IWorldLevel, iSpeedCheck.ISpeedCheck, iAbyssCell.IAbyssCell, iEnmity.IEnmity,
+             iBossMutexCell.IBossMutexCell, iCrossTeamCell.ICrossTeamCell, impCrossTeamDungeonCell.ImpCrossTeamDungeonCell,
+             iLeague.ILeague, metaclass=ExposedWrapper.ExposedWrapperMetaClass):
 
     IsAvatar = True
     IsCombatUnit = True
@@ -145,6 +150,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         iSpeedCheck.ISpeedCheck.__init__(self)
         iReplicaAvatar.IReplicaAvatar.__init__(self)
         iBossMutexCell.IBossMutexCell.__init__(self)
+        iEnmity.IEnmity.__init__(self)
 
         self.initDatetimeTimerTick()
 
@@ -241,6 +247,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             self._onLeftTimeSync()
         elif userData == gametimer.CHECK_EQUIPMENT_RETURN_EXPIRE:
             self._checkEquipExpire()
+        elif userData == gametimer.CROSS_TEAM_AVATAR_STATE_TICK:
+            self._syncCrossTeamState()
         else:
             super(Avatar, self).onTimer(tid, userData)
 
@@ -362,11 +370,13 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self._clearRaidJoinRecords()
         self.leaveTeamAuto()
         self.leaveRaidAuto()
+        self.leaveCrossTeamAuto(reason)
         # TODO x: logout log
         self.clearStateOffline()
         self._onCubeOffline()
         self._onWonderLandOffline()
         self._onAbyssOffline()
+        self._onRefugeOffline()
         self.base.startOffline(self.spaceNo, reason)
         self.safeDestroy()
         if self.spaceMgr:
@@ -384,6 +394,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             if self.spaceMgr:
                 self.spaceMgr.onPlayerRelogin(self, self.gbId)
             self.client.onAvatarTotalScoreInitCompleted()
+            if gameconfig.isCrossServer():
+                self.base.onAfterSyncLeagueUUID(self.leagueUUID, self.guildUUID)
         else:
             hpPercent = self.getTempMiscProp(gameconst.EntityPropsEnum.hpPercent) or 1
             mpPercent = self.getTempMiscProp(gameconst.EntityPropsEnum.mpPercent) or 1
@@ -407,7 +419,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.sendBodyEquipData()
 
         # self.sendCommonFlagCellInfo()
-        self.sendAllPickedCollections()
         self.client.sendAllSkills(self.skillDic.getClientData(self))
         self.client.onUpdateBuffs(self.buffMgrDic.getClientData(self))
         self.client.onUpdateAureoles(self.auraDic.getClientData())
@@ -492,7 +503,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         if self.teamId > 0 and not self.isCrossServerInOtherServer:
             gameengine.getTeamStub(self.teamId).fetchTeamInfoOnLogin(self.base, self.gbId, self.teamId)
-    
+
         if self.raidUUID > 0 and not self.isCrossServerInOtherServer:
             gameengine.getRaidStub(self.raidUUID).onAvatarLogin(self.base, self.gbId, self.raidUUID)
 
@@ -504,13 +515,14 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.checkLevelChange()
 
     def _initNoviceAvatar(self):
+        LOG_INFO('_initNoviceAvatar')
         if self.showCompleteNum == 0:
             self.showCompleteNum = utils.fetchShowCompleteModelNum()
         if self.school:
             self.setProp('level', self.level, gameconst.SourceType.SrcTpInit)
         self.mp = self.fullMp
         self.hp = self.fullHp
-        self.pkProtect=1 << gameconst.PKProtectEnum.TEAM | 1 << gameconst.PKProtectEnum.GROUP | 1 << gameconst.PKProtectEnum.GUILD | 1 << gameconst.PKProtectEnum.UNION
+        self.pkProtect=1 << gameconst.PKProtectEnum.TEAM | 1 << gameconst.PKProtectEnum.GROUP | 1 << gameconst.PKProtectEnum.GUILD | 1 << gameconst.PKProtectEnum.UNION | 1 << gameconst.PKProtectEnum.ATTACK_ENEMY
         self.base.initNoviceBase()
         self.base.updateRoleCache({
             'name': self.name, 
@@ -541,6 +553,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     def _isMyself(self, exposed):
         return self.id == abs(exposed)
+
+    def _relive(self):
+        super(Avatar, self)._relive()
+        self._syncRefugeBuff()
 
     def realDoGmCommandProxy(self, args):
         gmCommand.realDoCommand(*args)
@@ -786,6 +802,11 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if e.IsAvatar and self.isInTeam(e.gbId):
             self.teammateEntIdInAoiSet.add(e.id)
             self.expAddRatioByTeam = utils.getTeamExpBonus(len(self.teammateEntIdInAoiSet))
+
+        # 跨服讨伐队友（跨服镜像本服 teamId 为 0，用跨服队友集合识别）
+        if e.IsAvatar and not self.isInTeam(e.gbId) and self.isCrossTeammate(e.gbId):
+            self.teammateEntIdInAoiSet.add(e.id)
+            self.expAddRatioByTeam = utils.getTeamExpBonus(len(self.teammateEntIdInAoiSet))
             
         if e.IsAvatar and self.inRaid():
             self.raidmateEntIdInAoiSet.add(e.id)
@@ -808,6 +829,11 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     def onLeaveView(self, e):
         if self.isReal() and e.IsAvatar and self.isInTeam(e.gbId):
+            self.teammateEntIdInAoiSet.discard(e.id)
+            self.expAddRatioByTeam = utils.getTeamExpBonus(len(self.teammateEntIdInAoiSet))
+
+        # 跨服讨伐队友
+        if self.isReal() and e.IsAvatar and not self.isInTeam(e.gbId) and self.isCrossTeammate(e.gbId):
             self.teammateEntIdInAoiSet.discard(e.id)
             self.expAddRatioByTeam = utils.getTeamExpBonus(len(self.teammateEntIdInAoiSet))
         
@@ -1041,7 +1067,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         self._resetTeleportCache(spaceNo, callback, callbackArgs)
 
-        self.client.startTeleport(spaceNo, destPos)
+        # 幽灵（跨服期间本服镜像）无客户端，跳过加载屏；
+        # 引擎传送完成的 onTeleportSuccessBefore/onTeleportSuccess 回调与客户端无关，落地簿记照常
+        if self.client:
+            self.client.startTeleport(spaceNo, destPos)
         self.lastTeleportSpaceNoRecord = self.spaceNo
         if formula.inWorldLineScene(self.spaceNo):
             self.lastTeleportWorldlinePosRecord = sMath.position3DCellWithoutY(self.position)
@@ -1130,6 +1159,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             LogTrackingMgr.LogTrackingMgr.teleport(
                 self.gbId,
                 self.clientDistinctIdCell,
+                self.accountNameCell,
                 _fromMapId,
                 _toMapId,
             )
@@ -1142,10 +1172,13 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             gameengine.panicStack(f"onTeleportSuccess::raise exception, {e}")
             ret = False
 
+        self.refreshPKByScene()
         self.removeState(gameconst.StateEnum.Teleporting)
 
         if ret:
-            self.client.onTeleportDone(self.lastTeleportSpaceNoRecord, self.spaceNo)
+            # 幽灵（跨服期间本服镜像）无客户端，跳过落地通知
+            if self.client:
+                self.client.onTeleportDone(self.lastTeleportSpaceNoRecord, self.spaceNo)
             #传送后 距离过远 有道士召唤的狼 将狼拉过来
             self.teleportSummonsToMe()
         else:
@@ -1973,3 +2006,13 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if raidId <= 0:
             return
         gameengine.getRaidStub(raidId).reqUpdateVoiceRoomState(self.gbId, raidId, voiceFlags)
+
+    def afterModifyName(self, newName):
+        _oldName = self.name
+        self.name = newName
+        self.pyWriteToDB()
+
+        if self.isInTeam():
+            gameengine.getTeamStub(self.teamId).modifyPlayerName(self.base, self.teamId, self.gbId, newName, _oldName)
+        elif self.inRaid():
+            gameengine.getRaidStub(self.raidUUID).modifyPlayerName(self.base, self.raidUUID, self.gbId, newName, _oldName)

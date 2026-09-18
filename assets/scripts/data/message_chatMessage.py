@@ -193,7 +193,7 @@ datas = _tools.RODict({
         "ID": 58000032,
         "name": "guild_declareWar1",
         "Message": "众志成城，热血争锋，帮会<color=#98cf48>{0}</color>向帮会<color=#98cf48>{1}</color>宣战！",
-        "channelID": (2, 3, 99)
+        "channelID": (2, 3, 11, 99)
     }),
     58000033: _tools.RODict({
         "ID": 58000033,
@@ -217,19 +217,19 @@ datas = _tools.RODict({
         "ID": 58000036,
         "name": "guild_declareWar2",
         "Message": "众志成城，热血争锋，帮会<color=#98cf48>{0}</color>向联盟<color=#98cf48>{1}</color>宣战！",
-        "channelID": (2, 3, 99)
+        "channelID": (2, 3, 11, 99)
     }),
     58000037: _tools.RODict({
         "ID": 58000037,
         "name": "guild_declareWar3",
         "Message": "众志成城，热血争锋，联盟<color=#98cf48>{0}</color>向联盟<color=#98cf48>{1}</color>宣战！",
-        "channelID": (2, 3, 99)
+        "channelID": (2, 3, 11, 99)
     }),
     58000038: _tools.RODict({
         "ID": 58000038,
         "name": "guild_declareWar4",
         "Message": "众志成城，热血争锋，联盟<color=#98cf48>{0}</color>向帮会<color=#98cf48>{1}</color>宣战！",
-        "channelID": (2, 3, 99)
+        "channelID": (2, 3, 11, 99)
     }),
     58000060: _tools.RODict({
         "ID": 58000060,
@@ -372,20 +372,20 @@ datas = _tools.RODict({
     58000218: _tools.RODict({
         "ID": 58000218,
         "name": "guild_unionSupport1",
-        "Message": "我帮向帮会{0}援助{1}",
+        "Message": "我帮向帮会<color=#98cf48>{0}</color>援助<link item id={1} gbid={2}>×{3}",
         "channelID": (3,)
     }),
     58000219: _tools.RODict({
         "ID": 58000219,
         "name": "guild_unionSupport2",
-        "Message": "帮会{0}向我帮援助{1}",
+        "Message": "帮会<color=#98cf48>{0}</color>向我帮援助<link item id={1} gbid={2}>×{3}",
         "channelID": (3,)
     }),
     58000220: _tools.RODict({
         "ID": 58000220,
         "name": "guild_unionSupport3",
-        "Message": "帮会{0}向帮会{1}援助{2}",
-        "channelID": (3,)
+        "Message": "帮会<color=#98cf48>{0}</color>向帮会<color=#98cf48>{1}</color>援助<link item id={2} gbid={3}>×{4}",
+        "channelID": (11,)
     }),
     58000221: _tools.RODict({
         "ID": 58000221,

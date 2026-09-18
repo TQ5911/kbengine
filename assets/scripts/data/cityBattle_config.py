@@ -473,7 +473,7 @@ datas = _tools.RODict({
     }),
     "cityBattle_serverTimeLimit": _tools.RODict({
         "ID": "cityBattle_serverTimeLimit",
-        "value": 3,
+        "value": 0,
     }),
     "cityBattle_biddingTime": _tools.RODict({
         "ID": "cityBattle_biddingTime",

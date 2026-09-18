@@ -160,6 +160,7 @@ def routerServersInfo():
 def getCrossServerId():
     try:
         data = ResMgr.getStringContentListForPath(ResMgr.kbengineConfig(), 'game/crossServerInfo')
+        return 20808
         return int(data[0]['crossServerId'])
     except:
         LOG_WARN('[lj]crossServerInfo load fail')
@@ -463,6 +464,14 @@ def smsServiceVerifyUrl():
     return url
 
 @cache_wraper
+def webServerDomain():
+    try:
+        url = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/webServerDomain')
+    except:
+        url = 'https://test.api.hzyunxingu.cn'
+    return url
+
+@cache_wraper
 def patchVersion():
     try:
         versionStr = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/patchVersion')
@@ -691,7 +700,12 @@ def getHomeDis():
 
 @cache_wraper
 def stubTickCreateEntNum():
-    return 400
+    return 9999
+
+
+@cache_wraper
+def firstDungeonWeight():
+    return 20
 
 
 @cache_wraper
@@ -792,6 +806,17 @@ def crossDataServerInfo():
 
     return crossDataServersInfo
 
+@cache_wraper
+def crossTeamServerAddress():
+    try:
+        host = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/crossTeamServerHost')
+    except:
+        host = '192.168.10.13:2016'
+    return host
+
+@cache_wraper
+def enableCrossTeam():
+    return 1
 
 # 这里和服务端约定好格式为 android_version;ios_version;windows_version
 @config(Str, '', 'hotfix version')
@@ -1061,22 +1086,13 @@ def feishuIp():
     return feishuInfoList
 
 
-@config(Bool, None, '是否开启改名', (ConfigFlag.FLAG_CLIENT, ConfigFlag.CACHE_CONFIG, ConfigFlag.ALWAYS_SEND_CLIENT))
-def enableModifyName():
-    return 1
 
-
-@config(Bool, None, '是否开启邮件', (ConfigFlag.FLAG_CLIENT, ConfigFlag.CACHE_CONFIG, ConfigFlag.ALWAYS_SEND_CLIENT))
-def enableMail():
-    return 1
-
-
-@config(Bool, None, '是否使用注销旧流程', (ConfigFlag.FLAG_CLIENT, ConfigFlag.CACHE_CONFIG, ConfigFlag.ALWAYS_SEND_CLIENT))
+@config(Bool, None, '是否使用注销旧流程', (ConfigFlag.FLAG_CLIENT, ConfigFlag.ALWAYS_SEND_CLIENT))
 def enableOldLogout():
     return 1
 
 
-@config(Bool, None, '是否开启伤害统计', (ConfigFlag.CACHE_CONFIG, ))
+@config(Bool, None, '是否开启伤害统计')
 def enableStatistic():
     try:
         ret = int(ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/enableStatistic'))
@@ -1084,7 +1100,7 @@ def enableStatistic():
         ret = 0
     return ret
 
-@config(Bool, None, '是否开启交易行', (ConfigFlag.FLAG_CLIENT, ConfigFlag.CACHE_CONFIG, ConfigFlag.ALWAYS_SEND_CLIENT))
+@config(Bool, None, '是否开启交易行', (ConfigFlag.FLAG_CLIENT, ConfigFlag.ALWAYS_SEND_CLIENT))
 def enableAuction():
     return 1
 
@@ -1105,7 +1121,7 @@ def leaseServerAddress():
         host = '127.0.0.1:2015'
     return host
 
-@config(Bool, None, '是否开启租赁行', (ConfigFlag.FLAG_CLIENT, ConfigFlag.CACHE_CONFIG, ConfigFlag.ALWAYS_SEND_CLIENT))
+@config(Bool, None, '是否开启租赁行', (ConfigFlag.FLAG_CLIENT, ConfigFlag.ALWAYS_SEND_CLIENT))
 def enableLease():
     return 1
 
@@ -1115,6 +1131,10 @@ def isCrossServer():
 
 @config(Bool, 'true', '是否开启城战')
 def enableSiegeWar():
+    return True
+
+@cache_wraper
+def enableCrossTeamDungeonStub():
     return True
 
 @cache_wraper
@@ -1164,7 +1184,7 @@ def wxReportUrl():
     return host
 
 
-@config(Bool, None, '是否开启工坊制造', (ConfigFlag.FLAG_CLIENT, ConfigFlag.CACHE_CONFIG, ConfigFlag.ALWAYS_SEND_CLIENT))
+@config(Bool, None, '是否开启工坊制造', (ConfigFlag.FLAG_CLIENT, ConfigFlag.ALWAYS_SEND_CLIENT))
 def enableWorkshop():
     return 1
 
@@ -1210,11 +1230,11 @@ def orderServerHost():
         host = '192.168.10.13:2011'
     return host
 
-@config(Bool, None, '是否开启订单服务', (ConfigFlag.FLAG_CLIENT, ConfigFlag.CACHE_CONFIG, ConfigFlag.ALWAYS_SEND_CLIENT))
+@config(Bool, None, '是否开启订单服务', (ConfigFlag.FLAG_CLIENT, ConfigFlag.ALWAYS_SEND_CLIENT))
 def enableOrderService():
     return 1
 
-@config(Bool, None, '是否开启微信支付', (ConfigFlag.FLAG_CLIENT, ConfigFlag.CACHE_CONFIG, ConfigFlag.ALWAYS_SEND_CLIENT))
+@config(Bool, None, '是否开启微信支付', (ConfigFlag.FLAG_CLIENT, ConfigFlag.ALWAYS_SEND_CLIENT))
 def enableWechatPayment():
     return 1
 
@@ -1222,6 +1242,9 @@ def enableWechatPayment():
 def overSpeedCheckSwitch():
     return 1
 
+@cache_wraper
+def enableClaimTestReward():
+    return 1
 
 @cache_wraper
 def isWaitMapServer():

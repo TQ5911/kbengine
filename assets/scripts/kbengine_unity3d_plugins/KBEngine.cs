@@ -97,7 +97,7 @@ namespace KBEngine
         public string serverScriptVersion = "";
         public string clientScriptVersion = "0.1.0";
         public string serverProtocolMD5 = "9506842A6628D1E732A0FAA2B8FC8CB3";
-        public string serverEntitydefMD5 = "6D3B1BA568FB61D512063260651948A4";
+        public string serverEntitydefMD5 = "E492AC573198E5915802241E881CA60E";
 
         // 当前玩家的实体id与实体类别
         public UInt64 entity_uuid = 0;
@@ -413,13 +413,15 @@ namespace KBEngine
 
         public void disconnect()
         {
-            _networkInterface.close();
+            _closeNetwork(_networkInterface);
         }
 
         public void _closeNetwork(NetworkInterfaceBase networkInterface)
         {
             networkInterface.close();
+            EventMgr.Instance.SendEvent(EventDef.EVENT_NET_LOST_CONNECTION);
         }
+        
 
         public bool checkHeartBeatTimeout()
         {
@@ -430,7 +432,7 @@ namespace KBEngine
             if (span.TotalSeconds >= 30 || span.TotalSeconds < 0)
             {
                 Dbg.ERROR_MSG("sendTick: Receive appTick timeout!");
-                _networkInterface.close();
+                disconnect();
                 return true;
             }
             return false;
@@ -458,7 +460,7 @@ namespace KBEngine
                 if (span.TotalSeconds < 0)
                 {
                     Dbg.ERROR_MSG("sendTick: Receive appTick timeout!");
-                    _networkInterface.close();
+                    disconnect();
                     return;
                 }
 
@@ -687,7 +689,7 @@ namespace KBEngine
             if (noconnect)
             {
                 reset();
-                _networkInterface.connectTo(_args.ip, _args.port, onConnectTo_loginapp_callback, null);
+                _networkInterface.connectTo(_args.ip, _args.port, onConnectTo_loginapp_callback, "loginapp");
             }
             else
             {
@@ -703,13 +705,14 @@ namespace KBEngine
             }
         }
 
-        private void onConnectTo_loginapp_callback(string ip, int port, bool success, object userData)
+        private void onConnectTo_loginapp_callback(string ip, int port, bool success, object connectState)
         {
             _lastTickCBTime = System.DateTime.Now;
 
             if (!success)
             {
                 Dbg.ERROR_MSG(string.Format("KBEngine::login_loginapp(): connect {0}:{1} error!", ip, port));
+                EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_CONNECTION_STATE, success, connectState);
                 return;
             }
 
@@ -732,10 +735,10 @@ namespace KBEngine
         /*
 			登录到服务端，登录到网关(baseapp)
 		*/
-        public void login_baseapp(bool noconnect)
+        public void login_baseapp(bool noconnect, bool useTCP = false)
         {
             isReconnecting = false;
-            Dbg.DEBUG_MSG(string.Format("KBEngine::login_baseapp(): connect {0}", noconnect));
+            Dbg.DEBUG_MSG(string.Format("KBEngine::login_baseapp(): connect {0} useTCP={1}", noconnect, useTCP));
 
             if (noconnect)
             {
@@ -745,7 +748,7 @@ namespace KBEngine
                 _networkInterface.reset();
                 clearSpace(false);
 
-                if (_args.forceDisableUDP || baseappUdpPort == 0)
+                if (useTCP || _args.forceDisableUDP || baseappUdpPort == 0)
                 {
                     _networkInterface = new NetworkInterfaceTCP();
 #if UNITY_IOS && !UNITY_EDITOR
@@ -756,7 +759,7 @@ namespace KBEngine
  						baseappIP = "shenhe-baseapp.yunxingu.com";
                      }
 #endif
-                    _networkInterface.connectTo(baseappIP, baseappTcpPort, onConnectTo_baseapp_callback, null);
+                    _networkInterface.connectTo(baseappIP, baseappTcpPort, onConnectTo_baseapp_callback, "baseapp");
                 }
                 else
                 {
@@ -768,7 +771,7 @@ namespace KBEngine
  						baseappIP = "shenhe-baseapp.yunxingu.com";
  					}
 #endif
-                    _networkInterface.connectTo(baseappIP, baseappUdpPort, onConnectTo_baseapp_callback, null);
+                    _networkInterface.connectTo(baseappIP, baseappUdpPort, onConnectTo_baseapp_callback, "baseapp");
                 }
             }
             else
@@ -781,15 +784,32 @@ namespace KBEngine
             }
         }
 
-        private void onConnectTo_baseapp_callback(string ip, int port, bool success, object userData)
+        private void onConnectTo_baseapp_callback(string ip, int port, bool success, object connectState)
         {
             _lastTickCBTime = System.DateTime.Now;
-
+            NetworkInterfaceBase.ConnectState state = connectState as NetworkInterfaceBase.ConnectState;
+            
             if (!success)
             {
                 Dbg.ERROR_MSG(string.Format("KBEngine::onConnectTo_baseapp_callback(): connect {0}:{1} error!", ip, port));
+                if (state != null)
+                {
+                    //KCP连接超时，尝试切换到TCP
+                    if (state.networkInterface is NetworkInterfaceKCP && state.errorType == NetworkInterfaceBase.ErrorType.TimeoutError)
+                    {
+                        _args.forceDisableUDP = true;
+                        login_baseapp(true, true);
+                    }
+                    else
+                    {
+                        EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_CONNECTION_STATE, success, state);
+                    }
+                }
+
                 return;
             }
+
+            EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_CONNECTION_STATE, success, state);
 
             currserver = "baseapp";
             currstate = "";
@@ -828,11 +848,11 @@ namespace KBEngine
                 _networkInterface = new NetworkInterfaceTCP();
                 if (NetworkInterfaceBase.IsIpv6OnlyEnv())
                 {
-                    _networkInterface.connectTo(baseappIPv6, baseappTcpPortIpv6, onReConnectTo_baseapp_callback, null);
+                    _networkInterface.connectTo(baseappIPv6, baseappTcpPortIpv6, onReConnectTo_baseapp_callback, "re-baseapp");
                 }
                 else
                 {
-                    _networkInterface.connectTo(baseappIP, baseappTcpPort, onReConnectTo_baseapp_callback, null);
+                    _networkInterface.connectTo(baseappIP, baseappTcpPort, onReConnectTo_baseapp_callback, "re-baseapp");
                 }
             }
             else
@@ -840,17 +860,19 @@ namespace KBEngine
                 _networkInterface = new NetworkInterfaceKCP();
                 if (NetworkInterfaceBase.IsIpv6OnlyEnv())
                 {
-                    _networkInterface.connectTo(baseappIPv6, baseappUdpPortIpv6, onReConnectTo_baseapp_callback, null);
+                    _networkInterface.connectTo(baseappIPv6, baseappUdpPortIpv6, onReConnectTo_baseapp_callback, "re-baseapp");
                 }
                 else
                 {
-                    _networkInterface.connectTo(baseappIP, baseappUdpPort, onReConnectTo_baseapp_callback, null);
+                    _networkInterface.connectTo(baseappIP, baseappUdpPort, onReConnectTo_baseapp_callback, "re-baseapp");
                 }
             }
         }
 
-        private void onReConnectTo_baseapp_callback(string ip, int port, bool success, object userData)
+        private void onReConnectTo_baseapp_callback(string ip, int port, bool success, object connectState)
         {
+            EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_CONNECTION_STATE, success, connectState);
+
             if (!success)
             {
                 Dbg.ERROR_MSG(string.Format("KBEngine::reloginBaseapp(): connect {0}:{1} error!", ip, port));
@@ -918,7 +940,7 @@ namespace KBEngine
             if (noconnect)
             {
                 reset();
-                _networkInterface.connectTo(_args.ip, _args.port, onConnectTo_resetpassword_callback, null);
+                _networkInterface.connectTo(_args.ip, _args.port, onConnectTo_resetpassword_callback, "reset-loginapp");
             }
             else
             {
@@ -929,13 +951,14 @@ namespace KBEngine
             }
         }
 
-        private void onConnectTo_resetpassword_callback(string ip, int port, bool success, object userData)
+        private void onConnectTo_resetpassword_callback(string ip, int port, bool success, object connectState)
         {
             _lastTickCBTime = System.DateTime.Now;
 
             if (!success)
             {
                 Dbg.ERROR_MSG(string.Format("KBEngine::resetpassword_loginapp(): connect {0}:{1} error!", ip, port));
+                EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_CONNECTION_STATE, success, connectState);
                 return;
             }
 
@@ -1019,7 +1042,7 @@ namespace KBEngine
             if (noconnect)
             {
                 reset();
-                _networkInterface.connectTo(_args.ip, _args.port, onConnectTo_createAccount_callback, null);
+                _networkInterface.connectTo(_args.ip, _args.port, onConnectTo_createAccount_callback, "create-loginapp");
             }
             else
             {
@@ -1042,13 +1065,14 @@ namespace KBEngine
             createAccount_loginapp(false);
         }
 
-        private void onConnectTo_createAccount_callback(string ip, int port, bool success, object userData)
+        private void onConnectTo_createAccount_callback(string ip, int port, bool success, object connectState)
         {
             _lastTickCBTime = System.DateTime.Now;
 
             if (!success)
             {
                 Dbg.ERROR_MSG(string.Format("KBEngine::createAccount_loginapp(): connect {0}:{1} error!", ip, port));
+                EventMgr.Instance.SendEvent(EventDef.EVENT_NET_ON_CONNECTION_STATE, success, connectState);
                 return;
             }
 

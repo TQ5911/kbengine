@@ -1,0 +1,19 @@
+<root>
+    <BaseMethods>
+        <reqQueryTestReward> <Exposed/>
+        </reqQueryTestReward>
+
+        <reqClaimTestReward> <Exposed/>
+        </reqClaimTestReward>
+    </BaseMethods>
+
+    <ClientMethods>
+        <queryTestRewardReplay>
+            <Arg>   TEST_REWARD_OVERVIEW    </Arg>
+        </queryTestRewardReplay>
+
+        <claimTestRewardReplay>
+            <Arg>   BOOL                    </Arg>
+        </claimTestRewardReplay>
+    </ClientMethods>
+</root>

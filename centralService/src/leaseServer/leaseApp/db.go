@@ -9,7 +9,7 @@ func (lm *LeaseMgr) dbLoadItems(cb func(*LeaseMarketItem) error) error {
 	const batchSize = 1000
 	var lastId uint64
 	for {
-		rows, err := lm.db.Query(`SELECT id, unique_id, item_id, return_owner_gbid,
+		rows, err := lm.db.Query(`SELECT id, unique_id, item_id, enhance_lv, grade, return_owner_gbid,
 			return_owner_server_id, return_time, return_reason, lease_days, lessor_gbid,
 			lessor_server_id, lessee_gbid, lessee_server_id, price_per_day, lease_start_time,
 			lease_end_time, lease_cost, lease_gold, lease_bind_gold, lease_tax, item_data,
@@ -24,7 +24,7 @@ func (lm *LeaseMgr) dbLoadItems(cb func(*LeaseMarketItem) error) error {
 			item := &LeaseMarketItem{}
 			var id uint64
 			var createTime uint32
-			err := rows.Scan(&id, &item.UniqueId, &item.ItemId, &item.ReturnOwnerGbId, &item.ReturnOwnerServerId,
+			err := rows.Scan(&id, &item.UniqueId, &item.ItemId, &item.EnhanceLv, &item.Grade, &item.ReturnOwnerGbId, &item.ReturnOwnerServerId,
 				&item.ReturnEndTime, &item.ReturnReason, &item.LeaseDay,
 				&item.LessorGbId, &item.LessorServerId, &item.LesseeGbId, &item.LesseeServerId,
 				&item.PricePerDay, &item.LeaseStartTime, &item.LeaseEndTime,
@@ -58,13 +58,15 @@ func (lm *LeaseMgr) dbLoadItems(cb func(*LeaseMarketItem) error) error {
 func (lm *LeaseMgr) dbAddItemCommit(item *LeaseMarketItem) error {
 	now := time.Now().Unix()
 
-	_, err := lm.db.Exec(`INSERT INTO lease_market 
-		(unique_id, item_id, return_owner_gbid, return_owner_server_id, return_time, return_reason, lease_days,
-		lessor_gbid, lessor_server_id, lessee_gbid, lessee_server_id, 
+	_, err := lm.db.Exec(`INSERT INTO lease_market
+		(unique_id, item_id, enhance_lv, grade, return_owner_gbid, return_owner_server_id, return_time, return_reason, lease_days,
+		lessor_gbid, lessor_server_id, lessee_gbid, lessee_server_id,
 		price_per_day, lease_start_time, lease_end_time, lease_cost, lease_gold, lease_bind_gold, lease_tax, item_data, lease_status, create_time, update_time)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-		ON DUPLICATE KEY UPDATE 
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		ON DUPLICATE KEY UPDATE
 		item_id=VALUES(item_id),
+		enhance_lv=VALUES(enhance_lv),
+		grade=VALUES(grade),
 		return_owner_gbid=VALUES(return_owner_gbid),
 		return_owner_server_id=VALUES(return_owner_server_id),
 		return_time=VALUES(return_time),
@@ -84,7 +86,7 @@ func (lm *LeaseMgr) dbAddItemCommit(item *LeaseMarketItem) error {
 		item_data=VALUES(item_data),
 		lease_status=VALUES(lease_status),
 		update_time=VALUES(update_time)`,
-		item.UniqueId, item.ItemId, item.ReturnOwnerGbId, item.ReturnOwnerServerId, item.ReturnEndTime, item.ReturnReason, item.LeaseDay,
+		item.UniqueId, item.ItemId, item.EnhanceLv, item.Grade, item.ReturnOwnerGbId, item.ReturnOwnerServerId, item.ReturnEndTime, item.ReturnReason, item.LeaseDay,
 		item.LessorGbId, item.LessorServerId, item.LesseeGbId, item.LesseeServerId,
 		item.PricePerDay, item.LeaseStartTime, item.LeaseEndTime, item.LeaseCost, item.LeaseGold, item.LeaseBindGold,
 		item.LeaseTax, item.ItemData, item.Status, item.AddTime, now)

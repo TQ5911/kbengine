@@ -12,8 +12,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-func Init(configFileName string, config interface{}, serverInstance func() common.IApp) bool {
-	ret := initCfg(configFileName, config)
+func Init(config interface{}, serverInstance func() common.IApp) bool {
+	ret := initCfg(config)
 	if !ret {
 		return ret
 	}
@@ -45,8 +45,8 @@ func Init(configFileName string, config interface{}, serverInstance func() commo
 	return ret
 }
 
-func initCfg(configFileName string, config interface{}) bool {
-	if err := common.GetConfig(configFileName, config); err != nil {
+func initCfg(config interface{}) bool {
+	if err := common.GetConfig(config); err != nil {
 		log.Println("base server init fail:", err.Error())
 		return false
 	}

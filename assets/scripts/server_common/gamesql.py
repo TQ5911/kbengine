@@ -981,6 +981,17 @@ def deleteSafeBoxItem(safeBoxId, callback=None):
     _sql = f'DELETE FROM {gameconst.TABLE_NAME_GAME_SAFE_BOX} WHERE id={safeBoxId}'
     KBEngine.executeRawDatabaseCommand(_sql, callback or (lambda ret, num, insertId, err: None))
 
+def deleteSafeBoxItemByOrderId(orderId, callback=None):
+    _sql = f'DELETE FROM {gameconst.TABLE_NAME_GAME_SAFE_BOX} WHERE orderId={utils.escape_string(orderId)}'
+    KBEngine.executeRawDatabaseCommand(_sql, callback or (lambda ret, num, insertId, err: None))
+
+def checkSafeBoxExists(orderId, callback):
+    _sql = (
+        f'SELECT itemId FROM {gameconst.TABLE_NAME_GAME_SAFE_BOX} '
+        f'WHERE orderId={utils.escape_string(orderId)}'
+        f'LIMIT 1'
+    )
+    KBEngine.executeRawDatabaseCommand(_sql, callback)
 
 def checkOrderExists(orderId, callback):
     _sql = (

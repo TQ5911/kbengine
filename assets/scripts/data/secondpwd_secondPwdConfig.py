@@ -45,7 +45,7 @@ datas = _tools.RODict({
     }),
     "goldCostLimit": _tools.RODict({
         "ID": "goldCostLimit",
-        "value": (100, 2000),
+        "value": (101, 2000),
     }),
     "boundGoldCost": _tools.RODict({
         "ID": "boundGoldCost",
@@ -53,7 +53,7 @@ datas = _tools.RODict({
     }),
     "boundGoldCostLimit": _tools.RODict({
         "ID": "boundGoldCostLimit",
-        "value": (100, 2000),
+        "value": (101, 2000),
     }),
     "Disassembly": _tools.RODict({
         "ID": "Disassembly",
@@ -122,5 +122,13 @@ datas = _tools.RODict({
     "errPwdLockEndTime": _tools.RODict({
         "ID": "errPwdLockEndTime",
         "value": 54000406,
+    }),
+    "agent": _tools.RODict({
+        "ID": "agent",
+        "value": 7,
+    }),
+    "pwdNotBindPhone": _tools.RODict({
+        "ID": "pwdNotBindPhone",
+        "value": 54000407,
     })
 })
