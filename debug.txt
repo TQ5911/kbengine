@@ -1,0 +1,155 @@
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbID == 5693444604775366657:
+            obj.reqWelfareSignIn(12)
+KBEngine.entities.get(entityId)
+/////////////////////////////////////////////////////////
+import debugpy
+debugpy.listen(('0.0.0.0', 5678))
+debugpy.wait_for_client()
+
+import debugpy
+debugpy.listen(('0.0.0.0', 5679))
+debugpy.wait_for_client()
+
+# 个人创建团队 ok
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444315234172929:
+            obj.createRaidLonely(obj.id, 15)
+
+# 小队创建团队 ok
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        if obj.gbId == 5693444315234172929:
+            obj.createRaidWithTeam(obj.id, 15)
+
+# 解散团队 ok
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        print(obj.gbId)
+        obj.disbandRaid(obj.id)
+
+# 邀请个人玩家 ok
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444315234172929:
+            obj.applyInviteRaidLonely(obj.id, 5693444446062903297, "123")
+
+# 个人回复邀请(客户端已经实现了,不需要代码调试)
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444315234172929:
+            obj.replyInviteRaidLonely(obj.id, 3864775606365978624, 3864808935312195584, 5693444446062903297, 1)
+
+
+# 邀请小队玩家 ok
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444315234172929:
+            obj.applyInviteRaidWithTeam(obj.id, 5693444446062903297, 3864434551602937856, "123")
+
+# 小队长同意邀请
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444446062903297:
+            obj.replyInviteRaidWithTeam(obj.id, 3864439465045524480, 3864441767147995136, 5693444315234172929, 1)
+
+# 玩家离队 ok
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444446062903297:
+            obj.leaveRaid(obj.id)
+
+# 踢出玩家 ok
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444315234172929:
+            obj.kickOutRaidMember(obj.id, 1, 5693444446062903297)
+
+
+# 个人申请加入团队 ok
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444446062903297:
+            obj.applyJoinRaidLonely(obj.id, raiduuid)
+
+# 小队申请加入团队 ok
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444446062903297:
+            obj.applyJoinRaidWithTeam(obj.id, raiduuid)
+
+# 回复申请 ok
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444315234172929:
+            obj.replyJoinRaid(obj.id, 5693444446062903297, 1)
+
+# 团长任命团长 ok
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444315234172929:
+            obj.transferRaidLeader(obj.id, 5693444446062903297)
+
+# 团长任命副团长 ok
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444315234172929:
+            obj.transferRaidDeputy(obj.id, 5693444446062903297)
+
+# 移动团员
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444315234172929:
+            obj.moveRaidTeamMember(obj.id, 1, 5693444446062903297, 2, 0)
+
+sudo ss -tulnp | grep :5678
+sudo ss -tulnp | grep :5679
+
+
+.\gensdk_server.bat
+
+
+5693444315234172929 ztq
+5693444446062903297 qtz
+5693444333588447233 tqz
+
+
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444315234172929:
+            obj.sendAllMemberFollowAsk(obj.id)
+
+for obj in KBEngine.entities.values():
+    if obj.__class__.__name__ == 'Avatar':
+        print(obj)
+        if obj.gbId == 5693444446062903297:
+            obj.reqCaptainFollowInfo(obj.id)
+
+
+# 只会回复提示
+playerBox.onMessagePre(RAID_CONST.datas["raid_appointedRDL_msg"]["value"], [raidLeaderVal.playerName, ])
+# 广播回复提示
+raidVal.broadcastAllRaidMembersBase('onMessagePre', (RAID_CONST.datas["raid_appointRDLDone_msg"]["value"], [raidDeputyVal.playerName]),
+                                                exclude=(toPlayerGBID, orgRaidDeputyGBID))
+# 向某个只有srcPlayerGBID的回复提示
+gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                        [srcPlayerGBID, ], 'onMessagePre', (MMD.datas.raid_teamInvitationCheck_sectionTeam, []),
+                        None, '', ())
