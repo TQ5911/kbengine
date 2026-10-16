@@ -492,6 +492,13 @@ func GameServer_ReplyDoBuyItemByItemId_Handler(endPoint prpc.IEndPoint, dec func
     }
     return endPoint.(IGameServerInterface).ReplyDoBuyItemByItemId(in)
 }
+func GameServer_ReplySnatchRefund_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(SnatchRefundReq)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameServerInterface).ReplySnatchRefund(in)
+}
 func GameServer_ReplyGetAuctionItemsByAuctionIds_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
     in := new(GetAuctionItemByAuctionIdsResp)
     if err := dec(in); err != nil {
@@ -614,23 +621,28 @@ var GameServerServiceDesc = prpc.ServiceDesc{
             Handler:     GameServer_ReplyDoBuyItemByItemId_Handler,
         },
         {
-            MethodName:  "ReplyGetAuctionItemsByAuctionIds",
+            MethodName:  "ReplySnatchRefund",
             MethodIndex: 18,
+            Handler:     GameServer_ReplySnatchRefund_Handler,
+        },
+        {
+            MethodName:  "ReplyGetAuctionItemsByAuctionIds",
+            MethodIndex: 19,
             Handler:     GameServer_ReplyGetAuctionItemsByAuctionIds_Handler,
         },
         {
             MethodName:  "PushItemPriceInfoList",
-            MethodIndex: 19,
+            MethodIndex: 20,
             Handler:     GameServer_PushItemPriceInfoList_Handler,
         },
         {
             MethodName:  "ReplyBuyItems",
-            MethodIndex: 20,
+            MethodIndex: 21,
             Handler:     GameServer_ReplyBuyItems_Handler,
         },
         {
             MethodName:  "ReplyDoBuyItems",
-            MethodIndex: 21,
+            MethodIndex: 22,
             Handler:     GameServer_ReplyDoBuyItems_Handler,
         },
     },
@@ -719,20 +731,24 @@ func (self *GameServerClient) ReplyDoBuyItemByItemId(in *DoBuyItemByItemIdResp) 
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[17], in)
     return &Void{}, err
 }
-func (self *GameServerClient) ReplyGetAuctionItemsByAuctionIds(in *GetAuctionItemByAuctionIdsResp) (*Void, error) {
+func (self *GameServerClient) ReplySnatchRefund(in *SnatchRefundReq) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[18], in)
     return &Void{}, err
 }
-func (self *GameServerClient) PushItemPriceInfoList(in *ItemPriceInfoList) (*Void, error) {
+func (self *GameServerClient) ReplyGetAuctionItemsByAuctionIds(in *GetAuctionItemByAuctionIdsResp) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[19], in)
     return &Void{}, err
 }
-func (self *GameServerClient) ReplyBuyItems(in *BuyItemsResp) (*Void, error) {
+func (self *GameServerClient) PushItemPriceInfoList(in *ItemPriceInfoList) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[20], in)
     return &Void{}, err
 }
-func (self *GameServerClient) ReplyDoBuyItems(in *DoBuyItemsResp) (*Void, error) {
+func (self *GameServerClient) ReplyBuyItems(in *BuyItemsResp) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[21], in)
+    return &Void{}, err
+}
+func (self *GameServerClient) ReplyDoBuyItems(in *DoBuyItemsResp) (*Void, error) {
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[22], in)
     return &Void{}, err
 }
 type IGameServerInterface interface {
@@ -754,6 +770,7 @@ type IGameServerInterface interface {
     ReplyGetAuctionItemNumByCategoryId(*GetItemNumByCategoryIdResp) (*Void, error)
     ReplyBuyItemByItemId(*BuyItemByItemIdResp) (*Void, error)
     ReplyDoBuyItemByItemId(*DoBuyItemByItemIdResp) (*Void, error)
+    ReplySnatchRefund(*SnatchRefundReq) (*Void, error)
     ReplyGetAuctionItemsByAuctionIds(*GetAuctionItemByAuctionIdsResp) (*Void, error)
     PushItemPriceInfoList(*ItemPriceInfoList) (*Void, error)
     ReplyBuyItems(*BuyItemsResp) (*Void, error)

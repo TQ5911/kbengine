@@ -232,6 +232,18 @@ func (cta *CrossTeamApp) refreshTeamListSnapshot() {
 		}
 		entry.items = items
 		cta.teamListSnapshotMu.Unlock()
+
+		// debug：打印本 target 快照中的队伍列表，便于测试观测
+		for _, e := range items {
+			appLog.Debugf(
+				"team list snapshot, target=%d teamId=%d members=%d/%d isCross=%v",
+				target,
+				e.item.TeamId,
+				e.item.MemberCnt,
+				e.item.MaxNum,
+				e.isCross,
+			)
+		}
 	}
 }
 

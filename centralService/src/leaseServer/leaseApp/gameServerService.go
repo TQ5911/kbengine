@@ -5,8 +5,6 @@ import (
 	gameServerService "centralService/src/leaseServer/leaseApp/gameServerService"
 	"centralService/src/trpc"
 	"sync"
-
-	"golang.org/x/time/rate"
 )
 
 // 给游戏服务器提供的接口
@@ -16,19 +14,6 @@ type GameServerService struct {
 	serverId             uint32    // 游戏服 serverId
 	compId               uint32    // 游戏服 compId（组件 ID）
 	status               int8      // 连接状态：1=已连接 0=已断开
-	limiter              *rate.Limiter
-}
-
-func newRateLimiter() *rate.Limiter {
-	r := LeaseConfig.RateLimit.R
-	b := LeaseConfig.RateLimit.B
-	if r <= 0 {
-		r = 50
-	}
-	if b <= 0 {
-		b = 80
-	}
-	return rate.NewLimiter(rate.Limit(r), b)
 }
 
 const (
@@ -91,7 +76,7 @@ func (gs *GameServerService) RegisterServer(in *gameServerService.ServerInfoMess
 }
 
 func (gs *GameServerService) AddItemPrepare(in *gameServerService.LeaseAddItemPrepareReq) (*gameServerService.Void, error) {
-	if !gs.limiter.Allow() {
+	if !gs.app.tradeLimiter.Allow() {
 		appLog.Warnw("AddItemPrepare rate limited", "playerGBID", in.PlayerGBID, "uniqueId", in.UniqueId, "opUUID", in.OpUUID)
 		resp := replyAddItemPrepareRespPool.Get().(*gameServerService.LeaseAddItemPrepareResp)
 		resp.UniqueId = in.UniqueId
@@ -178,7 +163,7 @@ func (gs *GameServerService) AddItemRollback(in *gameServerService.LeaseAddItemR
 }
 
 func (gs *GameServerService) LeaseItemPrepare(in *gameServerService.LeaseItemPrepareReq) (*gameServerService.Void, error) {
-	if !gs.limiter.Allow() {
+	if !gs.app.tradeLimiter.Allow() {
 		appLog.Warnw("LeaseItemPrepare rate limited", "buyerGBID", in.BuyerGBID, "uniqueId", in.UniqueId, "opUUID", in.OpUUID)
 		resp := replyLeaseItemPrepareRespPool.Get().(*gameServerService.LeaseItemPrepareResp)
 		resp.PlayerGBID = in.BuyerGBID
@@ -197,7 +182,30 @@ func (gs *GameServerService) LeaseItemPrepare(in *gameServerService.LeaseItemPre
 	SafeGo(func() {
 		appLog.Infow("LeaseItemPrepare", "buyerGBID", in.BuyerGBID, "uniqueId", in.UniqueId, "opUUID", in.OpUUID)
 
-		totalPrice, ret := gs.app.leaseMgr.leaseItemPrepare(in.UniqueId, in.BuyerGBID, in.BuyerServerId, in.OpUUID, in.RentalProp01, in.RentalProp02)
+		// 承租方归属服以连接级 serverId 为准：与透传值不一致说明游戏服侧异常，直接拒绝
+		if in.BuyerServerId != gs.serverId {
+			appLog.Warnw(
+				"LeaseItemPrepare buyerServerId != conn serverId",
+				"buyerServerId", in.BuyerServerId,
+				"connServerId", gs.serverId,
+				"uniqueId", in.UniqueId,
+				"opUUID", in.OpUUID,
+			)
+			resp := replyLeaseItemPrepareRespPool.Get().(*gameServerService.LeaseItemPrepareResp)
+			resp.PlayerGBID = in.BuyerGBID
+			resp.UniqueId = in.UniqueId
+			resp.Result = int32(LEASE_PARAM_ERROR)
+			resp.OpUUID = in.OpUUID
+			_, err := gs.GetClientEndPoint().(*gameServerService.GameServerClient).ReplyLeaseItemPrepare(resp)
+			if err != nil {
+				appLog.Errorw("ReplyLeaseItemPrepare failed", "err", err, "opUUID", in.OpUUID)
+			}
+			resp.Reset()
+			replyLeaseItemPrepareRespPool.Put(resp)
+			return
+		}
+
+		totalPrice, ret := gs.app.leaseMgr.leaseItemPrepare(in.UniqueId, in.BuyerGBID, gs.serverId, in.OpUUID, in.RentalProp01, in.RentalProp02)
 
 		resp := replyLeaseItemPrepareRespPool.Get().(*gameServerService.LeaseItemPrepareResp)
 		resp.PlayerGBID = in.BuyerGBID
@@ -325,7 +333,7 @@ func (gs *GameServerService) LeaseItemRollback(in *gameServerService.LeaseItemRo
 }
 
 func (gs *GameServerService) CancelItem(in *gameServerService.LeaseCancelItemReq) (*gameServerService.Void, error) {
-	if !gs.limiter.Allow() {
+	if !gs.app.tradeLimiter.Allow() {
 		appLog.Warnw("CancelItem rate limited", "playerGBID", in.PlayerGBID, "uniqueId", in.UniqueId)
 		resp := replyCancelItemRespPool.Get().(*gameServerService.LeaseCancelItemResp)
 		resp.UniqueId = in.UniqueId
@@ -364,10 +372,20 @@ func (gs *GameServerService) CancelItem(in *gameServerService.LeaseCancelItemReq
 }
 
 func (gs *GameServerService) GetShopSummary(in *gameServerService.LeaseShopSummaryReq) (*gameServerService.Void, error) {
+	if !gs.app.queryLimiter.Allow() {
+		// 查询为纯内存操作，限流仅作兜底：触发时静默丢弃（不回包），避免空结果被误读为"货架空了"
+		appLog.Warnw(
+			"GetShopSummary rate limited, dropped",
+			"serverId", gs.serverId,
+			"playerGBID", in.PlayerGBID,
+			"categoryId", in.CategoryId,
+		)
+		return nil, nil
+	}
 	SafeGo(func() {
 		appLog.Debugw("GetShopSummary", "categoryId", in.CategoryId, "itemIds", in.ItemIds)
 
-		items := gs.app.leaseMgr.getShopSummary(in.ItemIds)
+		items := gs.app.leaseMgr.getShopSummary(groupOf(gs.serverId), in.ItemIds)
 
 		resp := replyShopSummaryRespPool.Get().(*gameServerService.LeaseShopSummaryResp)
 		resp.Items = items
@@ -384,10 +402,21 @@ func (gs *GameServerService) GetShopSummary(in *gameServerService.LeaseShopSumma
 }
 
 func (gs *GameServerService) GetShopItems(in *gameServerService.LeaseShopItemsReq) (*gameServerService.Void, error) {
+	if !gs.app.queryLimiter.Allow() {
+		// 查询为纯内存操作，限流仅作兜底：触发时静默丢弃（不回包），避免空结果被误读为"货架空了"
+		appLog.Warnw(
+			"GetShopItems rate limited, dropped",
+			"serverId", gs.serverId,
+			"playerGBID", in.PlayerGBID,
+			"itemId", in.ItemId,
+			"page", in.Page,
+		)
+		return nil, nil
+	}
 	SafeGo(func() {
 		appLog.Debugw("GetShopItems", "itemId", in.ItemId, "page", in.Page, "pageSize", in.PageSize, "enhanceLvMask", in.EnhanceLv, "gradeMask", in.Grade)
 
-		items := gs.app.leaseMgr.getShopItems(in.ItemId, in.Page, in.PageSize, in.EnhanceLv, in.Grade)
+		items := gs.app.leaseMgr.getShopItems(groupOf(gs.serverId), in.ItemId, in.Page, in.PageSize, in.EnhanceLv, in.Grade)
 
 		resp := replyShopItemsRespPool.Get().(*gameServerService.LeaseShopItemsResp)
 		resp.ItemId = in.ItemId

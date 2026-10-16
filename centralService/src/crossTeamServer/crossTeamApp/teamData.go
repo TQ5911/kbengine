@@ -9,8 +9,9 @@ import (
 // Member 队伍成员。仅由所属 worker goroutine 访问，无需加锁。
 // 注意：成员离线即退队，中心不维护在线/离线状态。
 type Member struct {
-	GbId     uint64
-	ServerId uint32 // 本服 serverId（归属服，讨伐协调/邀请等按此路由）
+	GbId            uint64
+	InTeamTimestamp int64  // 入队 Unix 时间戳（秒），用于自动移交队长
+	ServerId        uint32 // 本服 serverId（归属服，讨伐协调/邀请等按此路由）
 	// RouteServerId 成员当前实际所在服 serverId（推送路由依据）：
 	// 跨服副本中成员客户端连在跨服服上，由状态上报（ReportMemberStateRequest.serverId）刷新；
 	// 瞬态字段，随下一次状态上报自愈
@@ -48,21 +49,26 @@ type Member struct {
 
 func newMember(info *pb.MemberInfo) *Member {
 	return &Member{
-		GbId:          info.GbId,
-		ServerId:      info.ServerId,
-		RouteServerId: info.ServerId,
-		Name:          info.Name,
-		Level:         info.Level,
-		School:        info.School,
-		Score:         info.Score,
-		GroupIdx:      info.GroupIdx,
-		Pos:           info.Pos,
-		Sex:           info.Sex,
-		PicFrameId:    info.PicFrameId,
-		OpenId:        info.OpenId,
-		EnableMics:    info.EnableMics,
-		EnableSpeaker: info.EnableSpeaker,
-		InVoiceRoom:   info.InVoiceRoom,
+		GbId:            info.GbId,
+		InTeamTimestamp: time.Now().Unix(),
+		ServerId:        info.ServerId,
+		RouteServerId:   info.ServerId,
+		Name:            info.Name,
+		Level:           info.Level,
+		School:          info.School,
+		Score:           info.Score,
+		GroupIdx:        info.GroupIdx,
+		Pos:             info.Pos,
+		Sex:             info.Sex,
+		PicFrameId:      info.PicFrameId,
+		OpenId:          info.OpenId,
+		EnableMics:      info.EnableMics,
+		EnableSpeaker:   info.EnableSpeaker,
+		InVoiceRoom:     info.InVoiceRoom,
+
+		// 入队时携带的血量快照，作为该成员首个全量数据，后续由状态上报覆盖
+		Hp:    info.Hp,
+		MaxHp: info.MaxHp,
 	}
 }
 
@@ -84,6 +90,9 @@ func (m *Member) toPb() *pb.MemberInfo {
 		EnableMics:    m.EnableMics,
 		EnableSpeaker: m.EnableSpeaker,
 		InVoiceRoom:   m.InVoiceRoom,
+
+		Hp:    m.Hp,
+		MaxHp: m.MaxHp,
 	}
 }
 
@@ -99,6 +108,7 @@ func (m *Member) toStatePb() *pb.MemberState {
 		PosY:          m.PosY,
 		PosZ:          m.PosZ,
 		RouteServerId: m.RouteServerId,
+		Name:          m.Name,
 	}
 }
 
@@ -116,7 +126,7 @@ type CrossTeamData struct {
 	DungeonMap  int32 // 目标对应的讨伐副本（创建时由游戏服查表带入，目标不可改故创建后不变）
 	MinLevel    int32
 	MinScore    int32
-	Password    string // 非空 = 私密队伍（不进列表/匹配池）
+	Password    string // 非空 = 私密队伍（进列表，由 IsPublish 标记；不进匹配池）
 	Intro       string
 	CaptainGbId uint64
 	MaxNum      int32
@@ -246,9 +256,6 @@ func (t *CrossTeamData) nextPos(groupIdx int32) int32 {
 			max = m.Pos
 		}
 	}
-	if max == 0 {
-		return 1
-	}
 	return max + 1
 }
 
@@ -256,13 +263,14 @@ func (t *CrossTeamData) nextPos(groupIdx int32) int32 {
 // 优先落入人数未满的小组末尾
 func (t *CrossTeamData) assignNewMemberPos() (int32, int32) {
 	groups := t.groupMembers()
+	var maxx int32 = t.MaxNum / CROSS_TEAM_GROUP_SIZE
 	var bestGroup int32
-	for idx, list := range groups {
-		cnt := len(list)
-		if cnt >= CROSS_TEAM_GROUP_SIZE {
-			continue
+	for idx := int32(0); idx <= maxx; idx++ {
+		list := groups[idx]
+		if len(list) < CROSS_TEAM_GROUP_SIZE {
+			bestGroup = idx
+			break
 		}
-		bestGroup = min(bestGroup, idx)
 	}
 	return bestGroup, t.nextPos(bestGroup)
 }
@@ -285,14 +293,22 @@ func (t *CrossTeamData) checkServerMatch(serverId uint32) bool {
 	return t.IsCross || serverId == t.DunServer
 }
 
-// pickNewCaptain 从剩余成员中选新队长。
+// pickNewCaptain 从剩余成员中选择入队最早者作为新队长，同秒入队按 GbId 升序兜底。
 // 离线即退队，剩余成员均可作为新队长；无成员时返回 0。
 // 调用方应先把老队长移出 Members
 func (t *CrossTeamData) pickNewCaptain() uint64 {
-	for gbId := range t.Members {
-		return gbId
+	var earliestMember *Member
+	for _, member := range t.Members {
+		if earliestMember == nil ||
+			member.InTeamTimestamp < earliestMember.InTeamTimestamp ||
+			(member.InTeamTimestamp == earliestMember.InTeamTimestamp && member.GbId < earliestMember.GbId) {
+			earliestMember = member
+		}
 	}
-	return 0
+	if earliestMember == nil {
+		return 0
+	}
+	return earliestMember.GbId
 }
 
 // serverIds 成员当前所在服去重列表（面向客户端推送的路由依据，跨服副本中为跨服服）

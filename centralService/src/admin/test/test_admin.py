@@ -88,13 +88,43 @@ def add_buff():
     _args = f"{_id} {_buff_id} {_num}"                             # Command arguments
     return _cmd, _args
 
+def gm_get_all_switch_states():
+    """调用 $gmGetAllSwitchStates: 获取游戏服所有开关状态。
+
+    参考服务端实现:
+        for name, info in gameconfig.CONFIG.items():
+            configName, convFunc, default, defaultV, desc, cid, flags = info
+            ...
+            result[configName] = {
+                'value': ...,
+                'default': default,
+                'desc': desc,
+                'flags': flagNames,
+                'persistent': gameconfig.ConfigFlag.CACHE_CONFIG not in flags,
+            }
+        for name, value in gameconfig.CACHE_DIC.items():
+            if name not in result:
+                try:
+                    json.dumps(value)
+                    result[name] = {'value': value, 'persistent': False}
+                except (TypeError, ValueError):
+                    result[name] = {'value': str(value), 'persistent': False}
+
+    该命令无参数, 仅请求 docmd 拉取全量开关状态 (含 value / default / desc /
+    flags / persistent 等字段), 结果放在响应 body 里。
+    """
+    _cmd = '$gmGetAllSwitchStates'
+    _args = ''
+    return _cmd, _args
+
+
 def test_docmd():
     # -------------------------- CONFIGURATION --------------------------
     # Edit these parameters directly in the file:
 
-    _cmd, _args = add_buff()
+    _cmd, _args = gm_get_all_switch_states()
     print(f'{_cmd} {_args}')
-    URL = "http://192.168.10.13:8080/docmd"           # Admin server docmd URL
+    URL = "http://127.0.0.1:8080/docmd"           # Admin server docmd URL
     PARTITION = 20223                                  # Partition ID (0 for broadcast to all servers)
     COMMAND = _cmd
     ARGS = _args
@@ -166,6 +196,187 @@ def test_docmd():
         print(f"Error: Request timed out after {timeout} seconds")
     except Exception as e:
         print(f"Error: {str(e)}")
+
+
+def gm_batch_set_switch(items):
+    """构造 $gmBatchSetSwitch 的 args。
+
+    参考服务端签名:
+        @gm_cmd('$gmBatchSetSwitch', (Str('cfgStr'),), ...)
+        def gmBatchSetSwitch(su, cfgStr):
+            decoded = base64.b64decode(cfgStr.encode('ascii')).decode('utf-8')
+            cfgList = json.loads(decoded)
+            ...
+
+    服务端只接收一个参数 cfgStr: 必须先 base64 编码, 再整体作为 docmd 的
+    args (按现有约定 args 需要 hex 编码后再放进 body)。解码后是 JSON 数组,
+    每个元素形如:
+        {"key": "<configName>", "value": <任意>, "isCache": <bool>}
+
+    Args:
+        items: list[dict], 例如
+            [
+                {"key": "foo_flag", "value": "1", "isCache": False},
+                {"key": "bar_cache", "value": "test", "isCache": True},
+            ]
+
+    Returns:
+        (cmd, args): cmd = '$gmBatchSetSwitch';
+                     args = str, 已 base64 编码 (客户端会再 hex 一层)
+    """
+    if not isinstance(items, list):
+        raise TypeError("items 必须是 list[dict]")
+    _cmd = '$gmBatchSetSwitch'
+    _args = base64.b64encode(
+        json.dumps(items, ensure_ascii=False).encode('utf-8')
+    ).decode('ascii')
+    return _cmd, _args
+
+
+def test_gm_batch_set_switch():
+    """调用 $gmBatchSetSwitch: 批量设置开关状态。
+
+    与现有 docmd 调用方式一致; 区别仅在于需要先在本地构造 JSON 列表,
+    再 base64 编码成 cfgStr 字符串作为 args 传入。
+
+    示例 items:
+        [
+            {"key": "TradeSwitch", "value": "1",   "isCache": False},
+            {"key": "SomeCache",   "value": "test", "isCache": True},
+        ]
+    """
+    # -------------------------- CONFIGURATION --------------------------
+    URL = "http://127.0.0.1:8080/docmd"
+    PARTITION = 20223
+    ITEMS = [
+        {"key": "enableSiegeWar", "value": "true", "isCache": False},
+        {"key": "permitLogin",    "value": "0",    "isCache": True},
+    ]
+    SEQID = int(time.time())
+    SERIALNO = ""
+    SIGN_KEY = "3Pi0ZsIoRha8h0MG6jfHdxG1WLcE7XplB0kzhFitVIZzUNIbKc871DMEZnHGygno"
+    TIMEOUT = 15
+    # -------------------------------------------------------------------
+
+    COMMAND, ARGS = gm_batch_set_switch(ITEMS)
+
+    request_data = {
+        "Partition": PARTITION,
+        "Command": COMMAND,
+        "Args": ARGS.encode('utf-8').hex(),
+        "Seqid": SEQID,
+        "SerialNo": SERIALNO,
+    }
+
+    body_str = json.dumps(request_data)
+    body_bytes = body_str.encode('utf-8')
+
+    sign = generate_sign(body_bytes, SIGN_KEY)
+    params = {"sign": sign} if sign else {}
+
+    print(f"Testing docmd interface:")
+    print(f"URL: {URL}")
+    print(f"Command: {COMMAND}")
+    print(f"Items  : {json.dumps(ITEMS, ensure_ascii=False)}")
+    cfg_preview = ARGS[:80] + ('...' if len(ARGS) > 80 else '')
+    print(f"cfgStr : {cfg_preview}")
+    print(f"Request Body: {body_str}")
+    if sign:
+        print(f"Sign: {sign}")
+    print("-" * 50)
+
+    try:
+        response = requests.post(
+            URL,
+            params=params,
+            data=body_bytes,
+            headers={"Content-Type": "application/json"},
+            timeout=TIMEOUT,
+        )
+
+        print(f"Response Status: {response.status_code}")
+        print(f"Response Body: {response.text}")
+
+        if response.headers.get("Content-Type", "").startswith("application/json"):
+            try:
+                response_json = response.json()
+                print(f"Response JSON: {json.dumps(response_json, indent=2)}")
+            except json.JSONDecodeError:
+                print("Warning: Failed to parse response as JSON")
+
+    except requests.exceptions.ConnectionError:
+        print(f"Error: Cannot connect to {URL}. Is the admin server running?")
+    except requests.exceptions.Timeout:
+        print(f"Error: Request timed out after {TIMEOUT} seconds")
+    except Exception as e:
+        print(f"Error: {str(e)}")
+
+
+def test_gm_get_all_switch_states():
+    """调用 $gmGetAllSwitchStates: 获取游戏服所有开关状态。
+
+    与 test_docmd 走同一 docmd 接口, 仅 Command 不同。该命令无参数,
+    服务端返回的 body 形如:
+        { configName: { value, default, desc, flags, persistent }, ... }
+    """
+    # -------------------------- CONFIGURATION --------------------------
+    URL = "http://127.0.0.1:8080/docmd"
+    PARTITION = 20223
+    COMMAND, ARGS = gm_get_all_switch_states()
+    SEQID = int(time.time())
+    SERIALNO = ""
+    SIGN_KEY = "3Pi0ZsIoRha8h0MG6jfHdxG1WLcE7XplB0kzhFitVIZzUNIbKc871DMEZnHGygno"
+    TIMEOUT = 15
+    # -------------------------------------------------------------------
+
+    request_data = {
+        "Partition": PARTITION,
+        "Command": COMMAND,
+        "Args": ARGS.encode('utf-8').hex(),
+        "Seqid": SEQID,
+        "SerialNo": SERIALNO,
+    }
+
+    body_str = json.dumps(request_data)
+    body_bytes = body_str.encode('utf-8')
+
+    sign = generate_sign(body_bytes, SIGN_KEY)
+    params = {"sign": sign} if sign else {}
+
+    print(f"Testing docmd interface:")
+    print(f"URL: {URL}")
+    print(f"Command: {COMMAND} (args={ARGS!r})")
+    print(f"Request Body: {body_str}")
+    if sign:
+        print(f"Sign: {sign}")
+    print("-" * 50)
+
+    try:
+        response = requests.post(
+            URL,
+            params=params,
+            data=body_bytes,
+            headers={"Content-Type": "application/json"},
+            timeout=TIMEOUT,
+        )
+
+        print(f"Response Status: {response.status_code}")
+        print(f"Response Body: {response.text}")
+
+        if response.headers.get("Content-Type", "").startswith("application/json"):
+            try:
+                response_json = response.json()
+                print(f"Response JSON: {json.dumps(response_json, indent=2)}")
+            except json.JSONDecodeError:
+                print("Warning: Failed to parse response as JSON")
+
+    except requests.exceptions.ConnectionError:
+        print(f"Error: Cannot connect to {URL}. Is the admin server running?")
+    except requests.exceptions.Timeout:
+        print(f"Error: Request timed out after {TIMEOUT} seconds")
+    except Exception as e:
+        print(f"Error: {str(e)}")
+
 
 # ===================== 压测扩展（幂等专项） =====================
 # 用法：python test_admin.py            # 默认跑压测
@@ -501,5 +712,9 @@ if __name__ == "__main__":
     import sys
     if len(sys.argv) > 1 and sys.argv[1] == 'single':
         test_docmd()
+    elif len(sys.argv) > 1 and sys.argv[1] == 'switches':
+        test_gm_get_all_switch_states()
+    elif len(sys.argv) > 1 and sys.argv[1] == 'batchset':
+        test_gm_batch_set_switch()
     else:
         stress_test()

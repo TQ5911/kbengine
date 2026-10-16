@@ -1,6 +1,7 @@
 {
     "serverName":"adminServer",
     "serverId":1,
+    "mapleHttpAddr": "192.168.10.13:9527",
     "addressForGameServer": "0.0.0.0:2040",
     "addressForGMT": "0.0.0.0:2050",
     "AddreesForGRPC":"0.0.0.0:2051",

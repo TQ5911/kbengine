@@ -43,6 +43,11 @@ type AddMergeRequest struct {
 	ToServerId   int `json:"to_server_id"`
 }
 
+// 删除和服映射: 按主键 from_server_id 精确删除一条 from->to
+type RemoveMergeRequest struct {
+	FromServerId int `json:"from_server_id"`
+}
+
 // 拉取和服信息时的返回: 每条映射都"折叠"到最终的根服
 // 例如 raw: 10002->10003, 10003->10001
 // 输出 merge_map: {10002:10001, 10003:10001}

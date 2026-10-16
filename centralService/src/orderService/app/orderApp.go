@@ -90,6 +90,8 @@ type OrderApp struct {
 	ChannelToHost map[uuid.UUID]uint32
 	serversMutex  *sync.RWMutex
 	OrderChan     chan *OrderData
+	initMutex     *sync.RWMutex
+	IsInited      bool
 }
 
 func InitConfigStore() bool {
@@ -197,8 +199,21 @@ func NewOrderApp() *OrderApp {
 		httpService:   &HttpCommandService{},
 		ChannelToHost: make(map[uuid.UUID]uint32),
 		OrderChan:     make(chan *OrderData),
+		initMutex:     &sync.RWMutex{},
+		IsInited:      false,
 	}
+	common.AfterInitMapleServer(func() {
+		app.initMutex.Lock()
+		defer app.initMutex.Unlock()
+		app.IsInited = true
+	})
 	return &app
+}
+
+func (mg *OrderApp) CheckInited() bool {
+	mg.initMutex.RLock()
+	defer mg.initMutex.RUnlock()
+	return mg.IsInited
 }
 
 func (mg *OrderApp) GetServices() []*common.ServiceInfo {
@@ -234,7 +249,9 @@ func (mg *OrderApp) doRegisterServer(hostId uint32, compId uint32, hostName stri
 	if hostId == 0 {
 		return errors.New(fmt.Sprint("register server err: invalid hostId:", hostId))
 	}
-
+	if !mg.CheckInited() {
+		return errors.New(fmt.Sprint("register server err: server is in init:", hostId))
+	}
 	mg.serversMutex.Lock()
 	defer mg.serversMutex.Unlock()
 
@@ -333,8 +350,15 @@ func (mg *OrderApp) doReleaseOrderLock(outTradeNo string) error {
 }
 
 func (mg *OrderApp) ProcessOrder(order *OrderData, svc *HttpCommandService, w http.ResponseWriter) {
-	appLog.Infof("ProcessOrder, outTradeNo: %v, serverId: %v", order.OutTradeNo, order.ServerId)
-
+	isInited := mg.CheckInited()
+	appLog.Infof("ProcessOrder, isInited: %v, outTradeNo: %v, serverId: %v", isInited, order.OutTradeNo, order.ServerId)
+	if !isInited {
+		appLog.Error("ProcessOrder order service is not inited ")
+		errMsg := "service is not inited"
+		responseBytes := svc._buildErrResponse(SERVER_IS_NOT_INITED, errMsg)
+		svc.sendIDIPResponse(w, 200, responseBytes)
+		return
+	}
 	// 获取本地配置中心
 	itemCfg, ret := ConfigStore.cfgVipers.Get(CFG_TYPE_ITEM_DATA)
 	if !ret || nil == itemCfg {
@@ -374,7 +398,8 @@ func (mg *OrderApp) ProcessOrder(order *OrderData, svc *HttpCommandService, w ht
 		return
 	}
 	// 查询订单状态
-	sql := "select orderProcessStatus, serverId, userRoleId, productCode, buyNum, roleName from `orderData` where `OutTradeNo` = ?"
+	sql := "select `orderProcessStatus`, `addToSafe`, `createTime`, `payableAmount`, `actualAmount`, `userGameId`, " +
+		"`productCode`, `buyNum`,`userRoleId`, `serverId`, `roleName`, `payTime` from `orderData` where `OutTradeNo` = ?"
 	stmt, err := mg.db.Prepare(sql)
 	if err != nil {
 		appLog.Errorf("ProcessOrder mysql prepare error: %v, outTradeNo: %v", err.Error(), order.OutTradeNo)
@@ -396,13 +421,13 @@ func (mg *OrderApp) ProcessOrder(order *OrderData, svc *HttpCommandService, w ht
 	defer rows.Close()
 
 	orderProcessStatus := -1
-	serverId := 0
-	gbId := 0
-	itemId := 0
-	itemCount := 0
-	roleName := ""
+	orderDataOld := &OrderData{}
+	orderDataOld.OutTradeNo = order.OutTradeNo
 	for rows.Next() {
-		err = rows.Scan(&orderProcessStatus, &serverId, &gbId, &itemId, &itemCount, &roleName)
+		err = rows.Scan(&orderProcessStatus, &orderDataOld.AddToSafe, &orderDataOld.CreateTime, &orderDataOld.PayableAmount, &orderDataOld.ActualAmount,
+			&orderDataOld.UserGameId, &orderDataOld.ProductCode, &orderDataOld.BuyNum, &orderDataOld.UserRoleId, &orderDataOld.ServerId,
+			&orderDataOld.RoleName, &orderDataOld.PayTime)
+
 		if err != nil {
 			appLog.Errorf("ProcessOrder mysql scan error: %v, outTradeNo: %v", err.Error(), order.OutTradeNo)
 			errMsg := "mysql error"
@@ -420,7 +445,9 @@ func (mg *OrderApp) ProcessOrder(order *OrderData, svc *HttpCommandService, w ht
 			responseBytes := svc._buildErrResponse(SUCCESS, errMsg)
 			svc.sendIDIPResponse(w, 200, responseBytes)
 		} else if orderProcessStatus == 0 {
-			mg.SendToGameServer(order, svc, w, order.CreateTime, int32(itemId), int32(itemCount), order.PayableAmount, uint64(gbId), uint32(serverId), roleName, order.PayTime)
+			mg.SendToGameServer(svc, w, orderDataOld.OutTradeNo, orderDataOld.AddToSafe, orderDataOld.CreateTime, float64(orderDataOld.PayableAmount),
+				float64(orderDataOld.ActualAmount), orderDataOld.UserGameId, orderDataOld.ProductCode, int32(orderDataOld.BuyNum), orderDataOld.PayableAmount,
+				uint64(orderDataOld.UserRoleId), uint32(orderDataOld.ServerId), orderDataOld.RoleName, orderDataOld.PayTime)
 		}
 		return
 	}
@@ -458,44 +485,50 @@ func (mg *OrderApp) ProcessOrder(order *OrderData, svc *HttpCommandService, w ht
 		svc.sendIDIPResponse(w, 200, responseBytes)
 	}
 
-	mg.SendToGameServer(order, svc, w, order.CreateTime, order.ProductCode, int32(order.BuyNum), order.PayableAmount, uint64(order.UserRoleId), uint32(order.ServerId), order.RoleName, order.PayTime)
+	mg.SendToGameServer(svc, w, order.OutTradeNo, order.AddToSafe, order.CreateTime, float64(order.PayableAmount), float64(order.ActualAmount),
+		order.UserGameId, order.ProductCode, int32(order.BuyNum), order.PayableAmount, uint64(order.UserRoleId), uint32(order.ServerId),
+		order.RoleName, order.PayTime)
 
 	appLog.Infof("ProcessOrder success, outTradeNo: %v", order.OutTradeNo)
 	return
 }
 
-func (mg *OrderApp) SendToGameServer(order *OrderData, svc *HttpCommandService, w http.ResponseWriter, createTime int64, itemId int32, itemCount int32, itemPrice float32, gbId uint64, serverId uint32, roleName string, payTime int64) {
+func (mg *OrderApp) SendToGameServer(svc *HttpCommandService, w http.ResponseWriter, outTradeNo string, addToSafe uint8, createTime int64,
+	payableAmount float64, actualAmount float64, userGameId string, itemId int32, itemCount int32, itemPrice float32,
+	gbId uint64, serverId uint32, roleName string, payTime int64) {
+
+	serverId = common.GetGameServerMergeRoot(serverId)
 	orderService := mg.GetOrderService(uint32(serverId), 0)
 	if orderService != nil {
 		response := &service.OrderRequest{}
-		response.ServerId = order.ServerId
-		response.OutTradeNo = order.OutTradeNo
+		response.ServerId = int32(serverId)
+		response.OutTradeNo = outTradeNo
 		response.CreateTime = createTime
 		response.ItemId = int32(itemId)
 		response.ItemCount = int32(itemCount)
 		response.GbId = int64(gbId)
 		response.Price = float64(itemPrice)
-		response.AddToSafe = order.AddToSafe == 1
+		response.AddToSafe = addToSafe == 1
 		response.RoleName = roleName
 		response.PayTime = payTime
-		response.PayAmount = float64(order.PayableAmount)
-		response.ActualAmount = float64(order.ActualAmount)
-		response.AccountId = order.UserGameId
+		response.PayAmount = payableAmount
+		response.ActualAmount = actualAmount
+		response.AccountId = userGameId
 		_, err := orderService.GetClientEndPoint().(service.IGameServerInterface).NotifyOrder(response)
 		if err != nil {
-			appLog.Errorf("ProcessOrder send order to game error: %v, outTradeNo: %v", err.Error(), order.OutTradeNo)
+			appLog.Errorf("ProcessOrder send order to game error: %v, outTradeNo: %v", err.Error(), outTradeNo)
 			errMsg := "game server error"
 			responseBytes := svc._buildErrResponse(SERVER_ERROR, errMsg)
 			svc.sendIDIPResponse(w, 200, responseBytes)
 			return
 		} else {
-			appLog.Infof("ProcessOrder, in delivery, outTradeNo: %v", order.OutTradeNo)
+			appLog.Infof("ProcessOrder, in delivery, outTradeNo: %v", outTradeNo)
 			errMsg := "in delivery"
 			responseBytes := svc._buildErrResponse(IN_DELIVERY, errMsg)
 			svc.sendIDIPResponse(w, 200, responseBytes)
 		}
 	} else {
-		appLog.Errorf("ProcessOrder get game service error: missing, gbId: %v, outTradeNo: %v, serverId: %v, itemId: %v, itemCount:%v, itemPrice: %v", gbId, order.OutTradeNo, serverId, itemId, itemCount, itemPrice)
+		appLog.Errorf("ProcessOrder get game service error: missing, gbId: %v, outTradeNo: %v, serverId: %v, itemId: %v, itemCount:%v, itemPrice: %v", gbId, outTradeNo, serverId, itemId, itemCount, itemPrice)
 		errMsg := "game server missing"
 		responseBytes := svc._buildErrResponse(SERVER_MISSING, errMsg)
 		svc.sendIDIPResponse(w, 200, responseBytes)

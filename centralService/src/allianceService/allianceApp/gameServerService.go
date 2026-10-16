@@ -29,6 +29,18 @@ func (gss *GameServerService) RegisterGameServer(in *gameServerService.RegisterG
 	if in.ServerId == 0 {
 		return nil, errors.New("invalid serverId")
 	}
+
+	gss.app.waitGroupIdMutex.Lock()
+	defer gss.app.waitGroupIdMutex.Unlock()
+	if !gss.app.waitGroupId {
+		gss.app.waitGroupId = true
+		gss.doInitGroupId(int(in.ServerId))
+	}
+
+	if !gss.app.CheckDataInited() {
+		return nil, errors.New("server data is in init")
+	}
+
 	gss.serverId = in.ServerId
 	gss.app.addGameServer(gss)
 
@@ -55,6 +67,29 @@ func (gss *GameServerService) RegisterGameServer(in *gameServerService.RegisterG
 	}
 
 	return nil, nil
+}
+
+func (gss *GameServerService) doInitGroupId(serverId int) {
+	appLog.Info("start do init group id~", serverId)
+	common.AfterInitMapleServer(func() {
+		if !gss.initGroupId(int(serverId)) {
+			gss.doInitGroupId(serverId)
+		}
+	})
+}
+
+func (gss *GameServerService) initGroupId(serverId int) bool {
+	appLog.Info("start init group id~", serverId)
+	gss.app.groupIdMutex.Lock()
+	defer gss.app.groupIdMutex.Unlock()
+	groupId, ok := common.GetGameServerGroup(serverId)
+	if !ok {
+		appLog.Warn("register server err: not found group id with serverId:", serverId)
+		return false
+	}
+	gss.app.groupId = groupId
+	gss.app.InitDatas()
+	return true
 }
 
 func (gss *GameServerService) ActiveTick(in *gameServerService.Void) (*gameServerService.Void, error) {

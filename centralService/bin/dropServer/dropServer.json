@@ -12,5 +12,6 @@
 	    "passwd": "123456",
 	    "db": "dropDB"
     },
-    "reportAddr":"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5"
+    "reportAddr":"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=4fbcabeb-ad3f-4157-8f49-21ab89a089b5",
+    "mapleHttpAddr":"127.0.0.1:9527"
 }

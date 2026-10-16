@@ -110,7 +110,8 @@ func (self *QueueApp) Start() {
 
 	self.httpServer = &HttpService{app: self}
 	go self.StartDebugService(QueueConfig.AddressForDebug)
-	self.waitMapServerMgr.Start()
+	// 排队不再下发等待服数据（预创角阶段由游戏服onReqAvatarList下发），后台刷新协程停用
+	//self.waitMapServerMgr.Start()
 	self.httpServer.startHttpServer(QueueConfig.HttpServer)
 }
 

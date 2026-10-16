@@ -31,6 +31,9 @@ type DropApp struct {
 	channelToHost map[uuid.UUID]*GameServerService
 	db            *sql.DB
 	dropItemLock  DropItemLocker
+	store         *dropStore // 2026-10-08 三表内存缓存 (cache-aside + write-through)
+	initedMutex   *sync.RWMutex
+	inited        bool
 }
 
 func NewDropApp() *DropApp {
@@ -55,9 +58,18 @@ func NewDropApp() *DropApp {
 		gameServers:   make(map[string]*GameServerService),
 		channelToHost: make(map[uuid.UUID]*GameServerService),
 		db:            db,
+		store:         newDropStore(db),
+		initedMutex:   &sync.RWMutex{},
+		inited:        false,
 	}
 
 	return &app
+}
+
+func (da *DropApp) CheckInited() bool {
+	da.initedMutex.RLock()
+	defer da.initedMutex.RUnlock()
+	return da.inited
 }
 
 func (da *DropApp) Start() {
@@ -70,6 +82,16 @@ func (da *DropApp) Start() {
 	}()
 
 	go da.StartDebugService(DropConfig.AddressForDebug)
+
+	common.AfterInitMapleServer(func() {
+		// 2026-10-08 从 mysql 加载活跃 drop/custody/reward 到内存 (恢复完整数据)
+		if err := da.store.LoadFromMySQL(); err != nil {
+			appLog.Error("DropApp.Start LoadFromMySQL failed: ", err.Error())
+		}
+		da.initedMutex.Lock()
+		defer da.initedMutex.Unlock()
+		da.inited = true
+	})
 
 	// 全局定时检查掉落过期与赎回过期
 	da.startDropExpireTimer()

@@ -1,0 +1,59 @@
+# ============================================================================
+#  逐服务配置覆盖
+#
+#  仓库里 bin/<服务名>/<服务名>.json 是业务配置的基线，deploy.env 负责统一
+#  的 MySQL / Redis 连接信息；剩下跟机器环境相关的键（对外广告地址、跨服
+#  地址、端口、回调地址等）在这里逐个覆盖，不需要改仓库里的 JSON。
+#
+#  语法：<服务名>[:<文件名>]:<点分键路径>=<合法 JSON 值>
+#    - 只作用于该服务的主配置 <服务名>.json
+#    - 要改副配置（如 centralLogin/serverList.json）必须显式写文件名，
+#      避免把覆盖无差别刷到该目录所有 JSON 上
+#    - 点分路径可穿透嵌套对象，例如 redisServer.maxIdle=32
+#    - 键不存在时自动创建
+#    - 值必须是合法 JSON：字符串加引号，数字/布尔/数组/对象照写
+#    - 井号后为注释，空行忽略
+#
+#  改完执行：sudo ./deploy/install.sh --skip-build
+# ============================================================================
+
+# --- 对外广告地址（多网卡/负载均衡场景必填）--------------------------------
+# router 会用这个地址做集群组播，其它实例据此互相发现
+#router:routerClusterAdvertiseAddr="10.0.0.5:2061"
+
+# admin 与 leaseServer 需要按 IP 反查 maple
+#admin:mapleHttpAddr="10.0.0.5:9527"
+#leaseServer:mapleHttpAddr="10.0.0.5:9527"
+
+# admin 下发指令要回调登录服的 idip 端口
+#admin:centralLoginCmdAddressList=["10.0.0.5:8999"]
+
+# --- 跨服 / 区服列表（副配置，必须写文件名）--------------------------------
+#centralLogin/serverList.json:gameServerList.20001="10.0.0.9:20013"
+#centralLogin/serverList.json:queueServerList.20001="10.0.0.9:7999"
+#centralLogin:auditServerId=20001
+
+# --- 端口调整（改完记得同步 instances.conf 的 probe_ports）------------------
+#orderService:gameServerServiceAddr="0.0.0.0:12011"
+#orderService:httpAddr="0.0.0.0:8888"
+
+# --- 支付回调地址 ----------------------------------------------------------
+#orderService:payNotifyApi="https://pay.example.com/api/order/v1/app_pay_notify"
+
+# --- 其它 ------------------------------------------------------------------
+# 调试端口（pprof）。生产建议绑 127.0.0.1，切勿对外暴露堆信息
+#auction:addressForDebug="127.0.0.1:8989"
+#allianceService:addressForDebug="127.0.0.1:9900"
+#leaseServer:AddressForDebug="127.0.0.1:9393"
+#centralLogin:addressForDebug="127.0.0.1:8989"
+#crossTeamServer:addressForDebug="127.0.0.1:8990"
+#crossDataServer:addressForDebug="127.0.0.1:8989"
+#dropServer:addressForDebug="127.0.0.1:8989"
+#maple:addressForDebug="127.0.0.1:8989"
+#queueServer:addressForDebug="127.0.0.1:8989"
+#router:addressForDebug="127.0.0.1:8989"
+#admin:addressForDebug="127.0.0.1:9292"
+
+# 日志级别 -1=Debug 0=Info 1=Warn 2=Error
+#auction:logLevel=0
+#orderService:logLevel=0

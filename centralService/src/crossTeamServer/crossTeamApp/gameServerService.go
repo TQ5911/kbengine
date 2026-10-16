@@ -105,6 +105,30 @@ func (gss *GameServerService) ReplyInvite(in *pb.ReplyInviteRequest) (*pb.Void, 
 	return nil, nil
 }
 
+// TeamUpInvite 无队邀请（邀请人无队伍时发起）：队伍尚不存在，按邀请人 gbId 投桶
+func (gss *GameServerService) TeamUpInvite(in *pb.TeamUpInviteRequest) (*pb.Void, error) {
+	gss.app.dispatcher.Dispatch(in.Inviter.GbId, "TeamUpInvite", func(w *teamWorker) {
+		gss.app.teamUpInvite(w, gss, in)
+	})
+	return nil, nil
+}
+
+// ReplyTeamUpInvite 无队邀请应答：按应答人 gbId 投桶
+func (gss *GameServerService) ReplyTeamUpInvite(in *pb.ReplyTeamUpInviteRequest) (*pb.Void, error) {
+	gss.app.dispatcher.Dispatch(in.Invitee.GbId, "ReplyTeamUpInvite", func(w *teamWorker) {
+		gss.app.replyTeamUpInvite(w, gss, in)
+	})
+	return nil, nil
+}
+
+// TeamUpJoinNotify 队伍就绪通知（邀请人已有队伍/刚建成）：按邀请人 gbId 投桶
+func (gss *GameServerService) TeamUpJoinNotify(in *pb.TeamUpJoinNotifyRequest) (*pb.Void, error) {
+	gss.app.dispatcher.Dispatch(in.InviterGbId, "TeamUpJoinNotify", func(w *teamWorker) {
+		gss.app.teamUpJoinNotify(w, gss, in)
+	})
+	return nil, nil
+}
+
 func (gss *GameServerService) LeaveTeam(in *pb.LeaveTeamRequest) (*pb.Void, error) {
 	gss.app.dispatcher.Dispatch(in.TeamId, "LeaveTeam", func(w *teamWorker) {
 		gss.app.leaveTeam(w, gss, in)
@@ -245,6 +269,18 @@ func (gss *GameServerService) ReportMemberState(in *pb.ReportMemberStateRequest)
 	return nil, nil
 }
 
+// ReportMemberStateBatch 成员状态批量上报（游戏服每 tick 一条，包内按队伍分子包）：
+// 接口层只做拆包，按 teamId 重新分发到对应 teamWorker
+func (gss *GameServerService) ReportMemberStateBatch(in *pb.ReportMemberStateBatchRequest) (*pb.Void, error) {
+	for _, teamState := range in.Teams {
+		sub := teamState
+		gss.app.dispatcher.Dispatch(sub.TeamId, "ReportMemberState", func(w *teamWorker) {
+			gss.app.reportMemberState(w, gss, sub)
+		})
+	}
+	return nil, nil
+}
+
 func (gss *GameServerService) MemberOffline(in *pb.MemberOfflineRequest) (*pb.Void, error) {
 	gss.app.dispatcher.Dispatch(in.TeamId, "MemberOffline", func(w *teamWorker) {
 		gss.app.memberOffline(w, in)
@@ -303,6 +339,7 @@ func (gss *GameServerService) TeamChatMsg(in *pb.TeamChatMsgRequest) (*pb.Void, 
 		SenderLevel:      in.SenderLevel,
 		SenderSex:        in.SenderSex,
 		SenderPicFrameId: in.SenderPicFrameId,
+		SenderEntId:      in.SenderEntId,
 	})
 	return nil, nil
 }
@@ -359,6 +396,14 @@ func (gss *GameServerService) SetOnlyCaptainMark(in *pb.SetOnlyCaptainMarkReques
 func (gss *GameServerService) FollowAsk(in *pb.FollowAskRequest) (*pb.Void, error) {
 	gss.app.dispatcher.Dispatch(in.TeamId, "FollowAsk", func(w *teamWorker) {
 		gss.app.followAsk(w, gss, in)
+	})
+	return nil, nil
+}
+
+// ConvertTeam 小队转团队：以旧 teamId 为 key 投入旧 worker（两阶段交接见 teamOps.go convertTeam）
+func (gss *GameServerService) ConvertTeam(in *pb.ConvertTeamRequest) (*pb.Void, error) {
+	gss.app.dispatcher.Dispatch(in.TeamId, "ConvertTeam", func(w *teamWorker) {
+		gss.app.convertTeam(w, gss, in)
 	})
 	return nil, nil
 }

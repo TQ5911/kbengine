@@ -1,5 +1,12 @@
 package Auction
 
+import (
+	"centralService/src/appLog"
+	"fmt"
+	"strconv"
+	"strings"
+)
+
 const (
 	_ = iota
 	SERVICE_CLIENT_AUTH
@@ -52,10 +59,13 @@ const (
 	AUCTION_CANNOT_BUY_SELF_ITEM         = 20039 // 交易行无法购买自己卖出的商品
 	AUCTION_PLAYER_MAIL_SPACE_FULL       = 20040 // 玩家邮件剩余空间不足
 	AUCTION_SALED_ITEM_REJECTED          = 20041 // 交易行对应物品无法出售
-	AUCTION_ITEM_IS_IN_PUBLICITY         = 20042 // 交易行物品正在公示期
 	AUCTION_ITEM_IS_NOT_IN_SNATCH        = 20046 // 交易行物品正不在抢购期
 	AUCTION_ITEM_IS_SELF_SALE            = 20048 // 自己的商品不能购买
 	AUCTION_ITEM_IS_NOT_IN_SELLING       = 20049 // 交易行物品不在出售状态
+	AUCTION_SNATCH_PARTICIPATE_SUCCESS   = 20050 // 交易行物品抢购成功参与
+	AUCTION_SNATCH_PARTICIPATE_REPEAT    = 20051 // 交易行物品抢购重复参与
+	AUCTION_ITEM_IS_IN_PUBLICITY         = 20052 // 交易行物品正在公示期
+	AUCTION_ITEM_IS_IN_SNATCH            = 20053 // 交易行物品正在抢购
 )
 
 const (
@@ -143,6 +153,29 @@ func DirectUInt32Sharding(key uint32) uint32 {
 // 64位的hash函数
 func DirectUInt64Sharding(key uint64) uint32 {
 	return uint32(key) ^ uint32(key>>32)
+}
+
+func GetPriceItemKey(serverId uint32, itemId uint32) string {
+	return fmt.Sprintf("%v_%v", serverId, itemId)
+}
+
+func SpilitPriceItemKey(dataKey string) (uint32, uint32) {
+	datas := strings.Split(dataKey, "_")
+	if len(datas) != 2 {
+		appLog.Error("SpilitPriceItemKey, dataKey is error ", dataKey)
+		return 0, 0
+	}
+	serverId, err := strconv.Atoi(datas[0])
+	if err != nil {
+		appLog.Error("SpilitPriceItemKey, serverId is error ", dataKey)
+		return 0, 0
+	}
+	itemId, err := strconv.Atoi(datas[1])
+	if err != nil {
+		appLog.Error("SpilitPriceItemKey, itemId is error ", dataKey)
+		return 0, 0
+	}
+	return uint32(serverId), uint32(itemId)
 }
 
 var ConfigStore *CfgData

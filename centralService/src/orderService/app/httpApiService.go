@@ -21,18 +21,19 @@ import (
 )
 
 const (
-	SUCCESS          = 0
-	SERVER_NOT_EXIST = -1000
-	PLAYER_NOT_EXIST = -1001
-	REDIS_ERROR      = -1002
-	MYSQL_ERROR      = -1003
-	IN_PROCESSING    = -1004
-	IN_DELIVERY      = -1005
-	SIGN_ERR         = -1006
-	ARGS_ERR         = -1007
-	SERVER_ERROR     = -1008
-	SERVER_MISSING   = -1009
-	ITEM_CFG_MISSING = -1010
+	SUCCESS              = 0
+	SERVER_NOT_EXIST     = -1000
+	PLAYER_NOT_EXIST     = -1001
+	REDIS_ERROR          = -1002
+	MYSQL_ERROR          = -1003
+	IN_PROCESSING        = -1004
+	IN_DELIVERY          = -1005
+	SIGN_ERR             = -1006
+	ARGS_ERR             = -1007
+	SERVER_ERROR         = -1008
+	SERVER_MISSING       = -1009
+	ITEM_CFG_MISSING     = -1010
+	SERVER_IS_NOT_INITED = -1011
 )
 
 type CommandRequest struct {

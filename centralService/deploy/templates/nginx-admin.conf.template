@@ -1,0 +1,91 @@
+# ============================================================================
+#  admin（GMT 后台）nginx 反向代理模板
+#
+#  admin 的四个监听端口（见 bin/admin/admin.json）：
+#    2050  addressForGMT    grpc-web 封装，浏览器端访问走这里（HTTP/1.1）
+#    2051  AddreesForGRPC   原生 gRPC，供其它服务/工具调用
+#    8080  httpAPIAddress   HTTP 指令接口
+#    8081  httpSDKAddress   HTTP SDK 接口
+#    2040  addressForGameServer  游戏服长连接，不对外
+#
+#  仅在需要统一域名 + TLS 时使用：install.sh --install-nginx
+#  模板里的端口占位符由 install.sh 从渲染后的 admin.json 里读取，
+#  所以 overrides.conf 改了端口，这里的反代目标会自动跟着变。
+#  路由前缀（/api/ /sdk/）按 admin 实际注册的路径调整。
+# ============================================================================
+
+upstream centralsvc_admin_gmt {
+    server 127.0.0.1:@ADMIN_GMT_PORT@;
+    keepalive 16;
+}
+
+upstream centralsvc_admin_http {
+    server 127.0.0.1:@ADMIN_HTTP_PORT@;
+    keepalive 16;
+}
+
+upstream centralsvc_admin_sdk {
+    server 127.0.0.1:@ADMIN_SDK_PORT@;
+}
+
+# HTTP 一律跳 HTTPS
+server {
+    listen 80;
+    listen [::]:80;
+    server_name @ADMIN_HOSTNAME@;
+
+    location /.well-known/acme-challenge/ { root /var/www/certbot; }
+    location / { return 301 https://$host$request_uri; }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+    server_name @ADMIN_HOSTNAME@;
+
+    ssl_certificate     @SSL_CERT@;
+    ssl_certificate_key @SSL_KEY@;
+    ssl_protocols       TLSv1.2 TLSv1.3;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
+    ssl_session_cache   shared:SSL:10m;
+    ssl_session_timeout 10m;
+
+    add_header Strict-Transport-Security "max-age=31536000" always;
+    add_header X-Content-Type-Options    "nosniff" always;
+    add_header X-Frame-Options           "SAMEORIGIN" always;
+
+    # grpc-web 走 HTTP/1.1，不需要 grpc_pass，但要放开长连接与长请求体
+    location / {
+        proxy_pass         http://centralsvc_admin_gmt;
+        proxy_http_version 1.1;
+        proxy_set_header   Host              $host;
+        proxy_set_header   X-Real-IP         $remote_addr;
+        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        proxy_set_header   Connection        "";
+        proxy_read_timeout 300s;
+        proxy_send_timeout 300s;
+        client_max_body_size 32m;
+    }
+
+    location /api/ {
+        proxy_pass         http://centralsvc_admin_http;
+        proxy_http_version 1.1;
+        proxy_set_header   Host              $host;
+        proxy_set_header   X-Real-IP         $remote_addr;
+        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        proxy_read_timeout 60s;
+    }
+
+    location /sdk/ {
+        proxy_pass       http://centralsvc_admin_sdk;
+        proxy_set_header Host            $host;
+        proxy_set_header X-Real-IP       $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    # pprof 调试端口只监听 127.0.0.1，这里不暴露，如需排查用 SSH 隧道
+    location /debug/ { deny all; }
+}

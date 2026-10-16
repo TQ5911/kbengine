@@ -1222,6 +1222,20 @@ func (self *HttpCommandService) corsMiddleware(next http.HandlerFunc) http.Handl
 	}
 }
 
+func (self *HttpCommandService) handleTest(w http.ResponseWriter, r *http.Request) {
+	groups := common.GetAllGameServerGroups()
+	mergeMap := common.GetAllGameServerMergeMap()
+	appLog.Infof("test handler: gameServerGroups=%d servers, mergeMap=%d entries", len(groups), len(mergeMap))
+	for sid, root := range mergeMap {
+		group, hasGroup := groups[sid]
+		appLog.Infof("test handler: serverId=%d group=%d(known=%v) mergeRoot=%d", sid, group, hasGroup, root)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`{"result":0,"msg":"ok"}`))
+}
+
 func (self *HttpCommandService) startHttpApiServer(listenAddr string) {
 	// 启动幂等缓存周期清理协程，扫描并删除已过期的条目，避免长期运行内存膨胀
 	go self.idempotencyJanitor(idempotencyCleanupInterval)
@@ -1235,6 +1249,7 @@ func (self *HttpCommandService) startHttpApiServer(listenAddr string) {
 	http.HandleFunc("/queryRoleId", self.corsMiddleware(self.handleQueryRoleId))
 	http.HandleFunc("/getAvatarServerId", self.corsMiddleware(self.handleGetAvatarServerId))
 	http.HandleFunc("/doAllCmd", self.corsMiddleware(self.handleHttpAddSkuIdRequest)) //仅支持skuId设置
+	http.HandleFunc("/test", self.corsMiddleware(self.handleTest))
 	err := http.ListenAndServe(listenAddr, nil)
 	if err != nil {
 		appLog.Error("fail to serve at", listenAddr)

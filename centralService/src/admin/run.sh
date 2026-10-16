@@ -1,3 +1,3 @@
 bash build.sh
 cd ../../bin/admin/
-./admin
+bash game.sh restart

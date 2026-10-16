@@ -4,11 +4,13 @@ import (
 	"bytes"
 	"centralService/src/appLog"
 	gameServerService "centralService/src/auction/auctionApp/gameServerService"
+	"centralService/src/common"
 	cmap "centralService/src/common/concurrent_map"
 	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math/rand"
 	"strconv"
 	"sync"
 	"time"
@@ -22,15 +24,147 @@ var itemDataPool = sync.Pool{
 	},
 }
 
-func convert(i interface{}) (uint64, error) {
-	switch v := i.(type) {
-	case uint32:
-		return uint64(v), nil
-	case uint64:
-		return v, nil
-	default:
-		return 0, fmt.Errorf("invalid type: %T", v)
+// === 2026-09-21 抢购迁移 v3:抽签桶结构与全局索引 ===
+
+// SnatchReason 抢购退款原因 (与 proto SnatchRefundItem.reason 对应)
+type SnatchReason uint32
+
+const (
+	SnatchReasonNotLucky SnatchReason = 1 // 未中签
+	SnatchReasonTimeout  SnatchReason = 2 // 超时退款 (本期未使用)
+	SnatchReasonOffline  SnatchReason = 3 // 微服务下线退款 (本期未使用)
+)
+
+// SnatchRec 单个玩家的抢购参与记录
+type SnatchRec struct {
+	PlayerGBID uint64
+	RoleName   string
+	OpUUID     int64
+	InTime     int64
+	ServerId   uint32
+	// 2026-10-08 抢购权重快照(普通玩家=1000,推广者=1100);openSnatch 抽签时按此权重抽样
+	SnatchWeight int64
+	Extra        string
+}
+
+// SnatchBucket 每个拍卖物品的抢购参与桶
+type SnatchBucket struct {
+	AuctionItemUUID  uint64
+	ItemId           uint32
+	Price            uint64
+	Number           uint32
+	PublicityEndTime int64
+	Opened           bool                  // 抽签是否已执行
+	WinnerGBID       uint64                // 0 = 未抽或无人参与
+	Records          map[uint64]*SnatchRec // gbID → 参与记录
+	OpenTimer        *time.Timer           // 抽签调度 (用于崩溃重挂)
+	mu               sync.Mutex
+}
+
+// snatchBuckets 全局桶索引 auctionItemUUID → bucket
+var snatchBuckets = cmap.NewWithCustomShardingFunction[uint64, *SnatchBucket](DirectUInt64Sharding)
+
+func (am *AuctionMgr) checkSnatchBucket(auctionItemUUID uint64) bool {
+	if b, ok := snatchBuckets.Get(auctionItemUUID); ok && b != nil {
+		b.mu.Lock()
+		defer b.mu.Unlock()
+		return len(b.Records) > 0
 	}
+	return false
+}
+
+func (am *AuctionMgr) checkSnatchPlayer(auctionItemUUID uint64, playerGbId uint64) bool {
+	if b, ok := snatchBuckets.Get(auctionItemUUID); ok && b != nil {
+		b.mu.Lock()
+		defer b.mu.Unlock()
+		if _, ok := b.Records[playerGbId]; ok {
+			return true
+		}
+	}
+	return false
+}
+
+// getOrCreateSnatchBucket 获取或创建桶
+func (am *AuctionMgr) getOrCreateSnatchBucket(item *AuctionItem) (*SnatchBucket, int) {
+	if b, ok := snatchBuckets.Get(item.AuctionItemUUID); ok && b != nil {
+		b.mu.Lock()
+		defer b.mu.Unlock()
+		return b, len(b.Records)
+	}
+	b := &SnatchBucket{
+		AuctionItemUUID:  item.AuctionItemUUID,
+		ItemId:           item.ItemData.ItemId,
+		Price:            item.Price,
+		Number:           item.Number,
+		PublicityEndTime: item.GetPublicityEndTime(),
+		Records:          make(map[uint64]*SnatchRec),
+	}
+	res := snatchBuckets.Upsert(item.AuctionItemUUID, b, func(exist bool, valueInMap, newValue *SnatchBucket) *SnatchBucket {
+		if exist {
+			return valueInMap
+		}
+		return newValue
+	})
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	return res, len(b.Records)
+}
+
+// getOrCreateSnatchBucket 获取或创建桶
+func (am *AuctionMgr) popSnatchBucket(item *AuctionItem) (*SnatchBucket, int) {
+	data, ok := snatchBuckets.Pop(item.AuctionItemUUID)
+	if ok {
+		return data, len(data.Records)
+	}
+	return nil, 0
+}
+
+// maybeRecordSnatchParticipation v3 拦截点:
+// DoBuyItem 调用此函数检查是否在 SNATCH 期间.
+// 是 → 在 bucket.Records 中登记,return true (DoBuyItem 伪成交返回)
+// 否 → return false (DoBuyItem 走正常流)
+// snatchWeight = 0 由 game server 兜底改成默认值 DEFAULT_SNATCH_WEIGHT(1000)
+func (am *AuctionMgr) maybeRecordSnatchParticipation(auctionItem *AuctionItem, serverId uint32, playerGBID uint64, extra string, snatchWeight int64) bool {
+	if !auctionItem.CheckInSnatch() {
+		// 抢购时间过了
+		return false
+	}
+	// 解析 extra:尽力取 role_name + opUUID(失败给空也无所谓,只影响退款文案)
+	var m map[string]interface{}
+	roleName := ""
+	opUUID := int64(0)
+	if json.Unmarshal([]byte(extra), &m) == nil {
+		if tlogProps, ok := m["tlogProps"].(map[string]interface{}); ok {
+			if rn, ok := tlogProps["role_name"].(string); ok {
+				roleName = rn
+			}
+		}
+		opUUID = int64(m["opUUID"].(float64))
+	}
+
+	bucket, _ := am.getOrCreateSnatchBucket(auctionItem)
+	bucket.mu.Lock()
+	defer bucket.mu.Unlock()
+	if bucket.Opened {
+		// 已开始了
+		return false
+	}
+	_, exists := bucket.Records[playerGBID]
+	if exists {
+		// 已参与了
+		return false
+	}
+
+	bucket.Records[playerGBID] = &SnatchRec{
+		PlayerGBID:   playerGBID,
+		RoleName:     roleName,
+		OpUUID:       opUUID,
+		InTime:       time.Now().Unix(),
+		ServerId:     serverId,
+		SnatchWeight: snatchWeight,
+		Extra:        extra,
+	}
+	return true
 }
 
 //func getAuctionItemEndTime(itemId string) (uint32, error) {
@@ -249,6 +383,12 @@ func (a *AuctionItem) unLock() {
 	}
 }
 
+func (a *AuctionItem) checkLockedId(lockedId uint64) bool {
+	a.mu.RLock()
+	defer a.mu.RUnlock()
+	return a.Locked != 0 && a.LockPlayerGBID == lockedId
+}
+
 func (a *AuctionItem) isLocked(lockedId uint64) bool {
 	a.mu.RLock()
 	defer a.mu.RUnlock()
@@ -298,7 +438,7 @@ func (a *AuctionItem) CheckInSelling() bool {
 
 func (a *AuctionItem) CheckInSnatch() bool {
 	curTime := time.Now().Unix()
-	return a.GetPublicityEndTime()-a.getSnatchTime()-2 <= curTime && curTime <= a.GetPublicityEndTime()+2
+	return a.GetPublicityEndTime()-a.getSnatchTime()-2 <= curTime && curTime <= a.GetPublicityEndTime()
 }
 
 func (a *AuctionItem) CheckInPublicity() bool {
@@ -333,8 +473,8 @@ func (a *AuctionItem) setStatus(status uint8, db *sql.DB, isInit bool) error {
 }
 
 func (a *AuctionItem) Add(db *sql.DB, status uint8) error {
-	sql := "INSERT INTO `auction_auctionItemData` (`auctionType`, `auctionItemUUID`, `addTime`, `itemData_itemId`, `itemData_itemNum`, `itemData_createTime`, `itemData_expireTime`, `itemData_uniqueId`, `itemData_bindType`, `itemData_attrJson`, `price`, `number`, `bagType`, `source`, `status`, `locked`, `extraInfo`, `tCreate`, `fromPlayerGBID`, `addPublicityTime`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	_, err := db.Exec(sql, a.AuctionType, a.AuctionItemUUID, a.AddTime, a.ItemData.ItemId, a.ItemData.ItemNum, a.ItemData.CreateTime, a.ItemData.ExpireTime, a.ItemData.UniqueId, a.ItemData.BindType, a.ItemData.AttrJson, a.Price, a.Number, a.BagType, a.Source, status, a.Locked, a.ExtraInfo, a.TCreate, a.FromPlayerGBID, a.AddPublicityTime)
+	sql := "INSERT INTO `auction_auctionItemData` (`serverId`, `auctionType`, `auctionItemUUID`, `addTime`, `itemData_itemId`, `itemData_itemNum`, `itemData_createTime`, `itemData_expireTime`, `itemData_uniqueId`, `itemData_bindType`, `itemData_attrJson`, `price`, `number`, `bagType`, `source`, `status`, `locked`, `extraInfo`, `tCreate`, `fromPlayerGBID`, `addPublicityTime`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	_, err := db.Exec(sql, a.ServerId, a.AuctionType, a.AuctionItemUUID, a.AddTime, a.ItemData.ItemId, a.ItemData.ItemNum, a.ItemData.CreateTime, a.ItemData.ExpireTime, a.ItemData.UniqueId, a.ItemData.BindType, a.ItemData.AttrJson, a.Price, a.Number, a.BagType, a.Source, status, a.Locked, a.ExtraInfo, a.TCreate, a.FromPlayerGBID, a.AddPublicityTime)
 	if err != nil {
 		appLog.Error("Add AuctionItem Exec err:", err)
 		return err
@@ -404,12 +544,13 @@ type DailyPrice struct {
 }
 
 type AuctionItemAvgRecord struct {
-	itemId     uint32
-	totalPrice uint64
-	number     uint64
-	avgPrice   float32
-
-	recentPrices []DailyPrice
+	serverId       uint32
+	itemId         uint32
+	totalPrice     uint64
+	number         uint64
+	avgPrice       float32
+	lastUpdateTime int64
+	recentPrices   []DailyPrice
 }
 
 func (a *AuctionItemAvgRecord) GetRecentAvgPrice(days int) float32 {
@@ -434,7 +575,7 @@ func (a *AuctionItemAvgRecord) GetRecentAvgPrice(days int) float32 {
 	return float32(avgPrice)
 }
 
-func (a *AuctionItemAvgRecord) Update(db *sql.DB) error {
+func (a *AuctionItemAvgRecord) Update(db *sql.DB, isDailyReset bool) error {
 	jsonBytes, err := json.Marshal(a.recentPrices)
 	if err != nil {
 		appLog.Error("AuctionItemAvgRecord Update marshal recentPrices error: ", err.Error(), " itemId", a.itemId)
@@ -442,10 +583,18 @@ func (a *AuctionItemAvgRecord) Update(db *sql.DB) error {
 	}
 
 	var buf bytes.Buffer
-	buf.WriteString("UPDATE `auction_priceRecord_avgPrices` SET `totalPrice`=?, `number`=?, `avgPrice`=?, recentPrices=? WHERE `itemId`=?")
-	query := buf.String()
+	if isDailyReset {
+		buf.WriteString("UPDATE `auction_priceRecord_avgPrices` SET `tLastUpdateTime`=?, `totalPrice`=?, `number`=?, `avgPrice`=?, recentPrices=? WHERE `itemId`=? and `serverId`=?")
+		query := buf.String()
 
-	_, err = db.Exec(query, a.totalPrice, a.number, a.avgPrice, string(jsonBytes), a.itemId)
+		_, err = db.Exec(query, a.lastUpdateTime, a.totalPrice, a.number, a.avgPrice, string(jsonBytes), a.itemId, a.serverId)
+	} else {
+		buf.WriteString("UPDATE `auction_priceRecord_avgPrices` SET `totalPrice`=?, `number`=?, `avgPrice`=?, recentPrices=? WHERE `itemId`=? and `serverId`=?")
+		query := buf.String()
+
+		_, err = db.Exec(query, a.totalPrice, a.number, a.avgPrice, string(jsonBytes), a.itemId, a.serverId)
+	}
+
 	if err != nil {
 		appLog.Error("AuctionItemAvgRecord Update error: ", err.Error(), " itemId", a.itemId)
 		return err
@@ -461,7 +610,7 @@ func (a *AuctionItemAvgRecord) Insert(db *sql.DB) error {
 		return err
 	}
 
-	stmt, err := db.Prepare("INSERT INTO `auction_priceRecord_avgPrices` (`itemId`, `totalPrice`, `number`, `avgPrice`, `recentPrices`) VALUES (?, ?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO `auction_priceRecord_avgPrices` (`serverId`, `itemId`, `totalPrice`, `number`, `avgPrice`, `recentPrices`) VALUES (?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		appLog.Error("AuctionItemAvgRecord Insert error: ", err.Error(), " itemId: ", a.itemId)
 		return err
@@ -469,7 +618,7 @@ func (a *AuctionItemAvgRecord) Insert(db *sql.DB) error {
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(a.itemId, a.totalPrice, a.number, a.avgPrice, string(jsonBytes))
+	_, err = stmt.Exec(a.serverId, a.itemId, a.totalPrice, a.number, a.avgPrice, string(jsonBytes))
 	if err != nil {
 		appLog.Error("AuctionItemAvgRecord Insert error: ", err.Error(), " itemId: ", a.itemId)
 		return err
@@ -499,12 +648,13 @@ func (a *AuctionItemAvgRecord) GetAvgPrice() (float32, float32) {
 }
 
 type AuctionItemLastRecord struct {
-	itemId uint32
-	price  float32
+	serverId uint32
+	itemId   uint32
+	price    float32
 }
 
 func (a *AuctionItemLastRecord) Update(db *sql.DB) error {
-	stmt, err := db.Prepare("UPDATE `auction_priceRecord_lastPrices` SET `price`=? WHERE `itemId`=?")
+	stmt, err := db.Prepare("UPDATE `auction_priceRecord_lastPrices` SET `price`=? WHERE `itemId`=? and `serverId`=?")
 	if err != nil {
 		appLog.Error("AuctionItemLastRecord Update error: ", err.Error(), " itemId: ", a.itemId)
 		return err
@@ -512,7 +662,7 @@ func (a *AuctionItemLastRecord) Update(db *sql.DB) error {
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(a.price, a.itemId)
+	_, err = stmt.Exec(a.price, a.itemId, a.serverId)
 	if err != nil {
 		appLog.Error("AuctionItemLastRecord Update error: ", err.Error(), " itemId: ", a.itemId)
 		return err
@@ -522,7 +672,7 @@ func (a *AuctionItemLastRecord) Update(db *sql.DB) error {
 }
 
 func (a *AuctionItemLastRecord) Insert(db *sql.DB) error {
-	stmt, err := db.Prepare("INSERT INTO `auction_priceRecord_lastPrices` (`itemId`, `price`) VALUES (?, ?)")
+	stmt, err := db.Prepare("INSERT INTO `auction_priceRecord_lastPrices` (`serverId`, `itemId`, `price`) VALUES (?, ?, ?)")
 	if err != nil {
 		appLog.Error("AuctionItemLastRecord Insert error: ", err.Error(), " itemId: ", a.itemId)
 		return err
@@ -530,7 +680,7 @@ func (a *AuctionItemLastRecord) Insert(db *sql.DB) error {
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(a.itemId, a.price)
+	_, err = stmt.Exec(a.serverId, a.itemId, a.price)
 	if err != nil {
 		appLog.Error("AuctionItemLastRecord Insert error: ", err.Error(), " itemId: ", a.itemId)
 		return err
@@ -540,47 +690,114 @@ func (a *AuctionItemLastRecord) Insert(db *sql.DB) error {
 }
 
 type AuctionPriceRecords struct {
-	itemAvgPriceRecords map[uint32]*AuctionItemAvgRecord
+	itemAvgPriceRecords map[string]*AuctionItemAvgRecord
 	avgPriceLock        *sync.RWMutex
-	itemLastPriceData   map[uint32]*AuctionItemLastRecord
+	itemLastPriceData   map[string]*AuctionItemLastRecord
 	rcdPriceLock        *sync.RWMutex
 }
 
-func (a *AuctionPriceRecords) GetItemAvgPrice(itemId uint32) (float32, float32) {
+func (a *AuctionPriceRecords) GetAllItemPriceInfos() []*gameServerService.ItemPriceInfo {
+	avgPrices := make(map[uint32]float32, 0)
+	recentPrices := make(map[uint32]float32, 0)
+	priceCounts := make(map[uint32]float32, 0)
+	for itemIdData, auctionItemRecord := range a.itemAvgPriceRecords {
+		_, itemId := SpilitPriceItemKey(itemIdData)
+		if itemId == 0 {
+			continue
+		}
+
+		avgPrice, recentPrice := auctionItemRecord.GetAvgPrice()
+
+		a, ok := avgPrices[itemId]
+		if ok {
+			a += avgPrice
+		}
+		avgPrices[itemId] = a
+
+		b, ok := recentPrices[itemId]
+		if ok {
+			b += recentPrice
+		}
+
+		recentPrices[itemId] = b
+		c, ok := priceCounts[itemId]
+		if ok {
+			c += 1
+		}
+
+		priceCounts[itemId] = c
+	}
+
+	var priceInfoList []*gameServerService.ItemPriceInfo
+	for itemId, priceCount := range priceCounts {
+		if priceCount == 0 {
+			continue
+		}
+		avgPrice, _ := avgPrices[itemId]
+		recentPrice, _ := recentPrices[itemId]
+		priceInfoList = append(priceInfoList, &gameServerService.ItemPriceInfo{
+			ItemId:    itemId,
+			AvgPrice:  avgPrice / priceCount,
+			AvgPrice7: recentPrice / priceCount,
+		})
+	}
+
+	return priceInfoList
+}
+
+func (a *AuctionPriceRecords) GetItemAvgPrice(itemId uint32, serverIds []int) (float32, float32) {
 	a.avgPriceLock.RLock()
 	defer a.avgPriceLock.RUnlock()
-	itemAvgPriceRecord, ok := a.itemAvgPriceRecords[itemId]
-	if !ok {
-		return 0, 0
+	batchCount := 0
+	totalAvgPrice := float32(0)
+	totalRecentPrice := float32(0)
+	for _, serverId := range serverIds {
+		itemAvgPriceRecord, ok := a.itemAvgPriceRecords[GetPriceItemKey(uint32(serverId), itemId)]
+		if !ok {
+			continue
+		}
+		a, b := itemAvgPriceRecord.GetAvgPrice()
+		totalAvgPrice += a
+		totalRecentPrice += b
+		batchCount++
 	}
-
-	return itemAvgPriceRecord.GetAvgPrice()
+	if batchCount > 0 {
+		totalAvgPrice /= float32(batchCount)
+		totalRecentPrice /= float32(batchCount)
+	}
+	return totalAvgPrice, totalRecentPrice
 }
 
-func (a *AuctionPriceRecords) GetItemLastPrice(itemId uint32) float32 {
+func (a *AuctionPriceRecords) GetItemLastPrice(itemId uint32, serverIds []int) float32 {
 	a.rcdPriceLock.RLock()
 	defer a.rcdPriceLock.RUnlock()
-	if _, ok := a.itemLastPriceData[itemId]; !ok {
-		return 0
+	totalPrice := 0
+	for _, serverId := range serverIds {
+		d, ok := a.itemLastPriceData[GetPriceItemKey(uint32(serverId), itemId)]
+		if ok {
+			totalPrice += int(d.price)
+		}
 	}
-
-	return a.itemLastPriceData[itemId].price
+	return float32(totalPrice)
 }
 
-func (a *AuctionPriceRecords) AddAvgPriceRecord(itemId uint32, price uint64, number uint32, app *AuctionApp) {
+func (a *AuctionPriceRecords) AddAvgPriceRecord(serverId uint32, itemId uint32, price uint64, number uint32, app *AuctionApp) {
 	a.avgPriceLock.Lock()
-	itemAvgPriceRecord, ok := a.itemAvgPriceRecords[itemId]
+	defer a.avgPriceLock.Unlock()
+	dataKey := GetPriceItemKey(serverId, itemId)
+	itemAvgPriceRecord, ok := a.itemAvgPriceRecords[dataKey]
 	totalPrice := price
 	if !ok {
 		itemAvgPriceRecord = &AuctionItemAvgRecord{
+			serverId:     serverId,
 			itemId:       itemId,
 			totalPrice:   totalPrice,
 			number:       uint64(number),
 			avgPrice:     0.0,
 			recentPrices: make([]DailyPrice, 0),
 		}
-		a.itemAvgPriceRecords[itemId] = itemAvgPriceRecord
-		a.avgPriceLock.Unlock()
+		a.itemAvgPriceRecords[dataKey] = itemAvgPriceRecord
+
 		err := itemAvgPriceRecord.Insert(app.db)
 		if err != nil {
 			appLog.Error("AuctionPriceRecords AddAvgPriceRecord error: ", err.Error(), " itemId: ", itemId)
@@ -590,7 +807,6 @@ func (a *AuctionPriceRecords) AddAvgPriceRecord(itemId uint32, price uint64, num
 	} else {
 		itemAvgPriceRecord.totalPrice += totalPrice
 		itemAvgPriceRecord.number += uint64(number)
-		a.avgPriceLock.Unlock()
 		itemIdStr := strconv.FormatUint(uint64(itemId), 10)
 		if _, ok := app.auctionMgr.updateTimerMap.Get(itemIdStr); ok {
 			appLog.Debug("AddAvgPriceRecord: timer already exist")
@@ -601,7 +817,7 @@ func (a *AuctionPriceRecords) AddAvgPriceRecord(itemId uint32, price uint64, num
 			if ok {
 				app.auctionMgr.updateTimerMap.Remove(itemIdStr)
 			}
-			err := itemAvgPriceRecord.Update(app.db)
+			err := itemAvgPriceRecord.Update(app.db, false)
 			if err != nil {
 				appLog.Error("AuctionPriceRecords AddAvgPriceRecord error: ", err.Error(), " itemId: ", itemId)
 				return
@@ -611,14 +827,15 @@ func (a *AuctionPriceRecords) AddAvgPriceRecord(itemId uint32, price uint64, num
 	}
 }
 
-func (a *AuctionPriceRecords) AddLastPriceRecord(itemId uint32, price float32, db *sql.DB) {
+func (a *AuctionPriceRecords) AddLastPriceRecord(serverId uint32, itemId uint32, price float32, db *sql.DB) {
 	var oldPrice float32 = 0
 	a.rcdPriceLock.Lock()
 	defer a.rcdPriceLock.Unlock()
-	auctionItemRecord, ok := a.itemLastPriceData[itemId]
+	dataKey := GetPriceItemKey(serverId, itemId)
+	auctionItemRecord, ok := a.itemLastPriceData[dataKey]
 	if !ok {
-		auctionItemRecord = &AuctionItemLastRecord{itemId: itemId, price: price}
-		a.itemLastPriceData[itemId] = auctionItemRecord
+		auctionItemRecord = &AuctionItemLastRecord{serverId: serverId, itemId: itemId, price: price}
+		a.itemLastPriceData[dataKey] = auctionItemRecord
 		err := auctionItemRecord.Insert(db)
 		if err != nil {
 			appLog.Error("AuctionPriceRecords AddLastPriceRecord error: ", err.Error(), " itemId: ", itemId)
@@ -675,9 +892,9 @@ type AuctionMgr struct {
 
 func NewAuctionMgr(db *sql.DB, app *AuctionApp) *AuctionMgr {
 	var priceRecord = &AuctionPriceRecords{
-		itemAvgPriceRecords: make(map[uint32]*AuctionItemAvgRecord),
+		itemAvgPriceRecords: make(map[string]*AuctionItemAvgRecord),
 		avgPriceLock:        &sync.RWMutex{},
-		itemLastPriceData:   make(map[uint32]*AuctionItemLastRecord),
+		itemLastPriceData:   make(map[string]*AuctionItemLastRecord),
 		rcdPriceLock:        &sync.RWMutex{},
 	}
 
@@ -698,8 +915,6 @@ func NewAuctionMgr(db *sql.DB, app *AuctionApp) *AuctionMgr {
 		addCh:                     make(chan *CacheItem, 1000000),
 	}
 
-	auctionMgr.Init()
-
 	return auctionMgr
 }
 
@@ -707,6 +922,7 @@ const loadSize = 1000
 
 // Init 初始化拍卖行管理器
 func (am *AuctionMgr) Init() {
+	appLog.Info("start init auction data from db~")
 	am.isDBLoaded = false
 	go am.procAuctionItemIndex()
 	am._loadAuctionAllItemData()
@@ -715,6 +931,9 @@ func (am *AuctionMgr) Init() {
 	am._loadAuctionBlackListData()
 	am.onInitAuctionFromDB()
 	am.isDBLoaded = true
+	am.app.initedMutex.Lock()
+	defer am.app.initedMutex.Unlock()
+	am.app.inited = true
 }
 
 func (am *AuctionMgr) procAuctionItemIndex() {
@@ -739,7 +958,7 @@ func (am *AuctionMgr) _loadAuctionAvgPricesData() {
 		}
 
 		for _, auctionItemRecord := range auctionItemRecords {
-			am.priceRecord.itemAvgPriceRecords[auctionItemRecord.itemId] = auctionItemRecord
+			am.priceRecord.itemAvgPriceRecords[GetPriceItemKey(auctionItemRecord.serverId, auctionItemRecord.itemId)] = auctionItemRecord
 		}
 		offset += 1000
 	}
@@ -792,7 +1011,7 @@ func (am *AuctionMgr) loadAuctionBlackListFromDB(offset int) ([]uint64, error) {
 }
 
 func (am *AuctionMgr) loadAuctionItemRecordsFromDB(offset int) ([]*AuctionItemAvgRecord, error) {
-	stmt, err := am.db.Prepare("SELECT `itemId`, `totalPrice`, `number`, `avgPrice`, `recentPrices` FROM `auction_priceRecord_avgPrices` LIMIT ?, ?")
+	stmt, err := am.db.Prepare("SELECT `serverId`, `itemId`, `totalPrice`, `number`, `avgPrice`, `recentPrices`, `tLastUpdateTime` FROM `auction_priceRecord_avgPrices` LIMIT ?, ?")
 	if err != nil {
 		appLog.Error("loadAuctionItemRecordsFromDB err: ", err)
 		return nil, err
@@ -810,10 +1029,20 @@ func (am *AuctionMgr) loadAuctionItemRecordsFromDB(offset int) ([]*AuctionItemAv
 	for rows.Next() {
 		auctionItemRecord := &AuctionItemAvgRecord{}
 		var recentPricesJsonStr string
-		err = rows.Scan(&auctionItemRecord.itemId, &auctionItemRecord.totalPrice, &auctionItemRecord.number, &auctionItemRecord.avgPrice, &recentPricesJsonStr)
+		err = rows.Scan(&auctionItemRecord.serverId, &auctionItemRecord.itemId, &auctionItemRecord.totalPrice, &auctionItemRecord.number, &auctionItemRecord.avgPrice, &recentPricesJsonStr, &auctionItemRecord.lastUpdateTime)
 		if err != nil {
 			return nil, err
 		}
+
+		// 这里先去查找兑换的合服信息
+		serverId := common.GetGameServerMergeRoot(auctionItemRecord.serverId)
+		// 不是本组的，过滤掉
+		if !common.CheckServerIdInGroup(am.app.groupId, serverId) {
+			continue
+		}
+
+		auctionItemRecord.serverId = uint32(serverId)
+
 		if recentPricesJsonStr != "" {
 			err = json.Unmarshal([]byte(recentPricesJsonStr), &auctionItemRecord.recentPrices)
 			if err != nil {
@@ -845,14 +1074,14 @@ func (am *AuctionMgr) _loadAuctionLastPricesData() {
 			break
 		}
 		for _, auctionItemLastRecord := range auctionItemLastPriceRecords {
-			am.priceRecord.itemLastPriceData[auctionItemLastRecord.itemId] = auctionItemLastRecord
+			am.priceRecord.itemLastPriceData[GetPriceItemKey(auctionItemLastRecord.serverId, auctionItemLastRecord.itemId)] = auctionItemLastRecord
 		}
 		offset += 1000
 	}
 }
 
 func (am *AuctionMgr) loadAuctionItemLastRecordsFromDB(offset int) ([]*AuctionItemLastRecord, error) {
-	stmt, err := am.db.Prepare("SELECT `itemId`, `price` FROM `auction_priceRecord_lastPrices` LIMIT ?, ?")
+	stmt, err := am.db.Prepare("SELECT `serverId`, `itemId`, `price` FROM `auction_priceRecord_lastPrices` LIMIT ?, ?")
 	if err != nil {
 		appLog.Error("loadAuctionItemLastRecordsFromDB err: ", err)
 		return nil, err
@@ -869,11 +1098,19 @@ func (am *AuctionMgr) loadAuctionItemLastRecordsFromDB(offset int) ([]*AuctionIt
 	auctionItemLastPriceRecords := make([]*AuctionItemLastRecord, 0)
 	for rows.Next() {
 		auctionIteLastPriceRecord := &AuctionItemLastRecord{}
-		err = rows.Scan(&auctionIteLastPriceRecord.itemId, &auctionIteLastPriceRecord.price)
+		err = rows.Scan(&auctionIteLastPriceRecord.serverId, &auctionIteLastPriceRecord.itemId, &auctionIteLastPriceRecord.price)
 		if err != nil {
 			appLog.Error("loadAuctionItemLastRecordsFromDB err: ", err)
 			return nil, err
 		}
+		// 这里先去查找兑换的合服信息
+		serverId := common.GetGameServerMergeRoot(auctionIteLastPriceRecord.serverId)
+		// 不是本组的，过滤掉
+		if !common.CheckServerIdInGroup(am.app.groupId, serverId) {
+			continue
+		}
+		auctionIteLastPriceRecord.serverId = uint32(serverId)
+
 		auctionItemLastPriceRecords = append(auctionItemLastPriceRecords, auctionIteLastPriceRecord)
 	}
 
@@ -893,7 +1130,7 @@ func (am *AuctionMgr) _loadAuctionAllItemData() error {
 			// 加载的数据为空，说明数据已经加载完
 			break
 		}
-		//offset += 100000
+		//offset += 10000
 	}
 
 	return nil
@@ -901,7 +1138,7 @@ func (am *AuctionMgr) _loadAuctionAllItemData() error {
 
 func (am *AuctionMgr) loadAuctionItemsFromDB(lastId int) ([]*AuctionItem, int, error) {
 	var auctionItems []*AuctionItem
-	query := fmt.Sprintf("SELECT id, auctionType, auctionItemUUID, addTime, itemData_itemId, itemData_itemNum, itemData_createTime, itemData_expireTime, itemData_uniqueId, itemData_bindType, itemData_attrJson, price, number, bagType, source, status, locked, extraInfo, tCreate, fromPlayerGBID, addPublicityTime FROM auction_auctionItemData where id > %d order by id asc LIMIT 100000 ", lastId)
+	query := fmt.Sprintf("SELECT id, serverId, auctionType, auctionItemUUID, addTime, itemData_itemId, itemData_itemNum, itemData_createTime, itemData_expireTime, itemData_uniqueId, itemData_bindType, itemData_attrJson, price, number, bagType, source, status, locked, extraInfo, tCreate, fromPlayerGBID, addPublicityTime FROM auction_auctionItemData where id > %d order by id asc LIMIT 10000 ", lastId)
 	rows, err := am.db.Query(query)
 	if err != nil {
 		return auctionItems, lastId, err
@@ -912,11 +1149,19 @@ func (am *AuctionMgr) loadAuctionItemsFromDB(lastId int) ([]*AuctionItem, int, e
 		var itemData = ItemData{}
 
 		var ai = AuctionItem{ItemData: &itemData, mu: &sync.RWMutex{}, EquipExtraCache: make(map[string]int32)}
-		err := rows.Scan(&lastId, &ai.AuctionType, &ai.AuctionItemUUID, &ai.AddTime, &ai.ItemData.ItemId, &ai.ItemData.ItemNum, &ai.ItemData.CreateTime, &ai.ItemData.ExpireTime, &ai.ItemData.UniqueId, &ai.ItemData.BindType, &ai.ItemData.AttrJson, &ai.Price, &ai.Number, &ai.BagType, &ai.Source, &ai.Status, &ai.Locked, &ai.ExtraInfo, &ai.TCreate, &ai.FromPlayerGBID, &ai.AddPublicityTime)
+		err := rows.Scan(&lastId, &ai.ServerId, &ai.AuctionType, &ai.AuctionItemUUID, &ai.AddTime, &ai.ItemData.ItemId, &ai.ItemData.ItemNum, &ai.ItemData.CreateTime, &ai.ItemData.ExpireTime, &ai.ItemData.UniqueId, &ai.ItemData.BindType, &ai.ItemData.AttrJson, &ai.Price, &ai.Number, &ai.BagType, &ai.Source, &ai.Status, &ai.Locked, &ai.ExtraInfo, &ai.TCreate, &ai.FromPlayerGBID, &ai.AddPublicityTime)
 		if err != nil {
 			appLog.Error("loadAuctionItemsFromDB: Scan err", err)
 			return auctionItems, lastId, err
 		}
+
+		// 这里先去查找兑换的合服信息
+		serverId := common.GetGameServerMergeRoot(ai.ServerId)
+		// 不是本组的，过滤掉
+		if !common.CheckServerIdInGroup(am.app.groupId, serverId) {
+			continue
+		}
+		ai.ServerId = uint32(serverId)
 
 		ai.EachPrice = float32(ai.Price) / float32(ai.Number)
 		var m map[string]interface{}
@@ -926,12 +1171,6 @@ func (am *AuctionMgr) loadAuctionItemsFromDB(lastId int) ([]*AuctionItem, int, e
 			return auctionItems, lastId, err
 		}
 
-		if m["serverId"] != nil {
-			ai.ServerId = uint32(m["serverId"].(float64))
-		} else {
-			appLog.Error("loadAuctionItemsFromDB: serverId is nil")
-			ai.ServerId = 0
-		}
 		if v, ok := m[EQUIP_GRADE_LEVEL]; ok {
 			ai.EquipExtraCache[EQUIP_GRADE_LEVEL] = int32(v.(float64))
 		}
@@ -988,15 +1227,7 @@ func isDiffDay(tLastUpdateTime, tNow time.Time) bool {
 // 每天凌晨5点更新
 func (am *AuctionMgr) refreshDaily() {
 	tNow := time.Now()
-	lastUpdateTime, err := am.getTLastUpdateTime()
-	if err != nil {
-		appLog.Warn("refreshDaily: getTLastUpdateTime err", err)
-	} else {
-		if isDiffDay(time.Unix(lastUpdateTime, 0), tNow) {
-			am.refreshItemPriceData()
-			am.setTLastUpdateTime(tNow.Unix())
-		}
-	}
+	am.refreshItemPriceData(true)
 
 	curDay := time.Date(tNow.Year(), tNow.Month(), tNow.Day(), 5, 0, 0, 0, tNow.Location())
 	var duration time.Duration
@@ -1012,8 +1243,7 @@ func (am *AuctionMgr) refreshDaily() {
 		for {
 			<-ticker.C
 			appLog.Info("refreshDaily start")
-			am.refreshItemPriceData()
-			am.setTLastUpdateTime(tNow.Unix())
+			am.refreshItemPriceData(false)
 			am.app.broadcastAllItemsPriceInfoList()
 			appLog.Info("refreshDaily end")
 			ticker.Reset(24 * time.Hour)
@@ -1021,11 +1251,17 @@ func (am *AuctionMgr) refreshDaily() {
 	}()
 }
 
-func (am *AuctionMgr) refreshItemPriceData() {
+func (am *AuctionMgr) refreshItemPriceData(needDoubleCheck bool) {
+	curTime := time.Now()
 	am.priceRecord.avgPriceLock.Lock()
 	defer am.priceRecord.avgPriceLock.Unlock()
 	today := time.Now().Format("2006-01-02")
 	for _, auctionItemRecord := range am.priceRecord.itemAvgPriceRecords {
+		if needDoubleCheck {
+			if !isDiffDay(time.Unix(auctionItemRecord.lastUpdateTime, 0), curTime) {
+				continue
+			}
+		}
 		if auctionItemRecord.number > 0 {
 			auctionItemRecord.avgPrice = float32(auctionItemRecord.totalPrice) / float32(auctionItemRecord.number)
 			daily := DailyPrice{
@@ -1039,7 +1275,8 @@ func (am *AuctionMgr) refreshItemPriceData() {
 			if len(auctionItemRecord.recentPrices) > 30 {
 				auctionItemRecord.recentPrices = auctionItemRecord.recentPrices[1:]
 			}
-			err := auctionItemRecord.Update(am.db)
+			auctionItemRecord.lastUpdateTime = time.Now().Unix()
+			err := auctionItemRecord.Update(am.db, true)
 			if err != nil {
 				appLog.Error("refreshItemPriceData: Update err", err)
 			}
@@ -1051,16 +1288,7 @@ func (am *AuctionMgr) getAllItemsPriceInfoList() []*gameServerService.ItemPriceI
 	am.priceRecord.avgPriceLock.Lock()
 	defer am.priceRecord.avgPriceLock.Unlock()
 
-	var priceInfoList []*gameServerService.ItemPriceInfo
-	for itemId, auctionItemRecord := range am.priceRecord.itemAvgPriceRecords {
-		price, price7 := auctionItemRecord.GetAvgPrice()
-		priceInfoList = append(priceInfoList, &gameServerService.ItemPriceInfo{
-			ItemId:    itemId,
-			AvgPrice:  price,
-			AvgPrice7: price7,
-		})
-	}
-	return priceInfoList
+	return am.priceRecord.GetAllItemPriceInfos()
 }
 func (am *AuctionMgr) refreshAuctionIndexData() {
 	// 当前时间
@@ -1413,7 +1641,7 @@ func (am *AuctionMgr) AddAuctionItem(auctionType uint8, auctionItemUUID uint64, 
 	return auctionItem, nil
 }
 
-func (am *AuctionMgr) DeleteAuctionItem(auctionItemUUID uint64, isNeedRemoveIndex bool) error {
+func (am *AuctionMgr) DeleteAuctionItem(auctionItemUUID uint64) error {
 	auctionItem, err := am.GetAuctionItem(auctionItemUUID)
 	if err != nil {
 		return fmt.Errorf("auction item not found")
@@ -1446,9 +1674,6 @@ func (am *AuctionMgr) DeleteAuctionItem(auctionItemUUID uint64, isNeedRemoveInde
 
 	auctionItem.IsDestroyed = true
 	for _, indexKey := range auctionIndexKeys {
-		if indexKey == INDEX_KEY_ITEMID && !isNeedRemoveIndex {
-			continue
-		}
 		am.removeAuctionItemFromIndex(indexKey, auctionItem.getIndexVal(indexKey), auctionItem)
 		am.removeAuctionItemFromPublicityIndex(indexKey, auctionItem.getIndexVal(indexKey), auctionItem)
 	}
@@ -1476,7 +1701,7 @@ func (am *AuctionMgr) GetAuctionItem(auctionItemUUID uint64) (*AuctionItem, erro
 
 func (am *AuctionMgr) GetItemLastPrice(itemId uint32) float32 {
 	var price = float32(0)
-	price = am.priceRecord.GetItemLastPrice(itemId)
+	price = am.priceRecord.GetItemLastPrice(itemId, common.GetGameGroupServerIdMap(am.app.groupId))
 
 	return price
 }
@@ -1484,7 +1709,7 @@ func (am *AuctionMgr) GetItemLastPrice(itemId uint32) float32 {
 func (am *AuctionMgr) GetItemAvgPrice(itemId uint32) (float32, float32) {
 	var price = float32(0)
 	var price7 = float32(0)
-	price, price7 = am.priceRecord.GetItemAvgPrice(itemId)
+	price, price7 = am.priceRecord.GetItemAvgPrice(itemId, common.GetGameGroupServerIdMap(am.app.groupId))
 
 	return price, price7
 }
@@ -1550,7 +1775,7 @@ func (am *AuctionMgr) doBuyItem(auctionItem *AuctionItem, buyNum uint32, fromPla
 		return extra, errors.New(fmt.Sprint("auction buy item num is more than auction item number", auctionItem.AuctionItemUUID))
 	}
 	if buyNum == auctionItem.Number {
-		err := am.DeleteAuctionItem(auctionItem.AuctionItemUUID, false)
+		err := am.DeleteAuctionItem(auctionItem.AuctionItemUUID)
 		if err != nil {
 			appLog.Errorw("auction delete item error", "auctionItemUUID", auctionItem.AuctionItemUUID, "err", err)
 			return extra, err
@@ -1580,11 +1805,7 @@ func (am *AuctionMgr) doBuyItem(auctionItem *AuctionItem, buyNum uint32, fromPla
 
 func (am *AuctionMgr) onPlayerAuctionItemBeSaled(auctionItem *AuctionItem, buyNumber uint32, extra map[string]interface{}, fromPlayerGBID uint64) {
 	totalPrice := auctionItem.Price
-	//totalPriceInDeductTax, totalPriceTax := am.app.getCoinAuctionPriceTax(totalPrice, auctionItem.ItemData.ItemId)
-	//var rcdPrice = am.GetItemLastPrice(auctionItem.ItemData.ItemId)
 	extra["totalPrice"] = totalPrice
-	//extra["totalPriceTax"] = totalPriceTax
-	//extra["rcdPrice"] = rcdPrice
 
 	if auctionItem.getServerId() != 0 {
 		extraB, err := json.Marshal(extra)
@@ -1612,6 +1833,10 @@ func (am *AuctionMgr) CheckCancelSaleItem(auctionItemUUID uint64, fromPlayerGBID
 		return auctionItem, AUCTION_CANCEL_SALE_GBID_NOT_MATCH
 	}
 
+	if auctionItem.CheckInSnatch() || auctionItem.checkLockedId(SNATCH_LOCK_ID) {
+		return auctionItem, AUCTION_ITEM_IS_IN_SNATCH
+	}
+
 	if auctionItem.isLocked(0) {
 		return auctionItem, AUCTION_ITEM_IS_LOCKED
 	}
@@ -1637,7 +1862,7 @@ func (am *AuctionMgr) doCancelSaleItemCheck(auctionItemUUID uint64, fromPlayerGB
 }
 
 func (am *AuctionMgr) doCancelSaleItem(auctionItem *AuctionItem) error {
-	err := am.DeleteAuctionItem(auctionItem.AuctionItemUUID, false)
+	err := am.DeleteAuctionItem(auctionItem.AuctionItemUUID)
 	if err != nil {
 		appLog.Errorw("auction delete item error", "auctionItemUUID", auctionItem.AuctionItemUUID, "err", err)
 		return err
@@ -1931,6 +2156,18 @@ func (am *AuctionMgr) setItemSelling(auctionItemUUID uint64, isBroadCast bool) {
 		appLog.Errorw("setItemSelling: GetAuctionItem err", "err", err)
 		return
 	}
+
+	// === 2026-09-21 v3 抢购迁移:挂抽签调度 (0 秒 timer,公示期结束立即异步抽签) ===
+
+	bucket, participateCount := am.popSnatchBucket(auctionItem)
+	if nil != bucket && participateCount > 0 {
+		if bucket.OpenTimer != nil {
+			bucket.OpenTimer.Stop()
+		}
+		bucket.OpenTimer = time.AfterFunc(0, func() { am.openSnatch(auctionItemUUID, bucket) })
+		return
+	}
+
 	// 置成出售状态
 	am.setStatus(AUCTION_STATUS_SELLING, auctionItem, false)
 	// 移除公示结束定时器
@@ -1959,6 +2196,134 @@ func (am *AuctionMgr) setItemSelling(auctionItemUUID uint64, isBroadCast bool) {
 		if flag == 1 {
 			go am.app.broadcastOnItemSaling(auctionItemUUID, auctionItem.ItemData.ItemId, auctionItem.FromPlayerGBID)
 		}
+	}
+}
+
+// openSnatch 抽签:v3 行为 —
+//   - 无人:物品继续按 SELLING 正常卖,不需要 winner
+//   - 有人:按 Σ snatchWeight 加权随机选 winner,winner 走 executeSnatchWinnerDoBuyItem 发物品;其余参与者走 notifySnatchRefund 退款
+//
+// 加权抽样算法: 总权重 totalWeight = Σ rec.SnatchWeight(2026-10-08 之前的老桶记录里 SnatchWeight 默认为 0,
+// 函数开头兜底为 DEFAULT_SNATCH_WEIGHT 1000,保持和老逻辑的等概率语义)
+// 取 rand ∈ [0, totalWeight),按 Records 顺序累计,首个累计 ≥ rand 的就是 winner.
+// 时间复杂度 O(n),Records map 顺序本来就不确定,语义上等价于"按权重加权后随机抽样".
+func (am *AuctionMgr) openSnatch(auctionItemUUID uint64, bucket *SnatchBucket) {
+	if bucket == nil {
+		appLog.Warnw("openSnatch: bucket missing", "uuid", auctionItemUUID)
+		return
+	}
+	bucket.mu.Lock()
+	defer bucket.mu.Unlock()
+	if bucket.Opened {
+
+		return
+	}
+	bucket.Opened = true
+
+	if len(bucket.Records) == 0 {
+		appLog.Infow("openSnatch: no participants, item stays SELLING", "uuid", auctionItemUUID)
+		return
+	}
+
+	// === 2026-10-08 按权重加权抽样 ===
+	// 1) 计算总权重 + 给老记录(无 SnatchWeight)兜底
+	var totalWeight uint64 = 0
+	weights := make(map[uint64]uint64, len(bucket.Records))
+	for gbID, rec := range bucket.Records {
+		w := uint64(rec.SnatchWeight)
+		weights[gbID] = w
+		totalWeight += w
+	}
+
+	// 2) 防御:totalWeight 应该 >0,否则退化为随机等概率抽样
+	if totalWeight == 0 {
+		appLog.Warnw("openSnatch: totalWeight==0, fall back to uniform random", "uuid", auctionItemUUID)
+		gbs := make([]uint64, 0, len(bucket.Records))
+		for gbID := range bucket.Records {
+			gbs = append(gbs, gbID)
+		}
+		bucket.WinnerGBID = gbs[rand.Intn(len(gbs))]
+	} else {
+		// 3) 抽 [0, totalWeight) 区间随机点,按顺序累计求 winner
+		pickPoint := rand.Uint64() % totalWeight
+		var accWeight uint64 = 0
+		var winnerGBID uint64
+		var winnerWeight uint64
+		for gbID, w := range weights {
+			accWeight += w
+			if accWeight >= pickPoint {
+				winnerGBID = gbID
+				winnerWeight = w
+				break
+			}
+		}
+		bucket.WinnerGBID = winnerGBID
+		appLog.Infow("openSnatch: weighted draw", "uuid", auctionItemUUID,
+			"winner", winnerGBID, "winnerWeight", winnerWeight,
+			"totalWeight", totalWeight, "participants", len(bucket.Records),
+			"pickPoint", pickPoint)
+	}
+
+	winnerGBID := bucket.WinnerGBID
+	rec := bucket.Records[winnerGBID]
+
+	auctionItem, err := am.GetAuctionItem(auctionItemUUID)
+	if err != nil {
+		appLog.Errorw("openSnatch: GetAuctionItem err", "err", err, "uuid", auctionItemUUID)
+		return
+	}
+
+	// winner 走完整成交路径 (doBuyItem + 发物品 + 通知卖家)
+	if err := am.app.executeSnatchWinnerDoBuyItem(auctionItem, winnerGBID, rec); err != nil {
+		appLog.Errorw("openSnatch: winner doBuyItem failed", "err", err,
+			"uuid", auctionItemUUID, "winner", winnerGBID)
+	}
+
+	// 其余参与者退款 (异步,不阻塞)
+	go am.notifySnatchRefund(bucket)
+}
+
+// notifySnatchRefund 把 winner 之外的参与者通过 SnatchRefundReq RPC 推到 game server
+// 当前实现:单一来源服推送 (auctionItem.ServerId);跨服玩家通过 game server 端按 playerGBID 路由
+func (am *AuctionMgr) notifySnatchRefund(bucket *SnatchBucket) {
+	if am.app == nil {
+		appLog.Errorw("notifySnatchRefund: app nil", "uuid", bucket.AuctionItemUUID)
+		return
+	}
+	bucket.mu.Lock()
+	defer bucket.mu.Unlock()
+	for gbID, rec := range bucket.Records {
+		if gbID == bucket.WinnerGBID {
+			continue
+		}
+
+		req := &gameServerService.SnatchRefundReq{
+			AuctionItemUUID: bucket.AuctionItemUUID,
+			ItemId:          bucket.ItemId,
+			Price:           bucket.Price,
+			Number:          bucket.Number,
+			PlayerGBID:      gbID,
+			OpUUID:          rec.OpUUID,
+			Reason:          uint32(SnatchReasonNotLucky),
+			PublicEndTime:   bucket.PublicityEndTime,
+		}
+		gs := am.app.GetGameServer(rec.ServerId, 0)
+		if gs == nil {
+			appLog.Errorw("notifySnatchRefund: gameServer is nil",
+				"uuid", bucket.AuctionItemUUID, "serverId", rec.ServerId)
+			return
+		}
+		gss, ok := gs.AuctionService.(*GameServerService)
+		if !ok {
+			appLog.Errorw("notifySnatchRefund: cast AuctionService failed", "serverId", rec.ServerId)
+			return
+		}
+		if _, err := gss.GetClientEndPoint().(*gameServerService.GameServerClient).ReplySnatchRefund(req); err != nil {
+			appLog.Errorw("notifySnatchRefund: RPC failed",
+				"err", err, "uuid", bucket.AuctionItemUUID, "serverId", rec.ServerId)
+			return
+		}
+		appLog.Infow("notifySnatchRefund: dispatched", "uuid", bucket.AuctionItemUUID, "serverId", rec.ServerId)
 	}
 }
 
@@ -2088,33 +2453,4 @@ func (am *AuctionMgr) checkIsInBlackList(playerGbId uint64) bool {
 	}
 
 	return false
-}
-
-func (am *AuctionMgr) getTLastUpdateTime() (int64, error) {
-	var tLastUpdateTime int64
-	row := am.db.QueryRow("SELECT `tLastUpdateTime` FROM `auction` LIMIT 1")
-	err := row.Scan(&tLastUpdateTime)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			tLastUpdateTime = 0
-		}
-		return 0, err
-	}
-	return tLastUpdateTime, nil
-}
-
-func (am *AuctionMgr) setTLastUpdateTime(tLastUpdateTime int64) error {
-	stmt, err := am.db.Prepare("UPDATE `auction` SET `tLastUpdateTime` = ?")
-	if err != nil {
-		appLog.Errorw("setTLastUpdateTime: Prepare err", "err", err, "tLastUpdateTime", tLastUpdateTime)
-	}
-
-	defer stmt.Close()
-
-	_, err = stmt.Exec(tLastUpdateTime)
-	if err != nil {
-		appLog.Errorw("setTLastUpdateTime: Exec err", "err", err, "tLastUpdateTime", tLastUpdateTime)
-	}
-
-	return err
 }

@@ -396,6 +396,7 @@ message GetLeagueListRequest {
     uint32 pageIndex = 2;
     uint32 pageSize = 3;
     uint64 uuid = 4;
+    bool crossServerFlag = 5;
 }
 message GetLeagueListResult {
     uint64 uuid = 1;
@@ -408,6 +409,7 @@ message SearchLeagueRequest {
     string keyword = 1;
     uint32 serverId = 2;
     uint64 uuid = 3;
+    bool crossServerFlag = 4;
 }
 message SearchLeagueResult {
     repeated AllianceListEntry entries = 1;
@@ -444,7 +446,9 @@ message ApplyToJoinRequest {
     uint32 leaderLevel = 15;           // 会长等级
     uint32 leaderProfession = 16;      // 会长职业
     uint32 leaderGender = 17;          // 会长性别
+    bool crossServerFlag = 18;
 }
+
 message ApplyToJoinResult {
     uint64 uuid = 1;
     uint32 errCode = 2;

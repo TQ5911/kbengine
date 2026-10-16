@@ -96,6 +96,8 @@ message BuyItemReq
   uint64 auctionItemUUID = 2;
   uint32 number = 3;
   string extra = 4;
+  // 2026-10-08 抢购权重(普通玩家=1000,推广者=1100);service 在 openSnatch 抽签时按此权重抽样
+  uint32 snatchWeight = 5;
 }
 
 message BuyItemResp
@@ -104,9 +106,9 @@ message BuyItemResp
   uint64 auctionItemUUID = 2;
   uint64 price = 3;
   int64 publicityEndTime = 4;
-  uint32 buyType = 5;
-  string extra = 6;
-  uint32 code = 7;
+  string extra = 5;
+  uint32 code = 6;
+  uint32 buyType = 7;
 }
 
 message DoBuyItemReq
@@ -116,6 +118,7 @@ message DoBuyItemReq
   uint32 errno = 3;
   uint64 price = 4;
   string extra = 5;
+  uint32 buyType = 6;
 }
 
 message DoBuyItemResp
@@ -123,6 +126,20 @@ message DoBuyItemResp
   uint64 playerGBID = 1;
   AuctionItem auctionItem = 2;
   string extra = 3;
+  uint32 buyType = 4;
+}
+
+// 2026-09-21 抢购迁移 v3 新增
+message SnatchRefundReq
+{
+  uint64 auctionItemUUID = 1;
+  uint32 itemId          = 2;
+  uint64 price           = 3;
+  uint32 number          = 4;
+  uint64 playerGBID      = 5;
+  int64 opUUID          = 6;
+  uint32 reason          = 7;       // 1=NOT_LUCKY 2=SNATCH_TIMEOUT 3=SERVICE_OFFLINE
+  int64 publicEndTime    = 8;
 }
 
 //批量购买-锁定阶段:一次请求锁定一批商品(部分成功)
@@ -460,6 +477,8 @@ service GameServer
   rpc replyGetAuctionItemNumByCategoryId(GetItemNumByCategoryIdResp) returns(Void);
   rpc replyBuyItemByItemId(BuyItemByItemIdResp) returns(Void);
   rpc replyDoBuyItemByItemId(DoBuyItemByItemIdResp) returns(Void);
+  // 2026-09-21 抢购迁移 v3 新增
+  rpc replySnatchRefund(SnatchRefundReq) returns(Void);
   rpc replyGetAuctionItemsByAuctionIds(GetAuctionItemByAuctionIdsResp) returns(Void);
   rpc pushItemPriceInfoList(ItemPriceInfoList) returns(Void);
   rpc replyBuyItems(BuyItemsResp) returns(Void);

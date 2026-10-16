@@ -76,6 +76,9 @@ func initCommon(cfg *viper.Viper) bool {
 	}
 
 	common.StartListenKillSignal()
+
+	// 接入方在配置文件中配置 mapleHttpAddr 即自动启用游戏服组别数据查询, 未配置则跳过
+	common.InitGameServerDataFromConfig()
 	return true
 }
 

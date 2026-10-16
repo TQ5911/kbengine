@@ -31,7 +31,8 @@ type AppConfig struct {
 	LogRotateSize         string          // 日志轮转大小（MB）
 	Mysql                 MysqlConfig     // MySQL 配置
 	RedisServer           RedisConfig     // Redis 配置
-	RateLimit             RateLimitConfig // 限流配置
+	TradeRateLimit        RateLimitConfig // 交易类接口（上架/下架/租赁）全局限流容量
+	QueryRateLimit        RateLimitConfig // 查询类接口（总览/详细分页）全局限流容量
 	PendingStatusTimeout  int             // 预上架/预租赁中间状态超时时间（秒），超时由清扫器自动恢复，<=0 时默认 60
 	CleanIntervalHours    int             // 数据库历史数据清理间隔（小时），<=0 时默认 6
 	CleanBatchSize        int             // 数据库清理每批删除行数，<=0 时默认 100

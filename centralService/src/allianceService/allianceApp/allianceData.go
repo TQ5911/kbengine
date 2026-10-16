@@ -490,7 +490,7 @@ type cancelledApply struct {
 }
 
 type AllianceData struct {
-	db              *sql.DB
+	app             *AllianceApp
 	alliances       concurrent_map.ConcurrentMap[uint64, *AllianceCache]
 	guildToAlliance concurrent_map.ConcurrentMap[uint64, uint64]
 	broadcast       broadcastFunc
@@ -581,8 +581,6 @@ type AllianceData struct {
 	// as notifyAllianceCancelHook. cancelled is the FULL list returned
 	// by cancelOtherGuildApplies so the test can assert the whole batch.
 	notifyGuildCancelHook func(app *AllianceApp, guildId, joinedAllianceId uint64, cancelled []*cancelledApply)
-	isInited              bool
-	initedLock            sync.RWMutex
 }
 
 // pendingApproveJoin captures every piece of state needed to finish an
@@ -1113,22 +1111,26 @@ func enemyKey(attackType uint32, attackId uint64, targetType uint32, targetId ui
 	return fmt.Sprintf("%d_%d_%d_%d", attackType, attackId, targetType, targetId)
 }
 
-func NewAllianceData(db *sql.DB) *AllianceData {
+func NewAllianceData(app *AllianceApp) *AllianceData {
 	ad := &AllianceData{
-		db:              db,
+		app:             app,
 		alliances:       concurrent_map.NewWithCustomShardingFunction[uint64, *AllianceCache](uint64Sharding),
 		guildToAlliance: concurrent_map.NewWithCustomShardingFunction[uint64, uint64](uint64Sharding),
 		guildApplies:    make(map[uint64]*guildApplyRecord),
 		invitesByGuild:  make(map[uint64]*guildInviteRecord),
 		allianceNames:   make(map[string]uint64),
 	}
-	ad.loadFromDB(db)
-	ad.loadEnemiesFromDB(db)
-	ad.loadAppliesAndInvitesFromDB(db)
-	ad.initedLock.Lock()
-	defer ad.initedLock.Unlock()
-	ad.isInited = true
+
 	return ad
+}
+
+func (ad *AllianceData) LoadDatas() {
+	ad.loadFromDB(ad.app.db)
+	ad.loadEnemiesFromDB(ad.app.db)
+	ad.loadAppliesAndInvitesFromDB(ad.app.db)
+	ad.app.dataInitedMutex.Lock()
+	defer ad.app.dataInitedMutex.Unlock()
+	ad.app.dataInited = true
 }
 
 func (ad *AllianceData) SetBroadcaster(b broadcastFunc) {
@@ -2113,7 +2115,18 @@ func (ad *AllianceData) GetLeagueList(in *gameServerService.GetLeagueListRequest
 	// the full alliance population, so a list of N alliances no longer
 	// pays O(N) per request to project a single page.
 	ad.sortedLock.RLock()
-	total := len(ad.sortedAlliances)
+	var allianceCaches []*AllianceCache
+	if !in.CrossServerFlag {
+		allianceCaches = make([]*AllianceCache, 0)
+		for _, allianceCache := range ad.sortedAlliances {
+			if allianceCache.info.LeaderServerId == in.ServerId {
+				allianceCaches = append(allianceCaches, allianceCache)
+			}
+		}
+	} else {
+		allianceCaches = ad.sortedAlliances
+	}
+	total := len(allianceCaches)
 	start := pageIndex * pageSize
 	if start >= total {
 		ad.sortedLock.RUnlock()
@@ -2123,7 +2136,7 @@ func (ad *AllianceData) GetLeagueList(in *gameServerService.GetLeagueListRequest
 	if end > total {
 		end = total
 	}
-	pageCaches := ad.sortedAlliances[start:end]
+	pageCaches := allianceCaches[start:end]
 	ad.sortedLock.RUnlock()
 	// Build entries only for the requested page. buildListEntry acquires
 	// the per-cache RLock; doing it outside the sortedLock keeps the
@@ -2151,6 +2164,10 @@ func (ad *AllianceData) SearchLeague(in *gameServerService.SearchLeagueRequest) 
 	entries := make([]*gameServerService.AllianceListEntry, 0)
 	for _, cache := range ad.sortedAlliances {
 		cache.RLock()
+		if !in.CrossServerFlag && cache.info.LeaderServerId != in.ServerId {
+			cache.Unlock()
+			continue
+		}
 		if contains(cache.info.Name, in.Keyword) {
 			entries = append(entries, buildListEntry(cache))
 		}
@@ -2376,6 +2393,10 @@ func (ad *AllianceData) ApplyToJoin(db *sql.DB, app *AllianceApp, in *gameServer
 	defer cache.Unlock()
 	// Snapshot the alliance card data before any path that might lock/mutate
 	// the cache, so we always return a consistent view to the caller.
+	if !in.CrossServerFlag && in.ServerId != cache.info.LeaderServerId {
+		return ErrCodeAllianceNotFound, nil, 0, "", 0
+	}
+
 	allianceId, allianceName, alliancePower := cache.info.AllianceId, cache.info.Name, cache.info.TotalScore
 
 	guildCfg, ok := ConfigStore.cfgVipers.Get(CFG_TYPE_GUILD_CONST)
@@ -5207,16 +5228,11 @@ func (ad *AllianceData) CheckLeaveGuild(db *sql.DB, app *AllianceApp, leagueUUID
 }
 
 func (ad *AllianceData) QueryLeagueUUID(guildId uint64) (uint64, bool) {
-	ad.initedLock.RLock()
-	defer ad.initedLock.RUnlock()
-	if ad.isInited {
-		leagueUUID, ret := ad.guildToAlliance.Get(guildId)
-		if ret {
-			return leagueUUID, true
-		}
-		return 0, true
+	leagueUUID, ret := ad.guildToAlliance.Get(guildId)
+	if ret {
+		return leagueUUID, true
 	}
-	return 0, false
+	return 0, true
 }
 
 func (ad *AllianceData) RemoveEnemyRelation(app *AllianceApp, db *sql.DB, guildId uint64) uint32 {

@@ -1,10 +1,3 @@
-CREATE TABLE IF NOT EXISTS `auction`
-(
-    id bigint(20) unsigned AUTO_INCREMENT,
-    `tLastUpdateTime` bigint unsigned not null DEFAULT 0,
-    PRIMARY KEY idKey (id)
-    );
-
 CREATE TABLE IF NOT EXISTS `auction_blackList`
 (
     id bigint(20) unsigned AUTO_INCREMENT,
@@ -16,6 +9,7 @@ CREATE TABLE IF NOT EXISTS `auction_blackList`
 CREATE TABLE IF NOT EXISTS `auction_auctionItemData`
 (
     id bigint(20) unsigned AUTO_INCREMENT,
+    `serverId` int unsigned not null DEFAULT 0,
     `auctionType` tinyint unsigned not null DEFAULT 0,
     `auctionItemUUID` bigint unsigned not null DEFAULT 0,
     `addTime` int unsigned not null DEFAULT 0,
@@ -43,38 +37,23 @@ CREATE TABLE IF NOT EXISTS `auction_auctionItemData`
 CREATE TABLE IF NOT EXISTS `auction_priceRecord_lastPrices`
 (
     id bigint(20) unsigned AUTO_INCREMENT,
+    `serverId` int unsigned not null DEFAULT 0,
     `itemId` int unsigned not null DEFAULT 0,
     `price` bigint unsigned not null DEFAULT 0,
-    INDEX (`itemId`),
+    INDEX (`itemId`, `serverId`),
     PRIMARY KEY idKey (id)
     );
 
 CREATE TABLE IF NOT EXISTS `auction_priceRecord_avgPrices`
 (
     id bigint(20) unsigned AUTO_INCREMENT,
+    `serverId` int unsigned not null DEFAULT 0,
     `itemId` int unsigned not null DEFAULT 0,
     `totalPrice` bigint unsigned not null DEFAULT 0,
     `number` bigint unsigned not null DEFAULT 0,
 	`avgPrice` float not null DEFAULT 0.0,
     `recentPrices` LONGTEXT NULL,
-    INDEX (`itemId`),
+    `tLastUpdateTime` bigint unsigned not null DEFAULT 0,
+    INDEX (`itemId`, `serverId`),
     PRIMARY KEY idKey (id)
     );
-
-SET @db_name = DATABASE();
-SET @table_name = 'auction_auctionItemData';
-SET @column_name = 'addPublicityTime';
-SET @column_def = 'int(10) unsigned NOT NULL DEFAULT 0';
-
-SET @sql = IF(
-    (SELECT COUNT(*) FROM information_schema.COLUMNS
-     WHERE TABLE_SCHEMA = @db_name
-       AND TABLE_NAME = @table_name
-       AND COLUMN_NAME = @column_name) = 0,
-    CONCAT('ALTER TABLE ', @table_name, ' ADD COLUMN ', @column_name, ' ', @column_def),
-    'SELECT concat(concat(concat("Table: ", @table_name), concat(", Column: ", @column_name)), " already exists, skipped") AS ''execute result message:'''
-);
-
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;

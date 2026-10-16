@@ -47,15 +47,21 @@ type GameServerInfo struct {
 
 type AuctionApp struct {
 	common.App
-	gameServers   map[uint32]map[uint32]*GameServerInfo
-	ChannelToHost map[uuid.UUID]uint32
-	serversMutex  *sync.RWMutex
-	actions       chan AuctionAction
-	db            *sql.DB
-	auctionMgr    *AuctionMgr
-	gmAllBuyNum   uint64
-	gmCurBuyNum   uint64
-	funcChan      chan func()
+	gameServers    map[uint32]map[uint32]*GameServerInfo
+	ChannelToHost  map[uuid.UUID]uint32
+	serversMutex   *sync.RWMutex
+	actions        chan AuctionAction
+	db             *sql.DB
+	auctionMgr     *AuctionMgr
+	gmAllBuyNum    uint64
+	gmCurBuyNum    uint64
+	funcChan       chan func()
+	groupMutex     *sync.RWMutex
+	groupId        int
+	waitGroupMutex *sync.RWMutex
+	waitGroupId    bool
+	initedMutex    *sync.RWMutex
+	inited         bool
 }
 
 func InitConfigStore() bool {
@@ -143,13 +149,20 @@ func NewAuctionApp() *AuctionApp {
 	app := AuctionApp{common.App{AppName: "AuctionApp"},
 		gameServers,
 		channelMap,
-		new(sync.RWMutex),
+		&sync.RWMutex{},
 		actions,
 		db,
 		nil,
 		0,
 		0,
-		make(chan func())}
+		make(chan func()),
+		&sync.RWMutex{},
+		0,
+		&sync.RWMutex{},
+		false,
+		&sync.RWMutex{},
+		false,
+	}
 	// 逐个初始化配置
 	for cfgType, cfgPath := range ConfigStore.cfgFiles {
 		ret := InitJsonCfg(cfgType, cfgPath)
@@ -225,6 +238,21 @@ func (au *AuctionApp) doRegisterServer(hostId uint32, compId uint32, hostName st
 		return errors.New(fmt.Sprint("register server err: invalid hostId:", hostId))
 	}
 
+	// 没有开始加载groupId就开始加载，并发多个连接，只允许加载一次
+	au.waitGroupMutex.Lock()
+	defer au.waitGroupMutex.Unlock()
+	if !au.waitGroupId {
+		appLog.Info("start init group id~", hostId)
+		au.waitGroupId = true
+		au.doInitGroupId(int(hostId))
+	}
+
+	au.initedMutex.RLock()
+	defer au.initedMutex.RUnlock()
+	if !au.inited {
+		return errors.New(fmt.Sprint("register server err: data is in init:", hostId))
+	}
+
 	au.serversMutex.Lock()
 	defer au.serversMutex.Unlock()
 
@@ -237,6 +265,30 @@ func (au *AuctionApp) doRegisterServer(hostId uint32, compId uint32, hostName st
 	au.ChannelToHost[service.GetRpcChannel().ChannelUUID] = hostId
 
 	return nil
+}
+
+func (au *AuctionApp) doInitGroupId(serverId int) {
+	appLog.Info("start do init group id~", serverId)
+	common.AfterInitMapleServer(func() {
+		if !au.initGroupId(int(serverId)) {
+			au.doInitGroupId(serverId)
+		}
+	})
+
+}
+
+func (au *AuctionApp) initGroupId(serverId int) bool {
+	appLog.Info("start init group id~", serverId)
+	au.groupMutex.Lock()
+	defer au.groupMutex.Unlock()
+	groupId, ok := common.GetGameServerGroup(serverId)
+	if !ok {
+		appLog.Warn("register server err: not found group id with serverId:", serverId)
+		return false
+	}
+	au.groupId = groupId
+	au.auctionMgr.Init()
+	return true
 }
 
 func (au *AuctionApp) unRegisterServer(service *GameServerService) {
@@ -416,8 +468,11 @@ func (au *AuctionApp) GenUUID() uint64 {
 }
 
 // 购买物品
-func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number uint32, extra string) (uint64, string, uint64, int64, uint32, uint32, error) {
-	appLog.Debugw("BuyItem", "playerGBID", playerGBID, "auctionItemUUID", auctionItemUUID, "number", number, "extra", extra)
+// 2026-10-08 snatchWeight 形参新增:从 game server BuyItemReq.snatchWeight 传入,
+// 透传到 extra 字段(m["snatchWeight"]),后续 DoBuyItem 解析后给 maybeRecordSnatchParticipation,
+// 在 openSnatch 时按 Σ snatchWeight 加权抽样.
+func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number uint32, extra string, snatchWeight uint32) (uint64, string, uint64, int64, uint32, uint32, error) {
+	appLog.Debugw("BuyItem", "playerGBID", playerGBID, "auctionItemUUID", auctionItemUUID, "number", number, "extra", extra, "snatchWeight", snatchWeight)
 
 	auctionItem, ret := au.auctionMgr.CheckBuyItem(auctionItemUUID, playerGBID, number)
 	if ret != AUCTION_OK {
@@ -438,15 +493,20 @@ func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number 
 	buyType := BUY_TYPE_NORMAL
 	// 抢购中的，用1做通用的锁，然后时间设定为抢购的两倍时间
 	if auctionItem.CheckInSnatch() {
+		if au.auctionMgr.checkSnatchPlayer(auctionItem.AuctionItemUUID, playerGBID) {
+			ret = AUCTION_SNATCH_PARTICIPATE_SUCCESS
+			return auctionItemUUID, extra, 0, 0, uint32(ret), 0, nil
+		}
 		buyType = BUY_TYPE_SNATCH
-		getLock := auctionItem.lock(uint32(auctionItem.getSnatchTime())*2, SNATCH_LOCK_ID, au, true)
+		getLock := auctionItem.lock(uint32(auctionItem.getSnatchTime())*2, SNATCH_LOCK_ID, au, false)
 		if !getLock {
 			appLog.Debugw("BuyItem: get lock failed", "auctionItemUUID", auctionItem.AuctionItemUUID)
 			ret = AUCTION_ITEM_IS_LOCKED
 			return auctionItemUUID, extra, 0, 0, uint32(ret), 0, nil
 		}
+
 	} else {
-		getLock := auctionItem.lock(AUCTION_ITEM_LOCKED_TIME, playerGBID, au, true)
+		getLock := auctionItem.lock(AUCTION_ITEM_LOCKED_TIME, playerGBID, au, false)
 		if !getLock {
 			appLog.Debugw("BuyItem: get lock failed", "auctionItemUUID", auctionItem.AuctionItemUUID)
 			ret = AUCTION_ITEM_IS_LOCKED
@@ -467,6 +527,8 @@ func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number 
 	m["selectItemLocked"] = auctionItem.LockPlayerGBID
 	m["auctionBuyItemId"] = auctionItem.ItemData.ItemId
 	m["auctionBuyItemNum"] = number
+	// 把 game server 传来的 snatchWeight 落到 extra,供 DoBuyItem 反读
+	m["snatchWeight"] = uint64(snatchWeight)
 
 	extraB, err := json.Marshal(m)
 	if err != nil {
@@ -478,8 +540,8 @@ func (au *AuctionApp) BuyItem(playerGBID uint64, auctionItemUUID uint64, number 
 	return auctionItemUUID, string(extraB), price, auctionItem.GetPublicityEndTime(), uint32(ret), uint32(buyType), nil
 }
 
-func (au *AuctionApp) DoBuyItem(auctionItemUUID uint64, playerGBID uint64, errno uint32, price uint64, extra string, service *GameServerService) (*AuctionItem, string, error) {
-	appLog.Debugw("DoBuyItem", "auctionItemUUID", auctionItemUUID, "playerGBID", playerGBID, "errno", errno, "price", price, "extra", extra)
+func (au *AuctionApp) DoBuyItem(auctionItemUUID uint64, playerGBID uint64, errno uint32, price uint64, extra string, buyType uint32, service *GameServerService) (*AuctionItem, string, error) {
+	appLog.Debugw("DoBuyItem", "auctionItemUUID", auctionItemUUID, "playerGBID", playerGBID, "errno", errno, "price", price, "extra", extra, "buyType", buyType)
 	isOK := true
 	if errno != AUCTION_OK {
 		isOK = false
@@ -503,7 +565,7 @@ func (au *AuctionApp) DoBuyItem(auctionItemUUID uint64, playerGBID uint64, errno
 	auctionItem, err := au.auctionMgr.GetAuctionItem(auctionItemUUID)
 	if err != nil {
 		appLog.Errorw("DoBuyItem: GetAuctionItem err", "err", err)
-		return auctionItem, extra, err
+		return nil, extra, err
 	}
 
 	if auctionItem.LockPlayerGBID > 0 && uint64(itemLock) != auctionItem.LockPlayerGBID {
@@ -512,9 +574,16 @@ func (au *AuctionApp) DoBuyItem(auctionItemUUID uint64, playerGBID uint64, errno
 	}
 
 	m["isOK"] = isOK
+	m["errno"] = errno
 	if !isOK {
-		auctionItem.unLock()
-		m["errno"] = errno
+		// 抢购情况下，第一个二阶段购买失败，释放锁
+		if buyType == BUY_TYPE_SNATCH {
+			if !au.auctionMgr.checkSnatchBucket(auctionItem.AuctionItemUUID) {
+				auctionItem.unLock()
+			}
+		} else {
+			auctionItem.unLock()
+		}
 		extraB, err := json.Marshal(m)
 		if err != nil {
 			appLog.Errorw("DoBuyItem: Marshal err", "err", err)
@@ -522,14 +591,47 @@ func (au *AuctionApp) DoBuyItem(auctionItemUUID uint64, playerGBID uint64, errno
 		}
 		return auctionItem, string(extraB), nil
 	}
+
 	auctionBuyItemNum, err := m["auctionBuyItemNum"].(json.Number).Int64()
 	if err != nil {
 		auctionItem.unLock()
-		appLog.Errorw("DoBuyItem: auctionBuyItemNum err", "err", err)
+		appLog.Errorw("DoBuyItem: auctionBuyItemNum err 1 ", "err", err)
 		return auctionItem, extra, err
 	}
 
 	buyNum := uint32(auctionBuyItemNum)
+
+	// === 2026-09-21 v3 抢购迁移:SNATCH 期间拦截,只登记不真成交 ===
+	// game server 已经预扣钱,这里登记到 snatchBuckets,return 伪成功 (game server 给客户端"抢购成功"提示,
+	// 等公示期结束 openSnatch 抽签决定 winner,其他人退款).
+	if buyType == BUY_TYPE_SNATCH {
+		// 2026-10-08 反读 BuyItem 阶段落下的 snatchWeight(无值兜底 DEFAULT_SNATCH_WEIGHT)
+		snatchWeightVal, err := m["snatchWeight"].(json.Number).Int64()
+		if err != nil {
+			auctionItem.unLock()
+			appLog.Errorw("DoBuyItem: auctionBuyItemNum err 2 ", "err", err)
+			return auctionItem, extra, err
+		}
+		if !au.auctionMgr.maybeRecordSnatchParticipation(auctionItem, service.serverId, playerGBID, extra, snatchWeightVal) {
+			// 参与失败，退钱
+			m["errno"] = AUCTION_SNATCH_PARTICIPATE_REPEAT
+			extraB, err := json.Marshal(m)
+			if err != nil {
+				appLog.Errorw("DoBuyItem: Marshal err", "err", err)
+				return auctionItem, extra, err
+			}
+			return auctionItem, string(extraB), nil
+		}
+		appLog.Infow("DoBuyItem: SNATCH participation recorded", "uuid", auctionItemUUID, "player", playerGBID, "weight", snatchWeightVal)
+		m["errno"] = AUCTION_SNATCH_PARTICIPATE_SUCCESS
+		extraB, err := json.Marshal(m)
+		if err != nil {
+			appLog.Errorw("DoBuyItem: Marshal err", "err", err)
+			return auctionItem, extra, err
+		}
+		return auctionItem, string(extraB), nil
+	}
+
 	_, err = au.auctionMgr.doBuyItem(auctionItem, buyNum, playerGBID, m)
 	auctionItem.unLock()
 	if err != nil {
@@ -550,8 +652,8 @@ func (au *AuctionApp) DoBuyItem(auctionItemUUID uint64, playerGBID uint64, errno
 			au.RefreshPlayerCoinAuctionData(auctionItem.FromPlayerGBID, gameServer.AuctionService.(*GameServerService))
 		}
 	}
-	au.auctionMgr.priceRecord.AddAvgPriceRecord(auctionItem.ItemData.ItemId, auctionItem.Price, buyNum, au)
-	au.auctionMgr.priceRecord.AddLastPriceRecord(auctionItem.ItemData.ItemId, auctionItem.getEachPrice(), au.db)
+	au.auctionMgr.priceRecord.AddAvgPriceRecord(auctionItem.ServerId, auctionItem.ItemData.ItemId, auctionItem.Price, buyNum, au)
+	au.auctionMgr.priceRecord.AddLastPriceRecord(auctionItem.ServerId, auctionItem.ItemData.ItemId, auctionItem.getEachPrice(), au.db)
 	extraB, err := json.Marshal(m)
 	if err != nil {
 		appLog.Errorw("DoBuyItem: Marshal err", "err", err)
@@ -583,7 +685,7 @@ func (au *AuctionApp) BuyItems(playerGBID uint64, auctionItemUUIDs []uint64, auc
 			results = append(results, result)
 			continue
 		}
-		getLock := auctionItem.lock(AUCTION_ITEM_LOCKED_TIME, playerGBID, au, true)
+		getLock := auctionItem.lock(AUCTION_ITEM_LOCKED_TIME, playerGBID, au, false)
 		if !getLock {
 			appLog.Debugw("BuyItems: get lock failed", "auctionItemUUID", auctionItem.AuctionItemUUID)
 			result.Code = uint32(AUCTION_ITEM_IS_LOCKED)
@@ -673,8 +775,8 @@ func (au *AuctionApp) DoBuyItems(playerGBID uint64, errCode uint32, preFailUUIDs
 				au.RefreshPlayerCoinAuctionData(auctionItem.FromPlayerGBID, gameServer.AuctionService.(*GameServerService))
 			}
 		}
-		au.auctionMgr.priceRecord.AddAvgPriceRecord(auctionItem.ItemData.ItemId, auctionItem.Price, item.AuctionItemNumber, au)
-		au.auctionMgr.priceRecord.AddLastPriceRecord(auctionItem.ItemData.ItemId, auctionItem.getEachPrice(), au.db)
+		au.auctionMgr.priceRecord.AddAvgPriceRecord(auctionItem.ServerId, auctionItem.ItemData.ItemId, auctionItem.Price, item.AuctionItemNumber, au)
+		au.auctionMgr.priceRecord.AddLastPriceRecord(auctionItem.ServerId, auctionItem.ItemData.ItemId, auctionItem.getEachPrice(), au.db)
 
 		successUUIDs = append(successUUIDs, item.AuctionItemUUID)
 		successItems = append(successItems, auctionItem)
@@ -718,6 +820,68 @@ func (au *AuctionApp) broadcastOnItemSaling(auctionUUID uint64, itemID uint32, g
 			gameServer.AuctionService.(*GameServerService).OnItemSaling(auctionUUID, itemID, gbId)
 		}
 	}
+}
+
+// executeSnatchWinnerDoBuyItem v3 新增:openSnatch 抽签后给 winner 走完整成交路径.
+// 类似 DoBuyItem,但不再做 SNATCH 拦截 (调用方已经确认 winner 是 SNATCH 之后的状态).
+func (au *AuctionApp) executeSnatchWinnerDoBuyItem(auctionItem *AuctionItem, winnerGBID uint64, snatchRec *SnatchRec) error {
+	appLog.Infow("executeSnatchWinnerDoBuyItem", "uuid", auctionItem.AuctionItemUUID, "winner", winnerGBID, "price", auctionItem.Price)
+
+	var m map[string]interface{}
+	if nil != json.Unmarshal([]byte(snatchRec.Extra), &m) {
+		appLog.Error("executeSnatchWinnerDoBuyItem, unmarshal error, ", winnerGBID, auctionItem.ItemData.ItemId, auctionItem.Number, auctionItem.Price)
+		return errors.New("executeSnatchWinnerDoBuyItem, unmarshal error")
+	}
+
+	m["isOK"] = true
+	m["errno"] = AUCTION_OK
+
+	buyNum := auctionItem.Number // 全拿
+	_, err := au.auctionMgr.doBuyItem(auctionItem, buyNum, winnerGBID, m)
+	auctionItem.unLock()
+	if err != nil {
+		return err
+	}
+
+	gameServerInfo := au.GetGameServer(snatchRec.ServerId, 0)
+	if nil == gameServerInfo {
+		return errors.New("executeSnatchWinnerDoBuyItem, missing server id ")
+	}
+	gs := gameServerInfo.AuctionService.(*GameServerService)
+	if nil == gs {
+		return errors.New("executeSnatchWinnerDoBuyItem, service is nil ")
+	}
+	// 通知卖家刷新上架物品
+	if auctionItem.FromPlayerGBID != 0 {
+		au.RefreshPlayerCoinAuctionData(auctionItem.FromPlayerGBID, gs)
+	}
+	au.auctionMgr.priceRecord.AddAvgPriceRecord(auctionItem.ServerId, auctionItem.ItemData.ItemId, auctionItem.Price, buyNum, au)
+	au.auctionMgr.priceRecord.AddLastPriceRecord(auctionItem.ServerId, auctionItem.ItemData.ItemId, auctionItem.getEachPrice(), au.db)
+	appLog.Infow("executeSnatchWinnerDoBuyItem: ok",
+		"uuid", auctionItem.AuctionItemUUID, "winner", winnerGBID)
+
+	extra, err := json.Marshal(m)
+	if err != nil {
+		appLog.Errorw("executeSnatchWinnerDoBuyItem: Marshal err", "err", err)
+		return err
+	}
+
+	dstAuctionItem := gs.NewAuctionItem()
+	defer gs.PutAuctionItem(dstAuctionItem)
+	response := doBuyItemRespPool.Get().(*gameServerService.DoBuyItemResp)
+	response.PlayerGBID = winnerGBID
+	response.AuctionItem = gs.TransAuctionItem(auctionItem, dstAuctionItem)
+	response.Extra = string(extra)
+	response.BuyType = BUY_TYPE_SNATCH
+
+	_, err = gs.GetClientEndPoint().(gameServerService.IGameServerInterface).ReplyDoBuyItem(response)
+	if err != nil {
+		appLog.Errorw("executeSnatchWinnerDoBuyItem->ReplyDoBuyItem failed", "err", err)
+	}
+
+	response.Reset()
+	doBuyItemRespPool.Put(response)
+	return nil
 }
 
 func (au *AuctionApp) CancelSaleItem(playerGBID uint64, auctionItemUUID uint64, extra string) (*AuctionItem, string, uint32, error) {
@@ -1167,9 +1331,15 @@ func (au *AuctionApp) gmSetAuctionItemRecommendPrice(extra string) (string, erro
 		return "执行失败", err
 	}
 
+	serverId, err := m["serverId"].(json.Number).Int64()
+	if err != nil {
+		appLog.Errorw("gmSetAuctionItemRecommendPrice: parse serverId err", "err", err)
+		return "执行失败", err
+	}
+
 	curTime := time.Now().Unix()
 	if setTime <= curTime {
-		au.auctionMgr.priceRecord.AddLastPriceRecord(uint32(itemId), float32(price), au.db)
+		au.auctionMgr.priceRecord.AddLastPriceRecord(uint32(serverId), uint32(itemId), float32(price), au.db)
 	} else {
 		duration := setTime - curTime
 		timer := time.NewTimer(time.Duration(duration) * time.Second)
@@ -1177,7 +1347,7 @@ func (au *AuctionApp) gmSetAuctionItemRecommendPrice(extra string) (string, erro
 		go func(t *time.Timer) {
 			for {
 				<-t.C
-				au.auctionMgr.priceRecord.AddLastPriceRecord(uint32(itemId), float32(price), au.db)
+				au.auctionMgr.priceRecord.AddLastPriceRecord(uint32(serverId), uint32(itemId), float32(price), au.db)
 			}
 		}(timer)
 	}
@@ -1630,7 +1800,7 @@ func (au *AuctionApp) doBuyItemByItemId(playerGbId uint64, errno uint32, itemId 
 				return nil, extra, err
 			}
 			curTotalPrice += uint32(auctionItem.Price) * curBuyNum
-			au.auctionMgr.priceRecord.AddAvgPriceRecord(itemId, auctionItem.Price, curBuyNum, au)
+			au.auctionMgr.priceRecord.AddAvgPriceRecord(auctionItem.ServerId, itemId, auctionItem.Price, curBuyNum, au)
 		}
 	}
 

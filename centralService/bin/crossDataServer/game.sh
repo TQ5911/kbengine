@@ -26,17 +26,14 @@ function start_fileserver(){
             echo "$binName - delete invalid pid file $pidFileName $pid"
             rm -f $pidFileName
         else
-            pl=`ps -A | grep -w "$pid"`
+            # ps -A + awk 按列取进程名的写法在 Linux 上取到的是 TIME 列而非
+            # CMD 列，会把「服务正在运行」误判成「pid 已失效」。
+            # ps -p <pid> -o comm= 在 Linux 与 macOS 上语义一致，
+            # 且不受输出列位置影响。
+            pn=$(ps -p "$pid" -o comm= 2>/dev/null | head -1)
+            pn=${pn##*/}
 
-            if [ "$pl" == "" ]; then
-                pc=0
-            else
-                pc=`echo $pl | wc -l`
-            fi
-
-            pn=`echo $pl | awk -F ' ' '{print $4}'`
-
-            if (("$pc" == "0")); then
+            if [ -z "$pn" ]; then
                 echo "$binName - delete untracked pid file $pidFileName $pid"
                 rm -f $pidFileName
             elif [ "$pn" == "$binName" ]; then

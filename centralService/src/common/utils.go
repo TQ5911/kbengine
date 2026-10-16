@@ -48,7 +48,7 @@ func GetConfig(config interface{}) error {
 	if nil == cfg {
 		cfg = viper.New()
 	}
-	exeName := strings.ToLower(filepath.Base(filepath.Dir(os.Args[0])))
+	exeName := filepath.Base(filepath.Dir(os.Args[0]))
 	cfg.SetConfigFile(exeName + ".json")
 	err := cfg.ReadInConfig()
 	if err != nil {

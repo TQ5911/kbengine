@@ -1,6 +1,7 @@
 {
     "serverName": "leaseServer",
     "serverId": 1,
+    "mapleHttpAddr": "192.168.10.13:9527",
     "GameServerServiceAddr": "0.0.0.0:2015",
     "AddressForDebug": "localhost:9393",
     "LogPath": "lease.log",

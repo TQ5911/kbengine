@@ -5,6 +5,8 @@ import (
 	"centralService/src/common"
 	pb "centralService/src/crossTeamServer/crossTeamApp/gameServerService"
 	"sort"
+	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -74,6 +76,19 @@ func (d *TeamDispatcher) sweep(w *teamWorker) {
 		}
 	}()
 	now := time.Now().Unix()
+	// debug：打印本 worker 当前所有队伍及成员，便于测试观测
+	for _, team := range w.teams {
+		memberStr := joinIds(sortedKeys(team.Members))
+		if memberStr != "" {
+			memberStr += ","
+		}
+		appLog.Debugf(
+			"worker %d sweep teams, %d:[%s]",
+			w.idx,
+			team.TeamId,
+			memberStr,
+		)
+	}
 	for _, team := range w.teams {
 		// 申请 60s 超时清理（瞬态数据）：移除后通知队长，客户端同步从申请列表剔除
 		for gbId, apply := range team.Applicants {
@@ -87,9 +102,9 @@ func (d *TeamDispatcher) sweep(w *teamWorker) {
 		}
 		// 讨伐检查/建空间超时
 		if team.CrusadeState == CRUSADE_STATE_CHECKING && now >= team.CrusadeDeadline {
-			d.app.crusadeAbort(w, team, CRUSADE_ABORT_CHECK_TIMEOUT)
+			d.app.crusadeAbort(w, team, CRUSADE_ABORT_CHECK_TIMEOUT, "")
 		} else if team.CrusadeState == CRUSADE_STATE_SPACE_CREATING && now >= team.CrusadeDeadline {
-			d.app.crusadeAbort(w, team, CRUSADE_ABORT_SPACE_FAILED)
+			d.app.crusadeAbort(w, team, CRUSADE_ABORT_SPACE_FAILED, "")
 		}
 	}
 }
@@ -106,7 +121,7 @@ func (w *teamWorker) getTeam(teamId uint64) *CrossTeamData {
 }
 
 // collectTeamList 跨 worker 收集可入列表的队伍（按 target 过滤，
-// 排除私密/InDungeon 队伍），按 createTS 升序排序后返回。
+// 排除 InDungeon 队伍），按 createTS 升序排序后返回。
 // 条目携带 isCross/dunServer 元数据：本服目标队伍仅对同服请求方可见，
 // 过滤在 GetTeamList 按请求 serverId 进行（快照为全组共享，版本号语义不变）。
 // 数据量 ≤8k 队，全量收集即可，无需索引结构。
@@ -125,7 +140,7 @@ func (d *TeamDispatcher) collectTeamList(target int32) []*teamListEntry {
 			defer wg.Done()
 			part := make([]*listEntry, 0, 16)
 			for _, team := range w.teams {
-				if team.Target != target || team.Password != "" || team.isInDungeon() {
+				if team.Target != target || team.isInDungeon() {
 					continue
 				}
 				part = append(part, &listEntry{
@@ -284,6 +299,25 @@ func (p *matchPool) drainOps() {
 	}
 }
 
+// sortedKeys 返回 map 键的升序快照（debug 日志用，输出稳定便于观测）
+func sortedKeys[V any](m map[uint64]V) []uint64 {
+	keys := make([]uint64, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+	return keys
+}
+
+// joinIds 把 id 列表按 "," 拼接（debug 日志用）
+func joinIds(ids []uint64) string {
+	parts := make([]string, len(ids))
+	for i, id := range ids {
+		parts[i] = strconv.FormatUint(id, 10)
+	}
+	return strings.Join(parts, ",")
+}
+
 // freeSlots 队伍可撮合空位
 func (p *matchPool) freeSlots(ts *teamSummary) int32 {
 	return ts.maxNum - ts.memberCnt
@@ -295,6 +329,18 @@ func (p *matchPool) freeSlots(ts *teamSummary) int32 {
 // 在 pool 内按入池顺序（EnterTS 排序快照）找满足门槛的散人，配对即从 map 删除
 func (p *matchPool) matchTick() {
 	now := time.Now().Unix()
+
+	// debug：打印本匹配池当前的队伍与散人，便于测试观测
+	appLog.Debugf(
+		"match tick teams, %d:[%s]",
+		p.target,
+		joinIds(sortedKeys(p.teams)),
+	)
+	appLog.Debugf(
+		"match tick players, %d:[%s]",
+		p.target,
+		joinIds(sortedKeys(p.players)),
+	)
 
 	// 超时扫描：按各散人入池时生效的超时值判定，删除并下发 MatchTimeout，玩家需重新发起（无自动重试）
 	for gbId, mp := range p.players {

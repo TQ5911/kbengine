@@ -162,7 +162,8 @@ func (cta *CrossTeamApp) crusadeCheckResult(w *teamWorker, gss *GameServerServic
 	team.CrusadeResults[in.GbId] = in.Ok
 	if !in.Ok {
 		appLog.Infof("crusade check failed, teamId=%d gbId=%d reason=%s", in.TeamId, in.GbId, in.Reason)
-		cta.crusadeAbort(w, team, CRUSADE_ABORT_CHECK_FAIL)
+		// failName 仅挑战次数不足时由游戏服携带，中心不识别业务语义，随 abort 透传给队长提示
+		cta.crusadeAbort(w, team, CRUSADE_ABORT_CHECK_FAIL, in.FailName)
 		return
 	}
 
@@ -180,7 +181,7 @@ func (cta *CrossTeamApp) crusadeCheckResult(w *teamWorker, gss *GameServerServic
 			dunServer,
 			team.TeamId,
 		)
-		cta.crusadeAbort(w, team, CRUSADE_ABORT_CROSS_NOT_CONN)
+		cta.crusadeAbort(w, team, CRUSADE_ABORT_CROSS_NOT_CONN, "")
 		return
 	}
 
@@ -210,7 +211,7 @@ func (cta *CrossTeamApp) crusadeSpaceReady(w *teamWorker, gss *GameServerService
 
 	if !in.Ok {
 		appLog.Errorf("crusade space create failed, teamId=%d", in.TeamId)
-		cta.crusadeAbort(w, team, CRUSADE_ABORT_SPACE_FAILED)
+		cta.crusadeAbort(w, team, CRUSADE_ABORT_SPACE_FAILED, "")
 		return
 	}
 
@@ -286,8 +287,10 @@ func (cta *CrossTeamApp) pushDungeonCDRefresh(team *CrossTeamData) {
 }
 
 // crusadeAbort 讨伐中止：通知各成员本服并复位状态（worker sweep 超时也走这里；
-// 只在检查中/建空间中触发，成员尚未迁移，一律按本服路由）
-func (cta *CrossTeamApp) crusadeAbort(w *teamWorker, team *CrossTeamData, reason int32) {
+// 只在检查中/建空间中触发，成员尚未迁移，一律按本服路由）；
+// failName 非空（成员挑战次数不足）时随包携带队长 gbId 与失败成员名，
+// 游戏服据此给队长弹提示（54001744），中心仅透传不识别业务语义
+func (cta *CrossTeamApp) crusadeAbort(w *teamWorker, team *CrossTeamData, reason int32, failName string) {
 	team.CrusadeState = CRUSADE_STATE_NONE
 	team.CrusadeResults = nil
 	// 进行中计数仅跨服模式占用（与 startCrusade 的递增对称）
@@ -300,6 +303,10 @@ func (cta *CrossTeamApp) crusadeAbort(w *teamWorker, team *CrossTeamData, reason
 			TeamId:        team.TeamId,
 			Reason:        reason,
 			ReceiverGbIds: gbIds,
+		}
+		if failName != "" {
+			msg.CaptainGbId = team.CaptainGbId
+			msg.FailName = failName
 		}
 		cta.sendToServer(serverId, "crusadeAbort", func(client *pb.GameServerClient) error {
 			_, err := client.CrusadeAbort(msg)

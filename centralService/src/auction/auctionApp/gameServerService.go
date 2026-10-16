@@ -161,7 +161,7 @@ var pushItemPriceInfoListPool = sync.Pool{
 	},
 }
 
-func (gs *GameServerService) newAuctionItem() *gameServerService.AuctionItem {
+func (gs *GameServerService) NewAuctionItem() *gameServerService.AuctionItem {
 	item := protoAuctionItemPool.Get().(*gameServerService.AuctionItem)
 	item.Reset()
 	itemData := protoItemDataPool.Get().(*gameServerService.ItemData)
@@ -171,7 +171,7 @@ func (gs *GameServerService) newAuctionItem() *gameServerService.AuctionItem {
 	return item
 }
 
-func (gs *GameServerService) putAuctionItem(auctionItem *gameServerService.AuctionItem) {
+func (gs *GameServerService) PutAuctionItem(auctionItem *gameServerService.AuctionItem) {
 	protoItemDataPool.Put(auctionItem.ItemData)
 	protoAuctionItemPool.Put(auctionItem)
 }
@@ -202,7 +202,7 @@ func (gs *GameServerService) ActiveTick(_ *gameServerService.Void) (*gameServerS
 	return nil, nil
 }
 
-func (gs *GameServerService) transAuctionItem(auctionItem *AuctionItem, dstAuctionItem *gameServerService.AuctionItem) *gameServerService.AuctionItem {
+func (gs *GameServerService) TransAuctionItem(auctionItem *AuctionItem, dstAuctionItem *gameServerService.AuctionItem) *gameServerService.AuctionItem {
 	if auctionItem == nil {
 		return nil
 	}
@@ -255,11 +255,11 @@ func (gs *GameServerService) SaleItem(in *gameServerService.SaleItemReq) (*gameS
 			return
 		}
 
-		dstAuctionItem := gs.newAuctionItem()
-		defer gs.putAuctionItem(dstAuctionItem)
+		dstAuctionItem := gs.NewAuctionItem()
+		defer gs.PutAuctionItem(dstAuctionItem)
 		response := saleItemRespPool.Get().(*gameServerService.SaleItemResp)
 		response.PlayerGBID = in.PlayerGBID
-		response.AuctionItem = gs.transAuctionItem(auctionItem, dstAuctionItem)
+		response.AuctionItem = gs.TransAuctionItem(auctionItem, dstAuctionItem)
 		response.Extra = extra
 
 		_, err = gs.GetClientEndPoint().(gameServerService.IGameServerInterface).ReplySaleItem(response)
@@ -282,12 +282,12 @@ func (gs *GameServerService) DoSaleItem(in *gameServerService.DoSaleItemReq) (*g
 			return
 		}
 
-		dstAuctionItem := gs.newAuctionItem()
-		defer gs.putAuctionItem(dstAuctionItem)
+		dstAuctionItem := gs.NewAuctionItem()
+		defer gs.PutAuctionItem(dstAuctionItem)
 
 		response := doSaleItemRespPool.Get().(*gameServerService.DoSaleItemResp)
 		response.PlayerGBID = in.PlayerGBID
-		response.AuctionItem = gs.transAuctionItem(auctionItem, dstAuctionItem)
+		response.AuctionItem = gs.TransAuctionItem(auctionItem, dstAuctionItem)
 		response.Extra = extra
 
 		_, err = gs.GetClientEndPoint().(gameServerService.IGameServerInterface).ReplyDoSaleItem(response)
@@ -323,8 +323,8 @@ func (gs *GameServerService) RefreshPlayerCoinAuctionData(playerGBID uint64, auc
 
 func (gs *GameServerService) BuyItem(in *gameServerService.BuyItemReq) (*gameServerService.Void, error) {
 	go func() {
-		appLog.Infow("BuyItem", "PlayerGBID", in.PlayerGBID, "AuctionItemUUID", in.AuctionItemUUID, "Number", in.Number, "Extra", in.Extra)
-		auctionItemUUID, extra, price, publicityEndTime, code, buyType, err := gs.app.BuyItem(in.PlayerGBID, in.AuctionItemUUID, in.Number, in.Extra)
+		appLog.Infow("BuyItem", "PlayerGBID", in.PlayerGBID, "AuctionItemUUID", in.AuctionItemUUID, "Number", in.Number, "Extra", in.Extra, "SnatchWeight", in.SnatchWeight)
+		auctionItemUUID, extra, price, publicityEndTime, code, buyType, err := gs.app.BuyItem(in.PlayerGBID, in.AuctionItemUUID, in.Number, in.Extra, in.SnatchWeight)
 		if err != nil {
 			appLog.Errorw("BuyItem", "err", err)
 			return
@@ -335,9 +335,9 @@ func (gs *GameServerService) BuyItem(in *gameServerService.BuyItemReq) (*gameSer
 		response.AuctionItemUUID = auctionItemUUID
 		response.Price = price
 		response.PublicityEndTime = publicityEndTime
-		response.BuyType = buyType
 		response.Extra = extra
 		response.Code = code
+		response.BuyType = buyType
 
 		_, err = gs.GetClientEndPoint().(gameServerService.IGameServerInterface).ReplyBuyItem(response)
 		if err != nil {
@@ -352,19 +352,20 @@ func (gs *GameServerService) BuyItem(in *gameServerService.BuyItemReq) (*gameSer
 
 func (gs *GameServerService) DoBuyItem(in *gameServerService.DoBuyItemReq) (*gameServerService.Void, error) {
 	gs.app.funcChan <- func() {
-		appLog.Infow("DoBuyItem", "AuctionItemUUID", in.AuctionItemUUID, "PlayerGBID", in.PlayerGBID, "Errno", in.Errno, "Price", in.Price, "Extra", in.Extra)
-		auctionItem, extra, err := gs.app.DoBuyItem(in.AuctionItemUUID, in.PlayerGBID, in.Errno, in.Price, in.Extra, gs)
+		appLog.Infow("DoBuyItem", "AuctionItemUUID", in.AuctionItemUUID, "PlayerGBID", in.PlayerGBID, "Errno", in.Errno, "Price", in.Price, "Extra", in.Extra, "BuyType", in.BuyType)
+		auctionItem, extra, err := gs.app.DoBuyItem(in.AuctionItemUUID, in.PlayerGBID, in.Errno, in.Price, in.Extra, in.BuyType, gs)
 		if err != nil || auctionItem == nil {
 			appLog.Errorw("DoBuyItem", "err", err)
 			return
 		}
 
-		dstAuctionItem := gs.newAuctionItem()
-		defer gs.putAuctionItem(dstAuctionItem)
+		dstAuctionItem := gs.NewAuctionItem()
+		defer gs.PutAuctionItem(dstAuctionItem)
 		response := doBuyItemRespPool.Get().(*gameServerService.DoBuyItemResp)
 		response.PlayerGBID = in.PlayerGBID
-		response.AuctionItem = gs.transAuctionItem(auctionItem, dstAuctionItem)
+		response.AuctionItem = gs.TransAuctionItem(auctionItem, dstAuctionItem)
 		response.Extra = extra
+		response.BuyType = in.BuyType
 
 		_, err = gs.GetClientEndPoint().(gameServerService.IGameServerInterface).ReplyDoBuyItem(response)
 		if err != nil {
@@ -424,8 +425,8 @@ func (gs *GameServerService) DoBuyItems(in *gameServerService.DoBuyItemsReq) (*g
 		response.OpUUID = in.OpUUID
 		response.Extra = extra
 		for _, auctionItem := range successItems {
-			dstAuctionItem := gs.newAuctionItem()
-			gs.transAuctionItem(auctionItem, dstAuctionItem)
+			dstAuctionItem := gs.NewAuctionItem()
+			gs.TransAuctionItem(auctionItem, dstAuctionItem)
 			response.SuccessItems = append(response.SuccessItems, dstAuctionItem)
 		}
 
@@ -435,7 +436,7 @@ func (gs *GameServerService) DoBuyItems(in *gameServerService.DoBuyItemsReq) (*g
 		}
 
 		for _, dstAuctionItem := range response.SuccessItems {
-			gs.putAuctionItem(dstAuctionItem)
+			gs.PutAuctionItem(dstAuctionItem)
 		}
 
 		response.Reset()
@@ -489,11 +490,11 @@ func (gs *GameServerService) OnItemSaling(auctionItemUUID uint64, itemId uint32,
 func (gs *GameServerService) OnItemBeSaled(playerGBID uint64, auctionItem *AuctionItem, number uint32, extra string) (*gameServerService.Void, error) {
 	go func() {
 		appLog.Debugw("OnItemBeSaled", "playerGBID", playerGBID, "auctionItemUUID", auctionItem.AuctionItemUUID, "number", number, "extra", extra)
-		dstAuctionItem := gs.newAuctionItem()
-		defer gs.putAuctionItem(dstAuctionItem)
+		dstAuctionItem := gs.NewAuctionItem()
+		defer gs.PutAuctionItem(dstAuctionItem)
 		response := onItemBeSaledInfoPool.Get().(*gameServerService.OnItemBeSaledInfo)
 		response.PlayerGBID = playerGBID
-		response.AuctionItem = gs.transAuctionItem(auctionItem, dstAuctionItem)
+		response.AuctionItem = gs.TransAuctionItem(auctionItem, dstAuctionItem)
 		response.Number = number
 		response.Extra = extra
 
@@ -516,12 +517,12 @@ func (gs *GameServerService) CancelSaleItem(in *gameServerService.CancelSaleItem
 			return
 		}
 		if retCode != AUCTION_OK {
-			dstAuctionItem := gs.newAuctionItem()
-			defer gs.putAuctionItem(dstAuctionItem)
+			dstAuctionItem := gs.NewAuctionItem()
+			defer gs.PutAuctionItem(dstAuctionItem)
 			response := doCancelSaleItemRespPool.Get().(*gameServerService.DoCancelSaleItemResp)
 			response.PlayerGBID = in.PlayerGBID
 			response.Errno = retCode
-			response.AuctionItem = gs.transAuctionItem(auctionItem, dstAuctionItem)
+			response.AuctionItem = gs.TransAuctionItem(auctionItem, dstAuctionItem)
 			response.Extra = extra
 			_, err := gs.GetClientEndPoint().(gameServerService.IGameServerInterface).ReplyDoCancelSaleItem(response)
 			if err != nil {
@@ -537,12 +538,12 @@ func (gs *GameServerService) CancelSaleItem(in *gameServerService.CancelSaleItem
 				return
 			}
 
-			dstAuctionItem := gs.newAuctionItem()
-			defer gs.putAuctionItem(dstAuctionItem)
+			dstAuctionItem := gs.NewAuctionItem()
+			defer gs.PutAuctionItem(dstAuctionItem)
 			response := doCancelSaleItemRespPool.Get().(*gameServerService.DoCancelSaleItemResp)
 			response.PlayerGBID = in.PlayerGBID
 			response.Errno = errno
-			response.AuctionItem = gs.transAuctionItem(auctionItem, dstAuctionItem)
+			response.AuctionItem = gs.TransAuctionItem(auctionItem, dstAuctionItem)
 			response.Extra = extra
 			_, err := gs.GetClientEndPoint().(gameServerService.IGameServerInterface).ReplyDoCancelSaleItem(response)
 			if err != nil {
@@ -565,12 +566,12 @@ func (gs *GameServerService) DoCancelSaleItem(in *gameServerService.DoCancelSale
 	//	return nil, nil
 	//}
 	//
-	//dstAuctionItem := gs.newAuctionItem()
-	//defer gs.putAuctionItem(dstAuctionItem)
+	//dstAuctionItem := gs.NewAuctionItem()
+	//defer gs.PutAuctionItem(dstAuctionItem)
 	//response := doCancelSaleItemRespPool.Get().(*gameServerService.DoCancelSaleItemResp)
 	//response.PlayerGBID = in.PlayerGBID
 	//response.Errno = errno
-	//response.AuctionItem = gs.transAuctionItem(auctionItem, dstAuctionItem)
+	//response.AuctionItem = gs.TransAuctionItem(auctionItem, dstAuctionItem)
 	//response.Extra = extra
 	//_, err := gs.GetClientEndPoint().(gameServerService.IGameServerInterface).ReplyDoCancelSaleItem(response)
 	//if err != nil {
@@ -594,8 +595,8 @@ func (gs *GameServerService) SearchItemsByItemId(in *gameServerService.SearchIte
 		}
 		var dstAuctionItems []*gameServerService.AuctionItem
 		for _, auctionItem := range auctionItems {
-			dstAuctionItem := gs.newAuctionItem()
-			gs.transAuctionItem(auctionItem, dstAuctionItem)
+			dstAuctionItem := gs.NewAuctionItem()
+			gs.TransAuctionItem(auctionItem, dstAuctionItem)
 			dstAuctionItems = append(dstAuctionItems, dstAuctionItem)
 		}
 
@@ -615,7 +616,7 @@ func (gs *GameServerService) SearchItemsByItemId(in *gameServerService.SearchIte
 		}
 
 		for _, dstAuctionItem := range dstAuctionItems {
-			gs.putAuctionItem(dstAuctionItem)
+			gs.PutAuctionItem(dstAuctionItem)
 		}
 
 		response.Reset()
@@ -681,8 +682,8 @@ func (gs *GameServerService) GetCurrentSaleItemInfo(in *gameServerService.GetCur
 		}
 		var dstAuctionItems []*gameServerService.AuctionItem
 		for _, auctionItem := range auctionItems {
-			dstAuctionItem := gs.newAuctionItem()
-			gs.transAuctionItem(auctionItem, dstAuctionItem)
+			dstAuctionItem := gs.NewAuctionItem()
+			gs.TransAuctionItem(auctionItem, dstAuctionItem)
 			dstAuctionItems = append(dstAuctionItems, dstAuctionItem)
 		}
 
@@ -716,7 +717,7 @@ func (gs *GameServerService) GetCurrentSaleItemInfo(in *gameServerService.GetCur
 		}
 
 		for _, dstAuctionItem := range dstAuctionItems {
-			gs.putAuctionItem(dstAuctionItem)
+			gs.PutAuctionItem(dstAuctionItem)
 		}
 
 		response.Reset()
@@ -731,8 +732,8 @@ func (gs *GameServerService) GetPlayerAuctionItems(in *gameServerService.GetPlay
 		var dstAuctionItems []*gameServerService.AuctionItem
 		auctionItems := gs.app.GetPlayerAuctionItems(in.PlayerGBID)
 		for _, auctionItem := range auctionItems {
-			dstAuctionItem := gs.newAuctionItem()
-			gs.transAuctionItem(auctionItem, dstAuctionItem)
+			dstAuctionItem := gs.NewAuctionItem()
+			gs.TransAuctionItem(auctionItem, dstAuctionItem)
 			dstAuctionItems = append(dstAuctionItems, dstAuctionItem)
 		}
 
@@ -747,7 +748,7 @@ func (gs *GameServerService) GetPlayerAuctionItems(in *gameServerService.GetPlay
 		}
 
 		for _, dstAuctionItem := range dstAuctionItems {
-			gs.putAuctionItem(dstAuctionItem)
+			gs.PutAuctionItem(dstAuctionItem)
 		}
 
 		response.Reset()
@@ -906,8 +907,8 @@ func (gs *GameServerService) GetAuctionItemsByAuctionIds(in *gameServerService.G
 
 		var dstAuctionItems []*gameServerService.AuctionItem
 		for _, auctionItem := range auctionItems {
-			dstAuctionItem := gs.newAuctionItem()
-			gs.transAuctionItem(auctionItem, dstAuctionItem)
+			dstAuctionItem := gs.NewAuctionItem()
+			gs.TransAuctionItem(auctionItem, dstAuctionItem)
 			dstAuctionItems = append(dstAuctionItems, dstAuctionItem)
 		}
 
@@ -922,7 +923,7 @@ func (gs *GameServerService) GetAuctionItemsByAuctionIds(in *gameServerService.G
 		}
 
 		for _, dstAuctionItem := range dstAuctionItems {
-			gs.putAuctionItem(dstAuctionItem)
+			gs.PutAuctionItem(dstAuctionItem)
 		}
 		response.Reset()
 		getAuctionItemsByAuctionIdsRespPool.Put(response)

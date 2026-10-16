@@ -26,11 +26,45 @@ const (
 
 type AllianceApp struct {
 	common.App
-	db            *sql.DB
-	serversLock   sync.RWMutex
-	gameServers   map[string]*GameServerService
-	channelToHost map[uuid.UUID]*GameServerService
-	allianceData  *AllianceData
+	db               *sql.DB
+	serversLock      sync.RWMutex
+	gameServers      map[string]*GameServerService
+	channelToHost    map[uuid.UUID]*GameServerService
+	allianceData     *AllianceData
+	groupIdMutex     *sync.RWMutex
+	groupId          int
+	waitGroupIdMutex *sync.RWMutex
+	waitGroupId      bool
+	dataInitedMutex  *sync.RWMutex
+	dataInited       bool
+}
+
+func (app *AllianceApp) InitDatas() {
+	app.allianceData.LoadDatas()
+}
+
+func (app *AllianceApp) CheckGroupId() bool {
+	app.groupIdMutex.RLock()
+	defer app.groupIdMutex.RUnlock()
+	return app.groupId > 0
+}
+
+func (app *AllianceApp) SetGroupId(groupId int) {
+	app.groupIdMutex.Lock()
+	defer app.groupIdMutex.Unlock()
+	app.groupId = groupId
+}
+
+func (app *AllianceApp) CheckDataInited() bool {
+	app.dataInitedMutex.RLock()
+	defer app.dataInitedMutex.RUnlock()
+	return app.dataInited
+}
+
+func (app *AllianceApp) SetDataInited(dataInited bool) {
+	app.dataInitedMutex.Lock()
+	defer app.dataInitedMutex.Unlock()
+	app.dataInited = dataInited
 }
 
 func (app *AllianceApp) GetName() string {
@@ -197,16 +231,21 @@ func NewAllianceApp() *AllianceApp {
 		return nil
 	}
 
-	allianceData := NewAllianceData(db)
 	app := &AllianceApp{
-		App:           common.App{AppName: "AllianceApp"},
-		db:            db,
-		serversLock:   sync.RWMutex{},
-		gameServers:   make(map[string]*GameServerService),
-		channelToHost: make(map[uuid.UUID]*GameServerService),
-		allianceData:  allianceData,
+		App:              common.App{AppName: "AllianceApp"},
+		db:               db,
+		serversLock:      sync.RWMutex{},
+		gameServers:      make(map[string]*GameServerService),
+		channelToHost:    make(map[uuid.UUID]*GameServerService),
+		groupIdMutex:     &sync.RWMutex{},
+		groupId:          0,
+		dataInitedMutex:  &sync.RWMutex{},
+		dataInited:       false,
+		waitGroupIdMutex: &sync.RWMutex{},
+		waitGroupId:      false,
 	}
-	allianceData.SetBroadcaster(func(f func(*gameServerService.GameClientClient)) {
+	app.allianceData = NewAllianceData(app)
+	app.allianceData.SetBroadcaster(func(f func(*gameServerService.GameClientClient)) {
 		app.BroadcastToGameServers(f)
 	})
 	return app

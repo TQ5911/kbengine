@@ -41,6 +41,7 @@ func (self *HttpService) doQueueReply(w http.ResponseWriter, queueId uint32, sta
 	response.ServerHost = serverHost
 	response.WaitTime = waitTime
 	response.ServerOpenTime = serverOpenTime
+	// 排队不再下发等待服数据（预创角阶段由游戏服onReqAvatarList下发），字段保留固定返回nil
 	response.WaitMapServers = waitMapServers
 	data, err := json.Marshal(response)
 	if err != nil {
@@ -58,6 +59,28 @@ func (self *HttpService) getOnlineNum(serverIdStr string) (int, error) {
 	defer conn.Close()
 
 	return redis.Int(conn.Do("get", "g:normal_online_num"+serverIdStr))
+}
+
+// inPreCreatePeriod 判断目标服当前是否处于预创角时间窗（游戏服起服时写入redis，格式'start,end'，未配置时为'0,0'）
+func (self *HttpService) inPreCreatePeriod(conn redis.Conn, serverIdStr string) bool {
+	preCreateTimeStr, err := redis.String(conn.Do("get", "g:pre_create_time"+serverIdStr))
+	if err != nil {
+		return false
+	}
+	timePair := strings.Split(preCreateTimeStr, ",")
+	if len(timePair) != 2 {
+		return false
+	}
+	preStart, err := strconv.ParseInt(timePair[0], 10, 64)
+	if err != nil {
+		return false
+	}
+	preEnd, err := strconv.ParseInt(timePair[1], 10, 64)
+	if err != nil {
+		return false
+	}
+	nowTs := time.Now().Unix()
+	return preStart > 0 && preStart < preEnd && nowTs >= preStart && nowTs < preEnd
 }
 
 func markQueuePass(conn redis.Conn, accountName string, serverId uint32) {
@@ -108,14 +131,17 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	//开服时间没到返回失败
+	//开服时间没到返回失败（预创角时间窗内放行）
 	openTime, err := redis.String(conn.Do("get", "g:server_open_time"+serverIdStr))
 	if err == nil {
 		openTimeI64, err := strconv.ParseInt(openTime, 10, 64)
 		if err == nil && openTimeI64 > time.Now().Unix() {
-			appLog.Info("server not open", accountNameStr, serverId)
-			self.doQueueReply(w, 0, uint8(clientService.QueueReply_BEFORE_OPENTIME), serverId, serverHost, 0, openTimeI64-time.Now().Unix(), nil)
-			return
+			if !self.inPreCreatePeriod(conn, serverIdStr) {
+				appLog.Info("server not open", accountNameStr, serverId)
+				self.doQueueReply(w, 0, uint8(clientService.QueueReply_BEFORE_OPENTIME), serverId, serverHost, 0, openTimeI64-time.Now().Unix(), nil)
+				return
+			}
+			appLog.Info("in preCreate period, permit queue", accountNameStr, serverId)
 		}
 	} else {
 		appLog.Warn("get server open time failed", accountNameStr, serverId)
@@ -222,14 +248,8 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 
 		client.SetQueueId(self.app.enQueue(serverId, accountName, VIPFlag))
 
-		// 目标服人数+当前排队人数超过最大人数限制时，才返回存活等待服列表（客户端自行选择）；
-		// 否则返回nil，让客户端不要进等待服
-		var waitMapServers map[string]int
-		if onlineNum+self.app.queueSize(serverId) > MaxOnlineNum {
-			waitMapServers, _ = self.app.waitMapServerMgr.GetAliveFreeServers()
-		}
-
-		self.doQueueReply(w, uint32(client.GetQueueId()), uint8(clientService.QueueReply_QUEUE_IN_PROCESS), serverId, client.GetServerHost(), client.GetWaitTime(), 0, waitMapServers)
+		// 排队不再下发等待服数据（字段保留，doQueueReply固定返回空{}）
+		self.doQueueReply(w, uint32(client.GetQueueId()), uint8(clientService.QueueReply_QUEUE_IN_PROCESS), serverId, client.GetServerHost(), client.GetWaitTime(), 0, nil)
 	}
 }
 
@@ -264,6 +284,7 @@ func (self *HttpService) handleGetQueueInfo(w http.ResponseWriter, r *http.Reque
 			response.ServerId = serverId
 			response.ServerHost = client.GetServerHost()
 			response.WaitTime = 0
+			// 排队不再下发等待服数据（预创角阶段由游戏服onReqAvatarList下发），字段保留固定返回nil
 			response.WaitMapServers = nil
 			data, err := json.Marshal(response)
 			if err != nil {
@@ -281,15 +302,8 @@ func (self *HttpService) handleGetQueueInfo(w http.ResponseWriter, r *http.Reque
 			response.ServerId = serverId
 			response.ServerHost = client.GetServerHost()
 			response.WaitTime = client.GetWaitTime()
-
-			// 目标服人数+当前排队人数超过最大人数限制时，才返回存活等待服列表；
-			// 否则返回nil，让客户端不要进等待服。获取在线人数失败时也返回nil
-			onlineNum, err := self.getOnlineNum(serverIdStr)
-			if err != nil {
-				appLog.Warn("handleGetQueueInfo get online num failed", accountNameStr, serverIdStr, err.Error())
-			} else if onlineNum+self.app.queueSize(serverId) > MaxOnlineNum {
-				response.WaitMapServers, _ = self.app.waitMapServerMgr.GetAliveFreeServers()
-			}
+			// 排队不再下发等待服数据（预创角阶段由游戏服onReqAvatarList下发），字段保留固定返回nil
+			response.WaitMapServers = nil
 
 			data, err := json.Marshal(response)
 			if err != nil {

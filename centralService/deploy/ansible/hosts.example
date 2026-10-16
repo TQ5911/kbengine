@@ -1,0 +1,26 @@
+# ============================================================================
+#  Ansible inventory 样例
+#
+#  用法：cp hosts.example hosts  然后改成目标机真实 IP。
+#  install.sh 会自动发现 deploy/ansible/hosts 并加上 -i，
+#  也可以用 --ansible-inventory <文件> 显式指定。
+#
+#  不想用 inventory 文件也可以直接给 IP：
+#    ./deploy/install.sh --ansible --ansible-hosts 172.16.41.49
+#  这时脚本会自动用内联 inventory（等价于 -i '172.16.41.49,'）。
+# ============================================================================
+
+# 组名要和 deploy.env 里的 ANSIBLE_HOSTS 对得上（默认 tmp）
+[tmp]
+# 每行一台机；ansible_user 覆盖 deploy.env 的 ANSIBLE_USER
+172.16.41.49 ansible_user=fengyan
+
+# 多台机就多行，ansible 会并发执行
+# 172.16.41.50 ansible_user=fengyan
+
+# 组内变量：所有主机共用的连接参数
+[tmp:vars]
+# 如果目标机的 python3 不在 /usr/bin/python3
+# ansible_python_interpreter=/usr/bin/python3
+# 免密 sudo；需要输密码就打开下面这行并加 -K
+# ansible_become_password=xxx

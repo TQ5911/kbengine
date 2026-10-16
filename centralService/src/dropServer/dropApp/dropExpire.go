@@ -47,42 +47,25 @@ func (da *DropApp) checkDropExpire() {
 		defer wg.Done()
 		// 延迟几秒过期，防止临界问题
 		limitTime := common.GetNowTime()
-		sql := "SELECT uniqueId, serverId, dropGbId, endTime, equipInfo FROM drop_info WHERE dropType=? AND endTime < ? order by endTime asc limit 100"
-		rows, err := da.db.Query(sql, TYPE_DROP, limitTime)
-		if err != nil {
-			appLog.Error("checkDropExpire: get drop info error: ", err.Error())
+		// 2026-10-08 改走 store: 内存里遍历找过期 drop
+		recs := da.store.FindExpiredDrops(limitTime, 100)
+		if len(recs) == 0 {
 			return
 		}
-		defer rows.Close()
 
 		expireDatas := make(map[uint64]*dropExpireData, 0)
-		for rows.Next() {
-			var uniqueId uint64
-			var serverId uint32
-			var dropGbId uint64
-			var endTime int64
-			var equipInfo []byte
-			err = rows.Scan(&uniqueId, &serverId, &dropGbId, &endTime, &equipInfo)
-			if err != nil {
-				appLog.Error("checkDropExpire: scan drop info error: ", err.Error())
-				continue
-			}
-			expireDatas[uniqueId] = &dropExpireData{
-				serverId:  serverId,
-				gbId:      dropGbId,
-				equipInfo: equipInfo,
+		for _, rec := range recs {
+			expireDatas[rec.UniqueId] = &dropExpireData{
+				serverId:  rec.ServerId,
+				gbId:      rec.DropGbId,
+				equipInfo: rec.EquipInfo,
 			}
 		}
-		rows.Close()
 
-		if len(expireDatas) == 0 {
-			return
-		}
-
-		// 删除过期数据并通知掉落者
+		// 删除过期数据并通知掉落者 (mysql + 内存联动)
 		for uniqueId, expireData := range expireDatas {
 			da.dropItemLock.Lock(uniqueId)
-			_, err = da.db.Exec("DELETE FROM drop_info WHERE uniqueId=?", uniqueId)
+			err := da.store.DeleteDropInfo(uniqueId)
 			da.dropItemLock.Unlock(uniqueId)
 			if err != nil {
 				appLog.Error("checkDropExpire: delete drop info error: ", err.Error())
@@ -103,32 +86,25 @@ func (da *DropApp) checkRedeemExpire() {
 		defer wg.Done()
 		// 延迟几秒过期，防止临界问题
 		limitTime := common.GetNowTime()
-		sql := "SELECT uniqueId, dropGbId, serverId, takerGbId, takerServerId, equipInfo, redeemWaitTime, returnTime, returnTimeBack, ownerGbId FROM drop_info WHERE dropType=? AND redeemWaitTime < ? order by redeemWaitTime asc limit 100"
-		rows, err := da.db.Query(sql, TYPE_TAKE, limitTime)
-		if err != nil {
-			appLog.Error("checkRedeemExpire: get drop info error: ", err.Error())
+		// 2026-10-08 改走 store: 内存里遍历找过期 redeem
+		recs := da.store.FindExpiredRedeems(limitTime, 100)
+		if len(recs) == 0 {
 			return
 		}
-		defer rows.Close()
 
 		now := common.GetNowTime()
-		for rows.Next() {
-			var uniqueId uint64
-			var dropGbId uint64
-			var dropServerId uint32
-			var takerGbId uint64
-			var takerServerId uint32
-			var equipInfo []byte
-			var redeemWaitTime int64
-			var returnTime int64
-			var returnTimeBack int64
-			var ownerGbId uint64
-			err = rows.Scan(&uniqueId, &dropGbId, &dropServerId, &takerGbId, &takerServerId, &equipInfo,
-				&redeemWaitTime, &returnTime, &returnTimeBack, &ownerGbId)
-			if err != nil {
-				appLog.Error("checkRedeemExpire: scan drop info error: ", err.Error())
-				continue
-			}
+		for _, rec := range recs {
+			uniqueId := rec.UniqueId
+			dropGbId := rec.DropGbId
+			dropServerId := rec.ServerId
+			takerGbId := rec.TakerGbId
+			takerServerId := rec.TakerServerId
+			equipInfo := rec.EquipInfo
+			redeemWaitTime := rec.RedeemWaitTime
+			returnTime := rec.ReturnTime
+			returnTimeBack := rec.ReturnTimeBack
+			ownerGbId := rec.OwnerGbId
+
 			// 超过返还时间，交给返还系统处理
 			if returnTime > 0 && now >= returnTime {
 				continue
@@ -139,21 +115,24 @@ func (da *DropApp) checkRedeemExpire() {
 			}
 
 			da.dropItemLock.Lock(uniqueId)
-			_, err = da.db.Exec("UPDATE drop_info SET dropType=?, returnTime=? WHERE uniqueId=?", TYPE_REDEEM_EXPIRE_WAIT_TAKE_GET, returnTimeBack, uniqueId)
-			if err != nil {
+			if err := da.store.UpdateDropDropTypeAndReturnTime(uniqueId, TYPE_REDEEM_EXPIRE_WAIT_TAKE_GET, returnTimeBack); err != nil {
 				appLog.Error("checkRedeemExpire: update drop info error: ", err.Error())
 				da.dropItemLock.Unlock(uniqueId)
 				continue
 			}
 			// 首次掉落的，需要处理下进入等待归还
 			if returnTime == 0 {
-				// 被人拾取了，处理下转移关系
-				sql = `INSERT INTO custody_info 
-					(uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId) 
-					VALUES (?, ?, ?, ?, ?, ?, ?, ?) on duplicate key update holderGbId=?, holderServerId=?`
-				_, err = da.db.Exec(sql, uniqueId, TYPE_RETURN_WAIT, equipInfo, takerGbId, takerServerId,
-					returnTimeBack, dropGbId, dropServerId, takerGbId, takerServerId)
-				if err != nil {
+				custodyRec := &CustodyInfoRecord{
+					UniqueId:       uniqueId,
+					DropType:       TYPE_RETURN_WAIT,
+					EquipInfo:      equipInfo,
+					HolderGbId:     takerGbId,
+					HolderServerId: takerServerId,
+					ReturnTime:     returnTimeBack,
+					OwnerGbId:      dropGbId,
+					OwnerServerId:  dropServerId,
+				}
+				if err := da.store.UpsertCustodyHolder(custodyRec); err != nil {
 					appLog.Error("checkRedeemExpire: insert custody info error: ", err.Error())
 					da.dropItemLock.Unlock(uniqueId)
 					continue

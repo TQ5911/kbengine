@@ -60,7 +60,7 @@ const (
 	ERROR_CODE_DUPLICATED_TEAM     = 12 // teamId 已存在
 	ERROR_CODE_NOT_INVITED         = 13 // 无有效邀请
 	ERROR_CODE_NOT_APPLIED         = 14 // 无有效申请
-	ERROR_CODE_APPLY_REJECTED      = 15 // 入队申请被拒绝
+	ERROR_CODE_APPLY_REJECTED      = 15 // 入队申请被拒绝（已停用：审批结果不再经 replyApplyNotify 通知申请人，保留编号兼容协议）
 	ERROR_CODE_MATCH_JOIN_INVALID  = 16 // 撮合入队作废（队伍已满/解散/不再自动匹配等），需重新发起匹配
 	ERROR_CODE_CRUSADE_RATE_LIMIT  = 17 // 讨伐发起被限流（全组并发上限/单服每秒上限）
 	ERROR_CODE_CRUSADE_IN_PROGRESS = 18 // 已有进行中的讨伐检查/副本
@@ -79,6 +79,13 @@ const (
 	// 无副团长可取消（setDeputy 取消时校验，对齐本服 transferRaidDeputy 的
 	// ENUM_RAID_NOT_RAID_DEPUTY 口径；与游戏服侧 gameconst.CROSS_TEAM_RESULT_NOT_DEPUTY 对齐）
 	ERROR_CODE_NOT_DEPUTY = 27
+	// 小队转团队目标非法（convertTeam：与旧队 isCross/dunServer 不一致，
+	// 跨服队不可转本服模式目标，反之亦然；与游戏服侧 gameconst 对齐）
+	ERROR_CODE_CONVERT_TARGET_INVALID = 28
+	// 重复申请（joinApply 已存在未超时申请时的受理回调码，仅经 replyApplyNotify
+	// 受理回调通道下发；与客户端 TeamOpResult.RAID_APPLY_IS_APPLIED 及游戏服侧
+	// gameconst.CROSS_TEAM_RESULT_RAID_APPLY_IS_APPLIED 对齐）
+	ERROR_CODE_RAID_APPLY_IS_APPLIED = 29
 )
 
 // 讨伐状态机

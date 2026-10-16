@@ -18,6 +18,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/btree"
 	"github.com/google/uuid"
+	"golang.org/x/time/rate"
 )
 
 var LeaseConfig = AppConfig{}
@@ -52,6 +53,31 @@ const (
 	LEASE_RATE_LIMIT
 	LEASE_SELF_LEASE
 	LEASE_SHELF_FULL
+	LEASE_GROUP_MISMATCH
+)
+
+// 逻辑组数据源：maple.server_group，由 common 包定时拉取缓存（见 gameServerData.go）。
+// 约定：组 ID 0 为未知组（未配组的服），其货架恒空、承租被保险判断拒绝
+// groupOf 返回游戏服所属逻辑组 ID; 查询不到（未接入/数据未就绪）时返回 0（未知组）
+func groupOf(serverId uint32) uint32 {
+	group, ok := common.GetGameServerGroup(int(serverId))
+	if !ok {
+		appLog.Warnw("GetGameServerGroup no group:", "serverId", serverId)
+	}
+	return uint32(group)
+}
+
+// itemIdIndexKey itemIdIndex 的复合键：高 32 位逻辑组 ID，低 32 位装备配置 ID
+func itemIdIndexKey(groupId, itemId uint32) uint64 {
+	return uint64(groupId)<<32 | uint64(itemId)
+}
+
+// 全局限流默认容量（配置缺失或非正值时兜底）
+const (
+	defaultTradeRateLimitR = 200  // 交易类（上架/下架/租赁）令牌/秒
+	defaultTradeRateLimitB = 400  // 交易类突发容量
+	defaultQueryRateLimitR = 1000 // 查询类（总览/详细分页）令牌/秒
+	defaultQueryRateLimitB = 2000 // 查询类突发容量
 )
 
 const (
@@ -96,6 +122,12 @@ type LeaseMarketItem struct {
 	PendingOpUUID uint64 // 当前中间状态（PREPARE/PRE_LOCK）所属流程的 opUUID，commit/rollback 必须携带相同值才生效；清扫器也用它识别脏条目
 
 	mu sync.Mutex // 保护 Status 及相关字段的并发访问
+}
+
+// groupId 物品所属逻辑组 ID：按出租方归属服现算。
+// 无需缓存为字段：LessorServerId 创建后不变，且分组映射进程内静态（停服重组以重启 leaseServer 生效）
+func (a *LeaseMarketItem) groupId() uint32 {
+	return groupOf(a.LessorServerId)
 }
 
 func (a *LeaseMarketItem) Less(other btree.Item) bool {
@@ -202,7 +234,7 @@ type LeaseMgr struct {
 
 	// 数据及索引
 	items         cmap.ConcurrentMap[uint64, *LeaseMarketItem] // uniqueId -> 租赁物品主数据
-	itemIdIndex   cmap.ConcurrentMap[uint32, *LockedBTree]     // itemId -> 按价格和上架时间排序的 BTree
+	itemIdIndex   cmap.ConcurrentMap[uint64, *LockedBTree]     // groupId<<32|itemId -> 按价格和上架时间排序的 BTree（逻辑组隔离：市场可见性的唯一来源）
 	playerIdIndex cmap.ConcurrentMap[uint64, *LockedBTree]     // playerGbId -> 该玩家的出租物品 BTree
 
 	auctionConst *AuctionConstConfig // 拍卖行常量配置（租赁服务复用）
@@ -222,7 +254,7 @@ func NewLeaseMgr(db *sql.DB, auctionConst *AuctionConstConfig) *LeaseMgr {
 	return &LeaseMgr{
 		db:            db,
 		items:         cmap.NewWithCustomShardingFunction[uint64, *LeaseMarketItem](uint64Shard),
-		itemIdIndex:   cmap.NewWithCustomShardingFunction[uint32, *LockedBTree](uint32Shard),
+		itemIdIndex:   cmap.NewWithCustomShardingFunction[uint64, *LockedBTree](uint64Shard),
 		playerIdIndex: cmap.NewWithCustomShardingFunction[uint64, *LockedBTree](uint64Shard),
 		auctionConst:  auctionConst,
 		expireHeap:    h,
@@ -514,8 +546,8 @@ func (lm *LeaseMgr) _cleanLoop(name string, batchSize int, doBatch func() (int64
 	}
 }
 
-func (lm *LeaseMgr) _getItemIdBtree(itemId uint32) *LockedBTree {
-	t, _ := lm.itemIdIndex.GetOrCreate(itemId, func() *LockedBTree {
+func (lm *LeaseMgr) _getItemIdBtree(groupId, itemId uint32) *LockedBTree {
+	t, _ := lm.itemIdIndex.GetOrCreate(itemIdIndexKey(groupId, itemId), func() *LockedBTree {
 		return NewLockedBTree()
 	})
 	return t
@@ -529,14 +561,26 @@ func (lm *LeaseMgr) _getPlayerIdBtree(playerGbId uint64) *LockedBTree {
 }
 
 func (lm *LeaseMgr) _addToItemIdIndex(item *LeaseMarketItem) {
-	t := lm._getItemIdBtree(item.ItemId)
+	groupId := item.groupId()
+	if groupId == 0 {
+		// 未配组服的物品不进任何组的市场索引：全服市场不可见，但仍保留在 items/playerIdIndex，玩家可取回
+		appLog.Warnw(
+			"skip itemIdIndex: server not in any group",
+			"uniqueId", item.UniqueId,
+			"lessorServerId", item.LessorServerId,
+			"lessor", item.LessorGbId,
+			"itemId", item.ItemId,
+		)
+		return
+	}
+	t := lm._getItemIdBtree(groupId, item.ItemId)
 	t.mu.Lock()
 	t.tree.ReplaceOrInsert(item)
 	t.mu.Unlock()
 }
 
 func (lm *LeaseMgr) _removeFromItemIdIndex(item *LeaseMarketItem) {
-	t, ok := lm.itemIdIndex.Get(item.ItemId)
+	t, ok := lm.itemIdIndex.Get(itemIdIndexKey(item.groupId(), item.ItemId))
 	if !ok {
 		return
 	}
@@ -647,6 +691,11 @@ func (lm *LeaseMgr) leaseItemPrepare(uniqueId uint64, buyerGbId uint64, buyerSer
 
 	if item.LessorGbId == buyerGbId {
 		return 0, LEASE_SELF_LEASE
+	}
+
+	// 逻辑组保险判断：承租方与物品归属组不一致时拒绝（查询隔离只保证"看不见"，此处兜底"摸不着"）
+	if item.groupId() != groupOf(buyerServerId) {
+		return 0, LEASE_GROUP_MISMATCH
 	}
 
 	now := uint32(time.Now().Unix())
@@ -805,10 +854,10 @@ func (lm *LeaseMgr) cancelItem(uniqueId uint64, playerGBID uint64) (*LeaseMarket
 	return item, LEASE_OK
 }
 
-func (lm *LeaseMgr) getShopSummary(itemIds []uint32) []*gameServerService.LeaseShopSummaryItem {
+func (lm *LeaseMgr) getShopSummary(groupId uint32, itemIds []uint32) []*gameServerService.LeaseShopSummaryItem {
 	result := make([]*gameServerService.LeaseShopSummaryItem, 0)
 	for _, itemId := range itemIds {
-		lockedBTree, ok := lm.itemIdIndex.Get(itemId)
+		lockedBTree, ok := lm.itemIdIndex.Get(itemIdIndexKey(groupId, itemId))
 		if !ok {
 			continue
 		}
@@ -845,8 +894,8 @@ func (lm *LeaseMgr) getShopSummary(itemIds []uint32) []*gameServerService.LeaseS
 	return result
 }
 
-func (lm *LeaseMgr) getShopItems(itemId uint32, page uint32, pageSize uint32, enhanceLvMask uint32, gradeMask uint32) []*LeaseMarketItem {
-	t, ok := lm.itemIdIndex.Get(itemId)
+func (lm *LeaseMgr) getShopItems(groupId uint32, itemId uint32, page uint32, pageSize uint32, enhanceLvMask uint32, gradeMask uint32) []*LeaseMarketItem {
+	t, ok := lm.itemIdIndex.Get(itemIdIndexKey(groupId, itemId))
 	if !ok {
 		return nil
 	}
@@ -930,6 +979,8 @@ type LeaseApp struct {
 	serversMutex  *sync.RWMutex                         // gameServers 和 channelToHost 的读写锁
 	db            *sql.DB                               // MySQL 连接
 	leaseMgr      *LeaseMgr                             // 租赁市场内存管理器
+	tradeLimiter  *rate.Limiter                         // 交易类接口（上架/下架/租赁）全局限流桶
+	queryLimiter  *rate.Limiter                         // 查询类接口（总览/详细分页）全局限流桶
 }
 
 func NewLeaseApp() *LeaseApp {
@@ -962,13 +1013,13 @@ func NewLeaseApp() *LeaseApp {
 		serversMutex:  &sync.RWMutex{},
 		db:            db,
 		leaseMgr:      NewLeaseMgr(db, auctionConst),
+		tradeLimiter:  newRateLimiter(LeaseConfig.TradeRateLimit, defaultTradeRateLimitR, defaultTradeRateLimitB),
+		queryLimiter:  newRateLimiter(LeaseConfig.QueryRateLimit, defaultQueryRateLimitR, defaultQueryRateLimitB),
 	}
 
-	appLog.Info("load lease data from db...")
-	if err := app.leaseMgr.loadFromDB(); err != nil {
-		appLog.Error("load lease db error:", err.Error())
-		return nil
-	}
+	// 存量物品要按逻辑组建市场索引(itemIdIndex), 需等首批游戏服组别数据(maple)拉取成功后再加载,
+	// 否则全部落入 0 组(全服市场不可见); 数据就绪前服务正常受理, 仅市场暂为空
+	common.AfterInitMapleServer(app.loadData)
 
 	return app
 }
@@ -980,6 +1031,16 @@ func (la *LeaseApp) GetServices() []*common.ServiceInfo {
 			ServiceName:       "LeaseServer",
 			ServiceListenAddr: LeaseConfig.GameServerServiceAddr,
 		},
+	}
+}
+
+// loadData 加载存量租赁数据并构建内存索引, 由 NewLeaseApp 注册的 common.AfterInitMapleServer 回调触发,
+// 在首批游戏服组别数据(maple)拉取成功后执行; 加载失败直接退出进程(数据不全无法正常服务)
+func (la *LeaseApp) loadData() {
+	appLog.Info("load lease data from db...")
+	if err := la.leaseMgr.loadFromDB(); err != nil {
+		appLog.Error("load lease db error:", err.Error())
+		common.ExitProgram(1)
 	}
 }
 
@@ -1038,7 +1099,6 @@ func (la *LeaseApp) NewService(conn net.Conn, serviceType uint8) trpc.IServerEnd
 			ServerEndPoint: gameServerService.NewLeaseServerService(gameServerService.NewGameServerClient(channel)),
 			app:            la,
 			status:         ServiceStatus_Connected,
-			limiter:        newRateLimiter(),
 		}
 		channel.SetEndPoint(service)
 	}
@@ -1106,3 +1166,15 @@ func (la *LeaseApp) GetGameServer(serverId uint32, compId uint32) *GameServerInf
 }
 
 // 租赁到期归还逻辑已下放到 Avatar 端，Go 服不再维护定时器与到期队列
+
+// newRateLimiter 创建全局限流令牌桶；配置值非正时用默认容量兜底
+func newRateLimiter(cfg RateLimitConfig, defR float64, defB int) *rate.Limiter {
+	r, b := cfg.R, cfg.B
+	if r <= 0 {
+		r = defR
+	}
+	if b <= 0 {
+		b = defB
+	}
+	return rate.NewLimiter(rate.Limit(r), b)
+}

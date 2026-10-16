@@ -1,0 +1,25 @@
+# ============================================================================
+#  centralService 日志轮转
+#
+#  由 deploy/install.sh 生成，勿手工编辑（重跑安装会覆盖）。
+#
+#  两类日志都在服务自己的目录里：
+#    <服务名>.log      业务日志，由程序内的 lumberjack 按大小轮转
+#    <服务名>.out.log  进程的 stdout/stderr，由 systemd 持有 fd
+#
+#  lumberjack 默认不限制备份份数与天数，轮转出来的 <服务名>-2026-...log 会一直堆着，
+#  这里用 logrotate 统一按天压缩并只保留最近 N 份。
+#  两个 writer（lumberjack 和 systemd）都持有文件描述符，所以只能 copytruncate：
+#  直接 rename 的话进程会继续往已改名的旧文件里写，磁盘照样涨。
+# ============================================================================
+
+@INSTALL_ROOT@/*/*.log {
+    daily
+    rotate @LOG_ROTATE_KEEP@
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate
+    su @SERVICE_USER@ @SERVICE_GROUP@
+}

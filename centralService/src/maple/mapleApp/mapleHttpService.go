@@ -697,20 +697,9 @@ func (mhs *MapleHttpService) addMergeServer(w http.ResponseWriter, r *http.Reque
 	w.Write([]byte("success"))
 }
 
-// getAllMergeServer: 返回折叠后的最终映射, 每个 from 都直接指向根服 (沿链追溯到没有出边的节点)。
-// 例如 raw: {10002:10003, 10003:10001}
-// 输出 merge_map: {10002:10001, 10003:10001}
-func (mhs *MapleHttpService) getAllMergeServer(w http.ResponseWriter, r *http.Request) {
-	enableCors(&w)
-
-	raw, err := mhs.loadMergeMap()
-	if err != nil {
-		appLog.Error("load merge map error: ", err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("internal server error"))
-		return
-	}
-
+// foldMergeMap: 给定原始 from->to 内存图, 把每条链路折叠到根服 (沿链追溯到没有出边的节点)。
+// 例如 raw: {10002:10003, 10003:10001} -> {10002:10001, 10003:10001}
+func foldMergeMap(raw map[int]int) map[int]int {
 	mergeMap := make(map[int]int, len(raw))
 	for from := range raw {
 		cur := from
@@ -730,9 +719,65 @@ func (mhs *MapleHttpService) getAllMergeServer(w http.ResponseWriter, r *http.Re
 			cur = next
 		}
 	}
+	return mergeMap
+}
+
+// removeMergeServer: 按主键 from_server_id 删除一条和服映射, 用来修正 addMergeServer 时填错的映射。
+//   - 删完之后, 该 from 服在 foldMergeMap 中没有出边, 会被视作根服, 不再出现在折叠后的 merge_map 中;
+//   - 不存在的 from_server_id 视为幂等成功 (DELETE 影响 0 行不报错)。
+func (mhs *MapleHttpService) removeMergeServer(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
+	if !mhs.handleAuth(w, r) {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("unauthorized"))
+		return
+	}
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		appLog.Error("read body error: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("internal server error"))
+		return
+	}
+
+	appLog.Info("removeMergeServer body: ", string(body))
+
+	var req model.RemoveMergeRequest
+	if err = json.Unmarshal(body, &req); err != nil {
+		appLog.Error("unmarshal body error: ", err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("invalid request"))
+		return
+	}
+
+	sql := "DELETE FROM `maple_merge_server` WHERE `from_server_id` = ?"
+	if _, err = mhs.app.db.Exec(sql, req.FromServerId); err != nil {
+		appLog.Error("exec merge delete sql error: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("internal server error"))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("success"))
+}
+
+// getAllMergeServer: 返回折叠后的最终映射, 每个 from 都直接指向根服 (沿链追溯到没有出边的节点)。
+// 例如 raw: {10002:10003, 10003:10001}
+// 输出 merge_map: {10002:10001, 10003:10001}
+func (mhs *MapleHttpService) getAllMergeServer(w http.ResponseWriter, r *http.Request) {
+	raw, err := mhs.loadMergeMap()
+	if err != nil {
+		appLog.Error("load merge map error: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("internal server error"))
+		return
+	}
 
 	response := model.GetMergeServerResponse{
-		MergeMap: mergeMap,
+		MergeMap: foldMergeMap(raw),
 	}
 
 	jsonData, err := json.Marshal(response)
@@ -759,6 +804,7 @@ func (mhs *MapleHttpService) start(listenAddr string) {
 	http.Handle("/updateKV", corsMiddleware(http.HandlerFunc(mhs.handleUpdateKV)))
 	http.Handle("/getAllMergeServer", corsMiddleware(http.HandlerFunc(mhs.getAllMergeServer)))
 	http.Handle("/addMergeServer", corsMiddleware(http.HandlerFunc(mhs.addMergeServer)))
+	http.Handle("/removeMergeServer", corsMiddleware(http.HandlerFunc(mhs.removeMergeServer)))
 
 	err := http.ListenAndServe(listenAddr, nil)
 	if err != nil {

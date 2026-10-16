@@ -27,6 +27,16 @@ syntax = "proto3";
 // 实现，服务端仅做召集转发——新增 followAsk 上行（队长发起，中心复核队长）与
 // followAskPush 下行（只发队长当前所在服，receiverGbIds 为全队除队长，游戏服 Stub
 // 按本服实有成员路由）；其余跟随预留接口（reqCrossCaptainFollowInfo 等 6 个）删除不做。
+// 2026-11 小队转团队（执行清单问题 3，本服 createRaidWithTeam 对应）：新增 convertTeam
+// 上行（队长操作，游戏服生成 newTeamId 并读好新目标配表参数；语义=退役旧小队+登记新团队，
+// 新 worker 两阶段交接，冲突兜底为报错日志+全员解散推送，不重建）与 teamConvertPush 下行
+// 全量推送（全员收新队全量，游戏服 cell 复用 onCrossTeamInfoUpdate 落地）。
+// 无队邀请组队（两人组队）：新增 teamUpInvite/replyTeamUpInvite/teamUpJoinNotify 上行
+// （均为纯中继：无队邀请转发/应答转发/队伍就绪通知，中心无状态不存邀请记录）与
+// teamUpInviteNotify/teamUpReplyNotify/teamUpTeamReady 下行。仅限同服邀请
+// （被邀请人所在服=请求来源服，协议不携带 serverId）；邀请携带邀请人 cell 预分配
+// teamId（建队复用）；被邀请人接受后凭该 teamId 走现有 reqJoin 免审进队，
+// 建队复用现有 createTeam，推送复用现有链路。
 
 package CrossTeamServer;
 option go_package = "../gameServerService";
@@ -59,6 +69,9 @@ message MemberInfo {
     bool enableSpeaker = 13;
     bool inVoiceRoom = 14;
     string openId = 15;
+    // ---- 成员高频状态快照（入队/全量推送携带，后续由 MemberState 广播覆盖） ----
+    int64 hp = 16;
+    int64 maxHp = 17;
 }
 
 // 成员基本身份信息（申请成为队长提示、队伍列表队长预览等只需展示身份的下行用，MemberInfo 的精简版）
@@ -84,6 +97,7 @@ message MemberState {
     float posY = 8;
     float posZ = 9;
     uint32 routeServerId = 10;  // 成员当前实际所在服（跨服副本中为跨服服），客户端跟随判断依据
+    string name = 11;           // 玩家可改名：低频变更顺带经状态上报同步（不再单开协议），中心存新名后随全量/广播带出
 }
 
 // 队伍标记单条数据（对齐客户端 CLIENT_TEAM_MARK_VAL 全字段；proto 无 VECTOR3，pos 拆三个 float）
@@ -171,6 +185,8 @@ message ChatMsg {
     int32 senderLevel = 9;
     int32 senderSex = 10;
     int32 senderPicFrameId = 11;
+    uint32 senderServerId = 12; // 发言者归属服：中心 flush 时按成员数据 Member.ServerId 盖戳，上行不带
+    int32 senderEntId = 13;      // 发信人实体 id：由发送方上行，中心透传
 }
 
 // ---------------- 队伍操作（game -> center） ----------------
@@ -194,6 +210,10 @@ message CreateTeamRequest {
                                 // 中心与配置解耦仅识别字段；0=非法（讨伐启动报错）
 }
 
+// 申请入队（需队长审批）：受理结果经 ReplyApplyNotifyMsg 按 uuid 回执申请人
+// （游戏服经 remoteCallCache 原路回调；SUCCESS=申请已受理并通知队长，
+// 仅表示申请动作完成，不代表审批通过；已存在未超时申请回 RAID_APPLY_IS_APPLIED=29
+// 不再受理；审批结果不再经此通道下发——同意由入队推送体现，拒绝不通知）
 message JoinApplyRequest {
     uint64 uuid = 1;
     uint64 teamId = 2;
@@ -203,16 +223,18 @@ message JoinApplyRequest {
 }
 
 // 免审批快速入队（本服 reqJoinTeam 对应）：不落地申请记录，中心校验通过直接入队，
-// 结果经 ReplyApplyNotifyMsg 主动通知申请人（applySource 下发 0，与审批流共用通道）
+// 受理结果（入队动作是否完成）经 ReplyApplyNotifyMsg 按 uuid 回执申请人
+// （applySource 下发 0，与审批流共用通道）
 message ReqJoinRequest {
-    uint64 uuid = 1;            // 保留字段（对齐其他请求格式；快速加入不走 uuid 回执）
+    uint64 uuid = 1;            // 受理结果回执 uuid（游戏服 remoteCallCache 原路回调）
     uint64 teamId = 2;
     string password = 3;
     MemberInfo applicant = 4;
 }
 
 // 一键清空申请列表（本服 clearApplyJoinDic 对应，队长操作）：
-// 申请人逐个按"被拒绝"通知（对齐本服静默清空语义之上补的结果闭环），队长收空列表
+// 队长侧逐个 applyRemoveNotify 同步剔除；申请人侧不再通知（对齐本服静默清空语义，
+// ReplyApplyNotifyMsg 为申请受理回调，不承载审批结果）
 message ClearApplyListRequest {
     uint64 uuid = 1;
     uint64 teamId = 2;
@@ -293,6 +315,44 @@ message ReplyInviteRequest {
     int32 inviteType = 5;       // 邀请类型（客户端上行透传，语义记录用）
 }
 
+// 无队邀请（邀请人无队伍时发起，inviteType=InviteType.TEAM_UP=2）：
+// 仅邀请同服玩家（被邀请人所在服=请求来源服，协议不再携带 serverId）；
+// 中心校验双方无队后转发被邀请人所在服（纯中继，中心不存邀请记录）；
+// teamId 为邀请人 cell 预分配的队伍 id（后续建队复用，被邀请人应答时可凭它先试进队）；
+// uuid 回执仅表示受理结果（INVALID_PARAM/ALREADY_IN_TEAM/SUCCESS=已转发），
+// 对方应答结果另经 teamUpReplyNotify 下行
+message TeamUpInviteRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;              // 邀请人 cell 预分配（KBEngine.genUUID64()）
+    MemberInfo inviter = 3;         // 邀请人全量信息（无队场景中心无队伍数据可取，游戏服带入）
+    uint64 inviteeGbId = 4;
+    int32 inviteType = 5;
+}
+
+// 无队邀请应答：中心校验（同意时应答人仍无队）后转发邀请人所在服（纯中继）；
+// 邀请人所在服=请求来源服（同服限制），不再携带 inviterServerId
+message ReplyTeamUpInviteRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;              // 邀请时携带的预分配 teamId（校验/日志用）
+    uint64 inviterGbId = 3;
+    MemberInfo invitee = 4;         // 应答人全量信息（转发邀请人展示用）
+    bool agree = 5;
+    int32 inviteType = 6;
+    int32 reason = 7;               // agree=false 时的原因细分（TeamUpReplyReason），主动拒绝=0；
+                                    // 离线场景不代答不提示，仅游戏服日志
+}
+
+// 邀请人队伍就绪后（含刚建成），通知被邀请人进队：
+// 中心复核邀请人确在该队（playerTeam[inviterGbId]==teamId）后转发被邀请人所在服
+// （=请求来源服，同服限制）；不做满员/副本/门槛检查，进队成败由被邀请人随后的
+// reqJoin 现有校验决定
+message TeamUpJoinNotifyRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;
+    uint64 inviterGbId = 3;
+    uint64 inviteeGbId = 4;
+}
+
 message LeaveTeamRequest {
     uint64 uuid = 1;
     uint64 teamId = 2;
@@ -332,6 +392,22 @@ message DisbandRequest {
     uint64 uuid = 1;
     uint64 teamId = 2;
     uint64 captainGbId = 3; // 操作人队长，中心复核（本服缓存可能失效）
+}
+
+// 小队转团队（队长操作）：把 5 人小队转换为目标玩法对应的团队（本服 createRaidWithTeam 对应）。
+// 语义 = 退役旧小队 + 登记新团队：newTeamId 由游戏服 KBEngine.genUUID64() 生成（同 createTeam 约定），
+// newMaxNum/newDungeonMap/isCross/dunServer 由游戏服读新目标配表带入（同 createTeam 口径）；
+// isCross/dunServer 必须与旧队一致（跨服队不可转本服模式目标，反之亦然）。
+message ConvertTeamRequest {
+    uint64 uuid = 1;
+    uint64 teamId = 2;        // 旧 teamId（Dispatch key）
+    uint64 captainGbId = 3;   // 操作人队长，中心复核（本服缓存可能失效）
+    uint64 newTeamId = 4;
+    int32 newTarget = 5;
+    int32 newMaxNum = 6;
+    int32 newDungeonMap = 7;
+    bool isCross = 8;
+    uint32 dunServer = 9;
 }
 
 // 修改队伍设置：门槛/介绍/满员自动进本/密码（队长操作）；autoMatch 修改频率高，已拆分到 SetAutoMatchRequest
@@ -427,12 +503,18 @@ message MatchJoinRequest {
 
 // ---------------- 成员状态（game -> center） ----------------
 
-// 本服 Stub 聚合上报包：每服每队伍 3s 一条
+// 本服 Stub 聚合上报包：每服每队伍一条（批量上行时作为批量包的子包，字段照常填写）
 message ReportMemberStateRequest {
     uint64 teamId = 1;
     uint32 serverId = 2;
     repeated MemberState members = 3;
     int64 reportTS = 4;
+}
+
+// 本服 Stub 聚合上报批量包：每服每 tick 一条，包内按队伍分子包，
+// 中心接口层按 teamId 拆包重新分发到对应 teamWorker
+message ReportMemberStateBatchRequest {
+    repeated ReportMemberStateRequest teams = 1;
 }
 
 // ---------------- 队伍聊天（game -> center） ----------------
@@ -451,6 +533,7 @@ message TeamChatMsgRequest {
     int32 senderLevel = 10;
     int32 senderSex = 11;
     int32 senderPicFrameId = 12;
+    int32 senderEntId = 13;      // 发信人实体 id：由发送方上行，中心透传
 }
 
 // ---------------- 讨伐（game/cross -> center） ----------------
@@ -466,6 +549,8 @@ message CrusadeCheckResultRequest {
     uint64 gbId = 2;
     bool ok = 3;
     string reason = 4;
+    string failName = 5;    // 检查失败成员名（仅挑战次数不足时由游戏服携带；
+                            // 中心不识别业务语义，abort 时透传给队长提示用）
 }
 
 // 跨服服回报副本空间就绪
@@ -514,17 +599,20 @@ message TeamOpResultMsg {
     int32 target = 5;           // 队伍目标（队伍已不存在/未建成时为 0）
 }
 
-// 入队申请结果主动通知（发给申请人所在服；申请时与队长应答统一通道，
-// 携带目标/门槛/密码/申请来源供客户端失败交互，队伍已不存在时目标/门槛/密码为零值）
+// 入队申请受理回调（uuid 回执：经请求来源连接回申请人所在服，游戏服按 uuid 经
+// remoteCallCache 原路回调申请人，不再按 serverId/gbId 路由）：仅表示"申请动作是否完成"
+// （受理成功=申请已发出/已入队，失败=具体原因；队长审批结果不再经此通道下发），
+// 携带目标/门槛/密码/申请来源供客户端失败交互，队伍已不存在时目标/门槛/密码为零值
 message ReplyApplyNotifyMsg {
     uint64 teamId = 1;
-    uint64 applicantGbId = 2;
+    uint64 applicantGbId = 2;   // 申请人（仅日志/对账用，路由已改 uuid 回执）
     int32 resultCode = 3;
     int32 target = 4;           // 队伍目标
     string password = 5;        // 队伍密码（对齐本服 onApplyJoinRaidLonelyFailed 下发口径）
     int32 applySource = 6;      // 申请来源（枚举复用本服 TeamJoinType）
     int32 requireLevel = 7;     // 队伍等级门槛
     int32 requireScore = 8;     // 队伍战力门槛
+    uint64 uuid = 9;            // 回执 uuid（与 JoinApplyRequest/ReqJoinRequest.uuid 对应）
 }
 
 // 创建队伍成功推送
@@ -537,6 +625,14 @@ message TeamCreateSuccessPushMsg {
 message TeamJoinSuccessPushMsg {
     CrossTeamInfo team = 1;
     repeated uint64 receiverGbIds = 2;
+}
+
+// 小队转团队全量推送（全员各收一份新队全量；oldTeamId 供日志/对账。
+// 游戏服 cell 复用 onCrossTeamInfoUpdate 落地，客户端按 teamId 变化重建缓存/语音房）
+message TeamConvertPushMsg {
+    CrossTeamInfo team = 1;
+    uint64 oldTeamId = 2;
+    repeated uint64 receiverGbIds = 3;
 }
 
 // 进队推送
@@ -731,6 +827,8 @@ message CrusadeAbortMsg {
     uint64 teamId = 1;
     int32 reason = 2;
     repeated uint64 receiverGbIds = 3;  // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
+    uint64 captainGbId = 4; // 队长 gbId（failName 非空时携带，游戏服据此定位本服队长弹提示）
+    string failName = 5;    // 检查失败成员名（挑战次数不足场景由游戏服上行、中心透传；空=无需提示）
 }
 
 // 中心经跨服服 CrossTeamStub 中转创建副本空间
@@ -756,6 +854,30 @@ message InviteNotifyMsg {
     MemberInfo inviter = 3; // 邀请人信息
     uint64 inviteeGbId = 4;
     int32 inviteType = 5;   // 邀请类型（枚举复用本服）
+}
+
+// 无队邀请通知（发给被邀请人所在服，游戏服按 inviteeGbId 分片过滤）
+message TeamUpInviteNotifyMsg {
+    uint64 teamId = 1;      // 邀请人预分配 teamId（被邀请人应答/试进队用）
+    MemberInfo inviter = 2; // 弹窗展示 + 应答时回传 serverId 的依据
+    uint64 inviteeGbId = 3;
+    int32 inviteType = 4;
+}
+
+// 无队邀请应答通知（发给邀请人所在服，游戏服按 inviterGbId 分片过滤）
+message TeamUpReplyNotifyMsg {
+    uint64 inviterGbId = 1;
+    MemberInfo invitee = 2;
+    bool agree = 3;
+    int32 reason = 4;       // agree=false 细分：0=主动拒绝 1=对方已在队伍（TeamUpReplyReason）
+}
+
+// 队伍就绪通知（发给被邀请人所在服，游戏服按 inviteeGbId 分片过滤）：
+// 游戏服据此为被邀请人自动发起免审进队（reqJoin）
+message TeamUpTeamReadyMsg {
+    uint64 teamId = 1;
+    uint64 captainGbId = 2; // = 邀请人 gbId，游戏服校验"已答应过此人"记录用
+    uint64 inviteeGbId = 3;
 }
 
 // 队伍数据查询应答（对应 QueryTeamRequest 中 gbId 反查路径：客户端主动全量查询）
@@ -831,6 +953,7 @@ service CrossTeamServer
     rpc leaveMatchPool(LeaveMatchPoolRequest) returns (Void);
     rpc matchJoin(MatchJoinRequest) returns (Void);
     rpc reportMemberState(ReportMemberStateRequest) returns (Void);
+    rpc reportMemberStateBatch(ReportMemberStateBatchRequest) returns (Void);
     rpc teamChatMsg(TeamChatMsgRequest) returns (Void);
     rpc startCrusade(StartCrusadeRequest) returns (Void);
     rpc crusadeCheckResult(CrusadeCheckResultRequest) returns (Void);
@@ -846,6 +969,10 @@ service CrossTeamServer
     rpc delMark(DelMarkRequest) returns (Void);
     rpc setOnlyCaptainMark(SetOnlyCaptainMarkRequest) returns (Void);
     rpc followAsk(FollowAskRequest) returns (Void);
+    rpc convertTeam(ConvertTeamRequest) returns (Void);
+    rpc teamUpInvite(TeamUpInviteRequest) returns (Void);
+    rpc replyTeamUpInvite(ReplyTeamUpInviteRequest) returns (Void);
+    rpc teamUpJoinNotify(TeamUpJoinNotifyRequest) returns (Void);
 }
 
 // 游戏服/跨服服侧服务：中心反向回调
@@ -888,4 +1015,8 @@ service GameServer
     rpc dungeonCDRefreshPush(DungeonCDRefreshPushMsg) returns (Void);
     rpc markChangePush(MarkChangePushMsg) returns (Void);
     rpc followAskPush(FollowAskPushMsg) returns (Void);
+    rpc teamConvertPush(TeamConvertPushMsg) returns (Void);
+    rpc teamUpInviteNotify(TeamUpInviteNotifyMsg) returns (Void);
+    rpc teamUpReplyNotify(TeamUpReplyNotifyMsg) returns (Void);
+    rpc teamUpTeamReady(TeamUpTeamReadyMsg) returns (Void);
 }
