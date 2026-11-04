@@ -124,6 +124,9 @@ class GlyphAffix(Affix):
 
     def getEffected(self):
         return self.isEffected
+    
+    def getQuality(self):
+        return self.glyphQuality
 
 class AffixAdjustType(object):
     AFFIX_ADJUST_EQUIP_DROP = 0

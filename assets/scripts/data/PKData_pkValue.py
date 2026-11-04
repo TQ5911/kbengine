@@ -69,7 +69,7 @@ datas = _tools.RODict({
         "mapType": (4, 5),
         "ifEnemy": 1,
         "ifRefuge": 1,
-        "pkValue": -20
+        "pkValue": 0
     }),
     8: _tools.RODict({
         "ID": 8,
@@ -77,7 +77,7 @@ datas = _tools.RODict({
         "mapType": (4, 5),
         "ifEnemy": 0,
         "ifRefuge": 1,
-        "pkValue": -40
+        "pkValue": -20
     }),
     9: _tools.RODict({
         "ID": 9,

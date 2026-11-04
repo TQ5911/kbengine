@@ -33,13 +33,14 @@ class IMultiStaticSpacePlayer(object):
         _linePlayers = self.allLines.get(_spaceNo)
 
         _timeoutTime = utils.curTS() - timeOutDuration
+        _lineCtx = formula.lineInfo(spaceNo=_spaceNo)
         if not _linePlayers:
-            LOG_WARN('onClearEnterTimeOut:spaceNo={}, _linePlayers is None'.format(_spaceNo))
+            LOG_WARN('onClearEnterTimeOut: _linePlayers is None', _lineCtx)
             return
         
         _clearList = _linePlayers.clearTimeOutInfo(_timeoutTime)
         if _clearList:
-            LOG_ERR('onClearEnterTimeOut:spaceNo={}, clearList={}'.format(_spaceNo, _clearList))
+            LOG_ERR('onClearEnterTimeOut: clear timeout players', _lineCtx, 'clearList', _clearList)
             for _gbId in _clearList:
                 self.allPlayers.pop(_gbId, None)
 
@@ -68,7 +69,7 @@ class IMultiStaticSpacePlayer(object):
 
     def addEnterPlayer(self, box, gbId, teamUUID, areaId, status, curSpaceNo, extraInfo):
         if gbId in self.allPlayers:
-            LOG_ERR('addEnterPlayer:already in allPlayers', gbId)
+            LOG_ERR('addEnterPlayer:already in allPlayers', formula.lineInfo(spaceNo=curSpaceNo), gbId)
             return
 
         _linePlayers = self.allLines.get(curSpaceNo)
@@ -80,7 +81,7 @@ class IMultiStaticSpacePlayer(object):
         self.allPlayers[gbId] = _linePlayers[gbId]
 
     def enterSpaceFailed(self, gbId, spaceNo):
-        LOG_WARN('enterSpaceFailed', gbId, spaceNo)
+        LOG_WARN('enterSpaceFailed', formula.lineInfo(spaceNo=spaceNo), gbId)
         _linePlayers = self.allLines.get(spaceNo)
         if not _linePlayers:
             return
@@ -98,7 +99,7 @@ class IMultiStaticSpacePlayer(object):
 
         _linePlayers = self.allLines.get(_playerVal.curSpaceNo)
         if not _linePlayers:
-            LOG_ERR('removePlayer:linePlayers not found', _playerVal.curSpaceNo)
+            LOG_ERR('removePlayer:linePlayers not found', formula.lineInfo(spaceNo=_playerVal.curSpaceNo), gbId)
             return
 
         _linePlayers.doRemoveLinePlayer(gbId)
@@ -106,11 +107,11 @@ class IMultiStaticSpacePlayer(object):
     def switchStaticSpace(self, gbId, toSpaceNo):
         _playerVal = self.allPlayers.get(gbId)
         if not _playerVal:
-            LOG_ERR('switchStaticSpace:player not found', gbId)
+            LOG_ERR('switchStaticSpace:player not found', formula.lineInfo(spaceNo=toSpaceNo), gbId)
             return
 
         if _playerVal.curSpaceNo == toSpaceNo:
-            LOG_ERR('switchStaticSpace:spaceNo same', toSpaceNo)
+            LOG_ERR('switchStaticSpace:spaceNo same', formula.lineInfo(spaceNo=toSpaceNo), gbId)
             return
 
         _isLeader = False
@@ -129,10 +130,10 @@ class IMultiStaticSpacePlayer(object):
         _linePlayers.doAddLinePlayerVal(_playerVal, _isLeader)
 
     def getMapBranchLinePlayers(self, lineType):
-        LOG_INFO('getMapBranchLinePlayers', lineType)
+        LOG_INFO('getMapBranchLinePlayers', formula.lineInfo(lineType))
         ret = {}
         if lineType not in B_BD.datas:
-            LOG_ERR('getMapBranchLinePlayers:lineType not found', lineType)
+            LOG_ERR('getMapBranchLinePlayers:lineType not found', formula.lineInfo(lineType))
             return ret
         for lineNo in range(gameconst.getBranchLineCnt(lineType)):
             _spaceNo = formula.combineLineSpaceNo(lineType, lineNo)
@@ -141,6 +142,6 @@ class IMultiStaticSpacePlayer(object):
                 _linePlayers = linePlayers.LinePlayers(formula.parseLineNo(_spaceNo))
                 self.allLines[_spaceNo] = _linePlayers
             ret[lineNo] = _linePlayers
-            LOG_DBG('getMapBranchLinePlayers:lineNo={}, linePlayers={}'.format(lineNo, _linePlayers))
+            LOG_DBG('getMapBranchLinePlayers', formula.lineInfo(lineType, lineNo), _linePlayers)
 
         return ret

@@ -104,7 +104,7 @@ datas = _tools.RODict({
         "name": "猎人天性",
         "unlockYanWuGeLevel": 3,
         "fightProp": "adjMonsterDmg",
-        "valueFormula": 34000011,
+        "valueFormula": 34000016,
     }),
     95000014: _tools.RODict({
         "ID": 95000014,
@@ -115,23 +115,23 @@ datas = _tools.RODict({
     }),
     95000015: _tools.RODict({
         "ID": 95000015,
-        "name": "战神祝福",
-        "unlockYanWuGeLevel": 4,
-        "fightProp": "adjFinalDmg",
-        "valueFormula": 34000012,
-    }),
-    95000016: _tools.RODict({
-        "ID": 95000016,
         "name": "竞技血脉",
         "unlockYanWuGeLevel": 4,
         "fightProp": "adjPVPDmg",
-        "valueFormula": 34000011,
+        "valueFormula": 34000016,
+    }),
+    95000016: _tools.RODict({
+        "ID": 95000016,
+        "name": "无坚不摧",
+        "unlockYanWuGeLevel": 4,
+        "fightProp": "adjIgnoreArmor",
+        "valueFormula": 34000012,
     }),
     95000017: _tools.RODict({
         "ID": 95000017,
-        "name": "无坚不摧",
+        "name": "战神祝福",
         "unlockYanWuGeLevel": 5,
-        "fightProp": "adjIgnoreArmor",
+        "fightProp": "adjFinalDmg",
         "valueFormula": 34000012,
     }),
     95000018: _tools.RODict({
@@ -167,7 +167,7 @@ datas = _tools.RODict({
         "name": "驱怪结界",
         "unlockYanWuGeLevel": 3,
         "fightProp": "adjMonsterDmgAnti",
-        "valueFormula": 34000011,
+        "valueFormula": 34000016,
     }),
     95000023: _tools.RODict({
         "ID": 95000023,
@@ -178,23 +178,23 @@ datas = _tools.RODict({
     }),
     95000024: _tools.RODict({
         "ID": 95000024,
-        "name": "玄元护体",
-        "unlockYanWuGeLevel": 4,
-        "fightProp": "adjFinalDmgAnti",
-        "valueFormula": 34000012,
-    }),
-    95000025: _tools.RODict({
-        "ID": 95000025,
         "name": "竞技抗性",
         "unlockYanWuGeLevel": 4,
         "fightProp": "adjPVPDmgAnti",
-        "valueFormula": 34000011,
+        "valueFormula": 34000016,
+    }),
+    95000025: _tools.RODict({
+        "ID": 95000025,
+        "name": "金刚体质",
+        "unlockYanWuGeLevel": 4,
+        "fightProp": "adjDmgArmor",
+        "valueFormula": 34000012,
     }),
     95000026: _tools.RODict({
         "ID": 95000026,
-        "name": "金刚体质",
+        "name": "玄元护体",
         "unlockYanWuGeLevel": 5,
-        "fightProp": "adjDmgArmor",
+        "fightProp": "adjFinalDmgAnti",
         "valueFormula": 34000012,
     })
 })

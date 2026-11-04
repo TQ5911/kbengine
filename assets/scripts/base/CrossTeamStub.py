@@ -6,15 +6,18 @@
 #   receiverGbIds / 全量成员列表（含 serverId），全量数据由 pb 直接转 streamDict 下发；
 # - 例外（问题记录#5）：队伍列表按 target 缓存 CROSS_TEAM_LIST_CACHE_SECONDS 秒
 #   （json+gzip 后的 blob），命中期查询直接经 base streamStringProxy 分片回缓存数据；
-# - 聚合本服成员状态 3s 定时上报中心（stateReportCache 为短周期缓冲）；
+# - 聚合本服成员状态 0.2s 定时定量上报中心（stateReportCache 为持续缓冲，按 gbId 存
+#   最新快照；每 tick 拆一批上行，单批 ≤500 成员、整队为原子单位不拆，配额外的
+#   剩余队伍留待下个 tick；Avatar 侧先做快照脏检查，血量/位置变动超阈值才上行；
+#   中心接口层按 teamId 拆包重新分发）；
 # - 登录恢复已移除（离线即退队）：客户端可经 reqQueryCrossTeamInfo 主动全量查询，
 #   回包按 uuid 经 remoteCallCache 原路回调。
 # 注意：推送给 Avatar 的方法（onCrossTeamInfoUpdate 等）在阶段 4 下半注册 iAvatarCrossTeam.def，
-#       异步回包经缓存的 box/method 直接回调（目标为 cell 时存 box.cell，base 时存 base box），
+#       异步回包经缓存的 box/method 回调：缓存只存 base box（cell 可能迁移/重建，
+#       缓存 cell 邮箱会失效），回调目标是 cell 时在调用时经 box.cell 动态解析；
 #       广播推送按目标分别经 PlayerStub.doOnOthersBase/Cell/Client 路由。
-# 讨伐副本：副本空间由对应 dungeonNo 的 CrossTeamDungeonStub 管理（每 dungeonNo 一个 owner stub，
-# 跨服服上的空间 dungeonPlayMode 落 CROSS_CRUSADE/CROSS_CHIEF，本服模式落 CRUSADE/CHIEF，
-# 跨服队伍归属统一走 SpaceVal.crossTeamId 判定）；
+# 讨伐副本：副本空间由对应 dungeonNo 的 CrossTeamDungeonStub 管理（每 dungeonNo 一个 owner stub；
+# 跨服服上的空间 dungeonPlayMode 落 CROSS_CRUSADE/CROSS_CHIEF，本服模式落 CRUSADE/CHIEF）；
 # 本 Stub 只承担中心 RPC 中转（建空间触发/就绪回报/完成复位/退队/离线）与 teamId->空间 的
 # 短周期簿记（crusadeDungeonCache/crusadeSpaceCache）。
 
@@ -35,22 +38,26 @@ import gameengine
 import gameconst
 import dungeonPlayMode
 import crossTeam
+import dungeonSrc
 import gameglobal
 import gamedecorator
 
 import gamePlay_gamePlay as DDI
 import teamMatch_matchConfig as TMMCD
+import message_Message_def as MMD
 
 from proto.gameServerCrossTeam_pb2 import GameServer, CrossTeamServer_Stub, RegisterGameServerRequest, Void, CreateTeamRequest,\
     JoinApplyRequest, ReqJoinRequest, ClearApplyListRequest, SetDeputyRequest, ReplyApplyRequest, InviteRequest, ReplyInviteRequest, LeaveTeamRequest, KickRequest, TransferCaptainRequest,\
     DisbandRequest, SetTeamSettingsRequest, SetAutoMatchRequest, GetTeamListRequest, EnterMatchPoolRequest, LeaveMatchPoolRequest, MatchJoinRequest,\
-    ReportMemberStateRequest, TeamChatMsgRequest, QueryTeamRequest, MemberOfflineRequest, SetMicsModeRequest, BlockMicRequest,\
+    ReportMemberStateBatchRequest, TeamChatMsgRequest, QueryTeamRequest, MemberOfflineRequest, SetMicsModeRequest, BlockMicRequest,\
     AdjustMemberPosRequest, AdjustMemberPosPushMsg, SetVoiceStateRequest, GetApplyListRequest,\
-    ApplyBecomeCaptainRequest, ReplyBecomeCaptainRequest,\
+    ApplyBecomeCaptainRequest, ReplyBecomeCaptainRequest, ConvertTeamRequest,\
     MemberJoinPushMsg, MemberLeavePushMsg, CaptainChangePushMsg, DeputyChangePushMsg, TeamDisbandPushMsg,\
     TeamSettingsChangePushMsg, TeamAutoMatchChangePushMsg, TeamMicsModeChangePushMsg, MemberMicBlockPushMsg,\
     StartCrusadeRequest, CrusadeCheckResultRequest, CrusadeSpaceReadyRequest, CrusadeFinishedRequest,\
-    DungeonCDRefreshPushMsg, AddMarkRequest, DelMarkRequest, SetOnlyCaptainMarkRequest, FollowAskRequest
+    DungeonCDRefreshPushMsg, AddMarkRequest, DelMarkRequest, SetOnlyCaptainMarkRequest, FollowAskRequest,\
+    TeamUpInviteRequest, ReplyTeamUpInviteRequest, TeamUpJoinNotifyRequest,\
+    TeamUpInviteNotifyMsg, TeamUpReplyNotifyMsg, TeamUpTeamReadyMsg, RenameMemberRequest
 
 
 class CrossTeamService(GameServer):
@@ -76,72 +83,71 @@ class CrossTeamService(GameServer):
         self.mgr.onTeamOpResult(reply)
 
     def replyApplyNotify(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
-            return
+        # uuid 回执：仅回请求来源连接（本 stub 持有 remoteCallCache），无需 _isMyTeam 分片过滤
         self.mgr.onReplyApplyNotify(reply)
 
     def teamCreateSuccessPush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.team.teamId):
+        if not self.mgr._isMyTeam(reply.team.teamId, 'teamCreateSuccessPush'):
             return
         self.mgr.onTeamCreateSuccessPush(reply)
 
     def teamJoinSuccessPush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.team.teamId):
+        if not self.mgr._isMyTeam(reply.team.teamId, 'teamJoinSuccessPush'):
             return
         self.mgr.onTeamJoinSuccessPush(reply)
 
     def memberJoinPush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'memberJoinPush'):
             return
         self.mgr.onMemberJoinPush(reply)
 
     def memberLeavePush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'memberLeavePush'):
             return
         self.mgr.onMemberLeavePush(reply)
 
     def captainChangePush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'captainChangePush'):
             return
         self.mgr.onCaptainChangePush(reply)
 
     def deputyChangePush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'deputyChangePush'):
             return
         self.mgr.onDeputyChangePush(reply)
 
     def becomeCaptainApplyPush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'becomeCaptainApplyPush'):
             return
         self.mgr.onBecomeCaptainApplyPush(reply)
 
     def teamDisbandPush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'teamDisbandPush'):
             return
         self.mgr.onTeamDisbandPush(reply)
 
     def teamSettingsChangePush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'teamSettingsChangePush'):
             return
         self.mgr.onTeamSettingsChangePush(reply)
 
     def teamAutoMatchChangePush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'teamAutoMatchChangePush'):
             return
         self.mgr.onTeamAutoMatchChangePush(reply)
 
     def teamMicsModeChangePush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'teamMicsModeChangePush'):
             return
         self.mgr.onTeamMicsModeChangePush(reply)
 
     def memberMicBlockPush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'memberMicBlockPush'):
             return
         self.mgr.onMemberMicBlockPush(reply)
 
     def adjustMemberPosPush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'adjustMemberPosPush'):
             return
         self.mgr.onAdjustMemberPosPush(reply)
 
@@ -149,42 +155,41 @@ class CrossTeamService(GameServer):
         self.mgr.onTeamListResult(reply)
 
     def matchSuccess(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'matchSuccess'):
             return
         self.mgr.onMatchSuccess(reply)
 
     def matchTimeout(self, rpc_controller, reply, done):
-        if not self.mgr._isMyGbId(reply.gbId):
+        if not self.mgr._isMyGbId(reply.gbId, 'matchTimeout'):
             return
         self.mgr.onMatchTimeout(reply)
 
-    def broadcastMemberState(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
-            return
-        self.mgr.onBroadcastMemberState(reply)
+    def teamMemberStatesPush(self, rpc_controller, reply, done):
+        # 批量包按队伍逐条分片过滤（同服多队合一包），在 mgr 内逐 item 判定
+        self.mgr.onTeamMemberStatesPush(reply)
 
     def teamChatBatch(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'teamChatBatch'):
             return
         self.mgr.onTeamChatBatch(reply)
 
     def crusadeCheck(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'crusadeCheck'):
             return
         self.mgr.onCrusadeCheck(reply)
 
     def crusadeGo(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'crusadeGo'):
             return
         self.mgr.onCrusadeGo(reply)
 
     def crusadeAbort(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'crusadeAbort'):
             return
         self.mgr.onCrusadeAbort(reply)
 
     def createCrusadeSpace(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'createCrusadeSpace'):
             return
         self.mgr.onCreateCrusadeSpace(reply)
 
@@ -197,27 +202,54 @@ class CrossTeamService(GameServer):
         self.mgr.onQueryTeamCrossResp(reply)
 
     def joinApplyNotify(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'joinApplyNotify'):
             return
         self.mgr.onJoinApplyNotify(reply)
 
     def inviteNotify(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'inviteNotify'):
             return
         self.mgr.onInviteNotify(reply)
 
+    # 无队邀请组队三件套下行：无队期消息一律按 gbId 分片过滤（同撮合三件套口径）
+    def teamUpInviteNotify(self, rpc_controller, reply, done):
+        if not self.mgr._isMyGbId(reply.inviteeGbId, 'teamUpInviteNotify'):
+            return
+        self.mgr.onTeamUpInviteNotify(reply)
+
+    def teamUpReplyNotify(self, rpc_controller, reply, done):
+        if not self.mgr._isMyGbId(reply.inviterGbId, 'teamUpReplyNotify'):
+            return
+        self.mgr.onTeamUpReplyNotify(reply)
+
+    def teamUpTeamReady(self, rpc_controller, reply, done):
+        if not self.mgr._isMyGbId(reply.inviteeGbId, 'teamUpTeamReady'):
+            return
+        self.mgr.onTeamUpTeamReady(reply)
+
+    def applyApprovedNotify(self, rpc_controller, reply, done):
+        # 申请审批同意通知：按申请人 gbId 分片过滤（中心已按 serverId 投递申请人所在服）
+        if not self.mgr._isMyGbId(reply.gbId, 'applyApprovedNotify'):
+            return
+        self.mgr.onApplyApprovedNotify(reply)
+
     def memberVoiceStatePush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'memberVoiceStatePush'):
             return
         self.mgr.onMemberVoiceStatePush(reply)
 
+    def memberRenamePush(self, rpc_controller, reply, done):
+        if not self.mgr._isMyTeam(reply.teamId, 'memberRenamePush'):
+            return
+        self.mgr.onMemberRenamePush(reply)
+
     def matchStart(self, rpc_controller, reply, done):
-        if not self.mgr._isMyGbId(reply.gbId):
+        if not self.mgr._isMyGbId(reply.gbId, 'matchStart'):
             return
         self.mgr.onMatchStart(reply)
 
     def matchStop(self, rpc_controller, reply, done):
-        if not self.mgr._isMyGbId(reply.gbId):
+        if not self.mgr._isMyGbId(reply.gbId, 'matchStop'):
             return
         self.mgr.onMatchStop(reply)
 
@@ -226,24 +258,30 @@ class CrossTeamService(GameServer):
         self.mgr.onApplyListPush(reply)
 
     def applyRemoveNotify(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'applyRemoveNotify'):
             return
         self.mgr.onApplyRemoveNotify(reply)
 
     def dungeonCDRefreshPush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'dungeonCDRefreshPush'):
             return
         self.mgr.onDungeonCDRefreshPush(reply)
 
     def markChangePush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'markChangePush'):
             return
         self.mgr.onMarkChangePush(reply)
 
     def followAskPush(self, rpc_controller, reply, done):
-        if not self.mgr._isMyTeam(reply.teamId):
+        if not self.mgr._isMyTeam(reply.teamId, 'followAskPush'):
             return
         self.mgr.onFollowAskPush(reply)
+
+    def teamConvertPush(self, rpc_controller, reply, done):
+        # 小队转团队全量推送：按新 teamId 分片过滤（中心以新 id 投递）
+        if not self.mgr._isMyTeam(reply.team.teamId, 'teamConvertPush'):
+            return
+        self.mgr.onTeamConvertPush(reply)
 
 
 class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
@@ -256,11 +294,23 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         self.remoteCallCache    = {} # rpc 回调缓存
         self.stateReportCache   = {} # 高频状态同步缓冲
-        # 队伍列表缓存（问题记录#5）：{target: {'data': gzip blob, 'ts': 生成时间戳}}，
-        # 命中期（CROSS_TEAM_LIST_CACHE_SECONDS 秒）内查询直接回缓存，过期才向中心拉取
+        # 队伍列表缓存（问题记录#5）：{target: {'data': gzip blob, 'ts': 生成时间戳,
+        # 'queryTs': 在途查询发起时间（0=空闲）, 'waiters': [box]}}，
+        # 命中期（CROSS_TEAM_LIST_CACHE_SECONDS 秒）内查询直接回缓存，过期才向中心拉取；
+        # 防击穿：在途期间并发查询回旧数据/挂等待队列，30s（CROSS_TEAM_LIST_QUERY_TIMEOUT）兜底
         self.teamListCache      = {}
+        # 成员状态快照缓存（推送模型）：中心 teamWorker 1s tick 把脏队伍全量快照经
+        # teamMemberStatesPush 推到本 Stub 即写本缓存（version 随写递增，首写为 1），
+        # Avatar 每秒轮询按版本号去重下发（version 未前进不重发，见 queryTeamMemberState）；
+        # {teamId: {'data': {gbId: stateDict 含 groupIdx}, 'ts': 写入时间,
+        # 'reportTS': 中心上报时间戳（乱序丢弃判定用）, 'version': 数据版本号,
+        # 'queryLook': {gbId: 已下发版本号}（随条目同生共死，无需单独维护清理）}}
+        self.stateQueryCache    = {}
         # 是否曾连上过中心：仅断连重连才触发全服重查对账，首连（进程重启）不触发
         self._hasConnectedBefore = False
+        # GM 禁止进入的副本 dungeonNo 集合（$banEnterDungeon/$disbanEnterDungeon 临时开关，
+        # 各分片独立内存态，重启/分片重建即失效），判定见 onCrusadeCheck
+        self.forbidEnterDungeonNos = set()
 
     def _fullPrepare(self):
         self.pyAddTimer(1, 1, gametimer.CROSS_TEAM_STUB_CONNECT_TICK)
@@ -297,17 +347,25 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         gameglobal.localBaseApp.fullPrepare(self.classname())
 
     # ------------------------------------------------------------------
-    # 分片判断：中心服按 serverId 广播到本服全部 stub，本层按 teamId/gbId 过滤
+    # 分片判断：中心按 serverId + 分片 key 路由到对应 stub 连接
+    # （shardKey % crossTeamStubNum == stubIdx，与中心 pickShardConn 口径一致），
+    # 本层过滤保留作兜底；过滤命中说明中心路由错误（或回退广播），记 warn 日志便于排查
     # ------------------------------------------------------------------
 
     def _myStubIdx(self):
         return getattr(self, 'stubIdx', 0)
 
-    def _isMyTeam(self, teamId):
-        return teamId % gameconst.CROSS_TEAMSTUB_CONF_NUM == self._myStubIdx()
+    def _isMyTeam(self, teamId, what=''):
+        if teamId % gameconfig.crossTeamStubNum() == self._myStubIdx():
+            return True
+        LOG_WARN('CrossTeamStub %s misrouted, teamId=%s stubIdx=%s' % (what, teamId, self._myStubIdx()))
+        return False
 
-    def _isMyGbId(self, gbId):
-        return gbId % gameconst.CROSS_TEAMSTUB_CONF_NUM == self._myStubIdx()
+    def _isMyGbId(self, gbId, what=''):
+        if gbId % gameconfig.crossTeamStubNum() == self._myStubIdx():
+            return True
+        LOG_WARN('CrossTeamStub %s misrouted, gbId=%s stubIdx=%s' % (what, gbId, self._myStubIdx()))
+        return False
 
     # ------------------------------------------------------------------
     # 连接管理
@@ -331,6 +389,9 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         _req = RegisterGameServerRequest()
         _req.serverId = serverId
+        # 携带本分片信息供中心按分片路由推送（stubNum 与过滤口径同源于 crossTeamStubNum）
+        _req.stubIdx = self._myStubIdx()
+        _req.stubNum = gameconfig.crossTeamStubNum()
 
         if self.crossTeamService and self.crossTeamService.channel.dispatcher:
             self.crossTeamService.serviceStub.registerGameServer(None, _req, None)
@@ -355,15 +416,17 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         self.crossTeamService.serviceStub.activeTick(None, Void(), None)
 
-    def _getService(self, funcName):
+    def _getService(self, funcName, *ctx):
         _service = self.crossTeamService
         if not (_service and _service.channel.dispatcher):
-            LOG_WARN('CrossTeamStub %s no service' % funcName)
+            LOG_WARN('CrossTeamStub %s no service' % funcName, *ctx)
             return None
         return _service
 
     def _cacheRemoteCall(self, uuid, box, method, args=None):
         # 缓存异步 RPC 回包所需上下文：box/method/args/ts
+        # box 一律存 base box：cell 可能迁移/重建，缓存 cell 邮箱会失效；
+        # 回调目标是 cell 时由读取方在调用时经 box.cell 动态解析
         self.remoteCallCache[uuid] = {
             'box': box,
             'method': method,
@@ -384,6 +447,11 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         for _target in _expiredTargets:
             self.teamListCache.pop(_target, None)
 
+        # 成员状态快照缓存同周期清理：60s 未刷新（推送已停止：队伍解散/全员离线）的条目回收
+        _expiredTeams = [_teamId for _teamId, _entry in self.stateQueryCache.items() if _now - _entry['ts'] > 60]
+        for _teamId in _expiredTeams:
+            self.stateQueryCache.pop(_teamId, None)
+
     # ------------------------------------------------------------------
     # 本服成员通知：统一经 PlayerStub 路由到本服玩家 base/cell。
     # 本服成员名单不再由本地缓存维护，一律取中心推送里的 receiverGbIds
@@ -393,9 +461,13 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     # 上行：Avatar -> Stub -> 中心（方法已在 CrossTeamStub.def 注册）
     # ------------------------------------------------------------------
 
+    # 创建队伍
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onTeamCreateSuccessPush 推送给创建者本人
     def createTeam(self, box, teamId, target, minLevel, minScore, password, intro, autoMatch, maxNum, dungeonMap, autoEnter, memberInfo):
         LOG_INFO('CrossTeamStub createTeam', teamId, target, dungeonMap, autoEnter, memberInfo.get('gbId'))
-        _service = self._getService('createTeam')
+        _service = self._getService('createTeam', teamId, memberInfo.get('gbId'))
         if not _service:
             return
 
@@ -424,13 +496,19 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.captain.sex = memberInfo.get('sex', 0)
         _req.captain.picFrameId = memberInfo.get('picFrameId', 0)
         _req.captain.openId = memberInfo.get('openId', '')
+        _req.captain.hp = memberInfo.get('hp', 0)
+        _req.captain.maxHp = memberInfo.get('maxHp', 0)
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.createTeam(None, _req, None)
 
+    # 申请入队（需队长审批）
+    # callback:
+    #   onReplyApplyNotify 申请受理回调（成功=申请已发出，失败=原因；不代表审批通过）
+    #   onJoinApplyNotify 推送队长收到申请
     def applyJoinTeam(self, box, teamId, password, memberInfo, applySource):
         LOG_INFO('CrossTeamStub applyJoinTeam', teamId, memberInfo.get('gbId'), applySource)
-        _service = self._getService('applyJoinTeam')
+        _service = self._getService('applyJoinTeam', teamId, memberInfo.get('gbId'))
         if not _service:
             return
 
@@ -448,16 +526,24 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.applicant.sex = memberInfo.get('sex', 0)
         _req.applicant.picFrameId = memberInfo.get('picFrameId', 0)
         _req.applicant.openId = memberInfo.get('openId', '')
+        _req.applicant.hp = memberInfo.get('hp', 0)
+        _req.applicant.maxHp = memberInfo.get('maxHp', 0)
 
-        # 申请结果（成功/失败）统一经中心 replyApplyNotify 主动通知申请人，
-        # 不再走 TeamOpResult uuid 回执，故无需注册 remoteCallCache
+        # 受理结果按 uuid 回执：注册 remoteCallCache（申请人 cell 透传客户端），
+        # 中心 replyApplyNotify 回包原路回调，不再按 gbId 路由
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamApplyJoinResult')
         _service.serviceStub.joinApply(None, _req, None)
 
+    # 免审批快速入队
+    # callback:
+    #   onReplyApplyNotify 入队受理结果通知申请人
+    #   onTeamJoinSuccessPush 成功时推送新成员本人
+    #   onMemberJoinPush 成功时推送其余成员
     def reqJoinTeam(self, box, teamId, password, memberInfo):
         # 免审批快速入队（本服 reqJoinTeam 对应）：不落地申请记录，中心校验通过直接入队；
-        # 结果同审批流统一经 replyApplyNotify 主动通知申请人，不走 uuid 回执
+        # 受理结果同审批流统一经 replyApplyNotify 按 uuid 回执申请人
         LOG_INFO('CrossTeamStub reqJoinTeam', teamId, memberInfo.get('gbId'))
-        _service = self._getService('reqJoin')
+        _service = self._getService('reqJoin', teamId, memberInfo.get('gbId'))
         if not _service:
             return
 
@@ -474,14 +560,24 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.applicant.sex = memberInfo.get('sex', 0)
         _req.applicant.picFrameId = memberInfo.get('picFrameId', 0)
         _req.applicant.openId = memberInfo.get('openId', '')
+        _req.applicant.hp = memberInfo.get('hp', 0)
+        _req.applicant.maxHp = memberInfo.get('maxHp', 0)
 
+        # 受理结果按 uuid 回执：注册 remoteCallCache（申请人 cell 透传客户端，同审批流）
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamApplyJoinResult')
         _service.serviceStub.reqJoin(None, _req, None)
 
+    # 一键清空申请列表（队长操作）
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onApplyRemoveNotify 队长侧逐条剔除申请列表
     def clearApplyList(self, box, teamId, captainGbId):
         # 一键清空申请列表（本服 clearApplyJoinDic 对应，队长操作）：
-        # 申请人逐个按"被拒绝"通知、队长收空列表；操作结果经 uuid 回执 onCrossTeamOpResult
+        # 队长侧逐个 applyRemoveNotify 同步剔除；申请人侧不再通知
+        # （replyApplyNotify 已调整为申请受理回调，不承载审批结果）；
+        # 操作结果经 uuid 回执 onCrossTeamOpResult
         LOG_INFO('CrossTeamStub clearApplyList', teamId, captainGbId)
-        _service = self._getService('clearApplyList')
+        _service = self._getService('clearApplyList', teamId, captainGbId)
         if not _service:
             return
 
@@ -490,15 +586,19 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.teamId = teamId
         _req.captainGbId = captainGbId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.clearApplyList(None, _req, None)
 
+    # 任命/取消副团长（队长操作）
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onDeputyChangePush 推送全队
     def reqSetDeputy(self, box, teamId, captainGbId, deputyGbId):
         # 任命/取消副团长（本服 transferRaidDeputy 对应，队长操作）：
         # 中心校验（队长/成员/取消须有副团长）后全队推送 deputyChangePush，
         # 操作结果经 uuid 回执 onCrossTeamOpResult（成功也回，操作者 UI 闭环）
         LOG_INFO('CrossTeamStub reqSetDeputy', teamId, captainGbId, deputyGbId)
-        _service = self._getService('reqSetDeputy')
+        _service = self._getService('reqSetDeputy', teamId, captainGbId)
         if not _service:
             return
 
@@ -508,7 +608,7 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.captainGbId = captainGbId
         _req.deputyGbId = deputyGbId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.setDeputy(None, _req, None)
 
     # ------------------------------------------------------------------
@@ -517,11 +617,13 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     # 对齐本服静默语义：不走 uuid 回执，校验失败仅中心日志
     # ------------------------------------------------------------------
 
+    # 添加队伍标记（静默语义，无回执）
+    # callback:
+    #   onMarkChangePush 标记变更推送
     def reqAddCrossMark(self, box, teamId, operatorGbId, markType, markIdx, markName, markGbId,
                         markEntityId, markPos, spaceNo, serverId):
-        LOG_INFO('CrossTeamStub reqAddCrossMark', teamId, operatorGbId, markType, markIdx,
-                 markName, markGbId, markEntityId, markPos, spaceNo, serverId)
-        _service = self._getService('addMark')
+        LOG_INFO('CrossTeamStub reqAddCrossMark', teamId, operatorGbId, markType, markIdx, markGbId)
+        _service = self._getService('addMark', teamId, operatorGbId)
         if not _service:
             return
 
@@ -540,9 +642,12 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         _service.serviceStub.addMark(None, _req, None)
 
+    # 删除队伍标记（静默语义，无回执）
+    # callback:
+    #   onMarkChangePush 标记变更推送
     def reqDelCrossMark(self, box, teamId, operatorGbId, markType, markIdx):
         LOG_INFO('CrossTeamStub reqDelCrossMark', teamId, operatorGbId, markType, markIdx)
-        _service = self._getService('delMark')
+        _service = self._getService('delMark', teamId, operatorGbId)
         if not _service:
             return
 
@@ -555,10 +660,13 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         _service.serviceStub.delMark(None, _req, None)
 
+    # 仅队长可标记开关（队长操作，无回执）
+    # callback:
+    #   onMarkChangePush 标记变更推送
     def reqChangeCrossOnlyCaptainMark(self, box, teamId, captainGbId, onlyCaptain):
         # 仅队长可标记开关（队长操作；cell 已校验队长，中心复核）
         LOG_INFO('CrossTeamStub reqChangeCrossOnlyCaptainMark', teamId, captainGbId, onlyCaptain)
-        _service = self._getService('setOnlyCaptainMark')
+        _service = self._getService('setOnlyCaptainMark', teamId, captainGbId)
         if not _service:
             return
 
@@ -570,10 +678,13 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         _service.serviceStub.setOnlyCaptainMark(None, _req, None)
 
+    # 被标怪物死亡自动摘除标记（Monster.onDead 调用，无回执）
+    # callback:
+    #   onMarkChangePush 标记变更推送
     def onCrossMarkMonsterDead(self, teamId, markIdx):
         # 被标怪物死亡自动摘除上行（Monster.onDead 调用）：无操作者免校验、无回执
         LOG_INFO('CrossTeamStub onCrossMarkMonsterDead', teamId, markIdx)
-        _service = self._getService('markMonsterDead')
+        _service = self._getService('markMonsterDead', teamId)
         if not _service:
             return
 
@@ -585,9 +696,14 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         _service.serviceStub.delMark(None, _req, None)
 
+    # 队长批复入队申请
+    # callback:
+    #   onTeamOpResult 操作回包（含复核失败错误码）
+    #   onApplyRemoveNotify 队长侧剔除该申请
+    #   onTeamJoinSuccessPush/onMemberJoinPush 同意时入队推送（申请人侧不再单独通知审批结果）
     def replyJoinApply(self, box, teamId, captainGbId, applicantGbId, bAgree):
-        LOG_INFO('CrossTeamStub replyJoinApply', teamId, applicantGbId, bAgree)
-        _service = self._getService('replyJoinApply')
+        LOG_INFO('CrossTeamStub replyJoinApply', teamId, captainGbId, applicantGbId, bAgree)
+        _service = self._getService('replyJoinApply', teamId, captainGbId)
         if not _service:
             return
 
@@ -598,12 +714,16 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.applicantGbId = applicantGbId
         _req.agree = bAgree
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.replyApply(None, _req, None)
 
+    # 邀请玩家入队
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onInviteNotify 推送被邀请人
     def inviteMember(self, box, teamId, inviterGbId, inviteeGbId, inviteeServerId):
         LOG_INFO('CrossTeamStub inviteMember', teamId, inviterGbId, inviteeGbId)
-        _service = self._getService('inviteMember')
+        _service = self._getService('inviteMember', teamId, inviterGbId)
         if not _service:
             return
 
@@ -614,12 +734,16 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.inviteeGbId = inviteeGbId
         _req.inviteeServerId = inviteeServerId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.invite(None, _req, None)
 
+    # 被邀请人应答邀请
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onTeamJoinSuccessPush/onMemberJoinPush 同意时入队推送
     def replyInvite(self, box, teamId, inviteeInfo, bAgree, inviteType):
         LOG_INFO('CrossTeamStub replyInvite', teamId, inviteeInfo.get('gbId'), bAgree, inviteType)
-        _service = self._getService('replyInvite')
+        _service = self._getService('replyInvite', teamId, inviteeInfo.get('gbId'))
         if not _service:
             return
 
@@ -635,15 +759,172 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.invitee.sex = inviteeInfo.get('sex', 0)
         _req.invitee.picFrameId = inviteeInfo.get('picFrameId', 0)
         _req.invitee.openId = inviteeInfo.get('openId', '')
+        _req.invitee.hp = inviteeInfo.get('hp', 0)
+        _req.invitee.maxHp = inviteeInfo.get('maxHp', 0)
         _req.agree = bAgree
         _req.inviteType = inviteType
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.replyInvite(None, _req, None)
 
+    # ------------------------------------------------------------------
+    # 无队邀请组队上行（方案 §4.3）：中心纯透传（校验双方无队/复核队伍归属后转发目标服），
+    # 回执仅表示受理结果，终态经对应下行 notify 到达
+    # ------------------------------------------------------------------
+
+    # 无队邀请（邀请人无队伍时发起，仅限同服邀请）
+    # callback:
+    #   onTeamOpResult 操作回包（INVALID_PARAM/ALREADY_IN_TEAM/SUCCESS=已转发）
+    #   teamUpInviteNotify 下行推送被邀请人（同服限制，目标服=请求来源服，中心侧处理）
+    def teamUpInvite(self, box, teamId, inviterInfo, inviteeGbId):
+        # teamId 为邀请人 cell 预分配 id（后续建队复用，被邀请人应答时可凭它先试进队）；
+        # inviterInfo 为邀请人全量信息（无队场景中心无队伍数据可取，游戏服带入）
+        LOG_INFO('CrossTeamStub teamUpInvite', teamId, inviterInfo.get('gbId'), inviteeGbId)
+        _service = self._getService('teamUpInvite', teamId, inviterInfo.get('gbId'))
+        if not _service:
+            return
+
+        _req = TeamUpInviteRequest()
+        _req.uuid = KBEngine.genUUID64()
+        _req.teamId = teamId
+        _req.inviter.gbId = inviterInfo.get('gbId', 0)
+        _req.inviter.serverId = gameconfig.serverId()
+        _req.inviter.name = inviterInfo.get('playerName', '')
+        _req.inviter.level = inviterInfo.get('level', 0)
+        _req.inviter.school = inviterInfo.get('school', 0)
+        _req.inviter.score = inviterInfo.get('score', 0)
+        _req.inviter.sex = inviterInfo.get('sex', 0)
+        _req.inviter.picFrameId = inviterInfo.get('picFrameId', 0)
+        _req.inviter.openId = inviterInfo.get('openId', '')
+        _req.inviter.hp = inviterInfo.get('hp', 0)
+        _req.inviter.maxHp = inviterInfo.get('maxHp', 0)
+        _req.inviteeGbId = inviteeGbId
+        _req.inviteType = gameconst.InviteType.TEAM_UP
+
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
+        _service.serviceStub.teamUpInvite(None, _req, None)
+
+    # 无队邀请应答（被邀请人同意/拒绝）
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   teamUpReplyNotify 下行推送邀请人（同服限制，目标服=请求来源服，中心侧处理）
+    def replyTeamUpInvite(self, box, teamId, inviterGbId, inviteeInfo, bAgree, inviteType, reason=0):
+        # reason 为 agree=false 时的原因细分（TeamUpReplyReason），主动拒绝=0
+        LOG_INFO('CrossTeamStub replyTeamUpInvite', teamId, inviteeInfo.get('gbId'), bAgree, inviteType, reason)
+        _service = self._getService('replyTeamUpInvite', teamId, inviteeInfo.get('gbId'))
+        if not _service:
+            return
+
+        _req = ReplyTeamUpInviteRequest()
+        _req.uuid = KBEngine.genUUID64()
+        _req.teamId = teamId
+        _req.inviterGbId = inviterGbId
+        _req.invitee.gbId = inviteeInfo.get('gbId', 0)
+        _req.invitee.serverId = gameconfig.serverId()
+        _req.invitee.name = inviteeInfo.get('playerName', '')
+        _req.invitee.level = inviteeInfo.get('level', 0)
+        _req.invitee.school = inviteeInfo.get('school', 0)
+        _req.invitee.score = inviteeInfo.get('score', 0)
+        _req.invitee.sex = inviteeInfo.get('sex', 0)
+        _req.invitee.picFrameId = inviteeInfo.get('picFrameId', 0)
+        _req.invitee.openId = inviteeInfo.get('openId', '')
+        _req.invitee.hp = inviteeInfo.get('hp', 0)
+        _req.invitee.maxHp = inviteeInfo.get('maxHp', 0)
+        _req.agree = bAgree
+        _req.inviteType = inviteType
+        _req.reason = reason
+
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
+        _service.serviceStub.replyTeamUpInvite(None, _req, None)
+
+    # 队伍就绪通知（邀请人已有队伍/刚建成）
+    # callback:
+    #   onTeamOpResult 操作回包（中心复核邀请人确在该队，不符回 NOT_TEAM_MEMBER）
+    #   teamUpTeamReady 下行推送被邀请人（同服限制，目标服=请求来源服，中心侧处理）
+    def teamUpJoinNotify(self, box, teamId, inviterGbId, inviteeGbId):
+        LOG_INFO('CrossTeamStub teamUpJoinNotify', teamId, inviterGbId, inviteeGbId)
+        _service = self._getService('teamUpJoinNotify', teamId, inviterGbId)
+        if not _service:
+            return
+
+        _req = TeamUpJoinNotifyRequest()
+        _req.uuid = KBEngine.genUUID64()
+        _req.teamId = teamId
+        _req.inviterGbId = inviterGbId
+        _req.inviteeGbId = inviteeGbId
+
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
+        _service.serviceStub.teamUpJoinNotify(None, _req, None)
+
+    # 无队邀请流程内部免审进队（应答接受时试直进 / 收到就绪通知后自动进队）
+    # callback:
+    #   onReplyApplyNotify 入队受理结果（注册专用回调 onTeamUpAutoJoinResult，
+    #                      与用户主动 reqJoin 的客户端透传通道隔离，流程静默）
+    #   onTeamJoinSuccessPush/onMemberJoinPush 成功时入队推送（现有链路）
+    def teamUpReqJoin(self, box, teamId, inviteeInfo):
+        LOG_INFO('CrossTeamStub teamUpReqJoin', teamId, inviteeInfo.get('gbId'))
+        _service = self._getService('teamUpReqJoin', teamId, inviteeInfo.get('gbId'))
+        if not _service:
+            return
+
+        _req = ReqJoinRequest()
+        _req.uuid = KBEngine.genUUID64()
+        _req.teamId = teamId
+        _req.password = ''
+        _req.applicant.gbId = inviteeInfo.get('gbId', 0)
+        _req.applicant.serverId = gameconfig.serverId()
+        _req.applicant.name = inviteeInfo.get('playerName', '')
+        _req.applicant.level = inviteeInfo.get('level', 0)
+        _req.applicant.school = inviteeInfo.get('school', 0)
+        _req.applicant.score = inviteeInfo.get('score', 0)
+        _req.applicant.sex = inviteeInfo.get('sex', 0)
+        _req.applicant.picFrameId = inviteeInfo.get('picFrameId', 0)
+        _req.applicant.openId = inviteeInfo.get('openId', '')
+        _req.applicant.hp = inviteeInfo.get('hp', 0)
+        _req.applicant.maxHp = inviteeInfo.get('maxHp', 0)
+
+        self._cacheRemoteCall(_req.uuid, box, 'onTeamUpAutoJoinResult')
+        _service.serviceStub.reqJoin(None, _req, None)
+
+    # 申请审批同意后申请人自证入队（applyApprovedNotify 下行驱动）：
+    # 中心侧为带 Approved 记录的申请人跳过密码与门槛校验，
+    # 成员展示数据（名字/等级/战力/血量快照等）随本请求上行，同 teamUpReqJoin 口径
+    # callback:
+    #   onReplyApplyNotify 入队受理结果（注册专用回调 onTeamApprovedJoinResult，
+    #                      与用户主动 reqJoin 的客户端透传通道隔离，流程静默）
+    #   onTeamJoinSuccessPush/onMemberJoinPush 成功时入队推送（现有链路）
+    def approvedReqJoin(self, box, teamId, applicantInfo):
+        LOG_INFO('CrossTeamStub approvedReqJoin', teamId, applicantInfo.get('gbId'))
+        _service = self._getService('approvedReqJoin', teamId, applicantInfo.get('gbId'))
+        if not _service:
+            return
+
+        _req = ReqJoinRequest()
+        _req.uuid = KBEngine.genUUID64()
+        _req.teamId = teamId
+        _req.password = ''
+        _req.applicant.gbId = applicantInfo.get('gbId', 0)
+        _req.applicant.serverId = gameconfig.serverId()
+        _req.applicant.name = applicantInfo.get('playerName', '')
+        _req.applicant.level = applicantInfo.get('level', 0)
+        _req.applicant.school = applicantInfo.get('school', 0)
+        _req.applicant.score = applicantInfo.get('score', 0)
+        _req.applicant.sex = applicantInfo.get('sex', 0)
+        _req.applicant.picFrameId = applicantInfo.get('picFrameId', 0)
+        _req.applicant.openId = applicantInfo.get('openId', '')
+        _req.applicant.hp = applicantInfo.get('hp', 0)
+        _req.applicant.maxHp = applicantInfo.get('maxHp', 0)
+
+        self._cacheRemoteCall(_req.uuid, box, 'onTeamApprovedJoinResult')
+        _service.serviceStub.reqJoin(None, _req, None)
+
+    # 主动离队
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onMemberLeavePush 离队推送
     def leaveTeam(self, box, teamId, gbId):
         LOG_INFO('CrossTeamStub leaveTeam', teamId, gbId)
-        _service = self._getService('leaveTeam')
+        _service = self._getService('leaveTeam', teamId, gbId)
         if not _service:
             return
 
@@ -652,12 +933,16 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.teamId = teamId
         _req.gbId = gbId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.leaveTeam(None, _req, None)
 
+    # 踢出成员（队长操作）
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onMemberLeavePush 离队推送
     def kickMember(self, box, teamId, kickedGbId, captainGbId):
         LOG_INFO('CrossTeamStub kickMember', teamId, kickedGbId, captainGbId)
-        _service = self._getService('kickMember')
+        _service = self._getService('kickMember', teamId, captainGbId)
         if not _service:
             return
 
@@ -667,12 +952,16 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.kickedGbId = kickedGbId
         _req.captainGbId = captainGbId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.kick(None, _req, None)
 
+    # 转让队长
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onCaptainChangePush 队长变更推送
     def transferCaptain(self, box, teamId, newCaptainGbId, captainGbId):
         LOG_INFO('CrossTeamStub transferCaptain', teamId, newCaptainGbId, captainGbId)
-        _service = self._getService('transferCaptain')
+        _service = self._getService('transferCaptain', teamId, captainGbId)
         if not _service:
             return
 
@@ -682,13 +971,17 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.newCaptainGbId = newCaptainGbId
         _req.captainGbId = captainGbId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.transferCaptain(None, _req, None)
 
+    # 申请成为队长（成员发起）
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onBecomeCaptainApplyPush 推送队长确认
     def applyBecomeCaptain(self, box, teamId, gbId):
         # 申请成为队长：成员发起，中心推送队长确认（申请人展示信息由中心成员数据带出）
         LOG_INFO('CrossTeamStub applyBecomeCaptain', teamId, gbId)
-        _service = self._getService('applyBecomeCaptain')
+        _service = self._getService('applyBecomeCaptain', teamId, gbId)
         if not _service:
             return
 
@@ -697,13 +990,17 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.teamId = teamId
         _req.gbId = gbId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.applyBecomeCaptain(None, _req, None)
 
+    # 队长应答"申请成为队长"
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onCaptainChangePush 同意时队长变更推送
     def replyBecomeCaptain(self, box, teamId, captainGbId, applicantGbId, bAgree):
         # 队长应答"申请成为队长"
         LOG_INFO('CrossTeamStub replyBecomeCaptain', teamId, captainGbId, applicantGbId, bAgree)
-        _service = self._getService('replyBecomeCaptain')
+        _service = self._getService('replyBecomeCaptain', teamId, captainGbId)
         if not _service:
             return
 
@@ -714,12 +1011,16 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.applicantGbId = applicantGbId
         _req.agree = bAgree
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.replyBecomeCaptain(None, _req, None)
 
+    # 解散队伍（队长操作）
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onTeamDisbandPush 解散推送
     def disbandTeam(self, box, teamId, captainGbId):
         LOG_INFO('CrossTeamStub disbandTeam', teamId, captainGbId)
-        _service = self._getService('disbandTeam')
+        _service = self._getService('disbandTeam', teamId, captainGbId)
         if not _service:
             return
 
@@ -728,12 +1029,43 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.teamId = teamId
         _req.captainGbId = captainGbId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.disband(None, _req, None)
 
+    # 小队转团队（队长操作）
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onTeamConvertPush 全员全量推送
+    def convertTeamToRaid(self, box, teamId, newTeamId, target, maxNum, dungeonMap, isCross, dunServer, captainGbId):
+        # 小队转团队（本服 createRaidWithTeam 对应）：newTeamId 与新目标配表参数
+        # （maxNum/dungeonMap/isCross/dunServer）由 cell 生成/读取带入（同 createTeam 口径）；
+        # 中心语义 = 退役旧小队 + 登记新团队（两阶段 worker 交接），回执走 onCrossTeamOpResult
+        LOG_INFO('CrossTeamStub convertTeamToRaid', teamId, newTeamId, target, captainGbId)
+        _service = self._getService('convertTeamToRaid', teamId, captainGbId)
+        if not _service:
+            return
+
+        _req = ConvertTeamRequest()
+        _req.uuid = KBEngine.genUUID64()
+        _req.teamId = teamId
+        _req.captainGbId = captainGbId
+        _req.newTeamId = newTeamId
+        _req.newTarget = target
+        _req.newMaxNum = maxNum
+        _req.newDungeonMap = dungeonMap
+        _req.isCross = isCross
+        _req.dunServer = dunServer
+
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
+        _service.serviceStub.convertTeam(None, _req, None)
+
+    # 修改队伍设置（门槛/简介/自动进本/密码，队长操作）
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onTeamSettingsChangePush 设置变更推送
     def setTeamSettings(self, box, teamId, minLevel, minScore, intro, autoEnter, captainGbId, password):
         LOG_INFO('CrossTeamStub setTeamSettings', teamId, autoEnter, captainGbId)
-        _service = self._getService('setTeamSettings')
+        _service = self._getService('setTeamSettings', teamId, captainGbId)
         if not _service:
             return
 
@@ -747,12 +1079,16 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.captainGbId = captainGbId
         _req.password = password
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.setTeamSettings(None, _req, None)
 
+    # 开关自动匹配（队长操作）
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onTeamAutoMatchChangePush 自动匹配变更推送
     def setAutoMatch(self, box, teamId, autoMatch, captainGbId):
         LOG_INFO('CrossTeamStub setAutoMatch', teamId, autoMatch, captainGbId)
-        _service = self._getService('setAutoMatch')
+        _service = self._getService('setAutoMatch', teamId, captainGbId)
         if not _service:
             return
 
@@ -762,20 +1098,46 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.autoMatch = autoMatch
         _req.captainGbId = captainGbId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.setAutoMatch(None, _req, None)
 
+    # 队伍列表查询（按 target，命中缓存直接回）
+    # callback:
+    #   onTeamListResult 列表回包（填缓存并下发请求者）
     def getTeamList(self, box, target):
         # 队伍列表查询（一波全量，问题记录#5）：命中 target 缓存直接回缓存数据，
-        # 否则向中心拉取（回包在 onTeamListResult 填缓存并下发）；box 为请求者 base 邮箱
+        # 否则向中心拉取（回包在 onTeamListResult 填缓存并 fan-out）；box 为请求者 base 邮箱。
+        # 防击穿：在途查询期间到达的并发查询，有旧数据直接回旧数据（容错），
+        # 无旧数据（冷启动）挂等待队列；标记卡死超 CROSS_TEAM_LIST_QUERY_TIMEOUT 兜底放行
+        LOG_DBG('CrossTeamStub getTeamList', target)
         _now = utils.curTS()
         _cache = self.teamListCache.get(target)
-        if _cache and _now - _cache['ts'] < gameconst.CROSS_TEAM_LIST_CACHE_SECONDS:
-            box.streamStringProxy(_cache['data'], '', gameconst.StreamStringID.CROSS_TEAM_LIST_DATA)
+        if _cache and _cache['data'] and _now - _cache['ts'] < gameconst.CROSS_TEAM_LIST_CACHE_SECONDS:
+            utils.safeBaseCall(
+                box,
+                'streamStringProxy',
+                _cache['data'],
+                '',
+                gameconst.StreamStringID.CROSS_TEAM_LIST_DATA
+            )
             return
 
-        _service = self._getService('getTeamList')
+        if _cache and _cache['queryTs'] and _now - _cache['queryTs'] < gameconst.CROSS_TEAM_LIST_QUERY_TIMEOUT:
+            if _cache['data']:
+                utils.safeBaseCall(
+                    box,
+                    'streamStringProxy',
+                    _cache['data'],
+                    '',
+                    gameconst.StreamStringID.CROSS_TEAM_LIST_DATA
+                )
+            elif not any(_w == box for _w in _cache['waiters']):
+                _cache['waiters'].append(box)
+            return
+
+        _service = self._getService('getTeamList', target)
         if not _service:
+            # 服务不可用：不置在途标记，后续请求自然重试
             return
 
         _req = GetTeamListRequest()
@@ -785,14 +1147,25 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         # （isCross=false 的队伍仅当 dunServer == serverId 时返回）
         _req.serverId = gameconfig.serverId()
 
-        self._cacheRemoteCall(_req.uuid, box, '', ())
+        if _cache is None:
+            _cache = {'data': None, 'ts': 0, 'queryTs': 0, 'waiters': []}
+            self.teamListCache[target] = _cache
+        _cache['queryTs'] = _now
+        # 重新发起（上轮回包丢失）时保留旧等待者，本轮回包一并 fan-out
+        if not any(_w == box for _w in _cache['waiters']):
+            _cache['waiters'].append(box)
         _service.serviceStub.getTeamList(None, _req, None)
 
+    # 进入匹配池
+    # callback:
+    #   onMatchStart 入池成功通知
+    #   onMatchSuccess 撮合成功
+    #   onMatchTimeout 匹配超时
     def enterMatchPool(self, box, target, playerInfo):
         _gbId = playerInfo.get('gbId', 0)
         LOG_INFO('CrossTeamStub enterMatchPool', target, _gbId)
 
-        _service = self._getService('enterMatchPool')
+        _service = self._getService('enterMatchPool', target, _gbId)
         if not _service:
             return
 
@@ -804,15 +1177,17 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.player.name = playerInfo.get('playerName', '')
         _req.player.level = playerInfo.get('level', 0)
         _req.player.score = playerInfo.get('score', 0)
-        # 匹配超时下带配表 maxMatchTime（决策 D5，注记 4），读不到回退中心默认（0）
         _req.timeoutSeconds = TMMCD.datas.get('maxMatchTime', {}).get('value', 0)
 
         _service.serviceStub.enterMatchPool(None, _req, None)
 
+    # 离开匹配池
+    # callback:
+    #   onMatchStop 出池确认
     def leaveMatchPool(self, box, gbId):
         LOG_INFO('CrossTeamStub leaveMatchPool', gbId)
 
-        _service = self._getService('leaveMatchPool')
+        _service = self._getService('leaveMatchPool', gbId)
         if not _service:
             return
 
@@ -821,17 +1196,36 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.gbId = gbId
         _service.serviceStub.leaveMatchPool(None, _req, None)
 
-    def syncMemberState(self, teamId, gbId, stateDict):
-        # Avatar 状态变化时同步（血量/spaceNo+position 等），Stub 聚合后 3s 定时上报中心
-        stateDict['teamId'] = teamId
-        self.stateReportCache[gbId] = stateDict
+    # 成员状态每秒合并同步（上行上报 + 下行读缓存合并为一次 RPC，省一次序列化）：
+    # stateDict 为空 dict 表示脏检查未通过，跳过上行；groupIdxs 非空时原样转入
+    # queryTeamMemberState 读缓存下行（空列表=跳过下行；全量对账同样经本路径读缓存）
+    # callback:
+    #   上行无（由 reportMemberStates 定时批量上报中心）；下行见 queryTeamMemberState
+    def syncMemberState(self, box, teamId, gbId, stateDict, groupIdxs):
+        # Avatar 状态变化时同步（血量/spaceNo+position 等），Stub 聚合后 0.1s 定时定量上报中心
+        if stateDict:
+            stateDict['teamId'] = teamId
+            self.stateReportCache[gbId] = stateDict
 
+        if groupIdxs:
+            self.queryTeamMemberState(box, teamId, gbId, groupIdxs)
+
+    # 丢弃尚未上报的旧状态快照（迁移换路由/即时全量上报时调用，防旧缓存迟发覆盖新状态）
+    def clearMemberStateReport(self, teamId, gbId):
+        LOG_DBG('CrossTeamStub clearMemberStateReport', teamId, gbId)
+        _stateDict = self.stateReportCache.get(gbId)
+        if _stateDict and _stateDict.get('teamId') == teamId:
+            self.stateReportCache.pop(gbId, None)
+
+    # 成员离线退队上报（离线即退队）
+    # callback:
+    #   onMemberLeavePush 中心移出后推送
     def memberOffline(self, teamId, gbId):
         # 本服检测到成员离线（离线即退队，中心直接移出）
         LOG_INFO('CrossTeamStub memberOffline', teamId, gbId)
         self.stateReportCache.pop(gbId, None)
 
-        _service = self._getService('memberOffline')
+        _service = self._getService('memberOffline', teamId, gbId)
         if not _service:
             return
 
@@ -840,9 +1234,12 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.gbId = gbId
         _service.serviceStub.memberOffline(None, _req, None)
 
-    # 客户端主动全量查询：向中心按 gbId 反查，回包经 uuid 从 remoteCallCache 原路回调
+    # 客户端主动全量查询队伍信息（按 gbId 反查）
+    # callback:
+    #   onTeamDataResp 查询回包（经 remoteCallCache 原路回调）
     def queryPlayerTeam(self, box, gbId):
-        _service = self._getService('queryPlayerTeam')
+        LOG_INFO('CrossTeamStub queryPlayerTeam', gbId)
+        _service = self._getService('queryPlayerTeam', gbId)
         if not _service:
             return
 
@@ -850,14 +1247,91 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.uuid = KBEngine.genUUID64()
         _req.gbId = gbId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamInfoUpdate')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamInfoUpdate')
         _service.serviceStub.queryTeam(None, _req, None)
 
+    # 成员状态查询（推送模型常态下行：中心 1s 推送脏队伍全量快照填充本地缓存并递增
+    # version，本函数纯读缓存）：版本号去重——请求者已收版本（queryLook，缺省 0 保证
+    # 首查必发）与缓存当前版本一致则跳过，不一致才按关注列表剪裁后直发请求者客户端
+    # 并记录版本；queryLook 随条目同生共死（60s 未刷新随缓存一并回收），换队/迁移
+    # 回本自然落到新条目重新首发；缓存缺失静默跳过，等中心下轮推送填充后自然恢复
+    # callback:
+    #   onCrossTeamMemberState 版本有更新即直发请求者客户端
+    def queryTeamMemberState(self, box, teamId, gbId, groupIdxs):
+        _entry = self.stateQueryCache.get(teamId)
+        if not _entry or _entry['queryLook'].get(gbId, 0) >= _entry['version']:
+            LOG_DBG('queryTeamMemberState skip:', gbId)
+            return
+
+        utils.safeClientCall(
+            box,
+            'onCrossTeamMemberState',
+            teamId,
+            self._trimTeamStates(_entry['data'], groupIdxs)
+        )
+        _entry['queryLook'][gbId] = _entry['version']
+
+    def _writeTeamStateCache(self, teamId, members, reportTS):
+        # 写队伍成员全量快照缓存（中心推送唯一写入点）：stateDict 含 groupIdx，
+        # 下发时由 _trimTeamStates 按关注列表剪裁；reportTS 不更新（更旧/相等）的乱序包
+        # 丢弃（version 不推进）；接受写入则 version 递增并保留 queryLook（版本去重依据）
+        _entry = self.stateQueryCache.get(teamId)
+        if _entry and reportTS <= _entry['reportTS']:
+            LOG_WARN('CrossTeamStub _writeTeamStateCache stale drop', teamId, reportTS, _entry['reportTS'])
+            return
+
+        _data = {}
+        for _state in members:
+            _data[_state.gbId] = {
+                'gbId': _state.gbId,
+                'hp': _state.hp,
+                'maxHp': _state.maxHp,
+                'level': _state.level,
+                'score': _state.score,
+                'spaceNo': _state.spaceNo,
+                'position': (_state.posX, _state.posY, _state.posZ),
+                'routeServerId': _state.routeServerId,
+                'groupIdx': _state.groupIdx,
+            }
+        if not _entry:
+            _entry = {'version': 0, 'queryLook': {}}
+            self.stateQueryCache[teamId] = _entry
+        _entry['data'] = _data
+        _entry['ts'] = utils.curTS()
+        _entry['reportTS'] = reportTS
+        _entry['version'] += 1
+
+    def _trimTeamStates(self, data, groupIdxs):
+        # 按请求者关注列表（小组下标，0 起始）剪裁全量快照，空列表=全量（对账语义）。
+        # 下发客户端的 stateDict 不含 groupIdx（客户端 FIXED_DICT 协议无此字段）
+        # if not groupIdxs:
+        #     _watch = None
+        # else:
+        #     _watch = set(groupIdxs)
+        _stateDicts = []
+        for _s in data.values():
+            # if _watch is not None and _s.get('groupIdx', 0) not in _watch:
+            #     continue
+            _stateDicts.append({
+                'gbId': _s['gbId'],
+                'hp': _s['hp'],
+                'maxHp': _s['maxHp'],
+                'level': _s['level'],
+                'score': _s['score'],
+                'spaceNo': _s['spaceNo'],
+                'position': _s['position'],
+                'routeServerId': _s['routeServerId'],
+            })
+        return _stateDicts
+
+    # 队伍预览（按 teamId 直查）
+    # callback:
+    #   onQueryTeamCrossResp 查询回包（经 remoteCallCache 原路回调）
     def queryTeamById(self, box, teamId):
         # 队伍预览（决策 D4）：queryTeam 的 teamId 直查路径，
         # 回包 QueryTeamCrossRespMsg 按 uuid 从 remoteCallCache 回调 cell.onCrossTeamPreview
         LOG_INFO('CrossTeamStub queryTeamById', teamId)
-        _service = self._getService('queryTeamById')
+        _service = self._getService('queryTeamById', teamId)
         if not _service:
             return
 
@@ -865,14 +1339,18 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.uuid = KBEngine.genUUID64()
         _req.teamId = teamId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamPreview')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamPreview')
         _service.serviceStub.queryTeam(None, _req, None)
 
+    # 成员语音状态同步（麦/扬声器/语音房）
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onMemberVoiceStatePush 语音状态变更推送
     def setVoiceState(self, box, teamId, gbId, enableMics, enableSpeaker, inVoiceRoom):
         # 成员语音状态同步（客户端位图已在 cell 解包为三态；中心只存不解读，
         # 变更经 memberVoiceStatePush 广播回全队后由各服 cell 落地缓存）
         LOG_INFO('CrossTeamStub setVoiceState', teamId, gbId, enableMics, enableSpeaker, inVoiceRoom)
-        _service = self._getService('setVoiceState')
+        _service = self._getService('setVoiceState', teamId, gbId)
         if not _service:
             return
 
@@ -884,14 +1362,17 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.enableSpeaker = enableSpeaker
         _req.inVoiceRoom = inVoiceRoom
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.setVoiceState(None, _req, None)
 
+    # 拉取申请列表（仅队长）
+    # callback:
+    #   onApplyListPush 申请列表回包（经 remoteCallCache 原路回调）
     def getApplyList(self, box, teamId, gbId):
         # 申请列表拉取（中心仅接受队长拉取；回包 ApplyListPushMsg 单播，
         # 按 uuid 从 remoteCallCache 回调 cell.onCrossTeamApplyList）
         LOG_INFO('CrossTeamStub getApplyList', teamId, gbId)
-        _service = self._getService('getApplyList')
+        _service = self._getService('getApplyList', teamId, gbId)
         if not _service:
             return
 
@@ -900,13 +1381,16 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.teamId = teamId
         _req.gbId = gbId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamApplyList')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamApplyList')
         _service.serviceStub.getApplyList(None, _req, None)
 
+    # 队伍聊天转发（敏感词本服已检）
+    # callback:
+    #   onTeamChatBatch 聊天批量广播
     def sendTeamChat(self, teamId, senderGbId, senderName, msgData, senderInfo):
         # 敏感词检查在发送方本服完成，中心只做转发；
         # 上行完整 CHAT_MSG_DATA 与拼 CHAT_CHANNEL_AVATAR_INFO 所需发送者信息（语音消息修复）
-        _service = self._getService('sendTeamChat')
+        _service = self._getService('sendTeamChat', teamId, senderGbId)
         if not _service:
             return
 
@@ -922,13 +1406,18 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.senderLevel = senderInfo.get('level', 0)
         _req.senderSex = senderInfo.get('sex', 0)
         _req.senderPicFrameId = senderInfo.get('picFrameId', 0)
+        _req.senderEntId = senderInfo.get('entId', 0)
         _req.ts = utils.curTS()
         _service.serviceStub.teamChatMsg(None, _req, None)
 
+    # 切换语音麦模式（队长操作）
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onTeamMicsModeChangePush 麦模式变更推送
     def setMicsMode(self, box, teamId, micsMode, captainGbId):
         # 切换语音麦模式（队长操作，队长身份在 Avatar 侧已校验）
         LOG_INFO('CrossTeamStub setMicsMode', teamId, micsMode, captainGbId)
-        _service = self._getService('setMicsMode')
+        _service = self._getService('setMicsMode', teamId, captainGbId)
         if not _service:
             return
 
@@ -938,13 +1427,17 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.micsMode = micsMode
         _req.captainGbId = captainGbId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.setMicsMode(None, _req, None)
 
+    # 禁麦/解除禁麦（队长操作）
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onMemberMicBlockPush 禁麦变更推送
     def blockMic(self, box, teamId, targetGbId, blocked, captainGbId):
         # 禁麦/解除禁麦（队长操作）
         LOG_INFO('CrossTeamStub blockMic', teamId, targetGbId, blocked, captainGbId)
-        _service = self._getService('blockMic')
+        _service = self._getService('blockMic', teamId, captainGbId)
         if not _service:
             return
 
@@ -955,13 +1448,17 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.blocked = blocked
         _req.captainGbId = captainGbId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.blockMic(None, _req, None)
 
+    # 成员位置调整（交换/移组，队长操作）
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onAdjustMemberPosPush 位置调整推送
     def adjustMemberPos(self, box, teamId, srcGbId, srcGroupIdx, dstGbId, dstGroupIdx, captainGbId):
         # 成员位置调整（队长操作）：交换两个成员位置，或将 src 移动到 dstGroupIdx 组末尾
         LOG_INFO('CrossTeamStub adjustMemberPos', teamId, srcGbId, srcGroupIdx, dstGbId, dstGroupIdx, captainGbId)
-        _service = self._getService('adjustMemberPos')
+        _service = self._getService('adjustMemberPos', teamId, captainGbId)
         if not _service:
             return
 
@@ -974,15 +1471,18 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.dstGbId = dstGbId
         _req.dstGroupIdx = dstGroupIdx
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.adjustMemberPos(None, _req, None)
 
+    # 召集全队跟随（队长操作，无回执）
+    # callback:
+    #   onFollowAskPush 召集推送
     def askAllCrossTeamMemberFollow(self, box, teamId, captainGbId, spaceNo, position):
         # 召集上行（本服 sendAllMemberFollowAsk 对应，队长操作；跟随本体由客户端实现，
         # 服务端仅转发）：中心复核队长后 followAskPush 广播队长当前所在服（全队除队长）；
         # 对齐本服静默语义：不走 uuid 回执，校验失败仅中心日志
         LOG_INFO('CrossTeamStub askAllCrossTeamMemberFollow', teamId, captainGbId, spaceNo)
-        _service = self._getService('followAsk')
+        _service = self._getService('followAsk', teamId, captainGbId)
         if not _service:
             return
 
@@ -998,9 +1498,24 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     # 讨伐
     # ------------------------------------------------------------------
 
+    def gmSetForbidEnterDungeons(self, dungeonNos, isBan):
+        # GM 禁止进入副本临时开关（GAME_API $banEnterDungeon/$disbanEnterDungeon 向全分片广播写入；
+        # 内存态，重启/分片重建即失效），判定见 onCrusadeCheck
+        LOG_INFO('gmSetForbidEnterDungeons', self.stubIdx, list(dungeonNos), isBan)
+        if isBan:
+            self.forbidEnterDungeonNos |= set(dungeonNos)
+        else:
+            self.forbidEnterDungeonNos -= set(dungeonNos)
+
+    # 发起跨服讨伐（队长操作）
+    # callback:
+    #   onTeamOpResult 操作回包
+    #   onCrusadeCheck 中心下发成员条件检查
+    #   onCrusadeGo 检查通过全员进本
+    #   onCrusadeAbort 讨伐中止
     def startCrusade(self, box, teamId, gbId):
         LOG_INFO('CrossTeamStub startCrusade', teamId, gbId)
-        _service = self._getService('startCrusade')
+        _service = self._getService('startCrusade', teamId, gbId)
         if not _service:
             return
 
@@ -1009,25 +1524,59 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.teamId = teamId
         _req.gbId = gbId
 
-        self._cacheRemoteCall(_req.uuid, box.cell, 'onCrossTeamOpResult')
+        self._cacheRemoteCall(_req.uuid, box, 'onCrossTeamOpResult')
         _service.serviceStub.startCrusade(None, _req, None)
 
-    def crusadeCheckResult(self, teamId, gbId, reasonCode):
-        # 本服成员条件检查结果回报中心（成员 Avatar 检查链路终点）
-        _service = self._getService('crusadeCheckResult')
+    # 本服成员讨伐条件检查结果回报中心
+    # callback:
+    #   无（中心汇总后走 onCrusadeGo/onCrusadeAbort）
+    def crusadeCheckResult(self, teamId, gbId, reasonCode, failName):
+        # 本服成员条件检查结果回报中心（成员 Avatar 检查链路终点）；
+        # failName：成员条件检查失败（次数/解锁/等级/战力）时携带失败成员名，
+        # 中心 abort 透传（连同 reasonCode 经 failReason 透传），
+        # 游戏服据此区分提示队长（次数不足=54001744 弹窗，其余 onMessagePre 消息）
+        _ok = (reasonCode == gameconst.TeamDunCheckCondErrno.UNKNOWN)
+        LOG_INFO('CrossTeamStub crusadeCheckResult', teamId, gbId, _ok)
+        if not _ok:
+            LOG_WARN('CrossTeamStub crusadeCheckResult fail', teamId, gbId, reasonCode, failName)
+        _service = self._getService('crusadeCheckResult', teamId, gbId)
         if not _service:
             return
 
         _req = CrusadeCheckResultRequest()
         _req.teamId = teamId
         _req.gbId = gbId
-        _req.ok = (reasonCode == gameconst.TeamDunCheckCondErrno.UNKNOWN)
+        _req.ok = _ok
         _req.reason = str(reasonCode)
+        _req.failName = failName
         _service.serviceStub.crusadeCheckResult(None, _req, None)
 
     def onCrusadeCheck(self, reply):
-        # 中心下发条件检查：对本服成员逐个走 Avatar 检查链路（次数/门票在 base，战斗/传送在 cell）
+        # 中心下发条件检查：对本服成员逐个走 Avatar 检查链路
+        # （次数/门票在 base，系统解锁/等级/战力门槛/传送条件在 cell）
         LOG_INFO('CrossTeamStub onCrusadeCheck', reply.teamId, reply.dungeonNo, list(reply.gbIds))
+
+        # GM 禁止进入开关（$banEnterDungeon 维护的各分片内存态）：队长手动发起与人满自动进本
+        # 在中心汇合后都必经本检查环节，命中则本服成员全部回报检查失败（中心汇总后中止讨伐），
+        # 并逐个提示维护文案（54003534）；已创建的副本空间不受影响
+        if reply.dungeonNo in self.forbidEnterDungeonNos:
+            LOG_INFO('onCrusadeCheck forbid enter dungeon', reply.teamId, reply.dungeonNo)
+            _forbidGbIds = [gbid for gbid in reply.gbIds]
+            if _forbidGbIds:
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                    _forbidGbIds, 'onMessagePre',
+                    (MMD.datas.challengeToggleMsg, []),
+                    None, '', ()
+                )
+                for _gbId in _forbidGbIds:
+                    self.crusadeCheckResult(
+                        reply.teamId,
+                        _gbId,
+                        gameconst.TeamDunCheckCondErrno.DUNGEON_FORBID_ENTER,
+                        ''
+                    )
+            return
+
         self.crusadeDungeonCache[reply.teamId] = reply.dungeonNo
 
         _gbIds = [gbid for gbid in reply.gbIds]
@@ -1080,7 +1629,7 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def onCrusadeAbort(self, reply):
         # 讨伐中止：通知本服成员（文案 message id 留阶段 6，先下发原因码）
         LOG_INFO('CrossTeamStub onCrusadeAbort', reply.teamId, reply.reason)
-        self.crusadeDungeonCache.pop(reply.teamId, None)
+        _dungeonNo = self.crusadeDungeonCache.pop(reply.teamId, 0)
         self.crusadeSpaceCache.pop(reply.teamId, None)
         _gbIds = list(reply.receiverGbIds)
         if _gbIds:
@@ -1088,10 +1637,44 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 _gbIds, 'onCrossCrusadeAbort', (reply.reason,), None, '', ()
             )
 
+        # 成员条件检查失败：中心随 abort 透传失败成员名/具体原因（failReason）与队长 gbId，
+        # 队长在本服则按原因区分提示。注意中心任一失败即中止，failName 只带首个失败成员——
+        # 多人同时失败时名单不全，完整名单需中心聚合改造（动微服务，暂不做）
+        if not reply.failName or reply.captainGbId not in _gbIds:
+            return
+
+        # failReason 为透传的 TeamDunCheckCondErrno 字符串；缺省/非法按挑战次数不足
+        # 旧口径兜底（failName 最初即为次数不足场景引入）
+        try:
+            _failReason = int(reply.failReason)
+        except (TypeError, ValueError):
+            _failReason = gameconst.TeamDunCheckCondErrno.REWARD_NUM_CHECK_FAIL
+
+        if _failReason == gameconst.TeamDunCheckCondErrno.SCORE_CHECK_FAIL:
+            _msgId = MMD.datas.teammateScoreNotEnough
+            _msgArgs = [reply.failName]
+        elif _failReason == gameconst.TeamDunCheckCondErrno.SC_LEVEL_CHECK_FAIL:
+            _msgId = MMD.datas.raidPartyInivte_underLevel
+            _msgArgs = []
+        elif _failReason == gameconst.TeamDunCheckCondErrno.UNLOCK_CHECK_FAIL:
+            _msgId = MMD.datas.functionNotAvailable
+            _msgArgs = []
+        else:
+            # 挑战次数不足（对照旧本服链路的队长提示）：下发 onLackChallengeNum 弹窗
+            gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
+                [reply.captainGbId], 'onLackChallengeNum',
+                (_dungeonNo, [reply.failName]), None, '', ()
+            )
+            return
+
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [reply.captainGbId], 'onMessagePre', (_msgId, _msgArgs), None, '', ()
+        )
+
     # ------------------------------------------------------------------
     # 讨伐副本（中心经本 Stub 中转建空间；跨服模式在跨服服调用，本服模式在本服调用）：
-    # 副本空间由对应 dungeonNo 的 CrossTeamDungeonStub 管理（跨服队伍归属走 SpaceVal.crossTeamId；
-    # 空间 dungeonPlayMode 跨服服落 CROSS_CRUSADE/CROSS_CHIEF，本服落 CRUSADE/CHIEF），
+    # 副本空间由对应 dungeonNo 的 CrossTeamDungeonStub 管理（空间 dungeonPlayMode 跨服服落
+    # CROSS_CRUSADE/CROSS_CHIEF，本服落 CRUSADE/CHIEF），
     # 本 Stub 只保留 teamId->空间 簿记（crusadeSpaceCache）与中心回报。
     # ------------------------------------------------------------------
 
@@ -1115,8 +1698,7 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         # playMode 按本机身份落枚举（问题记录#6/#7，D3-2 修订）：
         # - 本机跨服服：跨服 playMode（CROSS_CRUSADE/CROSS_CHIEF），结算/退出走跨服链路；
         # - 本机本服（本服模式，dunServer=本服）：直接落本服 playMode（CRUSADE/CHIEF），
-        #   结算/完成自动退出/客户端结算面板全量复用本服旧链路；
-        #   跨服队伍归属改由 SpaceVal.crossTeamId 判定（isCrossDungeon 不再依赖 playMode）
+        #   结算/完成自动退出/客户端结算面板全量复用本服旧链路。
         if gameconfig.isCrossServer():
             if _isRaid:
                 _playMode = dungeonPlayMode.CrossChiefDungeonPlayMode(teamUUID=_teamId)
@@ -1185,10 +1767,12 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _cache = self.crusadeSpaceCache.get(_teamId)
         if not _cache or not _cache.get('spaceNo') or not _cache.get('spaceBox'):
             LOG_ERR('logonEnterCrusadeDungeon no space', _teamId, gbId)
-            box.onCrossCrusadeLogonEnterFail()
+            utils.safeBaseCall(box, 'onCrossCrusadeLogonEnterFail')
             return
 
-        box.enterCrusadeDungeonOnLogon(
+        utils.safeBaseCall(
+            box,
+            'enterCrusadeDungeonOnLogon',
             _cache['spaceBox'],
             _cache['spaceMgrBox'],
             _cache['spaceNo'],
@@ -1200,16 +1784,25 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         LOG_INFO('CrossTeamStub enterCrusadeSpace', teamId, gbId)
         _cache = self.crusadeSpaceCache.get(teamId)
         if not _cache or not _cache.get('spaceNo'):
+            # 簿记缺失（空间已销毁/已结算，多为中心中止/完成与迁移的竞态）兜底：
+            # 直接回本服，避免镜像滞留跨服——进不了本也回不了家
+            # （对齐 onEnterCrossCrusadeSpaceRemotely 无 teamId 分支的回本处理）
             LOG_ERR('enterCrusadeSpace no space', teamId, gbId)
+            utils.safeBaseCall(
+                box,
+                'gobackServer',
+                gameconst.CrossServerCBComponent.ENUM_NONE,
+                '',
+                ()
+            )
             return
 
         _dungeonNo = _cache['dungeonNo']
         _spaceNo = _cache['spaceNo']
 
         # 镜像 cell 标记跨服队伍并构造 AOI 队友缓存（副本内退出/掉线语义用）
-        if box.cell:
-            box.cell.onCrossTeamIdChange(teamId)
-            box.cell.onCrossCrusadeSpaceEnter(context)
+        utils.safeCellCall(box, 'onCrossTeamIdChange', teamId)
+        utils.safeCellCall(box, 'onCrossCrusadeSpaceEnter', context)
 
         _extra = {
             'dungeonNo': _dungeonNo,
@@ -1222,11 +1815,22 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             # 进本资格名单与跳过门票道具检查（条件已在讨伐发起时由中心协调检查过）
             'teamEnterCheckDic': {gbId: 1},
             'skipUseNeedItem': True,
+            # 传送来源 src：离开场景埋点（cube_leave/wonderland_leave 取 context['src']）
+            # 与副本 stub enterDungeonSpaceSuccess 消费
+            'src': dungeonSrc.DungeonFromClientSrc(box, gbId),
         }
         _enterType = gameconst.DungeonEnterTypeEnum.RAID if _cache.get('isRaid') else gameconst.DungeonEnterTypeEnum.TEAM
         _dungeonStub = gameengine.getDungeonStubByDungeonNo(_dungeonNo, _enterType)
         if not _dungeonStub:
+            # 副本 stub 未就位（启动未完成/配表缺失）兜底：直接回本服，避免镜像滞留跨服
             LOG_ERR('enterCrusadeSpace no dungeon stub', _dungeonNo, teamId, gbId)
+            utils.safeBaseCall(
+                box,
+                'gobackServer',
+                gameconst.CrossServerCBComponent.ENUM_NONE,
+                '',
+                ()
+            )
             return
         _dungeonStub.doEnterDungeon(
             box,
@@ -1237,7 +1841,7 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         )
 
     def _reportCrusadeSpaceReady(self, teamId, spaceUUID, ok):
-        _service = self._getService('crusadeSpaceReady')
+        _service = self._getService('crusadeSpaceReady', teamId)
         if not _service:
             return
 
@@ -1247,19 +1851,23 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.ok = ok
         _service.serviceStub.crusadeSpaceReady(None, _req, None)
 
-    def crusadeFinished(self, teamId, result):
-        # 副本完成（跨服讨伐副本 stub 在完成回调中调用）：清空间缓存并通知中心复位 InDungeon
-        LOG_INFO('CrossTeamStub crusadeFinished', teamId, result)
+    # 副本完成
+    # callback
+    #   onDungeonCDRefreshPush 更新刷新时间
+    def crusadeFinished(self, teamId, result, finishedTime):
+        # 副本完成（跨服讨伐副本 stub 在战斗结束时调用）：清空间缓存并通知中心复位 InDungeon
+        LOG_INFO('CrossTeamStub crusadeFinished', teamId, result, finishedTime)
         self.crusadeSpaceCache.pop(teamId, None)
         self.crusadeDungeonCache.pop(teamId, None)
 
-        _service = self._getService('crusadeFinished')
+        _service = self._getService('crusadeFinished', teamId)
         if not _service:
             return
 
         _req = CrusadeFinishedRequest()
         _req.teamId = teamId
         _req.result = result
+        _req.finishedTime = finishedTime
         _service.serviceStub.crusadeFinished(None, _req, None)
 
     def onDungeonCDRefreshPush(self, reply):
@@ -1278,7 +1886,12 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             )
 
     # ------------------------------------------------------------------
-    # 成员状态聚合上报（3s 定时）
+    # 成员状态聚合上报（0.1s 定时定量）：
+    # stateReportCache 为持续缓冲（按 gbId 存最新快照），每个 tick 从中拆一批上行
+    # （ReportMemberStateBatchRequest），单批最多 CROSS_TEAM_REPORT_STATE_BATCH_MAX
+    # 个成员、整队为原子单位不拆队，配额用完的剩余队伍留待下个 tick；
+    # 中心接口层按 teamId 拆包重新分发到 teamWorker。下行为推送模型：中心 teamWorker 1s tick
+    # 把脏队伍全量快照经 teamMemberStatesPush 推回写本地缓存（onTeamMemberStatesPush）
     # ------------------------------------------------------------------
 
     def reportMemberStates(self):
@@ -1287,23 +1900,47 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         _service = self._getService('reportMemberStates')
         if not _service:
+            # 服务不可用（断线中）：保留缓存待下个 tick 重试，缓存为全量快照无叠加语义
             return
 
-        _serverId = gameconfig.serverId()
+        # 入批即出缓存：只移除本批已取走的成员，剩余成员快照留在缓存等下个 tick
         _teamStates = {}
-        for _gbId, _state in self.stateReportCache.items():
+        _total = 0
+        for _gbId, _state in list(self.stateReportCache.items()):
             _teamId = _state.get('teamId', 0)
             if _teamId == 0:
+                self.stateReportCache.pop(_gbId, None)
+                continue
+            if _teamId not in _teamStates and _total >= gameconst.CROSS_TEAM_REPORT_STATE_BATCH_MAX:
+                # 配额用完：不再接纳新队伍（已入批队伍的后续成员照常收齐，保整队原子）
                 continue
             _teamStates.setdefault(_teamId, []).append((_gbId, _state))
+            _total += 1
+            self.stateReportCache.pop(_gbId, None)
 
-        for _teamId, _members in _teamStates.items():
-            _req = ReportMemberStateRequest()
-            _req.teamId = _teamId
-            _req.serverId = _serverId
-            _req.reportTS = utils.curTS()
+        if not _teamStates:
+            return
+
+        self._sendMemberStateBatch(_service, _teamStates)
+
+        _remain = len(self.stateReportCache)
+        if _remain > gameconst.CROSS_TEAM_REPORT_STATE_BATCH_MAX:
+            # 积压超一批配额：上报速率持续高于 drain 速率（告警观察，不丢数据）
+            LOG_ERR('CrossTeamStub reportMemberStates backlog', _remain)
+
+    def _sendMemberStateBatch(self, service, teamStates):
+        # 组包并上行成员状态批量包（reportMemberStates 聚合上报与 reportMemberStateNow
+        # 单成员即时上报共用）：teamStates = {teamId: [(gbId, stateDict), ...]}
+        _serverId = gameconfig.serverId()
+        _reportTS = utils.curTS()
+        _req = ReportMemberStateBatchRequest()
+        for _teamId, _members in teamStates.items():
+            _teamReq = _req.teams.add()
+            _teamReq.teamId = _teamId
+            _teamReq.serverId = _serverId
+            _teamReq.reportTS = _reportTS
             for _gbId, _state in _members:
-                _memberState = _req.members.add()
+                _memberState = _teamReq.members.add()
                 _memberState.gbId = _gbId
                 _memberState.hp = _state.get('hp', 0)
                 _memberState.maxHp = _state.get('maxHp', 0)
@@ -1315,7 +1952,37 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 _memberState.posY = _position[1]
                 _memberState.posZ = _position[2]
 
-            _service.serviceStub.reportMemberState(None, _req, None)
+        service.serviceStub.reportMemberStateBatch(None, _req, None)
+
+    # 单成员即时状态上报（不进定时聚合缓存，cell 在路由敏感时点调用）
+    # callback:
+    #   无（与聚合上报同接口，中心 reportMemberState 据上报方 serverId 刷新成员 RouteServerId）
+    def reportMemberStateNow(self, teamId, gbId, stateDict):
+        # 中心仅在状态上报时刷新成员推送路由（RouteServerId）；差分抑制下进跨服副本/
+        # 退出副本回本服后路由可能滞留在旧服，进服拿到全量组队数据时 cell 调本方法即时刷新
+        LOG_INFO('CrossTeamStub reportMemberStateNow', teamId, gbId)
+        _service = self._getService('reportMemberStateNow', teamId, gbId)
+        if not _service:
+            return
+
+        # 即时全量状态已取代聚合缓存中的旧快照，避免下个 3s tick 迟发后反向覆盖
+        self.clearMemberStateReport(teamId, gbId)
+        self._sendMemberStateBatch(_service, {teamId: [(gbId, stateDict)]})
+
+    # 成员改名上报（改名事件即时上行，低频；cell 在 afterModifyName 统一收口调用）
+    # callback:
+    #   无（静默语义；中心更新成员名后 memberRenamePush 全队广播）
+    def renameMember(self, teamId, gbId, name):
+        LOG_INFO('CrossTeamStub renameMember', teamId, gbId, name)
+        _service = self._getService('renameMember', teamId, gbId)
+        if not _service:
+            return
+
+        _req = RenameMemberRequest()
+        _req.teamId = teamId
+        _req.gbId = gbId
+        _req.name = name
+        _service.serviceStub.renameMember(None, _req, None)
 
     # ------------------------------------------------------------------
     # 下行：中心 -> Stub -> 本服成员
@@ -1330,9 +1997,18 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 LOG_ERR('CrossTeamStub onTeamOpResult no cache', reply.uuid, reply.teamId, reply.gbId)
                 return
 
+            LOG_DBG('CrossTeamStub onTeamOpResult', reply.uuid, reply.teamId, reply.gbId, reply.resultCode)
             _box = _cache['box']
             _method = _cache['method']
-            getattr(_box, _method)(reply.resultCode, reply.teamId, reply.gbId, reply.target)
+            # 缓存只存 base box：cell 可能迁移/重建，回调时经 box.cell 动态解析
+            utils.safeCellCall(
+                _box,
+                _method,
+                reply.resultCode,
+                reply.teamId,
+                reply.gbId,
+                reply.target
+            )
             return
 
         LOG_INFO('CrossTeamStub onTeamOpResult push', reply.teamId, reply.gbId, reply.resultCode, reply.target)
@@ -1346,22 +2022,23 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         )
 
     def onReplyApplyNotify(self, reply):
-        # 入队申请结果主动通知：纯转发直发申请人客户端（doOnOthersClient，不绕 cell），
-        # 携带目标/门槛/密码/申请来源，供客户端失败交互
-        LOG_INFO('CrossTeamStub onReplyApplyNotify', reply.teamId, reply.applicantGbId, reply.resultCode)
-        gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
-            [reply.applicantGbId],
-            'onCrossTeamApplyJoinResult',
-            (
-                reply.resultCode,
-                reply.teamId,
-                reply.target,
-                reply.requireLevel,
-                reply.requireScore,
-                reply.password,
-                reply.applySource,
-            ),
-            None, '', ()
+        # 入队申请受理回调（uuid 回执）：按 uuid 从 remoteCallCache 取申请人 cell 原路回调
+        # （cell 透传客户端），不再按 gbId 路由直发客户端
+        _cache = self.remoteCallCache.pop(reply.uuid, None)
+        if _cache is None:
+            LOG_ERR('CrossTeamStub onReplyApplyNotify no cache', reply.uuid, reply.teamId, reply.applicantGbId)
+            return
+        LOG_DBG('CrossTeamStub onReplyApplyNotify', reply.uuid, reply.teamId, reply.applicantGbId, reply.resultCode)
+        utils.safeCellCall(
+            _cache['box'],
+            _cache['method'],
+            reply.resultCode,
+            reply.teamId,
+            reply.target,
+            reply.requireLevel,
+            reply.requireScore,
+            reply.password,
+            reply.applySource
         )
 
     def onBecomeCaptainApplyPush(self, reply):
@@ -1384,25 +2061,55 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 },),
                 None, '', ()
             )
+            # 队伍频道消息（58000021 申请成为队长）：经队长 cell 投递，仅队长可见
+            gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
+                _receivers, 'onCrossTeamBecomeCaptainApplyMsg',
+                (_applicant.gbId, _applicant.name,),
+                None, '', ()
+            )
 
     # 创建队伍成功：分发到 onCrossTeamCreateSuccess（仅创建人本人，中心经 receiverGbIds 指定）
     def onTeamCreateSuccessPush(self, reply):
-        LOG_DBG('onTeamCreateSuccessPush', reply.team.teamId, len(reply.team.members))
+        LOG_INFO('onTeamCreateSuccessPush', reply.team.teamId, len(reply.team.members))
         _gbIds = list(reply.receiverGbIds)
         if _gbIds:
             gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
                 _gbIds, 'onCrossTeamCreateSuccess',
                 (crossTeam.teamInfoPbToStreamDict(reply.team),),
-                None, '', ()
+                self, 'onTeamCreateSuccessDeliverFail', (reply.team.teamId,)
             )
+
+    def onTeamCreateSuccessDeliverFail(self, gbId, teamId):
+        # 建队成功推送未落地（创建人已离线）：离线时本地队伍缓存滞后，leaveCrossTeamAuto
+        # 上报的 memberOffline(0) 可能先于中心建队落索引到达而被反查丢弃，
+        # 此处用真实 teamId 补偿上报离线退队收口，防幽灵队残留
+        LOG_WARN('CrossTeamStub onTeamCreateSuccessDeliverFail', teamId, gbId)
+        self.memberOffline(teamId, gbId)
 
     # 新成员加入成功：分发到 onCrossTeamJoinSuccess（仅新成员本人，中心经 receiverGbIds 指定）
     def onTeamJoinSuccessPush(self, reply):
-        LOG_DBG('onTeamJoinSuccessPush', reply.team.teamId, len(reply.team.members))
+        LOG_INFO('onTeamJoinSuccessPush', reply.team.teamId, len(reply.team.members))
         _gbIds = list(reply.receiverGbIds)
         if _gbIds:
             gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
                 _gbIds, 'onCrossTeamJoinSuccess',
+                (crossTeam.teamInfoPbToStreamDict(reply.team),),
+                self, 'onTeamJoinSuccessDeliverFail', (reply.team.teamId,)
+            )
+
+    def onTeamJoinSuccessDeliverFail(self, gbId, teamId):
+        # 与 onTeamCreateSuccessDeliverFail 同理：入队全量包未落地即下线时补偿退队
+        LOG_WARN('CrossTeamStub onTeamJoinSuccessDeliverFail', teamId, gbId)
+        self.memberOffline(teamId, gbId)
+
+    # 小队转团队：全员全量分发到 onCrossTeamInfoUpdate（复用全量落地漏斗，
+    # 含新 teamId/target/maxNum；cell 侧 crossTeamId 变更、分线上报、AOI 重建自动完成）
+    def onTeamConvertPush(self, reply):
+        LOG_INFO('onTeamConvertPush', reply.oldTeamId, reply.team.teamId, len(reply.team.members))
+        _gbIds = list(reply.receiverGbIds)
+        if _gbIds:
+            gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
+                _gbIds, 'onCrossTeamInfoUpdate',
                 (crossTeam.teamInfoPbToStreamDict(reply.team),),
                 None, '', ()
             )
@@ -1476,7 +2183,7 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _markDict = crossTeam.markInfoPbToStreamDict(reply.mark) if reply.HasField('mark') else {}
         gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
             _receivers, 'onCrossTeamMarkChange',
-            (reply.changeType, _markDict, reply.onlyCaptainCanMark, min(*_receivers)),
+            (reply.changeType, _markDict, reply.onlyCaptainCanMark),
             None, '', ()
         )
 
@@ -1552,27 +2259,15 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 None, '', ()
             )
 
-    def onAdjustMemberPosPush(self, reply):
-        # 位置调整推送：转发到相关成员 cell，由 cell 通知客户端刷新全量
-        LOG_INFO('CrossTeamStub onAdjustMemberPosPush', reply.teamId, reply.srcGbId, reply.srcGroupIdx, reply.dstGbId, reply.dstGroupIdx)
-        _receivers = list(reply.receiverGbIds)
-        if not _receivers:
-            return
-
-        gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
-            _receivers,
-            'onCrossTeamMemberPosChange',
-            (reply.srcGbId, reply.srcGroupIdx, reply.dstGbId, reply.dstGroupIdx),
-            None, '', ()
-        )
-
     def onTeamChatBatch(self, reply):
+        LOG_DBG('CrossTeamStub onTeamChatBatch', reply.teamId, len(reply.msgs), len(reply.receiverGbIds))
         _gbIds = list(reply.receiverGbIds)
         if not _gbIds:
             return
 
         # 完整聊天内容（msgType/voiceUrl/code）与拼 avatarInfo 所需发送者信息
-        # （CROSS_TEAM_CHAT_MSG_VAL，base 侧据此走本服队伍频道链路下发）
+        # （CROSS_TEAM_CHAT_MSG_VAL，base 侧据此走本服队伍频道链路下发）；
+        # senderServerId 为发言者归属服，由中心按成员数据盖戳（客户端跨服标记用）
         _msgList = []
         for _msg in reply.msgs:
             _msgList.append({
@@ -1587,6 +2282,8 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 'msgType': _msg.msgType,
                 'voiceUrl': _msg.voiceUrl,
                 'code': _msg.code,
+                'senderServerId': _msg.senderServerId,
+                'senderEntId': _msg.senderEntId,
             })
 
         gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
@@ -1612,26 +2309,13 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             None, '', ()
         )
 
-    def onBroadcastMemberState(self, reply):
-        # 状态快照直接广播到客户端，省去 cell 中转（Stub 不维护队伍缓存，无回写）
-        _stateDicts = []
-        for _state in reply.members:
-            _stateDicts.append({
-                'gbId': _state.gbId,
-                'hp': _state.hp,
-                'maxHp': _state.maxHp,
-                'level': _state.level,
-                'score': _state.score,
-                'spaceNo': _state.spaceNo,
-                'position': (_state.posX, _state.posY, _state.posZ),
-                'routeServerId': _state.routeServerId,
-            })
-
-        _gbIds = list(reply.receiverGbIds)
-        if _gbIds:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
-                _gbIds, 'onCrossTeamMemberState', (reply.teamId, _stateDicts,), None, '', ()
-            )
+    def onTeamMemberStatesPush(self, reply):
+        # 成员状态推送（常态下行）：中心 teamWorker 1s tick 把脏队伍全量快照按服聚合下发，
+        # 逐队写本地快照缓存（reportTS 乱序丢弃在 _writeTeamStateCache 内判定）
+        for _item in reply.teams:
+            if not self._isMyTeam(_item.teamId, 'teamMemberStatesPush'):
+                continue
+            self._writeTeamStateCache(_item.teamId, _item.members, _item.reportTS)
 
     def onMatchSuccess(self, reply):
         # 两段式入队第一段：转发到 Avatar cell 做二次检查（是否仍在匹配/是否已入队等），
@@ -1645,12 +2329,15 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             None, '', ()
         )
 
+    # 匹配入队第二段：cell 二次检查通过后向中心发 MatchJoin
+    # callback:
+    #   onTeamJoinSuccessPush/onMemberJoinPush 入队成功推送
     def doMatchJoin(self, teamId, target, memberInfo):
         # Avatar cell 二次检查通过后回调：向中心发 MatchJoin 完成两段式入队第二段
         _gbId = memberInfo.get('gbId', 0)
         LOG_INFO('CrossTeamStub doMatchJoin', teamId, target, _gbId)
 
-        _service = self._getService('doMatchJoin')
+        _service = self._getService('doMatchJoin', teamId, _gbId)
         if not _service:
             return
 
@@ -1667,6 +2354,8 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         _req.member.sex = memberInfo.get('sex', 0)
         _req.member.picFrameId = memberInfo.get('picFrameId', 0)
         _req.member.openId = memberInfo.get('openId', '')
+        _req.member.hp = memberInfo.get('hp', 0)
+        _req.member.maxHp = memberInfo.get('maxHp', 0)
         _service.serviceStub.matchJoin(None, _req, None)
 
     def onMatchTimeout(self, reply):
@@ -1678,10 +2367,10 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         )
 
     def onTeamListResult(self, reply):
-        _cache = self.remoteCallCache.pop(reply.uuid, None)
-        if not _cache:
-            LOG_ERR('CrossTeamStub onTeamListResult no cache', reply.uuid)
-            return
+        # 列表回包：按回包 target 直接定位缓存条目，填缓存后 fan-out 给全部等待者
+        _target = reply.target
+
+        LOG_DBG('CrossTeamStub onTeamListResult', reply.uuid, _target)
 
         _teams = []
         for _team in reply.teams:
@@ -1710,9 +2399,26 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         # 一波全量下发（问题记录#5）：json+gzip 后经请求者 base streamStringProxy 分片推给客户端；
         # 同 target 结果缓存 CROSS_TEAM_LIST_CACHE_SECONDS 秒，命中期查询直接回缓存（getTeamList）
-        _zStr = gzip.compress(json.dumps({'target': reply.target, 'teams': _teams}).encode('ascii'))
-        self.teamListCache[reply.target] = {'data': _zStr, 'ts': utils.curTS()}
-        _cache['box'].streamStringProxy(_zStr, '', gameconst.StreamStringID.CROSS_TEAM_LIST_DATA)
+        _zStr = gzip.compress(json.dumps({'target': _target, 'teams': _teams}).encode('ascii'))
+        _cache = self.teamListCache.get(_target)
+        if _cache is None:
+            # 在途标记条目由 getTeamList 创建，理论必达；兜底重建（等待者已丢失，仅落缓存）
+            _cache = {'data': None, 'ts': 0, 'queryTs': 0, 'waiters': []}
+            self.teamListCache[_target] = _cache
+        _cache['data'] = _zStr
+        _cache['ts'] = utils.curTS()
+        _cache['queryTs'] = 0
+
+        _waiters = _cache['waiters']
+        _cache['waiters'] = []
+        for _box in _waiters:
+            utils.safeBaseCall(
+                _box,
+                'streamStringProxy',
+                _zStr,
+                '',
+                gameconst.StreamStringID.CROSS_TEAM_LIST_DATA
+            )
 
     def onTeamDataResp(self, reply):
         # 客户端主动查询回包：按 uuid 回调缓存的 box/method（无队/查询失败回空 dict）
@@ -1721,10 +2427,13 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             LOG_ERR('CrossTeamStub onTeamDataResp no cache', reply.uuid)
             return
 
+        LOG_DBG('CrossTeamStub onTeamDataResp', reply.uuid, reply.success, reply.team.teamId)
+
         _teamDict = crossTeam.teamInfoPbToStreamDict(reply.team) if reply.success else {}
         _box = _cache['box']
         _method = _cache['method']
-        getattr(_box, _method)(_teamDict)
+        # 缓存只存 base box：回调时经 box.cell 动态解析（cell 可能迁移/重建）
+        utils.safeCellCall(_box, _method, _teamDict)
 
     def onQueryTeamCrossResp(self, reply):
         # teamId 直查回包（队伍预览 onCrossTeamPreview / 跨服进本前校验）：
@@ -1734,11 +2443,14 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             LOG_ERR('CrossTeamStub onQueryTeamCrossResp no cache', reply.uuid)
             return
 
+        LOG_DBG('CrossTeamStub onQueryTeamCrossResp', reply.uuid, reply.team.teamId)
+
         _teamDict = crossTeam.teamInfoPbToStreamDict(reply.team) if reply.success else {}
         _box = _cache['box']
         _method = _cache['method']
         _args = _cache.get('args', ())
-        getattr(_box, _method)(_teamDict, *_args)
+        # 缓存只存 base box：回调时经 box.cell 动态解析（cell 可能迁移/重建）
+        utils.safeCellCall(_box, _method, _teamDict, *_args)
 
     def onMemberVoiceStatePush(self, reply):
         # 成员语音状态变更（决策 2 独立推送）：组位图转发成员 cell，
@@ -1760,6 +2472,19 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
                 _receivers, 'onCrossTeamMemberVoiceState',
                 (reply.gbId, _voiceFlags,),
+                None, '', ()
+            )
+
+    def onMemberRenamePush(self, reply):
+        # 成员改名广播（中心 renameMember 更新后全队推送，含改名者本人）：
+        # 转发成员 cell 落地缓存并透传客户端；携带 teamId 由 cell 校验当前队伍，
+        # 防换队/离队后旧推送落地
+        LOG_INFO('CrossTeamStub onMemberRenamePush', reply.teamId, reply.gbId, reply.name)
+        _receivers = list(reply.receiverGbIds)
+        if _receivers:
+            gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
+                _receivers, 'onCrossTeamMemberRename',
+                (reply.teamId, reply.gbId, reply.name,),
                 None, '', ()
             )
 
@@ -1788,6 +2513,8 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             LOG_ERR('CrossTeamStub onApplyListPush no cache', reply.uuid)
             return
 
+        LOG_DBG('CrossTeamStub onApplyListPush', reply.uuid, reply.teamId, reply.receiverGbId)
+
         _applyList = []
         for _app in reply.applicants:
             _m = _app.member
@@ -1807,7 +2534,8 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         _box = _cache['box']
         _method = _cache['method']
-        getattr(_box, _method)(_applyList)
+        # 缓存只存 base box：回调时经 box.cell 动态解析（cell 可能迁移/重建）
+        utils.safeCellCall(_box, _method, _applyList)
 
     def onApplyRemoveNotify(self, reply):
         # 申请移除通知：转发队长（副团长功能期扩展），客户端从申请列表移除
@@ -1821,7 +2549,7 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             )
 
     def onJoinApplyNotify(self, reply):
-        LOG_DBG('onJoinApplyNotify:', reply)
+        LOG_DBG('onJoinApplyNotify', reply.teamId, reply.applicant.gbId, reply.captainGbId)
         # 入队申请提示：转发队长
         _applicant = reply.applicant
         gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
@@ -1844,6 +2572,7 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def onInviteNotify(self, reply):
         # 组队邀请：转发被邀请人
+        LOG_INFO('CrossTeamStub onInviteNotify', reply.teamId, reply.inviter.gbId, reply.inviteeGbId)
         _inviter = reply.inviter
         gameengine.getGlobalBase('PlayerStub').doOnOthersClient(
             [reply.inviteeGbId], 'onCrossTeamInvite',
@@ -1862,3 +2591,101 @@ class CrossTeamStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             },),
             None, '', ()
         )
+
+    # ------------------------------------------------------------------
+    # 申请审批同意下行（队长 replyApply 同意后中心不再直接 addMember，而是标记
+    # Approved 并通知申请人所在服）：路由申请人 cell 自证入队；申请人离线则
+    # 回执队长系统提示，入队受理结果经 uuid 回执隔离回调（onTeamApprovedJoinResult）
+    # ------------------------------------------------------------------
+
+    def onApplyApprovedNotify(self, reply):
+        # 审批同意到达：路由申请人 cell 自证入队（gbId 分片过滤已在服务层完成），
+        # 申请人离线/不可达走失败回调回执队长（doOnOthersCell failCallback 用法同无队邀请三件套）
+        LOG_INFO('CrossTeamStub onApplyApprovedNotify', reply.teamId, reply.gbId, reply.captainGbId)
+        gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
+            [reply.gbId], 'onCrossTeamApplyApproved',
+            (reply.teamId,),
+            self, 'onApplyApprovedNotifyFail', (reply.captainGbId, reply.teamId)
+        )
+
+    def onApplyApprovedNotifyFail(self, failedGbId, captainGbId, teamId):
+        # 申请人离线/不可达：回执队长系统提示（54003535 该玩家已下线）；
+        # 队长离线则直接丢弃，不写离线留言
+        LOG_INFO('CrossTeamStub onApplyApprovedNotifyFail', failedGbId, captainGbId, teamId)
+        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+            [captainGbId],
+            'onMessagePre',
+            (MMD.datas.offlineApplyMsg, []),
+            None,
+            '',
+            ()
+        )
+
+    # ------------------------------------------------------------------
+    # 无队邀请组队下行（方案 §4.3）：经 PlayerStub 路由目标 cell，全部带 failCallback
+    # 仅记日志静默收口（现有 onInviteNotify 走 doOnOthersClient 无回调，离线静默吞）
+    # ------------------------------------------------------------------
+
+    def onTeamUpInviteNotify(self, reply):
+        # 无队邀请到达：组 CROSS_TEAM_INVITE_VAL 同构 dict 路由被邀请人 cell
+        # （target=0 无队伍设置；teamId 为邀请人预分配 id，应答回传/试进队用）
+        LOG_INFO('CrossTeamStub onTeamUpInviteNotify', reply.teamId, reply.inviter.gbId, reply.inviteeGbId)
+        _inviter = reply.inviter
+        _info = {
+            'teamId': reply.teamId,
+            'target': 0,
+            'gbId': _inviter.gbId,
+            'serverId': _inviter.serverId,
+            'playerName': _inviter.name,
+            'school': _inviter.school,
+            'level': _inviter.level,
+            'score': _inviter.score,
+            'inviteType': reply.inviteType,
+            'sex': _inviter.sex,
+        }
+        gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
+            [reply.inviteeGbId], 'onTeamUpInvite',
+            (_info,),
+            self, 'onTeamUpInviteDeliverFail', (_info,)
+        )
+
+    def onTeamUpInviteDeliverFail(self, inviteeGbId, inviteInfo):
+        # 被邀请人离线/不可达：不代答不提示邀请人（其 30s 超时自然收口），仅记日志（决策 7）
+        LOG_WARN('CrossTeamStub onTeamUpInviteDeliverFail', inviteeGbId, inviteInfo.get('teamId', 0))
+
+    def onTeamUpReplyNotify(self, reply):
+        # 无队邀请应答到达：组 CROSS_TEAM_TEAM_UP_REPLY_VAL 同构 dict 路由邀请人 cell
+        # （A 侧据此提示，同意时驱动服务端自动建队）
+        LOG_INFO('CrossTeamStub onTeamUpReplyNotify', reply.inviterGbId, reply.invitee.gbId,
+                 reply.agree, reply.reason)
+        _invitee = reply.invitee
+        _info = {
+            'gbId': _invitee.gbId,
+            'playerName': _invitee.name,
+            'school': _invitee.school,
+            'level': _invitee.level,
+            'agree': reply.agree,
+            'reason': reply.reason,
+        }
+        gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
+            [reply.inviterGbId], 'onTeamUpInviteReply',
+            (_info,),
+            self, 'onTeamUpReplyDeliverFail', (_invitee.gbId,)
+        )
+
+    def onTeamUpReplyDeliverFail(self, inviterGbId, inviteeGbId):
+        # 邀请人不在线：不建队不追究，仅记日志（决策 2）
+        LOG_WARN('CrossTeamStub onTeamUpReplyDeliverFail', inviterGbId, inviteeGbId)
+
+    def onTeamUpTeamReady(self, reply):
+        # 队伍就绪到达：路由被邀请人 cell 自动进队（其 cell 命中 accepted 记录才进）
+        LOG_INFO('CrossTeamStub onTeamUpTeamReady', reply.teamId, reply.captainGbId, reply.inviteeGbId)
+        gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
+            [reply.inviteeGbId], 'onTeamUpTeamReady',
+            (reply.teamId, reply.captainGbId),
+            self, 'onTeamUpReadyDeliverFail', (reply.teamId, reply.captainGbId)
+        )
+
+    def onTeamUpReadyDeliverFail(self, inviteeGbId, teamId, captainGbId):
+        # 被邀请人不在线：不入队，仅记日志（决策 1 同款静默）
+        LOG_WARN('CrossTeamStub onTeamUpReadyDeliverFail', inviteeGbId, teamId, captainGbId)

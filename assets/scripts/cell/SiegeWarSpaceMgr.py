@@ -1,6 +1,6 @@
 import KBEngine
 from KBEDebug import *
-import formula, gameengine, iStaticSpaceMgr, utils, random, math, gametimer, iTimer
+import formula, gameengine, iStaticSpaceMgr, utils, random, math, gametimer, iTimer, gameconfig
 from gameconst import AchieveType
 from gameconst import SiegeWarMonsterCustomId as siegeTp
 from gameconst import SiegeWarMinimapDataType as SMDT
@@ -324,10 +324,10 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
         if self.isFirstBuffCreate:
             self.isFirstBuffCreate = False
             self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_buffFirstRefreshMsg']['value']), []))
-            self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannelEnum.SIEGE_WAR, utils.buildChatChannelAvatarData(0, 0, 1, '', 1, 0, 0), MM.datas[CBC.datas['cityBattle_buffFirstRefreshMsg']['value']]['Message']))
+            self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannelEnum.SIEGE_WAR, utils.buildChatChannelAvatarData(0, 0, 1, '', 1, 0, 0, gameconfig.serverId()), MM.datas[CBC.datas['cityBattle_buffFirstRefreshMsg']['value']]['Message']))
         else:
             self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_buffRefreshMsg']['value']), []))
-            self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannelEnum.SIEGE_WAR, utils.buildChatChannelAvatarData(0, 0, 1, '', 1, 0, 0), MM.datas[CBC.datas['cityBattle_buffRefreshMsg']['value']]['Message']))
+            self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannelEnum.SIEGE_WAR, utils.buildChatChannelAvatarData(0, 0, 1, '', 1, 0, 0, gameconfig.serverId()), MM.datas[CBC.datas['cityBattle_buffRefreshMsg']['value']]['Message']))
 
     def onAvatarGetBuffCreation(self, creationId, avatar, buffId):
         if not avatar.IsAvatar:
@@ -346,7 +346,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                 # x/10战报
                 msgArg4 = str(self.campWushuangBuffCnt[avatar.siegeWarCamp]) + "/" + str(CBC.datas['cityBattle_campBuffDemand']['value'])
                 msg = MM.datas[CBC.datas['cityBattle_buffObtainMsg']['value']]['Message'].format(avatar.name, buff.Buff.getBuffName(buffId), avatarCampStr, msgArg4)
-                self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannelEnum.SIEGE_WAR, utils.buildChatChannelAvatarData(0, 0, 1, '', 1, 0, 0), msg))
+                self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannelEnum.SIEGE_WAR, utils.buildChatChannelAvatarData(0, 0, 1, '', 1, 0, 0, gameconfig.serverId()), msg))
                 #无双
                 if self.campWushuangBuffCnt[avatar.siegeWarCamp] >= CBC.datas['cityBattle_campBuffDemand']['value']:
                     for playerId in self.players.values():
@@ -358,7 +358,7 @@ class SiegeWarSpaceMgr(iStaticSpaceMgr.IStaticSpaceMgr):
                     #激活无双buff
                     self.syncPlayer(lambda playerEnt: playerEnt.showMsg(utils.getTranslatedMsgId(CBC.datas['cityBattle_campBuffMsg']['value']), [avatarCampStr, avatarCampStr, buff.Buff.getBuffName(SiegeWarBuff.WUSHUANG_BUFF)]))
                     msg = MM.datas[CBC.datas['cityBattle_campBuffMsg']['value']]['Message'].format(avatarCampStr, avatarCampStr, buff.Buff.getBuffName(SiegeWarBuff.WUSHUANG_BUFF))
-                    self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannelEnum.SIEGE_WAR, utils.buildChatChannelAvatarData(0, 0, 1, '', 1, 0, 0), msg))
+                    self.syncPlayer(lambda playerEnt: playerEnt.base.onRecvChannelMsg(ChatChannelEnum.SIEGE_WAR, utils.buildChatChannelAvatarData(0, 0, 1, '', 1, 0, 0, gameconfig.serverId()), msg))
                     self.campWushuangBuffCnt[avatar.siegeWarCamp] = 0
 
             #buff效果

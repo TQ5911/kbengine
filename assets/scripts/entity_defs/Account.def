@@ -2,6 +2,7 @@
     <Interfaces>
         <Interface>       iTimerBase            </Interface>
         <Interface>       iCycleEvent           </Interface>
+        <Interface>       iPromoter             </Interface>
     </Interfaces>
 
     <Properties>
@@ -250,6 +251,14 @@
             <Flags>         BASE                     </Flags>
             <Persistent>    true                     </Persistent>
         </secondaryPwdInfo>
+
+        <preCreateAvatars>
+            <!-- 预创角数据 {preId(1~100): {name, school, sex, isRandName, faceData, createTime, convertedGbId}} -->
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       {}                      </Default>
+            <Persistent>    true                    </Persistent>
+        </preCreateAvatars>
     </Properties>
 
     <ClientMethods>
@@ -257,6 +266,7 @@
             <Arg>   CHARACTERS_INFO </Arg>
             <Arg>   BOOL            </Arg>
             <Arg>   DBID            </Arg>
+            <Arg>   PRE_CREATE_INFO </Arg>   <!-- 预创角信息（开始/结束时间、等待服列表） -->
         </onReqAvatarList>
 
         <onCharInfoChange>
@@ -342,6 +352,16 @@
         <checkTextSecurityResp>
             <Arg>           CHECK_TEXT_SECURITY_RESP     </Arg>
         </checkTextSecurityResp>
+
+        <onCreatePreAvatarResult>
+            <Arg>   UINT8           </Arg>   <!-- CreateAvatarRes -->
+            <Arg>   PLAYER_GBID     </Arg>   <!-- 预创角ID(1~100)，失败为0 -->
+            <Arg>   SCHOOL  </Arg>  <!-- school -->
+            <Arg>   UNICODE </Arg>  <!-- name -->
+            <Arg>   SEX     </Arg>
+            <Arg>   BOOL    </Arg>  <!-- isRandName -->
+            <Arg>   FACE_DATA  </Arg>
+        </onCreatePreAvatarResult>
     </ClientMethods>
 
     <BaseMethods>
@@ -360,6 +380,15 @@
             <Arg>   FACE_DATA  </Arg>
         </reqCreateAvatar>
 
+        <reqCreatePreAvatar>
+            <Exposed/>
+            <Arg>   SCHOOL  </Arg>  <!-- school -->
+            <Arg>   UNICODE </Arg>  <!-- name -->
+            <Arg>   SEX     </Arg>
+            <Arg>   BOOL    </Arg>  <!-- isRandName -->
+            <Arg>   FACE_DATA  </Arg>
+        </reqCreatePreAvatar>
+
         <logBeforeLogin> <Exposed/>
             <Arg>   OBJECT_ID   </Arg>
             <Arg>   UNICODE     </Arg>
@@ -369,6 +398,7 @@
             <Exposed/>
             <Arg>   UNICODE     </Arg>  <!-- name -->
             <Arg>   SCHOOL      </Arg>  <!-- school -->
+            <Arg>   SEX         </Arg>  <!-- sex -->
             <Arg>   FACE_DATA   </Arg>  <!-- face data -->
         </reqCreateBot>
 

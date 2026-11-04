@@ -61,12 +61,15 @@ class Space(iBase.IBase):
             self.onLoseCellReason = reason
 
         LOG_INFO("space onLoseCell ", self.spaceno, reason)
+        notify = False
         if formula.inCubeScene(self.spaceno):
             if not KBEngine.isShuttingDown():
+                notify = True
                 gameengine.getCubeStubBySpaceNo(self.spaceno).onSpaceCellAppDeath(self.spaceno)
 
         elif formula.inWonderLandScene(self.spaceno):
             if not KBEngine.isShuttingDown():
+                notify = True
                 gameengine.getWonderLandStubBySpaceNo(self.spaceno).onSpaceCellAppDeath(self.spaceno)
 
         elif formula.inAbyssScene(self.spaceno):
@@ -74,11 +77,17 @@ class Space(iBase.IBase):
                 gameengine.getAbyssStubBySpaceNo(self.spaceno).onSpaceCellAppDeath(self.spaceno)
 
         elif formula.inLineScene(self.spaceno):
+            notify = True
             lineType = formula.fetchMapId(self.spaceno)
-            gameengine.getLineStub(lineType).onLineSpaceGone(self.spaceno, 0)
+            # 恢复侧只按 lineNo 重建, 不需要知道是哪个cellapp挂的,
+            # 因此不再传(以前恒为0的)cellapp标识
+            gameengine.getLineStub(lineType).onLineSpaceGone(self.spaceno)
 
         elif formula.inDungeonScene(self.spaceno):
             gameengine.getDungeonStubBySpaceNo(self.spaceno).onDungeonSpaceGone(self.spaceno, reason)
+
+        if notify:
+            gameengine.getGlobalBase('WorldRefreshEntityStub').onSpaceCellAppDeath(self.spaceno)
 
         self.doEntireDestroy(False, False)
 

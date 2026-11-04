@@ -20,9 +20,11 @@ class IMultiStaticSpace(iGlobal.IGlobal):
         self.loadWaitSet = set()
 
         # ===== 灾难恢复状态 (cellapp挂掉重启时使用) =====
-        self.deadApps = []           # type: list[int]  挂掉的cellapp groupOrder
-        self.relivedCellapps = []    # type: list[int]  恢复的cellapp groupOrder
-        self.missedSpaces = {}       # type: dict[int, int]  待恢复 spaceNo -> groupOrder
+        # 注意: 统一用 cellapp 的 cid(componentID) 做标识, 不能用 groupOrder,
+        # 后者各 baseapp 推导结果可能不一致, 会导致一次死亡记录成多个。
+        self.deadApps = []           # type: list[int]  挂掉的cellapp cid
+        self.relivedCellapps = []    # type: list[int]  恢复的cellapp cid
+        self.missedSpaces = {}       # type: dict[int, int]  待恢复 spaceNo -> cid
 
     def _createStaticSpace(self, mapId, spaceWeight=10, lineNo=0):
         LOG_INFO('_createStaticSpace:', mapId, lineNo)
@@ -87,7 +89,7 @@ class IMultiStaticSpace(iGlobal.IGlobal):
 
     def createCellEntityInSpace(self, spaceNo, className, bornPosition, bornDirection, params):
         _spaceVal = self.staticSpaces[spaceNo]
-        _spaceVal.lineSpaceBox.cell.createCellLocally(className, bornPosition, bornDirection, params)
+        _spaceVal.lineSpaceBox.cell.createCellLocallyRetry(className, bornPosition, bornDirection, params, None, '', ())
 
     def onSpaceMgrReady(self, spaceNo, spaceMgrCell):
         _spaceVal = self.staticSpaces[spaceNo]
@@ -116,6 +118,9 @@ class IMultiStaticSpace(iGlobal.IGlobal):
 
         LOG_DBG("IMultiStaticSpace::onLoadGroupEntities spaceNo", info['spaceNo'])
         _spaceVal = self.staticSpaces[info['spaceNo']]
+        if not _spaceVal or not _spaceVal.lineSpaceBox:
+            LOG_WARN('IMultiStaticSpace::onLoadGroupEntities: lineSpaceBox none', info['spaceNo'])
+            return
         _spaceVal.lineSpaceBox.cell.callOnSpace('onLoadGroupEntities', (info, _spaceVal.spaceMgrBoxCell.id))
 
     def onRefreshGroupEntities(self, info):
@@ -137,6 +142,9 @@ class IMultiStaticSpace(iGlobal.IGlobal):
 
         LOG_DBG("IMultiStaticSpace::onRefreshGroupEntities spaceNo", info['spaceNo'])
         _spaceVal = self.staticSpaces[info['spaceNo']]
+        if not _spaceVal or not _spaceVal.lineSpaceBox:
+            LOG_WARN('IMultiStaticSpace::onRefreshGroupEntities: lineSpaceBox none', info['spaceNo'])
+            return
         _spaceVal.lineSpaceBox.cell.callOnSpace('onRefreshGroupEntities', (info, _spaceVal.spaceMgrBoxCell.id))
 
     def onDestroyGroupEntities(self, info):
@@ -148,6 +156,9 @@ class IMultiStaticSpace(iGlobal.IGlobal):
             return
 
         _spaceVal = self.staticSpaces[info['spaceNo']]
+        if not _spaceVal or not _spaceVal.lineSpaceBox:
+            LOG_WARN('IMultiStaticSpace::onDestroyGroupEntities: lineSpaceBox none', info['spaceNo'])
+            return
         _spaceVal.lineSpaceBox.cell.callOnSpace('onDestroyGroupEntities', (info, _spaceVal.spaceMgrBoxCell.id))
 
     def onLoadEntitiesEnd(self, spaceNo):
@@ -182,15 +193,18 @@ class IMultiStaticSpace(iGlobal.IGlobal):
     # =========================================
     # 灾难恢复: handleCellappDeath / onCellappRelive
 
-    def handleCellappDeath(self, groupOrder):
-        if groupOrder not in self.deadApps:
-            self.deadApps.append(groupOrder)
-        LOG_INFO('IMultiStaticSpace::handleCellappDeath', groupOrder, self.deadApps)
+    def handleCellappDeath(self, cellId):
+        # cellId 为死亡 cellapp 的 cid(componentID)。每个 baseapp 都会收到
+        # onCellAppDeath 并转发到本 stub, 但只有 cid 在所有进程间一致,
+        # 用 groupOrder 去重会把一次死亡记成多个不同 cellapp。
+        if cellId not in self.deadApps:
+            self.deadApps.append(cellId)
+        LOG_INFO('IMultiStaticSpace::handleCellappDeath', cellId, self.deadApps)
 
-    def onCellappRelive(self, groupOrder):
-        if groupOrder not in self.relivedCellapps:
-            self.relivedCellapps.append(groupOrder)
-        LOG_INFO('IMultiStaticSpace::onCellappRelive', groupOrder,
+    def onCellappRelive(self, cellId):
+        if cellId not in self.relivedCellapps:
+            self.relivedCellapps.append(cellId)
+        LOG_INFO('IMultiStaticSpace::onCellappRelive', cellId,
                  'dead=', self.deadApps, 'relived=', self.relivedCellapps)
         self._doRecoverMissedSpaces()
 

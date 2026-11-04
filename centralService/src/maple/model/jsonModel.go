@@ -9,6 +9,7 @@ type Server struct {
 	QueueServer     string `json:"queue_server"`
 	CentralLogin    string `json:"central_login"`
 	ServerGroup     int    `json:"server_group"`
+	ServerSubGroup  int    `json:"server_sub_group"`
 	ServerState     int    `json:"server_state"`
 	ServerFlagState int    `json:"server_flag_state"`
 	Alias           string `json:"alias"`

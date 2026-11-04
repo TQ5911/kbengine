@@ -96,6 +96,12 @@
             <Arg>      ARRAY <of> CLIENT_OUTFIT_VAL    </of>    </Arg>
         </onUpdateOutfitData>
 
+        <!-- GM反激活坐骑/外观时通知客户端删除记录(客户端实现待开发) -->
+        <onRemoveOutfit>
+            <Arg>       UINT8           </Arg>
+            <Arg>       OUTFIT_ID       </Arg>
+        </onRemoveOutfit>
+
         <onPurchasedOutfitIds>
             <Arg>      ARRAY <of> UINT32    </of>    </Arg>
         </onPurchasedOutfitIds>

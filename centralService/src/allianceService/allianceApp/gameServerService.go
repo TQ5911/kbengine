@@ -71,11 +71,19 @@ func (gss *GameServerService) RegisterGameServer(in *gameServerService.RegisterG
 
 func (gss *GameServerService) doInitGroupId(serverId int) {
 	appLog.Info("start do init group id~", serverId)
-	common.AfterInitMapleServer(func() {
-		if !gss.initGroupId(int(serverId)) {
-			gss.doInitGroupId(serverId)
+	timer := time.NewTimer(1 * time.Second)
+	defer timer.Stop()
+
+	for {
+		select {
+		case <-timer.C:
+			if !gss.initGroupId(int(serverId)) {
+				timer.Reset(5 * time.Second)
+				continue
+			}
+			return
 		}
-	})
+	}
 }
 
 func (gss *GameServerService) initGroupId(serverId int) bool {
@@ -84,7 +92,7 @@ func (gss *GameServerService) initGroupId(serverId int) bool {
 	defer gss.app.groupIdMutex.Unlock()
 	groupId, ok := common.GetGameServerGroup(serverId)
 	if !ok {
-		appLog.Warn("register server err: not found group id with serverId:", serverId)
+		appLog.Error("register server err: not found group id with serverId:", serverId)
 		return false
 	}
 	gss.app.groupId = groupId

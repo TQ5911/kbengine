@@ -20,8 +20,8 @@ datas = _tools.RODict({
         "refNumber": 1,
         "qualityTypes": (0, 1, 1, 1, 0, 0),
         "openLv": (0, 1, 1, 1, 0, 0),
-        "probList": (0, 0.1, 0.07, 0.05, 0, 0),
-        "upgradeNum": (0, 0, 25, 20, 0, 0),
+        "probList": (0, 0.1, 0.05, 0.035, 0, 0),
+        "upgradeNum": (0, 0, 25, 25, 0, 0),
         "isOpen": 1,
     }),
     21: _tools.RODict({
@@ -29,8 +29,8 @@ datas = _tools.RODict({
         "refNumber": 1,
         "qualityTypes": (0, 1, 1, 1, 0, 0),
         "openLv": (0, 1, 1, 1, 0, 0),
-        "probList": (0, 0.1, 0.07, 0.05, 0, 0),
-        "upgradeNum": (0, 0, 25, 20, 0, 0),
+        "probList": (0, 0.1, 0.05, 0.035, 0, 0),
+        "upgradeNum": (0, 0, 25, 25, 0, 0),
         "isOpen": 1,
     }),
     22: _tools.RODict({
@@ -38,8 +38,8 @@ datas = _tools.RODict({
         "refNumber": 1,
         "qualityTypes": (0, 1, 1, 1, 0, 0),
         "openLv": (0, 1, 1, 1, 0, 0),
-        "probList": (0, 0.1, 0.07, 0.05, 0, 0),
-        "upgradeNum": (0, 0, 25, 20, 0, 0),
+        "probList": (0, 0.1, 0.05, 0.035, 0, 0),
+        "upgradeNum": (0, 0, 25, 25, 0, 0),
         "isOpen": 1,
     }),
     23: _tools.RODict({
@@ -47,8 +47,8 @@ datas = _tools.RODict({
         "refNumber": 1,
         "qualityTypes": (0, 1, 1, 1, 0, 0),
         "openLv": (0, 1, 1, 1, 0, 0),
-        "probList": (0, 0.1, 0.07, 0.05, 0, 0),
-        "upgradeNum": (0, 0, 25, 20, 0, 0),
+        "probList": (0, 0.1, 0.05, 0.035, 0, 0),
+        "upgradeNum": (0, 0, 25, 25, 0, 0),
         "isOpen": 1,
     }),
     11: _tools.RODict({
@@ -56,8 +56,8 @@ datas = _tools.RODict({
         "refNumber": 2,
         "qualityTypes": (0, 1, 1, 1, 0, 0),
         "openLv": (0, 1, 1, 1, 0, 0),
-        "probList": (0, 0.1, 0.07, 0.05, 0, 0),
-        "upgradeNum": (0, 0, 25, 20, 0, 0),
+        "probList": (0, 0.1, 0.05, 0.035, 0, 0),
+        "upgradeNum": (0, 0, 25, 25, 0, 0),
         "isOpen": 1,
     }),
     1000: _tools.RODict({
@@ -77,7 +77,16 @@ datas = _tools.RODict({
         "probList": (0, 0.1, 0.07, 0.05, 0, 0),
         "upgradeNum": (0, 0, 25, 20, 0, 0),
         "isOpen": 1,
+    }),
+    5: _tools.RODict({
+        "ID": 5,
+        "refNumber": 5,
+        "qualityTypes": (0, 1, 1, 1, 0, 0),
+        "openLv": (0, 1, 1, 1, 0, 0),
+        "probList": (0, 0.1, 0.1, 0.1, 0, 0),
+        "upgradeNum": (0, 0, 10, 5, 0, 0),
+        "isOpen": 1,
     })
 })
-minKey = 6
+minKey = 5
 maxKey = 1001

@@ -127,6 +127,7 @@ datas ={
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 63,
             "LightPillar": 51038360,
             "MapEntityScale": 0,
@@ -136,8 +137,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              5400.0,
-              6300.0
+              6900.0,
+              7500.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",
@@ -162,6 +163,7 @@ datas ={
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 63,
             "LightPillar": 51038361,
             "MapEntityScale": 0,
@@ -171,8 +173,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              5400.0,
-              6300.0
+              6900.0,
+              7500.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",
@@ -197,6 +199,7 @@ datas ={
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 59,
             "LightPillar": 51038362,
             "MapEntityScale": 0,
@@ -206,8 +209,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              3600.0,
-              4500.0
+              5100.0,
+              5700.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",
@@ -232,6 +235,7 @@ datas ={
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 59,
             "LightPillar": 51038363,
             "MapEntityScale": 0,
@@ -241,8 +245,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              3600.0,
-              4500.0
+              5100.0,
+              5700.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",
@@ -267,6 +271,7 @@ datas ={
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 55,
             "LightPillar": 51038364,
             "MapEntityScale": 0,

@@ -222,5 +222,10 @@
             <Arg>           STRING    </Arg>
             <Arg>           PYTHON    </Arg>
         </setBaseAppData>
+
+        <notifyStubGameCfgInited>
+            <Arg>           PYTHON    </Arg>
+            <Arg>           PYTHON    </Arg>
+        </notifyStubGameCfgInited>
     </BaseMethods>
 </root>

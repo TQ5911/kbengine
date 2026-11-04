@@ -27,6 +27,7 @@ import guildChallenge_config as GCC
 import mineBattle_config as MBC
 import guildAuthorization_action as GA_ACT
 import gameconfig
+import dataUtils
 
 class IGuild(object):
     def __init__(self):
@@ -64,8 +65,8 @@ class IGuild(object):
         })
         self.client.onGuildLevelChanged(guildLevel)
 
-    def onSetGuildInfoCross(self, guildUUID, guildName, leagueUUID, isOnline):
-        LOG_INFO("IGuild::onSetGuildInfoCross:", guildUUID, guildName, leagueUUID, isOnline)
+    def onSetGuildInfoCross(self, guildUUID, guildName, leagueUUID, isOnline, guildDspFlag=0, guildIcon=0):
+        LOG_INFO("IGuild::onSetGuildInfoCross:", guildUUID, guildName, leagueUUID, isOnline, guildDspFlag, guildIcon)
         self.guildUUIDBase = guildUUID
         self.guildNameBase = guildName
         self.leagueUUID = leagueUUID
@@ -77,6 +78,8 @@ class IGuild(object):
             'guildUUID': guildUUID,
             'guildName': guildName,
             'leagueUUID':leagueUUID,
+            'guildDspFlag': guildDspFlag,
+            'guildIcon': guildIcon,
         })
 
 
@@ -133,6 +136,12 @@ class IGuild(object):
             LOG_ERR("IGuild::createGuild: already in guild.")
             return
 
+        _dspFlag = createData['dspFlag']
+        _guildName = createData['guildName']
+        if _dspFlag >= len(_guildName):
+            LOG_ERR("IGuild::createGuild: dspFlag >= len(guildName).")
+            return
+        
         _deductVal = dropAward.DeductWealthVal()
         _opUUID = KBEngine.genUUID64()
         _detail = gameclass.AwardDetailCls()
@@ -148,12 +157,6 @@ class IGuild(object):
 
         _src = AAC_AACDD.datas.BONUS_SRC_CREATE_GUILD
         self.deductWealth(_src, _deductVal, _opUUID, _detail)
-
-        _dspFlag = createData['dspFlag']
-        _guildName = createData['guildName']
-        if _dspFlag >= len(_guildName):
-            LOG_ERR("IGuild::createGuild: dspFlag >= len(guildName).")
-            return
 
         _ctx = {
             'uuid': _opUUID,
@@ -205,9 +208,12 @@ class IGuild(object):
         elif reason == gameconst.JoinGuildReason.DEAL_APPLY:
             self.guildBox.onAvatarJoinGuild(self.gbID, self)
             self._sendGuildInfo()
+            # 在线入帮不走登录包，补推当前语音房间，客户端才显示加入入口
+            self._sendGuildVoiceMembers()
 
         elif reason == gameconst.JoinGuildReason.APPLY_JOIN:
             self._sendGuildInfo()
+            self._sendGuildVoiceMembers()
             self.achievementInfo.triggerAchieveByType(
                 self,
                 gameconst.AchieveType.JOIN_GUILD,
@@ -230,6 +236,8 @@ class IGuild(object):
             'guildBox': guildBox,
             'guildLevel': joinGuildData['guildLevel'],
             'leagueUUID': leagueUUID,
+            'guildDspFlag': joinGuildData.get('dspFlag', 0),
+            'guildIcon': joinGuildData.get('guildIcon', 0),
         })
 
         self.applyedGuilds.clear()
@@ -241,7 +249,9 @@ class IGuild(object):
 
         if reason != gameconst.JoinGuildReason.ONLINE:
             if self.isCrossServerInLocalServer and self.otherServerAvatarBox:
-                self.otherServerAvatarBox.onSetGuildInfoCross(guildUUID, self.guildNameBase, leagueUUID, False)
+                self.otherServerAvatarBox.onSetGuildInfoCross(
+                    guildUUID, self.guildNameBase, leagueUUID, False,
+                    joinGuildData.get('dspFlag', 0), joinGuildData.get('guildIcon', 0))
 
             self.onMineWarGuildChange()
 
@@ -249,8 +259,22 @@ class IGuild(object):
         self.guildNameBase = guildName
         self.cell.syncModifyGuildInfo({
             'guildName': guildName,
+            'guildDspFlag': dspFlag,
         })
         self.client.selfGuildNameChanged(guildName, dspFlag)
+
+    def onGuildDspFlagChanged(self, dspFlag):
+        LOG_INFO('IGuild::onGuildDspFlagChanged:', dspFlag)
+        self.cell.syncModifyGuildInfo({
+            'guildDspFlag': dspFlag,
+        })
+        self.client.onGuildDispChanged(dspFlag)
+
+    def onGuildIconSync(self, icon):
+        LOG_INFO('IGuild::onGuildIconSync:', icon)
+        self.cell.syncModifyGuildInfo({
+            'guildIcon': icon,
+        })
 
     def _clearApplyedGuilds(self, *args):
         _now = utils.curTS()
@@ -351,6 +375,8 @@ class IGuild(object):
             'guildBox': None,
             'guildLevel': 0,
             'leagueUUID': 0,
+            'guildDspFlag': 0,
+            'guildIcon': 0,
         })
 
         self.client.onExitGuildClient()
@@ -361,7 +387,7 @@ class IGuild(object):
         })
 
         if self.isCrossServerInLocalServer and self.otherServerAvatarBox:
-            self.otherServerAvatarBox.onSetGuildInfoCross(0, '', 0, False)
+            self.otherServerAvatarBox.onSetGuildInfoCross(0, '', 0, False, 0, 0)
 
         self.onMineWarGuildChange()
 
@@ -743,6 +769,17 @@ class IGuild(object):
     def gmDeductGuildContrib(self, delta, opUUID, src, detail):
         targetContrib = utils.deductResourceVal(self.guildContrib, delta, gameconst.ReourceValType.INT32)
         self.guildContrib = targetContrib
+
+    def gmSetGuildContrib(self, targetNum, opUUID, src, detail):
+        """GM 直设帮贡(支持扣减)。增加时走 addGuildContrib 会同步累加成员历史贡献(histCond 只增不减)。"""
+        oldNum = self.guildContrib
+        delta = targetNum - oldNum
+        if delta > 0:
+            self.addGuildContrib(delta, opUUID, src, detail)
+        elif delta < 0:
+            self.gmDeductGuildContrib(delta, opUUID, src, detail)
+        LOG_INFO('gmSetGuildContrib', targetNum, oldNum, self.guildContrib)
+        return True, oldNum, self.guildContrib, ''
 
     def deductGuildContrib(self, num, opUUID, src, detail):
         if num < 0:
@@ -1232,6 +1269,10 @@ class IGuild(object):
         
     def getGuildDetailOtherServer(self, exposed, guildUUID):
         LOG_INFO('IGuild::getGuildDetailOtherServer:', guildUUID)
+        # 跨服联盟没开启，其他服的帮会列表不让拉取
+        if not dataUtils.checkAllianceCross():
+            LOG_WARN('IGuild::getGuildDetailOtherServer: guild_unionCrossServer is closed', guildUUID)
+            return
         gameengine.getGlobalBase('CrossDataStub').getCrossServerGuildDetail(
             guildUUID,
             self,

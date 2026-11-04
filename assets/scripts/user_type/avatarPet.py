@@ -182,6 +182,7 @@ class LingShou(userType.UserSingleType):
         if owner.lingShouInfo.isInBattleList(owner, self.petId):
             petSlotId = owner.lingShouInfo.getSlotIdByPetId(self.petId, owner.battleIndex)
             owner.cell.onUpdateLingShouBattleList((self.petId, self.equipList), petSlotId)
+
         return oldItemId
     
     def getLevel(self):
@@ -337,13 +338,18 @@ class LingShouInfo(userType.UserSingleType):
         LogTrackingMgr.LogTrackingMgr.pet_get(owner.gbID, owner.accountEntity.clientDistinctId, owner.gbID, addContext.extra['opUUID'], pet.petId, pet.quality)
 
     def addLingShou(self, owner, addContext):
+        extraItem = addContext.extra['item']
+        if extraItem.petId in self.pets:
+            LOG_WARN("addLingShou: pet is already activated", addContext)
+            return None
         pet = LingShou()
-        data = addContext.extra['item'].attr2LingShouData()
+        data = extraItem.attr2LingShouData()
         data['school'] = addContext.extra['school']
         pet.initFromDict(data)
 
         addContext.setPet(pet)
         self._addLingShou(owner, addContext)
+        return pet.petId
 
     def getBattleListByIndex(self, battleIndex):
         return self.battleList[battleIndex].petIdList

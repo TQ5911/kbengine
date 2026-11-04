@@ -489,6 +489,21 @@
             <Arg>       PYTHON                  </Arg>
         </addGuildExp>
 
+        <gmSetGuildLevel>
+            <Arg>       LEVEL                   </Arg>
+            <Arg>       INT64                   </Arg>
+            <Arg>       BONUS_SRC               </Arg>
+            <Arg>       UUID                    </Arg>
+            <Arg>       PYTHON                  </Arg>
+        </gmSetGuildLevel>
+
+        <gmSetJunXuQixie>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       LEVEL                   </Arg>
+            <Arg>       INT64                   </Arg>
+            <Arg>       UUID                    </Arg>
+        </gmSetJunXuQixie>
+
         <onGuildMemberPropUpdate>
             <Arg>       PLAYER_GBID             </Arg>
             <Arg>       STRING                  </Arg>
@@ -831,11 +846,13 @@
             <Arg>       LEADER_BOARD_IDX                    </Arg>
         </onLeaderBoardRank>
 
-        <tryApplyInviteGuild>
+        <!-- 邀请帮会成员入跨服团（跨服组队版，执行清单问题 13）：
+             inviteInfo 为 CROSS_TEAM_INVITE_VAL 同构 dict（邀请人信息 + teamId/target/inviteType=GUILD）；
+             链路自闭环在本服（帮会成员本服可达），不经组队中心 -->
+        <tryApplyInviteCrossGuild>
             <Arg>       PLAYER_GBID      </Arg>
-            <Arg>       UINT8            </Arg>
-            <Arg>       UINT8            </Arg>
-        </tryApplyInviteGuild>
+            <Arg>       PY_DICT          </Arg>
+        </tryApplyInviteCrossGuild>
 
         <addCommissionGold>
             <Arg>       PLAYER_GBID             </Arg>

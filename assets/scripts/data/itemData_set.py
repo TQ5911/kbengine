@@ -333,7 +333,7 @@ datas = _tools.RODict({
     }),
     "ctopLimit": _tools.RODict({
         "ID": "ctopLimit",
-        "value": "可选数量：（{0}）",
+        "value": "可选数量：{0} / {1}",
     }),
     "selectNotEnough": _tools.RODict({
         "ID": "selectNotEnough",

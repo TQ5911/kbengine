@@ -6,6 +6,7 @@ import gametimer
 import tutorConst_newbieStep as TCNSD
 import tutorConst_newbieStep_task2Step as TCNSTD
 import gamePlay_gamePlay as GPGPD
+import gameclass
 import gameengine
 import complexTeleportOption
 import utils
@@ -13,6 +14,9 @@ import math
 import formula
 import visible_visible as V_VD
 import taskClass_taskTarget as TCCTD
+import growthGuide_strongerGuide as GGSGD
+import antiAddictCategory_antiAddictCategory_def as AACAACDD
+import dropAward
 
 
 class INewbie(object):
@@ -164,6 +168,29 @@ class INewbie(object):
         LOG_DBG('_claimTaskByNewbieStep:', startTask)
         self.baseTaskClaim(startTask, None, False)
 
+    def gmFinishAllClientGuides(self):
+        # 非gm指令不要调用。把客户端引导全部标成已完成。
+        import tutorConst_triggerReleat as TTRD
+        doneGuides = {}
+        for idx, guideId in enumerate(self.newbieGuideIds):
+            doneGuides[guideId] = self.newbieGuideVals[idx]
+        for newbieGuideId in TTRD.datas.keys():
+            if doneGuides.get(newbieGuideId):
+                continue
+            self.setNewbieGuideId(self.id, newbieGuideId, 1)
+
+    def gmLeaveNewbieDungeonIfInside(self):
+        # 非gm指令不要调用。当前在新手副本内才离开。
+        if not self.cell:
+            return
+        dungeonNo = formula.parseDungeonNoBySpaceNo(self.baseSpaceNo)
+        if not dungeonNo or not formula.inDungeonScene(self.baseSpaceNo):
+            return
+        for data in TCNSD.datas.values():
+            if int(data.get('lockDun') or 0) == dungeonNo:
+                self.cell.leaveTutorialIsComplete(dungeonNo)
+                return
+
     def setNewbieGuideId(self, exposed, newbieGuideId, val):
         if len(self.newbieGuideIds) > 100:
             LOG_ERR('setNewbieGuideId meet max')
@@ -182,3 +209,47 @@ class INewbie(object):
             self.taskCheckCounterTarget(TCCTD.couterTargetDic['CompleteAGuideOnce'], (newbieGuideId,))
 
         self.client.onNewbieGuideId(newbieGuideId, val)
+
+    # ------------------------------ growth reward start --------------------------
+    def takeGrowthGuideRewards(self, exposed, idList):
+        if not idList:
+            return
+
+        _srcType = AACAACDD.datas.BONUS_SRC_GUIDE_REWARD
+        _isSet = False
+        for _id in idList:
+            _id = int(_id)
+            if _id > 256:
+                LOG_ERR('takeGrowthGuideRewards id invalid', _id)
+            _data = GGSGD.datas.get(_id)
+            if not _data:
+                LOG_WARN('takeGrowthGuideRewards: invalid id', _id)
+                continue
+
+            _rewardId = _data.get('reward', '')
+            if not _rewardId:
+                LOG_WARN('takeGrowthGuideRewards: empty reward', _id)
+                continue
+
+            if self.growthGuideRewards.isHasState(_id):
+                continue
+
+            _ctx = self.getAvatarAwardCtx(_rewardId, None)
+            _wealthVal = dropAward.getAward(_rewardId, 1, _ctx)
+
+            opUUID = KBEngine.genUUID64()
+            _detail = gameclass.AwardDetailCls()
+            self.addWealth(_srcType, _wealthVal, opUUID, _detail, _ctx)
+            self.growthGuideRewards.bset(_id)
+            _isSet = True
+
+        if _isSet:
+            self._sendGrowthGuideRewards()
+
+    def _sendGrowthGuideRewards(self):
+        self.client.onGrowthGuideRewards(self.growthGuideRewards.toClientDatas())
+
+
+    # ------------------------------ growth reward end --------------------------
+
+

@@ -11,6 +11,7 @@ import userType
 import itemData_itemData as ITEMDATA
 import itemFactory
 import BaseItem
+import SoulInfo
 import gzip
 import gamelog
 import _pickle as cPickle
@@ -45,34 +46,69 @@ class Item(BaseItem.BaseItem):
         if kwargs.get('rollProps'):
             self.rollProps = kwargs['rollProps']
         else:
-            self.rollProps = []
+            self.rollProps = {}
             if 'extra' in kwargs:
                 if 'school' in kwargs['extra']:
-                    self.rollProps = utils.rollItemProps(self.itemId, self.itemSubType, kwargs['extra']['school'])
+                    allowLucky = self.bindType != gameconst.ItemBindType.BIND
+                    self.rollProps = utils.rollItemProps(self.itemId, self.itemSubType, kwargs['extra']['school'], allowLucky)
 
+        self._initSoulData(kwargs)
         return True
+
+    def _initSoulData(self, kwargs):
+        if self.isSoul():
+            SoulInfo.initItem(self, kwargs)
 
     def onSpecificItemChanged(self, attrJson):
         _itemData = dataUtils.getCommItemData(self.itemId)
         self.itemType = _itemData['type']
         self.itemSubType = _itemData['subType']
         self.quality = _itemData['quality']
-        if not attrJson:
-            return
-        _dic = json.loads(attrJson)
-        self.__dict__.update(_dic)
+        if attrJson:
+            _dic = json.loads(attrJson)
+            self.__dict__.update(_dic)
+        self._ensureSoulData()
         return
+
+    def _ensureSoulData(self):
+        if self.isSoul():
+            SoulInfo.ensureItem(self)
+
+    def exportSoulPayload(self):
+        self._ensureSoulData()
+        return SoulInfo.readItem(self)
+
+    def hasSoulAffix(self):
+        if not self.isSoul():
+            return False
+        return SoulInfo.hasAnyProp(self.exportSoulPayload())
+
+    def getSoulQualityScore(self):
+        if not self.isSoul():
+            return 0
+        return SoulInfo.calcBaseQualityScore(self.exportSoulPayload()['baseProps'])
 
     def attr2Dict(self):
         mDict = {}
         mDict["lockStatus"] = self.lockStatus
-        mDict["rollProps"] = self.rollProps
+        rollProps = self.__dict__.get('rollProps')
+        if rollProps is None:
+            rawAttrJson = self.__dict__.get('attrJson')
+            loaded = json.loads(rawAttrJson) if isinstance(rawAttrJson, str) and rawAttrJson else {}
+            rollProps = loaded['rollProps'] if isinstance(loaded, dict) and 'rollProps' in loaded else {}
+        mDict["rollProps"] = rollProps
+        if self.isSoul():
+            self._ensureSoulData()
+            mDict.update(SoulInfo.itemPersistDict(self))
         return mDict
 
     def attr2Json(self):
         mDict = self.attr2Dict()
         return json.dumps(mDict) if mDict else ""
 
+    def simpleAttr2Json(self):
+        return self.attr2Json()
+    
     def canMerge(self, withItem, skipItemId=False, skipBindType=False, skipMaxStack=False,
                  skipExpired=False, now=utils.curTS(), **kwargs):
         if not skipItemId and self.itemId != withItem.itemId:
@@ -86,6 +122,8 @@ class Item(BaseItem.BaseItem):
         if self.enableTime != withItem.enableTime:
             return False
         if self.lockStatus != withItem.lockStatus:
+            return False
+        if self.isSoul() or withItem.isSoul():
             return False
         if self.rollProps or withItem.rollProps:
             return False

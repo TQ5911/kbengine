@@ -852,69 +852,6 @@ def gm_getDropid(superUser, playerEnt, dropId, num):
     else:
         return False, '执行失败'
 
-@gm_cmd('$gmenterDungeon', (Player("gbId or Id"),Int('dungeonNo'), ), RARG(0), CELL, '管理员进入副本', ALLSIDE, GOD_GROUPS)
-def gm_gmEnterDungeon(superUser,playerEnt, dungeonNo):
-    import gamePlay_gamePlay
-    import dungeonSrc
-    if dungeonNo not in gamePlay_gamePlay.datas:
-        return False, '执行失败, 没有找到相应副本ID'
-
-    src = dungeonSrc.DungeonFromClientGMSrc(playerEnt.base, playerEnt.gbId)
-
-    dungeonSpaceType = gamePlay_gamePlay.datas[dungeonNo]['type']
-    dungeonEnterType = gamePlay_gamePlay.datas[dungeonNo]['enterType']
-    if gameconst.DungeonTypeJudge.isBothDungeon(dungeonSpaceType, dungeonEnterType):
-        if playerEnt.isInTeam(playerEnt.gbId):
-            playerEnt.gmEnterTeamDungeon(dungeonNo, src)
-            return True, '执行成功, gm正在尝试进入全类型副本(组队)'
-        else:
-            playerEnt.gmEnterSingleDungeon(dungeonNo, src)
-            return True, '执行成功, gm正在尝试进入全类型副本(单人)'
-    elif gameconst.DungeonTypeJudge.isTeamDungeon(dungeonSpaceType, dungeonEnterType):
-        if not playerEnt.isInTeam(playerEnt.gbId):
-            return False, '執行失敗, gm-组队副本必须组队进入'
-        playerEnt.gmEnterTeamDungeon(dungeonNo, src)
-        return True, '执行成功, gm正在尝试进入组队副本'
-    elif gameconst.DungeonTypeJudge.isSingleDungeon(dungeonSpaceType, dungeonEnterType):
-        playerEnt.gmEnterSingleDungeon(dungeonNo, src)
-        return True, '执行成功, gm正在尝试进入单人副本'
-    elif gameconst.DungeonTypeJudge.isRaidDungeon(dungeonSpaceType, dungeonEnterType):
-        playerEnt.gmEnterRaidDungeon(dungeonNo, src)
-        return True, '执行成功, gm正在尝试进入团队副本'
-    else:
-        return False, '执行失败, gm-不支持的副本类型'
-
-@gm_cmd('$enterDungeon', (Player("gbId or Id"),Int('dungeonNo'), ), RARG(0), CELL, '进入副本', ALLSIDE, GOD_GROUPS)
-def gm_enterDungeon(superUser,playerEnt, dungeonNo):
-    import gamePlay_gamePlay
-    import dungeonSrc
-    if dungeonNo not in gamePlay_gamePlay.datas:
-        return False, '执行失败, 没有找到相应副本ID'
-
-    src = dungeonSrc.DungeonFromClientSrc(playerEnt.base, playerEnt.gbId)
-
-    dungeonSpaceType = gamePlay_gamePlay.datas[dungeonNo]['type']
-    dungeonEnterType = gamePlay_gamePlay.datas[dungeonNo]['enterType']
-    if gameconst.DungeonTypeJudge.isBothDungeon(dungeonSpaceType, dungeonEnterType):
-        if playerEnt.isInTeam(playerEnt.gbId):
-            playerEnt.selfEnterTeamDungeon(dungeonNo, src)
-            return True, '执行成功, 正在尝试进入全类型副本(组队)'
-        else:
-            playerEnt.selfEnterSingleDungeon(dungeonNo, src)
-            return True, '执行成功, 正在尝试进入全类型副本(单人)'
-    elif gameconst.DungeonTypeJudge.isTeamDungeon(dungeonSpaceType, dungeonEnterType):
-        if not playerEnt.isInTeam(playerEnt.gbId):
-            return False, '執行失敗, 组队副本必须组队进入'
-        playerEnt.selfEnterTeamDungeon(dungeonNo, src)
-        return True, '执行成功, 正在尝试进入组队副本'
-    elif gameconst.DungeonTypeJudge.isSingleDungeon(dungeonSpaceType, dungeonEnterType):
-        playerEnt.selfEnterSingleDungeon(dungeonNo, src)
-        return True, '执行成功, 正在尝试进入单人副本'
-    elif gameconst.DungeonTypeJudge.isRaidDungeon(dungeonSpaceType, dungeonEnterType):
-        playerEnt.selfEnterRaidDungeon(dungeonNo, src)
-    else:
-        return False, '执行失败, 不支持的副本类型'
-
 @gm_cmd('$setgmmode', (Player("gbId or Id"), Int("int mode"),), RARG(0), gameconst.BASE, '设置gm模式', ALLSIDE, GOD_GROUPS)
 def gm_setGmMode(superUser, playerEnt, gmMode):
     if gmMode not in gameconst.GmModeEnum.ALL_MODES:
@@ -952,24 +889,6 @@ def gm_sendMailByGBIDNoMailId(superUser, playerEnt, dueTime, attachStr, title, c
     mailAssistor.sendIDIPMailByGBID(superUser, _toGBID, dueTime, _attach, _title, cont, AAC_AACDD.datas.BONUS_SRC_GM, 0, ())
     return True, 'command success'
 
-@gm_cmd('$sendB64MailByGBIDNoMailId', (Player("gbId or Id", raw=True), Int('dueTime'), Str('attachStr'), Str('title'), Str('cont')), RARG(0), BASE,
-        '向指定玩家发送一封自定义邮件, base64编码', ALLSIDE, GOD_GROUPS)
-def gm_sendB64MailByGBIDNoMailId(superUser, playerEnt, dueTime, attachStr, b64title, b64cont):
-    LOG_DBG('sendB64MailByGBIDNoMailId:', dueTime, attachStr, b64title, b64cont)
-    _title = base64.b64decode(b64title.encode('ascii'), b'_-').decode('utf-8')
-    cont = base64.b64decode(b64cont.encode('ascii'), b'_-').decode('utf-8')
-    LOG_DBG('sendMailByGBIDNoMailId:', attachStr, _title, cont)
-    if gmCommand.isRawPlayer(playerEnt):
-        _toGBID = gmCommand.fetchGbIdFromRawPlayer(playerEnt)
-    else:
-        _toGBID = playerEnt.gbID
-
-    _toGBID = int(_toGBID)
-    _attach = mailAssistor.parseAttachStr(attachStr)
-    _title = _title.strip("[] ")
-    cont = cont.strip("[] ")
-    mailAssistor.sendIDIPMailByGBID(superUser, _toGBID, dueTime, _attach, _title, cont, AAC_AACDD.datas.BONUS_SRC_GM, 0, ())
-    return True, 'command success'
 
 @gm_cmd('$sendmailByAvatarId', (Str("str toId"), Int('mail id'), Int('due time'), Str('attachStr'), Str('despArgsStr'), Str('title'), Str('cont')),
         RSU, gameconst.BASE, '向指定玩家发一封邮件', INSIDE, GOD_GROUPS)
@@ -984,18 +903,6 @@ def gm_sendMailByAvatarId(superUser, toId, mailId, dueTime, attachStr, despArgsS
     gameengine.broadcastBaseapp('gmSendMailByEntityId', (toId, mailId, dueTime, _attach, _despArgs, title, cont, AAC_AACDD.datas.BONUS_SRC_GM))
     return True, 'command success'
 
-@gm_cmd('$sendglobalmail', (Int('mail id'), Str('attachStr'), Str('despArgs str'), Str('title'), Str('cont'), Int('minRoleTime'), Int('maxRoleTime'),
-                            Int('dueTime'),Int('minRoleLevel'), Int('maxRoleLevel'), Int('channel'), Int("mailTag")),
-        RONE, gameconst.BASE, '发一封全服邮件', ALLSIDE, GOD_GROUPS)
-def gm_gmSendGlobalMail(superUser, mailId, attachStr, despArgsStr, title, cont, minRoleTime, maxRoleTime, dueTime, minRoleLevel, maxRoleLevel, channel, mailTag):
-    # attachStr: 多个物品用分号';'分隔; 每个物品有itemId, itemNum，若有绑定属性配置在第三个位置，例如：[30000001,100; 30001031,1,1]
-    _attach = mailAssistor.parseAttachStr(attachStr)
-    despArgs = mailAssistor.parseDespStr(despArgsStr)
-    title = base64.b64decode(title.encode('ascii'), b'_-').decode('utf-8')
-    cont = base64.b64decode(cont.encode('ascii'), b'_-').decode('utf-8')
-    gameengine.getGlobalBase('GlobalMailStub').sendGlobalMail(mailId, _attach, despArgs, title, cont, minRoleTime, maxRoleTime, 
-                                                              dueTime, minRoleLevel, maxRoleLevel, channel, AAC_AACDD.datas.BONUS_SRC_GM, mailTag)
-    return True, 'command success'
 
 @gm_cmd('$getGlobalMailList', (Player("gbId or Id"), Int("int mailNum")), RSU, gameconst.BASE, '查看最近mailNum封全服邮件列表', INSIDE, GOD_GROUPS)
 def gm_getGlobalMailList(superUser, playerEnt, mailNum):
@@ -1104,6 +1011,19 @@ def gm_gmSubmitTask(superUser, playerEnt, taskId):
         return False, '执行失败, 任务ID错误'
     playerEnt.gmForceSubmitTask(taskId)
     return True, 'command success'
+
+
+@gm_cmd('$submittaskline', (Player("gbId or Id"), Int('taskId'),), RARG(0), BASE,
+        '完成该任务及之前的主线、子任务、解锁任务，完成全部客户端引导，并离开新手副本', ALLSIDE, GOD_GROUPS)
+def gm_gmSubmitTaskLine(superUser, playerEnt, taskId):
+    if taskId <= 0:
+        return False, '执行失败, 任务ID错误'
+    ok, msg = playerEnt.gmForceSubmitTaskLine(taskId)
+    if not ok:
+        return ok, msg
+    playerEnt.gmFinishAllClientGuides()
+    playerEnt.gmLeaveNewbieDungeonIfInside()
+    return ok, msg
 
 
 @gm_cmd('$resetTask', (Player("gbId or Id"), Int('taskId'),), RARG(0), BASE, '重置任务', ALLSIDE, GOD_GROUPS)
@@ -1713,14 +1633,6 @@ def gm_importAvatar(superUser, targetAvatarGbId, accountName):
 
     gamesql.countCharacterNum(accountName, _innerFunc)
 
-
-# 测试专用GM 测试后删除
-@gm_cmd('$testAccountGM', (PlayerAccount("accountName"),), RONE, BASE, '测试账号GM', ALLSIDE, GOD_GROUPS)
-def gm_testAccountGM(superUser, account):
-    LOG_DBG("testAccountGM", account)
-    return True, 'command success'
-
-
 @gm_cmd('$getaccountinfo', (Player("gbId or Id", raw=True),), RARG(0), BASE, '获取角色的账号信息', ALLSIDE, GOD_GROUPS)
 def gm_getAccountInfo(superUser, playerEnt):
     if gmCommand.isRawPlayer(playerEnt):
@@ -1845,17 +1757,6 @@ def gm_gmOffline(superUser, playerEnt):
     return True, 'command success'
 
 
-@gm_cmd('$modifyName', (Player("gbId or Id", raw=True), Str('newName')), RARG(0), BASE, '改名', ALLSIDE, GOD_GROUPS)
-def gm_modifyName(su, playerEnt, newName):
-    LOG_INFO('in gm_modifyName:', playerEnt, newName)
-    if gmCommand.isRawPlayer(playerEnt):
-        gbId, name, accountName, dbId = playerEnt
-        gamesql.recordAvatarOfflineCallback(gbId, 'IDIPModifyName', (newName,))
-    else:
-        playerEnt.IDIPModifyName(newName)
-
-    su.onCommandResult(0, 'command success', {})
-    return True, 'command success'
 
 @gm_cmd('$modifyscore', (Player("gbId or Id", raw=True), Int('newScore')), RARG(0), CELL, '修改战力', ALLSIDE, GOD_GROUPS)
 def gm_modifyscore(superUser, playerEnt, newScore):
@@ -2091,10 +1992,10 @@ def gm_switchServer(superUser, playerEnt, serverId):
     return True, 'command success'
 
 
-@gm_cmd('$enterMap', (Player("gbId or Id"), Int("int mapId")), RARG(0), CELL, '进入地图', ALLSIDE, GOD_GROUPS)
-def gm_enterMap(superUser, playerEnt, mapId):
+@gm_cmd('$enterMap', (Player("gbId or Id"), Int("int mapId"), Int("isForceEnter", default=0)), RARG(0), CELL, '进入地图', ALLSIDE, GOD_GROUPS, minArgs=2)
+def gm_enterMap(superUser, playerEnt, mapId, isForceEnter=False):
     enterPos, direction = formula.getSpaceBornPosAndDir(mapId)
-    playerEnt.applyEnterLineInternal(mapId, -1, enterPos, direction, {'isForceEnter': True})
+    playerEnt.applyEnterLineInternal(mapId, -1, enterPos, direction, {'isForceEnter': bool(isForceEnter)})
     return True, 'command success'
 
 @gm_cmd('$EnterAbyss', (Player("gbId or Id"), Int("int floor")), RARG(0), BASE, '进入归墟', ALLSIDE, GOD_GROUPS)
@@ -2109,7 +2010,7 @@ def gm_LeaveAbyss(superUser, playerEnt):
 
 @gm_cmd('$EnterWonderLand', (Player("gbId or Id"), Int("int mapId")), RARG(0), BASE, '进入秘境峰', ALLSIDE, GOD_GROUPS)
 def gm_EnterWonderLand(superUser, playerEnt, mapId):
-    playerEnt.modifyWonderLandTicket(1, 3, KBEngine.genUUID64())
+    playerEnt.modifyWonderLandTicket(1, 1, 1, 3, KBEngine.genUUID64())
     extra = {
             'enterWonderLandType': gameconst.WONDER_LAND_ENTER_TYPE_TICKET,
             'floor': 0,
@@ -2234,7 +2135,7 @@ def gm_finishAchievement(superUser,playerEnt, AchievementID):
     if AchievementID in playerEnt.achievementInfo.finishedIds:
             LOG_WARN('AchievementID already exists', AchievementID)
     else:
-        playerEnt.achievementInfo.finishedIds.add(AchievementID)
+        playerEnt.achievementInfo.finishedIds.append(AchievementID)
     playerEnt.achievementInfo.sendInitDataToClient(playerEnt)
     return True, 'command success'
 
@@ -2461,18 +2362,18 @@ def gm_levelUpSkill(superUser, playerEnt, skillId, level):
         return False, f"技能ID {skillId} 不存在"
 
     newLevel = level
-    playerEnt.buildDic.skillLevels[skillId] = newLevel
-    playerEnt.cell.onChangeSkillLv(skillId, newLevel)
-    playerEnt.updateSkillLevelSetSummonSlotIdx(skillId, newLevel)
+    utils.traceSkill(playerEnt, 'gm_levelUpSkill.in', (skillId,),
+                     'skillId=', skillId, 'level=', level,
+                     'slotId=', playerEnt.buildDic.getSlotId(skillId),
+                     'inLevels=', skillId in playerEnt.buildDic.skillLevels,
+                     'slots=', tuple(playerEnt.buildDic.activeSkills))
 
-    # 处理相关联的被动技能升级（参考原有逻辑）
-    relatedSkills = SSD.datas.get(skillId, {}).get('conflictSkill') or ()
-    for sid in relatedSkills:
-        if sid in playerEnt.buildDic.skillLevels:
-            playerEnt.buildDic.skillLevels[sid] = newLevel
-            playerEnt.updateSkillLevelSetSummonSlotIdx(sid, newLevel)
+    if skillId not in playerEnt.buildDic.skillLevels:
+        playerEnt.buildDic.buildAddActiveSkill(playerEnt, skillId, newLevel)
 
-    playerEnt.client.onUpdateSkillLevel([skillId], [newLevel])
+    _ok = playerEnt.buildDic.updateSkillLevel(playerEnt, [(skillId, newLevel)])
+    if not _ok:
+        return False, f"技能 {skillId} 设置等级失败"
 
     return True, f"技能 {skillId} 已升级到等级 {level}"
 
@@ -2560,6 +2461,19 @@ def gm_reqGetAvatarBountyInfo(superUser, playerEnt, type):
     playerEnt.reqGetAvatarBountyInfo(playerEnt.gbID, type)
     return True, 'command success'
 
+
+@gm_cmd('$enterCrossWorld', (Player("gbId or Id"), Int("ServerId"), Int("mapId")), RARG(0), BASE, '进入跨服大世界', ALLSIDE, GOD_GROUPS)
+def gm_enterCrossWorld(superUser, playerEnt, serverId, mapId):
+    playerEnt.doEnterCrossWorld(serverId, mapId, {})
+    return True, 'ok'
+
+
+@gm_cmd('$gobackServer', (Player("gbId or Id"), ), RARG(0), BASE, '回到本服', ALLSIDE, GOD_GROUPS)
+def gm_gobackServer(superUser, playerEnt):
+    playerEnt.gobackServer(gameconst.CrossServerCBComponent.ENUM_NONE, '', ())
+    return True, 'ok'
+
+
 @gm_cmd('$reqReplyAssignedHunter', (Player("gbId or Id"), Int('uuid'), Int('res'),), RARG(0), BASE, '被指定杀手玩家回复', ALLSIDE, GOD_GROUPS)
 def gm_reqReplyAssignedHunter(superUser, playerEnt, uuid, res):
     playerEnt.reqReplyAssignedHunter(playerEnt.gbID, uuid, res)
@@ -2587,3 +2501,55 @@ def gm_routerPing(superUser, serverId):
     _r.onPing(gameconfig.serverId(), 'hello world')
     return True, 'command success'
 
+
+@gm_cmd('$addBattlePassExp', (Player("gbId or Id"), Int("groupId"), Int("exp")), RARG(0), BASE, '增加战令经验', ALLSIDE, GOD_GROUPS)
+def gm_addBattlePassExp(superUser, playerEnt, groupId, exp):
+    added = playerEnt.gmAddBattlePassExp(groupId, exp)
+    return True, 'added %s' % added
+
+
+@gm_cmd('$addBattlePassTaskExp', (Player("gbId or Id"), Int("groupId"), Int("exp")), RARG(0), BASE, '增加战令任务经验(含追赶倍率)', ALLSIDE, GOD_GROUPS)
+def gm_addBattlePassTaskExp(superUser, playerEnt, groupId, exp):
+    added = playerEnt.addBattlePassTaskExp(groupId, exp)
+    return True, 'added %s' % added
+
+
+@gm_cmd('$battlePassCatchup', (Player("gbId or Id"), Int("groupId")), RARG(0), BASE, '查看战令追赶倍率', ALLSIDE, GOD_GROUPS)
+def gm_battlePassCatchup(superUser, playerEnt, groupId):
+    return True, playerEnt.gmBattlePassCatchup(groupId)
+
+
+@gm_cmd('$buyBattlePassLv', (Player("gbId or Id"), Int("groupId"), Int("cnt")), RARG(0), BASE, '元宝购买战令等级', ALLSIDE, GOD_GROUPS)
+def gm_buyBattlePassLv(superUser, playerEnt, groupId, cnt):
+    ok = playerEnt.buyBattlePassLv(groupId, cnt)
+    return True, 'ok' if ok else 'fail'
+
+
+@gm_cmd('$addBattlePassTask', (Player("gbId or Id"), Int("taskType"), Int("num"), Int("key"), Int("src")), RARG(0), BASE, '推进战令任务, 31击杀/32召唤/33道具/34悬赏/35门票', ALLSIDE, GOD_GROUPS)
+def gm_addBattlePassTask(superUser, playerEnt, taskType, num, key, src):
+    playerEnt.onBattlePassTask(taskType, num or 1, key, src)
+    return True, 'ok'
+
+
+@gm_cmd('$resetBattlePassTask', (Player("gbId or Id"), Int("resetType")), RARG(0), BASE, '重置战令任务, 1日/2周/3赛季/0全部', ALLSIDE, GOD_GROUPS)
+def gm_resetBattlePassTask(superUser, playerEnt, resetType):
+    return True, playerEnt.gmResetBattlePassTask(resetType)
+
+
+@gm_cmd('$activateBattlePass', (Player("gbId or Id"), Int("passId")), RARG(0), BASE, '激活战令付费档并发放激活奖励, passId如26090102', ALLSIDE, GOD_GROUPS)
+def gm_activateBattlePass(superUser, playerEnt, passId):
+    return True, playerEnt.gmActivateBattlePass(passId)
+
+
+@gm_cmd('$claimBattlePassReward', (Player("gbId or Id"), Int("lv"), Int("groupId")), RARG(0), BASE, '领取战令奖励, 领取lv及之前未领的', ALLSIDE, GOD_GROUPS)
+def gm_claimBattlePassReward(superUser, playerEnt, lv, groupId):
+    ok = playerEnt.claimBattlePassReward(groupId, lv)
+    return True, 'ok' if ok else 'fail'
+
+
+@gm_cmd('$gmSetHangupMinutes', (Player("gbId or Id"), Int("minutes")), RARG(0), BASE, '设置今日剩余挂机时长(分钟,设置后今日不再自动补发)', ALLSIDE, GOD_GROUPS)
+def gm_setHangupMinutes(superUser, playerEnt, minutes):
+    if minutes < 0:
+        return False, '挂机分钟不能小于0'
+    ok, oldMinutes, newMinutes = playerEnt.gmSetHangupMinutes(minutes)
+    return True, 'remainHangupMinutes %s -> %s' % (oldMinutes, newMinutes)

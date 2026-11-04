@@ -18,5 +18,9 @@ datas = _tools.RODict({
     "firstStep": _tools.RODict({
         "ID": "firstStep",
         "value": 100100,
+    }),
+    "guideSkipTip": _tools.RODict({
+        "ID": "guideSkipTip",
+        "value": 54000187,
     })
 })

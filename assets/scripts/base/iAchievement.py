@@ -45,6 +45,31 @@ class IAchievement(object):
     def onCrossServerTriggerAchieveByType(self, achieveType, ctx):
         LOG_INFO("onCrossServerTriggerAchieveByType", achieveType, ctx)
         self.triggerAchievement(achieveType, ctx)
+
+    def gmResetAchievement(self, achieveId, resetStep):
+        """GM 重置成就项为未完成状态（只回退成就状态，不回收已发奖励）。"""
+        ok, errMsg, oldState, oldStep = self.achievementInfo.gmResetAchievement(achieveId, resetStep)
+        if not ok:
+            return False, errMsg, 0, 0
+        LOG_INFO('gmResetAchievement', achieveId, resetStep, oldState, oldStep)
+        self.achievementInfo.sendInitDataToClient(self)
+        if not gameconfig.isCrossServer():
+            self._updateLeaderBoardAvatar()
+            LogTrackingMgr.LogTrackingMgr.Achievement_Update(
+                self.gbID,
+                self.accountEntity.clientDistinctId,
+                self.accountEntity.accountName,
+                self.gbID,
+                gameconfig.gameId(),
+                achieveId,
+                self.achievementInfo.maxVersion,
+                gameconst.ACHIEVE_STATE_GM_RESET,
+                oldStep,
+                self.achievementInfo.sumPoint
+            )
+        # 跨服镜像同步（操作回放，镜像不落库；镜像上本方法内的跨服同步为空转）
+        self.syncMethodCallToCrossServerBase('gmResetAchievement', (achieveId, resetStep))
+        return True, '', oldState, oldStep
     
     def triggerAchievementWithCtx(self, achieveType, ctx):
         self.triggerAchievement(achieveType, ctx)
@@ -66,7 +91,20 @@ class IAchievement(object):
         if mapId not in self.mapExploreInfo.mapDatas:
             return
 
+        # 地图探索以策划配置为准：探索表未配置的项目不计入探索度
+        pointMap = GED.mapId2Point.get(mapId)
+        if not pointMap or tp not in pointMap:
+            LOG_INFO("triggerMapExplore skip, not configured:", mapId, tp, num)
+            return
+        point = pointMap[tp]
+
         LOG_INFO("before triggerMapExplore:", mapId, tp, num, self.mapExploreInfo.mapDatas[mapId])
+        # v5.2 新手历程 3=地图探索次数
+        self.beginnerJourney_onTaskEvent(
+            gameconst.BjTaskType.BJ_TASK_TYPE_MAP_EXPLORE,
+            delta=num * point, mapId=mapId
+        )
+
         mapExploreInfo = self.mapExploreInfo.mapDatas[mapId]
         enum2val = {
             gameconst.AchieveType.PERSONAL_BOX: mapExploreInfo.personalBox,
@@ -79,13 +117,12 @@ class IAchievement(object):
         if num <= 0:
             LOG_INFO("triggerMapExplore reach max:", mapId, tp, num)
             return
-        if tp in GED.mapId2Point[mapId]:
-            enum2val[tp][0] += num
-            mapExploreInfo.rewardData[0] += num * GED.mapId2Point[mapId][tp]
-    
-            LOG_INFO("after triggerMapExplore:", mapId, tp, num, self.mapExploreInfo.mapDatas[mapId])
-            if tp != gameconst.AchieveType.HOOK_TASK_REWARD:
-                self.onMessagePre(M_M_DD.datas.explorationRate, [str(num * GED.mapId2Point[mapId][tp]),])
+        enum2val[tp][0] += num
+        mapExploreInfo.rewardData[0] += num * point
+
+        LOG_INFO("after triggerMapExplore:", mapId, tp, num, self.mapExploreInfo.mapDatas[mapId])
+        if tp != gameconst.AchieveType.HOOK_TASK_REWARD:
+            self.onMessagePre(M_M_DD.datas.explorationRate, [str(num * point),])
         self.client.onUpdateMapExplore([mapExploreInfo,])
 
         LogTrackingMgr.LogTrackingMgr.map_exploration(self.gbID, self.accountEntity.clientDistinctId, mapId, tp, mapExploreInfo.rewardData[0], mapExploreInfo.rewardSlot)

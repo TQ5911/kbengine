@@ -31,6 +31,7 @@ namespace KBEngine
 		public virtual void onHotfixVersion(string arg1) {} //Account Avatar 
 		public virtual void onKickAnotherAccount() {} //Account Accounting 
 		public virtual void onMessage(Int32 arg1, List<string> arg2) {} //Account Avatar Monster Summon Npc Creation AvatarReplica Accounting Avataring 
+		public virtual void onOfficialMessage(Byte arg1, string arg2, Byte arg3, List<string> arg4, UInt64 arg5, string arg6, Byte arg7) {} //Avatar Avataring 
 		public virtual void onOthersSkillDamage(Int32 arg1, List<Int32> arg2) {} //Avatar Monster Summon Npc Creation AvatarReplica 
 		public virtual void onPatchVersion(string arg1) {} //Account Avatar 
 		public virtual void onRecvAvatarChannelMsg(UInt32 arg1, CHAT_CHANNEL_AVATAR_INFO arg2, CHAT_MSG_DATA arg3) {} //Avatar Avataring 
@@ -54,6 +55,7 @@ namespace KBEngine
 		public virtual void popDialog(Int32 arg1) {} //Avatar Monster Summon Npc Collection Accounting Avataring 
 		public virtual void showPopoverMsg(UInt32 arg1) {} //Avatar Monster Summon Npc Collection Accounting Avataring 
 		public virtual void showPopoverMsgWithArg(UInt32 arg1, List<string> arg2) {} //Avatar Monster Summon Npc Collection Accounting Avataring 
+		public virtual void stopOfficialMessage(UInt64 arg1) {} //Avatar Avataring 
 		public virtual void syncServerTime(Int64 arg1, float arg2) {} //Avatar Avataring 
 		public virtual void updateForbidSkillTags(List<UInt16> arg1) {} //Avatar Monster Summon Npc Creation AvatarReplica 
 
@@ -81,7 +83,9 @@ namespace KBEngine
 		public virtual void onIsBossChanged(Byte oldValue) {}	//Monster Summon Npc AvatarReplica 
 		public virtual void onIsWitnessCompleteChanged(Byte oldValue) {}	//Avatar Monster Summon Npc Creation AvatarReplica Avataring 
 		public virtual void onLevelChanged(UInt32 oldValue) {}	//Avatar Monster Summon Npc Creation AvatarReplica 
+		public virtual void onMaxAllArmorChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation AvatarReplica 
 		public virtual void onMedicineRateChanged(float oldValue) {}	//Avatar AvatarReplica 
+		public virtual void onMinAllArmorChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation AvatarReplica 
 		public virtual void onMiningRateChanged(float oldValue) {}	//Avatar AvatarReplica 
 		public virtual void onMpChanged(Int32 oldValue) {}	//Avatar AvatarReplica 
 		public virtual void onMulCDChanged(float oldValue) {}	//Avatar Monster Summon Npc Creation AvatarReplica 
@@ -98,5 +102,7 @@ namespace KBEngine
 		public virtual void onSummonSlotIdxChanged(Byte oldValue) {}	//Avatar AvatarReplica 
 		public virtual void onTeleporterIdChanged(Int32 oldValue) {}	//Teleporter CityBattleTeleporter 
 		public virtual void onUltraSkillPowerChanged(Byte oldValue) {}	//Avatar AvatarReplica 
+		public virtual void onUniAntiChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation AvatarReplica 
+		public virtual void onUniEnhChanged(Int32 oldValue) {}	//Avatar Monster Summon Npc Creation AvatarReplica 
 	}
 }

@@ -24,7 +24,11 @@ import gameglobal
 import itemData_itemData_set as IDIDS
 import copy
 import rank_rankDrop as R_RD
-
+import rank_Rank as RANK_CFG
+import welfare_config as W_CDD
+import buyCredit_buyCreditConst as BCBCCD
+import creep_base as CBD
+import creep_coefficient as C_CD
 
 class WealthUnit(userType.UserSingleType):
     def __getstate__(self):
@@ -156,7 +160,8 @@ class WealthItem(WealthUnit):
     def addItemObjs(self, its):
         self.itemsObjs.extend(its)
 
-    def getItemObjs(self, remove=False, extra={}):
+    def getItemObjs(self, remove=False, extra=None):
+        extra = extra or {}
         _itemList = []
         for _itemId, awardInfo in self.data.items():
             for _bindType, num in awardInfo.items():
@@ -260,8 +265,7 @@ class WealthItem(WealthUnit):
             if not _itemData:
                 LOG_WARN('popExtractRewardItems, no _itemData:', self.data)
                 continue
-            if _itemData['type'] == gameconst.ItemEnum.Normal and _itemData[
-                'subType'] == gameconst.ItemSubEnum.ExtractReward:
+            if _itemData['type'] == gameconst.ItemEnum.Normal and _itemData['subType'] == gameconst.ItemSubEnum.ExtractReward:
                 _extractRewardItemsDic[_itemId] = self.data.pop(_itemId)
         return _extractRewardItemsDic
 
@@ -1273,16 +1277,35 @@ def _getSinAward(singleAward, context, itemType):
             _addItemToAward(awardVal, itemId, num, bindType, quality, context)
     return awardVal
 
+# 推广者权限增加非绑概率
+def _getPromoterUnbindWeight(extra):
+    # 必须是小月卡在有效期内
+    if extra['isMonthCardExpired']:
+        return 0
+    if not extra['isPromoter']:
+        return 0
+    return int(W_CDD.datas['promoterBindWeight']['value'])
+
 def _getBindWeightRank(extra):
     bindWeightRank = 0
     rank = extra['avatarScoreRank']
     isMonthCardExpired = extra['isMonthCardExpired']
     isBigMonthCardExpired = extra['isBigMonthCardExpired']
     isCrossServer = extra['isCrossServer']
+    # 名次万分比的分母。开服首日没有昨日在线峰值，用战力榜最大排名数量
+    baseNum = RANK_CFG.datas[gameconst.LeaderBoardType.AVATAR_SCORE]['maxNum']
+    if utils.getSvrOpenDays() > 1:
+        onlineNum = utils.getYesterdayOnlineNum(useCross=bool(isCrossServer), useTotal=True)
+        if onlineNum and onlineNum > 0:
+            baseNum = onlineNum
+    if baseNum <= 0:
+        return 0
+    # rankRange 为万分比：名次 / 基准人数 * 10000
+    rankScaled = rank * 10000
     #小月卡加成
     for _, v in R_RD.datas.items():
         l, r = v['rankRange'][0], v['rankRange'][1]
-        if rank >= l and rank <= r:
+        if rankScaled >= l * baseNum and rankScaled <= r * baseNum:
             if v["isMonthCard"] and isMonthCardExpired:
                 continue
             if v["isCrossServer"] == 0 and isCrossServer:
@@ -1293,7 +1316,7 @@ def _getBindWeightRank(extra):
     #大月卡专属加成
     for _, v in R_RD.datas.items():
         l, r = v['rankRange'][0], v['rankRange'][1]
-        if rank >= l and rank <= r:
+        if rankScaled >= l * baseNum and rankScaled <= r * baseNum:
             #  【任务】大月卡特权调整+动态商品购买增加月卡特权 - 服务端
             if v["isMonthCard"] and (isBigMonthCardExpired or isMonthCardExpired):
                 continue
@@ -1317,20 +1340,26 @@ def _getWorldLevelRewardBind(context):
         monsterLevel = getattr(args, 'lv', 0) if args else 0
     useCross = extra.get('isCrossServer', False)
     rewardBind = utils.getMonsterWorldLevelBindRatio(monsterId, monsterLevel, useCross)
+    # fixedBindBonus: (世界等级阈值, 万分比)，世界等级低于阈值时固定增加非绑概率
+    fixedBindBonus = C_CD.datas.get(CBD.datas.get(monsterId, {}).get('coefficientType', 0), {}).get('fixedBindBonus')
+    if fixedBindBonus and utils.getWorldLevel(useCross) < fixedBindBonus[0]:
+        rewardBind += fixedBindBonus[1] / 10000.0
     extra['worldLevelRewardBind'] = rewardBind
     if rewardBind:
         LOG_INFO('worldLevel rewardBind', monsterId, monsterLevel, utils.getWorldLevel(useCross), rewardBind)
     return rewardBind
 
-def _calFinalBindWeight(dropTargetData, monthCard, bindWeightRank, rewardBind=0):
+def _calFinalBindWeight(dropTargetData, monthCard, bindWeightRank, unbindWeightPromoter, rewardBind=0):
     #非绑概率只受配表影响
     if dropTargetData.get('unactedWeight', 0) == 1:
         unbindWeight = dropTargetData.get('bindWeight', 10000)
     else:
         #非绑概率还受月卡、rank、世界等级影响
-        unbindWeight = dropTargetData.get('bindWeight', 10000) + monthCard * dropTargetData.get('bindWeightMonth', 10000) + bindWeightRank
+        #小月卡固定非绑加成（monthlyCardBindWeight），再叠加排名加成；未激活小月卡为 0
+        monthlyCardBindWeight = monthCard * BCBCCD.datas['monthlyCardBindWeight']['value']
+        unbindWeight = dropTargetData.get('bindWeight', 10000) + monthCard * dropTargetData.get('bindWeightMonth', 10000) + bindWeightRank + unbindWeightPromoter + monthlyCardBindWeight
         if rewardBind:
-            unbindWeight -= int(rewardBind * 10000)
+            unbindWeight += int(rewardBind * 10000)
     return 10000 - unbindWeight
 
 def _calSubPackDrop(dropTarget, times, context):
@@ -1342,7 +1371,7 @@ def _calSubPackDrop(dropTarget, times, context):
     monthCard = 0 if context.extra['isMonthCardExpired'] else 1
     bindWeightRank = _getBindWeightRank(context.extra)
     rewardBind = _getWorldLevelRewardBind(context)
-
+    unbindWeightPromoter = _getPromoterUnbindWeight(context.extra)
     dropSubPackageData = DDS.dropPackageData.get(dropTarget)
     if dropSubPackageData:
         dropSubPackageData = _checkDropCondition(dropSubPackageData, context)
@@ -1356,7 +1385,7 @@ def _calSubPackDrop(dropTarget, times, context):
         dropTargetList = [item['dropTarget'] for item in data]
         numMinList = [item['dropNumMin'] for item in data]
         numMaxList = [item['dropNumMax'] for item in data]
-        bindWeightList = [_calFinalBindWeight(item, monthCard, bindWeightRank, rewardBind) for item in data]
+        bindWeightList = [_calFinalBindWeight(item, monthCard, bindWeightRank, unbindWeightPromoter, rewardBind) for item in data]
         gradeList = [item['grade'] for item in data]
         return dropTargetList, numMinList, numMaxList, bindWeightList, gradeList
     return [], [], [], [], []
@@ -1367,11 +1396,12 @@ def _getRealDropTarget(dropTargetData, context):
     monthCard = 0 if context.extra['isMonthCardExpired'] else 1
     bindWeightRank = _getBindWeightRank(context.extra)
     rewardBind = _getWorldLevelRewardBind(context)
+    unbindWeightPromoter = _getPromoterUnbindWeight(context.extra)
 
     dropTargetList = [dropTargetData['dropTarget']]
     numMinList = [dropTargetData['dropNumMin']]
     numMaxList = [dropTargetData['dropNumMax']]
-    bindWeightList = [_calFinalBindWeight(dropTargetData, monthCard, bindWeightRank, rewardBind)]
+    bindWeightList = [_calFinalBindWeight(dropTargetData, monthCard, bindWeightRank, unbindWeightPromoter, rewardBind)]
     gradeList = [dropTargetData['grade']]
     #子包
     if dropTargetData['dropType'] == gameconst.DropWayType.DROP_WAY_TYPE_2:

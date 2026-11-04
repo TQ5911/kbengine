@@ -342,3 +342,8 @@ def _doRefreshData(includeModules):
                 LOG_DBG('_doRefreshData::reReference({}, {})'.format(
                     moduleName, rName))
                 setattr(module, rName, rModule)
+
+    # 只在本进程（bootstrap baseapp）持有 stub 时重算，其它进程（含 cellapp）由 stub 广播
+    if gameglobal.isBootstrap:
+        import gameengine
+        gameengine.getGlobalBase('WorldRefreshEntityStub').syncRefreshRateOfTime()

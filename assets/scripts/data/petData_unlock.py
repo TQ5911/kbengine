@@ -25,7 +25,7 @@ datas = _tools.RODict({
     }),
     3: _tools.RODict({
         "ID": 3,
-        "unlockRank": 20
+        "unlockRank": 30
     }),
     4: _tools.RODict({
         "ID": 4,

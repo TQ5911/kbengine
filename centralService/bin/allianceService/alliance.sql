@@ -36,8 +36,11 @@ CREATE TABLE IF NOT EXISTS alliance_member (
     guild_name VARCHAR(60) NOT NULL DEFAULT '',
     dsp_flag INT UNSIGNED NOT NULL DEFAULT 0,
     max_member_num INT UNSIGNED NOT NULL DEFAULT 0,
+    -- member_state: 1=正常, 2=禁用(合服后该成员所在服不在当前组时由加载流程标记)
+    alliance_member_state TINYINT NOT NULL DEFAULT 1,
     UNIQUE KEY uk_guild (guild_id),
-    KEY idx_alliance (alliance_id)
+    KEY idx_alliance (alliance_id),
+    KEY idx_state_alliance (alliance_member_state, alliance_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS alliance_apply (
@@ -53,6 +56,8 @@ CREATE TABLE IF NOT EXISTS alliance_apply (
     -- ==== Guild-level cosmetic attributes (snapshot at apply time) ====
     guild_icon INT UNSIGNED NOT NULL DEFAULT 0,
     dsp_flag INT UNSIGNED NOT NULL DEFAULT 0,
+    -- alliance_apply_state: 1=正常, 2=禁用(合服后该申请 serverId 不在当前组时由加载流程标记)
+    alliance_apply_state TINYINT NOT NULL DEFAULT 1,
     KEY idx_alliance (alliance_id),
     KEY idx_guild (guild_id),
     KEY idx_alliance_state (alliance_id, apply_state),
@@ -68,6 +73,8 @@ CREATE TABLE IF NOT EXISTS alliance_invite (
     -- invite_state: was `status` (reserved keyword in MySQL 8+)
     invite_state TINYINT NOT NULL DEFAULT 0,
     created_at INT NOT NULL,
+    -- alliance_invite_state: 1=正常, 2=禁用(合服后该邀请 serverId 不在当前组时由加载流程标记)
+    alliance_invite_state TINYINT NOT NULL DEFAULT 1,
     KEY idx_guild (guild_id),
     KEY idx_guild_state (guild_id, invite_state)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -82,6 +89,9 @@ CREATE TABLE IF NOT EXISTS alliance_enemy (
     target_server_id INT UNSIGNED NOT NULL,
     end_time INT NOT NULL,
     created_at INT NOT NULL,
+    -- alliance_enemy_state: 1=正常, 2=禁用(合服后 attacker 或 target 任意一侧的 serverId
+    -- 经合服折叠后不在当前组时, 由加载流程标记)
+    alliance_enemy_state TINYINT NOT NULL DEFAULT 1,
     KEY idx_attacker (attacker_type, attacker_id),
     KEY idx_target (target_type, target_id),
     UNIQUE KEY uk_relation (attacker_type, attacker_id, target_type, target_id)

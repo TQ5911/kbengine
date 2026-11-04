@@ -2104,7 +2104,167 @@ datas = _tools.RODict({
         "messageId": 0,
         "rewardMessage": None,
         "group": None
+    }),
+    210: _tools.RODict({
+        "ID": 210,
+        "name": "BONUS_SRC_MOUNT_ROLL_COST",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 2
+    }),
+    211: _tools.RODict({
+        "ID": 211,
+        "name": "BONUS_SRC_MOUNT_ROLL_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    212: _tools.RODict({
+        "ID": 212,
+        "name": "BONUS_SRC_MOUNT_ROLL_SECURED",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    213: _tools.RODict({
+        "ID": 213,
+        "name": "BONUS_SRC_GUIDE_REWARD",
+        "isAntiAddicted": 1,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001985,
+        "rewardMessage": ('<color=&color211>任务完成</color>', '完成<color=&color57>{0}</color>任务<color=&color57>{1}</color>，获得奖励：', '完成任务，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": None
+    }),
+    214: _tools.RODict({
+        "ID": 214,
+        "name": "BONUS_SRC_REFUGE_COST",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": (1, 2)
+    }),
+    215: _tools.RODict({
+        "ID": 215,
+        "name": "BONUS_SRC_BEGINNER_JOURNEY_TASK_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    216: _tools.RODict({
+        "ID": 216,
+        "name": "BONUS_SRC_BEGINNER_JOURNEY_PHASE_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    217: _tools.RODict({
+        "ID": 217,
+        "name": "BONUS_SRC_SOUL_REFINED_COST",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": (1, 2)
+    }),
+    218: _tools.RODict({
+        "ID": 218,
+        "name": "BONUS_SRC_SOUL_HEDGE_COST",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": (1, 2)
+    }),
+    219: _tools.RODict({
+        "ID": 219,
+        "name": "BONUS_SRC_SOUL_REPLACE_COST",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": (1, 2)
+    }),
+    220: _tools.RODict({
+        "ID": 220,
+        "name": "BONUS_SRC_AUCTION_SNATCH_RETURN_MONEY",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    221: _tools.RODict({
+        "ID": 221,
+        "name": "BONUS_SRC_BEGINNER_JOURNEY_SPECIAL_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 1
+    }),
+    222: _tools.RODict({
+        "ID": 222,
+        "name": "BONUS_SRC_BATTLEPASS_ACTIVATE_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001988,
+        "rewardMessage": ('<color=&color211>战令激活</color>', '激活战令，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 1
+    }),
+    223: _tools.RODict({
+        "ID": 223,
+        "name": "BONUS_SRC_BATTLEPASS_LEVEL_REWARD",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001988,
+        "rewardMessage": ('<color=&color211>战令奖励</color>', '升级战令，获得奖励：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": 1
+    }),
+    224: _tools.RODict({
+        "ID": 224,
+        "name": "BONUS_SRC_BATTLEPASS_BUY_LEVEL_COST",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 0,
+        "rewardMessage": None,
+        "group": 2
+    }),
+    225: _tools.RODict({
+        "ID": 225,
+        "name": "BONUS_SRC_MATERIAL_SALE",
+        "isAntiAddicted": 0,
+        "abandonWhenBagFull": 0,
+        "rewardDescribe": "",
+        "messageId": 54001990,
+        "rewardMessage": ('<color=&color211>交易成功</color>', '获得道具：', '<color=&color211>{0}秒</color>后自动关闭，点击屏幕可直接关闭窗口'),
+        "group": (1, 2)
     })
 })
 minKey = 1
-maxKey = 209
+maxKey = 225

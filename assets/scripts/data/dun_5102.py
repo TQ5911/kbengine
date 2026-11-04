@@ -90,7 +90,9 @@ datas ={
     "PosY": 0.278531,
     "PosZ": 29.56204,
     "Props": {
+      "ChestGroupID": "",
       "GroupID": "",
+      "IsAttack": 0,
       "Level": 45,
       "LightPillar": "",
       "MapEntityScale": 0,
@@ -122,12 +124,14 @@ datas ={
     "EliteCustomID": "",
     "EntityID": 11023004,
     "ID": 51020004,
-    "Name": "\u5bd2\u6e0a\u86a3\u9b54",
+    "Name": "\u6076\u7075\u5c71\u5996",
     "PosX": 430.2351,
     "PosY": 52.05371,
     "PosZ": 34.48069,
     "Props": {
+      "ChestGroupID": "",
       "GroupID": "",
+      "IsAttack": 0,
       "Level": 53,
       "LightPillar": 51028360,
       "MapEntityScale": 0,
@@ -137,8 +141,8 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": [
-        5400.0,
-        6300.0
+        6900.0,
+        7500.0
       ],
       "RefreshTimedID": 0,
       "Remark": "",
@@ -158,12 +162,14 @@ datas ={
     "EliteCustomID": "",
     "EntityID": 11023005,
     "ID": 51020005,
-    "Name": "\u6df1\u6d77\u730e\u624b",
+    "Name": "\u9b54\u50cf\u7981\u536b",
     "PosX": 267.2751,
     "PosY": 57.2359,
     "PosZ": 392.1776,
     "Props": {
+      "ChestGroupID": "",
       "GroupID": "",
+      "IsAttack": 0,
       "Level": 53,
       "LightPillar": 51028361,
       "MapEntityScale": 0,
@@ -173,8 +179,8 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": [
-        5400.0,
-        6300.0
+        6900.0,
+        7500.0
       ],
       "RefreshTimedID": 0,
       "Remark": "",
@@ -194,12 +200,14 @@ datas ={
     "EliteCustomID": "",
     "EntityID": 11023006,
     "ID": 51020006,
-    "Name": "\u5e7d\u51a5\u6218\u5c06",
+    "Name": "\u9b47\u9762\u5996\u50e7",
     "PosX": 380.9006,
     "PosY": 36.22639,
     "PosZ": 243.0157,
     "Props": {
+      "ChestGroupID": "",
       "GroupID": "",
+      "IsAttack": 0,
       "Level": 49,
       "LightPillar": 51028362,
       "MapEntityScale": 0,
@@ -209,8 +217,8 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": [
-        3600.0,
-        4500.0
+        5100.0,
+        5700.0
       ],
       "RefreshTimedID": 0,
       "Remark": "",
@@ -230,12 +238,14 @@ datas ={
     "EliteCustomID": "",
     "EntityID": 11023007,
     "ID": 51020007,
-    "Name": "\u7360\u9762\u5211\u541b",
+    "Name": "\u5de8\u77f3\u5080\u5121",
     "PosX": 74.17607,
     "PosY": 18.00691,
     "PosZ": 302.0142,
     "Props": {
+      "ChestGroupID": "",
       "GroupID": "",
+      "IsAttack": 0,
       "Level": 49,
       "LightPillar": 51028363,
       "MapEntityScale": 0,
@@ -245,8 +255,8 @@ datas ={
       "Radius": 0.0,
       "RefreshNum": 1,
       "RefreshTime": [
-        3600.0,
-        4500.0
+        5100.0,
+        5700.0
       ],
       "RefreshTimedID": 0,
       "Remark": "",
@@ -271,7 +281,9 @@ datas ={
     "PosY": 0.2382388,
     "PosZ": 53.62334,
     "Props": {
+      "ChestGroupID": "",
       "GroupID": "",
+      "IsAttack": 0,
       "Level": 45,
       "LightPillar": 51028366,
       "MapEntityScale": 0,

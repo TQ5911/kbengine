@@ -54,7 +54,8 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
         for _, _, _className, _, _pos, _dir, _params, _ in _entityProps:
             _params['spaceMgrId'] = self.spaceMgrId
             _params['monsterGroupId'] = self.id
-            KBEngine.createEntity(_className, self.spaceID, _pos, _dir, _params)
+            #KBEngine.createEntity(_className, self.spaceID, _pos, _dir, _params)
+            self.getCurrentSpace().createCellLocallyRetry(_className, _pos, _dir, _params, None, '', ())
 
     def getMonsterGIDs(self):
         _mapId = formula.fetchMapId(self.spaceNo)
@@ -64,13 +65,22 @@ class MonsterGrp(iCell.ICell, iTimer.ITimer, EventMgr.EventMgr, iFubenSpace.IFub
     def doEntityRefreshGrp(self, boxGroupId, gameEntityId):
         if KBEngine.isShuttingDown():
             return
-        
+
+        _entityProps = []
+        utils.loadLineReadyEntities(self.spaceNo, [gameEntityId], _entityProps, True)
+
+        # 死亡后的刷新需要按"本身等级与世界等级差值"判定刷新概率，判定失败按新刷新间隔顺延到下一次
+        # 分线怪物按 refreshRateWorldLevelOnBranch 判定，1 线/非分线按 refreshRateWorldLevel
+        _canRefresh, _retryRefreshTime = utils.checkRefreshRateByWorldLevel(_entityProps, self.spaceNo)
+        if not _canRefresh:
+            self.addTimerCB(_retryRefreshTime, 'doEntityRefreshGrp', (boxGroupId, gameEntityId,),
+                            gametimer.TIMER_TAG_MONSTER_GRP_DO_REFRESH)
+            return
+
         if boxGroupId > 0 and self.spaceMgr and self.spaceMgr.boxGroupHasUnlock(boxGroupId):
             self.spaceMgr.addBoxGroupMonster(boxGroupId, gameEntityId, self.id)
             return
 
-        _entityProps = []
-        utils.loadLineReadyEntities(self.spaceNo, [gameEntityId], _entityProps, True)
         for _, _, _className, _, _pos, _dir, _params, _ in _entityProps:
             _params['spaceMgrId'] = self.spaceMgrId
             _params['monsterGroupId'] = self.id

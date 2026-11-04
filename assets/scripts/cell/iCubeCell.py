@@ -16,6 +16,7 @@ import dungeonSrc
 import utils
 import actionContext
 import cube_floor
+import gameconfig
 import gametimer
 import cube_config
 import cube_room
@@ -50,7 +51,8 @@ class CubeSwitch(object):
 class ICubeCell(object):
     def __init__(self):
         if self.cubeQuota.quotaDurState != gameconst.QuotaDurStatus.NORMAL:
-            LOG_ERR('cube dur state invalid', self.cubeQuota)
+            if not gameconfig.isCrossServer():
+                LOG_ERR('cube dur state invalid', self.cubeQuota)
             self.cubeQuota.resetOnLogin()
 
     def _getCubeRoomType(self, spaceNo):
@@ -347,7 +349,8 @@ class ICubeCell(object):
         LOG_INFO('ICubeCell::backOriginRoomFromCow: {}'.format(self.spaceNo))
         self.enterCubeByMapIds([self.fromCubeMapId])
 
-    def enterCubeByMapIds(self, mapIds, extra={}):
+    def enterCubeByMapIds(self, mapIds, extra=None):
+        extra = extra or {}
         LOG_INFO('ICubeCell::enterCubeByMapIds: {}, {}'.format(mapIds, extra))
         _mapId = random.choice(mapIds)
 
@@ -511,11 +514,11 @@ class ICubeCell(object):
 
         return True
 
-    def checkAddCubeRoomDurationCondition(self, addType, costList, num, opUUID):
+    def checkAddCubeRoomDurationCondition(self, addType, costList, num, opUUID, isExchange):
         if not self._checkAddCubeRoomDurationCondition():
             return
 
-        self.base.useItemAddCubeTimes(addType, costList, num, True, True, gameconst.CubeAddTimesReason.CHECK_COND, opUUID)
+        self.base.useItemAddCubeTimes(addType, costList, num, True, True, gameconst.CubeAddTimesReason.CHECK_COND, opUUID, isExchange)
 
     def directlyAddCubeRoomDuration(self, func, args, cubeDurCtx):
         if not self._checkAddCubeRoomDurationCondition():
@@ -524,6 +527,7 @@ class ICubeCell(object):
 
         _dur = cube_config.datas['cubeNumTime']['value'] * 60
         self.cubeQuota.addCubeLeftTime(self, _dur)
+        self.showMsg(cube_config.datas['cube_timeExtensionSuccess']['value'], [])
         self.base.activityComplete(cube_config.datas['cubeActID']['value'])
         if self.cubeQuota.quotaDurState != gameconst.QuotaDurStatus.PROTECT:
             self._startCubeTimeOutTimer(gameconst.CUBE_CB_AUTO_RENEW)
@@ -669,7 +673,9 @@ class ICubeCell(object):
             castTime=CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR)
         )
 
-    def _switchCubeLine(self, lineNo, extra={}):
+    def _switchCubeLine(self, lineNo, extra=None):
+        # 本函数会原地写入 extra，必须拷贝，避免污染调用方传入的 dict / 默认参数
+        extra = dict(extra) if extra else {}
         LOG_INFO('ICubeCell::_switchCubeLine: {}'.format(lineNo))
 
         extra['enterCubeType'] = gameconst.ENTER_CUBE_SWITCH_LINE

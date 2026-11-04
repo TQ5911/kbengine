@@ -80,6 +80,66 @@ datas = _tools.RODict({
         "traceDistance": 0.0,
         "traceTime": 0.0
     }),
+    31000021: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31000022: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31000023: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31000024: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31000025: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31000026: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31000027: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31000028: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31000029: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31000030: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31000031: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31000032: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
     31000099: _tools.RODict({
         "bulletTimeScale": 0.0,
         "traceDistance": 0.0,
@@ -3236,6 +3296,66 @@ datas = _tools.RODict({
         "traceTime": 0.0
     }),
     31611368: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31611369: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31611370: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31611371: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31611372: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31611373: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31611374: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31611375: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31611376: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31611377: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31611378: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31611379: _tools.RODict({
+        "bulletTimeScale": 1.0,
+        "traceDistance": 0.0,
+        "traceTime": 0.0
+    }),
+    31611380: _tools.RODict({
         "bulletTimeScale": 1.0,
         "traceDistance": 0.0,
         "traceTime": 0.0

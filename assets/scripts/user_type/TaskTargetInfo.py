@@ -150,7 +150,7 @@ class TaskTargetMonsters(BaseTarget):
 
     def killOneMonster(self, spaceNo, monsterId, monsterGBId):
         mapId = formula.fetchMapId(spaceNo)
-        LOG_INFO('in TargetMonsters::killOneMonster:begin, ', spaceNo, mapId, self.tgtId, self.dstCnt, self.stepCnt, self.killedTotalCount, self.killMode)
+        LOG_DBG('in TargetMonsters::killOneMonster:begin, ', spaceNo, mapId, self.tgtId, self.dstCnt, self.stepCnt, self.killedTotalCount, self.killMode)
         _opResult = False
         completed = False
         if mapId != self.mapId:

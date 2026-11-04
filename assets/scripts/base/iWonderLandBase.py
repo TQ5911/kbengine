@@ -15,7 +15,6 @@ import itemData_itemData as ID_IDD
 import activityControl_config as AC_CD
 import gamedecorator
 import LogTrackingMgr
-import visible_visible as V_VD
 import creep_base as CBD
 import activityControl_activityTicket as AC_AT
 
@@ -115,7 +114,7 @@ class IWonderLandBase(object):
             )
 
     @gamedecorator.checkGameconfigEnable('wonderLand')
-    def addWonderLandTicket(self, exposed, addType, num, isAddDuration):
+    def addWonderLandTicket(self, exposed, addType, num, isAddDuration, isExchange=False):
         LOG_INFO('IWonderLandBase::addWonderLandTicket: addType: {}, num: {}, isAddDuration: {} {}'.format(addType, num, isAddDuration, self.wonderLandAddTimes))
         if not utils.isActOpen(WL_CD.datas['wonderLandActID']['value']) and isAddDuration:
             self.onMessagePre(AC_CD.datas['activity_notOpen']['value'], [])
@@ -151,28 +150,33 @@ class IWonderLandBase(object):
                     return
                 costList.append((itemId, itemNum, 1))
         LOG_INFO('IWonderLandBase::addWonderLandTicket: addType: {}, costList: {}, num: {}'.format(addType, costList, num))
-        self.doAddWonderLandTicket(addType, costList, num, isAddDuration, False, gameconst.WonderAddTicketReason.FROM_CLIENT, _opUUID)
+        self.doAddWonderLandTicket(addType, costList, num, isAddDuration, False, gameconst.WonderAddTicketReason.FROM_CLIENT, _opUUID, isExchange=isExchange)
 
-    def modifyWonderLandTicket(self, delta, freeNum, paidNum, src, opUUID, attType=gameconst.addTicketTimesType.NULL):
+    def modifyWonderLandTicket(self, changeNum, freeNum, paidNum, src, opUUID, attType=gameconst.addTicketTimesType.NULL):
         befPaidWonderLandTicket = self.paidWonderLandTicket
         befWonderLandTicket = self.wonderLandTicket
-        if delta > 0:
+        if changeNum > 0:
             if attType == gameconst.addTicketTimesType.COIN:
                 self.wonderLandTicket = min(1000000000, self.wonderLandTicket + freeNum)
                 self.paidWonderLandTicket = min(1000000000, self.paidWonderLandTicket + paidNum)
             else:
-                self.paidWonderLandTicket = min(1000000000, self.paidWonderLandTicket + delta)
+                self.paidWonderLandTicket = min(1000000000, self.paidWonderLandTicket + changeNum)
 
         else:
+            # v5.2 新手历程 6=门票使用
+            self.beginnerJourney_onTaskEvent(
+                gameconst.BjTaskType.BJ_TASK_TYPE_TICKET_USE,
+                delta=abs(changeNum), activityId=int(WL_CD.datas['wonderLandActID']['value'])
+            )
             if attType == gameconst.addTicketTimesType.COIN:
                 self.wonderLandTicket = max(0, self.wonderLandTicket + freeNum)
                 self.paidWonderLandTicket = max(0, self.paidWonderLandTicket + paidNum)
             else:
-                if self.wonderLandTicket >= -delta:
-                    self.wonderLandTicket += delta
+                if self.wonderLandTicket >= -changeNum:
+                    self.wonderLandTicket += changeNum
 
                 else:
-                    self.paidWonderLandTicket = max(0, self.paidWonderLandTicket + self.wonderLandTicket + delta)
+                    self.paidWonderLandTicket = max(0, self.paidWonderLandTicket + self.wonderLandTicket + changeNum)
                     self.wonderLandTicket = 0
 
         LogTrackingMgr.LogTrackingMgr.WonderLand_Ticket(
@@ -180,22 +184,25 @@ class IWonderLandBase(object):
             self.accountEntity.clientDistinctId, 
             self.gbID,
             src,
-            delta,
+            changeNum,
             self.wonderLandTicket,
             self.paidWonderLandTicket,
             opUUID,
         )
-        LOG_INFO('modifyWonderLandTicket:', attType, delta, freeNum, paidNum, src, befPaidWonderLandTicket, self.paidWonderLandTicket, befWonderLandTicket, self.wonderLandTicket)
+        LOG_INFO('modifyWonderLandTicket:', attType, changeNum, freeNum, paidNum, src, befPaidWonderLandTicket, self.paidWonderLandTicket, befWonderLandTicket, self.wonderLandTicket)
+        used = (befWonderLandTicket - self.wonderLandTicket) + (befPaidWonderLandTicket - self.paidWonderLandTicket)
+        if used > 0:
+            self.onBattlePassTicketUse(WL_CD.datas['wonderLandActID']['value'], used)
         return befWonderLandTicket - self.wonderLandTicket, befPaidWonderLandTicket - self.paidWonderLandTicket
 
-    def doAddWonderLandTicket(self, addType, costList, num, isAddDuration, hasCheckCell, reason, opUUID):
+    def doAddWonderLandTicket(self, addType, costList, num, isAddDuration, hasCheckCell, reason, opUUID, isExchange=False):
         LOG_INFO('IWonderLandBase::doAddWonderLandTicket: addType: {}, costList: {}, num: {}, isAddDuration: {}, hasCheckCell: {}, reason: {}'.format(addType, costList, num, isAddDuration, hasCheckCell, reason))
         if isAddDuration and num != 1:
             LOG_ERR('IWonderLandBase::addWonderLandTicket: invalid num: {}'.format(num))
             return
 
         if isAddDuration and not hasCheckCell:
-            self.cell.checkAddWonderLandDurationCondition(addType, costList, num, opUUID)
+            self.cell.checkAddWonderLandDurationCondition(addType, costList, num, opUUID, isExchange)
             return
 
         if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
@@ -214,14 +221,14 @@ class IWonderLandBase(object):
         for (itemId, itemNum, n) in costList:
             _award.addWealthByItemId(itemId, itemNum * n)
 
-        res = self.canDeductWealth(_award)
+        res = self.canDeductWealth(_award, allowMoneyCoverBindMoney=isExchange)
         if not res:
             LOG_WARN('IWonderLandBase::addWonderLandTicket: can not deduct wealth', res())
             return
 
         _src = AAC_AACDD.datas.BONUS_SRC_ADD_WONDER_LAND_TIMES
         _detail = gameclass.AwardDetailCls()
-        self.deductWealth(_src, _award, opUUID, _detail)
+        self.deductWealth(_src, _award, opUUID, _detail, allowMoneyCoverBindMoney=isExchange)
 
         freeNum = 0
         paidNum = 0
@@ -323,7 +330,7 @@ class IWonderLandBase(object):
                     return  
                 _deductVal = dropAward.DeductWealthVal()
                 _deductVal.addWealthByItemId(coinType, coinNum)
-                res = self.canDeductWealth(_deductVal)
+                res = self.canDeductWealth(_deductVal, allowMoneyCoverBindMoney=True)
                 if res:
                     self.doAddWonderLandTicket(
                         gameconst.CUBE_ADD_TIMES_TYPE_COIN,
@@ -333,6 +340,7 @@ class IWonderLandBase(object):
                         True,
                         gameconst.WonderAddTicketReason.RENEW_USE_COIN,
                         _opUUID,
+                        isExchange=True,
                     )
                     return
                 elif res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:

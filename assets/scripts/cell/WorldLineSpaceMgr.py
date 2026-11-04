@@ -21,10 +21,6 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
         iMineWarSpaceMgr.IMineWarSpaceMgr.__init__(self)
         iSpaceMgr.ISpaceMgr.__init__(self)
         if formula.inWolrdBossScene(self.spaceNo):
-            # 初始化世界boss 由 ITimerEntityRefresh 处理
-            if CONST.datas['bossRefreshSystem']['value'] != gameconst.WorldBossRefreshType.TIMED_INTERVALS_TIMER:
-                self._initCreateBoss(0)
-
             self._initWorldBossGid()
             self.setSceneStates([
                 gameconst.WorldLineSceneState.LEI_JI
@@ -53,22 +49,12 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
         for _data in _bossDatas.values():
             _monsterId = _data['EntityID']
             _creepData = creep_base.datas[_monsterId]
-            if _creepData['type'] != gameconst.MonsterType.ADVANCE:
+            if _creepData['nameSuffixID'] != gameconst.MonsterSuffix.WORLD_BOSS:
                 continue
 
             for i in utils.genGameEntityId(_data['ID'], 1):
                 self.worldBossGid = i #10360001xxx
             break
-
-    def _initCreateBoss(self, times):
-        _stub = gameengine.getGlobalBase('WorldBossStub')
-        if not _stub:
-            self.addTimerCB(1, '_initCreateBoss', (times + 1,), gametimer.TIMER_TAG_INIT_CREATE_BOSS)
-            if times > 60:
-                LOG_ERR('WorldBossStub create boss retry meet max times', times)
-            return
-
-        _stub.getBossCreateTime(self.spaceNo, self)
 
     def doCreateWorldBoss(self):
         self._createWorldBoss()
@@ -88,15 +74,6 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
         self.setSceneStates([
             gameconst.WorldLineSceneState.THUNDER
         ])
-
-    def onGetCreateBossTime(self, _createTime):
-        _now = utils.curTS()
-        if _createTime <= _now:
-            self._createWorldBoss()
-        else:
-            gameengine.getGlobalBase('WorldBossStub').addCreateWorldBossTimer(
-                self.spaceNo, _createTime
-            )
 
     def onTimer(self, tid, userArg):
         if utils.isBelongTimerTag(userArg):
@@ -156,25 +133,6 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
             'afterDeadSetSceneTimer'
         )
 
-        # 不通知刷新了,由 ITimerEntityRefresh 控制下次刷新
-        if CONST.datas['bossRefreshSystem']['value'] == gameconst.WorldBossRefreshType.TIMED_INTERVALS_TIMER:
-            LOG_DBG('onWorldBossDead2', self.spaceNo, refreshTime)
-            return
-
-        self.onWorldBossRefresh(utils.curTS(), refreshTime, 0)
-
-    def onWorldBossRefresh(self, _now, refreshTime, times):
-        LOG_DBG('onWorldBossRefresh', self.spaceNo, _now, refreshTime, times)
-        _stub = gameengine.getGlobalBase('WorldBossStub')
-        if not _stub:
-            self.addTimerCB(1, 'onWorldBossRefresh', (_now, refreshTime, times + 1,), gametimer.TIMER_TAG_REFRESH_CREATE_BOSS_TIMER)
-            if times > 60:
-                LOG_ERR('onWorldBossRefresh WorldBossStub create boss retry meet max times', times)
-            return
-
-        _nextCreateTime = _now + refreshTime
-        _stub.onWorldBossDeadAddTimer(self.spaceNo, _nextCreateTime)
-
     def _statisticFightingCount(self):
         now = utils.curTS()
         lastCnt = self.fightingPlayersCnt
@@ -191,3 +149,20 @@ class WorldLineSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, iMineWa
         if lastCnt != self.fightingPlayersCnt:
             stubName = 'WorldLineStub{}'.format(formula.fetchMapId(self.spaceNo))
             gameengine.getGlobalBase(stubName).onFightingPlayersCntSync(self.spaceNo, self.fightingPlayersCnt)
+
+    def onCrossWorld(self, extra):
+        LOG_INFO("WorldLineSpaceMgr::onCrossWorld", extra, self.spaceNo)
+        isCross = extra.get('isCross', False)
+        isCrossWorld = extra.get('isCrossWorld', False)
+        isOrgMap = extra.get('isOrgMap', False)
+        isCrossMap = extra.get('isCrossMap', False)
+        if isCross:
+            if isCrossMap and isCrossWorld and isOrgMap:
+                self.onRestoreTemporaryDestroyTimerEntities()
+            else:
+                self.onTemporaryDestroyTimerEntities([gameconst.EntityType.MONSTER], [(gameconst.MonsterSuffix.WORLD_BOSS,)])
+        else:
+            if not isCrossMap or (not isCrossWorld and isOrgMap):
+                self.onRestoreTemporaryDestroyTimerEntities()
+            else:             
+                self.onTemporaryDestroyTimerEntities([gameconst.EntityType.MONSTER], [(gameconst.MonsterSuffix.WORLD_BOSS,)])

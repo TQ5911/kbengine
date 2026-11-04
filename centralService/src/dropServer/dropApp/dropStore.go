@@ -29,13 +29,14 @@ type DropInfoRecord struct {
 	ExtraInfo      []byte
 	GiveUpTime     int64
 	CollectionId   uint32
-	RedeemWaitTime int64
-	HasRedeemPrice uint32
-	HasPayment     uint32
-	ReturnTime     int64
-	OwnerGbId      uint64
-	OwnerServerId  uint32
-	ReturnTimeBack int64
+	CollectionServerId uint32
+	RedeemWaitTime     int64
+	HasRedeemPrice     uint32
+	HasPayment         uint32
+	ReturnTime         int64
+	OwnerGbId          uint64
+	OwnerServerId      uint32
+	ReturnTimeBack     int64
 }
 
 // CustodyInfoRecord 对应 custody_info 表
@@ -49,6 +50,7 @@ type CustodyInfoRecord struct {
 	ReturnTime     int64
 	OwnerGbId      uint64
 	OwnerServerId  uint32
+	ExtraInfo      []byte
 }
 
 // RewardInfoRecord 对应 reward_info 表
@@ -213,7 +215,7 @@ func (s *dropStore) loadDropInfos() error {
 	defer s.dropMu.Unlock()
 
 	const selectFields = `id, serverId, uniqueId, dropGbId, dropType, endTime, equipInfo, dropTime, takerGbId, takerServerId,
-		       collExpireTime, price, maxPrice, extraInfo, giveUpTime, collectionId, redeemWaitTime,
+		       collExpireTime, price, maxPrice, extraInfo, giveUpTime, collectionId, collectionServerId, redeemWaitTime,
 		       hasRedeemPrice, hasPayment, returnTime, ownerGbId, ownerServerId, returnTimeBack`
 	query := fmt.Sprintf("SELECT %s FROM drop_info WHERE id > ? ORDER BY id LIMIT ?", selectFields)
 
@@ -231,7 +233,7 @@ func (s *dropStore) loadDropInfos() error {
 			if err := rows.Scan(
 				&rec.Id, &rec.ServerId, &rec.UniqueId, &rec.DropGbId, &rec.DropType, &rec.EndTime, &rec.EquipInfo,
 				&rec.DropTime, &rec.TakerGbId, &rec.TakerServerId, &rec.CollExpireTime, &rec.Price,
-				&rec.MaxPrice, &rec.ExtraInfo, &rec.GiveUpTime, &rec.CollectionId, &rec.RedeemWaitTime,
+				&rec.MaxPrice, &rec.ExtraInfo, &rec.GiveUpTime, &rec.CollectionId, &rec.CollectionServerId, &rec.RedeemWaitTime,
 				&rec.HasRedeemPrice, &rec.HasPayment, &rec.ReturnTime, &rec.OwnerGbId,
 				&rec.OwnerServerId, &rec.ReturnTimeBack,
 			); err != nil {
@@ -242,6 +244,8 @@ func (s *dropStore) loadDropInfos() error {
 			rec.ServerId = common.GetGameServerMergeRoot(rec.ServerId)
 			rec.TakerServerId = common.GetGameServerMergeRoot(rec.TakerServerId)
 			rec.OwnerServerId = common.GetGameServerMergeRoot(rec.OwnerServerId)
+			// 采集物所在服同样按合服折叠: 被合掉的服已无进程, 采集物随世界数据落到根服
+			rec.CollectionServerId = common.GetGameServerMergeRoot(rec.CollectionServerId)
 
 			s.dropByUid[rec.UniqueId] = rec
 			s.addDropIndex(rec)
@@ -266,7 +270,7 @@ func (s *dropStore) loadCustodyInfos() error {
 	s.custodyMu.Lock()
 	defer s.custodyMu.Unlock()
 
-	const selectFields = `id, uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId`
+	const selectFields = `id, uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId, extraInfo`
 	query := fmt.Sprintf("SELECT %s FROM custody_info WHERE id > ? ORDER BY id LIMIT ?", selectFields)
 
 	count := 0
@@ -282,7 +286,7 @@ func (s *dropStore) loadCustodyInfos() error {
 			rec := &CustodyInfoRecord{}
 			if err := rows.Scan(
 				&rec.Id, &rec.UniqueId, &rec.DropType, &rec.EquipInfo, &rec.HolderGbId, &rec.HolderServerId,
-				&rec.ReturnTime, &rec.OwnerGbId, &rec.OwnerServerId,
+				&rec.ReturnTime, &rec.OwnerGbId, &rec.OwnerServerId, &rec.ExtraInfo,
 			); err != nil {
 				rows.Close()
 				return err
@@ -359,12 +363,12 @@ func (s *dropStore) loadRewardInfos() error {
 func (s *dropStore) InsertDropInfo(rec *DropInfoRecord) error {
 	_, err := s.db.Exec(`INSERT INTO drop_info
 		(serverId, uniqueId, dropGbId, dropType, endTime, equipInfo, dropTime, takerGbId, takerServerId,
-		 collExpireTime, price, maxPrice, extraInfo, giveUpTime, collectionId, redeemWaitTime,
+		 collExpireTime, price, maxPrice, extraInfo, giveUpTime, collectionId, collectionServerId, redeemWaitTime,
 		 hasRedeemPrice, hasPayment, returnTime, ownerGbId, ownerServerId, returnTimeBack)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		rec.ServerId, rec.UniqueId, rec.DropGbId, rec.DropType, rec.EndTime, rec.EquipInfo, rec.DropTime,
 		rec.TakerGbId, rec.TakerServerId, rec.CollExpireTime, rec.Price, rec.MaxPrice, rec.ExtraInfo,
-		rec.GiveUpTime, rec.CollectionId, rec.RedeemWaitTime, rec.HasRedeemPrice, rec.HasPayment,
+		rec.GiveUpTime, rec.CollectionId, rec.CollectionServerId, rec.RedeemWaitTime, rec.HasRedeemPrice, rec.HasPayment,
 		rec.ReturnTime, rec.OwnerGbId, rec.OwnerServerId, rec.ReturnTimeBack)
 	if err != nil {
 		return err
@@ -385,12 +389,12 @@ func (s *dropStore) InsertDropInfo(rec *DropInfoRecord) error {
 func (s *dropStore) UpdateDropInfo(rec *DropInfoRecord) error {
 	_, err := s.db.Exec(`UPDATE drop_info SET
 		serverId=?, dropGbId=?, dropType=?, endTime=?, equipInfo=?, dropTime=?, takerGbId=?, takerServerId=?,
-		collExpireTime=?, price=?, maxPrice=?, extraInfo=?, giveUpTime=?, collectionId=?, redeemWaitTime=?,
+		collExpireTime=?, price=?, maxPrice=?, extraInfo=?, giveUpTime=?, collectionId=?, collectionServerId=?, redeemWaitTime=?,
 		hasRedeemPrice=?, hasPayment=?, returnTime=?, ownerGbId=?, ownerServerId=?, returnTimeBack=?
 		WHERE uniqueId=?`,
 		rec.ServerId, rec.DropGbId, rec.DropType, rec.EndTime, rec.EquipInfo, rec.DropTime,
 		rec.TakerGbId, rec.TakerServerId, rec.CollExpireTime, rec.Price, rec.MaxPrice, rec.ExtraInfo,
-		rec.GiveUpTime, rec.CollectionId, rec.RedeemWaitTime, rec.HasRedeemPrice, rec.HasPayment,
+		rec.GiveUpTime, rec.CollectionId, rec.CollectionServerId, rec.RedeemWaitTime, rec.HasRedeemPrice, rec.HasPayment,
 		rec.ReturnTime, rec.OwnerGbId, rec.OwnerServerId, rec.ReturnTimeBack, rec.UniqueId)
 	if err != nil {
 		return err
@@ -689,10 +693,10 @@ func (s *dropStore) FindExpiredRedeems(limitTime int64, limit int) []*DropInfoRe
 // 等价于原 `INSERT INTO custody_info (uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId) VALUES (...) on duplicate key update holderGbId=?, holderServerId=?`.
 func (s *dropStore) UpsertCustodyHolder(rec *CustodyInfoRecord) error {
 	_, err := s.db.Exec(`INSERT INTO custody_info
-		(uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?) on duplicate key update holderGbId=?, holderServerId=?`,
+		(uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId, extraInfo)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) on duplicate key update holderGbId=?, holderServerId=?`,
 		rec.UniqueId, rec.DropType, rec.EquipInfo, rec.HolderGbId, rec.HolderServerId,
-		rec.ReturnTime, rec.OwnerGbId, rec.OwnerServerId, rec.HolderGbId, rec.HolderServerId)
+		rec.ReturnTime, rec.OwnerGbId, rec.OwnerServerId, rec.ExtraInfo, rec.HolderGbId, rec.HolderServerId)
 	if err != nil {
 		return err
 	}

@@ -31,6 +31,7 @@ import gametimer
 import random
 import awardContext
 import gameconfig
+import CollectionCheckContext
 
 
 class IBag(object):
@@ -67,7 +68,7 @@ class IBag(object):
                 return
         # 检查是否是n选n礼包
         if itemData['Ncn'] == 1 or itemData['Ncn'] == 2:
-            ret, argsList = self.calculateNcnPackage(itemId, argsList)
+            ret, argsList = self.calculateNcnPackage(itemId, useNum, argsList)
             if not ret:
                 LOG_WARN('   in reqUseItems, ncn check failed')
                 return
@@ -116,7 +117,7 @@ class IBag(object):
         else:
             self.base.baseUseItems(gridId, itemId, useNum, _useItemCtx, False)
 
-    def calculateNcnPackage(self, itemId, argList):
+    def calculateNcnPackage(self, itemId, itemNum, argList):
         # 服务端校验 n 选 n 礼包：根据 itemId 读取道具配置，校验客户端上传的
         # argList 是否符合 Ncn/Ctoplimit/content 的构成规则。
         # 返回 True 表示构成合法允许继续使用，False 表示非法直接拒绝。
@@ -147,42 +148,40 @@ class IBag(object):
             entry = content[choiceId]
             return entry[0], entry[1]
         
-        total = 0
         picked = {}
         if ncn == 1:
             # 规则1：只能从 content 选 Ctoplimit 个不同种类的道具，每项限制个数不能为 0
             if len(argList) != limitSum:
-                LOG_ERR('calculateNcnPackage: item %s Ncn=1 choice count %s != Ctoplimit %s' % (itemId, len(argList), limitSum))
+                LOG_ERR('calculateNcnPackage 1: item %s Ncn=1 choice count %s != Ctoplimit %s' % (itemId, len(argList), limitSum))
                 return False, None
             picked = {}
             for choiceStr in argList:
                 parts = choiceStr.split(':')
                 if len(parts) != 2:
-                    LOG_ERR('calculateNcnPackage: item %s bad choice %s' % (itemId, choiceStr))
+                    LOG_ERR('calculateNcnPackage 1: item %s bad choice %s' % (itemId, choiceStr))
                     return False, None
                 try:
                     choiceId = int(parts[0])
                     choiceNum = int(parts[1])
                 except (TypeError, ValueError):
-                    LOG_ERR('calculateNcnPackage: item %s bad choice %s' % (itemId, choiceStr))
+                    LOG_ERR('calculateNcnPackage 1: item %s bad choice %s' % (itemId, choiceStr))
                     return False, None
                 if choiceId < 0 or choiceId >= len(content):
-                    LOG_ERR('calculateNcnPackage: item %s choice id %s out of range' % (itemId, choiceId))
+                    LOG_ERR('calculateNcnPackage 1: item %s choice id %s out of range' % (itemId, choiceId))
                     return False, None
                 if choiceId in picked:
-                    LOG_ERR('calculateNcnPackage: item %s choice id %s duplicated' % (itemId, choiceId))
+                    LOG_ERR('calculateNcnPackage 1: item %s choice id %s duplicated' % (itemId, choiceId))
                     return False, None
+                # 单个道具的限制
                 _, choiceLimit = _getItemLimit(choiceId)
                 if choiceLimit <= 0:
-                    LOG_ERR('calculateNcnPackage: item %s choice id %s limit 0' % (itemId, choiceId))
+                    LOG_ERR('calculateNcnPackage 1: item %s choice id %s limit 0' % (itemId, choiceId))
                     return False, None
-                if choiceNum < 1 or choiceNum > choiceLimit:
-                    LOG_ERR('calculateNcnPackage: item %s choice id %s num %s not in [1, %s]' % (itemId, choiceId, choiceNum, choiceLimit))
-                    return False, None
-                picked[choiceId] = choiceNum
+                batchCount = itemNum * choiceLimit
+                picked[choiceId] = batchCount
             # 判断种类
             if len(picked) != limitSum:
-                LOG_ERR('calculateNcnPackage: item %s Ncn=1 picked %s != Ctoplimit %s' % (itemId, picked, limitSum))
+                LOG_ERR('calculateNcnPackage 1: item %s Ncn=1 picked %s != Ctoplimit %s' % (itemId, picked, limitSum))
                 return False, None
             
         elif ncn == 2:
@@ -193,31 +192,33 @@ class IBag(object):
             for choiceStr in argList:
                 parts = choiceStr.split(':')
                 if len(parts) != 2:
-                    LOG_ERR('calculateNcnPackage: item %s bad choice %s' % (itemId, choiceStr))
+                    LOG_ERR('calculateNcnPackage 2: item %s bad choice %s' % (itemId, choiceStr))
                     return False, None
                 try:
                     choiceId = int(parts[0])
                     choiceNum = int(parts[1])
                 except ValueError:
-                    LOG_ERR('calculateNcnPackage: item %s bad choice %s' % (itemId, choiceStr))
+                    LOG_ERR('calculateNcnPackage 2: item %s bad choice %s' % (itemId, choiceStr))
                     return False, None
                 if choiceId < 0 or choiceId >= len(content):
-                    LOG_ERR('calculateNcnPackage: item %s choice id %s out of range' % (itemId, choiceId))
+                    LOG_ERR('calculateNcnPackage 2: item %s choice id %s out of range' % (itemId, choiceId))
                     return False, None
                 _, choiceLimit = _getItemLimit(choiceId)
                 if choiceLimit <= 0:
-                    LOG_ERR('calculateNcnPackage: item %s choice id %s limit 0' % (itemId, choiceId))
+                    LOG_ERR('calculateNcnPackage 2: item %s choice id %s limit 0' % (itemId, choiceId))
                     return False, None
-                picked[choiceId] = picked.get(choiceId, 0) + choiceNum
-                curChoiceNum = picked.get(choiceId, 0)
-                if curChoiceNum < 1 or curChoiceNum > choiceLimit:
-                    LOG_ERR('calculateNcnPackage: item %s choice id %s num %s not in [1, %s]' % (itemId, choiceId, choiceNum, choiceLimit))
+                picked[choiceId] = picked.get(choiceId, 0) + choiceLimit * itemNum
+
+            total = 0
+            for choiceId, choiceNum in picked.items():
+                _, choiceLimit = _getItemLimit(choiceId)
+                if choiceNum % (choiceLimit * itemNum) != 0:
+                    LOG_ERR('calculateNcnPackage 2: item %s choice id %s choice num %s num %s ' % (itemId, choiceId, choiceNum, choiceLimit * itemNum))
                     return False, None
-                
-                total += choiceNum
+                total += choiceNum // (choiceLimit * itemNum)
             # 判断数量
             if total != limitSum:
-                LOG_ERR('calculateNcnPackage: item %s Ncn=2 total %s != Ctoplimit %s' % (itemId, total, limitSum))
+                LOG_ERR('calculateNcnPackage 2: item %s Ncn=2 total %s != Ctoplimit %s' % (itemId, total, limitSum))
                 return False, None
         else:
             return False, None
@@ -363,14 +364,14 @@ class IBag(object):
         monsterExp = dataUtils.getMonsterExp(dropCtx.monsterId, dropCtx.level)
         if monsterExp is None or monsterExp == 0:
             return
-        # 组队
-        if self.isInTeam(self.gbId):
+        # 小队（本服组队/团已废弃，跨服小队/团队按 inCrossTeam/inCrossRaid 区分）
+        if self.inCrossTeam():
             teammateNum = len(self.teammateEntIdInAoiSet)
             if teammateNum >= 1:
                 # 组队加成系数列表
                 teamNumBonus = C_CD.datas['killMonsterTeamExpBonus'].get("value")
-                # 组队加成系数
-                teamNumRatio = teamNumBonus[teammateNum]
+                # 组队加成系数（人数超出配置长度时按最高档取）
+                teamNumRatio = teamNumBonus[min(teammateNum, len(teamNumBonus) - 1)]
                 # 组队均分经验
                 teamExp = int(teamNumRatio * monsterExp / (teammateNum + 1))
                 # 按照个人调整
@@ -389,9 +390,8 @@ class IBag(object):
                 killerExp = self._adjustKillMonsterExp(awardResults, monsterExp, dropCtx.level, self.level)
                 self.addSettlementExp(awardResults, self.id, killerExp)
                 LOG_DBG("iBag-> processKillMonsterExp 4 ", dropCtx, awardResults, monsterExp, dropCtx.level, self.level)
-        # 团战
-        elif self.inRaid():
-            # 根据等级调整经验
+        # 团队（对齐旧团语义：不参与组队分摊，杀手独享）
+        elif self.inCrossRaid():
             killerExp = self._adjustKillMonsterExp(awardResults, monsterExp, dropCtx.level, self.level)
             self.addSettlementExp(awardResults, self.id, killerExp)
             LOG_DBG("iBag-> processKillMonsterExp 5 ", dropCtx, awardResults, monsterExp, dropCtx.level, self.level)
@@ -402,6 +402,38 @@ class IBag(object):
             LOG_DBG("iBag-> processKillMonsterExp 6 ", dropCtx, awardResults, monsterExp, dropCtx.level, self.level)
         return
 
+    def _addFullKillExp(self, dropCtx, awardResults):
+        monsterExp = dataUtils.getMonsterExp(dropCtx.monsterId, dropCtx.level)
+        if not monsterExp:
+            return
+        exp = self._adjustKillMonsterExp(awardResults, monsterExp, dropCtx.level, self.level)
+        self.addSettlementExp(awardResults, self.id, exp)
+
+    def _splitKillExpInAoiTeam(self, dropCtx, awardResults):
+        # 基础经验在本人与视野内队友（小队/团队）之间平分，再按各自等级差调整。
+        # 经验模式 0/4/5 走这里。小队先乘 killMonsterTeamExpBonus，再按人数平分。
+        monsterExp = dataUtils.getMonsterExp(dropCtx.monsterId, dropCtx.level)
+        if not monsterExp:
+            return
+        memberIds = [self.id]
+        if self.teammateEntIdInAoiSet and (self.inCrossTeam() or self.inCrossRaid()):
+            for entId in self.teammateEntIdInAoiSet:
+                if entId != self.id:
+                    memberIds.append(entId)
+        shareExp = monsterExp
+        if self.inCrossTeam() and len(memberIds) > 1:
+            teamNumBonus = C_CD.datas['killMonsterTeamExpBonus'].get("value")
+            teammateNum = len(memberIds) - 1
+            shareExp = teamNumBonus[min(teammateNum, len(teamNumBonus) - 1)] * monsterExp
+        shareExp = int(shareExp / len(memberIds))
+        for entId in memberIds:
+            memVal = KBEngine.entities.get(entId)
+            if not memVal:
+                continue
+            exp = self._adjustKillMonsterExp(awardResults, shareExp, dropCtx.level, memVal.level)
+            self.addSettlementExp(awardResults, entId, exp)
+            LOG_DBG("iBag-> _splitKillExpInAoiTeam", dropCtx, entId, shareExp, memVal.level, exp)
+
     def _adjustKillMonsterExp(self, awardResults, monsterExp, monsterLevel, playerLevel):
         LOG_DBG("iBag-> _adjustKillMonsterExp", awardResults, monsterExp, monsterLevel, playerLevel)
         # 根据等级调整经验
@@ -409,10 +441,16 @@ class IBag(object):
         realExp = int(monsterExp * config.get('expprop'))
         return realExp
 
-    def preAwardOnKillMonster(self, dropCtx, dropRewardIds, shareRewards, displayModes):
-        LOG_DBG("iBag->preAwardOnKillMonster ", dropCtx, dropRewardIds, shareRewards, displayModes)
+    def preAwardOnKillMonster(self, dropCtx, dropRewardIds, shareRewards, displayModes, expShareMode=None, applyExp=True):
+        LOG_DBG("iBag->preAwardOnKillMonster ", dropCtx, dropRewardIds, shareRewards, displayModes, expShareMode, applyExp)
         awardResults = {}
-        self.processKillMonsterExp(dropCtx, awardResults)
+        if applyExp:
+            if expShareMode == gameconst.DropShareRewardType.RANDOM_ONE or expShareMode in (gameconst.DropShareRewardType.FIRST_BLOOD_2, gameconst.DropShareRewardType.FIRST_BLOOD_3):
+                self._splitKillExpInAoiTeam(dropCtx, awardResults)
+            elif expShareMode == gameconst.DropShareRewardType.SELF:
+                self._addFullKillExp(dropCtx, awardResults)
+            else:
+                self.processKillMonsterExp(dropCtx, awardResults)
         for idx in range(len(dropRewardIds)):
             dropRewardId = dropRewardIds[idx]
             shareReward = shareRewards[idx]
@@ -440,11 +478,11 @@ class IBag(object):
 
     def processKillMonsterAward(self, awardResults, dropRewardId, rewardNum, shareReward, displayMode, dropCtx):
         LOG_DBG("iBag->processKillMonsterAward ", awardResults, dropRewardId, rewardNum, shareReward, displayMode, dropCtx)
-        #首刀归属类奖励全部都会爆到地上，不进包，要做金币经验之类的，可以同时配(1,3)两种，3负责爆地上，1负责进包
-        if shareReward == gameconst.DropShareRewardType.FIRST_BLOOD:
+        # 掉地上的首刀奖励已生成采集物。进包的首刀奖励由分发时选定的玩家接收。
+        if shareReward in (gameconst.DropShareRewardType.FIRST_BLOOD, gameconst.DropShareRewardType.FIRST_BLOOD_2, gameconst.DropShareRewardType.FIRST_BLOOD_3):
             return
-        # 组队
-        if self.isInTeam(self.gbId):
+        # 小队（本服组队/团已废弃，跨服小队/团队按 inCrossTeam/inCrossRaid 区分）
+        if self.inCrossTeam():
             teammateNum = len(self.teammateEntIdInAoiSet)
             if teammateNum >= 1:
                 if shareReward == gameconst.DropShareRewardType.SELF:
@@ -464,30 +502,21 @@ class IBag(object):
                         self.addSettlementAward(awardResults, randChoiceEntId, dropRewardId, rewardNum, displayMode)
             else:
                 self.addSettlementAward(awardResults, self.id, dropRewardId, rewardNum, displayMode)
-        # 团战
-        elif self.inRaid():
-            raidmateNum = len(self.raidmateEntIdInAoiSet)
+        # 团队（对齐旧团语义：读同一 AOI 集合（raidmate 集合已随本服团废弃）；
+        # 注意旧团 ALL_TEAMMATE 不含自己，保持旧行为）
+        elif self.inCrossRaid():
+            raidmateNum = len(self.teammateEntIdInAoiSet)
             if raidmateNum >= 1:
                 if shareReward == gameconst.DropShareRewardType.SELF:
                     self.addSettlementAward(awardResults, self.id, dropRewardId, rewardNum, displayMode)
                 elif shareReward == gameconst.DropShareRewardType.ALL_TEAMMATE:
-                    # for _, _, memberVal in self.raidInfo.iterGetRaidMember():
-                    #     if not memberVal.playerBox:
-                    #         continue
-                    for memEntId in self.raidmateEntIdInAoiSet:
+                    for memEntId in self.teammateEntIdInAoiSet:
                         memVal = KBEngine.entities.get(memEntId)
                         if not memVal:
                             continue
                         self.addSettlementAward(awardResults, memEntId, dropRewardId, rewardNum, displayMode)
                 elif shareReward == gameconst.DropShareRewardType.RANDOM_ONE:
-                    # memberVals = []
-                    # for _, _, memberVal in self.raidInfo.iterGetRaidMember():
-                    #     if not memberVal.playerBox:
-                    #         continue
-                    #     memberVals.append(memberVal)
-                    # memberVal = random.choice(memberVals)
-                    # memVal = KBEngine.entities.get(memberVal.playerBox.id)
-                    allRanEntId = list(self.raidmateEntIdInAoiSet) + [self.id]
+                    allRanEntId = list(self.teammateEntIdInAoiSet) + [self.id]
                     randChoiceEntId = random.choice(allRanEntId)
                     memVal = KBEngine.entities.get(randChoiceEntId)
                     if memVal:
@@ -497,14 +526,10 @@ class IBag(object):
         else:
             self.addSettlementAward(awardResults, self.id, dropRewardId, rewardNum, displayMode)
 
-    def sendTeamMessage(self,messageId,messageArgs):
-        if self.isInTeam(self.gbId):
-            gameengine.getTeamStub(self.teamId).sendTeamMemberMsg(self.teamId,messageId,messageArgs)
-
 ################################## 采集 相关 ######################################
     @gamedecorator.crossServer
     @utils.isMyself
-    @gamedecorator.limitcall(1)
+    @gamedecorator.limitcall(0.1)
     def applyGather(self, exposed, targetId):
         LOG_INFO('applyGather', targetId)
         if not self.checkConflictState(C_C_DD.datas.clientPick):
@@ -573,6 +598,22 @@ class IBag(object):
                 if lastDecayRate > 0:
                     pickTime = math.ceil(pickTime * lastDecayRate)
         pickTime = pickTime if pickTime > 0 else 0
+        fbMode = getattr(target, 'fbShareMode', 0)
+        inProtect = False
+        if fbMode == gameconst.DropShareRewardType.FIRST_BLOOD_2:
+            fbIds = getattr(target, 'firstBloodTargetGbIds', None)
+            now = utils.curTS()
+            inProtect = fbIds is not None and self.gbId not in fbIds and now < target.fBProtectTime
+        elif fbMode == gameconst.DropShareRewardType.FIRST_BLOOD_3:
+            fbIds = getattr(target, 'firstBloodTargetGbIds', None)
+            now = utils.curTS()
+            # 弱保护期：非归属者可以拾取，读条加上 timeChange
+            inProtect = (fbIds is not None and self.gbId not in fbIds and now < target.fBProtectTime
+                         and now - target.createTime >= (getattr(target, 'FBStrongTime', 0) or 0))
+        if inProtect:
+            pickTime += pickData.get('timeChange', 0) or 0
+            if pickTime < 0:
+                pickTime = 0
         LOG_INFO('_calPickTime', pickTime)
         return pickTime
 
@@ -605,9 +646,21 @@ class IBag(object):
         if not pickData:
             return False
 
+        # BOSS 互斥组冷却：读条开始即触发（无论最终是否采集成功），重复采集刷新
+        groupId = pickData.get('mutexGroup', 0)
+        if groupId > 0:
+            self.addBossMutexCoolDown(
+                groupId,
+                formula.fetchMapId(self.spaceNo),
+                formula.parseLineNo(self.spaceNo)
+            )
+
         self.setState(gameconst.StateEnum.clientPick)
 
-        gatherTargetInfo = {'targetId': targetId, 'gatherTime': gatherTime, 'isUnstoppble': pickData['isUnstoppble'],
+        # 归属倒计时结束后按归属者打断，与头顶打断提示同一判定
+        isOwner = _target.isGatherAsOwner(self.gbId)
+        stopType = pickData.get('ownerStopType' if isOwner else 'nonownerStopType', 0)
+        gatherTargetInfo = {'targetId': targetId, 'gatherTime': gatherTime, 'stopType': stopType,
                             'collection': _target, 'collectionId': _target.collectionId,
                             'collectionType': _target.type, 'startTime': utils.curTS()}
 
@@ -627,6 +680,7 @@ class IBag(object):
         if pickData['isUnique']:
             _target.canGather = False
 
+        _target.beginGatherShow(self.id, self.gbId)
         self.allClients.onApplyGather(targetId, pickTime*1000)
         return True
 
@@ -756,8 +810,10 @@ class IBag(object):
                 self.allClients.onCancelGather(removeReason)
             targetId = gatherTarget['targetId']
             target = KBEngine.entities.get(targetId)
-            if target and pickData['isUnique']:
-                target.canGather = True
+            if target:
+                target.endGatherShow(self.id)
+                if pickData['isUnique']:
+                    target.canGather = True
 
         self.resumeAutoCombat(self.spaceNo, gameconst.SuspendAutoCombatReasonEnum.ApplyGather)
         if pickData:
@@ -779,13 +835,6 @@ class IBag(object):
         if triggerAction and callable(triggerAction):
             triggerAction(self, collectionId)
 
-        # BOSS 互斥组冷却触发
-        groupId = _pickData.get('mutexGroup', 0)
-        if groupId > 0:
-            mapId = formula.fetchMapId(self.spaceNo)
-            lineNo = formula.parseLineNo(self.spaceNo)
-            self.addBossMutexCoolDown(groupId, mapId, lineNo)
-
     def checkCollectionGatherFlag(self, eid):
         collection = KBEngine.entities.get(eid)
         if not collection or collection.isDestroyed:
@@ -805,9 +854,16 @@ class IBag(object):
         self.fbAOITimerId = 0
         unfinishList = []
         for eid, isTarget, times in self.fbAOICacheList:
+            collection = KBEngine.entities.get(eid)
+            # 结算会立刻清掉采集物，实体已销毁或不在当前场景时继续重试只会在离本后打出超时错误
+            if not collection or collection.isDestroyed or collection.spaceNo != self.spaceNo:
+                continue
             targetClient = self.clientEntity(eid)
             if not targetClient:
-                unfinishList.append((eid, isTarget, times + 1))
+                if times < 5:
+                    unfinishList.append((eid, isTarget, times + 1))
+                else:
+                    LOG_ERR("_doSyncIsFBTarget clientEntity none times >= 5", eid, isTarget, times)
                 continue
             if targetClient.syncIsFBTarget.__class__.__name__ == "ClientEntityMethod":
                 targetClient.syncIsFBTarget(isTarget)
@@ -820,6 +876,17 @@ class IBag(object):
         if unfinishList:
             self.fbAOITimerId = self.addTimerCB(0.5, '_doSyncIsFBTarget', (), gametimer.TIMER_TAG_DO_SYNC_IS_FB_TARGET)
 
+    def checkDailyGatherLimit(self, *args):
+        LOG_DBG("checkDailyGatherLimit", *args)
+        return CollectionCheckContext.CollectioncheckDailyGatherLimit(*args)
+    
+    def checkDailyGatherContinuousLimit(self, collectionId):
+        LOG_DBG("checkDailyGatherContinuousLimit", collectionId)
+        pickData = NPD.datas[collectionId]
+        collType = pickData['type']
+        if collType in (gameconst.CollectionType.LIGHT_PILLAR, ):
+            return not self.hasState(gameconst.StateEnum.clientPick)
+        return True
     ################################## 采集 end #########################################
 
     def useItemRandRewardPool(self, boxItemId, poolId, opUUID, ctx):
@@ -1194,4 +1261,5 @@ class IBag(object):
         awardCtx.addContextVar('isBigMonthCardExpired', self.isBigMonthCardExpiredCell())
         awardCtx.addContextVar('avatarScoreRank', self.avatarScoreRankCell)
         awardCtx.addContextVar('isCrossServer', self.isCrossServer)
+        awardCtx.addContextVar('isPromoter', self.checkPromoterCD())
         return awardCtx

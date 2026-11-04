@@ -55,7 +55,7 @@ datas = _tools.RODict({
         "ID": 102,
         "value": "祖珂祭坛",
         "pareActivity": 32000004,
-        "minScore": 25000,
+        "minScore": 27500,
         "scene": 0,
         "minLevel": 40,
         "enterDunID": 2102,
@@ -67,7 +67,7 @@ datas = _tools.RODict({
         "ID": 103,
         "value": "亡者之村",
         "pareActivity": 32000004,
-        "minScore": 15000,
+        "minScore": 17500,
         "scene": 0,
         "minLevel": 30,
         "enterDunID": 2104,
@@ -77,12 +77,24 @@ datas = _tools.RODict({
     }),
     104: _tools.RODict({
         "ID": 104,
-        "value": "万毒虫窟",
+        "value": "冰蜈蚣巢穴",
         "pareActivity": 32000004,
-        "minScore": 35000,
+        "minScore": 37500,
         "scene": 0,
         "minLevel": 50,
         "enterDunID": 2103,
+        "isCrossServer": 1,
+        "maxPlayer": 0,
+        "crossMaxPlayer": 5
+    }),
+    105: _tools.RODict({
+        "ID": 105,
+        "value": "锈时回廊",
+        "pareActivity": 32000004,
+        "minScore": 50000,
+        "scene": 0,
+        "minLevel": 60,
+        "enterDunID": 2105,
         "isCrossServer": 1,
         "maxPlayer": 0,
         "crossMaxPlayer": 5
@@ -91,9 +103,9 @@ datas = _tools.RODict({
         "ID": 151,
         "value": "弃天战狂",
         "pareActivity": 32000001,
-        "minScore": 10000,
+        "minScore": 12500,
         "scene": 0,
-        "minLevel": 25,
+        "minLevel": 24,
         "enterDunID": 2204,
         "isCrossServer": 0,
         "maxPlayer": 10,
@@ -103,25 +115,25 @@ datas = _tools.RODict({
         "ID": 152,
         "value": "阴阳鬼判",
         "pareActivity": 32000001,
-        "minScore": 20000,
+        "minScore": 22500,
         "scene": 0,
         "minLevel": 35,
         "enterDunID": 2201,
         "isCrossServer": 0,
-        "maxPlayer": 15,
-        "crossMaxPlayer": 15
+        "maxPlayer": 10,
+        "crossMaxPlayer": 10
     }),
     153: _tools.RODict({
         "ID": 153,
         "value": "双生海妖",
         "pareActivity": 32000001,
-        "minScore": 30000,
+        "minScore": 32500,
         "scene": 0,
         "minLevel": 45,
         "enterDunID": 2202,
         "isCrossServer": 0,
-        "maxPlayer": 15,
-        "crossMaxPlayer": 15
+        "maxPlayer": 10,
+        "crossMaxPlayer": 10
     }),
     154: _tools.RODict({
         "ID": 154,
@@ -132,8 +144,8 @@ datas = _tools.RODict({
         "minLevel": 55,
         "enterDunID": 2203,
         "isCrossServer": 1,
-        "maxPlayer": 15,
-        "crossMaxPlayer": 15
+        "maxPlayer": 10,
+        "crossMaxPlayer": 10
     })
 })
 minKey = 1

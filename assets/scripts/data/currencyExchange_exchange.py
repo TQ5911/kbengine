@@ -44,7 +44,7 @@ datas = _tools.RODict({
         "currencyTo": 30000013,
         "exchangeType": 0,
         "exchangeRate": 100,
-        "timeLimit": 10000,
+        "timeLimit": 1000,
         "dailyLimit": -1,
         "isMonthCard": 0
     }),
@@ -55,7 +55,7 @@ datas = _tools.RODict({
         "currencyTo": 30000013,
         "exchangeType": 0,
         "exchangeRate": 100,
-        "timeLimit": 10000,
+        "timeLimit": 1000,
         "dailyLimit": -1,
         "isMonthCard": 0
     }),
@@ -113,7 +113,18 @@ datas = _tools.RODict({
         "timeLimit": 10000,
         "dailyLimit": -1,
         "isMonthCard": 0
+    }),
+    10: _tools.RODict({
+        "ID": 10,
+        "typeID": 4,
+        "currencyFrom": 30000001,
+        "currencyTo": 30000563,
+        "exchangeType": 1,
+        "exchangeRate": 100,
+        "timeLimit": 100,
+        "dailyLimit": -1,
+        "isMonthCard": 0
     })
 })
 minKey = 1
-maxKey = 9
+maxKey = 10

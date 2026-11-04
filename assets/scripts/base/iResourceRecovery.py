@@ -12,6 +12,7 @@ import gameconst
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import itemData_itemData as ID_IDD
 import activityControl_config as AC_CD
+import activityControl_activityTicket as AC_AT
 import gamedecorator
 import LogTrackingMgr
 import visible_visible as V_VD
@@ -260,7 +261,7 @@ class IResourceRecovery(object):
 
     @gamedecorator.limitcall(1)
     @gamedecorator.checkGameconfigEnable('welfare_resourceRecovery')
-    def reqFreeTicketRecovery(self, exposed, subType, num, mainType):
+    def reqFreeTicketRecovery(self, exposed, subType, num, mainType, isExchange=False):
         LOG_INFO("IResourceRecovery::reqFreeTicketRecovery", num, mainType, subType)
         if mainType not in gameconst.RecoveryTicketType.VALID_TYPE:
             LOG_ERR("IResourceRecovery::reqFreeTicketRecovery error mainType", mainType)
@@ -283,7 +284,7 @@ class IResourceRecovery(object):
             return
         
         addNum = num - leftNum
-        res = self.canDeductWealth(deductWealthVal)
+        res = self.canDeductWealth(deductWealthVal, allowMoneyCoverBindMoney=isExchange)
         if not res:
             LOG_INFO("IResourceRecovery::reqFreeTicketRecovery cannot deductWealth", costInfo, res())
             if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
@@ -293,7 +294,7 @@ class IResourceRecovery(object):
         
         detail = gameclass.AwardDetailCls()
         opUUID = KBEngine.genUUID64()
-        self.deductWealth(AAC_AACDD.datas.BONUS_SRC_RECOVERY_TICKET, deductWealthVal, opUUID, detail)
+        self.deductWealth(AAC_AACDD.datas.BONUS_SRC_RECOVERY_TICKET, deductWealthVal, opUUID, detail, allowMoneyCoverBindMoney=isExchange)
         LOG_DBG("IResourceRecovery::reqFreeTicketRecovery deductWealth", costInfo)
 
         clientDataList = []
@@ -314,7 +315,18 @@ class IResourceRecovery(object):
                 break
 
         if subType in (gameconst.RecoveryTicketSubType.CRUSADE, gameconst.RecoveryTicketSubType.CHIEF):
-            self.subType2FreeTicketInfo[subType][gameconst.SubType2TicketInfoIdx.MODIFY_TICKET_NUM_FUNC](self)(addNum, addNum, {}, freeAddNum, paidAddNum, gameconst.addTicketTimesType.RECOVERY, False)
+            # 讨伐/首领线：opUUID 透传给门票获得埋点（Dungeon_Ticket_Buy 的 op_uuid，
+            # 同一操作共用一个）
+            self.subType2FreeTicketInfo[subType][gameconst.SubType2TicketInfoIdx.MODIFY_TICKET_NUM_FUNC](self)(
+                addNum,
+                addNum,
+                {},
+                freeAddNum,
+                paidAddNum,
+                gameconst.addTicketTimesType.RECOVERY,
+                False,
+                opUUID=opUUID
+            )
         else:
             self.subType2FreeTicketInfo[subType][gameconst.SubType2TicketInfoIdx.MODIFY_TICKET_NUM_FUNC](self)(addNum, freeAddNum, paidAddNum, AAC_AACDD.datas.BONUS_SRC_RECOVERY_TICKET, opUUID, gameconst.addTicketTimesType.RECOVERY)
 
@@ -326,11 +338,12 @@ class IResourceRecovery(object):
             addNum,
             durationCostList,
             mainType,
+            opUUID,
         )
 
     @gamedecorator.limitcall(1)
     @gamedecorator.checkGameconfigEnable('welfare_resourceRecovery')
-    def reqFreeTicketOneClickRecovery(self, exposed, rType, mainType):
+    def reqFreeTicketOneClickRecovery(self, exposed, rType, mainType, isExchange=False):
         LOG_INFO("IResourceRecovery::reqFreeTicketOneClickRecovery", rType, mainType)
         if mainType not in gameconst.RecoveryTicketType.VALID_TYPE:
             LOG_ERR("IResourceRecovery::reqFreeTicketOneClickRecovery error mainType", mainType)
@@ -365,7 +378,7 @@ class IResourceRecovery(object):
             self.client.onFreeTicketOneClickRecoveryInfo([])
             return
 
-        res = self.canDeductWealth(deductWealthVal)
+        res = self.canDeductWealth(deductWealthVal, allowMoneyCoverBindMoney=isExchange)
         if not res:
             LOG_INFO("IResourceRecovery::reqFreeTicketOneClickRecovery cannot deductWealth", costInfoDict, res())
             if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
@@ -375,7 +388,7 @@ class IResourceRecovery(object):
 
         detail = gameclass.AwardDetailCls()
         opUUID = KBEngine.genUUID64()
-        self.deductWealth(AAC_AACDD.datas.BONUS_SRC_RECOVERY_TICKET, deductWealthVal, opUUID, detail)
+        self.deductWealth(AAC_AACDD.datas.BONUS_SRC_RECOVERY_TICKET, deductWealthVal, opUUID, detail, allowMoneyCoverBindMoney=isExchange)
         LOG_DBG("IResourceRecovery::reqFreeTicketOneClickRecovery deductWealth", costInfoDict)
 
         clientDataList = []
@@ -418,3 +431,74 @@ class IResourceRecovery(object):
         LOG_INFO("IResourceRecovery::onSendUseCoinTimesTicketInfo")
         for subType in gameconst.RecoveryTicketSubType.VALID_SUB_TYPE:
             self.subType2FreeTicketInfo[subType][gameconst.SubType2TicketInfoIdx.SEND_USE_COIN_TICKET_INFO_FUNC](self)()
+
+    # ------------------------------------------------------------------
+    # GM 副本次数设置（dungeonType 即 gameconst.RecoveryTicketSubType：
+    # 1混沌回廊 2天劫崖 3归墟 4魔物巢穴 5首领巢穴）
+    # ------------------------------------------------------------------
+    GM_DUNGEON_TICKET_ATTRS = {
+        gameconst.RecoveryTicketSubType.CUBE: ('leftCubeTimes', 'paidCubeTimes', 'cubeUseCoinTimes'),
+        gameconst.RecoveryTicketSubType.WONDER_LAND: ('wonderLandTicket', 'paidWonderLandTicket', 'wonderLandAddTimes'),
+        gameconst.RecoveryTicketSubType.ABYSS: ('abyssTicket', 'paidAbyssTicket', 'abyssAddTimes'),
+    }
+    GM_DUNGEON_TICKET_MAX = 1000000000
+
+    def _gmGetDungeonPlayModeInfo(self, subType):
+        if subType == gameconst.RecoveryTicketSubType.CRUSADE:
+            return self.crusadeInfo
+        if subType == gameconst.RecoveryTicketSubType.CHIEF:
+            return self.chiefInfo
+        return None
+
+    def gmGetDungeonTicketInfo(self, subType):
+        """GM 查询指定副本的剩余进入次数与当日可购余量。"""
+        playModeInfo = self._gmGetDungeonPlayModeInfo(subType)
+        if playModeInfo:
+            return {
+                'freeNum': playModeInfo.leftDailyRewardNum,
+                'paidNum': playModeInfo.rewardCoinNumber,
+                'itemNum': playModeInfo.rewardItemNumber,
+                'commonNum': playModeInfo.rewardCommonNumber,
+                'buyLeft': playModeInfo.useCoinAddRewardNum,
+                'buyLimit': playModeInfo.rewardNumCoinDailyLimit,
+            }
+        freeAttr, paidAttr, buyAttr = self.GM_DUNGEON_TICKET_ATTRS[subType]
+        return {
+            'freeNum': getattr(self, freeAttr),
+            'paidNum': getattr(self, paidAttr),
+            'buyLeft': getattr(self, buyAttr),
+            'buyLimit': len(AC_AT.ticketIdDic[subType]),
+        }
+
+    def gmSetDungeonTicket(self, subType, freeNum, paidNum):
+        """GM 设置副本剩余进入次数。freeNum/paidNum 传 -1 表示不修改。
+
+        讨伐(魔物巢穴/首领巢穴)按分桶语义: freeNum=默认(免费)桶, paidNum=金币购买桶,
+        道具/通用桶不动, rewardNumber 重算保持"总次数=各桶之和"不变量(deductRewardNum 依赖)。
+        """
+        if subType not in gameconst.RecoveryTicketSubType.VALID_SUB_TYPE:
+            return False, '副本类型不合法', None
+        if self.isCrossServerInLocalServer:
+            return False, '玩家在跨服中, 本服直改会被跨服同步覆盖, 请回本服后执行', None
+
+        oldInfo = self.gmGetDungeonTicketInfo(subType)
+        playModeInfo = self._gmGetDungeonPlayModeInfo(subType)
+        if playModeInfo:
+            defaultNum = freeNum if freeNum >= 0 else oldInfo['freeNum']
+            coinNum = paidNum if paidNum >= 0 else playModeInfo.rewardCoinNumber
+            playModeInfo.rewardCoinNumber = coinNum
+            playModeInfo.rewardNumber = defaultNum + coinNum + playModeInfo.rewardItemNumber + playModeInfo.rewardCommonNumber
+            if subType == gameconst.RecoveryTicketSubType.CRUSADE:
+                self.crusadeInfo = self.crusadeInfo
+            else:
+                self.chiefInfo = self.chiefInfo
+        else:
+            freeAttr, paidAttr, _ = self.GM_DUNGEON_TICKET_ATTRS[subType]
+            if freeNum >= 0:
+                setattr(self, freeAttr, min(freeNum, self.GM_DUNGEON_TICKET_MAX))
+            if paidNum >= 0:
+                setattr(self, paidAttr, min(paidNum, self.GM_DUNGEON_TICKET_MAX))
+
+        newInfo = self.gmGetDungeonTicketInfo(subType)
+        LOG_INFO('gmSetDungeonTicket', subType, freeNum, paidNum, oldInfo, newInfo)
+        return True, '', newInfo

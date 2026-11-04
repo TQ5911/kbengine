@@ -18,10 +18,12 @@
     <BaseMethods>
         <reqBuyGiftStore> <Exposed/>
             <Arg>           UINT32          </Arg>   <!-- storeId -->
+            <Arg>           BOOL            </Arg>   <!-- isExchange -->
         </reqBuyGiftStore>
 
         <reqBuyMountStore> <Exposed/>
             <Arg>           UINT32          </Arg>   <!-- storeId -->
+            <Arg>           BOOL            </Arg>   <!-- isExchange -->
         </reqBuyMountStore>
 
         <reqGiftStoreLimit> <Exposed/>

@@ -1133,7 +1133,7 @@ datas = _tools.RODict({
     }),
     "InitialAmount": _tools.RODict({
         "ID": "InitialAmount",
-        "value": 100,
+        "value": 1000,
     }),
     "InitialTopAmount": _tools.RODict({
         "ID": "InitialTopAmount",
@@ -1478,5 +1478,13 @@ datas = _tools.RODict({
     "triggerRadialMenu": _tools.RODict({
         "ID": "triggerRadialMenu",
         "value": 0.4,
+    }),
+    "autoFightCounterRange": _tools.RODict({
+        "ID": "autoFightCounterRange",
+        "value": (20, 80),
+    }),
+    "TaskNotEnabled": _tools.RODict({
+        "ID": "TaskNotEnabled",
+        "value": 54990151,
     })
 })

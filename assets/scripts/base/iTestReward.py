@@ -276,7 +276,13 @@ class ITestReward(object):
         infoList = []
         for rewardVO in self._testRewardCache.get(TEST_REWARD_TYPE_LEVEL_RANK, []):
             info, rewardItem = self.buildTestRewardBaseInfo(TEST_REWARD_TYPE_LEVEL_RANK, rewardVO)
-            info['ranking'] = int(rewardItem.get('ranking', 0))
+            # 没有奖励资格的后台也会发，这里要过滤一下
+            ranking = rewardItem.get('ranking', 0)
+            if not ranking:
+                LOG_INFO('buildLevelRankInfoList not win guild:', rewardItem)
+                continue
+
+            info['ranking'] = int(ranking)
             info['awards'] = self.calcTestRewardAwards(TEST_REWARD_TYPE_LEVEL_RANK, rewardItem)
             infoList.append(info)
         return infoList
@@ -286,7 +292,13 @@ class ITestReward(object):
         infoList = []
         for rewardVO in self._testRewardCache.get(TEST_REWARD_TYPE_RECHARGE, []):
             info, rewardItem = self.buildTestRewardBaseInfo(TEST_REWARD_TYPE_RECHARGE, rewardVO)
-            info['rechargeAmount'] = float(rewardItem.get('rechargeAmount') or 0)
+            # 没有奖励资格的后台也会发，这里要过滤一下
+            rechargeAmount = rewardItem.get('rechargeAmount', 0)
+            if not rechargeAmount:
+                LOG_INFO('buildRechargeInfoList not win guild:', rewardItem)
+                continue
+
+            info['rechargeAmount'] = float(rechargeAmount)
             info['awards'] = self.calcTestRewardAwards(TEST_REWARD_TYPE_RECHARGE, rewardItem)
             infoList.append(info)
         return infoList
@@ -296,11 +308,13 @@ class ITestReward(object):
         infoList = []
         for rewardVO in self._testRewardCache.get(TEST_REWARD_TYPE_MINE_GUILD, []):
             info, rewardItem = self.buildTestRewardBaseInfo(TEST_REWARD_TYPE_MINE_GUILD, rewardVO)
+            # 没有奖励资格的后台也会发，这里要过滤一下
             guildTitleId = rewardItem.get('guildTitleId', 0)
             if not guildTitleId:
                 LOG_INFO('buildMineGuildInfoList not win guild:', rewardItem)
                 continue
-            info['guildJob'] = int(rewardItem.get('guildTitleId', 0))
+
+            info['guildJob'] = int(guildTitleId)
             info['guildName'] = str(rewardItem.get('guildName', ''))
             info['awards'] = self.calcTestRewardAwards(TEST_REWARD_TYPE_MINE_GUILD, rewardItem)
             infoList.append(info)
@@ -311,7 +325,13 @@ class ITestReward(object):
         infoList = []
         for rewardVO in self._testRewardCache.get(TEST_REWARD_TYPE_POWER_RANK, []):
             info, rewardItem = self.buildTestRewardBaseInfo(TEST_REWARD_TYPE_POWER_RANK, rewardVO)
-            info['ranking'] = int(rewardItem.get('ranking', 0))
+            # 没有奖励资格的后台也会发，这里要过滤一下
+            ranking = rewardItem.get('ranking', 0)
+            if not ranking:
+                LOG_INFO('buildPowerRankInfoList not win guild:', rewardItem)
+                continue
+
+            info['ranking'] = int(ranking)
             info['awards'] = self.calcTestRewardAwards(TEST_REWARD_TYPE_POWER_RANK, rewardItem)
             infoList.append(info)
         return infoList

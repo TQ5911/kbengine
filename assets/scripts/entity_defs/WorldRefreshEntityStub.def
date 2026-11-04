@@ -40,6 +40,18 @@
             <Flags>                 BASE            </Flags>
             <Default>               0               </Default>
         </timeLimitedGroupEntityTimerId>
+
+        <refreshRateOfTimeTimerId>
+            <Type>                  TIMER_ID        </Type>
+            <Flags>                 BASE            </Flags>
+            <Default>               0               </Default>
+        </refreshRateOfTimeTimerId>
+
+        <missedSpaces>
+            <Type>                  PY_SET          </Type>
+            <Flags>                 BASE            </Flags>
+        </missedSpaces>
+
     </Properties>
     
     <BaseMethods>
@@ -69,5 +81,16 @@
         <resumeTimeLimitedGroupEntityRefresh>
             <Arg>       MAP_ID          </Arg>
         </resumeTimeLimitedGroupEntityRefresh>
+
+        <onSpaceCellAppDeath>
+            <Arg>       SPACE_NO        </Arg>
+        </onSpaceCellAppDeath>
+
+        <onSpaceCellAppRelive>
+            <Arg>       SPACE_NO        </Arg>
+        </onSpaceCellAppRelive>
+
+        <syncRefreshRateOfTime>
+        </syncRefreshRateOfTime>
     </BaseMethods>
 </root>

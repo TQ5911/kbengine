@@ -83,7 +83,7 @@ func TestEntityMergerGuildEndToEnd(t *testing.T) {
 		t.Fatalf("buildRootPipeline: %v", err)
 	}
 
-	subPipes, err := m.buildSubPipelines(context.Background(), spec.Subs, rootIDMap)
+	subPipes, err := m.buildSubPipelines(context.Background(), spec.Subs, spec.Root.Name, rootIDMap)
 	if err != nil {
 		t.Fatalf("buildSubPipelines: %v", err)
 	}

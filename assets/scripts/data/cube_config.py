@@ -15,22 +15,6 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    "dailyCubeNum": _tools.RODict({
-        "ID": "dailyCubeNum",
-        "value": 1,
-    }),
-    "cubeNumCoin": _tools.RODict({
-        "ID": "cubeNumCoin",
-        "value": 100,
-    }),
-    "cubeNumCoinDailyLimit": _tools.RODict({
-        "ID": "cubeNumCoinDailyLimit",
-        "value": 2,
-    }),
-    "cubeNumCoinCost": _tools.RODict({
-        "ID": "cubeNumCoinCost",
-        "value": ((1, 30000021, 50), (2, 30000001, 100)),
-    }),
     "cubeNumItem": _tools.RODict({
         "ID": "cubeNumItem",
         "value": 30000222,

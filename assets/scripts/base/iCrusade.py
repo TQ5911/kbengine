@@ -76,9 +76,9 @@ class ICrusade(object):
         self._useCoinToIncreaseCrusadeRewardNumber(1, {})
 
     @gamedecorator.checkGameconfigEnable('teamDungeon')
-    def increaseCrusadeRewardNumber(self, exposed, coinNum, itemNum):
+    def increaseCrusadeRewardNumber(self, exposed, coinNum, itemNum, isExchange):
         LOG_INFO('increaseCrusadeRewardNumber::', coinNum, itemNum)
-        retCoin, coinAddCount = self._useCoinToIncreaseCrusadeRewardNumber(coinNum, {}, needMsg = False)
+        retCoin, coinAddCount = self._useCoinToIncreaseCrusadeRewardNumber(coinNum, {}, needMsg = False, isExchange=isExchange)
         retItem = self._useItemToIncreaseCrusadeRewardNumber(itemNum, {}, needMsg = False)
         if retCoin or retItem:
             totalNum = 0
@@ -95,9 +95,10 @@ class ICrusade(object):
         self._useItemToIncreaseCrusadeRewardNumber(useNum, {})
 
     @gamedecorator.checkGameconfigEnable('teamDungeon')
-    def useCoinToIncreaseCrusadeRewardNumber(self, exposed, useNum):
+    def useCoinToIncreaseCrusadeRewardNumber(self, exposed, useNum, isExchange=False):
         LOG_INFO('useCoinToIncreaseCrusadeRewardNumber::', useNum)
-        self._useCoinToIncreaseCrusadeRewardNumber(useNum, {})
+
+        self._useCoinToIncreaseCrusadeRewardNumber(useNum, {}, isExchange=isExchange)
 
     def _useItemToIncreaseCrusadeRewardNumber(self, itemNum, extra, needMsg = True):
         itemId = int(TDC_CFG.datas['rewardNumItem']['value'])
@@ -118,30 +119,51 @@ class ICrusade(object):
         detail = gameclass.AwardDetailCls(itemId=itemId, itemNum=itemNum)
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
 
-        self.onUseItemToIncreaseCrusadeRewardNumber(itemId, itemNum, extra, needMsg)
+        self.onUseItemToIncreaseCrusadeRewardNumber(itemId, itemNum, extra, needMsg, opUUID=opUUID)
         return True
     
-    def onUseItemToIncreaseCrusadeRewardNumber(self, itemId, itemNum, extra, needMsg = True):
+    def onUseItemToIncreaseCrusadeRewardNumber(self, itemId, itemNum, extra, needMsg = True, opUUID = 0):
         LOG_INFO('onUseItemToIncreaseCrusadeRewardNumber::', itemId, itemNum, extra)
         self.crusadeInfo.addRewardNumByUseSpecialItem(itemNum)
         self.crusadeInfo = self.crusadeInfo
+        # 获得门票埋点：op_uuid 关联扣道具的 opUUID
+        LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Buy(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            opUUID,
+            gameconst.DungeonTicketBuySrc.ITEM_BUY,
+            gameconst.DungeonTicketType.ITEM,
+            itemNum,
+            gameconst.DungeonPlayModeEnum.CRUSADE
+        )
         if needMsg:
             self.onMessagePre(int(TDC_CFG.datas["useShanglingdingMsg"]["value"]), [str(itemNum)])
 
-    def _useCoinToIncreaseCrusadeRewardNumber(self, useNum, extra, needMsg = True):
+    def _useCoinToIncreaseCrusadeRewardNumber(self, useNum, extra, needMsg = True, isExchange=False):
         LOG_INFO('_useCoinToIncreaseCrusadeRewardNumber::', useNum, extra, needMsg)
         if useNum <= 0:
             return False, 0
         addRewardNum = 0
         freeAddNum = 0
         paidAddNum = 0
+        # 一次购买操作全程共用同一 opUUID 与 srcType（埋点 op_uuid 口径）
+        opUUID = KBEngine.genUUID64()
+        srcType = AAC_AACDD.datas.BONUS_SRC_TEAMDUN_ADD_REWARD
         for _ in range(0, useNum):
             if not self.crusadeInfo.isCanAddRewardByCoin(1):
-                LOG_ERR('_useCoinToIncreaseCrusadeRewardNumber:: rewardNumber not enough')
+                LOG_ERR('useCoinToIncreaseCrusadeRewardNumber:: rewardNumber not enough')
                 break
             
             itemId, itemNum, discountType = self.crusadeCoinTicketData.getTicketInfo(self.crusadeInfo.useCoinAddRewardNum)
             if not itemId:
+                break
+
+            deductWealthVal = dropAward.DeductWealthVal()
+            deductWealthVal.addWealthByItemId(itemId, itemNum)
+
+            res = self.canDeductWealth(deductWealthVal, allowMoneyCoverBindMoney=isExchange)
+            if not res:
+                LOG_WARN('_useCoinToIncreaseCrusadeRewardNumber::check failed', res())
                 break
 
             addRewardNum += 1
@@ -150,25 +172,24 @@ class ICrusade(object):
             else:
                 freeAddNum += 1
 
-            deductWealthVal = dropAward.DeductWealthVal()
-            deductWealthVal.addWealthByItemId(itemId, itemNum)
-
-            res = self.canDeductWealth(deductWealthVal)
-            if not res:
-                LOG_WARN('_useCoinToIncreaseCrusadeRewardNumber::check failed', res())
-                break
-
-            opUUID = KBEngine.genUUID64()
-            srcType = AAC_AACDD.datas.BONUS_SRC_TEAMDUN_ADD_REWARD
             detail = gameclass.AwardDetailCls()
-            self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+            self.deductWealth(srcType, deductWealthVal, opUUID, detail, allowMoneyCoverBindMoney=isExchange)
             self.crusadeInfo.deductUsedCoinAddRewardNum(1)
 
         if addRewardNum > 0:
-            self.onUseCoinToIncreaseCrusadeRewardNumber(useNum, addRewardNum, extra, freeAddNum, paidAddNum, gameconst.addTicketTimesType.COIN, needMsg)
+            self.onUseCoinToIncreaseCrusadeRewardNumber(
+                useNum,
+                addRewardNum,
+                extra,
+                freeAddNum,
+                paidAddNum,
+                gameconst.addTicketTimesType.COIN,
+                needMsg,
+                opUUID=opUUID
+            )
         return True, addRewardNum
     
-    def onUseCoinToIncreaseCrusadeRewardNumber(self, useNum, addRewardNum, extra, freeAddNum, paidAddNum, attType, needMsg = True):
+    def onUseCoinToIncreaseCrusadeRewardNumber(self, useNum, addRewardNum, extra, freeAddNum, paidAddNum, attType, needMsg = True, opUUID = 0):
         LOG_INFO('onUseCoinToIncreaseCrusadeRewardNumber::', useNum, addRewardNum, extra, freeAddNum, paidAddNum, attType)
         if freeAddNum:
             if attType == gameconst.addTicketTimesType.RECOVERY:
@@ -178,43 +199,38 @@ class ICrusade(object):
         if paidAddNum:
             self.crusadeInfo.addRewardNumByUseCoin(paidAddNum)
         self.crusadeInfo = self.crusadeInfo
+        # 获得门票埋点：按桶拆分上报，同一操作共用 opUUID
+        if attType == gameconst.addTicketTimesType.COIN:
+            if freeAddNum:
+                LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Buy(
+                    self.gbID,
+                    self.accountEntity.clientDistinctId,
+                    opUUID,
+                    gameconst.DungeonTicketBuySrc.COIN_BUY,
+                    gameconst.DungeonTicketType.NORMAL,
+                    freeAddNum,
+                    gameconst.DungeonPlayModeEnum.CRUSADE
+                )
+            if paidAddNum:
+                LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Buy(
+                    self.gbID,
+                    self.accountEntity.clientDistinctId,
+                    opUUID,
+                    gameconst.DungeonTicketBuySrc.COIN_BUY,
+                    gameconst.DungeonTicketType.GOLD,
+                    paidAddNum,
+                    gameconst.DungeonPlayModeEnum.CRUSADE
+                )
+        elif attType == gameconst.addTicketTimesType.RECOVERY:
+            if freeAddNum:
+                LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Buy(
+                    self.gbID,
+                    self.accountEntity.clientDistinctId,
+                    opUUID,
+                    gameconst.DungeonTicketBuySrc.RECOVERY,
+                    gameconst.DungeonTicketType.COMMON,
+                    freeAddNum,
+                    gameconst.DungeonPlayModeEnum.CRUSADE
+                )
         if needMsg:
             self.onMessagePre(int(TDC_CFG.datas["useShanglingdingMsg"]["value"]), [str(addRewardNum)])
-
-    def onEnterCrusadeDungeon(self, spaceUUID, spaceNo, dungeonNo, spaceMgrBox, extra):
-        LOG_INFO('onEnterCrusadeDungeon::', spaceUUID, spaceNo, dungeonNo, spaceMgrBox, extra)
-        self.onEnterDungeon(spaceNo, spaceMgrBox, extra)
-        self.activityComplete(TDC_CFG.datas['teamDunChallengeActID']['value'])
-
-        LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Consume(
-            self.gbID,
-            self.accountEntity.clientDistinctId, 
-            extra.get('teamUUID'),
-            gameconst.DungeonPlayModeEnum.CRUSADE,
-            dungeonNo,
-            spaceNo, 
-            spaceUUID,
-            self.crusadeInfo.getUsedTicketType(),
-            extra.get('joinType'),
-            extra.get('totalNum'),
-            self.gbID,
-            self.getTotalScore(),
-            self.getRoleCacheAttr('level')
-        )
-        
-        LogTrackingMgr.LogTrackingMgr.Dungeon_Entrance(
-                self.gbID,
-                self.accountEntity.clientDistinctId,
-                extra.get('teamUUID'),
-                gameconst.DungeonPlayModeEnum.CRUSADE,
-                dungeonNo,
-                spaceUUID,
-                spaceNo,
-                self.gbID,
-                self.crusadeInfo.getUsedTicketType(),
-                extra.get('joinType'),
-                self.getTotalScore(),
-                self.getRoleCacheAttr('level'),
-                self.getRoleCacheAttr('name'),
-            )
-        LOG_INFO('in onEnterCrusadeDungeon::', spaceNo, dungeonNo, spaceMgrBox, extra)

@@ -82,6 +82,9 @@ class BigBitVal(userType.UserSingleType):
         """
         self.bset(state, False)
 
+    def toClientDatas(self):
+        return self.stateList
+
     def toBigBitSavedDict(self):
         return {
             'stateList': self.stateList

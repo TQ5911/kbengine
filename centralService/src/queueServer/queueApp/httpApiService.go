@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gomodule/redigo/redis"
 	"github.com/gogf/greuse"
+	"github.com/gomodule/redigo/redis"
 )
 
 type HttpService struct {
@@ -106,9 +106,9 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 		return
 	}
 	startTime := time.Now()
-	defer func(){
+	defer func() {
 		conn.Close()
-		if time.Since(startTime) > 500 * time.Millisecond {
+		if time.Since(startTime) > 500*time.Millisecond {
 			appLog.Error("handleStartQueue cost over 500ms", accountName)
 		}
 	}()
@@ -190,6 +190,14 @@ func (self *HttpService) handleStartQueue(w http.ResponseWriter, r *http.Request
 			self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0, nil)
 			return
 		}
+	}
+
+	//排队凭证放行：排队通过后掉线重登的账号，在凭证有效期内直接放行
+	passServerId, err := redis.Int(conn.Do("get", "queue:pass:"+accountNameStr))
+	if err == nil && passServerId == int(serverId) {
+		appLog.Info("handleStartQueue has valid queue pass, no need queue", accountNameStr, serverId)
+		self.doQueueReply(w, 0, uint8(clientService.QueueReply_QUEUE_SUCCESS), serverId, serverHost, 0, 0, nil)
+		return
 	}
 
 	hasGetTokenNoUse := false

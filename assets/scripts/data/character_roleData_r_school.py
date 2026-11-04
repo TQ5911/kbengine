@@ -17,10 +17,16 @@ import crontab
 datas = _tools.RODict({
     1001:_tools.ROList([
     _tools.RODict({
+        "sex":1,
+    }),
+    _tools.RODict({
         "sex":2,
     }),
     ]),
     1002:_tools.ROList([
+    _tools.RODict({
+        "sex":1,
+    }),
     _tools.RODict({
         "sex":2,
     }),
@@ -28,6 +34,9 @@ datas = _tools.RODict({
     1003:_tools.ROList([
     _tools.RODict({
         "sex":1,
+    }),
+    _tools.RODict({
+        "sex":2,
     }),
     ]),
 })

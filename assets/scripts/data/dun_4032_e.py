@@ -30,7 +30,7 @@ datas ={
       40320010
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "33",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -67,7 +67,7 @@ datas ={
       40320011
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "33",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -99,7 +99,7 @@ datas ={
       40320026
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "33",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -143,7 +143,7 @@ datas ={
       40320023
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "33",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -179,7 +179,7 @@ datas ={
       40320027
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "33",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -223,7 +223,7 @@ datas ={
       40320036
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "33",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -259,7 +259,7 @@ datas ={
       40320037
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "33",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -298,7 +298,6 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1070,
         1069,
         1079
       ]
@@ -340,10 +339,10 @@ datas ={
     "checkOnce": 0,
     "transition": {
       "finished": [
-        1049,
         1064,
         1068,
-        1078
+        1078,
+        1070
       ]
     }
   },
@@ -407,7 +406,7 @@ datas ={
       40320001
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "33",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

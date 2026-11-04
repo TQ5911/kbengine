@@ -15,25 +15,9 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    "dailyRewardNum": _tools.RODict({
-        "ID": "dailyRewardNum",
-        "value": 1,
-    }),
-    "rewardNumCoin": _tools.RODict({
-        "ID": "rewardNumCoin",
-        "value": 100,
-    }),
     "rewardNumItem": _tools.RODict({
         "ID": "rewardNumItem",
         "value": 30000309,
-    }),
-    "rewardNumCoinDailyLimit": _tools.RODict({
-        "ID": "rewardNumCoinDailyLimit",
-        "value": 1,
-    }),
-    "rewardNumCoinCost": _tools.RODict({
-        "ID": "rewardNumCoinCost",
-        "value": ((1, 30000021, 50),),
     }),
     "raidBossChallengeActID": _tools.RODict({
         "ID": "raidBossChallengeActID",

@@ -1037,7 +1037,7 @@ func (am *AuctionMgr) loadAuctionItemRecordsFromDB(offset int) ([]*AuctionItemAv
 		// 这里先去查找兑换的合服信息
 		serverId := common.GetGameServerMergeRoot(auctionItemRecord.serverId)
 		// 不是本组的，过滤掉
-		if !common.CheckServerIdInGroup(am.app.groupId, serverId) {
+		if !common.CheckServerIdInGroupWithSubGroup(am.app.groupId, am.app.subGroupId, serverId) {
 			continue
 		}
 
@@ -1106,7 +1106,7 @@ func (am *AuctionMgr) loadAuctionItemLastRecordsFromDB(offset int) ([]*AuctionIt
 		// 这里先去查找兑换的合服信息
 		serverId := common.GetGameServerMergeRoot(auctionIteLastPriceRecord.serverId)
 		// 不是本组的，过滤掉
-		if !common.CheckServerIdInGroup(am.app.groupId, serverId) {
+		if !common.CheckServerIdInGroupWithSubGroup(am.app.groupId, am.app.subGroupId, serverId) {
 			continue
 		}
 		auctionIteLastPriceRecord.serverId = uint32(serverId)
@@ -1156,11 +1156,13 @@ func (am *AuctionMgr) loadAuctionItemsFromDB(lastId int) ([]*AuctionItem, int, e
 		}
 
 		// 这里先去查找兑换的合服信息
-		serverId := common.GetGameServerMergeRoot(ai.ServerId)
+		dbServerId := ai.ServerId
+		serverId := common.GetGameServerMergeRoot(dbServerId)
 		// 不是本组的，过滤掉
-		if !common.CheckServerIdInGroup(am.app.groupId, serverId) {
+		if !common.CheckServerIdInGroupWithSubGroup(am.app.groupId, am.app.subGroupId, serverId) {
 			continue
 		}
+
 		ai.ServerId = uint32(serverId)
 
 		ai.EachPrice = float32(ai.Price) / float32(ai.Number)

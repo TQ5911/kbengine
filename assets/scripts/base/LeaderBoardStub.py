@@ -25,6 +25,7 @@ import gameconfig
 import experience_config as E_CDD
 import formula
 import iRouter
+import LogTrackingMgr
 
 class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
                             iTimer.ITimer, iCycleEvent.ICycleEventMixin,
@@ -48,6 +49,7 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         self.registerDailyEvent('_recalDynamicWorldLevel')
         self.onDailyEvent()
         self._syncWorldLevelToGlobal()
+        self._syncYesterdayOnlineNumToGlobal()
 
         if self.leaderBoardType == gameconst.LeaderBoardType.AVATAR_LEVEL_RUSH_RANK:
             delta = utils.curTS() % 3600
@@ -339,17 +341,15 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
                 LOG_INFO("recalDynamicWorldLevel", self.dynamicWorldLevel, peakOnlineNum, rankPercent, rank)
 
         self._syncWorldLevelToGlobal()
+        self._syncYesterdayOnlineNumToGlobal()
         # 只有跨服去收各服世界等级，算出后广播，保证组内 crossWorldLevel 一致
         if gameconfig.isCrossServer():
             self.addTimerCB(10, '_collectGroupWorldLevel', (), gametimer.TIMER_TAG_CROSS_WORLD_LEVEL)
+        else:
+            self._logOwnWorldLevelRecord()
 
     def _getGroupGameServerIds(self):
-        sid = gameconfig.serverId()
-        if sid not in gameglobal.mapleServerInfo:
-            return []
-        groupId = gameglobal.mapleServerInfo[sid]['server_group']
-        crossId = int(gameconfig.getCrossServerId())
-        return [int(s) for s in utils.group2ServerIds(groupId) if int(s) != crossId]
+        return utils.crossGroupGameServerIds()
 
     def _collectGroupWorldLevel(self):
         if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL:
@@ -359,6 +359,7 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
 
         self._crossWorldLevelApplied = False
         self._groupWorldLevelMap = {}
+        self._groupYesterdayOnlineNumMap = {}
         serverIds = self._getGroupGameServerIds()
 
         if not serverIds:
@@ -374,18 +375,22 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
     def onReqServerWorldLevel(self, fromServerId):
         if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL:
             return
+        onlineNum = self.yesterdayPeakOnlineNum or self.peakOnlineNum
         stubName = 'LeaderBoardStub' + str(gameconst.LeaderBoardType.AVATAR_LEVEL)
         iRouter.RemoteServerStubEntityCall(int(fromServerId), stubName).onAckServerWorldLevel(
-            int(gameconfig.serverId()), self.dynamicWorldLevel)
+            int(gameconfig.serverId()), self.dynamicWorldLevel, onlineNum)
 
-    def onAckServerWorldLevel(self, serverId, level):
+    def onAckServerWorldLevel(self, serverId, level, onlineNum):
         if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL:
             return
         if getattr(self, '_crossWorldLevelApplied', False):
             return
         if not hasattr(self, '_groupWorldLevelMap'):
             self._groupWorldLevelMap = {}
+        if not hasattr(self, '_groupYesterdayOnlineNumMap'):
+            self._groupYesterdayOnlineNumMap = {}
         self._groupWorldLevelMap[int(serverId)] = level
+        self._groupYesterdayOnlineNumMap[int(serverId)] = onlineNum
         if len(self._groupWorldLevelMap) >= len(self._getGroupGameServerIds()):
             self._applyCrossWorldLevel()
 
@@ -397,18 +402,74 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             LOG_INFO("applyCrossWorldLevel skip, no levels")
             return
 
+        nums = list(getattr(self, '_groupYesterdayOnlineNumMap', {}).values())
+        if not nums:
+            LOG_INFO("applyCrossWorldLevel skip, no nums")
+            return
+
         self._crossWorldLevelApplied = True
+        preCrossWorldLevel = int(self.crossWorldLevel or 0)
         avgLevel = formula.round2(sum(levels) / float(len(levels)))
         self.crossWorldLevel = max(self.crossWorldLevel, avgLevel)
         self.dynamicWorldLevel = self.crossWorldLevel
         LOG_INFO("applyCrossWorldLevel", avgLevel, self.crossWorldLevel, self.dynamicWorldLevel, levels)
+
+        totalNum = sum(nums)
+        avgNum = formula.round2(totalNum / float(len(nums)))
+        LOG_INFO("applyCrossWorldLevel", avgNum, totalNum, self.crossYesterdayPeakOnlineNum, self.crossYesterdayPeakOnlineTotalNum, nums)
+        self.crossYesterdayPeakOnlineNum = avgNum
+        self.crossYesterdayPeakOnlineTotalNum = totalNum
+
         self._syncWorldLevelToGlobal()
+        self._syncYesterdayOnlineNumToGlobal()
 
         stubName = 'LeaderBoardStub' + str(gameconst.LeaderBoardType.AVATAR_LEVEL)
         for sid in self._getGroupGameServerIds():
-            iRouter.RemoteServerStubEntityCall(sid, stubName).onSyncCrossWorldLevel(self.crossWorldLevel)
+            iRouter.RemoteServerStubEntityCall(sid, stubName).onSyncCrossWorldLevel(self.crossWorldLevel, 
+                                                                                    self.crossYesterdayPeakOnlineNum,
+                                                                                    self.crossYesterdayPeakOnlineTotalNum)
+        self._logWorldLevelRecords(preCrossWorldLevel)
 
-    def onSyncCrossWorldLevel(self, level):
+    def _logWorldLevelRecords(self, preCrossWorldLevel):
+        if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL:
+            return
+        if not gameconfig.isCrossServer():
+            return
+
+        gameId = gameconfig.gameId()
+        crossServerId = int(gameconfig.getCrossServerId())
+        currLevel = int(self.crossWorldLevel or 0)
+        pcuYesterday = int(self.yesterdayPeakOnlineNum or self.peakOnlineNum or 0)
+        self._logOneWorldLevelRecord(crossServerId, gameId, int(preCrossWorldLevel or 0), currLevel, pcuYesterday)
+
+    def _logOwnWorldLevelRecord(self):
+        if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL:
+            return
+        if gameconfig.isCrossServer():
+            return
+
+        serverId = int(gameconfig.serverId())
+        gameId = gameconfig.gameId()
+        currLevel = int(self.dynamicWorldLevel or 0)
+        prevLevel = getattr(self, '_worldLevelRecordPrevLevel', None)
+        preLevel = currLevel if prevLevel is None else int(prevLevel)
+        pcuYesterday = int(self.yesterdayPeakOnlineNum or self.peakOnlineNum or 0)
+        self._logOneWorldLevelRecord(serverId, gameId, preLevel, currLevel, pcuYesterday)
+        self._worldLevelRecordPrevLevel = currLevel
+
+    def _logOneWorldLevelRecord(self, serverId, gameId, preLevel, currLevel, pcuYesterday):
+        LOG_INFO("World_Level_Record", serverId, preLevel, currLevel, pcuYesterday)
+        LogTrackingMgr.LogTrackingMgr.World_Level_Record(
+            'LeaderBoardStub',
+            '',
+            int(serverId),
+            gameId,
+            int(preLevel),
+            int(currLevel),
+            int(pcuYesterday),
+        )
+
+    def onSyncCrossWorldLevel(self, level, num, totalNum):
         if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL:
             return
         if gameconfig.isCrossServer():
@@ -422,7 +483,13 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
             else:
                 self.dynamicWorldLevel = max(self.dynamicWorldLevel, self.crossWorldLevel)
         LOG_INFO("onSyncCrossWorldLevel", level, self.crossWorldLevel, self.dynamicWorldLevel)
+
+        LOG_INFO("onSyncCrossWorldLevel", num, totalNum, self.crossYesterdayPeakOnlineNum, self.crossYesterdayPeakOnlineTotalNum)
+        self.crossYesterdayPeakOnlineNum = num
+        self.crossYesterdayPeakOnlineTotalNum = totalNum
+
         self._syncWorldLevelToGlobal()
+        self._syncYesterdayOnlineNumToGlobal()
 
     def getDynamicWorldLevel(self, box):
         if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL:
@@ -439,6 +506,17 @@ class LeaderBoardStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell,
         gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_CROSS_WORLD_LEVEL, self.crossWorldLevel)
         gameglobal.crossWorldLevel = self.crossWorldLevel
         LOG_INFO("syncWorldLevelToGlobal", self.dynamicWorldLevel, self.crossWorldLevel)
+
+    def _syncYesterdayOnlineNumToGlobal(self):
+        if self.leaderBoardType != gameconst.LeaderBoardType.AVATAR_LEVEL:
+            return
+        
+        num = self.yesterdayPeakOnlineNum or self.peakOnlineNum
+        cNum = self.crossYesterdayPeakOnlineNum or num
+        cTNum = self.crossYesterdayPeakOnlineTotalNum or num
+        gameengine.setGlobalData(gameconst.GLOBALDATA_KEY_YESTERDAY_ONLINE_NUM, (num, cNum, cTNum))
+        gameglobal.yesterdayOnlineNum = (num, cNum, cTNum)
+        LOG_INFO("syncYesterdayOnlineNumToGlobal", num, cNum, cTNum)
 
     def gmSetDynamicWorldLevel(self, level):
         self.dynamicWorldLevel = level

@@ -129,6 +129,11 @@
             <Arg>           MAILBOX     </Arg>
         </isAllAvatarsOnline>
 
+        <syncEnmityOnlineState>
+            <Arg>           MAILBOX     </Arg>
+            <Arg>           ARRAY       <of>    PLAYER_GBID               </of>   </Arg>
+        </syncEnmityOnlineState>
+
         <sendSysMsgToAvatar>
             <Arg>           PLAYER_GBID     </Arg>
             <Arg>           INT32           </Arg>

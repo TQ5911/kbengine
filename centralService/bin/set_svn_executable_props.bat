@@ -45,6 +45,9 @@ svn propset svn:executable on ./leaseServer/game.sh
 svn propset svn:executable on ./queueServer/queueServer
 svn propset svn:executable on ./queueServer/game.sh
 
+svn propset svn:executable on ./crossTeamServer/crossTeamServer
+svn propset svn:executable on ./crossTeamServer/game.sh
+
 svn propset svn:executable on build_all_server.sh
 
 svn propset svn:executable on set_svn_executable_props.sh

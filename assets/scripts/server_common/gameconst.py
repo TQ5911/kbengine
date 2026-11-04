@@ -38,6 +38,9 @@ GLOBALDATA_KEY_CELLAPP_INITED = 'kCellappInited'
 GLOBALDATA_KEY_SVIP_ONLINE_NUM = 'kSVIPOnlineNum'
 GLOBALDATA_KEY_WORLD_LEVEL = 'kWorldLevel'
 GLOBALDATA_KEY_CROSS_WORLD_LEVEL = 'kCrossWorldLevel'
+GLOBALDATA_KEY_YESTERDAY_ONLINE_NUM = 'kYesterdayOnlineNum'
+# 本组游戏服 serverId 列表，由跨服心跳维护
+GLOBALDATA_KEY_CROSS_GROUP_SERVERS = 'kCrossGroupServers'
 
 gameUpdateHertz = 10
 
@@ -50,7 +53,6 @@ BASEAPP_STATE_LOCK_WAIT_FULL_PREPARE = 1
 GLOBAL_BASE_STUB_ARCHIVE = [
     'GlobalMailStub',
     'SiegeWarStub',
-    'WorldBossStub',
     'RedBagStub',
     'MineWarStub',
     'BountyStub',
@@ -59,22 +61,16 @@ GLOBAL_BASE_STUB_ARCHIVE = [
     ]
 GLOBAL_BASE_STUB_UNARCHIVE = [
     'PlayerStub',
-    'TeamMatchStub',
-    'RaidStub',
     'ItemLinkStub',
     'CrossServerStub',
     'DropStub',
     'ActStub',
-    'RaidMatchStub',
     'CrossDataStub',
     'WorldRefreshEntityStub',
     'AntiAddictionStub',
     'AllianceStub',
     'CrossSiegeWarStub',
     ]
-GLOBAL_BASE_STUB_TEAMSTUB = 'TeamStub'
-
-GLOBAL_BASE_STUB_RAIDSTUB = 'RaidStub'
 
 GLOBAL_BASE_STUB_STATISTICSTUB = 'StatisticStub'
 
@@ -115,7 +111,7 @@ MIN_LEVEL = 1
 
 SERVER_ID_BIT_SHIFT = 22
 SERVER_TIMESTAMP_BIT_SHIFT = 26
-GBID_TIME_BASE = 1517907600
+GBID_TIME_BASE = 1788256233
 GBID_TIME_INTERVAL = 5 * 60
 GBID_TIME_UPDATE_INTERVAL = GBID_TIME_INTERVAL + 10
 GBID_BASE = 2 ** (SERVER_ID_BIT_SHIFT + SERVER_TIMESTAMP_BIT_SHIFT)
@@ -155,9 +151,15 @@ GAME_CONFIG_TYPE_ROLE_AUTHORIZATION = 3
 GAME_CONFIG_TYPE_AUTO_COMBAT = 4
 
 LEGAL_AGE_OF_MAJORITY = 18
+LEGAL_AGE_OF_MINOR = 16
 
 
 BASE_COMMON_FLAG_INIT_SCORE = 0
+
+
+# createCell 发起后等待 onGetCell 的超时时间（秒），超时仍没有 cell 部分则自毁
+CELL_CREATE_TIMEOUT = 120
+
 
 # ======================
 # 角色基础信息表 a
@@ -301,6 +303,7 @@ class LineSubType(metaclass=UniqueIntEnum):
 
 SPACE_NO_INTERVAL = 10000
 COPIED_SPACE_NO_START = 1 * SPACE_NO_INTERVAL
+MAIN_LINE_NO = 0  # 主分线号：spaceNo % SPACE_NO_INTERVAL == MAIN_LINE_NO 即主分线
 
 
 class SpaceSubType(metaclass=UniqueIntEnum):
@@ -406,6 +409,10 @@ INIT_CLIENT_SEND = (
         ('sendSafeBoxData', True),
         ('sendAllEnmityDatas', True),
         ('onSendUseCoinTimesTicketInfo', True),
+        ('_sendGrowthGuideRewards', True),
+        ('onBeginnerJourneyLogin', True),
+        ('sendTaskChapterRewards', True),
+        ('sendPickedDailyCollectionsInfo', True),
 )
 
 class ItemEnum(object):
@@ -421,6 +428,7 @@ class ItemSubEnum(object):
     HEAL_HP = 1
     HEAL_MP = 2
     Equipment = 4
+    Mount = 5
     EQUIP_CORE = 6
     TASK = 15
     EQUIP_CORE2 = 21
@@ -495,13 +503,13 @@ class EntityPropsEnum(metaclass=UniqueIntEnum):
     disableTimerNumErrMsg = 30
     timerNumErrMsgTS = 31
     isCreatingAvatar = 32
-    teamInviteRecord = 33
+    # 33 = 已废弃 teamInviteRecord
     gatherTarget = 34
     hateRecord = 36
     isResetingSkill = 37
-    teamDungeonTeammateConfirmRecord = 38
-    teamJoinRecord = 40
-    raidJoinRecord = 42     # 团队申请加入记录, 记录在申请者身上
+    # 38 = 已废弃 teamDungeonTeammateConfirmRecord
+    # 40 = 已废弃 teamJoinRecord
+    # 42 = 已废弃 raidJoinRecord（团队申请加入记录, 记录在申请者身上）
     oldOutfitData = 43
     hpPercent = 46
     mpPercent = 47
@@ -509,13 +517,13 @@ class EntityPropsEnum(metaclass=UniqueIntEnum):
     avatarScoresInitChecklist = 62
     currentCastingSkill = 65
     currentChannelSkill = 66
-    getTeamListRecordData=73
+    # 73 = 已废弃 getTeamListRecordData
     effectSetProps = 76
-    raidDungeonCheckRecord = 81
+    # 81 = 已废弃 raidDungeonCheckRecord
     chongfengData = 84
     lockMinHp = 96
     mountIllegalTimer = 104
-    teamPlayerUploadCacheDict = 112
+    # 112 = 已废弃 teamPlayerUploadCacheDict
     lungeSkillData = 130
     dodgeSkillData = 154
     offlineTimeForRestoreBuff = 155
@@ -549,11 +557,11 @@ class EntityPropsEnum(metaclass=UniqueIntEnum):
     wonderLandSwitch = 260
     wonderLandRewardList = 262
 
-    raidTickTimerId = 300
-    raidCreateRaidTeamCheck = 301
-    raidBeInvitedRecordDic = 302
-    raidJoinRecord = 303
-    raidAvatarPropsCache = 304
+    # 300 = 已废弃 raidTickTimerId
+    # 301 = 已废弃 raidCreateRaidTeamCheck
+    # 302 = 已废弃 raidBeInvitedRecordDic
+    # 303 = 已废弃 raidJoinRecord
+    # 304 = 已废弃 raidAvatarPropsCache
 
     duelRequestId = 305
     currentRecvDuelReqId = 306
@@ -561,7 +569,7 @@ class EntityPropsEnum(metaclass=UniqueIntEnum):
     RecvDuelReqEndTime = 308
     ChiefDunAutoConfirmConfig = 309
 
-    getRaidListRecordData=310
+    # 310 = 已废弃 getRaidListRecordData
     newbieStepCellCache = 311
     newbieCreateCellCB = 312
     blazeStartTime = 313
@@ -605,6 +613,7 @@ class EntityPropsEnum(metaclass=UniqueIntEnum):
     cellExperience = 393
     cellMapId = 394
 
+    assignedHunterBountyInfo = 399
     publishBounty = 400
     acceptBounty = 401
     bountyInfoInited = 402
@@ -638,6 +647,11 @@ class EntityPropsEnum(metaclass=UniqueIntEnum):
     crossServerExtra = 430
     authSecondPwdInfo = 431 # 代理缓存下 号主人的二级密码信息
     preMineWarPKState = 432 # 矿战核心层锁定前的 pkModel/pkProtect
+    gatherTotalCnt = 433
+    completeCollectNum = 434 # 已集齐收集项数量
+    auctionGainMoney = 435 # 交易行累计获得元宝
+    preDuelScenePKState = 436 # 演武场锁定前的 pkModel/pkProtect
+    cellCreateWatchDogTimer = 437 # Avatar.createCell 超时自毁定时器id
 
 
 class TopSpeedType(object):
@@ -753,6 +767,7 @@ class StreamStringID(object):
     MY_LEASE_SALE_INFO = 31
     LEASE_RECORDS = 32
     CROSS_TEAM_LIST_DATA = 33
+    MOUNT_DRAW_CARD_RECORD = 34
 
 
 class UseItemEnum(object):
@@ -859,6 +874,15 @@ class CreateAvatarRes(object):
     CRS_CREATE_ENTITY_ERR = 7
     CRS_WRITE_ENTITY_ERR = 8
     CRS_GBID_ERR = 9
+    CRS_PRE_CREATE_LIMIT = 10
+    # 账号状态不允许建角（已在建角中 / 已有角色），reqCreateBot 的拒绝码
+    CRS_ACCOUNT_STATUS_ERR = 11
+
+
+# 预创角：账号内预创角记录的小ID上限（客户端以 gbId < PRE_CREATE_ID_MAX 识别预创角色）
+PRE_CREATE_ID_MAX = 100
+# 预创角：单账号允许的最大预创角数量（实现兼容多个，当前限制为1）
+PRE_CREATE_MAX_PER_ACCOUNT = 1
 
 
 class ReourceValType(object):
@@ -935,6 +959,13 @@ class TeleportLockEnum(metaclass=UniqueIntEnum):
     UNKNOWN = 255
 
 
+# 跨cellapp传送排队重试(Avatar._doTeleportQueue)：等 entity.isInTransit 标志清除后再发
+# 引擎传送是两段式握手(置 ENTITY_FLAGS_TELEPORT_START -> baseapp 回 reqTeleportToCellAppOver)，
+# 窗口内发起 teleport 会被以 "In transit!" 拒绝并静默丢失
+TELEPORT_QUEUE_RETRY_MAX = 25          # 最多重试次数
+TELEPORT_QUEUE_RETRY_INTERVAL = 0.2    # 秒；MAX * INTERVAL = 5s，覆盖压测下baseapp往返的最坏情况
+
+
 POSITION_ZERO = (0.0, 0.0, 0.0)
 DIRECTION_ZERO = (0.0, 0.0, 0.0)
 
@@ -977,6 +1008,34 @@ class TaskType(object):
     TASK_TYPE_CRUSADE = 7 # 讨伐任务
     TASK_TYPE_SPIRIT = 8 # 附灵任务
     TASK_TYPE_MAP_EXPLORE = 9 # 地图任务
+
+
+# 2026-09-24 新手历程系统的 taskType (与 TaskType 区分,前缀 Bj)
+# 注:数值含义独立,不可与 TaskType 混用.
+class BjTaskType(object):
+    BJ_TASK_TYPE_NONE = 0          # 占位:旧路径 (taskID 即其他任务系统 ID,impTask hook 直接 push)
+    BJ_TASK_TYPE_ITEM_GET = 1    # 道具变化(获得) - 累积型
+    BJ_TASK_TYPE_TASK_FINISH = 2    # 完成任务数 - 累积型
+    BJ_TASK_TYPE_MAP_EXPLORE = 3    # 地区探索度 - 累积型
+    BJ_TASK_TYPE_KILL_MONSTER = 4   # 击杀怪物 - 累积型
+    BJ_TASK_TYPE_DUNGEON_PASS = 5   # 通关讨伐副本 - 累积型
+    BJ_TASK_TYPE_TICKET_USE = 6     # 门票使用次数 - 累积型
+    BJ_TASK_TYPE_COLLECT = 7        # 采集指定采集物 - 累积型
+    BJ_TASK_TYPE_PET_ACTIVATE = 8   # 激活精灵数量 - 属性查询型
+    BJ_TASK_TYPE_PET_EQUIP = 9      # 精灵穿戴遗器 - 属性查询型
+    BJ_TASK_TYPE_PET_LEVEL = 10     # 精灵等级 - 属性查询型
+    BJ_TASK_TYPE_MERIDIAN = 11      # 经脉养成 - 属性查询型
+    BJ_TASK_TYPE_EQUIP_STRENGTHEN = 12  # 装备强化等级 - 属性查询型
+    BJ_TASK_TYPE_EQUIP_GRADE = 13   # 装备等阶 - 属性查询型
+    BJ_TASK_TYPE_WEAPON_BLESS = 14  # 武器祝福等级 - 属性查询型
+    BJ_TASK_TYPE_WEAPON_INSCRIPTION = 15  # 武器铭文品质 - 属性查询型
+    BJ_TASK_TYPE_EQUIP_AFFIX = 16   # 装备附灵词条评分 - 属性查询型
+    BJ_TASK_TYPE_EQUIP_SOUL = 17    # 装备魂魄词条评分 - 属性查询型
+    BJ_TASK_TYPE_SKILL_LEVEL = 18   # 技能等级 - 属性查询型
+    BJ_TASK_TYPE_MINE_WAR_SCORE = 19    # 矿战积分 - 累积型
+    BJ_TASK_TYPE_COLLECTION_STAT = 20   # 收集系统统计(指定品质, 完成 N 个) - 累积型
+    BJ_TASK_TYPE_DEATH_DROP_PICKUP = 21 # 死亡掉装拾取: 拾取指定品质的装备次数 - 累积型
+    BJ_TASK_TYPE_ITEM_COST = 22    # 道具变化(消耗) - 累积型
 
 class TaskNotSuccReasonEnum(object):
     UNKNOWN = 0
@@ -1100,10 +1159,17 @@ class CollectionType(object):
     MINE_DROP = 8 # 矿战掉落采集物
     INNER_DEMON = 9
     FIRST_BLOOD = 10 #首刀掉落采集物
+    LIGHT_PILLAR = 11
 
     VALID_RANGE_ACHIEVEMENT = (MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT)
-    VALID_RANGE_CHECK = (NORMAL, MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT, SUMMON_OBJECT, DECAY_BOX, MINE_DROP, INNER_DEMON, FIRST_BLOOD)
+    VALID_RANGE_CHECK = (NORMAL, MINERAL, ZHEN_QI, PERSONAL_BOX, VIEWPOINT, SUMMON_OBJECT, DECAY_BOX, MINE_DROP, INNER_DEMON, FIRST_BLOOD, LIGHT_PILLAR)
     ADD_PICK_AVATAR_CNT = (PERSONAL_BOX, VIEWPOINT, MINE_DROP)
+    CHECK_DAILY_PICK_AVATAR_CNT = (LIGHT_PILLAR, )
+
+class GatherShowState(object):
+    NONE = 0
+    GATHERING = 1       # 正在采集，采集者不是首刀归属
+    FB_OWNER = 2        # 正在采集，采集者是首刀归属
 
 class CollectionPickType(object):
     Countdown_1 = 0  # 读条采集，客户端不屏蔽UI点击
@@ -1112,6 +1178,12 @@ class CollectionPickType(object):
 
     CountdownTypes = (Countdown_1, Countdown_2, CountdownAndClientJudge_1)
     ClientJudgeTypes = (CountdownAndClientJudge_1,)
+
+
+class CollectionStopType(object):
+    NONE = 0        # 受击不打断
+    ATTACK = 1      # 受击必定打断
+    ATTACK_PROB = 2 # 攻击概率打断，判定带内置CD
 
 
 class IDIPBanType(object):
@@ -1150,6 +1222,11 @@ class GMCommandErr(object):
     GM_RET_ADD_WEALTH_FAILED = -121
     GM_RET_AFTER_SALE_ERR = -122
     GM_RET_SEND_MAIL_ERR = -123
+    GM_RET_CROSS_SERVER_FORBIDDEN = -124
+    GM_RET_TARGET_IN_CROSS_SERVER = -125
+    GM_RET_EQUIP_GROWING_FORBIDDEN = -126
+    GM_RET_EQUIP_LV_OUT_OF_RANGE = -127
+    GM_RET_EQUIP_NOT_FOUND = -128
 
 
 GM_RAW_PLAYER_FIELDS = 4
@@ -1216,12 +1293,23 @@ class RedisKey(object):
     NORMAL_ONLINE_NUM = 'g:normal_online_num'
     SERVER_OPEN_TIME = 'g:server_open_time'
     SERVER_OPEN_STATE = 'g:server_open_state'
+    # 预创角开始、结束时间，格式 'start,end' 时间戳，未配置时为 '0,0'
+    PRE_CREATE_TIME = 'g:pre_create_time'
     FULL_PLAYER_INFO_KEY = 'g:full_player_info'
     WAITMAP_HEARTBEAT_KEY = 'waitmap:heartbeat'
     WAITMAP_FREE_PREFIX = 'waitmap:free:'
     RECHARGE_STAGE_INFO = 'recharfe:stage:'
     QUEUE_PASS = 'queue:pass:'
     AVATAR_INFO = 'AvatarInfo_'
+
+
+# 等待服数据缓存刷新间隔（秒），baseapp/queueServer查询用
+WAITMAP_CACHE_REFRESH_INTERVAL = 5
+# 等待服心跳写入间隔（秒）= 2倍查询间隔
+WAITMAP_HEARTBEAT_INTERVAL = WAITMAP_CACHE_REFRESH_INTERVAL * 2
+# 等待服心跳超时时间（秒）= 4倍查询间隔
+WAITMAP_OFFLINE_TIMEOUT = WAITMAP_CACHE_REFRESH_INTERVAL * 4
+
 
 class ForbidType(object):
     SHORT_FORBID = 1  # 临时封禁
@@ -1823,6 +1911,7 @@ class DunSrcEnum(object):
     FROM_TIME_OUT = 6                             # 副本超时
     FROM_FLOW_CONTROLLER = 7                      # 副本流程控制节点
     FROM_CONFIG = 8                               # custom config变更导致的传送
+    FROM_CROSS = 9                                # 跨服时候要离开非大世界场景
 
     COLL_FROM_TASK = (FROM_TASK, )
 
@@ -1865,14 +1954,7 @@ class GameSpaceRecoverEnum(object):
     COLL_ENTER_RCV = (RCV_FULL_HP_IO, RCV_FULL_HP_IN)
     COLL_LEAVE_RCV = (RCV_FULL_HP_IO, RCV_FULL_HP_OUT)
 
-# TeamStub个数
-TEAMSTUB_CONF_NUM = 5
 TEAM_MEMBER_MAX_NUM = 5
-TEAM_APPLY_JOIN_MAX_NUM = 20
-TEAM_MAX_LIST_NUM = 15
-
-# CrossTeamStub个数（跨服组队本服代理分片数）
-CROSS_TEAMSTUB_CONF_NUM = 2
 
 
 
@@ -1906,30 +1988,39 @@ CROSS_TEAM_RESULT_BECOME_CAPTAIN_REJECTED = 24  # 申请成为队长被队长拒
 CROSS_TEAM_RESULT_NEED_PASSWORD = 25  # 需要密码（目标队伍设了密码而申请未携带，对齐中心 crossConst.go）
 CROSS_TEAM_RESULT_SCORE_NOT_ENOUGH = 26  # 战力不足（与 CROSS_TEAM_RESULT_LEVEL_NOT_ENOUGH=6 区分，对齐中心 crossConst.go）
 CROSS_TEAM_RESULT_NOT_DEPUTY = 27  # 无副团长可取消（setDeputy 取消校验，对齐本服 ENUM_RAID_NOT_RAID_DEPUTY 与中心 crossConst.go）
+CROSS_TEAM_RESULT_CONVERT_TARGET_INVALID = 28  # 小队转团队目标非法（与旧队 isCross/dunServer 不一致，对齐中心 crossConst.go）
+CROSS_TEAM_RESULT_RAID_APPLY_IS_APPLIED = 29  # 重复申请（joinApply 已存在未超时申请的受理回调码，对齐中心 crossConst.go）
 
-# 跨服组队状态上报周期（秒）：本服 Stub 聚合成员状态定时上报中心
-CROSS_TEAM_REPORT_STATE_INTERVAL = 3
+# 跨服组队状态上行节奏（本服 Stub -> 中心）：
+# 避免每秒一次的全服大包造成突发流量（中心 trpc 单包硬顶 1200KB，超限断连）
+CROSS_TEAM_REPORT_STATE_INTERVAL = 1
+CROSS_TEAM_REPORT_STATE_BATCH_MAX = 500
 
 # 跨服队伍列表 Stub 缓存时长（秒，问题记录#5）：一波全量回包按 target 缓存，
 # 命中期内查询直接回缓存数据；与中心快照刷新周期（TEAM_LIST_REFRESH_SECONDS=5）对齐
 CROSS_TEAM_LIST_CACHE_SECONDS = 5
 
-RAIDSTUB_CONFIG_NUM = 5
-RAID_TEAM_MEMBER_MAX_NUM = 5
-RAID_LSIT_MAX_NUM = 15
+# 跨服组队状态上行脏检查阈值（Avatar 与上次上报快照对比，超过才上报 Stub）：
+# 血量变动绝对值 / 位置移动距离平方（10 米）
+CROSS_TEAM_STATE_HP_DELTA = 10
+CROSS_TEAM_STATE_POS_DIST_SQ = 100.0
+
+# 跨服队伍成员状态关注列表默认值（小组下标，0 起始）：客户端常态化只更新本组成员，
+# 由 setCrossTeamWatchGroups 覆盖；空列表表示不更新任何成员状态
+CROSS_TEAM_WATCH_GROUPS_DEFAULT = (0,)
+
+# 跨服队伍成员状态下行（Stub 全量快照 + 版本号去重）：中心推送脏队伍快照写缓存并递增
+# version，Avatar 轮询（周期 gameconfig.crossTeamStateQueryCacheSeconds，默认 1s，线上
+# 可经 GM $setcachecfg 调整）仅在版本前进时重发，见 CrossTeamStub.queryTeamMemberState
+
+# 跨服队伍列表查询防击穿：在途查询标记的兜底超时时长（秒），
+# 超时后允许重新发起（回包丢失容错）；在途期间有旧数据直接回旧数据
+CROSS_TEAM_LIST_QUERY_TIMEOUT = 30
+
 RAID_MEMBER_MAX_NUM = 40
-RAID_APPLY_JOIN_MAX_NUM = 20
 STATISTICSTUB_CONFIG_NUM = 5
 
 class TeamMicsModeEnum(object):
-    OFF = 0
-    FREE = 1
-    LEADER = 2
-
-    COLL_ALL = (OFF, FREE, LEADER)
-
-class RaidMicsModeEnum(object):
-
     OFF = 0
     FREE = 1
     LEADER = 2
@@ -1941,10 +2032,6 @@ class TeamMountState(object):
     ride = 1
     fly = 2
 
-class RaidJoinTypeEnum(object):
-    SINGLE = 1
-    TEAM = 2
-
 class TeamType(object):
     DEFAULT = 0
     TEAM = 1
@@ -1952,6 +2039,7 @@ class TeamType(object):
     CROSS_TEAM = 3  # 跨服组队（跨服队标记怪物的记录类型，Monster.crossTeamMarkDict）
     VALID_TYPES = (TEAM, RAID)
 
+TEAM_MEMBER_NUM_VS_RAID = 5
 TEAM_MARK_MAX_SLOT = 8
 class TeamMarkType(object):
     MARK_NONE = 0
@@ -1972,147 +2060,6 @@ class TeamStatisticType(object):
     HEAL = 2
     HURT = 3
     DEAD = 4
-
-class _RaidErrno(object):
-    from userType import Error as _errno
-
-    def _lateReload(self):
-        for _value in self.__class__.__dict__.values():
-            if _value.__class__.__name__ == 'Error':
-                _value.reloadScript()
-
-    def reloadScript(self):
-        import utils
-        utils.resetClass(self)
-        self._lateReload()
-
-    ENUM_UNKNOWN                                 = _errno(0)         # 未知错误
-    ENUM_RAID_OK                                 = _errno(1)         # 正常
-    ENUM_RAID_PARAM_ERR                          = _errno(2)         # 参数错误
-    ENUM_RAID_NOT_IN_TEAM                        = _errno(10000)     # 不在小队中
-    ENUM_RAID_ALREADY_IN_TEAM                    = _errno(10001)     # 已经在小队中
-    ENUM_RAID_RAID_ID_REPEAT                     = _errno(10002)     # 团队ID重复
-    ENUM_RAID_TEAM_ID_REPEAT                     = _errno(10003)     # 小队ID重复(teamId)
-    ENUM_RAID_PLAYER_GBID_REPEAT                 = _errno(10004)     # 玩家ID重复
-    ENUM_RAID_TEAM_NOT_FOUND                     = _errno(10005)     # 小队ID未找到(teamId)
-    ENUM_RAID_PLAYER_GBID_NOT_FOUND              = _errno(10006)     # 玩家ID位找到
-    ENUM_RAID_NOT_TEAM_CAPTAIN                   = _errno(10007)     # 不是小队队长
-    ENUM_RAID_NOT_IN_RAID                        = _errno(10008)     # 不在团队中
-    ENUM_RAID_NOT_RAID_LEADER                    = _errno(10009)     # 不是团长
-    ENUM_RAID_RAID_ID_NOT_FOUND                  = _errno(10010)     # 团队ID未找到
-    ENUM_RAID_TEAM_IDX_REPEAT                    = _errno(10011)     # 小队IDX重复
-    ENUM_RAID_TEAM_IDX_NOT_FOUND                 = _errno(10012)     # 小队IDX未找到
-    ENUM_RAID_RAID_ID_NOT_MATCH                  = _errno(10013)     # 团队ID不匹配
-    ENUM_RAID_ALREADY_IN_RAID                    = _errno(10014)     # 已经在团队中
-    ENUM_RAID_RAID_IS_FULL                       = _errno(10015)     # 团队已满
-    ENUM_RAID_ALREADY_APPLY_JOIN                 = _errno(10016)     # 已经申请加入该团队
-    ENUM_RAID_APPLY_JOIN_NOT_FOUND               = _errno(10017)     # 申请记录没有找到
-    ENUM_RAID_APPLY_JOIN_RECORD_NOT_FOUND        = _errno(10018)     # 申请记录(玩家缓存)没有找到
-    ENUM_RAID_UNKNOWN_CAPACITY                   = _errno(10019)     # 不支持的团队人数
-    ENUM_RAID_CREATE_RAID_OFR                    = _errno(10020)     # 创建团对时超出人数上限
-    ENUM_RAID_TEAM_NUM_NOT_MATCH                 = _errno(10021)     # 小队人物数量没有匹配
-    ENUM_RAID_TEAM_MEMBER_NOT_MATCH              = _errno(10022)     # 小队人员没有匹配
-    ENUM_RAID_RAID_NOT_ENOUGH_SIT                = _errno(10023)     # 团队不足以加入新的小队
-    ENUM_RAID_CHECKING_TEAM_JOIN_FAILED          = _errno(10024)     # 团队检查加入失败(申请)
-    ENUM_RAID_AVATAR_REJECTED_ACT                = _errno(10025)     # 玩家主动拒绝操作
-    ENUM_RAID_PLAYER_GBID_NOT_MATCH              = _errno(10026)     # 玩家ID不匹配
-    ENUM_RAID_JOIN_TYPE_NOT_MATCH                = _errno(10027)     # 团队加入(检查)类型不匹配
-    ENUM_RAID_RAID_TEAM_IS_FULL                  = _errno(10028)     # 小队已满
-    ENUM_RAID_TEAM_IDX_CHANGED                   = _errno(10029)     # 小队ID变化
-    ENUM_RAID_TEAM_ID_CHANGED                    = _errno(10030)     # 小队ID变化(teamId)
-    ENUM_RAID_APPLY_BE_INVITED_RECORD_NOT_FOUND  = _errno(10031)     # 邀请记录未找到
-    ENUM_RAID_CHECKING_TEAM_INVITE_FAILED        = _errno(10032)     # 团队检查加入失败(邀请)
-    ENUM_RAID_TEAM_IS_EMPTY                      = _errno(10033)     # 小队为空
-    ENUM_RAID_KICKOUT_SELF                       = _errno(10034)     # 尝试移除自己(self.gbId==gbId)
-    ENUM_RAID_LEADER_TEAM_CANT_TRANS_CAPTAIN     = _errno(10035)     # 团长所在队伍不能转移队长
-    ENUM_RAID_AWARD_SELF                         = _errno(10036)     # 尝试对自己任命(团长不能对自己小队进行一些任命操作)
-    ENUM_RAID_AWARD_SELF_TEAM                    = _errno(10037)     # 尝试对自己所在团队任命
-    ENUM_RAID_ALREADY_BE_TEAM_CAPTAIN            = _errno(10038)     # 已经是小队队长
-    ENUM_RAID_IS_SAME_TEAM                       = _errno(10039)     # 小队相同
-    ENUM_RAID_IS_SAME_PLAYER                     = _errno(10040)     # 玩家相同
-    ENUM_RAID_RAID_TEAM_IDX_OFR                  = _errno(10041)     # 创建小队IDX超出上限
-    ENUM_RAID_SAME_RAID_TARGET_ID                = _errno(10042)     # 相同目标ID
-    ENUM_RAID_DURING_STANDBY_CHECK               = _errno(10043)     # 团队正在进行检查
-    ENUM_RAID_STANDBY_RECORD_NOT_FOUND           = _errno(10044)     # 团队检查记录未找到
-    ENUM_RAID_STANDBY_ALREADY_CHECKED            = _errno(10045)     # 已经check过
-    ENUM_RAID_RAID_LEADER_CHANGED                = _errno(10046)     # 团队已经变更
-    ENUM_RAID_TEAM_MEMBER_OFFLINE                = _errno(10047)     # 团队成员离线
-    ENUM_RAID_APPLY_JOIN_STUB_VAL_NOT_FOUND      = _errno(10048)     # 申请记录没有找到(RaidStub记录)
-    ENUM_RAID_APPLY_JOIN_NUMBER_OFR              = _errno(10049)     # 当前团队申请记录超过上限
-    ENUM_RAID_INVITE_SELF_TEAM                   = _errno(10050)     # 玩家尝试邀请自己的小队加入团队
-    ENUM_RAID_MICS_NUM_OUT_OF_RANGE              = _errno(10051)     # 麦克风人数到达上限
-    ENUM_RAID_MICS_BLOCK                         = _errno(10052)     # 麦克风被强制禁用
-    ENUM_RAID_MICS_SWITCH_OFF                    = _errno(10053)     # 麦克风总开关关闭
-    ENUM_RAID_MISC_FREE_MODE_LIMIT               = _errno(10054)     # Free模式限制麦克风相关功能
-    ENUM_RAID_MISC_LEADER_MODE_LIMIT             = _errno(10054)     # leader模式限制麦克风相关功能
-    ENUM_RAID_LEADER_CANT_TURN_OFF_MICS          = _errno(10056)     # 团长禁止关闭麦克风
-    ENUM_RAID_MICS_MODE_ERR                      = _errno(10057)     # 团队麦克风模式错误
-    ENUM_RAID_INVITED_SAME_PLAYER_INCD           = _errno(10058)     # 同一团队邀请CD
-    ENUM_RAID_IS_RAID_LEADER                     = _errno(10059)     # 操作对象是团长A
-    ENUM_RAID_TEAM_CANT_DISBAND                  = _errno(10061)     # 小队无法被解散
-    ENUM_RAID_UI_DENIED                          = _errno(10062)     # 团队接口被UI相关判断阻止
-    ENUM_RAID_ALL_MICS_BLOCKED                   = _errno(10063)     # 已经全员禁麦
-    ENUM_RAID_TEAM_MEMBER_DUOHUN                 = _errno(10064)     # 被夺魂
-    ENUM_RAID_NOT_RAID_DEPUTY                    = _errno(10065)     # 不是副团长
-    ENUM_RAID_NOT_RAID_LEADER_OR_DEPUTY          = _errno(10066)     # 不是团长/副团长
-    ENUM_RAID_NOT_RAID_CANNOT_KICK_LEADER        = _errno(10067)     # 不能踢团长
-    ENUM_RAID_NOT_RAID_CANNOT_KICK_DEPUTY        = _errno(10068)     # 不能踢副团长
-    ENUM_RAID_NOT_RAID_CANNOT_MOVE_LEADER        = _errno(10069)     # 不能移动团长
-    ENUM_RAID_NOT_RAID_UNKNOWN_TEAM_MEMBER       = _errno(10070)     # 小队人数不支持
-    ENUM_RAID_NOT_SAME_SIEGEWAR_CAMP             = _errno(10071)     # 城战不同阵营
-
-    ENUM_RAID_CHECKING_TEAM_JOIN                 = _errno(50000)     # 团队正在检查组队加入(申请通过)
-    ENUM_RAID_CHECKING_TEAM_INVITE               = _errno(50001)     # 团队正在检查组队加入(邀请通过)
-    ENUM_RAID_CHECKING_STANDBY_CHECK             = _errno(50002)     # 团队正在进行整团检查(团长发起)
-    ENUM_RAID_INVITE_TO_JOIN                     = _errno(50100)     # 团队邀请转变为申请
-    ENUM_RAID_TARGET_IS_ILLEGAL                  = _errno(50101)     # 团队目标不合法
-    ENUM_RAID_PASSWORD_IS_WRONG                  = _errno(50102)     # 密码不对
-    ENUM_RAID_LEVEL_IS_LIMITED                   = _errno(50103)     # 等级不足
-    ENUM_RAID_SCORE_LIMITED                      = _errno(50104)     # 战力不足
-    ENUM_RAID_SOCRE_IS_ILLEGAL                   = _errno(50105)     # 战力不合法
-    ENUM_RAID_LEVEL_IS_ILLEGAL                   = _errno(50106)     # 等级不合法
-    ENUM_RAID_PASSWORD_IS_ILLEGAL                = _errno(50107)     # 密码不合法
-    ENUM_RAID_PASSWORD_IS_EMPTY                  = _errno(50108)     # 密码为空
-    ENUM_RAID_RECRUIT_IS_ILLEGAL                 = _errno(50109)     # 招募不合法
-    ENUM_RAID_AUTO_EXPEDITION_IS_ILLEGAL         = _errno(50110)     # 自动开启远征不合法
-    ENUM_RAID_SET_TARGET_ILLEGAL                 = _errno(50111)     # 设置目标不合法
-    ENUM_RAID_IS_IN_DUNGEON                      = _errno(50112)     # 团队已进入副本
-    ENUM_RAID_APPLY_LIST_IS_FULL                 = _errno(50113)     # 团队申请列表满了
-    ENUM_RAID_IN_CROSS_STATE                     = _errno(50114)     # 在跨服状态
-    ENUM_RAID_ALREADY_IN_DUNGEON                 = _errno(50115)     # 已经在副本中了
-    ENUM_RAID_ERR_IGNORE                         = _errno(60000)     # 可以忽略的错误
-
-
-RaidErrno = _RaidErrno()
-
-
-class RaidPermissionEnum(object):
-    """Raid permission enum"""
-
-    UNKNOWN = 0
-    MEMBER = 1
-    CAPTAIN = 2
-    DEPUTY = 3
-    LEADER = 4
-
-    @classmethod
-    def haveRaidPermission(cls, perm, needPermission, onlyMode=False, exluce=()):
-        if perm in exluce:
-            return False
-
-        if onlyMode:
-            return perm == needPermission
-
-        else:
-            return perm >= needPermission
-
-class RaidDungeonStandbyCheckSrcEnum(object):
-    """全团检查check"""
-
-    UNKNOWN = 0
-    DEFAULT = 1
-    ENTER_DUNGEON = 2
-
 
 class ControlledByReason(object):
     Idle = 0
@@ -2154,7 +2101,7 @@ class PKProtectEnum(object):
     GUILD = 2
     UNION = 3 # 同盟保护
     ATTACK_RED = 4   # 防卫：攻击红名/灰名，默认不勾选
-    ATTACK_ENEMY = 5 # 防卫：攻击敌对列表/宣战帮会，新号默认勾选
+    ATTACK_ENEMY = 5 # 防卫：攻击个人敌对，新号默认勾选
 
 class PKMoralLevel(object):
     KINDNESS = 0
@@ -2216,8 +2163,8 @@ class DungeonPlayModeEnum(object):
     CHIEF = 2
     GUILD_BOSS = 3
     INNER_DEMON = 4
-    # 跨服讨伐：仅跨服服上的跨服组队空间使用（本服模式空间落本服 CRUSADE/CHIEF 枚举，
-    # 跨服队伍归属由 SpaceVal.crossTeamId 判定）；teamUUID/raidUUID 语义为跨服队伍 ID
+    # 跨服讨伐：仅跨服服上的跨服组队空间使用（本服模式空间落本服 CRUSADE/CHIEF 枚举）；
+    # teamUUID/raidUUID 语义为跨服队伍 ID
     CROSS_CRUSADE = 5
     CROSS_CHIEF = 6
 
@@ -2235,6 +2182,14 @@ class DungeonTicketType(metaclass=UniqueIntEnum):
     ITEM = 3
     # 普通使用
     COMMON = 4
+
+class DungeonTicketBuySrc(metaclass=UniqueIntEnum):
+    # 道具购买
+    ITEM_BUY = 1
+    # 金币购买
+    COIN_BUY = 2
+    # 资源找回
+    RECOVERY = 3
 
 class DungeonSpaceMgrProps(object):
     DSMPEnumdungeonRewardBossID = 1000
@@ -2393,12 +2348,12 @@ class _RaidDungeonErrno(object):
     ENUM_RAIDDUN_DUNGEON_NO_NOT_MATCH            = _errno(20002)     # 团队副本不匹配
     ENUM_RAIDDUN_NOT_RAID_LEADER                 = _errno(20003)     # 不是团队Leader
     ENUM_RAIDDUN_RAID_ID_NOT_MATCH               = _errno(20004)     # 团队ID不匹配
-    ENUM_RAIDDUN_DUNGEON_VAL_NOT_FOUND           = _errno(20005)     # 团队副本val没有找到(RaidDungeonStub)
+    ENUM_RAIDDUN_DUNGEON_VAL_NOT_FOUND           = _errno(20005)     # 团队副本val没有找到(CrossTeamDungeonStub)
     ENUM_RAIDDUN_DUNGEON_ALREADY_BE_DESTROYED    = _errno(20006)     # 团队副本已经被销毁(包括标记删除)
     ENUM_RAIDDUN_RAID_ID_NOT_FOUND               = _errno(20007)     # 团队ID没有找到
     ENUM_RAIDDUN_RAID_ALREADY_EXIST_DUNGEON      = _errno(20008)     # 团队已经存在副本
     ENUM_RAIDDUN_NOT_IN_AVAILABLE_SPACE          = _errno(20009)     # 不在合法space中
-    ENUM_RAIDDUN_FOUNDER_VAL_NOT_FOUND           = _errno(20010)     # 副本成员没有找到(dungeonRaidStub)
+    ENUM_RAIDDUN_FOUNDER_VAL_NOT_FOUND           = _errno(20010)     # 副本成员没有找到(CrossTeamDungeonStub)
     ENUM_RAIDDUN_NOT_IN_RAID_DUNGEON             = _errno(20011)     # 不在团队副本中
     ENUM_RAIDDUN_DUNGEON_IS_NOT_ACTIVE           = _errno(20012)     # 团队副本不活跃(可能是已经完成或者已经标记销毁)
     ENUM_RAIDDUN_SPACE_UUID_NOT_MATCH            = _errno(20013)     # 团队space唯一ID不相同
@@ -2427,6 +2382,10 @@ class TeamDunCheckCondErrno(object):
     SC_LEVEL_CHECK_FAIL = 8
     TELEPORT_COND_FAIL = 9
     REWARD_NUM_CHECK_FAIL = 10
+    # GM 禁止进入开关命中（$banEnterDungeon 维护的副本维护列表），由 CrossTeamStub.onCrusadeCheck 回报中心中止讨伐
+    DUNGEON_FORBID_ENTER = 11
+    # 目标玩法未解锁（魔物巢穴/首领巢穴系统未开启），由 checkCrossCrusadeConditionCell 回报
+    UNLOCK_CHECK_FAIL = 12
 
 class DungeonFlowCompSym(object):
     un = 0
@@ -2878,8 +2837,20 @@ class AUTO_DISA_KEY(object):
     RING = 26
     # 手镯
     BRACELET = 27
-    # 魂魄
+    # 魂魄（魂魄分解开关：勾选后魂魄筛选才生效，沿用旧"无属性"位）
     SOUL = 28
+    # 魂魄--词条数量目标低位（位段[29..32]：词条数量 <= 目标 才分解）
+    SOUL_AFFIX_COUNT = 29
+    # 魂魄--词条品质目标低位（位段[33..36]：词条品质 <= 目标 才分解）
+    SOUL_AFFIX_QUALITY = 33
+    # 魂魄--是否可交易（与装备/道具的 TRADE 分开）
+    SOUL_TRADE = 37
+
+
+# 魂魄筛选位段宽度（bit），与客户端保持一致
+class AUTO_DISA_SOUL_BITS(object):
+    COUNT_BITS = 4
+    QUALITY_BITS = 4
 
 class AUTO_DISA_MAP(object):
     datas = {
@@ -3112,6 +3083,7 @@ class CrossServerReasonNo(object):
     ENTER_CROSS_ABYSS = 2
     ENTER_CROSS_CRUSADE = 3     # 跨服讨伐-魔物巢穴
     ENTER_CROSS_CHIEF = 4       # 跨服讨伐-首领巢穴
+    ENTER_CROSS_WORLD = 5       # 大世界跨服
 
 class CrossServerWaitClientInitTuple(object):
     DEFAULT = 0
@@ -3240,10 +3212,12 @@ class StoreItemType(object):
     DYNAMIC_PRICE = 2
 
 class DropShareRewardType(object):
-    RANDOM_ONE = 0
+    RANDOM_ONE = 0      # 尾刀归属1。进包按死亡时锁定的队伍人数拆成单份，每人独立结算
     SELF = 1
     ALL_TEAMMATE = 2
-    FIRST_BLOOD = 3
+    FIRST_BLOOD = 3     # 首刀归属1，归属方优先，倒计时后其他人可拾取
+    FIRST_BLOOD_2 = 4   # 首刀归属2，倒计时内非归属者拾取时间变长
+    FIRST_BLOOD_3 = 5   # 首刀归属3，强保护期同首刀1，弱保护期同首刀2，结束后全员视为归属者。进包同尾刀归属1按锁定队伍拆份
 
 # 每轮刷怪的最大数目
 INIT_EACH_EN_LOOP_COUNT = 40
@@ -3279,7 +3253,7 @@ class _AuctionErrno(object):
 
     ERR_AUCTION_UNKNOWN                             = _errno(0)
     ERR_AUCTION_OK                              = _errno(1)
-
+    
     ERR_AUCTION_TYPE_ERR                        = _errno(20000)     # 交易行类型错误
     ERR_AUCTION_ALREADY_IN_AUCTION              = _errno(20001)     # 交易物品已经在交易行
     ERR_AUCTION_ITEM_ATTR_NOT_DEFINED           = _errno(20002)     # 交易物品属性没有定义
@@ -3327,10 +3301,13 @@ class _AuctionErrno(object):
     AUCTION_ITEM_IS_NOT_IN_SNATCH               = _errno(20046)     # 交易行物品正不在抢购期
     ERR_AUCTION_SOUL_WITH_EMPTY_ROLL_PROPS      = _errno(20047)     # 没有词条魂魄不允许上交易行
     ERR_AUCTION_ITEM_IS_SELF_SALE               = _errno(20048)     # 自己的商品不能购买
+    ERR_AUCTION_ITEM_IS_NOT_IN_SELLING          = _errno(20049)     # 交易行物品不在出售状态
+    ERR_AUCTION_SNATCH_PARTICIPATE_SUCCESS      = _errno(20050)     # 交易行物品抢购成功参与
+    ERR_AUCTION_SNATCH_PARTICIPATE_REPEAT       = _errno(20051)     # 交易行物品抢购重复参与
+    ERR_AUCTION_ITEM_IS_IN_PUBLICITY            = _errno(20052)     # 交易行物品正在公示期
+    ERR_AUCTION_ITEM_IS_IN_SNATCH               = _errno(20053)     # 交易行物品正在抢购锁住了
     ERR_AUCTION_IDIP_GM_BAN                     = _errno(20100)     # IDIP禁止
     ERR_AUCTION_FAIL                            = _errno(20101)     # 通用失败
-    ERR_AUCTION_ITEM_IS_NOT_IN_SELLING          = _errno(20049)     # 交易行物品不在出售状态
-    
 
 AuctionErrno = _AuctionErrno()
 
@@ -3495,10 +3472,11 @@ class AchievementFlag(object):
 ACHIEVE_SRC_NEW = 1
 ACHIEVE_SRC_UPDATE = 2
 
-# 1:新增 2.完成 3.领取
+# 1:新增 2.完成 3.领取 4:GM重置
 ACHIEVE_STATE_NEW = 1
 ACHIEVE_STATE_FINISH = 2
 ACHIEVE_STATE_RECEIVE = 3
+ACHIEVE_STATE_GM_RESET = 4
 
 
 class AchieveType(object):
@@ -3919,6 +3897,7 @@ class CancelGatherReason(object):
 
 
 class MonsterType(object):
+    NULL = 0
     # 对应creep base表中的type字段
     NORMAL = 1 # 小怪
     ELITE = 2 # 精英
@@ -3928,6 +3907,7 @@ class MonsterType(object):
 LARGE_ENTITY_DEFAULT_AOI = 250
 
 class MonsterSuffix(object):
+    NULL = 0
     # 对应creep base表中的nameSuffixID字段
     NORMAL = 1 # 小怪
     ELITE = 2 # 精英
@@ -4019,6 +3999,7 @@ class AuthState(object):
 
 SELECT_GAME_FAILED_AUTH_EXPIRED = 1
 SELECT_GAME_FAILED_MORAL_LOW = 2
+SELECT_GAME_FAILED_PRE_CREATE_ABNORMAL = 3
 
 
 class AuthPerFlags(object):
@@ -4497,7 +4478,7 @@ class ForbiddenTaskIdOpType(object):
 
 GAME_SERVER_ERR_BAN_FOREVER         = 2001 # 账户被永久封禁
 GAME_SERVER_ERR_BAN_WITH_TIME       = 2002 # 账户被临时封禁
-GAME_SERVER_ERR_ANTI_ADDICT         = 2003 # 账户被防沉迷
+GAME_SERVER_ERR_ANTI_ADDICT1        = 2003 # 账户被防沉迷(18以下)
 GAME_SERVER_ERR_VERIFY_FAIL         = 2004 # 中心服校验失败
 GAME_SERVER_ERR_VERIFY_TIMEOUT      = 2005 # 中心服校验超时
 GAME_SERVER_ERR_MEET_REG_MAX        = 2006 # 达到注册上限
@@ -4509,6 +4490,7 @@ GAME_SERVER_ERR_REJECT_LOGIN        = 2011 # 拒绝登录
 GAME_SERVER_ERR_NO_LOGIN_MGR2       = 2012 # 登录管理器不存在
 GAME_SERVER_ERR_APP_VERSION         = 2013 # 登录时整包强更
 GAME_SERVER_ERR_PATCH_VERSION       = 2014 # 登录时PATCH强更
+GAME_SERVER_ERR_ANTI_ADDICT2        = 2015 # 账户被防沉迷(16以下)
 
 class EquipMultiEnhanceResult(object):
     # 成功
@@ -4891,7 +4873,14 @@ class MallItemType(object):
 class InviteType(object):
     DEFAULT= 0
     GUILD = 1
-    VALID_TYPES = (DEFAULT, GUILD)
+    TEAM_UP = 2                        # 无队邀请组队（中心透传，不解读）
+    VALID_TYPES = (DEFAULT, GUILD, TEAM_UP)
+
+TEAM_UP_INVITE_TIMEOUT = 30            # 无队邀请/应答记录有效期（秒）
+TEAM_UP_TARGET = 1                     # 无队邀请组队建队固定目标（自由队），配置读 teamMatch_activity
+class TeamUpReplyReason(object):       # 与 proto TeamUpReplyNotifyMsg.reason 对齐
+    REJECT = 0                         # 主动拒绝
+    INVITEE_IN_TEAM = 1                # 对方已在队伍
 
 class PremiumType(object):
     BIG_MONTH_CARD = 1
@@ -4951,6 +4940,10 @@ class AuctionSnatchStatus(object):
     DEFAULT = 0
     DONE = 1
 
+# 2026-10-08 抢购权重常量(默认值,可后续改成读配表/远程配置)
+class AuctionSnatchWeight(object):
+    DEFAULT  = 1000   # 普通玩家每次抢购基础权重
+
 class IllegalEventType(object):
     # 聊天
     CHAT = 1
@@ -4971,14 +4964,28 @@ CrossServerExpWhitelist = {
     AAC_AACDD.datas.BONUS_SRC_RECOVER_DEAD_PENALTY,
     AAC_AACDD.datas.BONUS_SRC_DEAD_PENALTY,
     AAC_AACDD.datas.BONUS_SRC_KILL_MONSTER,
-    AAC_AACDD.datas.BONUS_SRC_MAP_HANG_UP_INCOME
+    AAC_AACDD.datas.BONUS_SRC_MAP_HANG_UP_INCOME,
+    AAC_AACDD.datas.BONUS_SRC_TEAM_FIRST_PASS_REWARD,
+    AAC_AACDD.datas.BONUS_SRC_TEAM_CLEAR_PASS_REWARD,
+    AAC_AACDD.datas.BONUS_SRC_TEAM_GOLD_PASS_REWARD,
+    AAC_AACDD.datas.BONUS_SRC_RAID_FIRST_PASS_REWARD,
+    AAC_AACDD.datas.BONUS_SRC_RAID_CLEAR_PASS_REWARD,
+    AAC_AACDD.datas.BONUS_SRC_RAID_GOLD_PASS_REWARD,
 }
 
 #加经验同步单独处理的类型
 CrossServerExpIgnorelist = {
     AAC_AACDD.datas.BONUS_SRC_RECOVER_DEAD_PENALTY,
     AAC_AACDD.datas.BONUS_SRC_DEAD_PENALTY,
-    AAC_AACDD.datas.BONUS_SRC_MAP_HANG_UP_INCOME
+    AAC_AACDD.datas.BONUS_SRC_MAP_HANG_UP_INCOME,
+    # 跨服组队副本通关奖励：经验已由本服结算权威落账（onLocalServerCrossCrusadeSettlementApply），
+    # 镜像回放 addWealth（onLocalServerCrossTeamDungeonAwardSync）仅为刷新镜像显示，弹回本服须丢弃防双倍
+    AAC_AACDD.datas.BONUS_SRC_TEAM_FIRST_PASS_REWARD,
+    AAC_AACDD.datas.BONUS_SRC_TEAM_CLEAR_PASS_REWARD,
+    AAC_AACDD.datas.BONUS_SRC_TEAM_GOLD_PASS_REWARD,
+    AAC_AACDD.datas.BONUS_SRC_RAID_FIRST_PASS_REWARD,
+    AAC_AACDD.datas.BONUS_SRC_RAID_CLEAR_PASS_REWARD,
+    AAC_AACDD.datas.BONUS_SRC_RAID_GOLD_PASS_REWARD,
 }
 
 class EquipReturnType(object):
@@ -5269,6 +5276,7 @@ class SpeedCheckData(object):
     CONTINIOUS_DRAG_BACK_COUNT = 5
 
 class GamePlayModeType(object):
+    Safe = 1 # 安全模式
     Dungeon = 4
 
 
@@ -5352,6 +5360,8 @@ class BodyEquipDressOpType:
     UNDRESS_DROP_DISAPPEAR = 9
     # 玩家替换脱下
     UNDRESS_DRESS_REPLACE = 10
+    # 升阶后穿戴等级不足，服务端主动脱下
+    UNDRESS_GRADE_LOW_LEVEL = 11
 
 class SubType2TicketInfoIdx(object):
     # 剩余次数信息属性
@@ -5380,3 +5390,49 @@ class BindPhoneWebCode(object):
     TAPTAP_UNBIND_PARMS_INCOMPLETE = 5013
     TAPTAP_UNBIND_ACCOUNT_FORBIDDEN = 5014
     TAPTAP_UNBIND_PHONE_MISMATCH = 5015
+
+class DrawcardType(object):
+    PET = 1
+    MOUNT = 2
+
+class EnterLineMapType(object):
+    NULL = 0
+    ENTER_CROSS = 1
+    LEAVE_CROSS = 2
+
+class ChatMsgConveyType(object):
+    NULL = 0
+    # 在其他服务器的 本服玩家
+    CROSS_LOCAL = 1
+    # 该组内所有玩家受到
+    CROSS_GROUP = 2
+
+class AllowCrossWorldType(object):
+    NULL = 0
+    CHECK_UNLOCK = 1
+    DIRECTLY = 2
+
+class WorldRefreshEntityAttachmentType(object):
+    NULL = 0
+    DETACH = 1
+    ATTACH = 2
+
+class BeginnerJourneyTaskFinishType(object):
+    TASK = 1
+    PHASE = 2
+
+class SendPickedDailyInfoType(object):
+    INIT = 0
+    UPDATE = 1
+    RESET = 2
+    
+REFRESH_RATE_OF_TIME_RESYNC_INTERVAL = 600
+
+class MinorStageType(object):
+    ADULT = 0       # 成年
+    MINOR1 = 1      # [16,18)
+    MINOR2 = 2      # 16以下
+
+class PetOpType(object):
+    DRESS = 1
+    UNDRESS = 2

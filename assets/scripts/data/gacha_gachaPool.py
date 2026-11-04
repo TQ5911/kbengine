@@ -18,6 +18,7 @@ datas = _tools.RODict({
     101: _tools.RODict({
         "ID": 101,
         "name": "史诗召唤",
+        "poolType": 1,
         "poolGroupId": 101,
         "timeLimit": 0,
         "startTime": "",
@@ -29,7 +30,7 @@ datas = _tools.RODict({
         "1rollReward": 40020672,
         "10rollReward": 40020673,
         "ifPityWork": 1,
-        "pityPullCount": 1000,
+        "pityPullCount": 300,
         "pityReset": (1, 0, 3),
         "pityReward": 30000330,
         "pityInfo": 29,
@@ -37,6 +38,7 @@ datas = _tools.RODict({
     102: _tools.RODict({
         "ID": 102,
         "name": "精良召唤",
+        "poolType": 1,
         "poolGroupId": 102,
         "timeLimit": 0,
         "startTime": "",
@@ -48,11 +50,31 @@ datas = _tools.RODict({
         "1rollReward": 40020675,
         "10rollReward": 40020676,
         "ifPityWork": 0,
-        "pityPullCount": 1000,
+        "pityPullCount": 300,
         "pityReset": (1, 0, 3),
         "pityReward": 30000330,
         "pityInfo": 71,
+    }),
+    103: _tools.RODict({
+        "ID": 103,
+        "name": "坐骑召唤",
+        "poolType": 2,
+        "poolGroupId": 103,
+        "timeLimit": 0,
+        "startTime": "",
+        "endTime": "",
+        "1rollCostCoin": None,
+        "1rollCost": ((30000563, 1),),
+        "10rollCost": ((30000563, 10),),
+        "100rollCost": ((30000563, 100),),
+        "1rollReward": 40020677,
+        "10rollReward": 40020678,
+        "ifPityWork": 1,
+        "pityPullCount": 300,
+        "pityReset": (0, 5, 3),
+        "pityReward": 30000331,
+        "pityInfo": 94,
     })
 })
 minKey = 101
-maxKey = 102
+maxKey = 103

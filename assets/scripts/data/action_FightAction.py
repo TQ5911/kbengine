@@ -201,6 +201,8 @@ def attackShare(self, target, context, *args):
 
     levelDmgRatioEx = levelDmgRatio(self, target, classTag)
 
+    skillDmgRatioEx = skillDmgRatio(self, target, classTag)
+
     # 对象伤害倍率计算
     if self.IsCreation:
         realDmgRatioEx = realDmgRatio(utils.getHostEntity(self), target,context)
@@ -245,7 +247,7 @@ def attackShare(self, target, context, *args):
                     from KBEDebug import DEBUG_MSG
                     DEBUG_MSG("in attackShare, inscription effect is triggered, skill_id:{0}, effect_type{1}, effect_value{2}", context.skillId, gameconst.InscriptionEffectType.DAMAGE_INCREASE_RATIO, datas)
 
-        realHurt =max((((realAtk - dmgAvoidance) *(arg1+addSkillRatio)+ arg2 + addValue) *(1+addRatio) * fatalDmgRatio * realDmgRatioEx * levelDmgRatioEx + self.getProp("realDmg") - target.getProp("realDmgDef"))* moralEffectRatio, 0.1 * realAtk + 1)
+        realHurt =max((((realAtk - dmgAvoidance) *(arg1+addSkillRatio)+ arg2 + addValue) *(1+addRatio) * fatalDmgRatio * realDmgRatioEx * levelDmgRatioEx * skillDmgRatioEx + self.getProp("realDmg") - target.getProp("realDmgDef"))* moralEffectRatio, 0.1 * realAtk + 1)
     
     if target.IsMonster:
         if not hasattr(context, "ignoreMaxDamage"):
@@ -626,12 +628,12 @@ def armorAvoidance(self, target, classTag, ignoreRatio):
     # 防御计算
     if classTag == 2:
         # 法术防御
-        minArmor = target.getProp("minMagicArmor") if target else 0
-        maxArmor = target.getProp("maxMagicArmor") if target else 0
+        minArmor = target.getProp("minMagicArmor") + target.getProp("minAllArmor") if target else 0
+        maxArmor = target.getProp("maxMagicArmor") + target.getProp("maxAllArmor") if target else 0
     else:
         # 物理防御，辅助技能保护（如果3的技能action里有attack则当做物攻）
-        minArmor = target.getProp("minPhysicalArmor") if target else 0
-        maxArmor = target.getProp("maxPhysicalArmor") if target else 0
+        minArmor = target.getProp("minPhysicalArmor") + target.getProp("minAllArmor") if target else 0
+        maxArmor = target.getProp("maxPhysicalArmor") + target.getProp("maxAllArmor") if target else 0
 
     if maxArmor >= minArmor:
         dmgAvoidance = random.randint(minArmor, maxArmor)
@@ -671,31 +673,69 @@ def realDmgRatio(self, target, context):
     return realDmgRatio
 
 def pushTarget(self, target, context, *args):
-    if not target:
-        return 
-    arg1 = args[0] if len(args) >= 1 else -1
-    # 击退距离，填-1表示会造成击退效果，但是效果由受击方决定（对应单位上配置被击退的效果）
-    arg2 = args[1] if len(args) >= 2 else 10.0
-    # 击退速度
-    arg3 = args[2] if len(args) >= 3 else 0.0
-    # 额外僵直时间
-    arg4 = args[3] if len(args) >= 4 else 1.0
-    # 成功的概率
-    arg5 = args[4] if len(args) >= 5 else 0
-    # 什么环境下生效，0代表都生效，1代表只PVP生效，2代表只PVE生效，默认只PVE生效
-
-    if arg5 == 1 and not utils.isPVP(self, target):
-        return
-    elif arg5 == 2 and utils.isPVP(self, target):
-        return
-    else:
-        if random.randint(1, 100) <= arg4 * 100:
-            if arg1 == -1:
-                self.pushTarget(target, context, -1)
-            else:
-                self.pushTarget(target, context, arg1, arg2, arg3)
+        if not target:
+            return
+        arg1 = args[0] if len(args) >= 1 else -1
+        # 击退距离，填-1表示会造成击退效果，但是效果由受击方决定（对应单位上配置被击退的效果）
+        arg2 = args[1] if len(args) >= 2 else 10.0
+        # 击退速度
+        arg3 = args[2] if len(args) >= 3 else 0.0
+        # 额外僵直时间
+        arg4 = args[3] if len(args) >= 4 else 1.0
+        # 成功的概率
+        arg5 = args[4] if len(args) >= 5 else 0
+        # 什么环境下生效，0代表都生效，1代表只PVP生效，2代表只PVE生效，默认都生效
+        arg6 = args[5] if len(args) >= 6 else 0
+        # 是否参与控制抵抗结算，0表示按原逻辑只判概率，1表示走controlResist通用控制对抗，不填默认0（保持原有表现）
+        arg7 = args[6] if len(args) >= 7 else 1.0
+        # 参与控制抵抗时使用的控制持续时间（只用于对抗结算与控制衰减判定，不改变实际位移的距离/速度/僵直），默认1.0秒
+        arg8 = args[7] if len(args) >= 8 else 1
+        # 是否参与控制衰减计算，0表示不参与，1表示参与，不填默认参与
+        arg9 = args[8] if len(args) >= 9 else 0
+        # 是否强制命中，且不会控制衰减，0表示根据正常结算，1表示强制命中，不填默认正常结算
+    
+        if arg5 == 1 and not utils.isPVP(self, target):
+            return False
+        elif arg5 == 2 and utils.isPVP(self, target):
+            return False
+    
+        if arg6 == 1:
+            # 推拉反制：带buffTag99的目标、以及配置了creepTag99(推拉反制)的非玩家单位免疫击退
+            if target.hasBuffTag(99) or (not target.IsAvatar and hasattr(target, "hasCreepTag") and target.hasCreepTag(99)):
+                return False
+    
+            # 控制BuffID，位移统一使用64000106，与dragTarget保持一致
+            controlBuffID = 64000106
+            # 控制状态ID，位移控制（与dragTarget共用同一个控制衰减池）
+            stateID = 2
+            # 控制穿透
+            controlEnh = (self.getProp("pushEnh") or 0) + (self.getProp("uniEnh") or 0)
+            # 控制抵抗
+            controlAnti = (target.getProp("pushAnti") or 0) + (target.getProp("uniAnti") or 0)
+            # 控制抵抗调整值
+            adjControlAnti = target.getProp("adjPushAnti") or 0
+            # 可被驱散的Buff Tag
+            dispelTag = 26
+    
+            # 使用controlResist计算控制结果，1表示控制命中
+            # 注意：位移是瞬时效果，控制衰减只作用于免疫判定，命中后仍按原始距离/速度/僵直执行位移
+            if controlResist(self, target, context, arg7, arg4, arg8, arg9,
+                             controlBuffID, stateID, controlEnh, controlAnti,
+                             adjControlAnti, dispelTag) != 1:
+                return False
+        else:
+            # 原逻辑：只按概率判定是否击退
+            if random.randint(1, 100) > arg4 * 100:
+                return False
+    
+        if arg1 == -1:
+            self.pushTarget(target, context, -1)
+        else:
+            self.pushTarget(target, context, arg1, arg2, arg3)
+            # 参与控制抵抗时，tag26的驱散已在calcAntiControl内统一处理，这里只保留原逻辑的驱散
+            if arg6 != 1:
                 target.tagDispelAll(26)
-    return
+        return False
 
 def dragTarget(self, target, context, *args):
     if not target:
@@ -731,9 +771,9 @@ def dragTarget(self, target, context, *args):
         # 控制状态ID (使用2表示位移控制)
         stateID = 2
         # 控制穿透
-        controlEnh = self.getProp("pushEnh") or 0
+        controlEnh = self.getProp("pushEnh") + self.getProp("uniEnh") or 0
         # 控制抵抗
-        controlAnti = target.getProp("pushAnti") or 0
+        controlAnti = target.getProp("pushAnti") + target.getProp("uniAnti") or 0
         # 控制抵抗调整值
         adjControlAnti = target.getProp("adjPushAnti") or 0
         # 可被驱散的Buff Tag (使用默认值)
@@ -784,7 +824,7 @@ def controlResist(self, target, context, *args):
 
     skill = self._getSkillByActionContext(context)
     skillLv = skill.getLevel(self) if skill else 0
-    controlPower = controlAnti - controlEnh + min(max((target.level - self.level),0), 5)
+    controlPower = controlAnti - controlEnh + min(max((target.level - self.level - 3)*5,0), 30)
 
     result = combatSkill.AntiControlResult()
     result.resultCode = 0
@@ -798,7 +838,8 @@ def controlResist(self, target, context, *args):
     result.dispelBuffTag = dispelTag
 
     # 控制衰减的等级
-    decayLv = self.getControllLv(stateID)
+    decayOwner = utils.getHostEntity(self)
+    decayLv = decayOwner.getControllLv(stateID)
 
     if arg4 == 1:
         # 强制命中，且不会控制衰减
@@ -862,9 +903,9 @@ def stun(self, target, context, *args):
     # 控制状态ID
     stateID = 6
     # 控制穿透
-    controlEnh = self.getProp("stunEnh")
+    controlEnh = self.getProp("stunEnh") + self.getProp("uniEnh")
     # 控制抵抗
-    controlAnti = target.getProp("stunAnti")
+    controlAnti = target.getProp("stunAnti") + target.getProp("uniAnti")
     # 控制抵抗调整值
     adjControlAnti = target.getProp("adjStunAnti")
     # 可被驱散的Buff Tag
@@ -907,9 +948,9 @@ def silent(self, target, context, *args):
     # 控制状态ID
     stateID = 8
     # 控制穿透
-    controlEnh = self.getProp("silentEnh")
+    controlEnh = self.getProp("silentEnh") + self.getProp("uniEnh")
     # 控制抵抗
-    controlAnti = target.getProp("silentAnti")
+    controlAnti = target.getProp("silentAnti") + target.getProp("uniAnti")
     # 控制抵抗调整值
     adjControlAnti = target.getProp("adjSilentAnti")
     # 可被驱散的Buff Tag
@@ -948,9 +989,9 @@ def down(self, target, context, *args):
     # 控制状态ID
     stateID = 5
     # 控制穿透
-    controlEnh = self.getProp("knockEnh")
+    controlEnh = self.getProp("knockEnh") + self.getProp("uniEnh")
     # 控制抵抗
-    controlAnti = target.getProp("knockAnti")
+    controlAnti = target.getProp("knockAnti") + target.getProp("uniAnti")
     # 控制抵抗调整值
     adjControlAnti = target.getProp("adjKnockAnti")
     # 可被驱散的Buff Tag
@@ -1042,9 +1083,9 @@ def frozen(self, target, context, *args):
     # 控制状态ID
     stateID = 10
     # 控制穿透
-    controlEnh = self.getProp("frozenEnh")
+    controlEnh = self.getProp("frozenEnh") + self.getProp("uniEnh")
     # 控制抵抗
-    controlAnti = target.getProp("frozenAnti")
+    controlAnti = target.getProp("frozenAnti")  + target.getProp("uniAnti")
     # 控制抵抗调整值
     adjControlAnti = target.getProp("adjFrozenAnti")
     # 可被驱散的Buff Tag
@@ -1085,9 +1126,9 @@ def snare(self, target, context, *args):
     # 控制状态ID
     stateID = 9
     # 控制穿透
-    controlEnh = self.getProp("slowEnh")
+    controlEnh = self.getProp("slowEnh") + self.getProp("uniEnh")
     # 控制抵抗
-    controlAnti = target.getProp("slowAnti")
+    controlAnti = target.getProp("slowAnti") + target.getProp("uniAnti")
     # 控制抵抗调整值
     adjControlAnti = target.getProp("adjSlowAnti")
     # 可被驱散的Buff Tag
@@ -1191,9 +1232,9 @@ def levelDmgRatio(self, target, context):
     selfHost = utils.getHostEntity(self)
     targetHost = utils.getHostEntity(target)
     if selfHost and selfHost.IsAvatar and targetHost and targetHost.IsMonster:
-        levelDmgRatio = max(1 - max((target.level - self.level),0) * 0.05,0.3)        
+        levelDmgRatio = max(1 - max((target.level - self.level - 3),0) * 0.05,0.5)        
     elif selfHost and selfHost.IsMonster and targetHost and targetHost.IsAvatar:
-        levelDmgRatio = min(1 + max((self.level - target.level),0) * 0.1,3)
+        levelDmgRatio = min(1 + max((self.level - target.level - 3),0) * 0.1,2)
     else:
         levelDmgRatio = 1
         
@@ -1251,9 +1292,9 @@ def snarecommom(self, target, context, *args):
     # 控制状态ID
     stateID = 9
     # 控制穿透
-    controlEnh = self.getProp("slowEnh")
+    controlEnh = self.getProp("slowEnh") + self.getProp("uniEnh")
     # 控制抵抗
-    controlAnti = target.getProp("slowAnti")
+    controlAnti = target.getProp("slowAnti") + target.getProp("uniAnti")
     # 控制抵抗调整值
     adjControlAnti = target.getProp("adjSlowAnti")
     # 可被驱散的Buff Tag
@@ -1265,6 +1306,28 @@ def snarecommom(self, target, context, *args):
         return False
     else:
         return controlResist(self, target, context, arg1, arg2, isDecay, arg4, controlBuffID, stateID, controlEnh, controlAnti, adjControlAnti, dispelTag)
+
+def skillDmgRatio(self, target, context):
+    # 技能伤害倍率计算
+
+    skillDmgRatio = 1.0
+    AtkDmgRatio = 0
+    DefDmgRatio = 0
+    if not target:
+        return skillDmgRatio
+
+    targetHost = utils.getHostEntity(target)
+    selfHost = utils.getHostEntity(self)
+    if targetHost and (targetHost.IsAvatar or targetHost.IsAvatarReplica) and selfHost and (selfHost.IsAvatar or selfHost.IsAvatarReplica):
+        AtkDmgRatio = self.getProp("skillDmg")
+        DefDmgRatio = target.getProp("skillDmgAnti")
+    else:
+        AtkDmgRatio = self.getProp("skillDmg")
+        DefDmgRatio = target.getProp("skillDmgAnti")
+
+    skillDmgRatio = min(max(1 + AtkDmgRatio - DefDmgRatio,0.1),2)
+
+    return skillDmgRatio
 
 
 

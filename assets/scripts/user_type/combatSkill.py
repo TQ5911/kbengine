@@ -842,37 +842,14 @@ class SkillBaseClass(userType.UserSingleType):
 
     def getOneHPLowest(self, casterEnt):
         ###取队伍或小队百分比最低
-        if not casterEnt.isInTeam() and not casterEnt.inRaid():
-            return casterEnt
-
         _targetsList = []
-        if casterEnt.isInTeam():
-            for _member in casterEnt.teamInfo.teamPlayerDict.values():
-                if not _member.playerBox:
-                    continue
-
-                player = KBEngine.entities.get(_member.playerBox.id, None)
-
-                if not player:
-                    continue
-                if utils.checkTargetTypeValid(self.getEffectTargetType(self.skillId), casterEnt, player) and self.inEffectRange(
-                        casterEnt, player):
-                    _targetsList.append(player)
-
-        elif casterEnt.inRaid():
-            raidTeamCacheVal = casterEnt.raidInfo.raidTeamDic.get(casterEnt.raidInfo.raidTeamIDX, None)
-            if raidTeamCacheVal:
-                for _member in raidTeamCacheVal.teamPlayerDict.values():
-                    if not _member.playerBox:
-                        continue
-
-                    player = KBEngine.entities.get(_member.playerBox.id, None)
-
-                    if not player:
-                        continue
-                    if utils.checkTargetTypeValid(self.getEffectTargetType(self.skillId), casterEnt, player) and self.inEffectRange(
-                            casterEnt, player):
-                        _targetsList.append(player)
+        for _gbId in casterEnt.crossTeamInfo.memberDict:
+            player = utils.getAvatarByGbId(_gbId)
+            if not player:
+                continue
+            if utils.checkTargetTypeValid(self.getEffectTargetType(self.skillId), casterEnt, player) and self.inEffectRange(
+                    casterEnt, player):
+                _targetsList.append(player)
 
         if not _targetsList:
             return casterEnt
@@ -1161,6 +1138,9 @@ class SkillBaseClass(userType.UserSingleType):
         return _position, _direction
 
     def getSkillArr(self, caster, target, direction=None):
+        """
+        direction 一定得是一个向量，而不是direction[2] == yaw
+        """
         _arr = []
         if not direction:
             direction = sMath.vector3WithoutY(target.position - caster.position)
@@ -1339,15 +1319,13 @@ class SkillBaseClass(userType.UserSingleType):
                 if not targetId:
                     return []
 
-                if self.getTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION):
-                    targetsList = caster.getTargets(caster, targetId, self.getEffectTargetType(self.skillId),
-                                                    self.getServerEffectRange(caster), forceTarget,
-                                                    self.getTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION))
-                    _targetNearest = self.getOneNearest(self.getTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION), targetsList)
-                else:
-                    targetsList = caster.getTargets(caster, targetId, self.getEffectTargetType(self.skillId),
-                                                    self.getServerEffectRange(caster), forceTarget)
-                    _targetNearest = self.getOneNearest(caster.position, targetsList)
+                # 单目标：按距离升序逐个校验，首个命中即返回。
+                # 等价于原来的「getTargets 全量过滤 + getOneNearest 取最近」，但谓词调用次数
+                # 从 O(候选数) 降到 O(1)（同屏 190 人时单次搜索候选集 40~50 个）。
+                # 说明见 SkillManager.getNearestTarget。
+                _targetNearest = caster.getNearestTarget(targetId, self.getEffectTargetType(self.skillId),
+                                                         self.getServerEffectRange(caster), forceTarget,
+                                                         self.getTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION))
 
             if _targetNearest and (caster.isVisible(_targetNearest) or caster.hasBuffTag(
                     gameconst.BuffTag.TagSeeHiddenEnt)) and self.inEffectRange(caster, _targetNearest):
@@ -1417,6 +1395,10 @@ class SkillBaseClass(userType.UserSingleType):
                 range = min(self.getEffectRange(caster, self.skillId, self.skillLv), distance + self.getProtectRange(self.skillId))
             else:
                 range = self.getServerEffectRange(caster) + self.getProtectRange(self.skillId)
+
+            if gameconfig.enableDrawCube():
+                caster.allClients.drawCube(caster.position, _skillDir, width, range)
+
             if self.getTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION):
                 checkScopeFun = lambda target: self.isInAttackRectAngle(target, self.getTempData(gameconst.SkillTempDataKey.BEGIN_SKILL_POSITION),
                                                                         _skillDir, length, width, range)
@@ -1805,7 +1787,14 @@ class SkillBaseClass(userType.UserSingleType):
             _realSkillArgs = skillArgs
             if self.isChangePosSkill(self.skillId):
                 _realSkillArgs = skillArgs[:-3]
-            _effectedEntIds = self.getEffectTargets(owner, targetId, _realSkillArgs)
+            # 绝大多数 endSkillAction 只做 removeBuffBySkill，并不消费 effectedEntIds。
+            # 该标记由导出侧生成：仅 endSkillAction 函数体引用了 effectedEntIds 的技能才会命中
+            # （见 xls2data2/procpysheet.py unlockCondProcessor.endActionNeedTargets）。
+            # 未命中的技能跳过收尾目标收集，省一次完整 AoE 扫描（set拷贝+候选遍历+几何判定）。
+            if self.skillId in S_SD.endActionNeedTargets:
+                _effectedEntIds = self.getEffectTargets(owner, targetId, _realSkillArgs)
+            else:
+                _effectedEntIds = []
             _ctx = actionContext.UseSkillCtx(
                 owner.id, 
                 self.skillId, 

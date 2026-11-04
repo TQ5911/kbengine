@@ -32,6 +32,13 @@ class IMount(object):
                     if prop:
                         self.cell.updatePropByMount(outfit.outfitId, True)
 
+    def getUnlockMountNum(self):
+        num = 0
+        for outfit in self.outfitInfo.outfitDic.values():
+            if outfit.outfitType == gameconst.OutfitEnum.mount and not outfit.expireTime:
+                num += 1
+        return num
+
     def doAddMount(self, pid, mountId, durationDays):
         LOG_INFO('doAddMount:', pid, mountId, durationDays)
         outfit = self.outfitInfo.getOutfitInfo(gameconst.OutfitEnum.mount, mountId)

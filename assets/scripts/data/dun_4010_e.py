@@ -54,16 +54,6 @@ datas ={
       40100001
     ],
     "dialogID": 19900243,
-    "transition": {
-      "finished": [
-        1024
-      ]
-    }
-  },
-  "1024": {
-    "type": "dunEnd",
-    "exitTime": 8.0,
-    "isDungeonDone": 1,
     "transition": {}
   }
 }

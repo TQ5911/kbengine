@@ -87,6 +87,14 @@ datas = _tools.RODict({
         "ID": "petUpperLimitText",
         "value": "可出战<color=#d35a66>{0}</color>只{1}品质的精灵",
     }),
+    "equipLimitQuality": _tools.RODict({
+        "ID": "equipLimitQuality",
+        "value": (2, 3, 4),
+    }),
+    "petLimitQuality": _tools.RODict({
+        "ID": "petLimitQuality",
+        "value": (2, 3, 4),
+    }),
     "activateCrossWorldLevel": _tools.RODict({
         "ID": "activateCrossWorldLevel",
         "value": 8,

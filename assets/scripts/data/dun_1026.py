@@ -26,7 +26,7 @@ datas ={
       "MonsterGroupID": "",
       "PathID": "",
       "Radius": 0.0,
-      "RefreshNum": 0,
+      "RefreshNum": 1,
       "RefreshTime": 0.0,
       "RefreshTimedID": 1,
       "Remark": "",

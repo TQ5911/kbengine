@@ -10,11 +10,6 @@ class IMonthCard(object):
     def __init__(self):
         pass
 
-    def addMonthCardByItem(self, monthCardId, opUUID, ctx):
-        self.setPendingUseId(opUUID, ctx)
-        self.base.addMonthCardByItem(monthCardId, opUUID, ctx)
-        return gameconst.UseItemEnum.PENDING
-
     def syncMonthCardInfo(self, monthCardExpireTime, bigMonthCardExpireTime):
         self.monthCardExpireTimeCell = monthCardExpireTime
         self.bigMonthCardExpireTimeCell = bigMonthCardExpireTime

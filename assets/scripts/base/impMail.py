@@ -585,6 +585,7 @@ class ImpMail(object):
         self.onMailsDeleted(rmMails, srcType, desc=desc)
 
     def onMailsDeleted(self, rmMails, srcType=0, srcSubType=0, desc='', idipSource=0, sendClient=True):
+        LOG_DBG('onMailsDeleted~')
         _mailGBIDList = list(rmMails.keys())
         now = utils.curTS()
         expireDuration = gameconst.ONE_DAY_COST_SECONDS * 60
@@ -593,18 +594,19 @@ class ImpMail(object):
             if mailGbId not in gameglobal.globalMailsCacheList and now - tAdd > expireDuration:
                 self.hasGotGlobalMails.pop(mailGbId, 0)
         self.mailCacheData.deleteMailsCache(_mailGBIDList)
-        if sendClient:
-            self.client.onDelMails(
-                _mailGBIDList,
-                self.mailCacheData.playerMailSpaceLeft(),
-                self.mailCacheData.systemMailSpaceLeft()
-            )
 
         _opUUID = KBEngine.genUUID64()
         for mailGBID, mVal in rmMails.items():
             if not mVal:
                 continue
             self.doRecordDeleteMailLog(mVal, _opUUID, srcType, srcSubType, desc, idipSource, mailGBID)
+
+        if sendClient and self.client:
+            self.client.onDelMails(
+                _mailGBIDList,
+                self.mailCacheData.playerMailSpaceLeft(),
+                self.mailCacheData.systemMailSpaceLeft()
+            )
 
     def doRecordDeleteMailLog(self, mail, opUUID, srcType, srcSubType, desc, idipSource, mailGBID):
         result = []

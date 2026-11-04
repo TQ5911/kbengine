@@ -10,6 +10,18 @@
             <Type>          ARRAY   <of>    PLAYER_GBID   </of>       </Type>
             <Flags>         CELL_PRIVATE                            </Flags>
         </enmityList>
+
+        <tempEnmityDict>
+            <Type>          PY_DICT                                 </Type>
+            <Flags>         CELL_PRIVATE                            </Flags>
+            <Default>       {}                                      </Default>
+        </tempEnmityDict>
+
+        <tempEnmityTimerId>
+            <Type>          TIMER_ID                                </Type>
+            <Flags>         CELL_PRIVATE                            </Flags>
+            <Default>       0                                       </Default>
+        </tempEnmityTimerId>
     </Properties>
 
     <BaseMethods>
@@ -23,6 +35,11 @@
         <removeEnmity> <Exposed/>
             <Arg>   PLAYER_GBID     </Arg>
         </removeEnmity>
+
+        <onSyncEnmityOnlineState>
+            <Arg>   ARRAY <of> PLAYER_GBID </of>   </Arg>
+            <Arg>   ARRAY <of> UINT8 </of>         </Arg>
+        </onSyncEnmityOnlineState>
     </BaseMethods>
 
     <CellMethods>
@@ -30,6 +47,9 @@
             <Arg>   UINT8   </Arg>
             <Arg>   ARRAY <of> PLAYER_GBID </of>   </Arg>
         </onUpdateEnmityList>
+
+        <getTempEnmityList> <Exposed/>
+        </getTempEnmityList>
     </CellMethods>
 
     <ClientMethods>
@@ -37,5 +57,9 @@
             <Arg>  UINT8   </Arg>
             <Arg>  ARRAY <of>  ENMITY_ITEM_CLIENT_VAL </of>   </Arg>
         </onEnmityDatas>
+
+        <onTempEnmityList>
+            <Arg>  ARRAY <of>  TEMP_ENMITY_ITEM </of>   </Arg>
+        </onTempEnmityList>
     </ClientMethods>
 </root>

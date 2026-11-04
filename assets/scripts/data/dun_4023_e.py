@@ -26,7 +26,7 @@ datas ={
       40230014
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -162,7 +162,7 @@ datas ={
       40230009
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -213,7 +213,7 @@ datas ={
       40230085
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -240,7 +240,7 @@ datas ={
       40230015
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -267,7 +267,7 @@ datas ={
       40230001
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -436,7 +436,7 @@ datas ={
       40230031
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -484,7 +484,7 @@ datas ={
       40230049
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -580,7 +580,7 @@ datas ={
       40230089
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 1,
@@ -637,7 +637,7 @@ datas ={
       40230067
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -701,7 +701,7 @@ datas ={
       40230097
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -746,7 +746,7 @@ datas ={
       40230109
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

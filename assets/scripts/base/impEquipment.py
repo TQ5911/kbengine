@@ -34,8 +34,11 @@ import gearManufacture_details as GMDD
 import agent_agentFunction as A_AFD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import soul_soul as SS_D
+import soul_soulRconst as SSRCD
+import SoulInfo
 import taskClass_taskTarget as TCCTD
 import formula_generalFormula as F_GFD
+import gearEnhance_gearconst as GE_GC
 
 from proto.gameServerDrop_pb2 import DropResult_SUCCESS,\
     DropResult_NOT_FOUND,\
@@ -63,7 +66,16 @@ class ImpEquipment(object):
         'bagEquipSoulSocketDeductItemsCB',
         'bodyEquipSoulSocketDeductItemsCB',
         'bagEquipGlyphWashingPreviewCB',
-        'cellEquipGlyphWashingPreview'
+        'cellEquipGlyphWashingPreview',
+        'bagSoulWashDeductCB',
+        'bagEquipSoulWashDeductCB',
+        'cellEquipSoulWashPreview',
+        'bagSoulClashDeductCB',
+        'bagEquipSoulClashDeductCB',
+        'bodyEquipSoulClashDeductCB',
+        'bagSoulDefReplaceDeductCB',
+        'bagEquipSoulDefReplaceDeductCB',
+        'bodyEquipSoulDefReplaceDeductCB',
     )
 
     def __init__(self):
@@ -414,7 +426,15 @@ class ImpEquipment(object):
     def cellUndressEquipmentSucc(self, opUUID, bodyEquipDic):
         LOG_INFO('in cellUndressEquipmentSucc', opUUID)
         self.unlockBag()
-        self.bagData.doBagUndressEquip(self, opUUID, bodyEquipDic)
+        _opStat, _equipItem, _srcType = self.bagData.doBagUndressEquip(self, opUUID, bodyEquipDic)
+        if _opStat == gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
+            return
+        # 背包放不下（或被锁住）时不能把玩家身上的装备直接丢掉，
+        # 按工程既有惯例改走邮件把装备发回给玩家
+        LOG_WARN('in cellUndressEquipmentSucc, add item to bag failed, send by mail:', _opStat, _equipItem.itemId)
+        equipUndressReturnMail = int(GE_GC.datas['equipmentReturnMail']['value'])
+        _mailWealth = dropAward.MailAttachVal(itemObjs=[_equipItem])
+        mailAssistor.sendMailToPlayers([self.gbID], equipUndressReturnMail, extraAttach=_mailWealth, opUUID=opUUID, srcType=_srcType)
     
     def cellUndressEquipmentFail(self, slotId, reason):
         LOG_INFO("cellUndressEquipmentFail::", slotId, reason)
@@ -1070,6 +1090,10 @@ class ImpEquipment(object):
             LOG_ERR('bagEquipSoulSocket, equipType is not match:', soulItem.itemId, bagEquipItem.equipAttr.equipType)
             return
 
+        if utils.soulInlayForbidden(soulItem.quality, bagEquipItem.getQuality()):
+            LOG_ERR('bagEquipSoulSocket, inlayRange forbid:', soulItem.itemId, soulItem.quality, bagEquipItem.getQuality())
+            return
+
         costItemDic, costCurrencyDic = bagEquipItem.soulSocketNeedItems()
         if not costCurrencyDic:
             LOG_ERR('     bagEquipSoulSocket, cost is empty:')
@@ -1090,7 +1114,10 @@ class ImpEquipment(object):
             LOG_ERR('_doDeductSoulItem, soulGridId is invalid:', soulGridId)
             return None, None, None
 
-        rollProps = soulItem.rollProps
+        soulPayload = soulItem.exportSoulPayload()
+        if not SoulInfo.hasAnyProp(soulPayload):
+            LOG_ERR('_doDeductSoulItem, soul has no affix:', soulGridId, soulItem.itemId)
+            return None, None, None
         soulItemId = soulItem.itemId
         soulBindType = soulItem.bindType
 
@@ -1102,7 +1129,691 @@ class ImpEquipment(object):
             LOG_ERR('in _doDeductSoulItem, cleanGridByGridId error')
             return None, None, None
 
-        return rollProps, soulItemId, soulBindType
+        return soulPayload, soulItemId, soulBindType
+
+    @gamedecorator.checkGameconfigEnable('equip_soulWash')
+    def reqSoulWash(self, exposed, gridId, uniqueId, itemIds, bindTypes):
+        LOG_INFO('in reqSoulWash:', gridId, uniqueId, itemIds, bindTypes)
+        soulItem = self._getBagSoulItem(gridId, uniqueId)
+        if not soulItem:
+            self.client.onSoulWashPreview(0, gridId, uniqueId, 0, [], [])
+            return
+        payload = soulItem.exportSoulPayload()
+        if not payload['defLevel']:
+            LOG_ERR('reqSoulWash, defLevel is 0:', gridId, soulItem.itemId)
+            self.client.onSoulWashPreview(0, gridId, uniqueId, 0, [], [])
+            return
+        if not self.getRoleCacheAttr('school'):
+            LOG_ERR('reqSoulWash, school missing:', gridId)
+            self.client.onSoulWashPreview(0, gridId, uniqueId, 0, [], [])
+            return
+        cost = utils.soulWashCost(payload['defLevel'])
+        if not cost:
+            LOG_ERR('reqSoulWash, cost missing:', payload['defLevel'])
+            self.client.onSoulWashPreview(0, gridId, uniqueId, 0, [], [])
+            return
+
+        opUUID = KBEngine.genUUID64()
+        srcType = AAC_AACDD.datas.BONUS_SRC_SOUL_REFINED_COST
+        costItems = {}
+        if cost['fragmentNum'] > 0:
+            costItems[cost['fragmentItemId']] = cost['fragmentNum']
+        costCurrency = {cost['ironItemId']: cost['ironNum']}
+        detail = gameclass.AwardDetailCls(uniqueId=soulItem.uniqueId, costCurrencyDic=costCurrency, costItemDic=costItems)
+        self.baseEquipDeductItemsWithBindTypes(
+            costCurrency, costItems, itemIds, bindTypes, opUUID, srcType, detail, self,
+            'bagSoulWashDeductCB', (opUUID, gridId, uniqueId))
+
+    def bagEquipSoulWash(self, equipPos, uniqueId, itemIds, bindTypes):
+        LOG_INFO('in bagEquipSoulWash:', equipPos, uniqueId, itemIds, bindTypes)
+        equipItem = self._getBagEquipWithSoul(equipPos, uniqueId)
+        if not equipItem:
+            self.client.onEquipSoulWashPreview(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, 0, [], [], 0)
+            return
+        payload = equipItem.equipAttr.soulPayload()
+        if not self._beginSoulWashDeduct(equipItem.uniqueId, payload['defLevel'], itemIds, bindTypes,
+                                         'bagEquipSoulWashDeductCB', (equipPos, uniqueId)):
+            self.client.onEquipSoulWashPreview(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, 0, [], [], 0)
+
+    def bodyEquipSoulWash(self, equipPos, uniqueId, defLevel, itemIds, bindTypes):
+        LOG_INFO('in bodyEquipSoulWash:', equipPos, uniqueId, defLevel, itemIds, bindTypes)
+        if not self._beginSoulWashDeduct(uniqueId, defLevel, itemIds, bindTypes,
+                                         'cellEquipSoulWashPreview', (equipPos, uniqueId), box=self.cell):
+            self.client.onEquipSoulWashPreview(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, uniqueId, 0, [], [], 0)
+
+    def bagEquipSoulWashDeductCB(self, opStat, bindValue, unbindValue, opUUID, equipPos, uniqueId):
+        LOG_INFO('in bagEquipSoulWashDeductCB:', opStat, bindValue, unbindValue, opUUID, equipPos, uniqueId)
+        equipItem = self._getBagEquipWithSoul(equipPos, uniqueId)
+        if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK or not equipItem:
+            self.client.onEquipSoulWashPreview(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, 0, [], [], 0)
+            return
+        if not self._saveEquipSoulWashPreview(equipItem, self.getRoleCacheAttr('school'), bindValue):
+            self.client.onEquipSoulWashPreview(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, 0, [], [], 0)
+            return
+        payload = SoulInfo.readEquip(equipItem.equipAttr)
+        preview = payload['previewWash']
+        self._syncBagSoulItem(equipPos, equipItem)
+        self._sendEquipSoulWashPreview(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, equipItem)
+        self._trackSoul(
+            'Soul_Wash_Normal', opUUID, None, equipItem, SoulInfo.calcBindType(payload), payload,
+            afterBase=preview['baseProps'], afterLucky=preview['luckyProp'], affixOpType='wash')
+
+    def bagEquipSoulWashConfirm(self, equipPos, uniqueId):
+        LOG_INFO('in bagEquipSoulWashConfirm:', equipPos, uniqueId)
+        equipItem = self._getBagEquipWithSoul(equipPos, uniqueId)
+        before = SoulInfo.readEquip(equipItem.equipAttr) if equipItem else None
+        if not equipItem or not self._keepEquipSoulWash(equipItem):
+            bindType = equipItem.equipAttr.soulBindType if equipItem else 0
+            bindFromWash = equipItem.equipAttr.soulBindFromWash if equipItem else 0
+            self.client.onEquipSoulWashConfirm(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, bindType, [], [], bindFromWash)
+            return
+        after = SoulInfo.readEquip(equipItem.equipAttr)
+        self._syncBagSoulItem(equipPos, equipItem)
+        self._sendEquipSoulWashConfirm(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, equipItem)
+        self._trackSoul(
+            'Soul_Wash_Normal', KBEngine.genUUID64(), None, equipItem, SoulInfo.calcBindType(after), before,
+            afterBase=after['baseProps'], afterLucky=after['luckyProp'], affixOpType='confirm')
+
+    def bagEquipSoulWashDiscard(self, equipPos, uniqueId):
+        LOG_INFO('in bagEquipSoulWashDiscard:', equipPos, uniqueId)
+        equipItem = self._getBagEquipWithSoul(equipPos, uniqueId)
+        if not equipItem or not self._discardEquipSoulWash(equipItem):
+            LOG_WARN('   in bagEquipSoulWashDiscard, preview not found:', equipPos, uniqueId)
+            self.client.onEquipSoulWashDiscardResult(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, 0)
+            return
+        self._syncBagSoulItem(equipPos, equipItem)
+        self.client.onEquipSoulWashDiscardResult(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, 1)
+
+    def _beginSoulWashDeduct(self, uniqueId, defLevel, itemIds, bindTypes, methodName, args, box=None):
+        if not defLevel:
+            LOG_ERR('_beginSoulWashDeduct, defLevel is 0:', uniqueId)
+            return False
+        if not self.getRoleCacheAttr('school'):
+            LOG_ERR('_beginSoulWashDeduct, school missing:', uniqueId)
+            return False
+        cost = utils.soulWashCost(defLevel)
+        if not cost:
+            LOG_ERR('_beginSoulWashDeduct, cost missing:', defLevel)
+            return False
+        opUUID = KBEngine.genUUID64()
+        srcType = AAC_AACDD.datas.BONUS_SRC_SOUL_REFINED_COST
+        costItems = {}
+        if cost['fragmentNum'] > 0:
+            costItems[cost['fragmentItemId']] = cost['fragmentNum']
+        costCurrency = {cost['ironItemId']: cost['ironNum']}
+        detail = gameclass.AwardDetailCls(uniqueId=uniqueId, costCurrencyDic=costCurrency, costItemDic=costItems)
+        self.baseEquipDeductItemsWithBindTypes(
+            costCurrency, costItems, itemIds, bindTypes, opUUID, srcType, detail, box or self,
+            methodName, (opUUID,) + tuple(args))
+        return True
+
+    def _saveEquipSoulWashPreview(self, equipItem, schoolId, bindValue):
+        preview = SoulInfo.previewEquipWash(equipItem.equipAttr, schoolId, not bindValue)
+        if not preview:
+            LOG_ERR('_saveEquipSoulWashPreview, preview failed:', equipItem.uniqueId)
+            return None
+        payload = SoulInfo.readEquip(equipItem.equipAttr)
+        payload['previewWash']['materialBound'] = 1 if bindValue else 0
+        SoulInfo.writeEquip(equipItem.equipAttr, payload)
+        equipItem.equipAttr.setDirtyFlag()
+        return payload['previewWash']
+
+    def _keepEquipSoulWash(self, equipItem):
+        payload = SoulInfo.keepEquipWash(equipItem.equipAttr)
+        if not payload:
+            return None
+        equipItem.refreshSoulBindFromPayload()
+        equipItem.equipAttr.calcScore()
+        equipItem.equipAttr.setDirtyFlag()
+        return payload
+
+    def _discardEquipSoulWash(self, equipItem):
+        payload = SoulInfo.discardEquipWash(equipItem.equipAttr)
+        if not payload:
+            return None
+        equipItem.equipAttr.setDirtyFlag()
+        return payload
+
+    def _sendEquipSoulWashPreview(self, equipIn, equipPos, equipItem):
+        preview = equipItem.equipAttr.soulPayload()['previewWash']
+        lucky = [preview['luckyProp']] if preview and preview['luckyProp'] else []
+        baseProps = preview['baseProps'] if preview else []
+        materialBound = preview.get('materialBound', 0) if preview else 0
+        self.client.onEquipSoulWashPreview(
+            1, equipIn, equipPos, equipItem.uniqueId, equipItem.equipAttr.soulBindType,
+            SoulInfo.propsToClient(baseProps), SoulInfo.propsToClient(lucky), materialBound)
+
+    def _sendEquipSoulWashConfirm(self, equipIn, equipPos, equipItem):
+        payload = equipItem.equipAttr.soulPayload()
+        lucky = [payload['luckyProp']] if payload['luckyProp'] else []
+        self.client.onEquipSoulWashConfirm(
+            1, equipIn, equipPos, equipItem.uniqueId, equipItem.equipAttr.soulBindType,
+            SoulInfo.propsToClient(payload['baseProps']), SoulInfo.propsToClient(lucky),
+            payload['bindFromWash'])
+
+    def _getBagEquipWithSoul(self, gridId, uniqueId):
+        equipItem = self.bagData.getItemObjByGridId(gridId)
+        if not equipItem or equipItem.uniqueId != uniqueId or not equipItem.isEquipmentItem():
+            LOG_ERR('_getBagEquipWithSoul, invalid equip:', gridId, uniqueId)
+            return None
+        if dataUtils.checkEquipGrowingForbidden(self.gbID, equipItem):
+            LOG_ERR('_getBagEquipWithSoul, equipment can not be growing:', equipItem.itemId)
+            return None
+        if not equipItem.equipAttr.soulItemId:
+            LOG_ERR('_getBagEquipWithSoul, no soul:', gridId, uniqueId)
+            return None
+        return equipItem
+
+    def bagSoulWashDeductCB(self, opStat, bindValue, unbindValue, opUUID, gridId, uniqueId):
+        LOG_INFO('in bagSoulWashDeductCB:', opStat, bindValue, unbindValue, opUUID, gridId, uniqueId)
+        soulItem = self._getBagSoulItem(gridId, uniqueId)
+        if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK or not soulItem:
+            self.client.onSoulWashPreview(0, gridId, uniqueId, 0, [], [])
+            return
+        preview = SoulInfo.previewItemWash(soulItem, self.getRoleCacheAttr('school'), not bindValue)
+        if not preview:
+            LOG_ERR('bagSoulWashDeductCB, preview failed:', gridId, uniqueId)
+            self.client.onSoulWashPreview(0, gridId, uniqueId, 0, [], [])
+            return
+        payload = SoulInfo.readItem(soulItem)
+        payload['previewWash']['materialBound'] = 1 if bindValue else 0
+        SoulInfo.writeItem(soulItem, payload)
+        self._syncBagSoulItem(gridId, soulItem)
+        lucky = [preview['luckyProp']] if preview['luckyProp'] else []
+        self.client.onSoulWashPreview(
+            1, gridId, uniqueId, soulItem.bindType,
+            SoulInfo.propsToClient(preview['baseProps']),
+            SoulInfo.propsToClient(lucky))
+        self._trackSoul(
+            'Soul_Wash_Normal', opUUID, soulItem, None, SoulInfo.calcBindType(payload), payload,
+            afterBase=preview['baseProps'], afterLucky=preview['luckyProp'], affixOpType='wash')
+
+    @gamedecorator.checkGameconfigEnable('equip_soulWash')
+    def reqSoulWashConfirm(self, exposed, gridId, uniqueId):
+        LOG_INFO('in reqSoulWashConfirm:', gridId, uniqueId)
+        soulItem = self._getBagSoulItem(gridId, uniqueId)
+        if not soulItem:
+            self.client.onSoulWashConfirm(0, gridId, uniqueId, 0, [], [])
+            return
+        before = SoulInfo.readItem(soulItem)
+        payload = SoulInfo.keepItemWash(soulItem)
+        if not payload:
+            self.client.onSoulWashConfirm(0, gridId, uniqueId, soulItem.bindType, [], [])
+            return
+        self._syncBagSoulItem(gridId, soulItem)
+        lucky = [payload['luckyProp']] if payload['luckyProp'] else []
+        self.client.onSoulWashConfirm(
+            1, gridId, uniqueId, soulItem.bindType,
+            SoulInfo.propsToClient(payload['baseProps']),
+            SoulInfo.propsToClient(lucky))
+        self._trackSoul(
+            'Soul_Wash_Normal', KBEngine.genUUID64(), soulItem, None, SoulInfo.calcBindType(payload), before,
+            afterBase=payload['baseProps'], afterLucky=payload['luckyProp'], affixOpType='confirm')
+
+    @gamedecorator.checkGameconfigEnable('equip_soulWash')
+    def reqSoulWashDiscard(self, exposed, gridId, uniqueId):
+        LOG_INFO('in reqSoulWashDiscard:', gridId, uniqueId)
+        soulItem = self._getBagSoulItem(gridId, uniqueId)
+        if not soulItem or not SoulInfo.discardItemWash(soulItem):
+            LOG_WARN('   in reqSoulWashDiscard, preview not found:', gridId, uniqueId)
+            self.client.onSoulWashDiscardResult(gridId, uniqueId, 0)
+            return
+        self._syncBagSoulItem(gridId, soulItem)
+        self.client.onSoulWashDiscardResult(gridId, uniqueId, 1)
+
+    def _getBagSoulItem(self, gridId, uniqueId):
+        soulItem = self.bagData.getItemObjByGridId(gridId)
+        if not soulItem or soulItem.uniqueId != uniqueId or not soulItem.isSoul():
+            LOG_ERR('_getBagSoulItem, invalid soul:', gridId, uniqueId)
+            return None
+        return soulItem
+
+    def _trackSoul(self, event, opUUID, soulItem, equipItem, bindType, beforePayload, **kwargs):
+        distinctId = self.accountEntity.clientDistinctId if self.accountEntity else ''
+        SoulInfo.trackSoul(self.gbID, distinctId, event, opUUID, soulItem, equipItem, bindType, beforePayload, **kwargs)
+
+    def _syncBagSoulItem(self, gridId, soulItem):
+        self.client.onUpdateGridItemsJson(
+            self.bagData.bagType, gridId, soulItem.uniqueId, soulItem.attr2Json())
+
+    @gamedecorator.checkGameconfigEnable('equip_soulWash')
+    def reqSoulClash(self, exposed, gridId, uniqueId, costGridId, costUniqueId, itemIds, bindTypes):
+        LOG_INFO('in reqSoulClash:', gridId, uniqueId, costGridId, costUniqueId, itemIds, bindTypes)
+        soulItem = self._getBagSoulItem(gridId, uniqueId)
+        if not soulItem or gridId == costGridId:
+            self.client.onSoulClashPreview(0, gridId, uniqueId, 0, [])
+            return
+        material, curLevel = self._clashMaterialLevel(costGridId, costUniqueId, uniqueId, soulItem.itemId)
+        if not material or not self._beginSoulClashDeduct(
+                soulItem.uniqueId, curLevel, itemIds, bindTypes, 'bagSoulClashDeductCB',
+                (gridId, uniqueId, costGridId, costUniqueId, curLevel)):
+            self.client.onSoulClashPreview(0, gridId, uniqueId, 0, [])
+
+    def bagSoulClashDeductCB(self, opStat, bindValue, unbindValue, opUUID, gridId, uniqueId, costGridId, costUniqueId, curLevel):
+        LOG_INFO('in bagSoulClashDeductCB:', opStat, bindValue, unbindValue, opUUID, gridId, uniqueId, costGridId, curLevel)
+        soulItem = self._getBagSoulItem(gridId, uniqueId)
+        if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK or not soulItem:
+            self.client.onSoulClashPreview(0, gridId, uniqueId, 0, [])
+            return
+        material = self._getBagSoulItem(costGridId, costUniqueId)
+        materialQuality = material.quality if material else 0
+        payload = SoulInfo.setClashPreview(SoulInfo.readItem(soulItem), soulItem.itemId, self.getRoleCacheAttr('school'), curLevel, materialQuality)
+        if not payload:
+            LOG_ERR('bagSoulClashDeductCB, preview failed:', gridId, uniqueId)
+            self.client.onSoulClashPreview(0, gridId, uniqueId, soulItem.bindType, [])
+            return
+        materialBound = self._consumeClashMaterial(opUUID, bindValue, costGridId, costUniqueId, uniqueId, soulItem.itemId, curLevel)
+        if materialBound is None:
+            self.client.onSoulClashPreview(0, gridId, uniqueId, soulItem.bindType, [])
+            return
+        payload['previewClash']['materialBound'] = materialBound
+        SoulInfo.writeItem(soulItem, payload)
+        self._syncBagSoulItem(gridId, soulItem)
+        self.client.onSoulClashPreview(
+            1, gridId, uniqueId, soulItem.bindType, SoulInfo.propsToClient(payload['previewClash']['rareProps']))
+        self._trackSoul(
+            'Soul_Wash_HighRank', opUUID, soulItem, None, SoulInfo.calcBindType(payload), payload,
+            afterRare=payload['previewClash']['rareProps'], affixOpType='wash')
+
+    @gamedecorator.checkGameconfigEnable('equip_soulWash')
+    def reqSoulClashConfirm(self, exposed, gridId, uniqueId):
+        LOG_INFO('in reqSoulClashConfirm:', gridId, uniqueId)
+        soulItem = self._getBagSoulItem(gridId, uniqueId)
+        if not soulItem:
+            self.client.onSoulClashConfirm(0, gridId, uniqueId, 0, [])
+            return
+        before = SoulInfo.readItem(soulItem)
+        payload = SoulInfo.keepItemClash(soulItem)
+        if not payload:
+            self.client.onSoulClashConfirm(0, gridId, uniqueId, soulItem.bindType, [])
+            return
+        self._syncBagSoulItem(gridId, soulItem)
+        self.client.onSoulClashConfirm(
+            1, gridId, uniqueId, soulItem.bindType, SoulInfo.propsToClient(payload['rareProps']))
+        self._trackSoul(
+            'Soul_Wash_HighRank', KBEngine.genUUID64(), soulItem, None, SoulInfo.calcBindType(payload), before,
+            afterRare=payload['rareProps'], affixOpType='confirm')
+
+    @gamedecorator.checkGameconfigEnable('equip_soulWash')
+    def reqSoulClashDiscard(self, exposed, gridId, uniqueId):
+        LOG_INFO('in reqSoulClashDiscard:', gridId, uniqueId)
+        soulItem = self._getBagSoulItem(gridId, uniqueId)
+        if not soulItem or not SoulInfo.discardItemClash(soulItem):
+            LOG_WARN('   in reqSoulClashDiscard, preview not found:', gridId, uniqueId)
+            self.client.onSoulClashDiscardResult(gridId, uniqueId, 0)
+            return
+        self._syncBagSoulItem(gridId, soulItem)
+        self.client.onSoulClashDiscardResult(gridId, uniqueId, 1)
+
+    @gamedecorator.checkGameconfigEnable('equip_soulWash')
+    def reqSoulDefReplace(self, exposed, gridId, uniqueId, costGridId, costUniqueId, itemIds, bindTypes):
+        LOG_INFO('in reqSoulDefReplace:', gridId, uniqueId, costGridId, costUniqueId, itemIds, bindTypes)
+        soulItem = self._getBagSoulItem(gridId, uniqueId)
+        if not soulItem or gridId == costGridId:
+            self.client.onSoulDefReplace(0, gridId, uniqueId, 0, 0)
+            return
+        payload = soulItem.exportSoulPayload()
+        material, materialDefLevel = self._defReplaceMaterial(
+            costGridId, costUniqueId, uniqueId, soulItem.itemId, payload['defLevel'])
+        if not material or not self._beginSoulDefReplaceDeduct(
+                soulItem.uniqueId, itemIds, bindTypes, 'bagSoulDefReplaceDeductCB',
+                (gridId, uniqueId, costGridId, costUniqueId, materialDefLevel)):
+            self.client.onSoulDefReplace(0, gridId, uniqueId, soulItem.bindType, payload['defLevel'])
+
+    def bagSoulDefReplaceDeductCB(self, opStat, bindValue, unbindValue, opUUID, gridId, uniqueId, costGridId, costUniqueId, materialDefLevel):
+        LOG_INFO('in bagSoulDefReplaceDeductCB:', opStat, bindValue, unbindValue, opUUID, gridId, uniqueId, costGridId, materialDefLevel)
+        soulItem = self._getBagSoulItem(gridId, uniqueId)
+        if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK or not soulItem:
+            bindType = soulItem.bindType if soulItem else 0
+            defLevel = soulItem.exportSoulPayload()['defLevel'] if soulItem else 0
+            self.client.onSoulDefReplace(0, gridId, uniqueId, bindType, defLevel)
+            return
+        payload = soulItem.exportSoulPayload()
+        consumed = self._consumeDefReplaceMaterial(
+            opUUID, bindValue, costGridId, costUniqueId, uniqueId, soulItem.itemId,
+            payload['defLevel'], materialDefLevel)
+        if not consumed:
+            self.client.onSoulDefReplace(0, gridId, uniqueId, soulItem.bindType, payload['defLevel'])
+            return
+        materialBound, newDefLevel = consumed
+        newPayload = SoulInfo.replaceItemDefLevel(soulItem, newDefLevel, materialBound)
+        if not newPayload:
+            LOG_ERR('bagSoulDefReplaceDeductCB, replace failed:', gridId, uniqueId, newDefLevel)
+            self.client.onSoulDefReplace(0, gridId, uniqueId, soulItem.bindType, payload['defLevel'])
+            return
+        self._syncBagSoulItem(gridId, soulItem)
+        self.client.onSoulDefReplace(1, gridId, uniqueId, soulItem.bindType, newPayload['defLevel'])
+        self._trackSoul(
+            'Soul_Level_Change', opUUID, soulItem, None, SoulInfo.calcBindType(newPayload), payload,
+            afterLevel=newPayload['defLevel'])
+
+    def bagEquipSoulClash(self, equipPos, uniqueId, costGridId, costUniqueId, itemIds, bindTypes):
+        LOG_INFO('in bagEquipSoulClash:', equipPos, uniqueId, costGridId, costUniqueId, itemIds, bindTypes)
+        equipItem = self._getBagEquipWithSoul(equipPos, uniqueId)
+        if not equipItem:
+            self.client.onEquipSoulClashPreview(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, 0, [], 0)
+            return
+        material, curLevel = self._clashMaterialLevel(costGridId, costUniqueId, uniqueId, equipItem.equipAttr.soulItemId)
+        if not material or not self._beginSoulClashDeduct(
+                equipItem.uniqueId, curLevel, itemIds, bindTypes, 'bagEquipSoulClashDeductCB',
+                (equipPos, uniqueId, costGridId, costUniqueId, curLevel)):
+            self.client.onEquipSoulClashPreview(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, 0, [], 0)
+
+    def bagEquipSoulClashDeductCB(self, opStat, bindValue, unbindValue, opUUID, equipPos, uniqueId, costGridId, costUniqueId, curLevel):
+        LOG_INFO('in bagEquipSoulClashDeductCB:', opStat, bindValue, unbindValue, opUUID, equipPos, uniqueId, costGridId, curLevel)
+        equipItem = self._getBagEquipWithSoul(equipPos, uniqueId)
+        if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK or not equipItem:
+            self.client.onEquipSoulClashPreview(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, 0, [], 0)
+            return
+        material = self._getBagSoulItem(costGridId, costUniqueId)
+        materialQuality = material.quality if material else 0
+        payload = SoulInfo.setClashPreview(
+            SoulInfo.readEquip(equipItem.equipAttr), equipItem.equipAttr.soulItemId,
+            self.getRoleCacheAttr('school'), curLevel, materialQuality)
+        if not payload:
+            LOG_ERR('bagEquipSoulClashDeductCB, preview failed:', equipPos, uniqueId)
+            self.client.onEquipSoulClashPreview(
+                0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, equipItem.equipAttr.soulBindType, [], 0)
+            return
+        materialBound = self._consumeClashMaterial(
+            opUUID, bindValue, costGridId, costUniqueId, uniqueId, equipItem.equipAttr.soulItemId, curLevel)
+        if materialBound is None:
+            self.client.onEquipSoulClashPreview(
+                0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, equipItem.equipAttr.soulBindType, [], 0)
+            return
+        payload['previewClash']['materialBound'] = materialBound
+        SoulInfo.writeEquip(equipItem.equipAttr, payload)
+        equipItem.equipAttr.setDirtyFlag()
+        self._syncBagSoulItem(equipPos, equipItem)
+        self._sendEquipSoulClashPreview(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, equipItem)
+        self._trackSoul(
+            'Soul_Wash_HighRank', opUUID, None, equipItem, SoulInfo.calcBindType(payload), payload,
+            afterRare=payload['previewClash']['rareProps'], affixOpType='wash')
+
+    def bagEquipSoulClashConfirm(self, equipPos, uniqueId):
+        LOG_INFO('in bagEquipSoulClashConfirm:', equipPos, uniqueId)
+        equipItem = self._getBagEquipWithSoul(equipPos, uniqueId)
+        before = SoulInfo.readEquip(equipItem.equipAttr) if equipItem else None
+        payload = self._keepEquipSoulClash(equipItem) if equipItem else None
+        if not equipItem or not payload:
+            bindType = equipItem.equipAttr.soulBindType if equipItem else 0
+            bindFromClash = equipItem.equipAttr.soulBindFromClash if equipItem else 0
+            self.client.onEquipSoulClashConfirm(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, bindType, [], bindFromClash)
+            return
+        self._syncBagSoulItem(equipPos, equipItem)
+        self._sendEquipSoulClashConfirm(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, equipItem)
+        self._trackSoul(
+            'Soul_Wash_HighRank', KBEngine.genUUID64(), None, equipItem, SoulInfo.calcBindType(payload), before,
+            afterRare=payload['rareProps'], affixOpType='confirm')
+
+    def bagEquipSoulClashDiscard(self, equipPos, uniqueId):
+        LOG_INFO('in bagEquipSoulClashDiscard:', equipPos, uniqueId)
+        equipItem = self._getBagEquipWithSoul(equipPos, uniqueId)
+        if not equipItem or not self._discardEquipSoulClash(equipItem):
+            LOG_WARN('   in bagEquipSoulClashDiscard, preview not found:', equipPos, uniqueId)
+            self.client.onEquipSoulClashDiscardResult(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, 0)
+            return
+        self._syncBagSoulItem(equipPos, equipItem)
+        self.client.onEquipSoulClashDiscardResult(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, 1)
+
+    def bodyEquipSoulClash(self, equipPos, uniqueId, soulItemId, costGridId, costUniqueId, itemIds, bindTypes, defLevel):
+        LOG_INFO('in bodyEquipSoulClash:', equipPos, uniqueId, soulItemId, costGridId, costUniqueId, itemIds, bindTypes, defLevel)
+        material, curLevel = self._clashMaterialLevel(costGridId, costUniqueId, uniqueId, soulItemId)
+        if not material or not self._beginSoulClashDeduct(
+                uniqueId, curLevel, itemIds, bindTypes, 'bodyEquipSoulClashDeductCB',
+                (equipPos, uniqueId, soulItemId, costGridId, costUniqueId, curLevel, defLevel)):
+            self.client.onEquipSoulClashPreview(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, uniqueId, 0, [], 0)
+
+    def bodyEquipSoulClashDeductCB(self, opStat, bindValue, unbindValue, opUUID, equipPos, uniqueId, soulItemId, costGridId, costUniqueId, curLevel, defLevel):
+        LOG_INFO('in bodyEquipSoulClashDeductCB:', opStat, bindValue, unbindValue, opUUID, equipPos, uniqueId, costGridId, curLevel, defLevel)
+        if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
+            self.client.onEquipSoulClashPreview(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, uniqueId, 0, [], 0)
+            return
+        payload = SoulInfo.emptyPayload()
+        payload['defLevel'] = defLevel
+        material = self._getBagSoulItem(costGridId, costUniqueId)
+        materialQuality = material.quality if material else 0
+        payload = SoulInfo.setClashPreview(payload, soulItemId, self.getRoleCacheAttr('school'), curLevel, materialQuality)
+        if not payload:
+            LOG_ERR('bodyEquipSoulClashDeductCB, preview failed:', equipPos, uniqueId, curLevel)
+            self.client.onEquipSoulClashPreview(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, uniqueId, 0, [], 0)
+            return
+        materialBound = self._consumeClashMaterial(opUUID, bindValue, costGridId, costUniqueId, uniqueId, soulItemId, curLevel)
+        if materialBound is None:
+            self.client.onEquipSoulClashPreview(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, uniqueId, 0, [], 0)
+            return
+        self.cell.cellEquipSoulClashPreview(materialBound, equipPos, uniqueId, payload['previewClash']['rareProps'])
+
+    def _beginSoulClashDeduct(self, uniqueId, curLevel, itemIds, bindTypes, methodName, args, box=None):
+        if not curLevel:
+            LOG_ERR('_beginSoulClashDeduct, curLevel is 0:', uniqueId)
+            return False
+        if not self.getRoleCacheAttr('school'):
+            LOG_ERR('_beginSoulClashDeduct, school missing:', uniqueId)
+            return False
+        cost = utils.soulClashCost(curLevel)
+        if not cost:
+            LOG_ERR('_beginSoulClashDeduct, cost missing:', curLevel)
+            return False
+        opUUID = KBEngine.genUUID64()
+        srcType = AAC_AACDD.datas.BONUS_SRC_SOUL_HEDGE_COST
+        costCurrency = {cost['ironItemId']: cost['ironNum']}
+        detail = gameclass.AwardDetailCls(uniqueId=uniqueId, costCurrencyDic=costCurrency)
+        self.baseEquipDeductItemsWithBindTypes(
+            costCurrency, {}, itemIds, bindTypes, opUUID, srcType, detail, box or self,
+            methodName, (opUUID,) + tuple(args))
+        return True
+
+    def _clashMaterialLevel(self, costGridId, costUniqueId, targetUniqueId, targetItemId):
+        material = self._getBagSoulItem(costGridId, costUniqueId)
+        if not material or material.uniqueId == targetUniqueId:
+            LOG_ERR('_clashMaterialLevel, invalid material:', costGridId, costUniqueId)
+            return None, 0
+        if material.isLocked():
+            LOG_ERR('_clashMaterialLevel, material is locked:', costGridId, material.itemId)
+            return None, 0
+        targetData = dataUtils.getCommItemData(targetItemId)
+        curLevel = utils.soulCurrentLevel(material.itemId, material.exportSoulPayload()['baseProps'])
+        targetQuality = targetData['quality'] if targetData else 0
+        if not utils.soulClashMaterialAllowed(material.quality, targetQuality, curLevel):
+            LOG_ERR('_clashMaterialLevel, inlayLevelRestrict:', material.itemId, targetItemId, material.quality, targetQuality, curLevel)
+            return None, 0
+        if curLevel <= 0:
+            LOG_ERR('_clashMaterialLevel, level is 0:', material.itemId, costGridId)
+            return None, 0
+        return material, curLevel
+
+    def _consumeClashMaterial(self, opUUID, bindValue, costGridId, costUniqueId, targetUniqueId, targetItemId, curLevel):
+        material, levelNow = self._clashMaterialLevel(costGridId, costUniqueId, targetUniqueId, targetItemId)
+        if not material or levelNow != curLevel:
+            LOG_ERR('_consumeClashMaterial, material changed:', costGridId, curLevel, levelNow)
+            return None
+        rareBound = SoulInfo.rareBoundFromClashMaterial(material.exportSoulPayload())
+        srcType = AAC_AACDD.datas.BONUS_SRC_SOUL_HEDGE_COST
+        detail = gameclass.AwardDetailCls(bagType=self.bagData.bagType, gridId=costGridId, itemId=material.itemId)
+        cleaned = self.bagData.cleanGridByGridId(self, costGridId, material.itemId, opUUID, srcType, detail)
+        if not cleaned:
+            LOG_ERR('_consumeClashMaterial, clean failed:', costGridId)
+            return None
+        return rareBound
+
+    def _keepEquipSoulClash(self, equipItem):
+        payload = SoulInfo.keepEquipClash(equipItem.equipAttr)
+        if not payload:
+            return None
+        equipItem.refreshSoulBindFromPayload()
+        equipItem.equipAttr.calcScore()
+        equipItem.equipAttr.setDirtyFlag()
+        return payload
+
+    def _discardEquipSoulClash(self, equipItem):
+        payload = SoulInfo.discardEquipClash(equipItem.equipAttr)
+        if not payload:
+            return None
+        equipItem.equipAttr.setDirtyFlag()
+        return payload
+
+    def _sendEquipSoulClashPreview(self, equipIn, equipPos, equipItem):
+        preview = equipItem.equipAttr.soulPayload()['previewClash']
+        rareProps = preview['rareProps'] if preview else []
+        materialBound = preview.get('materialBound', 0) if preview else 0
+        self.client.onEquipSoulClashPreview(
+            1, equipIn, equipPos, equipItem.uniqueId, equipItem.equipAttr.soulBindType,
+            SoulInfo.propsToClient(rareProps), materialBound)
+
+    def _sendEquipSoulClashConfirm(self, equipIn, equipPos, equipItem):
+        payload = equipItem.equipAttr.soulPayload()
+        self.client.onEquipSoulClashConfirm(
+            1, equipIn, equipPos, equipItem.uniqueId, equipItem.equipAttr.soulBindType,
+            SoulInfo.propsToClient(payload['rareProps']), payload['bindFromClash'])
+
+    def bagEquipSoulDefReplace(self, equipPos, uniqueId, costGridId, costUniqueId, itemIds, bindTypes):
+        LOG_INFO('in bagEquipSoulDefReplace:', equipPos, uniqueId, costGridId, costUniqueId, itemIds, bindTypes)
+        equipItem = self._getBagEquipWithSoul(equipPos, uniqueId)
+        if not equipItem:
+            self.client.onEquipSoulDefReplace(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, 0, 0, 0)
+            return
+        payload = equipItem.equipAttr.soulPayload()
+        material, materialDefLevel = self._defReplaceMaterial(
+            costGridId, costUniqueId, uniqueId, equipItem.equipAttr.soulItemId, payload['defLevel'])
+        if not material or not self._beginSoulDefReplaceDeduct(
+                equipItem.uniqueId, itemIds, bindTypes, 'bagEquipSoulDefReplaceDeductCB',
+                (equipPos, uniqueId, costGridId, costUniqueId, materialDefLevel)):
+            self.client.onEquipSoulDefReplace(
+                0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId,
+                equipItem.equipAttr.soulBindType, payload['defLevel'], equipItem.equipAttr.soulBindFromInherit)
+
+    def bagEquipSoulDefReplaceDeductCB(self, opStat, bindValue, unbindValue, opUUID, equipPos, uniqueId, costGridId, costUniqueId, materialDefLevel):
+        LOG_INFO('in bagEquipSoulDefReplaceDeductCB:', opStat, bindValue, unbindValue, opUUID, equipPos, uniqueId, costGridId, materialDefLevel)
+        equipItem = self._getBagEquipWithSoul(equipPos, uniqueId)
+        if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK or not equipItem:
+            bindType = equipItem.equipAttr.soulBindType if equipItem else 0
+            defLevel = equipItem.equipAttr.soulDefLevel if equipItem else 0
+            bindFromInherit = equipItem.equipAttr.soulBindFromInherit if equipItem else 0
+            self.client.onEquipSoulDefReplace(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId, bindType, defLevel, bindFromInherit)
+            return
+        payload = equipItem.equipAttr.soulPayload()
+        consumed = self._consumeDefReplaceMaterial(
+            opUUID, bindValue, costGridId, costUniqueId, uniqueId, equipItem.equipAttr.soulItemId,
+            payload['defLevel'], materialDefLevel)
+        if not consumed:
+            self.client.onEquipSoulDefReplace(
+                0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId,
+                equipItem.equipAttr.soulBindType, payload['defLevel'], equipItem.equipAttr.soulBindFromInherit)
+            return
+        materialBound, newDefLevel = consumed
+        newPayload = SoulInfo.replaceEquipDefLevel(equipItem.equipAttr, newDefLevel, materialBound)
+        if not newPayload:
+            LOG_ERR('bagEquipSoulDefReplaceDeductCB, replace failed:', equipPos, uniqueId, newDefLevel)
+            self.client.onEquipSoulDefReplace(
+                0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId,
+                equipItem.equipAttr.soulBindType, payload['defLevel'], equipItem.equipAttr.soulBindFromInherit)
+            return
+        equipItem.refreshSoulBindFromPayload()
+        equipItem.equipAttr.setDirtyFlag()
+        self._syncBagSoulItem(equipPos, equipItem)
+        self.client.onEquipSoulDefReplace(
+            1, gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, equipPos, uniqueId,
+            equipItem.equipAttr.soulBindType, newPayload['defLevel'], newPayload['bindFromInherit'])
+        self._trackSoul(
+            'Soul_Level_Change', opUUID, None, equipItem, SoulInfo.calcBindType(newPayload), payload,
+            afterLevel=newPayload['defLevel'])
+
+    def bodyEquipSoulDefReplace(self, equipPos, uniqueId, soulItemId, costGridId, costUniqueId, itemIds, bindTypes, defLevel):
+        LOG_INFO('in bodyEquipSoulDefReplace:', equipPos, uniqueId, soulItemId, costGridId, costUniqueId, itemIds, bindTypes, defLevel)
+        material, materialDefLevel = self._defReplaceMaterial(
+            costGridId, costUniqueId, uniqueId, soulItemId, defLevel)
+        if not material or not self._beginSoulDefReplaceDeduct(
+                uniqueId, itemIds, bindTypes, 'bodyEquipSoulDefReplaceDeductCB',
+                (equipPos, uniqueId, soulItemId, costGridId, costUniqueId, defLevel, materialDefLevel)):
+            self.client.onEquipSoulDefReplace(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, uniqueId, 0, 0, 0)
+
+    def bodyEquipSoulDefReplaceDeductCB(self, opStat, bindValue, unbindValue, opUUID, equipPos, uniqueId, soulItemId, costGridId, costUniqueId, defLevel, materialDefLevel):
+        LOG_INFO('in bodyEquipSoulDefReplaceDeductCB:', opStat, bindValue, unbindValue, opUUID, equipPos, uniqueId, costGridId, defLevel, materialDefLevel)
+        if opStat != gameconst.BagOPStat.OPERATE_BAG_STAT_OK:
+            self.client.onEquipSoulDefReplace(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, uniqueId, 0, 0, 0)
+            return
+        consumed = self._consumeDefReplaceMaterial(
+            opUUID, bindValue, costGridId, costUniqueId, uniqueId, soulItemId, defLevel, materialDefLevel)
+        if not consumed:
+            self.client.onEquipSoulDefReplace(0, gameconst.EquipAttrConst.EQUIP_BELONGTO_BODY, equipPos, uniqueId, 0, 0, 0)
+            return
+        materialBound, newDefLevel = consumed
+        self.cell.cellEquipSoulDefReplace(materialBound, equipPos, uniqueId, newDefLevel)
+
+    def _beginSoulDefReplaceDeduct(self, uniqueId, itemIds, bindTypes, methodName, args, box=None):
+        opUUID = KBEngine.genUUID64()
+        srcType = AAC_AACDD.datas.BONUS_SRC_SOUL_REPLACE_COST
+        costCurrency = {SSRCD.datas['replaceType']['value']: SSRCD.datas['replaceConsume']['value']}
+        detail = gameclass.AwardDetailCls(uniqueId=uniqueId, costCurrencyDic=costCurrency)
+        self.baseEquipDeductItemsWithBindTypes(
+            costCurrency, {}, itemIds, bindTypes, opUUID, srcType, detail, box or self,
+            methodName, (opUUID,) + tuple(args))
+        return True
+
+    def _defReplaceMaterial(self, costGridId, costUniqueId, targetUniqueId, targetItemId, targetDefLevel):
+        material = self._getBagSoulItem(costGridId, costUniqueId)
+        if not material or material.uniqueId == targetUniqueId:
+            LOG_ERR('_defReplaceMaterial, invalid material:', costGridId, costUniqueId)
+            return None, 0
+        if material.isLocked():
+            LOG_ERR('_defReplaceMaterial, material is locked:', costGridId, material.itemId)
+            return None, 0
+        targetData = dataUtils.getCommItemData(targetItemId)
+        materialDefLevel = material.exportSoulPayload()['defLevel']
+        if not targetData or targetData['quality'] != material.quality or materialDefLevel < targetDefLevel:
+            LOG_ERR('_defReplaceMaterial, not allowed:', material.itemId, targetItemId,
+                    material.quality, materialDefLevel, targetDefLevel)
+            return None, 0
+        return material, materialDefLevel
+
+    def _consumeDefReplaceMaterial(self, opUUID, bindValue, costGridId, costUniqueId, targetUniqueId, targetItemId, targetDefLevel, materialDefLevel):
+        material, levelNow = self._defReplaceMaterial(
+            costGridId, costUniqueId, targetUniqueId, targetItemId, targetDefLevel)
+        if not material or levelNow != materialDefLevel:
+            LOG_ERR('_consumeDefReplaceMaterial, material changed:', costGridId, materialDefLevel, levelNow)
+            return None
+        bindFromInherit = material.exportSoulPayload().get('bindFromInherit')
+        srcType = AAC_AACDD.datas.BONUS_SRC_SOUL_REPLACE_COST
+        detail = gameclass.AwardDetailCls(bagType=self.bagData.bagType, gridId=costGridId, itemId=material.itemId)
+        cleaned = self.bagData.cleanGridByGridId(self, costGridId, material.itemId, opUUID, srcType, detail)
+        if not cleaned:
+            LOG_ERR('_consumeDefReplaceMaterial, clean failed:', costGridId)
+            return None
+        materialBound = 1 if bindValue or bindFromInherit else 0
+        return materialBound, levelNow
+
+    def bodyEquipSoulSocket(self, equipQuality, equipType, soulGridId, costCurrencyDic, costItemDic, itemIds, bindTypes, opUUID, srcType, detail, cbArgs):
+        LOG_INFO('in bodyEquipSoulSocket:', equipQuality, equipType, soulGridId)
+        soulItem = self.bagData.getItemObjByGridId(soulGridId)
+        if not soulItem:
+            LOG_ERR('bodyEquipSoulSocket, soulGridId is invalid:', soulGridId)
+            self.cell.unlockBodyEquips()
+            return
+
+        if soulItem.itemSubType not in gameconst.ItemSubEnum.EQUIP_SOUL_TYPE:
+            LOG_ERR('bodyEquipSoulSocket, soulGridId is not soul item:', soulGridId)
+            self.cell.unlockBodyEquips()
+            return
+
+        soulData = SS_D.datas.get(soulItem.itemId, None)
+        if not soulData:
+            LOG_ERR('bodyEquipSoulSocket, soulItem is not soul item:', soulItem.itemId)
+            self.cell.unlockBodyEquips()
+            return
+
+        if soulData['equipmentID'] != equipType:
+            LOG_ERR('bodyEquipSoulSocket, equipType is not match:', soulItem.itemId, equipType)
+            self.cell.unlockBodyEquips()
+            return
+
+        if utils.soulInlayForbidden(soulItem.quality, equipQuality):
+            LOG_ERR('bodyEquipSoulSocket, inlayRange forbid:', soulItem.itemId, soulItem.quality, equipQuality)
+            self.cell.unlockBodyEquips()
+            return
+
+        self.baseEquipDeductItemsWithBindTypes(costCurrencyDic, costItemDic, itemIds, bindTypes, opUUID, srcType, detail, self,
+                                                'bodyEquipSoulSocketDeductItemsCB', cbArgs)
 
     def bodyEquipSoulSocketDeductItemsCB(self, opStat, bindValue, unbindValue, opUUID, equipSlot, soulGridId):
         LOG_INFO('in bodyEquipSoulSocketDeductItemsCB:', opStat, bindValue, unbindValue, opUUID, equipSlot, soulGridId)
@@ -1136,8 +1847,13 @@ class ImpEquipment(object):
             soulAffixes = []
             for oneAffix in bagEquipItem.equipAttr.soulAffixes:
                 soulAffixes.append(oneAffix.toAfxClientDic())
+            payload = bagEquipItem.equipAttr.soulPayload()
+            lucky = [payload['luckyProp']] if payload['luckyProp'] else []
             self.client.onEquipSoulSocketSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, soulAffixes,
-                                                 bagEquipItem.getEquipScore(), bagEquipItem.equipAttr.soulBindType, bagEquipItem.bindType, soulItemId)
+                                                 bagEquipItem.getEquipScore(), bagEquipItem.equipAttr.soulBindType, bagEquipItem.bindType, soulItemId,
+                                                 payload['defLevel'],
+                                                 SoulInfo.propsToClient(payload['rareProps']), SoulInfo.propsToClient(lucky),
+                                                 payload['bindFromWash'], payload['bindFromClash'], payload['bindFromInherit'])
 
         equipAttrs = {
             'baseAttrs':bagEquipItem.getBaseAttrs(),
@@ -1465,7 +2181,7 @@ class ImpEquipment(object):
             if 0 not in reqClassList and myClass not in reqClassList:
                 continue
 
-            equipLevel = _gearData['equipLevel']
+            equipLevel = _gearData['equipLevel'][it.getGrade()-1]
             if equipLevel > myLevel:
                 continue
 
@@ -1514,6 +2230,319 @@ class ImpEquipment(object):
                                                     glyphData.toClientData(), bagEquipItem.getEquipScore(),
                                                     glyphBindType, bagEquipItem.bindType)
         return
+
+    def gmSetEquipEnhance(self, su, itemId, equipId, enhanceLv, bindEnhanceCost=-1, syncMaxLv=0):
+        """
+        GM设置装备强化等级/强化绑定值, 按 背包->仓库->身上 顺序定位装备, 仅支持在线玩家
+        """
+        LOG_INFO('gmSetEquipEnhance', itemId, equipId, enhanceLv, bindEnhanceCost, syncMaxLv)
+        if self.isCrossServer:
+            LOG_ERR('gmSetEquipEnhance, player is in cross server:', itemId, equipId)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_IN_CROSS_SERVER, '执行失败, 玩家在跨服中, 请回到本服后执行',
+                               {"ec": gameconst.GMCommandErr.GM_RET_TARGET_IN_CROSS_SERVER})
+            return
+
+        errMsgMap = {
+            gameconst.GMCommandErr.GM_RET_EQUIP_GROWING_FORBIDDEN: '执行失败, 装备当前禁止养成操作(如在架拍卖/掉落中)',
+            gameconst.GMCommandErr.GM_RET_EQUIP_LV_OUT_OF_RANGE: '执行失败, 强化等级超出配置范围',
+        }
+
+        #先找背包
+        gridIds = self.bagData.getGridIdsByItemId(itemId)
+        for gridId in gridIds:
+            bagEquipItem = self.bagData.getItemObjByGridId(gridId)
+            if bagEquipItem.uniqueId != equipId:
+                continue
+            ret, errCode = bagEquipItem.gmSetEnhance(self.gbID, self, enhanceLv, bindEnhanceCost, syncMaxLv)
+            if not ret:
+                su.onCommandResult(errCode, errMsgMap.get(errCode, '执行失败'), {"ec": errCode, "enhanceLv": enhanceLv})
+                return
+            if self.client:
+                self.client.onUpdateGridItemsJson(self.bagData.bagType, gridId, equipId, bagEquipItem.attr2Json())
+                #onUpdateGridItemsJson只带attrJson, 客户端不刷新bindType与GearInfo解析值, 补发强化回包同步
+                equipEnhanceDatas = [{
+                    'eqipIn': gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG,
+                    'eqipPos': gridId,
+                    'enhanceVal': bagEquipItem.getEnhanceLevel(),
+                    'itemId': bagEquipItem.itemId,
+                    'uniqueId': bagEquipItem.uniqueId,
+                    'enhanceLv': bagEquipItem.getEnhanceLevel(),
+                    'score': bagEquipItem.getEquipScore(),
+                    'bindEnhanceCost': bagEquipItem.equipAttr.bindEnhanceCost,
+                    'bindType': bagEquipItem.bindType,
+                    'maxEnhanceLv': bagEquipItem.getMaxEnhanceLevel(),
+                }]
+                self.client.onMultiEquipEnhance(gameconst.EquipMultiEnhanceResult.OK, equipEnhanceDatas, [], False)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_OK, '执行成功', {"ec": gameconst.GMCommandErr.GM_RET_OK, "gbId": self.gbID, "equipIn": gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG,
+                                             "pos": gridId, "enhanceLv": bagEquipItem.getEnhanceLevel(), "bindEnhanceCost": bagEquipItem.equipAttr.bindEnhanceCost})
+            return
+
+        #背包没有找仓库
+        gridIds = self.warehouse.getGridIdsByItemId(itemId)
+        for gridId in gridIds:
+            warehouseEquipItem = self.warehouse.getItemObjByGridId(gridId)
+            if warehouseEquipItem.uniqueId != equipId:
+                continue
+            ret, errCode = warehouseEquipItem.gmSetEnhance(self.gbID, self, enhanceLv, bindEnhanceCost, syncMaxLv)
+            if not ret:
+                su.onCommandResult(errCode, errMsgMap.get(errCode, '执行失败'), {"ec": errCode, "enhanceLv": enhanceLv})
+                return
+            if self.client:
+                self.sendWarehouseData()
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_OK, '执行成功', {"ec": gameconst.GMCommandErr.GM_RET_OK, "gbId": self.gbID, "equipIn": "warehouse",
+                                             "pos": gridId, "enhanceLv": warehouseEquipItem.getEnhanceLevel(), "bindEnhanceCost": warehouseEquipItem.equipAttr.bindEnhanceCost})
+            return
+
+        #仓库没有找身上
+        if not self.cell:
+            LOG_ERR('gmSetEquipEnhance, cell not exist:', itemId, equipId)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_EQUIP_NOT_FOUND, '执行失败, 装备不存在', {"ec": gameconst.GMCommandErr.GM_RET_EQUIP_NOT_FOUND})
+            return
+        self.cell.cellGmSetEquipEnhance(su, itemId, equipId, enhanceLv, bindEnhanceCost, syncMaxLv)
+
+    def gmSetEquipGrade(self, su, itemId, equipId, grade, bindValue=-1):
+        """
+        GM设置装备升阶等级/升阶绑定值, 按 背包->仓库->身上 顺序定位装备, 仅支持在线玩家
+        """
+        LOG_INFO('gmSetEquipGrade', itemId, equipId, grade, bindValue)
+        if self.isCrossServer:
+            LOG_ERR('gmSetEquipGrade, player is in cross server:', itemId, equipId)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_IN_CROSS_SERVER, '执行失败, 玩家在跨服中, 请回到本服后执行',
+                               {"ec": gameconst.GMCommandErr.GM_RET_TARGET_IN_CROSS_SERVER})
+            return
+
+        errMsgMap = {
+            gameconst.GMCommandErr.GM_RET_EQUIP_GROWING_FORBIDDEN: '执行失败, 装备当前禁止养成操作(如在架拍卖/掉落中)',
+            gameconst.GMCommandErr.GM_RET_EQUIP_LV_OUT_OF_RANGE: '执行失败, 升阶等级超出配置范围',
+        }
+
+        #先找背包
+        gridIds = self.bagData.getGridIdsByItemId(itemId)
+        for gridId in gridIds:
+            bagEquipItem = self.bagData.getItemObjByGridId(gridId)
+            if bagEquipItem.uniqueId != equipId:
+                continue
+            ret, errCode = bagEquipItem.gmSetGrade(self.gbID, self, grade, bindValue)
+            if not ret:
+                su.onCommandResult(errCode, errMsgMap.get(errCode, '执行失败'), {"ec": errCode, "grade": grade})
+                return
+            if self.client:
+                self.client.onUpdateGridItemsJson(self.bagData.bagType, gridId, equipId, bagEquipItem.attr2Json())
+                #onUpdateGridItemsJson只带attrJson, 客户端不刷新bindType与GearInfo解析值, 补发升阶回包同步
+                self.client.onEquipUpgradeSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, bagEquipItem.getGrade(),
+                                               bagEquipItem.getEquipScore(), bagEquipItem.getOriginalBindValue(),
+                                               bagEquipItem.equipAttr.bindValue, bagEquipItem.bindType)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_OK, '执行成功', {"ec": gameconst.GMCommandErr.GM_RET_OK, "gbId": self.gbID, "equipIn": gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG,
+                                             "pos": gridId, "grade": bagEquipItem.getGrade(), "bindValue": bagEquipItem.equipAttr.bindValue})
+            return
+
+        #背包没有找仓库
+        gridIds = self.warehouse.getGridIdsByItemId(itemId)
+        for gridId in gridIds:
+            warehouseEquipItem = self.warehouse.getItemObjByGridId(gridId)
+            if warehouseEquipItem.uniqueId != equipId:
+                continue
+            ret, errCode = warehouseEquipItem.gmSetGrade(self.gbID, self, grade, bindValue)
+            if not ret:
+                su.onCommandResult(errCode, errMsgMap.get(errCode, '执行失败'), {"ec": errCode, "grade": grade})
+                return
+            if self.client:
+                self.sendWarehouseData()
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_OK, '执行成功', {"ec": gameconst.GMCommandErr.GM_RET_OK, "gbId": self.gbID, "equipIn": "warehouse",
+                                             "pos": gridId, "grade": warehouseEquipItem.getGrade(), "bindValue": warehouseEquipItem.equipAttr.bindValue})
+            return
+
+        #仓库没有找身上
+        if not self.cell:
+            LOG_ERR('gmSetEquipGrade, cell not exist:', itemId, equipId)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_EQUIP_NOT_FOUND, '执行失败, 装备不存在', {"ec": gameconst.GMCommandErr.GM_RET_EQUIP_NOT_FOUND})
+            return
+        self.cell.cellGmSetEquipGrade(su, itemId, equipId, grade, bindValue)
+
+    def gmSetEquipSpirit(self, su, itemId, equipId, spiritPos, affixIds, bindType=-1):
+        """
+        GM设置装备附灵词缀/附灵绑定状态, 按 背包->仓库->身上 顺序定位装备, 仅支持在线玩家
+        """
+        LOG_INFO('gmSetEquipSpirit', itemId, equipId, spiritPos, affixIds, bindType)
+        if self.isCrossServer:
+            LOG_ERR('gmSetEquipSpirit, player is in cross server:', itemId, equipId)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_IN_CROSS_SERVER, '执行失败, 玩家在跨服中, 请回到本服后执行',
+                               {"ec": gameconst.GMCommandErr.GM_RET_TARGET_IN_CROSS_SERVER})
+            return
+
+        errMsgMap = {
+            gameconst.GMCommandErr.GM_RET_EQUIP_GROWING_FORBIDDEN: '执行失败, 装备当前禁止养成操作(如在架拍卖/掉落中)',
+            gameconst.GMCommandErr.GM_RET_ARGS_ERR: '执行失败, 参数错误(词缀格式/词缀ID不合法/附灵槽位未开启)',
+        }
+
+        #先找背包
+        gridIds = self.bagData.getGridIdsByItemId(itemId)
+        for gridId in gridIds:
+            bagEquipItem = self.bagData.getItemObjByGridId(gridId)
+            if bagEquipItem.uniqueId != equipId:
+                continue
+            ret, errCode = bagEquipItem.gmSetSpirit(self.gbID, self, spiritPos, affixIds, bindType)
+            if not ret:
+                su.onCommandResult(errCode, errMsgMap.get(errCode, '执行失败'), {"ec": errCode, "spiritPos": spiritPos})
+                return
+            if self.client:
+                self.client.onUpdateGridItemsJson(self.bagData.bagType, gridId, equipId, bagEquipItem.attr2Json())
+                #onUpdateGridItemsJson只带attrJson, 客户端不刷新bindType与GearInfo解析值, 补发附灵回包同步
+                spiritBindType = gameconst.ItemBindType.BIND if bagEquipItem.isSpiritBindType(spiritPos) else gameconst.ItemBindType.NORMAL
+                spiritData = bagEquipItem.equipAttr.spiritDatas[spiritPos]
+                self.client.onEquipSpiritWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, spiritData.toClientData(),
+                                                     spiritPos, bagEquipItem.getEquipScore(), spiritBindType, bagEquipItem.bindType)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_OK, '执行成功', {"ec": gameconst.GMCommandErr.GM_RET_OK, "gbId": self.gbID, "equipIn": gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG,
+                                             "pos": gridId, "spiritPos": spiritPos, "affixIds": affixIds})
+            return
+
+        #背包没有找仓库
+        gridIds = self.warehouse.getGridIdsByItemId(itemId)
+        for gridId in gridIds:
+            warehouseEquipItem = self.warehouse.getItemObjByGridId(gridId)
+            if warehouseEquipItem.uniqueId != equipId:
+                continue
+            ret, errCode = warehouseEquipItem.gmSetSpirit(self.gbID, self, spiritPos, affixIds, bindType)
+            if not ret:
+                su.onCommandResult(errCode, errMsgMap.get(errCode, '执行失败'), {"ec": errCode, "spiritPos": spiritPos})
+                return
+            if self.client:
+                self.sendWarehouseData()
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_OK, '执行成功', {"ec": gameconst.GMCommandErr.GM_RET_OK, "gbId": self.gbID, "equipIn": "warehouse",
+                                             "pos": gridId, "spiritPos": spiritPos, "affixIds": affixIds})
+            return
+
+        #仓库没有找身上
+        if not self.cell:
+            LOG_ERR('gmSetEquipSpirit, cell not exist:', itemId, equipId)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_EQUIP_NOT_FOUND, '执行失败, 装备不存在', {"ec": gameconst.GMCommandErr.GM_RET_EQUIP_NOT_FOUND})
+            return
+        self.cell.cellGmSetEquipSpirit(su, itemId, equipId, spiritPos, affixIds, bindType)
+
+    def gmSetEquipGlyph(self, su, itemId, equipId, glyphPos, affixIds, bindType=-1):
+        """
+        GM设置装备铭文词缀/铭文绑定状态, 按 背包->仓库->身上 顺序定位装备, 仅支持在线玩家
+        """
+        LOG_INFO('gmSetEquipGlyph', itemId, equipId, glyphPos, affixIds, bindType)
+        if self.isCrossServer:
+            LOG_ERR('gmSetEquipGlyph, player is in cross server:', itemId, equipId)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_IN_CROSS_SERVER, '执行失败, 玩家在跨服中, 请回到本服后执行',
+                               {"ec": gameconst.GMCommandErr.GM_RET_TARGET_IN_CROSS_SERVER})
+            return
+
+        errMsgMap = {
+            gameconst.GMCommandErr.GM_RET_EQUIP_GROWING_FORBIDDEN: '执行失败, 装备当前禁止养成操作(如在架拍卖/掉落中)',
+            gameconst.GMCommandErr.GM_RET_ARGS_ERR: '执行失败, 参数错误(词缀格式/词缀ID不合法/铭文槽位未开启)',
+        }
+
+        #先找背包
+        gridIds = self.bagData.getGridIdsByItemId(itemId)
+        for gridId in gridIds:
+            bagEquipItem = self.bagData.getItemObjByGridId(gridId)
+            if bagEquipItem.uniqueId != equipId:
+                continue
+            ret, errCode = bagEquipItem.gmSetGlyph(self.gbID, self, glyphPos, affixIds, bindType)
+            if not ret:
+                su.onCommandResult(errCode, errMsgMap.get(errCode, '执行失败'), {"ec": errCode, "glyphPos": glyphPos})
+                return
+            if self.client:
+                self.client.onUpdateGridItemsJson(self.bagData.bagType, gridId, equipId, bagEquipItem.attr2Json())
+                #onUpdateGridItemsJson只带attrJson, 客户端不刷新bindType与GearInfo解析值, 补发铭文回包同步
+                glyphBindType = gameconst.ItemBindType.BIND if glyphPos in bagEquipItem.equipAttr.glyphBindTypes else gameconst.ItemBindType.NORMAL
+                glyphData = bagEquipItem.equipAttr.getGlyphData(glyphPos)
+                self.client.onEquipGlyphWashingSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, glyphPos,
+                                                    glyphData.toClientData(), bagEquipItem.getEquipScore(),
+                                                    glyphBindType, bagEquipItem.bindType)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_OK, '执行成功', {"ec": gameconst.GMCommandErr.GM_RET_OK, "gbId": self.gbID, "equipIn": gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG,
+                                             "pos": gridId, "glyphPos": glyphPos, "affixIds": affixIds})
+            return
+
+        #背包没有找仓库
+        gridIds = self.warehouse.getGridIdsByItemId(itemId)
+        for gridId in gridIds:
+            warehouseEquipItem = self.warehouse.getItemObjByGridId(gridId)
+            if warehouseEquipItem.uniqueId != equipId:
+                continue
+            ret, errCode = warehouseEquipItem.gmSetGlyph(self.gbID, self, glyphPos, affixIds, bindType)
+            if not ret:
+                su.onCommandResult(errCode, errMsgMap.get(errCode, '执行失败'), {"ec": errCode, "glyphPos": glyphPos})
+                return
+            if self.client:
+                self.sendWarehouseData()
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_OK, '执行成功', {"ec": gameconst.GMCommandErr.GM_RET_OK, "gbId": self.gbID, "equipIn": "warehouse",
+                                             "pos": gridId, "glyphPos": glyphPos, "affixIds": affixIds})
+            return
+
+        #仓库没有找身上
+        if not self.cell:
+            LOG_ERR('gmSetEquipGlyph, cell not exist:', itemId, equipId)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_EQUIP_NOT_FOUND, '执行失败, 装备不存在', {"ec": gameconst.GMCommandErr.GM_RET_EQUIP_NOT_FOUND})
+            return
+        self.cell.cellGmSetEquipGlyph(su, itemId, equipId, glyphPos, affixIds, bindType)
+
+    def gmSetEquipBless(self, su, itemId, equipId, luckyVal, maxBlessLv=-1, blessLvRate=-1, bindBlessCost=-1):
+        """
+        GM设置装备祝福幸运值/历史最高/保底回溯进度/祝福绑定值, 按 背包->仓库->身上 顺序定位装备, 仅支持在线玩家
+        """
+        LOG_INFO('gmSetEquipBless', itemId, equipId, luckyVal, maxBlessLv, blessLvRate, bindBlessCost)
+        if self.isCrossServer:
+            LOG_ERR('gmSetEquipBless, player is in cross server:', itemId, equipId)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_TARGET_IN_CROSS_SERVER, '执行失败, 玩家在跨服中, 请回到本服后执行',
+                               {"ec": gameconst.GMCommandErr.GM_RET_TARGET_IN_CROSS_SERVER})
+            return
+
+        errMsgMap = {
+            gameconst.GMCommandErr.GM_RET_EQUIP_GROWING_FORBIDDEN: '执行失败, 装备当前禁止养成操作(如在架拍卖/掉落中)',
+            gameconst.GMCommandErr.GM_RET_ARGS_ERR: '执行失败, 该装备不支持祝福',
+            gameconst.GMCommandErr.GM_RET_EQUIP_LV_OUT_OF_RANGE: '执行失败, 祝福幸运值超出配置范围',
+        }
+
+        #先找背包
+        gridIds = self.bagData.getGridIdsByItemId(itemId)
+        for gridId in gridIds:
+            bagEquipItem = self.bagData.getItemObjByGridId(gridId)
+            if bagEquipItem.uniqueId != equipId:
+                continue
+            ret, errCode = bagEquipItem.gmSetBless(self.gbID, self, luckyVal, maxBlessLv, blessLvRate, bindBlessCost)
+            if not ret:
+                su.onCommandResult(errCode, errMsgMap.get(errCode, '执行失败'), {"ec": errCode, "luckyVal": luckyVal})
+                return
+            if self.client:
+                self.client.onUpdateGridItemsJson(self.bagData.bagType, gridId, equipId, bagEquipItem.attr2Json())
+                #onUpdateGridItemsJson只带attrJson, 客户端不刷新bindType与GearInfo解析值, 补发祝福回包同步
+                blessAffixes = []
+                for oneAffix in bagEquipItem.equipAttr.blessAffixes:
+                    blessAffixes.append(oneAffix.toAfxClientDic())
+                self.client.onEquipBlessSucc(gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG, gridId, blessAffixes,
+                                             bagEquipItem.equipAttr.maxBlessLv, bagEquipItem.equipAttr.blessLvRate,
+                                             bagEquipItem.getEquipScore(), bagEquipItem.equipAttr.bindBlessCost,
+                                             bagEquipItem.bindType, bagEquipItem.getBlessFailLevels(), bagEquipItem.getBlessFailCounts())
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_OK, '执行成功', {"ec": gameconst.GMCommandErr.GM_RET_OK, "gbId": self.gbID, "equipIn": gameconst.EquipAttrConst.EQUIP_BELONGTO_BAG,
+                                             "pos": gridId, "luckyVal": luckyVal, "maxBlessLv": bagEquipItem.equipAttr.maxBlessLv, "blessLvRate": bagEquipItem.equipAttr.blessLvRate})
+            return
+
+        #背包没有找仓库
+        gridIds = self.warehouse.getGridIdsByItemId(itemId)
+        for gridId in gridIds:
+            warehouseEquipItem = self.warehouse.getItemObjByGridId(gridId)
+            if warehouseEquipItem.uniqueId != equipId:
+                continue
+            ret, errCode = warehouseEquipItem.gmSetBless(self.gbID, self, luckyVal, maxBlessLv, blessLvRate, bindBlessCost)
+            if not ret:
+                su.onCommandResult(errCode, errMsgMap.get(errCode, '执行失败'), {"ec": errCode, "luckyVal": luckyVal})
+                return
+            if self.client:
+                self.sendWarehouseData()
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_OK, '执行成功', {"ec": gameconst.GMCommandErr.GM_RET_OK, "gbId": self.gbID, "equipIn": "warehouse",
+                                             "pos": gridId, "luckyVal": luckyVal, "maxBlessLv": warehouseEquipItem.equipAttr.maxBlessLv, "blessLvRate": warehouseEquipItem.equipAttr.blessLvRate})
+            return
+
+        #仓库没有找身上
+        if not self.cell:
+            LOG_ERR('gmSetEquipBless, cell not exist:', itemId, equipId)
+            su.onCommandResult(gameconst.GMCommandErr.GM_RET_EQUIP_NOT_FOUND, '执行失败, 装备不存在', {"ec": gameconst.GMCommandErr.GM_RET_EQUIP_NOT_FOUND})
+            return
+        self.cell.cellGmSetEquipBless(su, itemId, equipId, luckyVal, maxBlessLv, blessLvRate, bindBlessCost)
 ################################## gm cmd end ###################################
 
     ################################### drop equip start ##############################
@@ -1554,7 +2583,7 @@ class ImpEquipment(object):
         else:
             self.cell.doDropEquipByItem(baseDropInfo, equipInfo, isCross)
 
-    def onDropEquipBase(self, ownerId, returnTime, ownerServerId, uniqueId, price, maxPrice, mapId, pos, equipInfo, collEndTime, killerName, endTime, extraBlob, collectionId, dropTime, isFirst):
+    def onDropEquipBase(self, ownerId, returnTime, ownerServerId, uniqueId, price, maxPrice, mapId, pos, equipInfo, collEndTime, killerName, endTime, extraBlob, collectionId, dropTime, isFirst, collectionServerId):
         _blob = cPickle.dumps(equipInfo)
         gameengine.getGlobalBase('DropStub').dropEquipItem(
             ownerServerId,
@@ -1571,7 +2600,8 @@ class ImpEquipment(object):
             maxPrice,
             self.serverId,
             collectionId,
-            isFirst
+            isFirst,
+            collectionServerId
         )
         
         self.equipDropInfo.addNewDrop(
@@ -1756,6 +2786,11 @@ class ImpEquipment(object):
             str(_pos),
         )
 
+        # 新手历程 taskType=21: 拾取指定品质装备计数 (任意掉落来源)
+        self.beginnerJourney_onTaskEvent(
+                gameconst.BjTaskType.BJ_TASK_TYPE_DEATH_DROP_PICKUP,
+                delta=1, quality=equipItem.getQuality())
+        
         if dropGbId == self.gbID:
             if not gameconfig.isCrossServer():
                 self.onDropTypeChangeToAvatar([uniqueId], [gameconst.DropNotifyType.NOTIFY_TYPE_TAKE_WAIT_DROP_GET], [[]])
@@ -1835,7 +2870,8 @@ class ImpEquipment(object):
 
         gameengine.getGlobalBase('DropStub').doRedeemEquipDrop(self.gbID, uniqueId, self)
 
-        self.syncMethodCallToLocalServerBase('_syncOnRedeemEquipDrop', (_src, _deductVal, _opUUID, _detail))
+        # 扣费发生在本服，跨服镜像同步扣一次，客户端当前连在跨服
+        self.syncMethodCallToCrossServerBase('_syncOnRedeemEquipDrop', (_src, _deductVal, _opUUID, _detail))
 
     #cross
     def _syncOnRedeemEquipDrop(self, _src, _deductVal, _opUUID, _detail):
@@ -2182,8 +3218,8 @@ class ImpEquipment(object):
             LOG_ERR('setTakeEquipRedeemPrice over redeemTime:', uniqueId)
             self.client.onSetTakeEquipRedeemPrice(uniqueId, -1)
             return
-        if price > takerVal.price:
-            LOG_ERR('setTakeEquipRedeemPrice invalid price:', uniqueId, price)
+        if price > takerVal.maxPrice:
+            LOG_ERR('setTakeEquipRedeemPrice invalid price:', uniqueId, price, takerVal.price, takerVal.maxPrice)
             self.client.onSetTakeEquipRedeemPrice(uniqueId, -1)
             return
         gameengine.getGlobalBase('DropStub').setTakeEquipRedeemPrice(self.gbID, uniqueId, self, price)
@@ -2487,6 +3523,8 @@ class ImpEquipment(object):
         consumedItemBindInfos = {}
 
         for itemId, itemNum in itemsDic.items():
+            if itemNum <= 0:
+                continue
             bindType = itemBindInfos.get(itemId, None)
             if bindType is None:
                 LOG_ERR('in calculateConsumePlanGridsWithBindTyps wrong args 2, missing item bind type:', itemId, itemNum, itemBindInfos)

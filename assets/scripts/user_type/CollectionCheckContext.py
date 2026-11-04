@@ -2,6 +2,7 @@ class CollectionCheckType(object):
     WONDER_LAND = 1
     SIEGE_WAR = 2
     INNER_DEMON = 3
+    DAILY_GATHER = 4
 
 class CollectionCheckWonderLand(object):
     CHECK_TYPE = CollectionCheckType.WONDER_LAND
@@ -38,3 +39,14 @@ class CollectionCheckInnerDemon(object):
 
     def checkBase(self, avatarBase):
         return avatarBase.checkInnerDemonRewardCnt()
+
+class CollectioncheckDailyGatherLimit(object):
+    CHECK_TYPE = CollectionCheckType.DAILY_GATHER
+    def __init__(self, collectionId):
+        self.collectionId = collectionId
+
+    def checkCell(self, avatarCell):
+        return avatarCell.checkDailyGatherContinuousLimit(self.collectionId)
+
+    def checkBase(self, avatarBase):
+        return avatarBase.checkDailyGatherLimitCnt(self.collectionId)

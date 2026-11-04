@@ -39,6 +39,12 @@
             <Arg>   ARRAY <of> UINT32 </of>   </Arg>
             <Arg>   UINT64   </Arg>
         </onCollectAward>
+
+        <gmRemoveCollectAward>
+            <!-- GM回退: 传入要移除prop的index -->
+            <Arg>   ARRAY <of> UINT32 </of>   </Arg>
+            <Arg>   UINT64   </Arg>
+        </gmRemoveCollectAward>
     </CellMethods>
 
     <ClientMethods>

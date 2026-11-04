@@ -47,7 +47,7 @@ class IDungeonStubMonster(object):
 
     def addKillCount(self, spaceNo, flagId, creepbaseId):
         if spaceNo not in self.spaces:
-            LOG_ERR('wl: createCellEntity cannot find space:', spaceNo)
+            LOG_WARN('wl: addKillCount cannot find space:', spaceNo)
             return
 
         _sVal = self.spaces[spaceNo]

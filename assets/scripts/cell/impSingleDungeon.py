@@ -39,7 +39,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
     def _singleDungeonTrapCallback(self, dungeonNo, exitCount):
         if formula.fetchMapId(self.spaceNo) != dungeonNo:
             return
-        
+
         _mapInfo = self._getMapInfoByDungeonNo(dungeonNo)
         if not _mapInfo:
             return
@@ -86,7 +86,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
 
         gameengine.getDungeonStubByDungeonNo(
             dungeonNo, gameconst.DungeonEnterTypeEnum.SINGLE).applyCreateDungeon(
-                self.base, self.gbId, self.teamId,
+                self.base, self.gbId, 0,
                 {
                     'src': src, 
                     'dungeonNo': dungeonNo, 
@@ -134,7 +134,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         extraData['inSpaceUUID'] = _spaceUUID
         gameengine.getDungeonStubByDungeonNo(
             dungeonNo, gameconst.DungeonEnterTypeEnum.SINGLE).applyCreateDungeon(
-            self.base, self.gbId, self.teamId, extraData)
+            self.base, self.gbId, 0, extraData)
         self.resetStatisticsData()
 
     def _checkEnterSingleDungeon(self, dunNo, src=None, checkSameDungeon=True):
@@ -247,14 +247,13 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
 
         spaceType = self._getParamBydungeonNo(dungeonNo, 'type')
         enterType = gameengine.getDungeonEnterTypeBySpaceNo(self.spaceNo)
+        if self._isInCrossTeamDungeonSpace(self.spaceMgr):
+            LOG_WARN('doLeaveSingleDungeon:: in cross team dungeon, change to cross exit', dungeonNo, self.spaceNo, enterType)
+            self._doExitCrossTeamDungeon(src)
+            return
+
         if enterType and enterType != gameconst.DungeonEnterTypeEnum.SINGLE:
-            LOG_WARN('doLeaveSingleDungeon:: leave single but got team, auto change',
-                        dungeonNo, self.spaceNo, enterType)
-            if enterType == gameconst.DungeonEnterTypeEnum.TEAM:
-                LOG_WARN('doLeaveSingleDungeon:: change to team dungeon leave', self.spaceNo)
-                self.selfLeaveTeamDungeon(src)
-            else:
-                LOG_ERR('doLeaveSingleDungeon::unknown enterType', dungeonNo, enterType)
+            LOG_ERR('doLeaveSingleDungeon:: leave single but got other:', dungeonNo, self.spaceNo, enterType)
             return
 
         _mMapId, _mOutsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=spaceType)
@@ -268,7 +267,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
             return
         options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.LEAVE)
 
-        self.doLeaveFromSapceToSpace(self.spaceNo, spaceNo, options, context, spaceType=spaceType)
+        self.doLeaveFromSapceToSpace(self.spaceNo, spaceNo, options, context)
 
         # gamelog.singleDungeonLogger.leaveDungeon(
         #     self.spaceMgr.dungeonPlayMode, self.gbId, dungeonNo=dungeonNo)
@@ -297,7 +296,7 @@ class ImpSingleDungeon(impDungeonCommon.ImpDungeonCommon):
         context = {'e': {}, 'l': lCtx}
         options = complexTeleportOption.ComplexTeleportOpt(teleportType=gameconst.ComplexTeleportEnum.LEAVE)
         spaceNo = formula.combineLineSpaceNo(dstNo)
-        self.doLeaveFromSapceToSpace(self.spaceNo, spaceNo, options, context, spaceType=spaceType)
+        self.doLeaveFromSapceToSpace(self.spaceNo, spaceNo, options, context)
 
     def isInSingleDungeon(self):
         if not formula.inDungeonScene(self.spaceNo):

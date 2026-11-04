@@ -33,7 +33,7 @@ datas ={
       40340017
     ],
     "num": 0,
-    "lv": "28",
+    "lv": "33",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -120,7 +120,7 @@ datas ={
       40340032
     ],
     "num": 0,
-    "lv": "28",
+    "lv": "33",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -210,7 +210,7 @@ datas ={
       40340044
     ],
     "num": 0,
-    "lv": "28",
+    "lv": "33",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -246,7 +246,7 @@ datas ={
       40340002
     ],
     "num": 0,
-    "lv": "28",
+    "lv": "33",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -296,7 +296,7 @@ datas ={
       40340059
     ],
     "num": 0,
-    "lv": "28",
+    "lv": "33",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -332,7 +332,7 @@ datas ={
       40340001
     ],
     "num": 0,
-    "lv": "28",
+    "lv": "33",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

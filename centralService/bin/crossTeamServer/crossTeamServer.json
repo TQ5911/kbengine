@@ -4,12 +4,11 @@
     "crossTeamServerAddr": "0.0.0.0:2016",
     "addressForDebug":"localhost:8990",
     "logPath":"crossTeam.log",
-    "logLevel":-1,
+    "logLevel":0,
     "logRotateSize":500,
     "groupId":1,
     "workerNum":16,
     "crusadeMaxConcurrent":100,
-    "crusadeStartLimitPerSecond":1,
     "redisServer":{
     	"addr":"127.0.0.1:6379",
     	"passwd":"",

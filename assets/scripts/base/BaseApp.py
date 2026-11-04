@@ -26,6 +26,7 @@ import iBatchChatBroadcast
 import iGameStart
 import iWaitMapGameStart
 import elasticUtils
+import worldBoss_base as WB_BASE
 
 from proto.interface_pb2 import BaseApp as BaseAppService
 from proto.interface_pb2 import Void, Interface_Stub, ConfigVal, ListVal, IntVal, SetAccountCompVal, AntiAddictionData, MapleServerInfo, PatchVersionData
@@ -92,8 +93,14 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         self.initAysncore()
         self.accountNum = 0
         self.avatarNum = 0
+        # 等待服数据缓存（预创角阶段使用），由TIMER_REFRESH_WAITMAP_SERVERS定时从redis刷新
+        self.waitMapServersCache = []
 
         self.pyAddTimer(5, 1, gametimer.TIMER_REDIS_HEART_BEAT)
+        self.pyAddTimer(
+            gameconst.WAITMAP_CACHE_REFRESH_INTERVAL,
+            gameconst.WAITMAP_CACHE_REFRESH_INTERVAL,
+            gametimer.TIMER_REFRESH_WAITMAP_SERVERS)
         self.pyAddTimer(1, 5, gametimer.TIMER_BASEAPP_CONN_INTERFACE)
         self.pyAddTimer(gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL,
                         gametimer.BASEAPP_INTERFACE_ACTIVE)
@@ -166,6 +173,9 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
         elif userData == gametimer.TIMER_REDIS_HEART_BEAT:
             self._onRedisHeartBeat()
 
+        elif userData == gametimer.TIMER_REFRESH_WAITMAP_SERVERS:
+            self._refreshWaitMapServers()
+
         elif userData == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
 
@@ -208,6 +218,75 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
             LOG_ERR('the redis server is not connected')
             self.redisAsyncClient.disconnectRedis()
             self.redisAsyncClient.onConnect()
+
+    def getWaitMapServers(self):
+        """
+        获取等待服数据缓存（预创角阶段使用），[{serverId, freeNum}, ...]
+        """
+        return self.waitMapServersCache
+
+    def _refreshWaitMapServers(self):
+        """
+        预创角阶段定时从redis刷新等待服数据到缓存（与queueServer的WaitMapServerMgr逻辑一致）
+        """
+        if not utils.inPreCreatePeriod():
+            if self.waitMapServersCache:
+                self.waitMapServersCache = []
+            return
+
+        self.redisAsyncClient.getRange(
+            gameconst.RedisKey.WAITMAP_HEARTBEAT_KEY,
+            0,
+            -1,
+            False,
+            True,
+            self._onWaitMapHeartbeat
+        )
+
+    def _onWaitMapHeartbeat(self, cid, err, result):
+        if err:
+            LOG_ERR('_onWaitMapHeartbeat err:', err)
+            return
+
+        if not result:
+            self.waitMapServersCache = []
+            return
+
+        # withscores返回 [member1, score1, member2, score2, ...]
+        _now = utils.curTS()
+        _aliveIds = []
+        for _i in range(0, len(result) - 1, 2):
+            _serverIdStr = utils.bytesToStringRedis(result[_i])
+            _heartbeatTs = int(utils.bytesToStringRedis(result[_i + 1]))
+            if _now - _heartbeatTs > gameconst.WAITMAP_OFFLINE_TIMEOUT:
+                continue
+            _aliveIds.append(_serverIdStr)
+
+        if not _aliveIds:
+            self.waitMapServersCache = []
+            return
+
+        self.redisAsyncClient.mget(
+            [gameconst.RedisKey.WAITMAP_FREE_PREFIX + _serverIdStr for _serverIdStr in _aliveIds],
+            functools.partial(self._onWaitMapFreeNum, _aliveIds)
+        )
+
+    def _onWaitMapFreeNum(self, aliveIds, cid, err, result):
+        if err:
+            LOG_ERR('_onWaitMapFreeNum err:', err)
+            return
+
+        if not result:
+            return
+
+        _waitMapServers = []
+        for _serverIdStr, _freeNum in zip(aliveIds, result):
+            _freeNum = int(utils.bytesToStringRedis(_freeNum)) if _freeNum else 0
+            _waitMapServers.append({
+                'serverId': int(_serverIdStr),
+                'freeNum': max(0, _freeNum),
+            })
+        self.waitMapServersCache = _waitMapServers
 
     def _checkInterfaceActive(self):
         for _client in self.interfaceClient.values():
@@ -453,7 +532,11 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
     def _sendOfficialMessage(self, content, tick, channelList, seqId, endTime=None, priority=0, chatChannelList='', chatType=0):
         self.officialMesTimerDict.pop(seqId, None)
         self.officialMesTickTimerDict.pop(seqId, None)
-        self.onBroadcastToAllClients('onOfficialMessage', (95, content, 1, channelList, seqId, chatChannelList, chatType))
+        args = (95, content, 1, channelList, seqId, chatChannelList, chatType)
+        if gameconfig.isWaitMapServer():
+            self.broadcastToAllAvataring('onOfficialMessage', args)
+        else:
+            self.onBroadcastToAllClients('onOfficialMessage', args)
         if endTime is None or utils.curTS() > endTime or tick <= 0:
             return
 
@@ -470,7 +553,10 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
             self._cancelDatetimeCallback(self.officialMesTimerDict.get(seqId), gametimer.TIMER_GM_OFFICIAL_MESSAGE)
         self.officialMesTimerDict.pop(seqId, None)
         self.officialMesTickTimerDict.pop(seqId, None)
-        self.onBroadcastToAllClients('stopOfficialMessage', (seqId,))
+        if gameconfig.isWaitMapServer():
+            self.broadcastToAllAvataring('stopOfficialMessage', (seqId,))
+        else:
+            self.onBroadcastToAllClients('stopOfficialMessage', (seqId,))
 
         self.getRedisClient().hdel(gameconst.RedisKey.IDIPMARQUEE_KEY, str(seqId))
 
@@ -659,3 +745,35 @@ class BaseApp(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iBroadcastEvent.IBroadcast
 
     def setBaseAppData(self, key, val):
         gameengine.setBaseAppData(key, val)
+
+    def notifyStubGameCfgChanged(self, name, val, oldVal, checkSame=True, lineType=None, lineNo=None):
+        LOG_INFO('notifyStubGameCfgChanged', name, val, oldVal, checkSame, lineType, lineNo)
+        if checkSame and val == oldVal:
+            return
+
+        # 这个gm会在该区下所有服跑,所以只需要处理当前服务器就好了
+        if name == 'isCrossWorld':
+            isCross = gameconfig.isCrossServer()
+            crossMaps = WB_BASE.cross2LocalMap if isCross else WB_BASE.local2CrossMap
+            allMaps = WB_BASE.allCross2localMap if isCross else WB_BASE.allLocal2CrossMap
+            for orgMapId, destMapId in allMaps.items():
+                extra = {'isCross' : isCross, 'isCrossWorld' : val, 'lineNo' : lineNo, 'isCrossMap' : orgMapId in crossMaps}
+                if lineType == None:
+                    extra['isOrgMap'] = True
+                    extra['lineType'] = orgMapId
+                    gameengine.getLineStub(orgMapId).onCrossWorld(extra)
+                    if orgMapId == destMapId:
+                        continue
+                    extra['isOrgMap'] = False
+                    extra['lineType'] = destMapId
+                    gameengine.getLineStub(destMapId).onCrossWorld(extra)
+                elif lineType in (orgMapId, destMapId):
+                    extra['isOrgMap'] = lineType == orgMapId
+                    extra['lineType'] = lineType
+                    gameengine.getLineStub(lineType).onCrossWorld(extra)
+                    break
+
+    def notifyStubGameCfgInited(self, lineType=None, lineNo=None):
+        LOG_INFO('notifyStubGameCfgInited', lineType, lineNo)
+        value = KBEngine.globalData['CONFIG']['isCrossWorld']
+        self.notifyStubGameCfgChanged('isCrossWorld', value, value, checkSame=False, lineType=lineType, lineNo=lineNo)

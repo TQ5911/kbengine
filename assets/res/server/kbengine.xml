@@ -21,9 +21,12 @@
         <branchLineCnt>
             <subType1> 2 </subType1>
             <subType2> 1 </subType2>
+            <subType3> 1 </subType3>
         </branchLineCnt>
         <maxCellAvatarCount> 500 </maxCellAvatarCount>
         <serverOpenTime> 1764709200 </serverOpenTime>
+        <preCreateStartTime> 0 </preCreateStartTime>
+        <preCreateEndTime> 0 </preCreateEndTime>
         <enableAdminServer> 0 </enableAdminServer>
         <enableRouterServer> 1 </enableRouterServer>
         <greenPassUrl> https://test.api.hzyunxingu.cn/user/api/v1/access-code/green-pass </greenPassUrl>
@@ -35,7 +38,7 @@
         <smsServiceReqUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/common/send-code </smsServiceReqUrl>
         <smsServiceVerifyUrl> https://test.api.hzyunxingu.cn/user/api/v1/user-info/common/verify-code </smsServiceVerifyUrl>
         <webServerDomain> https://test.api.hzyunxingu.cn </webServerDomain>
-
+        <promoterAPI> https://test.api.hzyunxingu.cn/user/api/v1/promoter/public-beta/home </promoterAPI>
         <appVersion> 0.0.0.0 </appVersion>
         <patchVersion> 0.0.0.0 </patchVersion>
 
@@ -45,6 +48,7 @@
         <gmHttpSecret> 8nvkguc7w7igpyituowk8pusi56r41mp </gmHttpSecret>
         <centralServersInfo>
             <item centralServerId='1' ip='192.168.10.13' port='2030'></item>
+            <item centralServerId='2' ip='192.168.10.13' port='2031'></item>
         </centralServersInfo>
 
         <routerServersInfo>

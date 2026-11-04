@@ -1098,15 +1098,11 @@ class PlayerCoinAuctionRecord(object):
 
     @staticmethod
     def _getUidListKey(gbId):
-        return "{server_id}_{gkey}_{gbId}".format(
-            server_id=str(gameconfig.serverId()),
-            gkey='_p_cau_uids_', gbId=gbId)
+        return "{gkey}_{gbId}".format(gkey='_p_cau_uids_', gbId=gbId)
 
     @staticmethod
     def _getDataHashKey(gbId):
-        return "{server_id}_{gkey}_{gbId}".format(
-            server_id=str(gameconfig.serverId()),
-            gkey='_p_cau_data_', gbId=gbId)
+        return "{gkey}_{gbId}".format(gkey='_p_cau_data_', gbId=gbId)
 
     @staticmethod
     def _encodeMessage(timestamp, playerGBID, itemId, number, bindMoney, money, itemData, reviewUUID,
@@ -1278,11 +1274,7 @@ class PlayerBuyAuctionItemRecord(object):
 
     @staticmethod
     def _getKey(gbId):
-        return "{}_{}_{}".format(
-            gameconfig.serverId(),
-            '_buy_rcd_', 
-            gbId,
-        )
+        return "{}_{}".format('_buy_rcd_', gbId,)
 
     @staticmethod
     def _encodeMessage(timestamp, playerGBID, itemId, number, totalPrice, itemData, reviewUUID):

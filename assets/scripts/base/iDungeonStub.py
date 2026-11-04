@@ -70,8 +70,10 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def _onCreateDungeonSpaceFailed(self, dungeonUUID, extra):
         # 建空间失败兜底：跨服组队副本需回报中心失败（本服各 stub 维持只记日志）；
-        # 判定认 extra['crossTeamId']（本服模式空间 playMode 已落本服枚举，认 playMode 会漏报）
-        if (extra or {}).get('crossTeamId'):
+        # 判定认 extra['crossTeamId']（本服模式空间 playMode 已落本服枚举，认 playMode 会漏报）；
+        # GM 独立建本不经过组队中心，失败时不能按伪造的队伍 ID 上报
+        _extra = extra or {}
+        if _extra.get('crossTeamId') and not _extra.get('gmEnter'):
             gameengine.getCrossTeamStub(dungeonUUID).onCrossCrusadeSpaceReady(
                 dungeonUUID,
                 0,
@@ -280,8 +282,6 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         _spaceVal = self.spaces[spaceNo]
 
-        # calculate tDungeonLostTime to client
-        endTime = int(_spaceVal.tCreate + DDI.datas[self.dungeonNo]['timeOut'] * 60 + 1)
         if _spaceVal.isCompleted():
             if _spaceVal.dungeonSpaceValType == gameconst.DungeonSpaceValType.RAID:
                 _spaceVal.spaceMgr.cell.onRaidDungeonCompleted(spaceNo, _spaceVal.raidUUID, not _spaceVal.isFailed(), 0, _spaceVal.dungeonCreepBaseKillDic, _spaceVal.getAllPlayerGbidAndNamePair(), _spaceVal.getElapsedTime(), gbId, _spaceVal.completedReasonType)
@@ -291,7 +291,6 @@ class IDungeonStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
                 _spaceVal.spaceMgr.cell.onSingleDungeonCompleted(spaceNo, gbId, not _spaceVal.isFailed(), 0, _spaceVal.getElapsedTime())
             elif _spaceVal.dungeonSpaceValType == gameconst.DungeonSpaceValType.GUILD_BOSS:
                 _spaceVal.spaceMgr.cell.onGuildBossDungeonCompleted(spaceNo, _spaceVal.guildUUID, not _spaceVal.isFailed(), 0, _spaceVal.getElapsedTime(), gbId, _spaceVal.completedReasonType)
-        box.client.changeDungeonRemainTime(spaceNo, endTime)
 
     def getSpaceCell(self, spaceNo):
         return self.spaces[spaceNo].spaceBox.cell

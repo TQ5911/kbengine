@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS `maple` (
     `queue_server` varchar(255) NOT NULL,
     `central_login` varchar(255) NOT NULL,
     `server_group` int(11) NOT NULL,
+    `server_sub_group` int(11) NOT NULL DEFAULT 1,
     `server_state` int(11) NOT NULL,
     `server_flag_state` int(11) NOT NULL,
     `alias` varchar(255) NOT NULL,
@@ -41,3 +42,22 @@ CREATE TABLE IF NOT EXISTS `maple_merge_server` (
     PRIMARY KEY (`from_server_id`),
     INDEX `idx_to` (`to_server_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+SET @db_name = DATABASE();
+SET @table_name = 'maple';
+
+SET @column_name = 'server_sub_group';
+SET @column_def = 'int(11) NOT NULL DEFAULT 1';
+
+SET @sql = IF(
+    (SELECT COUNT(*) FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = @db_name
+       AND TABLE_NAME = @table_name
+       AND COLUMN_NAME = @column_name) = 0,
+    CONCAT('ALTER TABLE ', @table_name, ' ADD COLUMN ', @column_name, ' ', @column_def),
+    'SELECT concat(concat(concat("Table: ", @table_name), concat(", Column: ", @column_name)), " already exists, skipped") AS ''execute result message:'''
+);
+
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;

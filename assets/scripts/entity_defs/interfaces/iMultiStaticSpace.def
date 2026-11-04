@@ -40,7 +40,7 @@
         </broadcastAllSpaceMgrByTypes>
 
         <onCellappRelive>
-            <Arg>       UINT8         </Arg>
+            <Arg>       UINT32        </Arg>
         </onCellappRelive>
 
         <onStaticSpaceReady>
@@ -73,7 +73,7 @@
         </onSpaceCellAppDeath>
 
         <handleCellappDeath>
-            <Arg>       UINT8         </Arg>
+            <Arg>       UINT32        </Arg>
         </handleCellappDeath>
     </BaseMethods>
 </root>

@@ -47,6 +47,20 @@
             <Default>       0                                               </Default>
         </crossWorldLevel>
 
+        <crossYesterdayPeakOnlineNum>
+            <Type>          UINT32                                          </Type>
+            <Flags>         BASE                                            </Flags>
+            <Persistent>    true                                            </Persistent>
+            <Default>       0                                               </Default>
+        </crossYesterdayPeakOnlineNum>
+
+        <crossYesterdayPeakOnlineTotalNum>
+            <Type>          UINT32                                          </Type>
+            <Flags>         BASE                                            </Flags>
+            <Persistent>    true                                            </Persistent>
+            <Default>       0                                               </Default>
+        </crossYesterdayPeakOnlineTotalNum>
+
         <leaderBoardCache>
             <Type>          PY_DICT         </Type>
             <Flags>         BASE            </Flags>
@@ -102,10 +116,13 @@
         <onAckServerWorldLevel>
             <Arg>          SERVER_ID                   </Arg>
             <Arg>          LEVEL                       </Arg>
+            <Arg>          UINT32                      </Arg>
         </onAckServerWorldLevel>
 
         <onSyncCrossWorldLevel>
             <Arg>          LEVEL                       </Arg>
+            <Arg>          UINT32                      </Arg>
+            <Arg>          UINT32                      </Arg>
         </onSyncCrossWorldLevel>
 
         <getScoreRushRankSelf>

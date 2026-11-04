@@ -76,6 +76,34 @@ def limitcall(interval, bMsg=True, msgId=0, keyFun=None, msgArgs=()):
     return decorator.decorator(_limitcall(interval, bMsg, msgId, keyFun=keyFun, msgArgs=msgArgs))
 
 
+def preCreateOnly(func):
+    """
+    仅预创角时间窗内允许调用，否则报错并忽略
+    """
+    @functools.wraps(func)
+    def __(self, *args, **kwargs):
+        if not utils.inPreCreatePeriod():
+            LOG_WARN(f'{func.__name__}: not in preCreate period, ignore')
+            return None
+        return func(self, *args, **kwargs)
+
+    return __
+
+
+def serverOpenedOnly(func):
+    """
+    正式开服后才允许调用，否则报错并忽略
+    """
+    @functools.wraps(func)
+    def __(self, *args, **kwargs):
+        if utils.curTS() < gameconfig.serverOpenTime():
+            LOG_WARN(f'{func.__name__}: server not open yet, ignore')
+            return None
+        return func(self, *args, **kwargs)
+
+    return __
+
+
 def _checkTeleportLock(lockReason):
     def _fwrap(f, self, *args, **kwargs):
         _now = utils.curTS()
@@ -165,9 +193,11 @@ def doCheckGameConfig(avatar, name, needMsg, checkList=(), *args):
     v = KBEngine.globalData['CONFIG'][configName]
     if not v:
         if KBEngine.component == 'cellapp':
-            avatar.showMsg(C_CD.datas['systemSwitch']['value'], [])
+            if needMsg:
+                avatar.showMsg(C_CD.datas['systemSwitch']['value'], [])
         else:
-            avatar.onMessagePre(C_CD.datas['systemSwitch']['value'], [])
+            if needMsg:
+                avatar.onMessagePre(C_CD.datas['systemSwitch']['value'], [])
         #LOG_WARN('gameconfig not enable: 2', name)
         return False
     
@@ -223,7 +253,8 @@ def doCheckSpecialGameConfig(avatar, name, needMsg, checkList, *args):
 
     return True
 
-def checkSpecialGameconfigEnable(name, checkList=[]):
+def checkSpecialGameconfigEnable(name, checkList=None):
+    checkList = checkList or []
     def f(func):
         @functools.wraps(func)
         def wrapper(*args):
@@ -242,9 +273,12 @@ def prevent_instance_reentry(method):
     主要是防止一些递归调用中的重入情况
     如果你的函数希望递归就不要用了
     """
+    # 性能优化：属性名在装饰期算一次，避免每次调用都做 f-string 拼接
+    # （热点路径每次派发都要过这个 wrapper，如 effect.onActionEvent）
+    attr = "_reentry_flag_" + method.__name__
+
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
-        attr = f"_reentry_flag_{method.__name__}"
         if getattr(self, attr, False):
             LOG_DBG(f"[重入拦截] {method.__name__} 正在执行，跳过")
             return None

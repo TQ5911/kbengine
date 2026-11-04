@@ -154,5 +154,25 @@ datas = _tools.RODict({
     "bankForbiddenList": _tools.RODict({
         "ID": "bankForbiddenList",
         "value": (30010022, 30990151, 30990158, 30990159, 30990169, 30990170, 30990189, 30990160, 30990161, 30990166, 30990167, 30990168, 30990172),
+    }),
+    "soulQuality": _tools.RODict({
+        "ID": "soulQuality",
+        "value": 1,
+    }),
+    "soulNum": _tools.RODict({
+        "ID": "soulNum",
+        "value": 0,
+    }),
+    "soulNumlList": _tools.RODict({
+        "ID": "soulNumlList",
+        "value": _tools.ROList([0, 1, 2, 3, 4, 5]),
+    }),
+    "forceBindWhitelist": _tools.RODict({
+        "ID": "forceBindWhitelist",
+        "value": (3, 6, 15, 20, 26, 28, 29, 30, 31, 36, 37, 52, 61, 62, 67, 68, 70, 92, 93, 94, 95, 152, 180, 208),
+    }),
+    "forceRebindBlacklist": _tools.RODict({
+        "ID": "forceRebindBlacklist",
+        "value": (1, 2, 9, 17, 22, 100, 101, 102, 103, 115, 116, 121, 122, 142, 174, 188, 225),
     })
 })

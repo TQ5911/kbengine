@@ -78,3 +78,22 @@ class IGuildTrainCell(object):
         propName = gtData['fightProp']
         self.addProp(propName, _targetVal - curVal, gameconst.SourceType.SrcTpGuildTrain)
 
+    def _calcGuildTrainPropVal(self, func, level):
+        """按等级取修炼属性值, 兼容公式返回标量(int/float)与二元组(propVal, score)两种形式。"""
+        if not level:
+            return 0
+        ret = func(level)
+        if isinstance(ret, (int, float)):
+            return ret
+        return ret[0]
+
+    def gmSetGuildTrainLevelCell(self, trainId, curLevel, targetLevel):
+        """GM 直设修炼等级(支持降级, delta 可为负)。"""
+        gtData = GT_GTD.datas[trainId]
+        _func = F_GFD.datas[gtData['valueFormula']]['serverFormula']
+        propName = gtData['fightProp']
+        curVal = self._calcGuildTrainPropVal(_func, curLevel)
+        targetVal = self._calcGuildTrainPropVal(_func, targetLevel)
+        LOG_INFO('gmSetGuildTrainLevelCell:', propName, curVal, targetVal, trainId, curLevel, targetLevel)
+        self.addProp(propName, targetVal - curVal, gameconst.SourceType.SrcTpGuildTrain)
+

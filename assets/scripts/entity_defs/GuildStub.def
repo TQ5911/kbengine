@@ -89,6 +89,7 @@
             <Arg>       ENTITYCALL              </Arg>
             <Arg>       ENTITYCALL              </Arg>
             <Arg>       PYTHON                  </Arg>
+            <Arg>       GUILD_UUID              </Arg>
             <Arg>       UNICODE                 </Arg>
         </checkGuildNameValid>
 

@@ -39,6 +39,7 @@ def onInit(isReload):
     gameglobal.avatarExposedMethods = utils.fetchExposedMethods()
     KBEngine.addTimer(1800, 1800, outputExposedMethodStats)
     gameglobal.worldLevel = KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_WORLD_LEVEL, 0)
+    gameglobal.yesterdayOnlineNum = KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_YESTERDAY_ONLINE_NUM, None)
 
 def initAsyncore(timerId):
     asyncore.loop(0, True, None, 1)
@@ -86,6 +87,9 @@ def onGlobalData(key, value):
             gameglobal.worldLevel = value
             LOG_INFO('onGlobalData worldLevel', value)
 
+        elif key == gameconst.GLOBALDATA_KEY_YESTERDAY_ONLINE_NUM:
+            gameglobal.yesterdayOnlineNum = value
+            LOG_INFO('onGlobalData yesterdayOnlineNum', value)
 
 def onGlobalDataDel(key):
     """
@@ -186,12 +190,15 @@ def _outputExposedMethodStats(stats, fromIdx, num):
 
 def onInited():
     gorder = KBEngine.getComponentGroupOrder()
-    LOG_INFO('cellapp onInited!!!', gorder)
+    cellId = gameengine.getComponentId()
+    LOG_INFO('cellapp onInited!!!', gorder, cellId)
     gameengine.setGlobalData('%s:%s' % (gameconst.GLOBALDATA_KEY_CELLAPP_INITED, gorder), gorder)
 
     if KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_GAME_READY):
+        # 重建配对统一用 cellId(cid): 死亡侧拿到的是 cid, 只有它全局一致;
+        # groupOrder 各进程不一致, 不能用于去重。
         for lineType in gameconst.lineStubMap().keys():
-            gameengine.getLineStub(lineType).onCellappRelive(gorder)
+            gameengine.getLineStub(lineType).onCellappRelive(cellId)
 
         # 通知 Cube/WonderLand/Abyss stub (multi-static space 系)
         import cube_floor as C_FD
@@ -200,16 +207,17 @@ def onInited():
         for _floorNo in C_FD.datas.keys():
             _stub = gameengine.getGlobalBase('CubeStub%d' % _floorNo, reportErr=False)
             if _stub:
-                _stub.onCellappRelive(gorder)
+                _stub.onCellappRelive(cellId)
         for _floorNo in WL_FD.datas.keys():
             _stub = gameengine.getGlobalBase('WonderLandStub%d' % _floorNo, reportErr=False)
             if _stub:
-                _stub.onCellappRelive(gorder)
+                _stub.onCellappRelive(cellId)
         for _floorNo in AB_FD.datas.keys():
             _stub = gameengine.getGlobalBase('AbyssStub%d' % _floorNo, reportErr=False)
             if _stub:
-                _stub.onCellappRelive(gorder)
+                _stub.onCellappRelive(cellId)
 
+        # 以下接收方只做日志/数据刷新, 保留可读的 groupOrder
         # cell 重新拉起,广播给所有可用的base
         bases = gameengine.chooseGoodBaseApp()
         for base in bases:

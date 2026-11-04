@@ -72,7 +72,7 @@ def _90010004(self, target, context):
         if not ent:  # 如果目标不存在，跳过
             continue
         self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 2)
-        action_FightAction.pushTarget(self, ent, context, 2, 8, 0.5, 1, 2)
+        action_FightAction.pushTarget(self, ent, context, 2, 8, 0.5, 1, 2, 1, 1, 1)
 
 def _90010005checkAction(self, target, context):
 
@@ -80,26 +80,33 @@ def _90010005checkAction(self, target, context):
 
     if skillLv < 5:
         buff_level = 10
+        buff_level1 = 10
     elif 5 <= skillLv < 8:
+        buff_level = 12
+        buff_level1 = 12
+    elif 8 <= skillLv < 11:
         buff_level = 15
-    else:
+        buff_level1 = 15
+    elif skillLv == 11:
         buff_level = 15
+        buff_level1 = 20
 
-    selfBuffLv= self.getBuffLv(64001135)
-
-    if selfBuffLv >= buff_level:
-        self.showMsg(54479003,[])    
+    selfBuffLv = self.getBuffLv(64001135)
+    if selfBuffLv >= buff_level1:
+        self.showMsg(54479003, [])
         return False
 
     if target:
         targetbuffLv = target.getBuffLv(64001135)
         if targetbuffLv >= buff_level:
-            self.showMsg(54479003,[])    
-            return False 
+            self.showMsg(54479003, [])
+            return False
+
     return True
 
 def _90010005(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
+    buff_level1 = 0
     if skillLv < 5:
         buff_level = 10
     elif 5 <= skillLv < 8:
@@ -107,6 +114,9 @@ def _90010005(self, target, context):
     elif 8 <= skillLv < 11:
         buff_level = 15
     elif skillLv == 11:
+        buff_level = 15
+        buff_level1 = 20
+    else:  
         buff_level = 15
 
     # 铭文效果调用
@@ -117,8 +127,10 @@ def _90010005(self, target, context):
     # 铭文效果结束
 
     # 自己
-    self.addBuffBySkill(self, context, 64001135, buff_level, 1.0, 10)
-
+    if skillLv == 11:
+        self.addBuffBySkill(self, context, 64001135, buff_level1, 1.0, 10)        
+    else:
+        self.addBuffBySkill(self, context, 64001135, buff_level, 1.0, 10) 
     # 召唤物
     for summonId in self.petList:
         summon = KBEngine.entities.get(summonId)
@@ -133,7 +145,6 @@ def _90010005(self, target, context):
             continue
 
         self.addBuffBySkill(ent, context, 64001135, buff_level, 1.0, 10)
-       # self.attack(ent, context, 100, 10, 0, 2, 1, None, 2)
         if buffId:
             self.addBuffBySkill(ent, context, buffId, 1, 1.0, 5)
 
@@ -223,13 +234,13 @@ def _90010012(self, target, context):
     import KBEngine
 
     if skillLv < 5:
-        buff_level = 1
-    elif 5 <= skillLv < 8:
-        buff_level = 2
-    elif 8 <= skillLv < 11:
         buff_level = 3
+    elif 5 <= skillLv < 8:
+        buff_level = 5
+    elif 8 <= skillLv < 11:
+        buff_level = 10
     elif skillLv == 11:
-        buff_level = 4
+        buff_level = 15
                 #铭文效果调用
     ret, datas = self.getAvatar().getInscriptionEffects(90010012, 13)
     if ret and datas:
@@ -257,17 +268,17 @@ def _90010012(self, target, context):
             # if summon:
             #     summon.castSkill(self,context,summonskillId,1)
 
-        self.clearAllSummon(target,context)
-
+        self.clearAllSummon(target,context)       
         self.addBuffBySkill(self, context, 64001175, buff_level, 1.0, -1)
-        if skillLv == 11 : 
-            self.addBuffBySkill(self, context, 64001179, skillLv, 1.0, -1)
+        #if skillLv == 11 : 
+        #    self.addBuffBySkill(self, context, 64001179, skillLv, 1.0, -1)
 
     else:
         self.clearAllSummon(target,context)
         self.addBuffBySkill(self, context, 64001175, buff_level, 1.0, -1)
-        if skillLv == 11 : 
-            self.addBuffBySkill(self, context, 64001179, skillLv, 1.0, -1)
+        self.addBuffBySkill(self, context, 64001175, buff_level, 1.0, -1)
+        #if skillLv == 11 : 
+        #    self.addBuffBySkill(self, context, 64001179, skillLv, 1.0, -1)
 
 def _90010012_start(self, target, context):
     self.removeBuffBySkill(self, context, 64001183)
@@ -317,13 +328,13 @@ def _90010020(self, target, context):
     dmgRatio = lvParam[skillLv - 1] / 100
 
     if skillLv < 5:
-        controlTime = 0.2
+        controlTime = 0
     elif 5 <= skillLv < 8:
-        controlTime = 0.3
+        controlTime = 0
     elif 8 <= skillLv < 11:
-        controlTime = 0.5
+        controlTime = 0.3
     elif skillLv == 11:
-        controlTime = 1
+        controlTime = 0.5
 
     for e in context.effectedEntIds:
         ent = KBEngine.entities.get(e)
@@ -338,8 +349,11 @@ def _90010020(self, target, context):
 def _90010020_start(self, target, context):
     if not target:
         return
-    controlPenetration = min( max(self.level - target.level, 0)* 5, 30)
-    self.addBuffBySkill(self, context, 64001195, 1, 1.0, 3, control =controlPenetration)
+    levelDiff = self.level - target.level - 3      
+    if levelDiff <= 0:                             
+        return
+    controlPenetration = min(levelDiff * 5, 30)    
+    self.addBuffBySkill(self, context, 64001195, 1, 1.0, 3, control=controlPenetration)
 
 def _90010020_end(self, target, context):
     self.removeBuffBySkill(self, context, 64001195)
@@ -350,7 +364,7 @@ def _90010021(self, target, context):
     levelDmg = 50 + skillLv * 35
     dmgRatio = lvParam[skillLv - 1] / 100
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
 
     # 定义不同技能等级对应的额外拖拽参数
     level_params = {
@@ -383,7 +397,7 @@ def _90010021(self, target, context):
 def _90010025(self, target, context):
 
     skillLv = self.getSkillLevel(target, context, context.skillId)
-    self.createCreation(target, context, 65000013, self.level, skillLv, 3, 1, 0, 0, 0)
+    self.createCreation(target, context, 65000013, self.level, skillLv, 3.2, 1, 0, 0, 0)
 
 def _90010026(self, target, context):
     import KBEngine
@@ -474,15 +488,17 @@ def _90010030checkAction(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
 
     if skillLv < 5:
-        buff_level = 4
+        buff_level1 = 4
     elif 5 <= skillLv < 8:
-        buff_level = 8
-    else:
-        buff_level = 12
+        buff_level1 = 8
+    elif 8 <= skillLv < 11:
+        buff_level1 = 12
+    elif skillLv == 11:
+        buff_level1 = 18
 
     selfBuffLv = self.getBuffLv(64001160)
 
-    if selfBuffLv >= skillLv:
+    if selfBuffLv >= buff_level1:
         self.showMsg(54479003,[])    
         return False
     return True
@@ -492,16 +508,15 @@ def _90010030(self, target, context):
     lvParam = utils.getSkillLvParam(context.skillId)
 
     if skillLv < 5:
-        buff_level = 5
         buff_level1 = 4
     elif 5 <= skillLv < 8:
-        buff_level = 10
+        buff_level = 5
         buff_level1 = 8
     elif 8 <= skillLv < 11:
-        buff_level = 15
+        buff_level = 10
         buff_level1 = 12
     elif skillLv == 11:
-        buff_level = 20
+        buff_level = 15
         buff_level1 = 18
         # 铭文效果调用
     buffId = 0
@@ -513,13 +528,13 @@ def _90010030(self, target, context):
         self.addBuffBySkill(self, context, 64001160, buff_level1, 1.0, 20)
     elif 5 <= skillLv < 8:
         self.addBuffBySkill(self, context, 64001160, buff_level1, 1.0, 30)
-        self.addBuffBySkill(self, context, 64001161, buff_level, 1.0, 30)
+        #self.addBuffBySkill(self, context, 64001161, buff_level, 1.0, 30)
     elif 8 <= skillLv < 11:
         self.addBuffBySkill(self, context, 64001160, buff_level1, 1.0, 40)
-        self.addBuffBySkill(self, context, 64001161, buff_level, 1.0, 40)
+        #self.addBuffBySkill(self, context, 64001161, buff_level, 1.0, 40)
     elif skillLv == 11:
         self.addBuffBySkill(self, context, 64001160, buff_level1, 1.0, 40)
-        self.addBuffBySkill(self, context, 64001161, buff_level, 1.0, 40)
+        #self.addBuffBySkill(self, context, 64001161, buff_level, 1.0, 40)
     if buffId:
         self.addBuffBySkill(self, context, buffId, 1, 1.0, 10)
 
@@ -605,7 +620,7 @@ def _90010035(self, target, context):
     # 给自己添加buff
     self.addBuffBySkill(self, context, 64001145, skillLv, 1.0, 10)
     if skillLv >= 5:
-        self.addBuffBySkill(self, context, 64001150, buff_level, 1.0, 10)
+        self.addBuffBySkill(self, context, 64001150, buff_level, 1.0, 7)
     if skillLv == 11:
         self.addBuffBySkill(self, context, 64001158, 1, 1.0, 10)
 
@@ -650,7 +665,7 @@ def _90010037(self, target, context):
 def _90010040(self, target, context):
 
     skillLv = self.getSkillLevel(target, context, context.skillId)
-    self.createCreation(target, context, 65000015, self.level, skillLv, 3, 1, 0, 0, 0)
+    self.createCreation(target, context, 65000015, self.level, skillLv, 4, 1, 0, 0, 0)
 
 def _90010040_start(self, target, context): 
     skillLv = self.getSkillLevel(target, context, context.skillId) 
@@ -667,14 +682,14 @@ def _90010041(self, target, context):
     levelDmg = (50 + (skillLv - 1) * 35) / 4
     dmgRatio = lvParam[skillLv - 1] * 0.01
     targetNumber = len(context.effectedEntIds)
-    probability2 = 2/max(targetNumber, 2)
+    probability2 = 1/max(targetNumber, 1)
 
     if skillLv < 5:
-        probability = 0.2
+        probability = 0.1
     elif 5 <= skillLv < 8:
-        probability = 0.3
+        probability = 0.2
     elif 8 <= skillLv < 11:
-        probability = 0.4
+        probability = 0.3
     elif skillLv == 11:
         probability = 0.5
             # 铭文效果调用
@@ -736,11 +751,11 @@ def _90010045(self, target, context):
     if skillLv < 5:
         self.addBuffBySkill(target, context, 64001117, 6, 1, 15)
     elif 5 <= skillLv < 8:
-        self.addBuffBySkill(target, context, 64001117, 10, 1, 20)
+        self.addBuffBySkill(target, context, 64001117, 8, 1, 20)
     elif 8 <= skillLv < 11:
-        self.addBuffBySkill(target, context, 64001117, 15, 1, 25)
+        self.addBuffBySkill(target, context, 64001117, 10, 1, 25)
     elif skillLv == 11:
-        self.addBuffBySkill(target, context, 64001117, 20, 1, 30)
+        self.addBuffBySkill(target, context, 64001117, 15, 1, 30)
         self.addBuffBySkill(target, context, 64001120, 1, 1, 30)
 
 def _90010050(self, target, context):  
@@ -765,19 +780,19 @@ def _90010050(self, target, context):
             if not e:
                 continue
             self.attack(e, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)     
-            self.addBuffBySkill(e, context, 64001191, buff_level2, 1, 5)
+            self.addBuffBySkill(e, context, 64001191, buff_level2, 1, 2)
         return self.callAfterDelay(target, context, 0.2)
 
     elif context.actionStage == 1:
 
         if skillLv < 5:
-            buff_level = 2
+            buff_level = 1
         elif 5 <= skillLv < 8:
-            buff_level = 3
+            buff_level = 2
         elif 8 <= skillLv < 11:
-            buff_level = 4
+            buff_level = 3
         elif skillLv == 11:
-            buff_level = 5
+            buff_level = 4
         self.addBuffBySkill(self, context, 64001165, buff_level, 1.0, 10)
 
 def _90010050_start(self, target, context):
@@ -820,7 +835,7 @@ def _90010055(self, target, context):
     levelDmg = (50+ (skillLv - 1) * 35)
     dmgRatio = lvParam[skillLv - 1] / 100
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
 
     if context.actionStage == 0:
         self.lunge(target, context, 16, 8)
@@ -898,15 +913,15 @@ def _90010060(self, target, context):
     levelDmg = (50+ (skillLv - 1) * 35) / 2
     dmgRatio = lvParam[skillLv - 1] / 100/2
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    #probability = 1/max(targetNumber, 1)
 
     # 定义不同技能等级对应的额外击倒参数
     level_params = {
         (0, 5): [],
-        (5, 8): [(1.2, 0.3 * probability, 1, 0, 1)],
-        (8, 11): [(1.2, 0.7 * probability, 1, 0, 1)],
-        (11, 12): [(1.2, 1 * probability, 1, 0, 1)],
-        (12, float('inf')): [(1.5, 1 * probability, 1, 0, 1)]
+        (5, 8): [(1.2, 0.3, 1, 0, 1)],
+        (8, 11): [(1.2, 0.6, 1, 0, 1)],
+        (11, 12): [(1.2, 1, 1, 0, 1)],
+        (12, float('inf')): [(1.5, 1, 1, 0, 1)]
     }
 
     # 查找对应的额外击倒参数
@@ -924,8 +939,14 @@ def _90010060(self, target, context):
                 continue
             self.attack(e, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)
             action_FightAction.down(self, e, context, 1.5, 1, 1, 0, 2)
-            for params in extra_down_params:
-                action_FightAction.down(self, e, context, *params)
+            if 8 <= skillLv < 11:
+                action_FightAction.down(self, e, context, 1.2, 0.2, 1, 0, 1)
+            elif skillLv == 11:
+                action_FightAction.down(self, e, context, 1.2, 0.3, 1, 0, 1)         
+
+        # 额外击倒参数作用于主目标 target
+        for params in extra_down_params:
+            action_FightAction.down(self, target, context, *params)
 
         return self.callAfterDelay(target, context, 0.3667)  
 
@@ -937,8 +958,13 @@ def _90010060(self, target, context):
                 continue
             self.attack(e, context, dmgRatio, levelDmg, 0, 2, 1, None, 0)
             action_FightAction.down(self, e, context, 1.5, 1, 1, 0, 2)
-            for params in extra_down_params:
-                action_FightAction.down(self, e, context, *params)
+            if 8 <= skillLv < 11:
+                action_FightAction.down(self, e, context, 1.2, 0.2, 1, 0, 1)
+            elif skillLv == 11:
+                action_FightAction.down(self, e, context, 1.2, 0.3, 1, 0, 1) 
+        # 额外击倒参数作用于主目标 target
+        for params in extra_down_params:
+            action_FightAction.down(self, target, context, *params)
 
         self.castSkill(target, context, 90010061, skillLv)
         ret, datas = self.getAvatar().getInscriptionEffects(90010060, 13)
@@ -949,8 +975,8 @@ def _90010060(self, target, context):
 def _90010060_start(self, target, context): 
     skillLv = self.getSkillLevel(target, context, context.skillId)
     self.addBuffBySkill(self, context, 64001123, 1, 1.0, 2) 
-    if skillLv == 11:
-        self.addBuffBySkill(self, context, 64001182, 1, 1.0, 2)
+    #if skillLv == 11:
+    #    self.addBuffBySkill(self, context, 64001182, 1, 1.0, 2)
 
 def _90010060_end(self, target, context):    
     self.removeBuffBySkill(self, context, 64001123) 
@@ -1125,13 +1151,13 @@ def _90010200(self, target, context):
         controlTime = 0
     elif 5 <= skillLv < 8:
         probability2 = 0.2
-        controlTime = 0.3
+        controlTime = 0
     elif 8 <= skillLv < 11:
         probability2 = 0.4
-        controlTime = 0.5
+        controlTime = 0.3
     elif skillLv == 11:
         probability2 = 0.7
-        controlTime = 1
+        controlTime = 0.5
 
     for e in context.effectedEntIds:
         ent = KBEngine.entities.get(e)
@@ -1158,15 +1184,15 @@ def _90010201(self, target, context):
     levelDmg = 50 + skillLv * 35
     dmgRatio = lvParam[skillLv - 1] / 100
     targetNumber = len(context.effectedEntIds)
-    probability = 0.2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
 
     # 定义不同技能等级对应的额外拖拽参数
     level_params = {
         (0, 5): [],
-        (5, 8): [(-1, probability * 10, 1, 15, 1, 1)],
-        (8, 11): [(-1, probability * 10, 1, 15, 1, 1)],
-        (11, 12): [(-1, probability * 10, 1, 15, 1, 1)],
-        (12, float('inf')): [(-1, probability * 10, 1, 15, 1, 1)]
+        (5, 8): [(-1, probability *0.2, 1, 15, 1, 1)],
+        (8, 11): [(-1, probability *0.4, 1, 15, 1, 1)],
+        (11, 12): [(-1, probability *0.8, 1, 15, 1, 1)],
+        (12, float('inf')): [(-1, probability *0.8, 1, 15, 1, 1)]
     }
     # 查找对应的额外拖拽参数
     extra_drag_params = []
@@ -1248,7 +1274,7 @@ def _90010350(self, target, context):
 
     # 自己buff
     self.addBuffBySkill(self, context, 64001145, skillLv, 1.0, 10)
-    self.addBuffBySkill(self, context, 64001150, buff_level, 1.0, 10)
+    self.addBuffBySkill(self, context, 64001150, buff_level, 1.0, 7)
 
     if skillLv == 11:
         self.addBuffBySkill(self, context, 64001158, 1, 1.0, 10)
@@ -1261,7 +1287,7 @@ def _90010350(self, target, context):
             continue
 
         self.addBuffBySkill(e, context, 64001145, skillLv, 1.0, 10)
-        self.addBuffBySkill(e, context, 64001150, buff_level, 1.0, 10)
+        self.addBuffBySkill(e, context, 64001150, buff_level, 1.0, 7)
 
         if skillLv == 11:
             self.addBuffBySkill(e, context, 64001158, 1, 1.0, 10)
@@ -1289,11 +1315,11 @@ def _90010450(self, target, context):
         if skillLv < 5:
             self.addBuffBySkill(e, context, 64001117, 6, 1, 15 + bufftime)
         elif 5 <= skillLv < 8:
-            self.addBuffBySkill(e, context, 64001117, 10, 1, 20 + bufftime)
+            self.addBuffBySkill(e, context, 64001117, 8, 1, 20 + bufftime)
         elif 8 <= skillLv < 11:
-            self.addBuffBySkill(e, context, 64001117, 15, 1, 25 + bufftime)
+            self.addBuffBySkill(e, context, 64001117, 10, 1, 25 + bufftime)
         elif skillLv == 11:
-            self.addBuffBySkill(e, context, 64001117, 20, 1, 30 + bufftime)
+            self.addBuffBySkill(e, context, 64001117, 15, 1, 30 + bufftime)
             self.addBuffBySkill(e, context, 64001120, 1, 1, 30 + bufftime)
 
 def _90010450_start(self, target, context): 
@@ -1306,7 +1332,7 @@ def _90010550(self, target, context):
     levelDmg = (50 + (skillLv - 1) * 35)
     dmgRatio = lvParam[skillLv - 1] / 100
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
 
     if context.actionStage == 0:
         self.lunge(target, context, 16, 8)
@@ -1377,16 +1403,16 @@ def _90010600(self, target, context):
     levelDmg = (50+ (skillLv - 1) * 35) / 2
     dmgRatio = lvParam[skillLv - 1] / 100/2
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    #probability = 1/max(targetNumber, 1)
 
 
     # 定义不同技能等级对应的额外击倒参数
     level_params = {
         (0, 5): [],
-        (5, 8): [(1.2, 0.3 * probability, 1, 0, 1)],
-        (8, 11): [(1.2, 0.7 * probability, 1, 0, 1)],
-        (11, 12): [(1.2, 1 * probability, 1, 0, 1)],
-        (12, float('inf')): [(1.5, 1 * probability, 1, 0, 1)]
+        (5, 8): [(1.2, 0.3, 1, 0, 1)],
+        (8, 11): [(1.2, 0.6, 1, 0, 1)],
+        (11, 12): [(1.2, 1, 1, 0, 1)],
+        (12, float('inf')): [(1.5, 1, 1, 0, 1)]
     }
 
     # 查找对应的额外击倒参数
@@ -1404,8 +1430,14 @@ def _90010600(self, target, context):
                 continue
             self.attack(e, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)
             action_FightAction.down(self, e, context, 1.5, 1, 1, 0, 2)
-            for params in extra_down_params:
-                action_FightAction.down(self, e, context, *params)
+            if 8 <= skillLv < 11:
+                action_FightAction.down(self, e, context, 1.2, 0.2, 1, 0, 1)
+            elif skillLv == 11:
+                action_FightAction.down(self, e, context, 1.2, 0.3, 1, 0, 1) 
+
+
+        for params in extra_down_params:
+            action_FightAction.down(self, target, context, *params)
 
         return self.callAfterDelay(target, context, 0.3667)  
 
@@ -1424,8 +1456,13 @@ def _90010600(self, target, context):
             #else:
             self.attack(e, context, dmgRatio, levelDmg, 0, 2, 1, None, 0)
             action_FightAction.down(self, e, context, 1.5, 1, 1, 0, 2)
-            for params in extra_down_params:
-                action_FightAction.down(self, e, context, *params)
+            if 8 <= skillLv < 11:
+                action_FightAction.down(self, e, context, 1.2, 0.2, 1, 0, 1)
+            elif skillLv == 11:
+                action_FightAction.down(self, e, context, 1.2, 0.3, 1, 0, 1) 
+
+        for params in extra_down_params:
+            action_FightAction.down(self, target, context, *params)
         self.castSkill(target, context, 90010601, skillLv)
         ret, datas = self.getAvatar().getInscriptionEffects(90010060, 13)
         if ret and datas:
@@ -1437,8 +1474,8 @@ def _90010600_start(self, target, context):
     self.addBuffBySkill(self, context, 64001123, 1, 1.0, 2)
     self.addBuffBySkill(self, context, 64001322, 1, 1.0, 2)
     self.addBuffBySkill(self, context, 64001323, 1, 1.0, 2) 
-    if skillLv == 11:
-        self.addBuffBySkill(self, context, 64001182, 1, 1.0, 2)
+    #if skillLv == 11:
+    #    self.addBuffBySkill(self, context, 64001182, 1, 1.0, 2)
 
 def _90010600_end(self, target, context):    
     self.removeBuffBySkill(self, context, 64001123) 
@@ -1604,7 +1641,7 @@ def _90010652(self, target, context):
     levelDmg = 1
     dmgRatio = lvParam[skillLv - 1] / 100
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
 
     for eid in context.effectedEntIds:
         e = KBEngine.entities.get(eid)
@@ -1624,7 +1661,7 @@ def _90010652(self, target, context):
 
 def _90010653(self, target, context):
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
     for eid in context.effectedEntIds:
         e = KBEngine.entities.get(eid)
         if not e:
@@ -1637,14 +1674,20 @@ def _90015000checkAction(self, target, context):
 
     if skillLv < 5:
         buff_level = 10
+        buff_level1 = 10
     elif 5 <= skillLv < 8:
         buff_level = 12
-    else:
+        buff_level1 = 12
+    elif 8 <= skillLv < 11:
         buff_level = 15
+        buff_level1 = 15
+    elif skillLv == 11:
+        buff_level = 15
+        buff_level1 = 20
 
     selfBuffLv = self.getBuffLv(64001302)
 
-    if selfBuffLv >= buff_level:
+    if selfBuffLv >= buff_level1:
         self.showMsg(54479003,[])    
         return False
 
@@ -1671,13 +1714,19 @@ def _90015000(self, target, context):
     elif 8 <= skillLv < 11:
         buff_level = 15
         healnum = 0.075
-    else:  # skillLv >= 11
+    elif skillLv == 11:
         buff_level = 15
+        buff_level1 = 20
         healnum = 0.075
+    else:
+        buff_level = 15
     # 铭文效果结束
 
     # 自己
-    self.addBuffBySkill(self, context, 64001302, buff_level, 1.0, 10)
+    if skillLv == 11:
+        self.addBuffBySkill(self, context, 64001302, buff_level1, 1.0, 10)        
+    else:
+        self.addBuffBySkill(self, context, 64001302, buff_level, 1.0, 10) 
 
     # 召唤物
     for summonId in self.petList:
@@ -1744,7 +1793,7 @@ def _90020004(self, target, context):
         if not e:
             continue    
         self.attack(e, context, dmgRatio, levelDmg, 0,2,1,None,1)    
-        action_FightAction.pushTarget(self, e, context, 1, 4, 0, 1, 2)
+        action_FightAction.pushTarget(self, e, context, 1, 4, 0, 1, 2, 1, 1, 1)
 
 def _90020005(self, target, context): 
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -1762,14 +1811,14 @@ def _90020005(self, target, context):
     elif skillLv == 11:
         bufftime = 60
         buff_level = 4
-    if skillLv < 5:            
-        self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 10)
-    elif 5 <= skillLv < 8:
-        self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 10)
-    elif 8 <= skillLv < 11:
-        self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 10)
-    elif skillLv == 11:
-        self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 15)    
+    # if skillLv < 5:            
+    #     self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 10)
+    # elif 5 <= skillLv < 8:
+    #     self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 10)
+    # elif 8 <= skillLv < 11:
+    #     self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 10)
+    # elif skillLv == 11:
+    #     self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 15)    
 
 
 
@@ -1793,7 +1842,15 @@ def _90020005_start(self, target, context):
 
 def _90020010(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
-    self.createCreation(target, context, 65000002, self.level, skillLv, 0, 1, 0, 0, 0)
+    self.createCreation(target, context, 65000033, self.level, skillLv, 0, 1, 0, 0, 0)
+
+def _90020010_start(self, target, context):
+    skillLv = self.getSkillLevel(target, context, context.skillId)
+    if skillLv == 11:
+        self.addBuffBySkill(self, context, 64000617, 1, 1.0, 1.5)
+
+def _90020010_end(self, target, context):
+    self.removeBuffBySkill(self, context, 64000617,)
 
 def _90020011(self, target, context):
     import KBEngine
@@ -1801,7 +1858,7 @@ def _90020011(self, target, context):
     skillLv = self.tmpProps.get('skillLv')
     lvParam = utils.getSkillLvParam(skillId)
     levelDmg = (50 + (skillLv - 1)*35)/6    
-    dmgRatio = lvParam[skillLv-1]*0.01/6
+    dmgRatio = lvParam[skillLv-1]*0.01/10
 
     if skillLv < 5:
         buff_level = 1
@@ -1847,15 +1904,15 @@ def _90020016(self, target, context):
     levelDmg = (50+35*(skillLv - 1))*2/3
     dmgRatio = lvParam[skillLv - 1] * 0.01
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    #probability = 1/max(targetNumber, 1)
 
     # 定义不同技能等级对应的额外击倒参数
     level_params = {
-        (0, 5): [(1.2, 0.2 * probability, 1, 0, 1)],
-        (5, 8): [(1.2, 0.5 * probability, 1, 0, 1)],
-        (8, 11): [(1.2, 0.8 * probability, 1, 0, 1)],
-        (11, 12): [(1.2, 1 * probability, 1, 0, 1)],
-        (12, float('inf')): [(1.5, 1 * probability, 1, 0, 1)]
+        (0, 5): [(1.2, 0.3, 1, 0, 1)],
+        (5, 8): [(1.2, 0.5, 1, 0, 1)],
+        (8, 11): [(1.2, 0.8, 1, 0, 1)],
+        (11, 12): [(1.2, 1, 1, 0, 1)],
+        (12, float('inf')): [(1.5, 1, 1, 0, 1)]
     }
 
     # 查找对应的额外击倒参数
@@ -1871,8 +1928,14 @@ def _90020016(self, target, context):
             continue
         self.attack(e, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)
         action_FightAction.down(self, e, context, 1.5, 1, 1, 0, 2)
-        for params in extra_down_params:
-            action_FightAction.down(self, e, context, *params)
+        if 8 <= skillLv < 11:
+            action_FightAction.down(self, e, context, 1.2, 0.2, 1, 0, 1)
+        elif skillLv == 11:
+            action_FightAction.down(self, e, context, 1.2, 0.3, 1, 0, 1)
+
+
+    for params in extra_down_params:
+        action_FightAction.down(self, target, context, *params)
 
 def _90020020(self, target, context):
     import action_FightAction
@@ -1926,9 +1989,9 @@ def _90020025(self, target, context):
 
 def _90020025_start(self, target, context): 
     skillLv = self.getSkillLevel(target, context, context.skillId) 
-    if skillLv < 5:
-        self.addBuffBySkill(self, context, 64000413, 1, 1.0, 2)
-    elif 5 <= skillLv < 8: 
+    #if skillLv < 5:
+    #    self.addBuffBySkill(self, context, 64000413, 1, 1.0, 2)
+    if 5 <= skillLv < 8: 
         self.addBuffBySkill(self, context, 64000414, 1, 1.0, 2)
     elif 8 <= skillLv < 11: 
         self.addBuffBySkill(self, context, 64000415, 1, 1.0, 2)
@@ -1961,27 +2024,27 @@ def _90020030(self, target, context):
 
         if skillLv < 5:
             if e.hasBuff(64000401) or e.hasBuff(64000407):
-                action_FightAction.snarecommom(self, e, context, 2, 1, 0, 0, 2)
+                action_FightAction.snarecommom(self, e, context, 2, 1, 1, 0, 2)
             else:
-                action_FightAction.snarecommom(self, e, context, 2, 0.5, 0, 0, 2)
+                action_FightAction.snarecommom(self, e, context, 2, 0.5, 1, 0, 2)
             action_FightAction.snarecommom(self, e, context, 1.2, 1, 1, 0, 1)
         elif skillLv < 8:
             if e.hasBuff(64000401) or e.hasBuff(64000407):
-                action_FightAction.snarecommom(self, e, context, 2, 1, 0, 0, 2)
+                action_FightAction.snarecommom(self, e, context, 2, 1, 1, 0, 2)
             else:
-                action_FightAction.snarecommom(self, e, context, 2, 0.5, 0, 0, 2)
+                action_FightAction.snarecommom(self, e, context, 2, 0.5, 1, 0, 2)
             action_FightAction.snarecommom(self, e, context, 1.4, 1, 1, 0, 1)
         elif skillLv < 11:
             if e.hasBuff(64000401) or e.hasBuff(64000407):
-                action_FightAction.snarecommom(self, e, context, 2, 1, 0, 0, 2)
+                action_FightAction.snarecommom(self, e, context, 2, 1, 1, 0, 2)
             else:
-                action_FightAction.snarecommom(self, e, context, 2, 0.5, 0, 0, 2)
+                action_FightAction.snarecommom(self, e, context, 2, 0.5, 1, 0, 2)
             action_FightAction.snarecommom(self, e, context, 1.7, 1, 1, 0, 1)
         else:
             if e.hasBuff(64000401) or e.hasBuff(64000407):
-                action_FightAction.snarecommom(self, e, context, 2, 1, 0, 0, 2)
+                action_FightAction.snarecommom(self, e, context, 2, 1, 1, 0, 2)
             else:
-                action_FightAction.snarecommom(self, e, context, 2, 0.5, 0, 0, 2)
+                action_FightAction.snarecommom(self, e, context, 2, 0.5, 1, 0, 2)
             action_FightAction.snarecommom(self, e, context, 2, 1, 1, 0, 1)
 
     # 第二段：以第一段指定的 target 为中心
@@ -1998,8 +2061,11 @@ def _90020030_start(self, target, context):
     if ret and datas:
         buffId = int(datas[0])
         self.addBuffBySkill(self, context, buffId, 1, 1.0, 2)
-    controlPenetration = min( max(self.level - target.level, 0)* 5, 30)
-    self.addBuffBySkill(self, context, 64000449, 1, 1.0, 3, control =controlPenetration)
+    levelDiff = self.level - target.level - 3      
+    if levelDiff <= 0:                             
+        return
+    controlPenetration = min(levelDiff * 5, 30)    
+    self.addBuffBySkill(self, context, 64000449, 1, 1.0, 3, control=controlPenetration)
 
 def _90020030_end(self, target, context):
     buff_ids = [64000443]
@@ -2029,22 +2095,22 @@ def _90020035(self, target, context):
         self.dodgeSkill(target, context, 150, 10)
 
         if skillLv < 5:
-            buff_level = 2
+            buff_level = 1
         elif 5 <= skillLv < 8:
-            buff_level = 3
+            buff_level = 2
         elif 8 <= skillLv < 11:
-            buff_level = 4
+            buff_level = 3
         elif skillLv == 11:
-            buff_level = 6
+            buff_level = 3
 
         if skillLv < 5:            
-            self.addBuffBySkill(self, context, 64000450, buff_level, 1.0, 10)
+            self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 10)
         elif 5 <= skillLv < 8:
-            self.addBuffBySkill(self, context, 64000450, buff_level, 1.0, 10)
+            self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 10)
         elif 8 <= skillLv < 11:
-            self.addBuffBySkill(self, context, 64000450, buff_level, 1.0, 10)
+            self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 10)
         elif skillLv == 11:
-            self.addBuffBySkill(self, context, 64000450, buff_level, 1.0, 15)
+            self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 15)
 
         # 铭文效果调用
         ret, datas = self.getAvatar().getInscriptionEffects(90020035, 13)
@@ -2094,7 +2160,7 @@ def _90020041(self, target, context):
     levelDmg = (50 + (skillLv - 1) * 35) / 3
     dmgRatio = lvParam[skillLv - 1] * 0.01
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
 
     if context.actionStage == 0:
         for tid in context.effectedEntIds:
@@ -2111,7 +2177,7 @@ def _90020041(self, target, context):
             ent = KBEngine.entities.get(tid)
             if not ent:
                 continue
-            self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 0)
+            self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)
         return self.callAfterDelay(target, context, 1.5)
 
     elif context.actionStage == 2:
@@ -2119,7 +2185,7 @@ def _90020041(self, target, context):
             ent = KBEngine.entities.get(tid)
             if not ent:
                 continue
-            self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 0)
+            self.attack(ent, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)
 
 def _90020042(self, target, context):
     import utils
@@ -2128,7 +2194,7 @@ def _90020042(self, target, context):
     levelDmg = (50 + (skillLv - 1) * 35) / 3
     dmgRatio = lvParam[skillLv - 1] * 0.01
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
 
     if context.actionStage == 0:
         for tid in context.effectedEntIds:
@@ -2162,7 +2228,7 @@ def _90020043(self, target, context):
     levelDmg = (50 + (skillLv - 1) * 35) / 3
     dmgRatio = lvParam[skillLv - 1] * 0.01
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
 
     if context.actionStage == 0:
         for tid in context.effectedEntIds:
@@ -2196,7 +2262,7 @@ def _90020044(self, target, context):
     levelDmg = (50 + (skillLv - 1) * 35) / 3
     dmgRatio = lvParam[skillLv - 1] * 0.01
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
 
     if context.actionStage == 0:
         for tid in context.effectedEntIds:
@@ -2234,8 +2300,8 @@ def _90020046(self, target, context):
     skillId = self.tmpProps['skillId']
     skillLv = self.tmpProps.get('skillLv')
     lvParam = utils.getSkillLvParam(skillId)
-    levelDmg = (50 + (skillLv -1)*35)/5    
-    dmgRatio = lvParam[skillLv-1]*0.01/5
+    levelDmg = (50 + (skillLv -1)*35)/4    
+    dmgRatio = lvParam[skillLv-1]*0.01/4
     for eid in context.effectedEntIds:
         e = KBEngine.entities.get(eid)
         if not e:
@@ -2247,9 +2313,9 @@ def _90020047(self, target, context):
     skillId = self.tmpProps['skillId']
     skillLv = self.tmpProps.get('skillLv')
     targetNumber = len(context.effectedEntIds)
-    probability = 0.2/max(targetNumber, 2)
+    probability = 0.1/max(targetNumber, 1)
     targetNumber1 = len(context.effectedEntIds)
-    probability1 = 2/max(targetNumber1, 2)
+    probability1 = 1/max(targetNumber1, 1)
 
 
         # 铭文效果调用
@@ -2297,13 +2363,13 @@ def _90020050(self, target, context):
     levelDmg = 50+(skillLv-1)*35  # 计算伤害
     dmgRatio = lvParam[skillLv-1]*0.01
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
 
     for eid in context.effectedEntIds:
         e = KBEngine.entities.get(eid)
         if not e:
             continue
-        action_FightAction.stun(self, e, context, 0.3, 1, 1, 1)
+        action_FightAction.stun(self, e, context, 0.3, 1, 1, 0, 2)
         if e.hasBuff(64000401):
             context.isCombo = True
             self.attack(e, context, dmgRatio*1.2, levelDmg*1.2, 0, 2, 1, None, 3)
@@ -2313,19 +2379,19 @@ def _90020050(self, target, context):
         distance = sMath.distance2D(self.position, e.position)
         if skillLv < 5:
             pushDis = float(6 - distance)
-            action_FightAction.pushTarget(self, e, context, pushDis , 10, 1, probability, 1)
+            action_FightAction.pushTarget(self, e, context, pushDis , 10, 1, probability, 0, 1, 1, 1)
         elif 5 <= skillLv < 8: 
             pushDis = float(7 - distance)
-            action_FightAction.pushTarget(self, e, context, pushDis , 10, 1, probability, 1)
-            action_FightAction.stun(self, e, context, 0.8, 1, 1)
+            action_FightAction.pushTarget(self, e, context, pushDis , 10, 1, probability, 0, 1, 1, 1)
+            #action_FightAction.stun(self, e, context, 0.8, 1, 1)
         elif 8 <= skillLv < 11: 
             pushDis = float(8 - distance)
-            action_FightAction.pushTarget(self, e, context, pushDis , 10, 1, probability, 1)
-            action_FightAction.stun(self, e, context, 1.1, 1, 1)
+            action_FightAction.pushTarget(self, e, context, pushDis , 10, 1, probability, 0, 1, 1, 1)
+            #action_FightAction.stun(self, e, context, 1.1, 1, 1)
         elif skillLv == 11 : 
             pushDis = float(9 - distance)
-            action_FightAction.pushTarget(self, e, context, pushDis , 10, 1, probability, 1)
-            action_FightAction.stun(self, e, context, 1.5, 1, 1)
+            action_FightAction.pushTarget(self, e, context, pushDis , 10, 1, probability, 0, 1, 1, 1)
+            #action_FightAction.stun(self, e, context, 1.5, 1, 1)
 
                     #铭文效果
         #ret, datas = self.getAvatar().getInscriptionEffects(90020050, 13)
@@ -2396,11 +2462,11 @@ def _90020056(self, target, context):
     if  skillLv < 8: 
         dmgRate = 1.2
     elif  8<= skillLv < 11: 
-        dmgRate = 1.3
+        dmgRate = 1.2
     elif skillLv == 11 : 
-        dmgRate = 1.4
+        dmgRate = 1.2
     elif skillLv == 12 : 
-        dmgRate = 1.4
+        dmgRate = 1.2
 
     for eid in context.effectedEntIds:
         e = KBEngine.entities.get(eid)
@@ -2475,7 +2541,7 @@ def _90020065(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = (88+(skillLv -1)*8)/5
-    dmgRatio = lvParam[skillLv-1]/100  
+    dmgRatio = lvParam[skillLv-1]*0.01
   
     if context.actionStage == 0:
         # self.createCreation(target, context, 65000017,self.level, skillLv, 4, 1, 0, 0, 0)
@@ -2517,7 +2583,7 @@ def _90020066(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = (30+(skillLv -1)*8)/5
-    dmgRatio = lvParam[skillLv-1]/100  
+    dmgRatio = lvParam[skillLv-1]*0.01
 
     if context.actionStage == 0: 
         for eid in context.effectedEntIds:
@@ -2573,7 +2639,7 @@ def _90020110(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = (50 + (skillLv - 1)*35)/6
-    dmgRatio = lvParam[skillLv-1]*0.01/6
+    dmgRatio = lvParam[skillLv-1]*0.01/10
     self.createCreation(target, context, 65000033, self.level, skillLv, 0, 1, 0, 0, 0)
     #self.createCreation(target, context, 65000035, self.level, skillLv, 0, 1, 0, 0, 0)
 
@@ -2588,23 +2654,17 @@ def _90020111(self, target, context):
     skillId = self.tmpProps['skillId']
     skillLv = self.tmpProps.get('skillLv')
     lvParam = utils.getSkillLvParam(skillId)
-    levelDmg = (50 + (skillLv - 1)*35)/6   
-    dmgRatio = lvParam[skillLv-1]*0.01/6
-    # 根据技能等级映射不同的 Buff ID
-    buff_mapping = {
-        (0, 5): 64000408,
-        (5, 8): 64000409,
-        (8, 11): 64000410,
-        (11, 12): 64000411,
-        (12, float('inf')): 64000412
-    }
+    levelDmg = (50 + (skillLv - 1)*35)/6    
+    dmgRatio = lvParam[skillLv-1]*0.01/10
 
-    # 查找对应的 Buff ID
-    extra_buff_id = None
-    for (min_lv, max_lv), buff_id in buff_mapping.items():
-        if min_lv <= skillLv < max_lv:
-            extra_buff_id = buff_id
-            break
+    if skillLv < 5:
+        buff_level = 1
+    elif 5 <= skillLv < 8:
+        buff_level = 2
+    elif 8 <= skillLv < 11:
+        buff_level = 3
+    elif skillLv == 11:
+        buff_level = 5
 
     for eid in context.effectedEntIds:
         e = KBEngine.entities.get(eid)
@@ -2612,17 +2672,33 @@ def _90020111(self, target, context):
             continue
         self.attack(e, context, dmgRatio, levelDmg, 0, 2, 1, None, 3)
         self.addBuffBySkill(e, context, 64000407, 1, 1.0, 10)
-        if extra_buff_id:
-            self.addBuffBySkill(e, context, extra_buff_id, 1, 1.0, 2)
+        self.addBuffBySkill(e, context, 64000408, buff_level, 1.0, 2)
 
 def _90020112(self, target, context):
+    import KBEngine
+    skillId = self.tmpProps['skillId']
+    skillLv = self.tmpProps.get('skillLv')
+    lvParam = utils.getSkillLvParam(skillId)
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    #probability = 1/max(targetNumber, 1)
+
     for eid in context.effectedEntIds:
         e = KBEngine.entities.get(eid)
         if not e:
             continue
-        action_FightAction.frozen(self, e, context, 1.5, 1 * probability, 1, 0)
+        if 8 <= skillLv < 11:
+            action_FightAction.frozen(self, e, context, 1.5, 0.2, 1, 0)
+        elif skillLv == 11:
+            action_FightAction.frozen(self, e, context, 2, 0.3, 1, 0)            
+
+    if skillLv < 5:
+        action_FightAction.frozen(self, target, context, 1, 0.3, 1, 0)
+    elif 5 <= skillLv < 8:
+        action_FightAction.frozen(self, target, context, 1.2, 0.5, 1, 0)
+    elif 8 <= skillLv < 11:
+        action_FightAction.frozen(self, target, context, 1.5, 0.8, 1, 0)
+    elif skillLv == 11:
+        action_FightAction.frozen(self, target, context, 2, 1, 1, 0)
 
 def _90020250(self, target, context):
     import KBEngine
@@ -2657,9 +2733,9 @@ def _90020250(self, target, context):
 
 def _90020250_start(self, target, context): 
     skillLv = self.getSkillLevel(target, context, context.skillId) 
-    if skillLv < 5:
-        self.addBuffBySkill(self, context, 64000413, 1, 1.0, 2)
-    elif 5 <= skillLv < 8: 
+    #if skillLv < 5:
+    #    self.addBuffBySkill(self, context, 64000413, 1, 1.0, 2)
+    if 5 <= skillLv < 8: 
         self.addBuffBySkill(self, context, 64000414, 1, 1.0, 2)
     elif 8 <= skillLv < 11: 
         self.addBuffBySkill(self, context, 64000415, 1, 1.0, 2)
@@ -2694,30 +2770,30 @@ def _90020350(self, target, context):
         self.dodgeSkill(target, context, 150, 10)
         
         if skillLv < 5:
-            buff_level = 2
+            buff_level = 1
         elif 5 <= skillLv < 8:
-            buff_level = 3
+            buff_level = 2
         elif 8 <= skillLv < 11:
-            buff_level = 4
+            buff_level = 3
         elif skillLv == 11:
-            buff_level = 6
+            buff_level = 3
 
         if skillLv < 5:            
-            self.addBuffBySkill(self, context, 64000450, buff_level, 1.0, 10)
+            self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 10)
         elif 5 <= skillLv < 8:
-            self.addBuffBySkill(self, context, 64000450, buff_level, 1.0, 10)
+            self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 10)
         elif 8 <= skillLv < 11:
-            self.addBuffBySkill(self, context, 64000450, buff_level, 1.0, 10)
+            self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 10)
         elif skillLv == 11:
-            self.addBuffBySkill(self, context, 64000450, buff_level, 1.0, 15)
+            self.addBuffBySkill(self, context, 64000419, buff_level, 1.0, 15)
 
 def _90020350_start(self, target, context):
     # 添加buff 64000602，不受限制
     self.addBuffBySkill(self, context, 64000602, 1, 1.0, 5)
 
     # 仅当没有 64000603 时才添加
-    #if not self.hasBuff(64000603):
-        #self.addBuffBySkill(self, context, 64000603, 1, 1.0, -1)
+    if not self.hasBuff(64000603):
+        self.addBuffBySkill(self, context, 64000603, 1, 1.0, 120)
 
 def _90020350_activate(self, target, context):      
     self.addBuffBySkill(self, context, 64000603, 1, 1.0, -1)
@@ -2781,7 +2857,7 @@ def _90020452(self, target, context):
     skillId = self.tmpProps['skillId']
     skillLv = self.tmpProps.get('skillLv')
     targetNumber = len(context.effectedEntIds)
-    probability = 0.2/max(targetNumber, 2)
+    probability = 0.1/max(targetNumber, 1)
 
     # 定义不同技能等级对应的额外拖拽参数
     level_params = {
@@ -3074,7 +3150,7 @@ def _90030003(self, target, context):
     levelDmg2 = (50+(skillLv-1)*35)
     dmgRatio2 = lvParam[skillLv-1]/100
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
 
     for tid in context.effectedEntIds:
         ent = KBEngine.entities.get(tid)
@@ -3089,7 +3165,7 @@ def _90030004(self, target, context):
     levelDmg2 = (50+(skillLv-1)*35)
     dmgRatio2 = lvParam[skillLv-1]/100
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
 
     for tid in context.effectedEntIds:
         ent = KBEngine.entities.get(tid)
@@ -3112,16 +3188,12 @@ def _90030005(self, target, context):
         buffId = int(datas[0])
     if context.actionStage == 0:
 
-        if skillLv < 5:
-            buff_level = 1
-        elif 5 <= skillLv < 8:
-            buff_level = 2
+        if 5 <= skillLv < 8:
+            self.addBuffBySkill(self, context, 64000733, 1, 1.0, 10)
         elif 8 <= skillLv < 11:
-            buff_level = 3
-        elif skillLv == 11:
-            buff_level = 4
-
-        self.addBuffBySkill(self, context, 64000733, buff_level, 1.0, 10)
+            self.addBuffBySkill(self, context, 64000733, 2, 1.0, 10)
+        elif skillLv== 11:
+            self.addBuffBySkill(self, context, 64000733, 3, 1.0, 10) 
 
         for tid in context.effectedEntIds:
             ent = KBEngine.entities.get(tid)
@@ -3158,7 +3230,7 @@ def _90030010(self, target, context):
     import action_FightAction, random
     import KBEngine
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
     skillLv = self.getSkillLevel(target, context, context.skillId)
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = (50 + (skillLv - 1) * 35) / 2
@@ -3272,17 +3344,28 @@ def _90030015(self, target, context):
             if not e:
                 continue
             self.attack(e, context,dmgRatio , levelDmg, 0, 1, 1, None, 3)
-        return self.callAfterDelay(target, context, 0.1)
-    if context.actionStage == 2:
-        if target :
-            if skillLv < 5:
-                action_FightAction.stun(self, target, context, 2, 0.5, 1, 0, 0)
-            if 5 <= skillLv < 8:
-                action_FightAction.stun(self, target, context, 2, 0.75, 1, 0, 0)
-            elif 8 <= skillLv < 11:
-                action_FightAction.stun(self, target, context, 2.5, 1, 1, 0, 0)
-            elif skillLv == 11:
-                action_FightAction.stun(self, target, context, 3, 1, 1, 0, 0)
+    if target :
+        if skillLv < 5:
+            action_FightAction.stun(self, target, context, 1.5, 0.5, 1, 0, 0)
+        if 5 <= skillLv < 8:
+            action_FightAction.stun(self, target, context, 1.5, 0.75, 1, 0, 0)
+        elif 8 <= skillLv < 11:
+            action_FightAction.stun(self, target, context, 2, 1, 1, 0, 0)
+        elif skillLv == 11:
+            action_FightAction.stun(self, target, context, 2.5, 1, 1, 0, 0)
+
+        
+    #     return self.callAfterDelay(target, context, 0.1)
+    # # if context.actionStage == 2:
+    #     if target :
+    #         if skillLv < 5:
+    #             action_FightAction.stun(self, target, context, 2, 0.5, 1, 0, 0)
+    #         if 5 <= skillLv < 8:
+    #             action_FightAction.stun(self, target, context, 2, 0.75, 1, 0, 0)
+    #         elif 8 <= skillLv < 11:
+    #             action_FightAction.stun(self, target, context, 2.5, 1, 1, 0, 0)
+    #         elif skillLv == 11:
+    #             action_FightAction.stun(self, target, context, 3, 1, 1, 0, 0)
         #return self.callAfterDelay(target, context, 0.4)
     #if context.actionStage == 3:
         #self.castSkill(target, context, 90030017,skillLv)
@@ -3413,7 +3496,7 @@ def _90030030(self, target, context):
             buff_level = 16
         elif skillLv == 11:
             buff_level = 20
-        self.addBuffBySkill(self, context, 64000745, buff_level, 1.0, 5)
+        self.addBuffBySkill(self, context, 64000745, buff_level, 1.0, 3)
 
         return self.callAfterDelay(target, context, 0.1)
 
@@ -3430,7 +3513,7 @@ def _90030030(self, target, context):
 
     elif context.actionStage == 3:
         if 8 <= skillLv < 11: 
-            self.addBuffBySkill(self, context,64000717, 1, 1.0, 5)
+            self.addBuffBySkill(self, context,64000717, 1, 1.0, 10)
         elif skillLv == 11 : 
             self.addBuffBySkill(self, context,64000717, 1, 1.0, 10)
 
@@ -3478,7 +3561,7 @@ def _90030031(self, target, context):
 
             self.attack(e, context, dmgRatio, levelDmg, 0)
             action_FightAction.pushTarget(
-                self, e, context, 1, 10, 0.1, 1, 2
+                self, e, context, 1, 10, 0.1, 1, 2, 1, 1, 1
             )
 
 def _90030035(self, target, context):
@@ -3537,16 +3620,15 @@ def _90030045(self, target, context):
     # 检查目标是否存在
     if target is None:
         return  # 如果没有目标，直接返回
+    if 5 <= skillLv < 8:
+        self.addBuffBySkill(target, context, 64000748, 5, 1, 10)
+    elif 8 <= skillLv < 11:
+        self.addBuffBySkill(target, context, 64000748, 10, 1, 10)
+    elif skillLv == 11:
+        self.addBuffBySkill(target, context, 64000748, 15, 1, 10)
+        self.addBuffBySkill(target, context, 64000749, 1, 1, 10)    
         
     self.addBuffBySkill(target, context,64000701, 1, 1.0, 10)
-    if 5 <= skillLv < 8: 
-        self.addBuffBySkill(target, context,64000718, 1, 1.0, 10)
-    elif 8 <= skillLv < 11: 
-        self.addBuffBySkill(target, context,64000718, 2, 1.0, 10)
-    elif skillLv == 11 : 
-        self.addBuffBySkill(target, context,64000718, 3, 1.0, 10)
-
-    # 计算距离（确保 target 和 self 都有 position 属性）
     distance = sMath.distance2D(self.position, target.position)
     pushDis = min(max(distance - 3, 0.5), 20) 
     # 基础拖拽操作
@@ -3561,8 +3643,11 @@ def _90030045(self, target, context):
 def _90030045_start(self, target, context):
     if not target:
         return
-    controlPenetration = min( max(self.level - target.level, 0)* 5, 30)
-    self.addBuffBySkill(self, context, 64000917, 1, 1.0, 3, control =controlPenetration)
+    levelDiff = self.level - target.level - 3      
+    if levelDiff <= 0:                             
+        return
+    controlPenetration = min(levelDiff * 5, 30)    
+    self.addBuffBySkill(self, context, 64000917, 1, 1.0, 3, control=controlPenetration)
 
 def _90030045_end(self, target, context):
     self.removeBuffBySkill(self, context, 64000917)
@@ -3596,15 +3681,15 @@ def _90030050(self, target, context):
     levelDmg = 50 + (skillLv - 1) * 35
     dmgRatio = lvParam[skillLv - 1] / 100
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    #probability = 1/max(targetNumber, 1)
 
     # 定义不同技能等级对应的额外击倒参数
     level_params = {
-        (0, 5): [(1.5, 0.5*probability, 1, 0, 1)],
-        (5, 8): [(1.5, 0.75*probability, 1, 0, 1)],
-        (8, 11): [(2, 1*probability, 1, 0, 1)],
-        (11, 12): [(2, 1*probability, 1, 0, 1)],
-        (12, float('inf')): [(2.5, 1*probability, 1, 0, 1)]
+        (0, 5): [(1.5, 0.5, 1, 0, 1)],
+        (5, 8): [(1.5, 0.75, 1, 0, 1)],
+        (8, 11): [(2, 1, 1, 0, 1)],
+        (11, 12): [(2, 1, 1, 0, 1)],
+        (12, float('inf')): [(2.5, 1, 1, 0, 1)]
     }
 
     # 查找对应的额外击倒参数
@@ -3620,8 +3705,12 @@ def _90030050(self, target, context):
             continue
         self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
         action_FightAction.down(self, e, context, 2, 1, 1, 0, 2)
-        for params in extra_down_params:
-            action_FightAction.down(self, e, context, *params)
+        if 8 <= skillLv < 11:                
+            action_FightAction.down(self, e, context, 2, 0.2, 1, 0, 1)
+        elif skillLv == 11:
+            action_FightAction.down(self, e, context, 2, 0.3, 1, 0, 1)
+    for params in extra_down_params:
+        action_FightAction.down(self, target, context, *params)
 
 def _90030050_start(self, target, context): 
     skillLv = self.getSkillLevel(target, context, context.skillId) 
@@ -3654,7 +3743,6 @@ def _90030051(self, target, context):
             self.attack(e, context, dmgRatio*1.4, levelDmg*1.4, 0, 1, 1, None, 0)
         else:
             self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 0)
-        action_FightAction.down(self, e, context, 1.2, 1, 1, 1)
 
 def _90030055(self, target, context):
     import random
@@ -3677,11 +3765,11 @@ def _90030055_start(self, target, context):
     elif 5 <= skillLv < 8: 
         self.addBuffBySkill(self, context, 64000729, 1, 1.0, 2)
     elif 8 <= skillLv < 11: 
-        self.addBuffBySkill(self, context, 64000730, 1, 1.0, 2)
+        self.addBuffBySkill(self, context, 64000729, 1, 1.0, 2)
     elif skillLv == 11 : 
-        self.addBuffBySkill(self, context, 64000731, 1, 1.0, 2)
+        self.addBuffBySkill(self, context, 64000729, 1, 1.0, 2)
     elif skillLv == 12 : 
-        self.addBuffBySkill(self, context, 64000732, 1, 1.0, 2)
+        self.addBuffBySkill(self, context, 64000729, 1, 1.0, 2)
 
 def _90030055_end(self, target, context):
     buff_ids = [64000728, 64000729, 64000730, 64000731, 64000732]
@@ -3722,7 +3810,7 @@ def _90030056(self, target, context):
             self.attack(ent, context, dmgRatio*1.2, levelDmg*1.2, 0, 1, 1, None, 3)
         else:
             self.attack(ent, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
-        action_FightAction.pushTarget(self, ent, context, 2, 10, 0.2, 1, 0)
+        action_FightAction.pushTarget(self, ent, context, 2, 10, 0.2, 1, 0, 1, 1, 1)
 
 def _90030060(self, target, context):
     import action_FightAction
@@ -3733,7 +3821,7 @@ def _90030060(self, target, context):
     levelDmg = 50 + (skillLv - 1) * 35 
     dmgRatio = lvParam[skillLv-1]/100 
     targetNumber = len(context.effectedEntIds)
-    probability = 0.2/max(targetNumber, 2)
+    probability = 0.1/max(targetNumber, 1)
     if context.actionStage == 0:
         self.addBuffBySkill(self, context, 64000717, 1, 1.0, 10)
         return self.callAfterDelay(target, context, 0.3)
@@ -3771,14 +3859,12 @@ def _90030060(self, target, context):
         return self.callAfterDelay(target, context, 0.5)
 
     elif context.actionStage == 2:
-        if skillLv < 5:
-            buff_level = 3
-        elif 5 <= skillLv < 8:
-            buff_level = 4
+        if 5 <= skillLv < 8:
+            self.addBuffBySkill(self, context, 64000747, 1, 1.0, 60)
         elif 8 <= skillLv < 11:
-            buff_level = 5
+            self.addBuffBySkill(self, context, 64000747, 2, 1.0, 60)
         elif skillLv == 11:
-            buff_level = 6
+            self.addBuffBySkill(self, context, 64000747, 3, 1.0, 60)
                             # 铭文效果调用
         buffId = 0
         ret, datas = self.getAvatar().getInscriptionEffects(90030060, 13)
@@ -3787,28 +3873,26 @@ def _90030060(self, target, context):
             if buffId:    
                 self.addBuffBySkill(self, context, buffId, 1, 1.0, 5)
 
-        self.addBuffBySkill(self, context, 64000747, buff_level, 1.0, 10)
-
 def _90030065(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = 50 + (skillLv - 1) * 35
     dmgRatio = lvParam[skillLv - 1] / 100
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    #probability = 1/max(targetNumber, 1)
 
     if  skillLv < 11: 
         dmgRate = 1.2
     elif skillLv == 11 : 
-        dmgRate = 1.3
+        dmgRate = 1.2
 
     # 定义不同技能等级对应的额外参数
     level_params = {
-        (0, 5): [(2, 0.5*probability, 1, 0, 1)],
-        (5, 8): [(2, 0.75*probability, 1, 0, 1)],
-        (8, 11): [(2.5, 1*probability, 1, 0, 1)],
-        (11, 12): [(3, 1*probability, 1, 0, 1)],
-        (12, float('inf')): [(3, 1*probability, 1, 0, 1)]
+        (0, 5): [(2, 0.5, 1, 0, 1)],
+        (5, 8): [(2, 0.75, 1, 0, 1)],
+        (8, 11): [(2.5, 1, 1, 0, 1)],
+        (11, 12): [(3, 1, 1, 0, 1)],
+        (12, float('inf')): [(3, 1, 1, 0, 1)]
     }
 
     # 查找对应的眩晕参数
@@ -3828,14 +3912,19 @@ def _90030065(self, target, context):
         else:
             self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
         action_FightAction.stun(self, e, context, 3, 1, 1, 0, 2)
+
+        if 8 <= skillLv < 11:                
+            action_FightAction.stun(self, e, context, 2.5, 0.2, 1, 0, 1)
+        elif skillLv == 11:
+            action_FightAction.stun(self, e, context, 3, 0.3, 1, 0, 1)
         # 执行额外的眩晕操作
-        for params in extra_stun_params:
-            action_FightAction.stun(self, e, context, *params)
+    for params in extra_stun_params:
+        action_FightAction.stun(self, target, context, *params)
 
 def _90030065_start(self, target, context): 
     skillLv = self.getSkillLevel(target, context, context.skillId) 
-    if skillLv == 11 : 
-        self.addBuffBySkill(self, context, 64000740, 1, 1.0, 2)
+    #if skillLv == 11 : 
+    #    self.addBuffBySkill(self, context, 64000740, 1, 1.0, 2)
 
 def _90030065_end(self, target, context):
     buff_ids = [64000740]
@@ -3868,7 +3957,7 @@ def _90030070(self, target, context):
             buff_level = 6
             buff_time = 5
 
-        self.addBuffBySkill(self, context, 64000746, buff_level, 1.0, 5)
+        self.addBuffBySkill(self, context, 64000746, buff_level, 1.0, 3)
 
         #if skillLv >= 5:
         #    self.addBuffBySkill(self, context, 64000447, 1, 1.0, buff_time * 0.5)
@@ -3955,17 +4044,12 @@ def _90030080(self, target, context):
     bufftime1 = 5
     bufftime2 = 5
     if context.actionStage == 0:
-
-        if skillLv < 5:
+        if 5 <= skillLv < 8:
             self.addBuffBySkill(self, context, 64000733, 1, 1.0, 10 + bufftime1)
-        elif 5 <= skillLv < 8: 
-            self.addBuffBySkill(self, context, 64000734, 1, 1.0, 10 + bufftime1)
-        elif 8 <= skillLv < 11: 
-            self.addBuffBySkill(self, context, 64000735, 1, 1.0, 10 + bufftime1)
-        elif skillLv == 11 : 
-            self.addBuffBySkill(self, context, 64000736, 1, 1.0, 10 + bufftime1)
-        elif skillLv == 12 : 
-            self.addBuffBySkill(self, context, 64000737, 1, 1.0, 10 + bufftime1)
+        elif 8 <= skillLv < 11:
+            self.addBuffBySkill(self, context, 64000733, 2, 1.0, 10 + bufftime1)
+        elif skillLv== 11:
+            self.addBuffBySkill(self, context, 64000733, 3, 1.0, 10 + bufftime1) 
 
         for tid in context.effectedEntIds:
             ent = KBEngine.entities.get(tid)
@@ -3998,24 +4082,36 @@ def _90030150(self, target, context):
             if not e:
                 continue
             self.attack(e, context,dmgRatio , levelDmg, 0, 1, 1, None, 3)
-        return self.callAfterDelay(target, context, 0.1)
-    if context.actionStage == 2:
-        if target :
-            if skillLv < 5:
-                action_FightAction.stun(self, target, context, 2, 0.5, 1, 0, 0)
-            if 5 <= skillLv < 8:
-                action_FightAction.stun(self, target, context, 2, 0.75, 1, 0, 0)
-            elif 8 <= skillLv < 11:
-                action_FightAction.stun(self, target, context, 2.5, 1, 1, 0, 0)
-            elif skillLv == 11:
-                action_FightAction.stun(self, target, context, 3, 1, 1, 0, 0)
-       # return self.callAfterDelay(target, context, 0.4)
+
+    if target :
+        if skillLv < 5:
+            action_FightAction.stun(self, target, context, 1.5, 0.5, 1, 0, 0)
+        if 5 <= skillLv < 8:
+            action_FightAction.stun(self, target, context, 1.5, 0.75, 1, 0, 0)
+        elif 8 <= skillLv < 11:
+            action_FightAction.stun(self, target, context, 2, 1, 1, 0, 0)
+        elif skillLv == 11:
+            action_FightAction.stun(self, target, context, 2.5, 1, 1, 0, 0)
+
+
+    #     return self.callAfterDelay(target, context, 0.1)
+    # if context.actionStage == 2:
+    #     if target :
+    #         if skillLv < 5:
+    #             action_FightAction.stun(self, target, context, 2, 0.5, 1, 0, 0)
+    #         if 5 <= skillLv < 8:
+    #             action_FightAction.stun(self, target, context, 2, 0.75, 1, 0, 0)
+    #         elif 8 <= skillLv < 11:
+    #             action_FightAction.stun(self, target, context, 2.5, 1, 1, 0, 0)
+    #         elif skillLv == 11:
+    #             action_FightAction.stun(self, target, context, 3, 1, 1, 0, 0)
+    #    # return self.callAfterDelay(target, context, 0.4)
     #if context.actionStage == 3:
         #self.castSkill(target, context, 90030152,skillLv)
 
 def _90030150_start(self, target, context): 
     skillLv = self.getSkillLevel(target, context, context.skillId) 
-    inscription = 3
+    inscription = 1
     self.addBuffBySkill(self, context, 64000908, 1, 1.0, 2)
     if skillLv < 5:
         buff_level = 4
@@ -4088,7 +4184,7 @@ def _90030300(self, target, context):
             buff_level = 16
         elif skillLv == 11:
             buff_level = 20
-        self.addBuffBySkill(self, context, 64000745, buff_level, 1.0, 5)
+        self.addBuffBySkill(self, context, 64000745, buff_level, 1.0, 3)
 
         return self.callAfterDelay(target, context, 0.1)
 
@@ -4105,7 +4201,7 @@ def _90030300(self, target, context):
 
     elif context.actionStage == 3:
         if 8 <= skillLv < 11: 
-            self.addBuffBySkill(self, context,64000717, 1, 1.0, 5)
+            self.addBuffBySkill(self, context,64000717, 1, 1.0, 10)
         elif skillLv == 11 : 
             self.addBuffBySkill(self, context,64000717, 1, 1.0, 10)
 
@@ -4120,7 +4216,7 @@ def _90030301(self, target, context):
 
     effectedEntIds = context.effectedEntIds or []
     targetNumber = len(effectedEntIds)
-    probability = 2 / max(targetNumber, 2)
+    probability = 1 / max(targetNumber, 1)
 
     # 铭文效果调用
     buffId = 0
@@ -4155,7 +4251,7 @@ def _90030301(self, target, context):
             self.attack(e, context, dmgRatio, levelDmg, 0)
             action_FightAction.snare(self, e, context, 1.2, probability, 1, 0, 0)
             action_FightAction.pushTarget(
-                self, e, context, 1, 10, 0.1, 1, 2
+                self, e, context, 1, 10, 0.1, 1, 2, 1, 1, 1
             )
 
 def _90030450(self, target, context):
@@ -4169,21 +4265,22 @@ def _90030450(self, target, context):
     # 检查目标是否存在
     if target is None:
         return  # 如果没有目标，直接返回
+    if 5 <= skillLv < 8:
+        self.addBuffBySkill(target, context, 64000748, 5, 1, 10)
+    elif 8 <= skillLv < 11:
+        self.addBuffBySkill(target, context, 64000748, 10, 1, 10)
+    elif skillLv == 11:
+        self.addBuffBySkill(target, context, 64000748, 15, 1, 10)
+        self.addBuffBySkill(target, context, 64000749, 1, 1, 10)     
+
+
         
     self.addBuffBySkill(target, context,64000701, 1, 1.0, 10)
-    if 5 <= skillLv < 8: 
-        self.addBuffBySkill(target, context,64000718, 1, 1.0, 10)
-    elif 8 <= skillLv < 11: 
-        self.addBuffBySkill(target, context,64000718, 2, 1.0, 10)
-    elif skillLv == 11 : 
-        self.addBuffBySkill(target, context,64000718, 3, 1.0, 10)
-
-    # 计算距离（确保 target 和 self 都有 position 属性）
     distance = sMath.distance2D(self.position, target.position)
     pushDis = min(max(distance - 3, 0.5), 20) 
     # 基础拖拽操作
     if  action_FightAction.stun(self, target, context, 2, 1, 1, 0):
-        action_FightAction.dragTarget(self, target, context, pushDis, 1, 0, 25, 0.5, 1, 1)
+        action_FightAction.dragTarget(self, target, context, pushDis, 1, 0, 25, 0.5, 1, 0)
 
     self.attack(target, context, dmgRatio, levelDmg, 0,1,1,None,3)
     self.castSkill(target, context, 90030452, skillLv)
@@ -4192,8 +4289,13 @@ def _90030450(self, target, context):
 
 def _90030450_start(self, target, context):
     self.addBuffBySkill(self, context, 64000915, 1, 1.0, 2)
-    controlPenetration = min( max(self.level - target.level, 0)* 5, 30)
-    self.addBuffBySkill(self, context, 64000917, 1, 1.0, 3, control =controlPenetration)
+    if not target:
+        return
+    levelDiff = self.level - target.level - 3      
+    if levelDiff <= 0:                             
+        return
+    controlPenetration = min(levelDiff * 5, 30)    
+    self.addBuffBySkill(self, context, 64000917, 1, 1.0, 3, control=controlPenetration)
 
 def _90030450_end(self, target, context):
     self.removeBuffBySkill(self, context, 64000915)
@@ -4225,7 +4327,7 @@ def _90030452(self, target, context):
         distance = sMath.distance2D(self.position, ent.position)
         pushDis = min(max(distance - 3, 0.5), 20) 
         # 基础拖拽操作
-        action_FightAction.dragTarget(self, ent, context, pushDis, 1, 2, 25, 0.5, 1, 1)
+        action_FightAction.dragTarget(self, ent, context, pushDis, 1, 2, 25, 0.5, 1, 0)
 
 def _90030500(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -4233,15 +4335,15 @@ def _90030500(self, target, context):
     levelDmg = 50 + (skillLv - 1) * 35
     dmgRatio = lvParam[skillLv - 1] / 100
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    #probability = 1/max(targetNumber, 1)
 
     # 定义不同技能等级对应的额外击倒参数
     level_params = {
-        (0, 5): [(1.5, 0.5*probability, 1, 0, 1)],
-        (5, 8): [(1.5, 0.75*probability, 1, 0, 1)],
-        (8, 11): [(2, 1*probability, 1, 0, 1)],
-        (11, 12): [(2, 1*probability, 1, 0, 1)],
-        (12, float('inf')): [(2.5, 1*probability, 1, 0, 1)]
+        (0, 5): [(1.5, 0.5, 1, 0, 1)],
+        (5, 8): [(1.5, 0.75, 1, 0, 1)],
+        (8, 11): [(2, 1, 1, 0, 1)],
+        (11, 12): [(2, 1, 1, 0, 1)],
+        (12, float('inf')): [(2.5, 1, 1, 0, 1)]
     }
 
     # 查找对应的额外击倒参数
@@ -4259,8 +4361,12 @@ def _90030500(self, target, context):
         action_FightAction.down(self, e, context, 1.5, 1, 1, 0, 2)
                         #铭文效果调用
         self.addBuffBySkill(e, context, 64000904, 1, 1.0, 5) 
-        for params in extra_down_params:
-            action_FightAction.down(self, e, context, *params)
+        if 8 <= skillLv < 11:                
+            action_FightAction.down(self, e, context, 2, 0.2, 1, 0, 1)
+        elif skillLv == 11:
+            action_FightAction.down(self, e, context, 2, 0.3, 1, 0, 1)
+    for params in extra_down_params:
+        action_FightAction.down(self, target, context, *params)
 
 def _90030500_start(self, target, context): 
     skillLv = self.getSkillLevel(target, context, context.skillId) 
@@ -4296,11 +4402,11 @@ def _90030550_start(self, target, context):
     elif 5 <= skillLv < 8: 
         self.addBuffBySkill(self, context, 64000729, 1, 1.0, 2)
     elif 8 <= skillLv < 11: 
-        self.addBuffBySkill(self, context, 64000730, 1, 1.0, 2)
+        self.addBuffBySkill(self, context, 64000729, 1, 1.0, 2)
     elif skillLv == 11 : 
-        self.addBuffBySkill(self, context, 64000731, 1, 1.0, 2)
+        self.addBuffBySkill(self, context, 64000729, 1, 1.0, 2)
     elif skillLv == 12 : 
-        self.addBuffBySkill(self, context, 64000732, 1, 1.0, 2)
+        self.addBuffBySkill(self, context, 64000729, 1, 1.0, 2)
 
 def _90030550_end(self, target, context):
     buff_ids = [64000728, 64000729, 64000730, 64000731, 64000732]
@@ -4315,14 +4421,13 @@ def _90030560(self, target, context):
     lvParam = utils.getSkillLvParam(context.skillId)
     levelDmg = 50 + (skillLv - 1) * 35
     dmgRatio = lvParam[skillLv - 1] / 100
-
+    removed_success = False   # ✅ 必须先定义
     for tid in context.effectedEntIds:
         ent = KBEngine.entities.get(tid)
         if not ent:
             continue
 
         removeBuffTag = [7]
-        removed_success = False   # ✅ 必须先定义
 
         # --- 根据技能等级计算概率 ---
         if skillLv < 5:
@@ -4340,9 +4445,6 @@ def _90030560(self, target, context):
                 if ent.hasBuffTag(selectTag):
                     ent.removeBuffByTag(selectTag)
                     removed_success = True
-        if removed_success:
-            self.addBuffBySkill(self, context, 64000906, 1, 1.0, 5)
-
         # --- 伤害逻辑 ---
         if ent.hasBuff(64000701):
             context.isCombo = True
@@ -4351,7 +4453,9 @@ def _90030560(self, target, context):
             self.attack(ent, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
 
         # --- 推击 ---
-        action_FightAction.pushTarget(self, ent, context, 2, 10, 0.2, 1, 0)
+        action_FightAction.pushTarget(self, ent, context, 2, 10, 0.2, 1, 0, 1, 1, 1)
+    if removed_success:
+        self.addBuffBySkill(self, context, 64000906, 1, 1.0, 5)
 
 def _90030650(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -4360,19 +4464,19 @@ def _90030650(self, target, context):
     dmgRatio = lvParam[skillLv - 1] / 100
     stuntime = 1
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+   #probability = 1/max(targetNumber, 1)
     if  skillLv < 11: 
         dmgRate = 1.2
     elif skillLv == 11 : 
-        dmgRate = 1.3
+        dmgRate = 1.2
     stuntime = 1
     # 定义不同技能等级对应的额外眩晕参数
     level_params = {
-        (0, 5): [(2 + stuntime, 0.5*probability, 1, 0, 1)],
-        (5, 8): [(2 + stuntime, 0.75*probability, 1, 0, 1)],
-        (8, 11): [(2.5 + stuntime, 1*probability, 1, 0, 1)],
-        (11, 12): [(3 + stuntime, 1*probability, 1, 0, 1)],
-        (12, float('inf')): [(3 + stuntime , 1*probability, 1, 0, 1)]
+        (0, 5): [(2 + stuntime, 0.5, 1, 0, 1)],
+        (5, 8): [(2 + stuntime, 0.75, 1, 0, 1)],
+        (8, 11): [(2.5 + stuntime, 1, 1, 0, 1)],
+        (11, 12): [(3 + stuntime, 1, 1, 0, 1)],
+        (12, float('inf')): [(3 + stuntime , 1, 1, 0, 1)]
     }
 
     # 查找对应的额外眩晕参数
@@ -4392,15 +4496,19 @@ def _90030650(self, target, context):
         else:
             self.attack(e, context, dmgRatio, levelDmg, 0, 1, 1, None, 3)
         action_FightAction.stun(self, e, context, 3 + stuntime, 1, 1, 0, 2)
-        # 执行额外的眩晕操作
-        for params in extra_stun_params:
-            action_FightAction.stun(self, e, context, *params)
+        if 8 <= skillLv < 11:                
+            action_FightAction.stun(self, e, context, 2.5 + stuntime, 0.2, 1, 0, 1)
+        elif skillLv == 11:
+            action_FightAction.stun(self, e, context, 3 + stuntime, 0.3, 1, 0, 1)
+    # 执行额外的眩晕操作
+    for params in extra_stun_params:
+        action_FightAction.stun(self, target, context, *params)
 
 def _90030650_start(self, target, context): 
     skillLv = self.getSkillLevel(target, context, context.skillId)
     self.addBuffBySkill(self, context, 64000903, 1, 1.0, 2)     
-    if skillLv == 11 : 
-        self.addBuffBySkill(self, context, 64000740, 1, 1.0, 2)
+    #if skillLv == 11 : 
+    #    self.addBuffBySkill(self, context, 64000740, 1, 1.0, 2)
 
 def _90030650_end(self, target, context):
     buff_ids = [64000740]
@@ -4547,7 +4655,7 @@ def _90031002(self, target, context):
     levelDmg = 50 + (skillLv - 1) * 35
     dmgRatio = lvParam[skillLv - 1] / 100
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
 
     # 最大恢复上限 = 最大生命15%
     fullHp = self.getProp("fullHp")
@@ -4595,7 +4703,7 @@ def _90031003(self, target, context):
     dmgRatio = lvParam[skillLv - 1] / 100
     totalDmg = 0
     targetNumber = len(context.effectedEntIds)
-    probability = 2/max(targetNumber, 2)
+    probability = 1/max(targetNumber, 1)
 
     # 最大恢复上限 = 最大生命15%
     fullHp = self.getProp("fullHp")
@@ -4635,208 +4743,352 @@ def _90031003(self, target, context):
 def _91000010(self, target, context):
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000011(self, target, context):
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000012(self, target, context):
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000013(self, target, context):
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000014(self, target, context):
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000015(self, target, context):
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000016(self, target, context):
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000017(self, target, context):
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000018(self, target, context):
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000019(self, target, context):
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000020(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000021(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000022(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000023(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000024(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000025(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000026(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000027(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000028(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000029(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000030(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000031(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000032(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000033(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000034(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000035(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000036(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000037(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000038(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000039(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000040(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000041(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000042(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000043(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000044(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000045(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000046(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -4959,217 +5211,361 @@ def _91000063(self, target, context):
 def _91000064(self, target, context):
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000065(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000066(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000067(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000068(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000069(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000070(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000071(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000072(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000073(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000074(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000075(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000076(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000077(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000078(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000079(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000080(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000081(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000082(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000083(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000084(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000085(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000086(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000087(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000088(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000089(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000090(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000091(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000092(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000093(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000094(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000095(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000096(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000097(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000098(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000099(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000100(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -5212,7 +5608,11 @@ def _91000103(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000104(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -5224,7 +5624,11 @@ def _91000105(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000106(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -5236,7 +5640,11 @@ def _91000107(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000108(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -5248,7 +5656,11 @@ def _91000109(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000110(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -5377,217 +5789,361 @@ def _91000120(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000121(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000122(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000123(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000124(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000125(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000126(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000127(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000128(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000129(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000130(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000131(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000132(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000133(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000134(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000135(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000136(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000137(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000138(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000139(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000140(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000141(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000142(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000143(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000144(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000145(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000146(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000147(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000148(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000149(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000150(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000151(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000152(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000153(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000154(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000155(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000156(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -5808,114 +6364,186 @@ def _91000191(self, target, context):
 def _91000192(self, target, context):
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
-    self.addBuffBySkill(target, context, 64003006, 1, 1, 5)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
+        self.addBuffBySkill(ent, context, 64003006, 1, 1, 5)
 
 def _91000193(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000194(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
-    self.addBuffBySkill(target, context, 64000004, 1, 1.0, 2)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
+        self.addBuffBySkill(ent, context, 64000004, 1, 1.0, 2)
 
 def _91000195(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000196(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
-    self.addBuffBySkill(target, context, 64000004, 1, 1.0, 2)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
+        self.addBuffBySkill(ent, context, 64000004, 1, 1.0, 2)
 
 def _91000197(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000198(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
-    self.addBuffBySkill(target, context, 64000004, 1, 1.0, 2)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
+        self.addBuffBySkill(ent, context, 64000004, 1, 1.0, 2)
 
 def _91000199(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000200(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
-    self.addBuffBySkill(target, context, 64000004, 1, 1.0, 2)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)    
+        self.addBuffBySkill(ent, context, 64000004, 1, 1.0, 2)
 
 def _91000201(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000202(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000203(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000204(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000205(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000206(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000207(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000208(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000209(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000210(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -6029,109 +6657,181 @@ def _91000228(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000229(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000230(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000231(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000232(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000233(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000234(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000235(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000236(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000237(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000238(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000239(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000240(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000241(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000242(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000243(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000244(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000245(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000246(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -6245,109 +6945,181 @@ def _91000264(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000265(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000266(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000267(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000268(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000269(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000270(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000271(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000272(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000273(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000274(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000275(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000276(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000277(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000278(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000279(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000280(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000281(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000282(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -6461,325 +7233,541 @@ def _91000300(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000301(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000302(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000303(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000304(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000305(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000306(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000307(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000308(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000309(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000310(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000311(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000312(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000313(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000314(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000315(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000316(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000317(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000318(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000319(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000320(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000321(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000322(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000323(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000324(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000325(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000326(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000327(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000328(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000329(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000330(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000331(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000332(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000333(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000334(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000335(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000336(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000337(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000338(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000339(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000340(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000341(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000342(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000343(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000344(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000345(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000346(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000347(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000348(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000349(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000350(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000351(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000352(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000353(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000354(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -6893,7 +7881,11 @@ def _91000372(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000373(self, target, context):
     levelDmg = 0
@@ -6918,217 +7910,361 @@ def _91000374(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000375(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000376(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000377(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000378(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000379(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000380(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000381(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000382(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000383(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000384(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000385(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000386(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000387(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000388(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000389(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000390(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000391(self, target, context):
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
-    action_FightAction.down(self,target, context, 1, 1, 0, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)    
+        action_FightAction.down(self, ent, context, 1, 1, 0, 0)
 
 def _91000392(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000393(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000394(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000395(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000396(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000397(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000398(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000399(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000400(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000401(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000402(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000403(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000404(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000405(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000406(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000407(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000408(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000409(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000410(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7140,7 +8276,11 @@ def _91000411(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000412(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7152,7 +8292,11 @@ def _91000413(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000414(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7164,7 +8308,11 @@ def _91000415(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000416(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7176,7 +8324,11 @@ def _91000417(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000418(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7230,121 +8382,201 @@ def _91000426(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000427(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000428(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000429(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000430(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000431(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000432(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000433(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000434(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000435(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000436(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000437(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000438(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000439(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000440(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000441(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000442(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000443(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000444(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000445(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000446(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7352,13 +8584,25 @@ def _91000446(self, target, context):
     dmgRatio = 0.35
     t = 0
     if context.actionStage == 0:
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
         t = 0.2
     if context.actionStage == 1:
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
         t = 0.2
     if context.actionStage == 2:
-        self.attack(target, context, dmgRatio, levelDmg, 0) 
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
     if t:
         return self.callAfterDelay(target, context, t)
 
@@ -7366,7 +8610,11 @@ def _91000447(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000448(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7374,13 +8622,25 @@ def _91000448(self, target, context):
     dmgRatio = 0.35
     t = 0
     if context.actionStage == 0:
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
         t = 0.2
     if context.actionStage == 1:
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
         t = 0.2
     if context.actionStage == 2:
-        self.attack(target, context, dmgRatio, levelDmg, 0) 
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
     if t:
         return self.callAfterDelay(target, context, t)
 
@@ -7388,7 +8648,11 @@ def _91000449(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000450(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7396,13 +8660,25 @@ def _91000450(self, target, context):
     dmgRatio = 0.35
     t = 0
     if context.actionStage == 0:
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
         t = 0.2
     if context.actionStage == 1:
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
         t = 0.2
     if context.actionStage == 2:
-        self.attack(target, context, dmgRatio, levelDmg, 0) 
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
     if t:
         return self.callAfterDelay(target, context, t)
 
@@ -7410,7 +8686,11 @@ def _91000451(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000452(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7418,13 +8698,25 @@ def _91000452(self, target, context):
     dmgRatio = 0.35
     t = 0
     if context.actionStage == 0:
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
         t = 0.2
     if context.actionStage == 1:
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
         t = 0.2
     if context.actionStage == 2:
-        self.attack(target, context, dmgRatio, levelDmg, 0) 
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
     if t:
         return self.callAfterDelay(target, context, t)
 
@@ -7432,61 +8724,101 @@ def _91000453(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000454(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000455(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000456(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000457(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000458(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000459(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000460(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000461(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000462(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000463(self, target, context):
     levelDmg = 0
@@ -7498,49 +8830,81 @@ def _91000464(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000465(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000466(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000467(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000468(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000469(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000470(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000471(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000472(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7594,213 +8958,357 @@ def _91000480(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000481(self, target, context):
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000482(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000483(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000484(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000485(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000486(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000487(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000488(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000489(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000490(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000491(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000492(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000493(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000494(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000495(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000496(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000497(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000498(self, target, context):
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000499(self, target, context):
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000500(self, target, context):
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000501(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000502(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000503(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000504(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000505(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000506(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000507(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000508(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000509(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000510(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000511(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000512(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000513(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000514(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000515(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000516(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7812,7 +9320,11 @@ def _91000517(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000518(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7824,7 +9336,11 @@ def _91000519(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000520(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7836,7 +9352,11 @@ def _91000521(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000522(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7848,7 +9368,11 @@ def _91000523(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000524(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7860,7 +9384,11 @@ def _91000525(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000526(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -7914,228 +9442,380 @@ def _91000534(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000535(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000536(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000537(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000538(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000539(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000540(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000541(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000542(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000543(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000544(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000545(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000546(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000547(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000548(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000549(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000550(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000551(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000552(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000553(self, target, context):
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000554(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000555(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000556(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000557(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000558(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000559(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000560(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000561(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000562(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000563(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000564(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000565(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000566(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000567(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000568(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000569(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000570(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000571(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000572(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -8143,13 +9823,25 @@ def _91000572(self, target, context):
     dmgRatio = 0.4
     t = 0
     if context.actionStage == 0:
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
         t = 0.2
     if context.actionStage == 1:
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
         t = 0.2
     if context.actionStage == 2:
-        self.attack(target, context, dmgRatio, levelDmg, 0) 
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
     if t:
         return self.callAfterDelay(target, context, t)
 
@@ -8157,43 +9849,71 @@ def _91000573(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000574(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000575(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000576(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000577(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000578(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000579(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000580(self, target, context):
     summonId = 11981201
@@ -8203,163 +9923,271 @@ def _91000581(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000582(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000583(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000584(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000585(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000586(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000587(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000588(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000589(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000590(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000591(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000592(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000593(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000594(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000595(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000596(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000597(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000598(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000599(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000600(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000601(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000602(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000603(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000604(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000605(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000606(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000607(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000608(self, target, context):
     # 获取技能等级
@@ -8372,8 +10200,12 @@ def _91000609(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
-    action_FightAction.stun(self, target, context, 3, 1, 0, 1)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
+        action_FightAction.stun(self, ent, context, 3, 1, 0, 0, 0)
 
 def _91000609_end(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -8386,115 +10218,191 @@ def _91000610(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000611(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000612(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000613(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000614(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000615(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000616(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000617(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000618(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000619(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000620(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000621(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000622(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000623(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000624(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000625(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000626(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000627(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000628(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000629(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -8506,20 +10414,36 @@ def _91000630(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000631(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.2
     if context.actionStage == 0:
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
         return self.callAfterDelay(target, context, 0.1)
     if context.actionStage == 1:
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
         return self.callAfterDelay(target, context, 0.1)
     if context.actionStage == 2:
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000632(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -8651,7 +10575,11 @@ def _91000653(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 0.8
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000654(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -8668,7 +10596,11 @@ def _91000655(self, target, context):
 def _91000656(self, target, context):
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000657(self, target, context):
     levelDmg = 0
@@ -8691,25 +10623,41 @@ def _91000658(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000659(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.5
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000660(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000661(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000662(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -8727,7 +10675,11 @@ def _91000664(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000665(self, target, context):
     levelDmg = 0
@@ -8752,30 +10704,50 @@ def _91000666(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000667(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000668(self, target, context):
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000669(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000670(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000671(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -8847,7 +10819,11 @@ def _91000674(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000675(self, target, context):
     import KBEngine
@@ -8877,27 +10853,42 @@ def _91000676(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000677(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.5
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000678(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000679(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
     if context.actionStage == 0:
-
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)        
         return self.callAfterDelay(target, context, 0.833)
     if context.actionStage == 1:
         self.castSkill(target, context, 91000696, skillLv)
@@ -8906,228 +10897,379 @@ def _91000680(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000681(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000682(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000683(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000684(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000685(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000686(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000687(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000688(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000689(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000690(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000691(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000692(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000693(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000694(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000695(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000696(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000697(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.5
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000698(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.2
     if context.actionStage == 0:
-
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
         return self.callAfterDelay(target, context, 0.9)
     if context.actionStage == 1:
-        self.attack(target, context, dmgRatio, levelDmg, 0)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+            self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000699(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000700(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000701(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000702(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000703(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000704(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000705(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000706(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000707(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000708(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000709(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000710(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000711(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000712(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000713(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000714(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000715(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000716(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000717(self, target, context):
 
@@ -9145,13 +11287,21 @@ def _91000718(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.5
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000719(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.5
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000720(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -9182,109 +11332,181 @@ def _91000721(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000722(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000723(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000724(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000725(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000726(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000727(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000728(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000729(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000730(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000731(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000732(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000733(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000734(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000735(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000736(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000737(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.5
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000738(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000739(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -9301,170 +11523,282 @@ def _91000740(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000741(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000742(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000743(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000744(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000745(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000746(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000747(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000748(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000749(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000750(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000751(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000752(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000753(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000754(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000755(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000756(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.5
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000757(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.5
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000758(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
-    action_FightAction.stun(self, target, context, 1.5, 1, 0, 0, 2)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
+        action_FightAction.stun(self, ent, context, 1.5, 1, 0, 0, 2)
 
 def _91000759(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000760(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000761(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000762(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000763(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000764(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000765(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000766(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000767(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000768(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)   
@@ -9487,7 +11821,11 @@ def _91000769(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000770(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)   
@@ -9510,7 +11848,11 @@ def _91000771(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000772(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)   
@@ -9533,7 +11875,11 @@ def _91000773(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91000774(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)   
@@ -9847,12 +12193,20 @@ def _91001038(self, target, context):
 def _91001039(self, target, context):
     levelDmg = 0
     dmgRatio = 1.25
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91001040(self, target, context):
     levelDmg = 0
     dmgRatio = 2
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91001041(self, target, context):
 
@@ -9963,14 +12317,18 @@ def _91006003(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
 
     # 施放技能
-    self.castSkill(target, context, 91006005, skillLv)
+    self.castSkill(None, context, 91006005, skillLv)
 
 def _91006005(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
-    action_FightAction.stun(self, target, context, 3, 1, 0, 1)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
+        action_FightAction.stun(self, ent, context, 3, 1, 0, 0, 0)
 
 def _91006005_end(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -10026,14 +12384,18 @@ def _91006008(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
 
     # 施放技能
-    self.castSkill(target, context, 91006009, skillLv)
+    self.castSkill(None, context, 91006009, skillLv)
 
 def _91006009(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 2.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
-    action_FightAction.stun(self, target, context, 3, 1, 0, 1)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
+        action_FightAction.stun(self, ent, context, 3, 1, 0, 0, 0)
 
 def _91006009_end(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
@@ -10046,7 +12408,11 @@ def _91009029(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 0
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 def _91009030(self, target, context):
     context.ignoreMaxDamage = True
@@ -10080,7 +12446,11 @@ def _91009034(self, target, context):
 def _91009035(self, target, context):
     levelDmg = 1
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        ent = KBEngine.entities.get(eid) 
+        if not ent:  
+            continue  
+        self.attack(ent, context, dmgRatio, levelDmg, 0)
 
 # 生成的技能代码
 def _91011001(self, target, context):
@@ -10417,7 +12787,7 @@ def _91012010(self, target, context):
 
     if target is None:
         return  # 如果没有目标，直接返回
-    action_FightAction.stun(self, target, context, 3, 1, 0, 1)
+    action_FightAction.stun(self, target, context, 3, 1, 0, 0, 0)
 
 # 生成的技能代码
 def _91012021(self, target, context):
@@ -10771,8 +13141,12 @@ def _91015021(self, target, context):
 # 生成的技能代码
 def _91015022(self, target, context):
     if target and target.IsAvatar:
-        self.attack(target, context, 1.5)
-        self.createCreation(target, context, 66000006, self.level, 1, 5, 3)
+        for eid in context.effectedEntIds:
+            ent = KBEngine.entities.get(eid) 
+            if not ent:  
+                continue  
+        self.attack(ent, context, 1.5)
+        self.createCreation(ent, context, 66000006, self.level, 1, 5, 3)
 
 def _91015050(self, target, context):
 
@@ -10961,7 +13335,7 @@ def _91017011bystart(self, target, context):
             if not ent1:
                 continue  # 如果实体不存在，跳过
             # 确保攻击者和目标有效
-            action_FightAction.stun(self, ent1, context, 2, 0, 0, 1)  
+            action_FightAction.stun(self, ent1, context, 2, 0, 0, 0, 0)  
 
             # 对每个目标单独计算距离
             distance = sMath.distance2D(self.position, ent1.position)
@@ -12988,7 +15362,7 @@ def _91025005(self, target, context):
         if not ent:
             continue
         action_FightAction.pushTarget(self, ent, context, 5, 20)
-        action_FightAction.stun(self, ent, context, 1, 1, 0, 1)
+        action_FightAction.stun(self, ent, context, 1, 1, 0, 0, 0)
         self.attack(ent, context, 3, 0, 0)
 
 def _91025006(self, target, context):
@@ -13054,7 +15428,11 @@ def _91025010(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)
     levelDmg = 1
     dmgRatio = 1.0
-    self.attack(target, context, dmgRatio, levelDmg, 0)
+    for eid in context.effectedEntIds:
+        e = KBEngine.entities.get(eid)
+        if not e:
+            continue
+        self.attack(target, context, dmgRatio, levelDmg, 0)
 
 def _91025011(self, target, context):
     
@@ -14125,7 +16503,7 @@ def _91028011(self, target, context):
             if not ent1:
                 continue  # 如果实体不存在，跳过
             # 确保攻击者和目标有效
-            action_FightAction.stun(self, ent1, context, 3, 1, 0, 1) 
+            action_FightAction.stun(self, ent1, context, 3, 1, 0, 0, 0) 
             # 对每个目标单独计算距离
             distance = sMath.distance2D(self.position, ent1.position)
             if distance < 50:
@@ -14428,7 +16806,7 @@ def _91029010(self, target, context):
                 continue
             
             # 对所有实体应用眩晕效果
-            action_FightAction.stun(self, ent, context, 1, 1, 0, 1)
+            action_FightAction.stun(self, ent, context, 1, 1, 0, 0, 0)
             
             # 对每个目标单独计算距离
             distance = sMath.distance2D(self.position, ent.position)
@@ -15044,7 +17422,7 @@ def _91031007(self, target, context):
         hitResult = action_FightAction.isHit(self, ent,context)
         self.attack(ent, context, 6, 0, 0, 1, 1, hitResult)
         if hitResult:
-            action_FightAction.stun(self, ent, context, 1, 1, 0, 1) 
+            action_FightAction.stun(self, ent, context, 1, 1, 0, 0, 0) 
             action_FightAction.pushTarget(self, ent, context, 6, 18)
 
 def _91031008(self, target, context):
@@ -16901,6 +19279,165 @@ def _91042006(self, target, context):
             continue
         self.attack(ent, context, 8)
 
+def _91042010(self, target, context):
+
+    if context.actionStage == 0:
+        self.castSkill(target, context, 91042002, 1)
+        return self.callAfterDelay(target, context, 0.6)
+
+    # 阶段1的执行逻辑
+    if context.actionStage == 1:
+        self.castSkill(target, context, 91042003, 1)
+
+def _91042011(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 1)
+
+def _91042012(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 1)
+
+def _91042013(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 2)
+
+def _91042014(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        hitResult = action_FightAction.isHit(self, ent,context)
+        self.attack(ent, context, 5, 0, 0, 1, 1, hitResult)
+        if hitResult:
+            action_FightAction.pushTarget(self, ent, context, 4, 10)
+
+def _91042015(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 8)
+
+def _91042020(self, target, context):
+
+    if context.actionStage == 0:
+        self.castSkill(target, context, 91042002, 1)
+        return self.callAfterDelay(target, context, 0.6)
+
+    # 阶段1的执行逻辑
+    if context.actionStage == 1:
+        self.castSkill(target, context, 91042003, 1)
+
+def _91042021(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 1)
+
+def _91042022(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 1)
+
+def _91042023(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 2)
+
+def _91042024(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        hitResult = action_FightAction.isHit(self, ent,context)
+        self.attack(ent, context, 5, 0, 0, 1, 1, hitResult)
+        if hitResult:
+            action_FightAction.pushTarget(self, ent, context, 4, 10)
+
+def _91042025(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 8)
+
+def _91042030(self, target, context):
+
+    if context.actionStage == 0:
+        self.castSkill(target, context, 91042002, 1)
+        return self.callAfterDelay(target, context, 0.6)
+
+    # 阶段1的执行逻辑
+    if context.actionStage == 1:
+        self.castSkill(target, context, 91042003, 1)
+
+def _91042031(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 1)
+
+def _91042032(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 1)
+
+def _91042033(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 2)
+
+def _91042034(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        hitResult = action_FightAction.isHit(self, ent,context)
+        self.attack(ent, context, 5, 0, 0, 1, 1, hitResult)
+        if hitResult:
+            action_FightAction.pushTarget(self, ent, context, 4, 10)
+
+def _91042035(self, target, context):
+
+    for tid in context.effectedEntIds:
+        ent = KBEngine.entities.get(tid)
+        if not ent:
+            continue
+        self.attack(ent, context, 8)
+
 def _91043001(self, target, context):
     skillLv = self.getSkillLevel(target, context, context.skillId)   
     if context.actionStage == 0:
@@ -18013,7 +20550,7 @@ datas = _tools.RODict({
         "ID": 90010005,
         "name": "灵符治愈",
         "classTag": 2,
-        "CD": (40, 39, 38, 37, 35, 34, 32, 30, 28, 25, 20),
+        "CD": (30, 29, 28, 27, 25, 24, 23, 20, 20, 20, 20),
         "globalCD": 0.5,
         "skillEvent": 0,
         "delayCD": 0,
@@ -19136,7 +21673,7 @@ datas = _tools.RODict({
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
         "range": 10,
-        "DamageRange": 13,
+        "DamageRange": 10,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 3,
@@ -19173,7 +21710,7 @@ datas = _tools.RODict({
         "ID": 90010050,
         "name": "火凰护体",
         "classTag": 2,
-        "CD": (40, 40, 40, 40, 36, 36, 36, 32, 32, 32, 24),
+        "CD": (40, 40, 40, 40, 36, 36, 36, 32, 32, 32, 28),
         "globalCD": 0.5,
         "skillEvent": 29100032,
         "delayCD": 0,
@@ -20064,7 +22601,7 @@ datas = _tools.RODict({
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
         "range": 10,
-        "DamageRange": 13,
+        "DamageRange": 10,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
@@ -20507,7 +23044,7 @@ datas = _tools.RODict({
         "ID": 90015000,
         "name": "灵符治愈",
         "classTag": 2,
-        "CD": (40, 39, 38, 37, 35, 34, 32, 30, 28, 25, 20),
+        "CD": (30, 29, 28, 27, 25, 24, 23, 20, 20, 20, 20),
         "globalCD": 0.5,
         "skillEvent": 0,
         "delayCD": 0,
@@ -20862,8 +23399,8 @@ datas = _tools.RODict({
         "lvParam": (300, 306, 312, 318, 330, 337, 344, 363, 370, 377, 399),
         "checkUseSkillAction": None,
         "action": _90020010,
-        "startSkillAction": None,
-        "endSkillAction": None,
+        "startSkillAction": _90020010_start,
+        "endSkillAction": _90020010_end,
         "activateAction": None,
         "deactivateAction": None,
         "failClearBuffs": None,
@@ -21017,7 +23554,7 @@ datas = _tools.RODict({
         "category": 0,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill04",
+        "unlockCondition": "MageSkill11",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -21075,7 +23612,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill04",
+        "unlockCondition": "MageSkill11",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -21307,7 +23844,7 @@ datas = _tools.RODict({
         "category": 0,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill10",
+        "unlockCondition": "MageSkill06",
         "autoBattleWeight": 10,
         "tag": (63, 12, 64),
         "GeneralSkillTag": None,
@@ -21365,7 +23902,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill10",
+        "unlockCondition": "MageSkill06",
         "autoBattleWeight": 0,
         "tag": None,
         "GeneralSkillTag": None,
@@ -21539,7 +24076,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "",
+        "unlockCondition": "MageSkill08",
         "autoBattleWeight": 0,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -21597,7 +24134,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "",
+        "unlockCondition": "MageSkill08",
         "autoBattleWeight": 0,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -21655,7 +24192,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "",
+        "unlockCondition": "MageSkill08",
         "autoBattleWeight": 0,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -21713,7 +24250,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "",
+        "unlockCondition": "MageSkill08",
         "autoBattleWeight": 0,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -21771,7 +24308,7 @@ datas = _tools.RODict({
         "category": 0,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill07",
+        "unlockCondition": "MageSkill04",
         "autoBattleWeight": 10,
         "tag": (63, 12),
         "GeneralSkillTag": None,
@@ -21829,7 +24366,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill07",
+        "unlockCondition": "MageSkill04",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -21887,7 +24424,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill07",
+        "unlockCondition": "MageSkill04",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -21945,7 +24482,7 @@ datas = _tools.RODict({
         "category": 0,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill11",
+        "unlockCondition": "MageSkill07",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -22003,7 +24540,7 @@ datas = _tools.RODict({
         "category": 0,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill06",
+        "unlockCondition": "MageSkill10",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -22061,7 +24598,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill06",
+        "unlockCondition": "MageSkill10",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -22295,7 +24832,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "MageSkillUlt",
         "autoBattleWeight": 0,
-        "tag": (64, 100),
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 0,
@@ -22815,7 +25352,7 @@ datas = _tools.RODict({
         "category": 0,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill07",
+        "unlockCondition": "MageSkill04",
         "autoBattleWeight": 10,
         "tag": (63, 12),
         "GeneralSkillTag": None,
@@ -22873,7 +25410,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill07",
+        "unlockCondition": "MageSkill04",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -22931,7 +25468,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill07",
+        "unlockCondition": "MageSkill04",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -22989,7 +25526,7 @@ datas = _tools.RODict({
         "category": 1,
         "class": 1002,
         "spec": 1,
-        "unlockCondition": "MageSkill07",
+        "unlockCondition": "MageSkill04",
         "autoBattleWeight": 10,
         "tag": (63, 64),
         "GeneralSkillTag": None,
@@ -23281,7 +25818,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "MageSkillUlt",
         "autoBattleWeight": 0,
-        "tag": (64, 100),
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 0,
@@ -23780,7 +26317,7 @@ datas = _tools.RODict({
         "shiftDistance": 10.0,
         "protectRange": 3.1,
         "scope": 5,
-        "scopeParam": (10, 3),
+        "scopeParam": (10, 4),
         "maxTargetNum": 15,
         "consumeMp": (40, 45, 50, 57, 67, 77, 87, 97, 107, 117, 127),
         "skillTime": 0.633,
@@ -24219,7 +26756,7 @@ datas = _tools.RODict({
         "ID": 90030030,
         "name": "六合斩",
         "classTag": 1,
-        "CD": 24,
+        "CD": (27, 27, 27, 27, 26, 26, 26, 25, 25, 25, 24, 24),
         "globalCD": 0.5,
         "skillEvent": 29100019,
         "delayCD": 0,
@@ -24471,7 +27008,7 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": (6, 6, 6, 6, 7, 7, 7, 8, 8, 8, 10),
+        "range": (8, 8, 8, 8, 9, 9, 9, 10, 10, 10, 12),
         "DamageRange": 15,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
@@ -24973,7 +27510,7 @@ datas = _tools.RODict({
         "ID": 90030070,
         "name": "不屈之力",
         "classTag": 1,
-        "CD": (40, 40, 40, 40, 36, 36, 36, 32, 32, 32, 24, 24),
+        "CD": (40, 40, 40, 40, 36, 36, 36, 32, 32, 32, 28, 28),
         "globalCD": 0.5,
         "skillEvent": 29100032,
         "delayCD": 0,
@@ -25172,7 +27709,7 @@ datas = _tools.RODict({
         "shiftDistance": 10.0,
         "protectRange": 3.1,
         "scope": 5,
-        "scopeParam": (10, 3),
+        "scopeParam": (10, 4),
         "maxTargetNum": 15,
         "consumeMp": (40, 45, 50, 57, 67, 77, 87, 97, 107, 117, 127),
         "skillTime": 0.633,
@@ -25321,7 +27858,7 @@ datas = _tools.RODict({
         "ID": 90030300,
         "name": "六合斩",
         "classTag": 1,
-        "CD": 24,
+        "CD": (27, 27, 27, 27, 26, 26, 26, 25, 25, 25, 24, 24),
         "globalCD": 0.5,
         "skillEvent": 29100019,
         "delayCD": 0,
@@ -28305,7 +30842,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.567,
         "fxDelay": 1.3,
@@ -28363,7 +30900,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 3.13,
         "fxDelay": 1.267,
@@ -28421,7 +30958,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.4,
         "fxDelay": 1.13,
@@ -28479,7 +31016,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.4,
         "fxDelay": 1.1,
@@ -28537,7 +31074,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.4,
         "fxDelay": 1.13,
@@ -28595,7 +31132,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.4,
         "fxDelay": 1.1,
@@ -28653,7 +31190,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.4,
         "fxDelay": 1.13,
@@ -28711,7 +31248,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.4,
         "fxDelay": 1.1,
@@ -28769,7 +31306,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.4,
         "fxDelay": 1.13,
@@ -28827,7 +31364,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.4,
         "fxDelay": 1.1,
@@ -28885,7 +31422,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.4,
         "fxDelay": 0.867,
@@ -28943,7 +31480,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.167,
         "fxDelay": 0.7,
@@ -29001,7 +31538,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.4,
         "fxDelay": 0.867,
@@ -29059,7 +31596,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.167,
         "fxDelay": 0.7,
@@ -29117,7 +31654,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.4,
         "fxDelay": 0.867,
@@ -29175,7 +31712,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.167,
         "fxDelay": 0.7,
@@ -29233,7 +31770,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.4,
         "fxDelay": 0.867,
@@ -29291,7 +31828,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.167,
         "fxDelay": 0.7,
@@ -31437,7 +33974,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 0,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.467,
         "fxDelay": 0.6,
@@ -31468,7 +34005,7 @@ datas = _tools.RODict({
     91000101: _tools.RODict({
         "ID": 91000101,
         "name": "恶魔羊·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -31526,7 +34063,7 @@ datas = _tools.RODict({
     91000102: _tools.RODict({
         "ID": 91000102,
         "name": "恶魔羊1·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -31553,7 +34090,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.5,
         "fxDelay": 0.7,
@@ -31584,7 +34121,7 @@ datas = _tools.RODict({
     91000103: _tools.RODict({
         "ID": 91000103,
         "name": "恶魔羊1·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -31633,7 +34170,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -31642,7 +34179,7 @@ datas = _tools.RODict({
     91000104: _tools.RODict({
         "ID": 91000104,
         "name": "恶魔羊2·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -31669,7 +34206,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.5,
         "fxDelay": 0.7,
@@ -31700,7 +34237,7 @@ datas = _tools.RODict({
     91000105: _tools.RODict({
         "ID": 91000105,
         "name": "恶魔羊2·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -31749,7 +34286,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -31758,7 +34295,7 @@ datas = _tools.RODict({
     91000106: _tools.RODict({
         "ID": 91000106,
         "name": "恶魔羊3·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -31785,7 +34322,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.5,
         "fxDelay": 0.7,
@@ -31816,7 +34353,7 @@ datas = _tools.RODict({
     91000107: _tools.RODict({
         "ID": 91000107,
         "name": "恶魔羊3·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -31865,7 +34402,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -31874,7 +34411,7 @@ datas = _tools.RODict({
     91000108: _tools.RODict({
         "ID": 91000108,
         "name": "恶魔羊4·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -31901,7 +34438,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.5,
         "fxDelay": 0.7,
@@ -31932,7 +34469,7 @@ datas = _tools.RODict({
     91000109: _tools.RODict({
         "ID": 91000109,
         "name": "恶魔羊4·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -31981,7 +34518,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -31990,7 +34527,7 @@ datas = _tools.RODict({
     91000110: _tools.RODict({
         "ID": 91000110,
         "name": "恶魔羊5·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -32017,7 +34554,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.467,
         "fxDelay": 0.6,
@@ -32048,7 +34585,7 @@ datas = _tools.RODict({
     91000111: _tools.RODict({
         "ID": 91000111,
         "name": "恶魔羊5·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -32106,7 +34643,7 @@ datas = _tools.RODict({
     91000112: _tools.RODict({
         "ID": 91000112,
         "name": "恶魔羊6·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -32133,7 +34670,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.467,
         "fxDelay": 0.6,
@@ -32164,7 +34701,7 @@ datas = _tools.RODict({
     91000113: _tools.RODict({
         "ID": 91000113,
         "name": "恶魔羊6·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -32222,7 +34759,7 @@ datas = _tools.RODict({
     91000114: _tools.RODict({
         "ID": 91000114,
         "name": "恶魔羊7·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -32249,7 +34786,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.467,
         "fxDelay": 0.6,
@@ -32280,7 +34817,7 @@ datas = _tools.RODict({
     91000115: _tools.RODict({
         "ID": 91000115,
         "name": "恶魔羊7·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -32338,7 +34875,7 @@ datas = _tools.RODict({
     91000116: _tools.RODict({
         "ID": 91000116,
         "name": "恶魔羊8·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -32365,7 +34902,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.467,
         "fxDelay": 0.6,
@@ -32396,7 +34933,7 @@ datas = _tools.RODict({
     91000117: _tools.RODict({
         "ID": 91000117,
         "name": "恶魔羊8·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -32454,7 +34991,7 @@ datas = _tools.RODict({
     91000118: _tools.RODict({
         "ID": 91000118,
         "name": "恶魔羊（同心村）·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -32481,7 +35018,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.467,
         "fxDelay": 0.6,
@@ -32512,7 +35049,7 @@ datas = _tools.RODict({
     91000119: _tools.RODict({
         "ID": 91000119,
         "name": "恶魔羊（同心村）·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -33721,7 +36258,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -34658,7 +37195,7 @@ datas = _tools.RODict({
     91000156: _tools.RODict({
         "ID": 91000156,
         "name": "猪法·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -34685,7 +37222,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.2,
         "fxDelay": 0.967,
@@ -34716,7 +37253,7 @@ datas = _tools.RODict({
     91000157: _tools.RODict({
         "ID": 91000157,
         "name": "猪法·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 20,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -34743,7 +37280,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 3.067,
         "fxDelay": 1.4,
@@ -34765,7 +37302,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -34774,7 +37311,7 @@ datas = _tools.RODict({
     91000158: _tools.RODict({
         "ID": 91000158,
         "name": "猪法1·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -34801,7 +37338,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 1.113,
@@ -34832,7 +37369,7 @@ datas = _tools.RODict({
     91000159: _tools.RODict({
         "ID": 91000159,
         "name": "猪法1·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -34859,7 +37396,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 1.2,
@@ -34890,7 +37427,7 @@ datas = _tools.RODict({
     91000160: _tools.RODict({
         "ID": 91000160,
         "name": "猪法2·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -34917,7 +37454,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 1.113,
@@ -34948,7 +37485,7 @@ datas = _tools.RODict({
     91000161: _tools.RODict({
         "ID": 91000161,
         "name": "猪法2·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -34975,7 +37512,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 1.2,
@@ -35006,7 +37543,7 @@ datas = _tools.RODict({
     91000162: _tools.RODict({
         "ID": 91000162,
         "name": "猪法3·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -35033,7 +37570,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 1.113,
@@ -35064,7 +37601,7 @@ datas = _tools.RODict({
     91000163: _tools.RODict({
         "ID": 91000163,
         "name": "猪法3·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -35091,7 +37628,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 1.2,
@@ -35122,7 +37659,7 @@ datas = _tools.RODict({
     91000164: _tools.RODict({
         "ID": 91000164,
         "name": "猪法4·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -35149,7 +37686,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 1.113,
@@ -35180,7 +37717,7 @@ datas = _tools.RODict({
     91000165: _tools.RODict({
         "ID": 91000165,
         "name": "猪法4·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -35207,7 +37744,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 1.2,
@@ -35238,7 +37775,7 @@ datas = _tools.RODict({
     91000166: _tools.RODict({
         "ID": 91000166,
         "name": "猪法5·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -35265,7 +37802,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.2,
         "fxDelay": 0.967,
@@ -35296,7 +37833,7 @@ datas = _tools.RODict({
     91000167: _tools.RODict({
         "ID": 91000167,
         "name": "猪法5·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -35323,7 +37860,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.2,
         "fxDelay": 0.933,
@@ -35354,7 +37891,7 @@ datas = _tools.RODict({
     91000168: _tools.RODict({
         "ID": 91000168,
         "name": "猪法6·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -35381,7 +37918,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.2,
         "fxDelay": 0.967,
@@ -35412,7 +37949,7 @@ datas = _tools.RODict({
     91000169: _tools.RODict({
         "ID": 91000169,
         "name": "猪法6·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -35439,7 +37976,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.2,
         "fxDelay": 0.933,
@@ -35470,7 +38007,7 @@ datas = _tools.RODict({
     91000170: _tools.RODict({
         "ID": 91000170,
         "name": "猪法7·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -35497,7 +38034,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.2,
         "fxDelay": 0.967,
@@ -35528,7 +38065,7 @@ datas = _tools.RODict({
     91000171: _tools.RODict({
         "ID": 91000171,
         "name": "猪法7·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -35555,7 +38092,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.2,
         "fxDelay": 0.933,
@@ -35586,7 +38123,7 @@ datas = _tools.RODict({
     91000172: _tools.RODict({
         "ID": 91000172,
         "name": "猪法8·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -35613,7 +38150,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.2,
         "fxDelay": 0.967,
@@ -35644,7 +38181,7 @@ datas = _tools.RODict({
     91000173: _tools.RODict({
         "ID": 91000173,
         "name": "猪法8·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -35671,7 +38208,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.2,
         "fxDelay": 0.933,
@@ -35729,7 +38266,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -35787,7 +38324,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -35809,7 +38346,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -35845,7 +38382,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -35903,7 +38440,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -35961,7 +38498,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -36019,7 +38556,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -36077,7 +38614,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -36135,7 +38672,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -36193,7 +38730,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -36251,7 +38788,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -36309,7 +38846,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -36367,7 +38904,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -36425,7 +38962,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -36483,7 +39020,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -36541,7 +39078,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -36599,7 +39136,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -36657,7 +39194,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -36715,7 +39252,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -36746,7 +39283,7 @@ datas = _tools.RODict({
     91000192: _tools.RODict({
         "ID": 91000192,
         "name": "半兽人战士·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 15,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -37790,7 +40327,7 @@ datas = _tools.RODict({
     91000210: _tools.RODict({
         "ID": 91000210,
         "name": "半兽法·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -37817,7 +40354,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.3,
         "fxDelay": 0.833,
@@ -37848,7 +40385,7 @@ datas = _tools.RODict({
     91000211: _tools.RODict({
         "ID": 91000211,
         "name": "半兽法·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 10,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -37875,7 +40412,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.533,
         "fxDelay": 1.767,
@@ -37897,7 +40434,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -37906,7 +40443,7 @@ datas = _tools.RODict({
     91000212: _tools.RODict({
         "ID": 91000212,
         "name": "半兽法1·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -37933,7 +40470,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.3,
         "fxDelay": 0.867,
@@ -37964,7 +40501,7 @@ datas = _tools.RODict({
     91000213: _tools.RODict({
         "ID": 91000213,
         "name": "半兽法1·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -37991,7 +40528,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.3,
         "fxDelay": 0.7,
@@ -38022,7 +40559,7 @@ datas = _tools.RODict({
     91000214: _tools.RODict({
         "ID": 91000214,
         "name": "半兽法2·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -38049,7 +40586,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.3,
         "fxDelay": 0.867,
@@ -38080,7 +40617,7 @@ datas = _tools.RODict({
     91000215: _tools.RODict({
         "ID": 91000215,
         "name": "半兽法2·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -38107,7 +40644,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.3,
         "fxDelay": 0.867,
@@ -38138,7 +40675,7 @@ datas = _tools.RODict({
     91000216: _tools.RODict({
         "ID": 91000216,
         "name": "半兽法3·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -38165,7 +40702,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.3,
         "fxDelay": 0.867,
@@ -38196,7 +40733,7 @@ datas = _tools.RODict({
     91000217: _tools.RODict({
         "ID": 91000217,
         "name": "半兽法3·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -38223,7 +40760,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.3,
         "fxDelay": 0.867,
@@ -38254,7 +40791,7 @@ datas = _tools.RODict({
     91000218: _tools.RODict({
         "ID": 91000218,
         "name": "半兽法4·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -38281,7 +40818,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.3,
         "fxDelay": 0.867,
@@ -38312,7 +40849,7 @@ datas = _tools.RODict({
     91000219: _tools.RODict({
         "ID": 91000219,
         "name": "半兽法4·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -38339,7 +40876,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.3,
         "fxDelay": 0.867,
@@ -38370,7 +40907,7 @@ datas = _tools.RODict({
     91000220: _tools.RODict({
         "ID": 91000220,
         "name": "半兽法5·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -38397,7 +40934,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.833,
         "fxDelay": 1.13,
@@ -38428,7 +40965,7 @@ datas = _tools.RODict({
     91000221: _tools.RODict({
         "ID": 91000221,
         "name": "半兽法5·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -38455,7 +40992,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.267,
         "fxDelay": 0.633,
@@ -38486,7 +41023,7 @@ datas = _tools.RODict({
     91000222: _tools.RODict({
         "ID": 91000222,
         "name": "半兽法6·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -38513,7 +41050,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.833,
         "fxDelay": 1.13,
@@ -38544,7 +41081,7 @@ datas = _tools.RODict({
     91000223: _tools.RODict({
         "ID": 91000223,
         "name": "半兽法6·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -38571,7 +41108,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.267,
         "fxDelay": 0.633,
@@ -38602,7 +41139,7 @@ datas = _tools.RODict({
     91000224: _tools.RODict({
         "ID": 91000224,
         "name": "半兽法7·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -38629,7 +41166,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.833,
         "fxDelay": 1.13,
@@ -38660,7 +41197,7 @@ datas = _tools.RODict({
     91000225: _tools.RODict({
         "ID": 91000225,
         "name": "半兽法7·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -38687,7 +41224,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.267,
         "fxDelay": 0.633,
@@ -38718,7 +41255,7 @@ datas = _tools.RODict({
     91000226: _tools.RODict({
         "ID": 91000226,
         "name": "半兽法8·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -38745,7 +41282,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.833,
         "fxDelay": 1.13,
@@ -38776,7 +41313,7 @@ datas = _tools.RODict({
     91000227: _tools.RODict({
         "ID": 91000227,
         "name": "半兽法8·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -38803,7 +41340,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.267,
         "fxDelay": 0.633,
@@ -39878,7 +42415,7 @@ datas = _tools.RODict({
     91000246: _tools.RODict({
         "ID": 91000246,
         "name": "猫人仆从·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -39905,7 +42442,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.033,
         "fxDelay": 1,
@@ -39936,7 +42473,7 @@ datas = _tools.RODict({
     91000247: _tools.RODict({
         "ID": 91000247,
         "name": "猫人仆从·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -39963,7 +42500,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.367,
         "fxDelay": None,
@@ -39994,7 +42531,7 @@ datas = _tools.RODict({
     91000248: _tools.RODict({
         "ID": 91000248,
         "name": "猫人仆从1·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40021,7 +42558,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.534,
@@ -40052,7 +42589,7 @@ datas = _tools.RODict({
     91000249: _tools.RODict({
         "ID": 91000249,
         "name": "猫人仆从1·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40079,7 +42616,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.867,
         "fxDelay": 0.7,
@@ -40110,7 +42647,7 @@ datas = _tools.RODict({
     91000250: _tools.RODict({
         "ID": 91000250,
         "name": "猫人仆从2·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40137,7 +42674,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.534,
@@ -40168,7 +42705,7 @@ datas = _tools.RODict({
     91000251: _tools.RODict({
         "ID": 91000251,
         "name": "猫人仆从2·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40195,7 +42732,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.867,
         "fxDelay": 0.7,
@@ -40226,7 +42763,7 @@ datas = _tools.RODict({
     91000252: _tools.RODict({
         "ID": 91000252,
         "name": "猫人仆从3·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40253,7 +42790,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.534,
@@ -40284,7 +42821,7 @@ datas = _tools.RODict({
     91000253: _tools.RODict({
         "ID": 91000253,
         "name": "猫人仆从3·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40311,7 +42848,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.867,
         "fxDelay": 0.7,
@@ -40342,7 +42879,7 @@ datas = _tools.RODict({
     91000254: _tools.RODict({
         "ID": 91000254,
         "name": "猫人仆从4·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40369,7 +42906,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.534,
@@ -40400,7 +42937,7 @@ datas = _tools.RODict({
     91000255: _tools.RODict({
         "ID": 91000255,
         "name": "猫人仆从4·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40427,7 +42964,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.867,
         "fxDelay": 0.7,
@@ -40458,7 +42995,7 @@ datas = _tools.RODict({
     91000256: _tools.RODict({
         "ID": 91000256,
         "name": "猫人仆从5·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40485,7 +43022,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (5, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.5,
         "fxDelay": 0.33,
@@ -40516,7 +43053,7 @@ datas = _tools.RODict({
     91000257: _tools.RODict({
         "ID": 91000257,
         "name": "猫人仆从5·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40543,7 +43080,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2,
         "fxDelay": 0.5,
@@ -40574,7 +43111,7 @@ datas = _tools.RODict({
     91000258: _tools.RODict({
         "ID": 91000258,
         "name": "猫人仆从6·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40601,7 +43138,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (5, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.5,
         "fxDelay": 0.33,
@@ -40632,7 +43169,7 @@ datas = _tools.RODict({
     91000259: _tools.RODict({
         "ID": 91000259,
         "name": "猫人仆从6·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40659,7 +43196,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2,
         "fxDelay": 0.5,
@@ -40690,7 +43227,7 @@ datas = _tools.RODict({
     91000260: _tools.RODict({
         "ID": 91000260,
         "name": "猫人仆从7·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40717,7 +43254,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (5, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.5,
         "fxDelay": 0.33,
@@ -40748,7 +43285,7 @@ datas = _tools.RODict({
     91000261: _tools.RODict({
         "ID": 91000261,
         "name": "猫人仆从7·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40775,7 +43312,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2,
         "fxDelay": 0.5,
@@ -40806,7 +43343,7 @@ datas = _tools.RODict({
     91000262: _tools.RODict({
         "ID": 91000262,
         "name": "猫人仆从8·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40833,7 +43370,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (5, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.5,
         "fxDelay": 0.33,
@@ -40864,7 +43401,7 @@ datas = _tools.RODict({
     91000263: _tools.RODict({
         "ID": 91000263,
         "name": "猫人仆从8·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -40891,7 +43428,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2,
         "fxDelay": 0.5,
@@ -41993,7 +44530,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 3.033,
         "fxDelay": 1.5,
@@ -42051,7 +44588,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 2,
         "scopeParam": 8,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 3.867,
         "fxDelay": 2.667,
@@ -42109,7 +44646,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 3.033,
         "fxDelay": 1.5,
@@ -42167,7 +44704,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.567,
         "fxDelay": 1.113,
@@ -42225,7 +44762,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 3.033,
         "fxDelay": 1.5,
@@ -42283,7 +44820,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.567,
         "fxDelay": 1.113,
@@ -42341,7 +44878,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 3.033,
         "fxDelay": 1.5,
@@ -42399,7 +44936,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.567,
         "fxDelay": 1.113,
@@ -42457,7 +44994,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.9,
         "fxDelay": 0.567,
@@ -42515,7 +45052,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -42573,7 +45110,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.9,
         "fxDelay": 0.567,
@@ -42631,7 +45168,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -42689,7 +45226,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.9,
         "fxDelay": 0.567,
@@ -42747,7 +45284,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -42769,7 +45306,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -42805,7 +45342,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -42827,7 +45364,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -42863,7 +45400,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -42885,7 +45422,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -42921,7 +45458,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 3.033,
         "fxDelay": 1.5,
@@ -42979,7 +45516,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -43001,7 +45538,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -44161,7 +46698,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -45205,7 +47742,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -45321,7 +47858,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -45437,7 +47974,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -45553,7 +48090,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -45669,7 +48206,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -46142,7 +48679,7 @@ datas = _tools.RODict({
     91000354: _tools.RODict({
         "ID": 91000354,
         "name": "蛇法·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 3.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -46169,7 +48706,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 0.833,
@@ -46200,7 +48737,7 @@ datas = _tools.RODict({
     91000355: _tools.RODict({
         "ID": 91000355,
         "name": "蛇法·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 15,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -46227,7 +48764,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 2,
         "scopeParam": 3,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 4.1,
         "fxDelay": 3.6,
@@ -46249,7 +48786,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -46258,7 +48795,7 @@ datas = _tools.RODict({
     91000356: _tools.RODict({
         "ID": 91000356,
         "name": "蛇法1·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -46285,7 +48822,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.13,
         "fxDelay": 0.833,
@@ -46316,7 +48853,7 @@ datas = _tools.RODict({
     91000357: _tools.RODict({
         "ID": 91000357,
         "name": "蛇法1·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -46343,7 +48880,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.167,
         "fxDelay": 0.9,
@@ -46374,7 +48911,7 @@ datas = _tools.RODict({
     91000358: _tools.RODict({
         "ID": 91000358,
         "name": "蛇法2·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -46401,7 +48938,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.13,
         "fxDelay": 0.833,
@@ -46432,7 +48969,7 @@ datas = _tools.RODict({
     91000359: _tools.RODict({
         "ID": 91000359,
         "name": "蛇法2·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -46459,7 +48996,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.167,
         "fxDelay": 0.9,
@@ -46490,7 +49027,7 @@ datas = _tools.RODict({
     91000360: _tools.RODict({
         "ID": 91000360,
         "name": "蛇法3·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -46517,7 +49054,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.13,
         "fxDelay": 0.833,
@@ -46548,7 +49085,7 @@ datas = _tools.RODict({
     91000361: _tools.RODict({
         "ID": 91000361,
         "name": "蛇法3·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -46575,7 +49112,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.167,
         "fxDelay": 0.9,
@@ -46606,7 +49143,7 @@ datas = _tools.RODict({
     91000362: _tools.RODict({
         "ID": 91000362,
         "name": "蛇法4·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -46633,7 +49170,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.13,
         "fxDelay": 0.833,
@@ -46664,7 +49201,7 @@ datas = _tools.RODict({
     91000363: _tools.RODict({
         "ID": 91000363,
         "name": "蛇法4·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -46691,7 +49228,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.167,
         "fxDelay": 0.9,
@@ -46722,7 +49259,7 @@ datas = _tools.RODict({
     91000364: _tools.RODict({
         "ID": 91000364,
         "name": "蛇法5·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -46749,7 +49286,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 0.833,
@@ -46780,7 +49317,7 @@ datas = _tools.RODict({
     91000365: _tools.RODict({
         "ID": 91000365,
         "name": "蛇法5·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -46807,7 +49344,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.3,
         "fxDelay": 0.8,
@@ -46838,7 +49375,7 @@ datas = _tools.RODict({
     91000366: _tools.RODict({
         "ID": 91000366,
         "name": "蛇法6·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -46865,7 +49402,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 0.833,
@@ -46896,7 +49433,7 @@ datas = _tools.RODict({
     91000367: _tools.RODict({
         "ID": 91000367,
         "name": "蛇法6·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -46923,7 +49460,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.3,
         "fxDelay": 0.8,
@@ -46954,7 +49491,7 @@ datas = _tools.RODict({
     91000368: _tools.RODict({
         "ID": 91000368,
         "name": "蛇法7·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -46981,7 +49518,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 0.833,
@@ -47012,7 +49549,7 @@ datas = _tools.RODict({
     91000369: _tools.RODict({
         "ID": 91000369,
         "name": "蛇法7·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -47039,7 +49576,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.3,
         "fxDelay": 0.8,
@@ -47070,7 +49607,7 @@ datas = _tools.RODict({
     91000370: _tools.RODict({
         "ID": 91000370,
         "name": "蛇法8·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -47097,7 +49634,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 0.833,
@@ -47128,7 +49665,7 @@ datas = _tools.RODict({
     91000371: _tools.RODict({
         "ID": 91000371,
         "name": "蛇法8·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -47155,7 +49692,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.3,
         "fxDelay": 0.8,
@@ -47467,7 +50004,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -47525,7 +50062,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -47583,7 +50120,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -47641,7 +50178,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -47699,7 +50236,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -47757,7 +50294,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -47815,7 +50352,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -47873,7 +50410,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -47931,7 +50468,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -47989,7 +50526,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -48047,7 +50584,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -48105,7 +50642,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -48163,7 +50700,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -48221,7 +50758,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -49497,7 +52034,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -49613,7 +52150,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -49729,7 +52266,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -49845,7 +52382,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -49881,7 +52418,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (5, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -49903,7 +52440,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -49939,7 +52476,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (5, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -49961,7 +52498,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -49997,7 +52534,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (5, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -50019,7 +52556,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -50055,7 +52592,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (5, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -50077,7 +52614,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -50113,7 +52650,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (5, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -50135,7 +52672,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -50171,7 +52708,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (5, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -50193,7 +52730,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -50229,7 +52766,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (5, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -50251,7 +52788,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -50287,7 +52824,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (5, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -50309,7 +52846,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -50831,7 +53368,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -50889,7 +53426,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -50947,7 +53484,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -51005,7 +53542,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -51063,7 +53600,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -51121,7 +53658,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -51179,7 +53716,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -51237,7 +53774,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -51295,7 +53832,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -51353,7 +53890,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -51585,7 +54122,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -51701,7 +54238,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -51817,7 +54354,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -51933,7 +54470,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -51991,7 +54528,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -52049,7 +54586,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -52107,7 +54644,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -52165,7 +54702,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -52223,7 +54760,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -52281,7 +54818,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -52339,7 +54876,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -52397,7 +54934,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -52464,7 +55001,7 @@ datas = _tools.RODict({
     91000463: _tools.RODict({
         "ID": 91000463,
         "name": "蜘蛛·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 20,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -53013,7 +55550,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -53035,7 +55572,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -53071,7 +55608,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -53093,7 +55630,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -53129,7 +55666,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -53151,7 +55688,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -53187,7 +55724,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -53209,7 +55746,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -53245,7 +55782,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -53267,7 +55804,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -53303,7 +55840,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -53325,7 +55862,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -53361,7 +55898,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -53383,7 +55920,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -53419,7 +55956,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -53441,7 +55978,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -55538,7 +58075,7 @@ datas = _tools.RODict({
     91000516: _tools.RODict({
         "ID": 91000516,
         "name": "蜈蚣·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -55565,7 +58102,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.033,
         "fxDelay": 0.4,
@@ -55596,7 +58133,7 @@ datas = _tools.RODict({
     91000517: _tools.RODict({
         "ID": 91000517,
         "name": "蜈蚣·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -55645,7 +58182,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -55654,7 +58191,7 @@ datas = _tools.RODict({
     91000518: _tools.RODict({
         "ID": 91000518,
         "name": "蜈蚣1·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 2.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -55681,7 +58218,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.033,
         "fxDelay": 0.4,
@@ -55712,7 +58249,7 @@ datas = _tools.RODict({
     91000519: _tools.RODict({
         "ID": 91000519,
         "name": "蜈蚣1·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -55761,7 +58298,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -55770,7 +58307,7 @@ datas = _tools.RODict({
     91000520: _tools.RODict({
         "ID": 91000520,
         "name": "蜈蚣2·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 2.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -55797,7 +58334,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.033,
         "fxDelay": 0.4,
@@ -55828,7 +58365,7 @@ datas = _tools.RODict({
     91000521: _tools.RODict({
         "ID": 91000521,
         "name": "蜈蚣2·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -55877,7 +58414,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -55886,7 +58423,7 @@ datas = _tools.RODict({
     91000522: _tools.RODict({
         "ID": 91000522,
         "name": "蜈蚣3·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 2.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -55913,7 +58450,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.033,
         "fxDelay": 0.4,
@@ -55944,7 +58481,7 @@ datas = _tools.RODict({
     91000523: _tools.RODict({
         "ID": 91000523,
         "name": "蜈蚣3·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -55993,7 +58530,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -56002,7 +58539,7 @@ datas = _tools.RODict({
     91000524: _tools.RODict({
         "ID": 91000524,
         "name": "蜈蚣4·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 2.5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -56029,7 +58566,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.033,
         "fxDelay": 0.4,
@@ -56060,7 +58597,7 @@ datas = _tools.RODict({
     91000525: _tools.RODict({
         "ID": 91000525,
         "name": "蜈蚣4·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -56109,7 +58646,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -56118,7 +58655,7 @@ datas = _tools.RODict({
     91000526: _tools.RODict({
         "ID": 91000526,
         "name": "蜈蚣5·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -56145,7 +58682,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -56176,7 +58713,7 @@ datas = _tools.RODict({
     91000527: _tools.RODict({
         "ID": 91000527,
         "name": "蜈蚣5·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -56203,7 +58740,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -56234,7 +58771,7 @@ datas = _tools.RODict({
     91000528: _tools.RODict({
         "ID": 91000528,
         "name": "蜈蚣6·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -56261,7 +58798,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -56292,7 +58829,7 @@ datas = _tools.RODict({
     91000529: _tools.RODict({
         "ID": 91000529,
         "name": "蜈蚣6·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -56319,7 +58856,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -56350,7 +58887,7 @@ datas = _tools.RODict({
     91000530: _tools.RODict({
         "ID": 91000530,
         "name": "蜈蚣7·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -56377,7 +58914,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -56408,7 +58945,7 @@ datas = _tools.RODict({
     91000531: _tools.RODict({
         "ID": 91000531,
         "name": "蜈蚣7·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -56435,7 +58972,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -56466,7 +59003,7 @@ datas = _tools.RODict({
     91000532: _tools.RODict({
         "ID": 91000532,
         "name": "蜈蚣8·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -56493,7 +59030,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -56524,7 +59061,7 @@ datas = _tools.RODict({
     91000533: _tools.RODict({
         "ID": 91000533,
         "name": "蜈蚣8·普攻2",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -56551,7 +59088,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 3,
         "scopeParam": (3, 2),
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.433,
         "fxDelay": 0.5,
@@ -58893,7 +61430,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -58951,7 +61488,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59009,7 +61546,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59067,7 +61604,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59125,7 +61662,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59183,7 +61720,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59241,7 +61778,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59357,7 +61894,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59415,7 +61952,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59473,7 +62010,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59531,7 +62068,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59589,7 +62126,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59647,7 +62184,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59705,7 +62242,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59763,7 +62300,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59821,7 +62358,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59879,7 +62416,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59937,7 +62474,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -59995,7 +62532,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -60053,7 +62590,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -60111,7 +62648,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -60169,7 +62706,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -60575,7 +63112,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -60633,7 +63170,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -60691,7 +63228,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -60749,7 +63286,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -60758,7 +63295,7 @@ datas = _tools.RODict({
     91000606: _tools.RODict({
         "ID": 91000606,
         "name": "胖猪战·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 10,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -60816,7 +63353,7 @@ datas = _tools.RODict({
     91000607: _tools.RODict({
         "ID": 91000607,
         "name": "瘦猪战·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 10,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -60874,7 +63411,7 @@ datas = _tools.RODict({
     91000608: _tools.RODict({
         "ID": 91000608,
         "name": "震击-恶魔羊",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 15,
         "globalCD": 0.0,
         "skillEvent": 0,
@@ -60901,7 +63438,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 22.5,
-        "maxTargetNum": 5,
+        "maxTargetNum": 1,
         "consumeMp": None,
         "skillTime": 1.167,
         "fxDelay": None,
@@ -60932,7 +63469,7 @@ datas = _tools.RODict({
     91000609: _tools.RODict({
         "ID": 91000609,
         "name": "震击-恶魔羊",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 15,
         "globalCD": 0.0,
         "skillEvent": 0,
@@ -60981,7 +63518,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -62119,7 +64656,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.533,
         "fxDelay": 0.967,
@@ -62199,7 +64736,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -62293,7 +64830,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.467,
         "fxDelay": 1.533,
@@ -62351,7 +64888,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.467,
         "fxDelay": 1.13,
@@ -62409,7 +64946,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.467,
         "fxDelay": 1.533,
@@ -62467,7 +65004,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.467,
         "fxDelay": 1.13,
@@ -62525,7 +65062,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.467,
         "fxDelay": 1.533,
@@ -62583,7 +65120,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.467,
         "fxDelay": 1.13,
@@ -62641,7 +65178,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.467,
         "fxDelay": 1.533,
@@ -62699,7 +65236,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.467,
         "fxDelay": 1.13,
@@ -62757,7 +65294,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 0.933,
@@ -62815,7 +65352,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 4,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.7,
         "fxDelay": 0.5667,
@@ -62873,7 +65410,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 0.933,
@@ -62931,7 +65468,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 4,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.7,
         "fxDelay": 0.5667,
@@ -62989,7 +65526,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 0.933,
@@ -63047,7 +65584,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 4,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.7,
         "fxDelay": 0.5667,
@@ -63105,7 +65642,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 0.933,
@@ -63163,7 +65700,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 4,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.7,
         "fxDelay": 0.5667,
@@ -63221,7 +65758,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.033,
         "fxDelay": 0.5,
@@ -63279,7 +65816,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.667,
         "fxDelay": 0.4,
@@ -63310,7 +65847,7 @@ datas = _tools.RODict({
     91000650: _tools.RODict({
         "ID": 91000650,
         "name": "半兽法80幸运怪·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -63337,7 +65874,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.3,
         "fxDelay": 0.867,
@@ -63395,7 +65932,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.4,
         "fxDelay": 1.13,
@@ -63426,7 +65963,7 @@ datas = _tools.RODict({
     91000652: _tools.RODict({
         "ID": 91000652,
         "name": "恶魔羊80幸运怪·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -63453,7 +65990,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1.5,
         "fxDelay": 0.7,
@@ -63484,7 +66021,7 @@ datas = _tools.RODict({
     91000653: _tools.RODict({
         "ID": 91000653,
         "name": "恶魔羊80幸运怪·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -63533,7 +66070,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -63542,7 +66079,7 @@ datas = _tools.RODict({
     91000654: _tools.RODict({
         "ID": 91000654,
         "name": "蛇法80幸运怪·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 5,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -63569,7 +66106,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.13,
         "fxDelay": 0.833,
@@ -63600,7 +66137,7 @@ datas = _tools.RODict({
     91000655: _tools.RODict({
         "ID": 91000655,
         "name": "猪法80幸运怪·普攻1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 4,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -63627,7 +66164,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.2,
         "fxDelay": 0.967,
@@ -64033,7 +66570,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.667,
         "fxDelay": 1,
@@ -64091,7 +66628,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2.223,
         "fxDelay": 0.667,
@@ -64760,7 +67297,7 @@ datas = _tools.RODict({
     91000675: _tools.RODict({
         "ID": 91000675,
         "name": "蜈蚣·技能1",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 15,
         "globalCD": 1.0,
         "skillEvent": 0,
@@ -72068,7 +74605,7 @@ datas = _tools.RODict({
     91006001: _tools.RODict({
         "ID": 91006001,
         "name": "普攻·恶魔羊",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 2,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -72089,8 +74626,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 8,
-        "DamageRange": 8,
+        "range": 12,
+        "DamageRange": 12,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 0,
@@ -72184,7 +74721,7 @@ datas = _tools.RODict({
     91006003: _tools.RODict({
         "ID": 91006003,
         "name": "震击-恶魔羊",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 15,
         "globalCD": 0.0,
         "skillEvent": 0,
@@ -72202,20 +74739,20 @@ datas = _tools.RODict({
         "mulSkillCD": None,
         "skillHateRatio": 1.0,
         "chooseAgain": 0,
-        "target": "Enemy",
+        "target": "None",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 9,
-        "DamageRange": 9,
+        "range": 15,
+        "DamageRange": 15,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 15,
-        "scopeParam": (1, [17.5], 35),
+        "scope": 4,
+        "scopeParam": 45,
         "maxTargetNum": 5,
         "consumeMp": None,
         "skillTime": 1.167,
         "fxDelay": None,
-        "HitChooseAgain": 1,
+        "HitChooseAgain": 0,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
         "isAttackSkill": 1,
@@ -72242,7 +74779,7 @@ datas = _tools.RODict({
     91006005: _tools.RODict({
         "ID": 91006005,
         "name": "震击-恶魔羊",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 15,
         "globalCD": 0.0,
         "skillEvent": 0,
@@ -72260,20 +74797,20 @@ datas = _tools.RODict({
         "mulSkillCD": None,
         "skillHateRatio": 1.0,
         "chooseAgain": 0,
-        "target": "Enemy",
+        "target": "None",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 8,
-        "DamageRange": 8,
+        "range": 15,
+        "DamageRange": 15,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
-        "scopeParam": 22.5,
+        "scopeParam": 45,
         "maxTargetNum": 5,
         "consumeMp": 0,
         "skillTime": 3.5,
         "fxDelay": 0.8833,
-        "HitChooseAgain": 1,
+        "HitChooseAgain": 0,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
         "isAttackSkill": 1,
@@ -72291,7 +74828,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -72358,7 +74895,7 @@ datas = _tools.RODict({
     91006007: _tools.RODict({
         "ID": 91006007,
         "name": "普攻·恶魔羊（新手）",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 2,
         "globalCD": 1.0,
         "skillEvent": 29100015,
@@ -72379,8 +74916,8 @@ datas = _tools.RODict({
         "target": "Enemy",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 8,
-        "DamageRange": 8,
+        "range": 12,
+        "DamageRange": 12,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 0,
@@ -72416,7 +74953,7 @@ datas = _tools.RODict({
     91006008: _tools.RODict({
         "ID": 91006008,
         "name": "震击-恶魔羊（新手）",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 15,
         "globalCD": 0.0,
         "skillEvent": 0,
@@ -72434,20 +74971,20 @@ datas = _tools.RODict({
         "mulSkillCD": None,
         "skillHateRatio": 1.0,
         "chooseAgain": 0,
-        "target": "Enemy",
+        "target": "None",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 9,
-        "DamageRange": 9,
+        "range": 15,
+        "DamageRange": 15,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 15,
-        "scopeParam": (1, [17.5], 35),
+        "scope": 4,
+        "scopeParam": 45,
         "maxTargetNum": 5,
         "consumeMp": None,
         "skillTime": 1.167,
         "fxDelay": None,
-        "HitChooseAgain": 1,
+        "HitChooseAgain": 0,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
         "isAttackSkill": 1,
@@ -72474,7 +75011,7 @@ datas = _tools.RODict({
     91006009: _tools.RODict({
         "ID": 91006009,
         "name": "震击-恶魔羊（新手）",
-        "classTag": 1,
+        "classTag": 2,
         "CD": 15,
         "globalCD": 0.0,
         "skillEvent": 0,
@@ -72492,20 +75029,20 @@ datas = _tools.RODict({
         "mulSkillCD": None,
         "skillHateRatio": 1.0,
         "chooseAgain": 0,
-        "target": "Enemy",
+        "target": "None",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
-        "range": 8,
-        "DamageRange": 8,
+        "range": 15,
+        "DamageRange": 15,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
         "scope": 4,
-        "scopeParam": 22.5,
+        "scopeParam": 45,
         "maxTargetNum": 5,
         "consumeMp": 0,
-        "skillTime": 3.5,
+        "skillTime": 1.867,
         "fxDelay": 0.8833,
-        "HitChooseAgain": 1,
+        "HitChooseAgain": 0,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
         "isAttackSkill": 1,
@@ -72523,7 +75060,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -72581,7 +75118,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": None,
+        "tag": (64, 99),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -74473,7 +77010,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 1,
         "scopeParam": 99,
-        "maxTargetNum": 10,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 0.1,
         "fxDelay": 0.1,
@@ -74705,7 +77242,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 1,
         "scopeParam": 30,
-        "maxTargetNum": 10,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 1,
         "fxDelay": 0.5,
@@ -74821,7 +77358,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 45,
-        "maxTargetNum": 10,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 3.8,
         "fxDelay": 1.5,
@@ -74879,7 +77416,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 1,
         "scopeParam": 5,
-        "maxTargetNum": 10,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 2,
         "fxDelay": 0,
@@ -74995,7 +77532,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 45,
-        "maxTargetNum": 10,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 3.8,
         "fxDelay": 1.5,
@@ -75053,7 +77590,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 1,
         "scopeParam": 10,
-        "maxTargetNum": 10,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 5,
         "fxDelay": 4,
@@ -75075,7 +77612,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64, 24, 26),
+        "tag": (64,),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -76061,7 +78598,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64, 24, 26),
+        "tag": (24, 26),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -76271,7 +78808,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 0,
         "scopeParam": None,
-        "maxTargetNum": 10,
+        "maxTargetNum": 3,
         "consumeMp": None,
         "skillTime": None,
         "fxDelay": None,
@@ -78185,7 +80722,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
-        "maxTargetNum": 50,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 6.4,
         "fxDelay": 0.5,
@@ -80005,7 +82542,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -83137,7 +85674,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -84181,7 +86718,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -84239,7 +86776,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -85283,7 +87820,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -85341,7 +87878,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -86327,7 +88864,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -86675,7 +89212,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -87313,7 +89850,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64, 24, 26),
+        "tag": (24, 26),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -87893,7 +90430,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64, 24, 26),
+        "tag": (24, 26),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -88821,7 +91358,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64, 24, 26),
+        "tag": (24, 26),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -88937,7 +91474,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64, 24, 26),
+        "tag": (24, 26),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -89731,7 +92268,7 @@ datas = _tools.RODict({
         "consumeMp": 0,
         "skillTime": 1.7,
         "fxDelay": 0,
-        "HitChooseAgain": 0,
+        "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
         "isAttackSkill": 1,
@@ -90414,7 +92951,7 @@ datas = _tools.RODict({
         "mulSkillCD": None,
         "skillHateRatio": 1.0,
         "chooseAgain": 0,
-        "target": "Enemy",
+        "target": "None",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
         "range": 70,
@@ -90427,7 +92964,7 @@ datas = _tools.RODict({
         "consumeMp": 0,
         "skillTime": 2.5,
         "fxDelay": 0,
-        "HitChooseAgain": 0,
+        "HitChooseAgain": 1,
         "shiftSpeed": 0.0,
         "shiftDelay": 0.0,
         "isAttackSkill": 1,
@@ -90437,7 +92974,7 @@ datas = _tools.RODict({
         "channelTime": 0,
         "channelInterval": 0.0,
         "castingAction": None,
-        "castingTime": 5.7,
+        "castingTime": 5.5,
         "interrupt": 0,
         "CDAfterInterrupt": 0,
         "category": 0,
@@ -90587,7 +93124,7 @@ datas = _tools.RODict({
         "mulSkillID": None,
         "mulSkillCD": None,
         "skillHateRatio": 1.0,
-        "chooseAgain": 1,
+        "chooseAgain": 0,
         "target": "None",
         "effectTarget": "Enemy",
         "lingzhuSkillPos_customID": "",
@@ -90735,7 +93272,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -91663,7 +94200,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64, 24, 26),
+        "tag": (24, 26),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -91895,7 +94432,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64, 24, 26),
+        "tag": (24, 26),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -92185,7 +94722,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -92301,7 +94838,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -92939,7 +95476,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64, 24, 26),
+        "tag": (24, 26),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -93693,7 +96230,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -95201,7 +97738,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -95317,7 +97854,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -95491,7 +98028,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -96477,7 +99014,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64, 24, 26),
+        "tag": (24, 26),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -96535,7 +99072,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -96593,7 +99130,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -96651,7 +99188,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64, 24, 26),
+        "tag": (24, 26),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -96709,7 +99246,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64, 24, 26),
+        "tag": (24, 26),
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -96767,7 +99304,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -96941,7 +99478,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -97033,9 +99570,9 @@ datas = _tools.RODict({
         "DamageRange": 40,
         "shiftDistance": 0.0,
         "protectRange": 0.0,
-        "scope": 0,
-        "scopeParam": None,
-        "maxTargetNum": 99,
+        "scope": 1,
+        "scopeParam": 50,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": None,
         "fxDelay": None,
@@ -97057,7 +99594,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -97115,7 +99652,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -97289,7 +99826,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -97405,7 +99942,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -98913,7 +101450,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -99899,7 +102436,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -100225,7 +102762,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 1,
         "scopeParam": 30,
-        "maxTargetNum": 6,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 6.9,
         "fxDelay": 2.1,
@@ -100805,7 +103342,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 1,
         "scopeParam": 20,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 8.633,
         "fxDelay": 2.4,
@@ -100979,7 +103516,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 60,
-        "maxTargetNum": 50,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 4.7,
         "fxDelay": 0.8,
@@ -101327,7 +103864,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 1,
         "scopeParam": 30,
-        "maxTargetNum": 3,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 7.5,
         "fxDelay": 0.5,
@@ -101443,7 +103980,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 75,
-        "maxTargetNum": 99,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 3.6,
         "fxDelay": 0.733,
@@ -101714,6 +104251,1050 @@ datas = _tools.RODict({
         "lvParam": None,
         "checkUseSkillAction": None,
         "action": _91042006,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 25,
+        "DamageRange": 25,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 15,
+        "scopeParam": (2, [0, 180], 85),
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": 1.9,
+        "fxDelay": 0,
+        "HitChooseAgain": 1,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 1,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 4.2,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64, 24, 26),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042010: _tools.RODict({
+        "ID": 91042010,
+        "name": "6013普攻-冰",
+        "classTag": 1,
+        "CD": 5,
+        "globalCD": 2.0,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042010,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 10,
+        "DamageRange": 10,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 4,
+        "scopeParam": 75,
+        "maxTargetNum": 1,
+        "consumeMp": 0,
+        "skillTime": 3.6,
+        "fxDelay": 0.733,
+        "HitChooseAgain": 1,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042011: _tools.RODict({
+        "ID": 91042011,
+        "name": "6013普攻第一段伤害-冰",
+        "classTag": 1,
+        "CD": None,
+        "globalCD": 0.0,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042011,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 10,
+        "DamageRange": 10,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 4,
+        "scopeParam": 75,
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": None,
+        "fxDelay": None,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 1,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042012: _tools.RODict({
+        "ID": 91042012,
+        "name": "6013普攻第二段伤害-冰",
+        "classTag": 1,
+        "CD": None,
+        "globalCD": 0.0,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042012,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 10,
+        "DamageRange": 10,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 4,
+        "scopeParam": 75,
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": None,
+        "fxDelay": None,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 1,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042013: _tools.RODict({
+        "ID": 91042013,
+        "name": "6013技能1-冰",
+        "classTag": 2,
+        "CD": 5,
+        "globalCD": 2.0,
+        "skillEvent": 0,
+        "delayCD": 3,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042013,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 30,
+        "DamageRange": 30,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 2,
+        "scopeParam": 4,
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": 3.8,
+        "fxDelay": 1,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042014: _tools.RODict({
+        "ID": 91042014,
+        "name": "6013技能2-冰",
+        "classTag": 1,
+        "CD": 23,
+        "globalCD": 2.0,
+        "skillEvent": 0,
+        "delayCD": 7,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042014,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 15,
+        "DamageRange": 15,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 1,
+        "scopeParam": 15,
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": 1.6,
+        "fxDelay": 0,
+        "HitChooseAgain": 1,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 1,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 2.2,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64, 24, 26),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042015: _tools.RODict({
+        "ID": 91042015,
+        "name": "6013技能3-冰",
+        "classTag": 1,
+        "CD": 25,
+        "globalCD": 2.0,
+        "skillEvent": 0,
+        "delayCD": 19,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042015,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 25,
+        "DamageRange": 25,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 15,
+        "scopeParam": (2, [0, 180], 85),
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": 1.9,
+        "fxDelay": 0,
+        "HitChooseAgain": 1,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 1,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 4.2,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64, 24, 26),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042020: _tools.RODict({
+        "ID": 91042020,
+        "name": "6013普攻-金",
+        "classTag": 1,
+        "CD": 5,
+        "globalCD": 2.0,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042020,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 10,
+        "DamageRange": 10,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 4,
+        "scopeParam": 75,
+        "maxTargetNum": 1,
+        "consumeMp": 0,
+        "skillTime": 3.6,
+        "fxDelay": 0.733,
+        "HitChooseAgain": 1,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042021: _tools.RODict({
+        "ID": 91042021,
+        "name": "6013普攻第一段伤害-金",
+        "classTag": 1,
+        "CD": None,
+        "globalCD": 0.0,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042021,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 10,
+        "DamageRange": 10,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 4,
+        "scopeParam": 75,
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": None,
+        "fxDelay": None,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 1,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042022: _tools.RODict({
+        "ID": 91042022,
+        "name": "6013普攻第二段伤害-金",
+        "classTag": 1,
+        "CD": None,
+        "globalCD": 0.0,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042022,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 10,
+        "DamageRange": 10,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 4,
+        "scopeParam": 75,
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": None,
+        "fxDelay": None,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 1,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042023: _tools.RODict({
+        "ID": 91042023,
+        "name": "6013技能1-金",
+        "classTag": 2,
+        "CD": 5,
+        "globalCD": 2.0,
+        "skillEvent": 0,
+        "delayCD": 3,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042023,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 30,
+        "DamageRange": 30,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 2,
+        "scopeParam": 4,
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": 3.8,
+        "fxDelay": 1,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042024: _tools.RODict({
+        "ID": 91042024,
+        "name": "6013技能2-金",
+        "classTag": 1,
+        "CD": 23,
+        "globalCD": 2.0,
+        "skillEvent": 0,
+        "delayCD": 7,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042024,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 15,
+        "DamageRange": 15,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 1,
+        "scopeParam": 15,
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": 1.6,
+        "fxDelay": 0,
+        "HitChooseAgain": 1,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 1,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 2.2,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64, 24, 26),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042025: _tools.RODict({
+        "ID": 91042025,
+        "name": "6013技能3-金",
+        "classTag": 1,
+        "CD": 25,
+        "globalCD": 2.0,
+        "skillEvent": 0,
+        "delayCD": 19,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042025,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 25,
+        "DamageRange": 25,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 15,
+        "scopeParam": (2, [0, 180], 85),
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": 1.9,
+        "fxDelay": 0,
+        "HitChooseAgain": 1,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 1,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 4.2,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64, 24, 26),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042030: _tools.RODict({
+        "ID": 91042030,
+        "name": "6013普攻-炎",
+        "classTag": 1,
+        "CD": 5,
+        "globalCD": 2.0,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042030,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 10,
+        "DamageRange": 10,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 4,
+        "scopeParam": 75,
+        "maxTargetNum": 1,
+        "consumeMp": 0,
+        "skillTime": 3.6,
+        "fxDelay": 0.733,
+        "HitChooseAgain": 1,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042031: _tools.RODict({
+        "ID": 91042031,
+        "name": "6013普攻第一段伤害-炎",
+        "classTag": 1,
+        "CD": None,
+        "globalCD": 0.0,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042031,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 10,
+        "DamageRange": 10,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 4,
+        "scopeParam": 75,
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": None,
+        "fxDelay": None,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 1,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042032: _tools.RODict({
+        "ID": 91042032,
+        "name": "6013普攻第二段伤害-炎",
+        "classTag": 1,
+        "CD": None,
+        "globalCD": 0.0,
+        "skillEvent": 0,
+        "delayCD": 0,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042032,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 10,
+        "DamageRange": 10,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 4,
+        "scopeParam": 75,
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": None,
+        "fxDelay": None,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 1,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042033: _tools.RODict({
+        "ID": 91042033,
+        "name": "6013技能1-炎",
+        "classTag": 2,
+        "CD": 5,
+        "globalCD": 2.0,
+        "skillEvent": 0,
+        "delayCD": 3,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042033,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 30,
+        "DamageRange": 30,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 2,
+        "scopeParam": 4,
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": 3.8,
+        "fxDelay": 1,
+        "HitChooseAgain": 0,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 0,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 0.0,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64,),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042034: _tools.RODict({
+        "ID": 91042034,
+        "name": "6013技能2-炎",
+        "classTag": 1,
+        "CD": 23,
+        "globalCD": 2.0,
+        "skillEvent": 0,
+        "delayCD": 7,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042034,
+        "startSkillAction": None,
+        "endSkillAction": None,
+        "activateAction": None,
+        "deactivateAction": None,
+        "failClearBuffs": None,
+        "conflictSkill": None,
+        "mulSkillID": None,
+        "mulSkillCD": None,
+        "skillHateRatio": 1.0,
+        "chooseAgain": 0,
+        "target": "Enemy",
+        "effectTarget": "Enemy",
+        "lingzhuSkillPos_customID": "",
+        "range": 15,
+        "DamageRange": 15,
+        "shiftDistance": 0.0,
+        "protectRange": 0.0,
+        "scope": 1,
+        "scopeParam": 15,
+        "maxTargetNum": 99,
+        "consumeMp": 0,
+        "skillTime": 1.6,
+        "fxDelay": 0,
+        "HitChooseAgain": 1,
+        "shiftSpeed": 0.0,
+        "shiftDelay": 0.0,
+        "isAttackSkill": 1,
+        "bulletFx": 0,
+        "bulletFxTime": 0.0,
+        "isAlerted": 1,
+        "channelTime": 0,
+        "channelInterval": 0.0,
+        "castingAction": None,
+        "castingTime": 2.2,
+        "interrupt": 0,
+        "CDAfterInterrupt": 0,
+        "category": 0,
+        "class": 99,
+        "spec": 1,
+        "unlockCondition": "",
+        "autoBattleWeight": 0,
+        "tag": (64, 24, 26),
+        "GeneralSkillTag": None,
+        "upgradedBy": None,
+        "autoFightUseSkill": 1,
+        "isMoveSkill": 0,
+    }),
+    91042035: _tools.RODict({
+        "ID": 91042035,
+        "name": "6013技能3-炎",
+        "classTag": 1,
+        "CD": 25,
+        "globalCD": 2.0,
+        "skillEvent": 0,
+        "delayCD": 19,
+        "lvParam": None,
+        "checkUseSkillAction": None,
+        "action": _91042035,
         "startSkillAction": None,
         "endSkillAction": None,
         "activateAction": None,
@@ -102045,7 +105626,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -102161,7 +105742,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -102197,7 +105778,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 6,
         "scopeParam": 15,
-        "maxTargetNum": 50,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 8.7,
         "fxDelay": 0,
@@ -103437,7 +107018,7 @@ datas = _tools.RODict({
         "spec": 1,
         "unlockCondition": "",
         "autoBattleWeight": 0,
-        "tag": (64,),
+        "tag": None,
         "GeneralSkillTag": None,
         "upgradedBy": None,
         "autoFightUseSkill": 1,
@@ -104111,7 +107692,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 4,
         "scopeParam": 75,
-        "maxTargetNum": 99,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 3.8,
         "fxDelay": 0.867,
@@ -104285,7 +107866,7 @@ datas = _tools.RODict({
         "protectRange": 0.0,
         "scope": 15,
         "scopeParam": (4, [0, 90, 180, 270], 30),
-        "maxTargetNum": 99,
+        "maxTargetNum": 1,
         "consumeMp": 0,
         "skillTime": 0.8,
         "fxDelay": 0,
@@ -105444,3 +109025,5 @@ stateToSkill = _tools.RODict({
 })
 
 hasCreationSkill = {91009032, 91029008, 91029009, 91029011, 90010650, 91028002, 91030051, 91028014, 91028015, 91027002, 91027003, 91027006, 91027012, 91027021, 91027025, 91027027, 91026005, 91026006, 91026007, 91026010, 91026011, 91027036, 90020450, 91025006, 91025008, 91046003, 91046005, 91046006, 91025015, 91027066, 91027072, 91024003, 91024004, 91024005, 91024011, 91045011, 91023003, 91023004, 91023005, 91023006, 91023007, 91023008, 91023009, 91023010, 91024034, 91023013, 91023017, 90020010, 90020015, 91022002, 91024054, 91024055, 91044024, 91023034, 91043005, 91043007, 91043008, 91022021, 91021002, 90020045, 91023054, 91023060, 90020060, 90020065, 91020002, 91020004, 91041007, 91020021, 90020600, 91020027, 91020029, 91019006, 91020031, 91020032, 91020033, 91020035, 91019013, 91040005, 90020110, 91018004, 91018005, 91039003, 91039004, 91039007, 91039008, 90020650, 91017012, 91017014, 91017015, 91016001, 91037011, 91037012, 91037015, 91036005, 91015014, 91015015, 91036006, 91036007, 91036008, 91036011, 91036012, 91015022, 91000720, 91034004, 91034005, 91034008, 91034010, 91034013, 91012002, 91034021, 91012008, 90010025, 91033002, 90010027, 91033004, 91034025, 91034028, 91034031, 91036076, 91033009, 90010040, 91011010, 91011011, 91011014, 91000775, 91011015, 90010065, 91031011, 91031012, 91031013, 91030002, 91030010, 91030011, 91030013, 91030014}
+
+endActionNeedTargets = {91000609, 91006005, 91006009}

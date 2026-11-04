@@ -31,12 +31,22 @@ syntax = "proto3";
 // 上行（队长操作，游戏服生成 newTeamId 并读好新目标配表参数；语义=退役旧小队+登记新团队，
 // 新 worker 两阶段交接，冲突兜底为报错日志+全员解散推送，不重建）与 teamConvertPush 下行
 // 全量推送（全员收新队全量，游戏服 cell 复用 onCrossTeamInfoUpdate 落地）。
-// 无队邀请组队（两人组队）：新增 teamUpInvite/replyTeamUpInvite/teamUpJoinNotify 上行
+// 2026-11 无队邀请组队（两人组队）：新增 teamUpInvite/replyTeamUpInvite/teamUpJoinNotify 上行
 // （均为纯中继：无队邀请转发/应答转发/队伍就绪通知，中心无状态不存邀请记录）与
 // teamUpInviteNotify/teamUpReplyNotify/teamUpTeamReady 下行。仅限同服邀请
 // （被邀请人所在服=请求来源服，协议不携带 serverId）；邀请携带邀请人 cell 预分配
 // teamId（建队复用）；被邀请人接受后凭该 teamId 走现有 reqJoin 免审进队，
 // 建队复用现有 createTeam，推送复用现有链路。
+// 2026-11 成员改名独立协议：renameMember 上行（改名事件即时上报）与 memberRenamePush
+// 下行（全队广播）；阶段二已移除 MemberState.name——低频字段不再随每秒拉取的状态包
+// 同步，改名只走本链路（队伍全量包 MemberInfo.name 仍为初始来源）
+// 2026-11 成员状态同步回摆为推送模型（替代拉取模型常态路径）：中心 teamWorker 记录
+// 脏队伍集合，reportMemberState/Batch 上报即标脏；worker 协程 500ms tick 把脏队全量快照
+// 按目标服聚合为 TeamMemberStatesPushMsg 下行（同服多队合一包）；游戏服 Stub 收包即写
+// 本地快照缓存，avatar 每秒轮询直接读缓存（未命中仅告警跳过）。
+// 2026-11 兜底拉取接口整条下线：推送模型稳定后 Stub 纯读缓存、重连走整包对账，
+// 拉取无调用方（原 queryTeamMemberState/queryTeamMemberStateResp，曾更名 Pull 系，
+// 消息与 rpc 一并删除）
 
 package CrossTeamServer;
 option go_package = "../gameServerService";
@@ -49,6 +59,11 @@ message Void {
 message RegisterGameServerRequest
 {
     uint32 serverId = 1;
+    // Stub 分片信息（中心按分片路由推送用）：stubIdx 为本连接分片下标，stubNum 为本服分片总数，
+    // 路由口径与游戏服 Stub 过滤一致（shardKey % stubNum == stubIdx，key 按消息类型取 teamId/gbId）；
+    // 旧版 Stub 不带（保持 0 值），中心对无分片信息的连接回退广播，由 Stub 过滤兜底
+    uint32 stubIdx = 2;
+    uint32 stubNum = 3;
 }
 
 // 成员基础信息（建队/申请/邀请/入队时携带，中心据此做展示与门槛校验）
@@ -85,7 +100,7 @@ message MemberBasicInfo {
     int32 level = 7;
 }
 
-// 成员高频状态快照（3s 聚合上报/广播用）
+// 成员高频状态快照（cell 1s 采集上行，经 teamMemberStatesPush 推送下行）
 message MemberState {
     uint64 gbId = 1;
     int64 hp = 2;
@@ -97,7 +112,7 @@ message MemberState {
     float posY = 8;
     float posZ = 9;
     uint32 routeServerId = 10;  // 成员当前实际所在服（跨服副本中为跨服服），客户端跟随判断依据
-    string name = 11;           // 玩家可改名：低频变更顺带经状态上报同步（不再单开协议），中心存新名后随全量/广播带出
+    int32 groupIdx = 11;        // 小组下标（0 起始，中心权威）：stub 缓存全量快照后按请求者关注列表剪裁用，不下发客户端
 }
 
 // 队伍标记单条数据（对齐客户端 CLIENT_TEAM_MARK_VAL 全字段；proto 无 VECTOR3，pos 拆三个 float）
@@ -511,10 +526,19 @@ message ReportMemberStateRequest {
     int64 reportTS = 4;
 }
 
-// 本服 Stub 聚合上报批量包：每服每 tick 一条，包内按队伍分子包，
-// 中心接口层按 teamId 拆包重新分发到对应 teamWorker
+// 本服 Stub 聚合上报批量包：每服每 0.2s tick 一条，单批 ≤500 成员、整队为原子单位
+// 不拆队，包内按队伍分子包，中心接口层按 teamId 拆包重新分发到对应 teamWorker
 message ReportMemberStateBatchRequest {
     repeated ReportMemberStateRequest teams = 1;
+}
+
+// 成员改名上报（改名事件即时上行，低频）：中心更新成员名后按全队广播 MemberRenamePushMsg；
+// 无 uuid 回执（改名结果由改名流程自身反馈客户端，本链路纯同步，静默语义对齐标记三件套）。
+// 成员名唯一变更通道（MemberState 不再携带 name）
+message RenameMemberRequest {
+    uint64 teamId = 1;
+    uint64 gbId = 2;
+    string name = 3;
 }
 
 // ---------------- 队伍聊天（game -> center） ----------------
@@ -549,8 +573,8 @@ message CrusadeCheckResultRequest {
     uint64 gbId = 2;
     bool ok = 3;
     string reason = 4;
-    string failName = 5;    // 检查失败成员名（仅挑战次数不足时由游戏服携带；
-                            // 中心不识别业务语义，abort 时透传给队长提示用）
+    string failName = 5;    // 检查失败成员名（成员条件检查失败时由游戏服携带；
+                            // 中心不识别业务语义，abort 时透传，游戏服按 reason 区分提示用）
 }
 
 // 跨服服回报副本空间就绪
@@ -578,6 +602,7 @@ message MemberOfflineRequest {
 message CrusadeFinishedRequest {
     uint64 teamId = 1;
     int32 result = 2;
+    int64 finishedTime = 3; // 副本实际完成时刻（Unix 秒，游戏服上报）
 }
 
 // 申请列表拉取（队长查看/断线重建；中心把列表单播回请求者）
@@ -788,12 +813,28 @@ message MatchTimeoutMsg {
     uint64 gbId = 2;
 }
 
-// 按队伍成员所在服分发的状态快照
-message BroadcastMemberStateMsg {
+// 成员状态推送单元（推送模型）：teamId + 全量成员快照 + 上报时间戳，
+// 游戏服 Stub 按 teamId 整体覆盖本地快照缓存（reportTS 更旧的丢弃）
+message TeamMemberStatePushItem {
     uint64 teamId = 1;
     repeated MemberState members = 2;
     int64 reportTS = 3;
-    repeated uint64 receiverGbIds = 4;  // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
+}
+
+// 成员状态批量推送包（推送模型常态下行）：中心 teamWorker 500ms tick 收集脏队伍，
+// 按"成员所在服"分桶聚合（同服多队合一包），经反向连接单播到对应游戏服 Stub；
+// 游戏服 Stub 收包即写本地快照缓存，avatar 每秒轮询直接读缓存。无需回执
+message TeamMemberStatesPushMsg {
+    repeated TeamMemberStatePushItem teams = 1;
+}
+
+// 成员改名广播（renameMember 更新后下发）：按成员当前路由服逐服定制 receiverGbIds（全队，
+// 含改名者本人），游戏服 Stub 按本服实有成员路由到 cell，落地缓存并透传客户端
+message MemberRenamePushMsg {
+    uint64 teamId = 1;
+    uint64 gbId = 2;
+    string name = 3;
+    repeated uint64 receiverGbIds = 4;
 }
 
 // 0.5s 聚合后的聊天批量推送
@@ -828,7 +869,9 @@ message CrusadeAbortMsg {
     int32 reason = 2;
     repeated uint64 receiverGbIds = 3;  // 目标服上需接收本推送的成员 gbId 列表（中心逐服定制）
     uint64 captainGbId = 4; // 队长 gbId（failName 非空时携带，游戏服据此定位本服队长弹提示）
-    string failName = 5;    // 检查失败成员名（挑战次数不足场景由游戏服上行、中心透传；空=无需提示）
+    string failName = 5;    // 检查失败成员名（成员条件检查失败场景由游戏服上行、中心透传；空=无需提示）
+    string failReason = 6;  // 成员条件检查失败的具体原因（游戏服 TeamDunCheckCondErrno 字符串，
+                            // 中心透传不识别业务语义，游戏服据此区分提示；空=非成员检查失败）
 }
 
 // 中心经跨服服 CrossTeamStub 中转创建副本空间
@@ -854,6 +897,14 @@ message InviteNotifyMsg {
     MemberInfo inviter = 3; // 邀请人信息
     uint64 inviteeGbId = 4;
     int32 inviteType = 5;   // 邀请类型（枚举复用本服）
+}
+
+// 入队申请批准通知（发给申请人所在服；申请人自证后经 reqJoin 消费批准记录完成入队）
+message ApplyApprovedNotifyMsg {
+    uint64 teamId = 1;      // 队伍Id
+    uint64 gbId = 2;        // 申请人gbId
+    uint32 serverId = 3;    // 申请人所在游戏服Id
+    uint64 captainGbId = 4; // 操作审批的队长gbId（申请人离线时游戏服回执队长用）
 }
 
 // 无队邀请通知（发给被邀请人所在服，游戏服按 inviteeGbId 分片过滤）
@@ -954,6 +1005,7 @@ service CrossTeamServer
     rpc matchJoin(MatchJoinRequest) returns (Void);
     rpc reportMemberState(ReportMemberStateRequest) returns (Void);
     rpc reportMemberStateBatch(ReportMemberStateBatchRequest) returns (Void);
+    rpc renameMember(RenameMemberRequest) returns (Void);
     rpc teamChatMsg(TeamChatMsgRequest) returns (Void);
     rpc startCrusade(StartCrusadeRequest) returns (Void);
     rpc crusadeCheckResult(CrusadeCheckResultRequest) returns (Void);
@@ -997,7 +1049,8 @@ service GameServer
     rpc teamListResult(TeamListResultMsg) returns (Void);
     rpc matchSuccess(MatchSuccessMsg) returns (Void);
     rpc matchTimeout(MatchTimeoutMsg) returns (Void);
-    rpc broadcastMemberState(BroadcastMemberStateMsg) returns (Void);
+    rpc teamMemberStatesPush(TeamMemberStatesPushMsg) returns (Void);
+    rpc memberRenamePush(MemberRenamePushMsg) returns (Void);
     rpc teamChatBatch(TeamChatBatchMsg) returns (Void);
     rpc crusadeCheck(CrusadeCheckMsg) returns (Void);
     rpc crusadeGo(CrusadeGoMsg) returns (Void);
@@ -1007,6 +1060,7 @@ service GameServer
     rpc queryTeamCrossResp(QueryTeamCrossRespMsg) returns (Void);
     rpc joinApplyNotify(JoinApplyNotifyMsg) returns (Void);
     rpc inviteNotify(InviteNotifyMsg) returns (Void);
+    rpc applyApprovedNotify(ApplyApprovedNotifyMsg) returns (Void);
     rpc memberVoiceStatePush(MemberVoiceStatePushMsg) returns (Void);
     rpc matchStart(MatchStartMsg) returns (Void);
     rpc matchStop(MatchStopMsg) returns (Void);

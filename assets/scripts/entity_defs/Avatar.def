@@ -19,9 +19,7 @@
         <Interface>         iEquipment                  </Interface>
         <Interface>         iAvatarVariable             </Interface>
         <Interface>         iCycleEvent                 </Interface>
-        <Interface>         iAvatarTeam                 </Interface>
         <Interface>         iAvatarCrossTeam            </Interface>
-        <Interface>         iAvatarTeamDungeon          </Interface>
         <Interface>         iAvatarSingleDungeon        </Interface>
         <Interface>         iTask                       </Interface>
         <Interface>         iAutoCombat                 </Interface>
@@ -33,8 +31,6 @@
         <Interface>         iAvatarLine                 </Interface>
         <Interface>         iFlowControllerBase         </Interface>
         <Interface>         iAvatarPK                   </Interface>
-        <Interface>         iAvatarRaid                 </Interface>
-        <Interface>         iAvatarRaidDungeon          </Interface>
         <Interface>         iAvatarComplexTeleport      </Interface>
         <Interface>         iMount                      </Interface>
         <Interface>         iOutfit                     </Interface>
@@ -67,6 +63,7 @@
         <Interface>         iDateData                   </Interface>
         <Interface>         iMeridian                   </Interface>
         <Interface>         iMonthCard                  </Interface>
+        <Interface>         iBattlePass                 </Interface>
         <Interface>         iMineWar                    </Interface>
         <Interface>         iDungeonSettlement          </Interface>
         <Interface>         iGuildBossChallenge         </Interface>
@@ -81,9 +78,11 @@
         <Interface>         iReport                     </Interface>
         <Interface>         iSafeBox                    </Interface>
         <Interface>         iMallStore                  </Interface>
+        <Interface>         iMaterialSale               </Interface>
         <Interface>         iReplicaAvatar              </Interface>
         <Interface>         iLeague                     </Interface>
         <Interface>         iEnmity                     </Interface>
+        <Interface>         iBeginnerJourney            </Interface>
     </Interfaces>
 
     <Properties>
@@ -690,6 +689,12 @@
             <Flags>         BASE                </Flags>
             <Default>       0                   </Default>
         </creationOrder>
+
+        <promoterTime>
+            <Type>          INT64              </Type>
+            <Flags>         OWN_CLIENT         </Flags>
+            <Default>       0                  </Default>
+        </promoterTime>
     </Properties>
 
     <BaseMethods>
@@ -922,19 +927,16 @@
         <checkTextSecurityReq> <Exposed/>
             <Arg>        CHECK_TEXT_SECURITY_REQ      </Arg>
         </checkTextSecurityReq>
+
+        <onCrossMessagePre>
+            <Arg>        UINT16                       </Arg>
+            <Arg>        UINT32                       </Arg>
+            <Arg>        INT32                        </Arg>
+            <Arg>        ARRAY <of> UNICODE </of>     </Arg>
+        </onCrossMessagePre>
     </BaseMethods>
 
     <CellMethods>
-        <reqUpdateTeamVoiceRoomState> <Exposed/>
-            <Arg>        TEAMID      </Arg>
-            <Arg>        UINT8       </Arg>
-        </reqUpdateTeamVoiceRoomState>
-
-        <reqUpdateRaidVoiceRoomState> <Exposed/>
-            <Arg>        RAID_ID     </Arg>
-            <Arg>        UINT8       </Arg>
-        </reqUpdateRaidVoiceRoomState>
-
         <transmitWithMapPointCallback>
             <Arg>       BOOL            </Arg>
             <Arg>       PY_DICT         </Arg>
@@ -1033,6 +1035,7 @@
         </removeMapBuff>
 
         <tryHealWoundsFromNpc> <Exposed/>
+            <Arg>           BOOL            </Arg>
         </tryHealWoundsFromNpc>
 
         <onDailyHealWoundsTimesRefresh>
@@ -1086,6 +1089,10 @@
             <Arg>        UINT32     </Arg>
             <Arg>        UINT8      </Arg>
         </switchMapMode>
+
+        <syncPromoterInfo>
+            <Arg>   INT64  </Arg>
+        </syncPromoterInfo>
 
     </CellMethods>
 

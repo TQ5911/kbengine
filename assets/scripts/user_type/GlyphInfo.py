@@ -3,6 +3,7 @@ from KBEDebug import *
 import userType
 import gameconst
 import AffixInfo
+import affix_affix as AFAFD
 
 class GlyphInfo(userType.UserSingleType):
     def __init__(self, glyphPos = 0):
@@ -47,3 +48,11 @@ class GlyphInfo(userType.UserSingleType):
     
     def getGlyphPos(self):
         return self.glyphPos
+    
+    def getQulityDatas(self):
+        result = None
+        for glyphAffix in self.glyphAffixes:
+            if result is None:
+                result = []
+            result.append(glyphAffix.getQuality())
+        return result

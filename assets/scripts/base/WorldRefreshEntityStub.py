@@ -46,11 +46,56 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
 
         self.refreshGroupEntityQueue = [[] for i in range(gameconst.TimerEntityRefreshType.SIZE)]
         self.timeLimitedGroupEntityTimerId = 0
+
+        self.missedSpaces = set()
+
+        self.refreshRateOfTimeTimerId = 0
+
         self.initDatetimeTimerTick()
+
+        self.initRefreshRateOfTime()
 
     def doNext(self):
         gameglobal.localBaseApp.fullPrepare(self.classname())
         return
+
+    def initRefreshRateOfTime(self):
+        """起服首算一次时段刷新概率，并按最近的时段边界继续重算"""
+        self.syncRefreshRateOfTime()
+
+    def syncRefreshRateOfTime(self):
+        """计算当前时段各怪物类型的刷新概率系数，callAllApps 广播到每个 base/cell 进程各自的 gameglobal
+        （同 setMineCanAttackBits 的做法，各进程无需监听 globalData），然后按下个时段边界重排定时器。
+        计算与广播都集中在本 stub，怪物刷新时只读 gameglobal，不跑 cron。"""
+        now = utils.curTS()
+        rates, nextDelta = utils.calcRefreshRateOfTime(now)
+        changed = rates != (gameglobal.refreshRateOfTime or {})
+        gameengine.callAllApps('gameengine.setRefreshRateOfTime', (rates,))
+        gameglobal.refreshRateOfTime = rates
+        if changed:
+            LOG_INFO("WorldRefreshEntityStub::syncRefreshRateOfTime", rates, nextDelta)
+
+        self.startRefreshRateOfTimeTimer(now + min(nextDelta, gameconst.REFRESH_RATE_OF_TIME_RESYNC_INTERVAL))
+
+    def onRefreshRateOfTimeTimerCallback(self):
+        self.syncRefreshRateOfTime()
+
+    def startRefreshRateOfTimeTimer(self, fireTime):
+        timerId = self.refreshRateOfTimeTimerId
+        if timerId and self._hasDatetimeTimerData(timerId):
+            self._cancelDatetimeCallback(timerId, gametimer.TIMER_TAG_REFRESH_RATE_OF_TIME)
+
+        self.refreshRateOfTimeTimerId = self._datetimeCallback(
+            fireTime, 'onRefreshRateOfTimeTimerCallback', (), gametimer.TIMER_TAG_REFRESH_RATE_OF_TIME,
+            'refreshRateOfTimeTimerId')
+
+    def reloadScript(self):
+        """脚本热更后重新建立时段定时器：__init__ 不会在热更时重跑，不补这一步改动要等重启才生效"""
+        super(WorldRefreshEntityStub, self).reloadScript()
+        if not self.datetimePropTimerId:
+            self.initDatetimeTimerTick()
+        self.initRefreshRateOfTime()
+    # endregion
 
     def onTimer(self, timerID, userData):
         self._onTimerTrigger(timerID, userData)
@@ -85,7 +130,8 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
 
         self.doLoadTimerGroupEntities()
 
-    def _initGroupEntities(self, groupId, groupCfg, refreshType=0, refreshNum=0, excludeIds=[]):
+    def _initGroupEntities(self, groupId, groupCfg, refreshType=0, refreshNum=0, excludeIds=None):
+        excludeIds = excludeIds or []
         LOG_DBG("WorldRefreshEntityStub::_initGroupEntities")
 
         initInfo = {}
@@ -456,7 +502,7 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
         if refreshType == gameconst.TimerEntityRefreshType.TIMED_INTERVALS:
             LOG_ERR("WorldRefreshEntityStub::onAddGroupEntityRefreshTimer error")
 
-        if refreshType == gameconst.TimerEntityRefreshType.TIME_LIMITED:
+        if refreshType in (gameconst.TimerEntityRefreshType.TIME_LIMITED, gameconst.TimerEntityRefreshType.NONE):
             timerSet = info.setdefault('timerSet', set())
             timerSet.add(timerId)
 
@@ -468,7 +514,7 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
         if refreshType == gameconst.TimerEntityRefreshType.TIMED_INTERVALS:
             LOG_ERR("WorldRefreshEntityStub::onCancelGroupEntityRefreshTimer error")
 
-        if refreshType == gameconst.TimerEntityRefreshType.TIME_LIMITED:
+        if refreshType in (gameconst.TimerEntityRefreshType.TIME_LIMITED, gameconst.TimerEntityRefreshType.NONE):
             timerSet = info.setdefault('timerSet', set())
             if timerId and timerId in timerSet:
                 timerSet.discard(timerId)
@@ -477,3 +523,47 @@ class WorldRefreshEntityStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.IT
                     self._cancelDatetimeCallback(tId, gametimer.TIMER_TAG_LOAD_GROUP_ENTITIES_CALL_BACK)
                 info.pop('timerSet', set())
 
+########################################################################################################
+    def doDetachGroupEntity(self, info):
+        LOG_INFO("WorldRefreshEntityStub::doDetachGroupEntity", info)
+        self.onCancelGroupEntityRefreshTimer(info)
+    
+    def doAttachGroupEntity(self, info):
+        LOG_INFO("WorldRefreshEntityStub::doAttachGroupEntity", info)
+        self.onRefreshGroupEntities(info['id'], info, {"refreshTimerId" : 0})
+
+    def doDetachOrAttachGroupEntityBySpaceNo(self, spaceNo, attachmentType):
+        LOG_INFO("WorldRefreshEntityStub::doDetachOrAttachGroupEntityBySpaceNo", spaceNo, attachmentType)
+        mapId = formula.parseLineType(spaceNo)
+        lineNo = formula.parseLineNo(spaceNo)
+        for _, curGroupInfo in self.groupRefreshInfo.items():
+            for curLineNo, curLineInfo in curGroupInfo.items():
+                if lineNo != curLineNo:
+                    continue
+                for id, curInfo in curLineInfo.items():
+                    curMapId = formula.parseLineType(id)
+                    if mapId != curMapId:
+                        continue
+                    curInfo.setdefault('lineNo', lineNo)
+                    if attachmentType == gameconst.WorldRefreshEntityAttachmentType.DETACH:
+                        self.doDetachGroupEntity(curInfo)
+                    elif attachmentType == gameconst.WorldRefreshEntityAttachmentType.ATTACH:
+                        self.doAttachGroupEntity(curInfo)
+
+    def onSpaceCellAppDeath(self, spaceNo):
+        LOG_INFO("WorldRefreshEntityStub::onSpaceCellAppDeath", spaceNo)
+        if spaceNo in self.missedSpaces:
+            LOG_WARN("WorldRefreshEntityStub::onSpaceCellAppDeath already in missedSpaces", spaceNo)
+            return
+
+        self.missedSpaces.add(spaceNo)
+        self.doDetachOrAttachGroupEntityBySpaceNo(spaceNo, gameconst.WorldRefreshEntityAttachmentType.DETACH)
+    
+    def onSpaceCellAppRelive(self, spaceNo):
+        LOG_INFO("WorldRefreshEntityStub::onSpaceCellAppRelive", spaceNo)
+        if spaceNo not in self.missedSpaces:
+            LOG_WARN("WorldRefreshEntityStub::onSpaceCellAppRelive not in missedSpaces", spaceNo)
+            return
+        
+        self.missedSpaces.discard(spaceNo)
+        self.doDetachOrAttachGroupEntityBySpaceNo(spaceNo, gameconst.WorldRefreshEntityAttachmentType.ATTACH)

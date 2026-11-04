@@ -268,7 +268,7 @@ datas = _tools.RODict({
     25: _tools.RODict({
         "ID": 25,
         "varName": "clientPick",
-        "statusName": "采集",
+        "statusName": "采集（攻击打断）",
         "clearOnline": 1,
         "clearTeleport": 1,
         "event": 29100028,

@@ -72,19 +72,38 @@ class Build(userType.UserSingleType):
             if not self.activeSkills[Build.ULTRA_SKILL_SLOT]:
                 return Build.ULTRA_SKILL_SLOT
             else:
+                utils.traceSkill(owner, 'getRecommendSlot.ultraSlotOccupied', (skillId,),
+                                 'slots=', tuple(self.activeSkills))
                 return None
 
         charData = C_C_DD.datas.get(gameglobal.roleCache[owner.id]['school'])
         if not charData:
+            utils.traceSkill(owner, 'getRecommendSlot.noCharData', (skillId,),
+                             'school=', gameglobal.roleCache[owner.id]['school'])
             return None
 
         recommendSkills = charData['build']
         _recommendSlot = recommendSkills.index(skillId) if skillId in recommendSkills else None
+        utils.traceSkill(owner, 'getRecommendSlot', (skillId,),
+                         'recommendSlot=', _recommendSlot,
+                         'slotSkillId=', self.activeSkills[_recommendSlot] if _recommendSlot is not None and _recommendSlot < len(self.activeSkills) else 'outOfRange',
+                         'slots=', tuple(self.activeSkills))
         if _recommendSlot is not None and not self.activeSkills[_recommendSlot]:
             if not self.isRightSlot(skillId, _recommendSlot):
                 LOG_ERR('skill and slot mismatch', _recommendSlot, skillId)
+                utils.traceSkill(owner, 'getRecommendSlot.slotMismatch', (skillId,),
+                                 'recommendSlot=', _recommendSlot)
                 return None
             return _recommendSlot
+
+        if _recommendSlot is None:
+            utils.traceSkill(owner, 'getRecommendSlot.notInRecommendBuild', (skillId,),
+                             'recommendBuild=', tuple(recommendSkills))
+        else:
+            # 推荐槽已被别的技能占住, 这是「解锁了但不上栏」最常见的成因
+            utils.traceSkill(owner, 'getRecommendSlot.slotOccupied', (skillId,),
+                             'recommendSlot=', _recommendSlot,
+                             'occupiedBy=', self.activeSkills[_recommendSlot])
 
         return None
 
@@ -162,6 +181,10 @@ class Build(userType.UserSingleType):
         return True
 
     def buildRemoveActiveSkill(self, owner, skillId):
+        utils.traceSkill(owner, 'buildRemoveActiveSkill', (skillId,),
+                         'skillId=', skillId, 'slotId=', self.getSlotId(skillId),
+                         'slotsBefore=', tuple(self.activeSkills),
+                         'levelsBefore=', tuple(self.skillLevels.keys()))
         self.skillLevels.pop(skillId, None)
         owner.removeSkillSetSummonSlotIdx([skillId])
         return True
@@ -169,10 +192,21 @@ class Build(userType.UserSingleType):
     def changeSkillSlot(self, owner, skillId, fromSlotId, toSlotId, 
                         isFromDeleteTempSkill=False, fromSkillNextCastTime=0,
                         reason=gameconst.CHANGE_SKILL_REASON_NORMAL):
+        utils.traceSkill(owner, 'changeSkillSlot.in', (skillId,),
+                         'skillId=', skillId, 'fromSlot=', fromSlotId, 'toSlot=', toSlotId,
+                         'reason=', reason, 'isFromDeleteTempSkill=', isFromDeleteTempSkill,
+                         'inLevels=', skillId in self.skillLevels,
+                         'slotsBefore=', tuple(self.activeSkills))
+
         if fromSlotId is None and toSlotId is None:
+            utils.traceSkill(owner, 'changeSkillSlot.bothSlotNone', (skillId,))
             return
 
         if skillId not in self.skillLevels:
+            # 静默早退: 槽位不会被清空/写入, 上层却以为成功了, 是「槽位与等级表脱钩」的关键点
+            utils.traceSkill(owner, 'changeSkillSlot.skillLevelMiss', (skillId,),
+                             'skillId=', skillId, 'fromSlot=', fromSlotId, 'toSlot=', toSlotId,
+                             'levels=', tuple(self.skillLevels.keys()))
             return
 
         if fromSlotId is None:
@@ -185,6 +219,10 @@ class Build(userType.UserSingleType):
             owner.cell.removeSkill(skillId, isFromDeleteTempSkill)
         else:
             self.activeSkills[toSlotId] = skillId
+
+        utils.traceSkill(owner, 'changeSkillSlot.done', (skillId,),
+                         'skillId=', skillId, 'fromSlot=', fromSlotId, 'toSlot=', toSlotId,
+                         'slotsAfter=', tuple(self.activeSkills))
 
     def getMaxLevel(self, owner, skillId, oldSkillId):
         cfgData = SRSUD.datas.get(skillId, None)
@@ -216,6 +254,10 @@ class Build(userType.UserSingleType):
 
     def levelUp(self, owner, skillId, oldSkillId, delta):
         LOG_INFO('levelUp ', skillId, oldSkillId, delta)
+        utils.traceSkill(owner, 'levelUp.in', (skillId, oldSkillId),
+                         'skillId=', skillId, 'oldSkillId=', oldSkillId, 'delta=', delta,
+                         'inLevels=', (skillId in self.skillLevels, oldSkillId in self.skillLevels),
+                         'slotId=', self.getSlotId(skillId))
         if skillId not in self.skillLevels:
             return False, 0
 
@@ -284,13 +326,28 @@ class Build(userType.UserSingleType):
         for _sid in _relatedSkills:
             if _sid != skillId:
                 owner.onChangeSkillLv(_sid, newLevel)
-                
+        if oldSkillId != skillId:
+            owner.onChangeSkillLv(oldSkillId, newLevel)
+            owner.updateSkillLevelSetSummonSlotIdx(oldSkillId, newLevel)
+
         owner.client.onUpdateSkillLevel(skillIdList, [newLevel] * len(skillIdList))
         #
         owner.achievementInfo.triggerAchieveByType(
             owner,
             gameconst.AchieveType.LEVEL_UP_SKILL,
             actionContext.AchievementCtx(oldLevel=oldLevel, newLevel=newLevel))
+        
+        skillLvDatas = {}
+        for skillLv in self.skillLevels.values():
+            skillLvDatas[skillLv] = skillLvDatas.get(skillLv, 0) + 1
+        
+        owner.clearBeginnerJourneyBehaviorStatusEx([gameconst.BjTaskType.BJ_TASK_TYPE_SKILL_LEVEL])
+        for skillLv, count in skillLvDatas.items():
+            owner.beginnerJourney_onTaskEvent(
+                gameconst.BjTaskType.BJ_TASK_TYPE_SKILL_LEVEL,
+                delta=count, level=skillLv
+            )
+            
         LogTrackingMgr.LogTrackingMgr.Skill_Upgrade(owner.gbID, owner.accountEntity.clientDistinctId, owner.gbID, skillId, list(costItemInfo.keys()), list(costItemInfo.values()), consumeMoney[0], consumeMoney[1], newLevel, opUUID)
         return True, opUUID
 

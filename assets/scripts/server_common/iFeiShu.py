@@ -73,6 +73,40 @@ class IFeiShu():
                            headers={"Content-Type": "application/json"},
                            timeoutSec=1)
     
+    def criticalReportDirect(self, msgs):
+        """紧急告警直发, 走 gameconfig.criticalReportUrl() 配置的独立群机器人。
+
+        和 wxReportDirect 的差异:
+            1. url 独立配置(criticalReportUrl), 不与普通错误上报抢同一个群;
+            2. 上报失败不回落到 wxReportDirect, 避免两路报警重复/互相淹没;
+            3. 超时放宽到 3 秒, 紧急告警允许稍微多等一会儿。
+        """
+        url = gameconfig.criticalReportUrl()
+        if not url:
+            LOG_ERR('criticalReportDirect: criticalReportUrl is empty, skip report')
+            return
+
+        if gameglobal.curServerAlias:
+            _serverName = gameglobal.curServerAlias
+        else:
+            _serverName = gameglobal.curServerName
+
+        datas = {
+            "msgtype": "text",
+            "text": {
+                "content": ''.join(msgs),
+                'mentioned_mobile_list': [_serverName]
+            },
+        }
+
+        cbFunc = lambda httpcode, data, headers, success, url: \
+            self.onReportResult(httpcode, data, headers, success, url, msgs, 'wechat_critical')
+
+        KBEngine.urlopenv2(url, cbFunc, method='POST',
+                           postData=json.dumps(datas).encode('utf-8'),
+                           headers={"Content-Type": "application/json"},
+                           timeoutSec=3)
+
     def goBlinReport(self, msgs):
         debugErrorLogHost = gameconfig.debugErrorLogHost()
         if not debugErrorLogHost:
@@ -100,7 +134,8 @@ class IFeiShu():
 
     def onReportResult(self, httpcode, data, headers, success, url, msgs, channel):
         LOG_INFO('onReportResult: code: {}, data: {}, headers: {}, success: {}, url: {}, channel: {}'.format(httpcode, data, headers, success, url, channel))
-        if channel != 'wechat' and (httpcode != 200 or KBEngine.publish()):
+        # wechat / wechat_critical 本身就是走微信机器人, 失败不再回落到 wxReportDirect, 免重复
+        if channel not in ('wechat', 'wechat_critical') and (httpcode != 200 or KBEngine.publish()):
             # report to wechat
             self.wxReportDirect(msgs)
 

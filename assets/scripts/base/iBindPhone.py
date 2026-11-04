@@ -27,7 +27,6 @@ import functools
 import copy
 import secondpwd_secondPwdFunction as SP_SPF
 import secondpwd_secondPwdConfig as SP_SPC
-import visible_visible as V_VD
 
 class IBindPhone(object):
     def __init__(self):
@@ -819,18 +818,30 @@ class IBindPhone(object):
             if not self.secondaryPwdVerityInfo.checkNeedVerity(checkInfo, itemDisassemblyLimit):
                 continue
             LOG_INFO("IBindPhone::checkPopupSecondaryPassword need verity", checkInfo)
-            self.client.notifyPopupSecondaryPassword(gameconst.NotifyPopupSecondaryPasswordType.TO_VERITY)
+            if self.isCrossServerInLocalServer:
+                self.syncMethodCallToCrossServerBase('onNotifyPopupSecondaryPassword', (gameconst.NotifyPopupSecondaryPasswordType.TO_VERITY,))
+            else:
+                self.onNotifyPopupSecondaryPassword(gameconst.NotifyPopupSecondaryPasswordType.TO_VERITY)
             return True
 
         LOG_INFO("IBindPhone::checkPopupSecondaryPassword end")
         return False
         
+    def onNotifyPopupSecondaryPassword(self, npspType):
+        LOG_INFO("IBindPhone::onNotifyPopupSecondaryPassword", npspType)
+        if self.getClient(gameconst.ClientCallChannel.MAIN_CHANNEL):
+            self.getClient(gameconst.ClientCallChannel.MAIN_CHANNEL).notifyPopupSecondaryPassword(npspType)
+
     @gamedecorator.limitcall(1)
-    @gamedecorator.checkGameconfigEnable('settings_secondPwd')
+    #@gamedecorator.checkGameconfigEnable('settings_secondPwd')
+    @gamedecorator.crossServer
     def reqSecondaryPasswordVerity(self, exposed, pwd):
         LOG_INFO("IBindPhone::reqSecondaryPasswordVerity")
         LOG_DBG("IBindPhone::reqSecondaryPasswordVerity", self.getSecondaryPwdInfo())
         LOG_DBG("IBindPhone::reqSecondaryPasswordVerity", self.secondaryPwdVerityInfo)
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('reqSecondaryPasswordVerity', (exposed, pwd))
+            return
         now = utils.curTS()
         checkRes = self.secondaryPwdVerity(now, pwd, gameconst.SecondaryPasswordVerityType.VERITY)
         if not checkRes:
@@ -873,9 +884,9 @@ class IBindPhone(object):
                     self.accountEntity.checkSecondaryPwdLockedExpired(len(continuousWrong))
 
                 self.secondaryPwdVerityInfo.updateBeVerity(now, False, SP_SPC.datas.get('pwdFreeVerifyDurationMs', {}).get('value', ()))
-                self.onMessagePre(msgId, [])
+                self.onMessagePre_localCross(msgId, [])
             else:
-                self.onMessagePre(MMD.datas.continuousWrongPwd, [])
+                self.onMessagePre_localCross(MMD.datas.continuousWrongPwd, [])
 
             self.sendSecondaryPasswordInfo()
             LOG_INFO("IBindPhone::secondaryPwdVerity verity failed", beLocked)
@@ -885,7 +896,7 @@ class IBindPhone(object):
         
         self.getSecondaryPwdInfo().veritySecondaryPassword()
         self.sendSecondaryPasswordInfo()
-        self.onMessagePre(MMD.datas.secondPwdSuccess, [])
+        self.onMessagePre_localCross(MMD.datas.secondPwdSuccess, [])
         LOG_INFO("IBindPhone::secondaryPwdVerity end")
         return True
 
@@ -954,7 +965,12 @@ class IBindPhone(object):
     def sendSecondaryPasswordInfo(self):
         LOG_DBG("IBindPhone::sendSecondaryPasswordInfo1", self.getSecondaryPwdInfo())
         LOG_INFO("IBindPhone::sendSecondaryPasswordInfo2", self.getSecondaryPwdInfo().toStreamClientDic())
-        self.client.sendSecondaryPasswordInfo(self.getSecondaryPwdInfo().toStreamClientDic())
+        if self.isCrossServerInLocalServer:
+            self.syncMethodCallToCrossClient('sendSecondaryPasswordInfo', (self.getSecondaryPwdInfo().toStreamClientDic(),))
+        elif gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase('sendSecondaryPasswordInfo', ())
+        else:
+            self.client.sendSecondaryPasswordInfo(self.getSecondaryPwdInfo().toStreamClientDic())
 
     def sendSecondaryPasswordVerityInfo(self):
         LOG_DBG("IBindPhone::sendSecondaryPasswordVerityInfo1", self.secondaryPwdVerityInfo)

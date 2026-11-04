@@ -53,6 +53,7 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
 
         self._doInitBornState()
 
+        self.gatherTotalCnt = self.getTempMiscProp(gameconst.EntityPropsEnum.gatherTotalCnt, NPD.datas.get(self.collectionId, {}).get('forPickTimes', 0))
         _spaceMgr = self.spaceMgr
         gid = utils.parseGidFromGameEntityId(self.gameEntityId)
         if _spaceMgr:
@@ -72,8 +73,11 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         self.createTime = utils.curTS()
         if hasattr(self, 'FBTime'):
             self.fBProtectTime = self.createTime + self.FBTime
-            self.awardContext = awardContext.DropAwardCtx(self.collectionId, 1)
-            self.awardContext.addContextVar('customAward', [{'itemId': self.FBItemId, 'count': 1, 'FBBind': self.FBBind}])
+            # 地面物品掉落才带 FBItemId；首刀宝箱只有保护时间，奖励走采集物 rewardID
+            if hasattr(self, 'FBItemId'):
+                self.awardContext = awardContext.DropAwardCtx(self.collectionId, 1)
+                count = self.fBItemNum or 1
+                self.awardContext.addContextVar('customAward', [{'itemId': self.FBItemId, 'count': count, 'FBBind': getattr(self, 'FBBind', 0)}])
 
     def _doInitBornState(self):
         ifBornState = NPD.datas[self.collectionId]['ifBornState']
@@ -92,6 +96,8 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         return self.collectionId
 
     def getPickTimes(self, collectionId):
+        if self.collectionId == collectionId:
+            return self.gatherTotalCnt
         pickData = NPD.datas.get(collectionId, None)
         if not pickData:
             return 0
@@ -124,11 +130,6 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
             if formula.isMineWarMineArea(self.spaceNo):
                 spaceMgr.onAvatarGetMineEntity(self.id, avatarId)
 
-        if formula.inLineScene(self.spaceNo):
-            lineType = formula.fetchMapId(self.spaceNo)
-            gameengine.getLineStub(lineType).onCollectionBeCollectAndDestroyed(self.spaceNo, self.posIndex, self.gameEntityId)
-        # TODO:: 处理非线空间的Entity
-
         self.delaySafeDestroy(CONST.datas.get("chestOpened", {}).get("value", 0.3))
 
     def onEquipDropDestroy(self, dropEquipId):
@@ -154,7 +155,46 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
             # 过5秒后检查状态并向玩家发送提醒邮件
             KBEngine.addTimer(5, 0, lambda *args: gameengine.getGlobalBase('DropStub').sendRepairDropMail(self.dropEquipId))
 
+    def isGatherAsOwner(self, gbId):
+        # 归属倒计时结束后，所有人按归属者打断
+        # 没有首刀/尾刀归属时，读条者按归属者打断
+        protectTime = getattr(self, 'fBProtectTime', 0) or 0
+        if protectTime and utils.curTS() >= protectTime:
+            return True
+        fbIds = getattr(self, 'firstBloodTargetGbIds', None)
+        lhIds = getattr(self, 'lastHitTargetGbIds', None)
+        if fbIds is None and lhIds is None:
+            return True
+        if fbIds is not None and gbId in fbIds:
+            return True
+        if lhIds is not None and gbId in lhIds:
+            return True
+        return False
+
+    def _needGatherShow(self):
+        # 允许多人同时采集时，表现不跟单次读条走
+        return bool(NPD.datas.get(self.collectionId, {}).get('isUnique'))
+
+    def beginGatherShow(self, avatarId, gbId):
+        if not self._needGatherShow():
+            return
+        # 与受击打断同一判定：没有首刀/尾刀归属时按归属者表现
+        if self.isGatherAsOwner(gbId):
+            self.gatherShowState = gameconst.GatherShowState.FB_OWNER
+        else:
+            self.gatherShowState = gameconst.GatherShowState.GATHERING
+        self.gatherShowAvatarId = avatarId
+
+    def endGatherShow(self, avatarId):
+        if not self._needGatherShow():
+            return
+        if getattr(self, 'gatherShowAvatarId', 0) != avatarId:
+            return
+        self.gatherShowAvatarId = 0
+        self.gatherShowState = gameconst.GatherShowState.NONE
+
     def addGatherAvatar(self, avatarId, gbId, collectionId):
+        self.endGatherShow(avatarId)
         _avatar = KBEngine.entities.get(avatarId)
         collData = NPD.datas[collectionId]
         canPickTime = collData['timeCheck']
@@ -242,8 +282,15 @@ class Collection(iCell.ICell, iTimer.ITimer, iFubenSpace.IFubenSpace, iGameEntit
         if hasattr(self, 'firstBloodTargetGbIds'):
             #LOG_INFO("firstBloodTargetGbIds", self.firstBloodTargetGbIds)
             if gbId not in self.firstBloodTargetGbIds:
-                if utils.curTS() - self.createTime < self.FBTime:
-                    return False
+                # 首刀1、以及首刀3强保护期：倒计时内不可拾取
+                # 首刀2、以及首刀3弱保护期：可以拾取
+                elapsed = utils.curTS() - self.createTime
+                if self.fbShareMode == gameconst.DropShareRewardType.FIRST_BLOOD_3:
+                    if elapsed < (getattr(self, 'FBStrongTime', 0) or 0):
+                        return False
+                elif self.fbShareMode != gameconst.DropShareRewardType.FIRST_BLOOD_2:
+                    if elapsed < self.FBTime:
+                        return False
 
         return True
 

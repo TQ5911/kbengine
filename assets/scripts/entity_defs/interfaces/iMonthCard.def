@@ -123,6 +123,7 @@
 
         <clientBuyPremiumGoods> <Exposed/>
             <Arg>       UINT32       </Arg>
+            <Arg>       BOOL         </Arg>
         </clientBuyPremiumGoods>
     </BaseMethods>
 

@@ -43,6 +43,7 @@ class Bag(BaseBag.BaseBag):
         self.groupCDDic = {}
         self.dailyUseLimitDic = {}
         self.item2timer = {}
+        self.bpExtraGrids = 0
 
     def _lateReload(self):
         super(Bag, self)._lateReload()
@@ -58,7 +59,7 @@ class Bag(BaseBag.BaseBag):
 
     @classmethod
     def _checkIgnores_(cls):
-        return 'itemsCDDic', 'groupCDDic', 'item2timer', 'lockedTime', 'lockDesc'
+        return 'itemsCDDic', 'groupCDDic', 'item2timer', 'lockedTime', 'lockDesc', 'bpExtraGrids'
 
     def initFromDict(self, savedDataDict):
         super(Bag, self).initFromDict(savedDataDict)
@@ -66,6 +67,7 @@ class Bag(BaseBag.BaseBag):
         self.groupCDDic = {}
         self.itemsCDDic = {}
         self.dailyUseLimitDic = {}
+        self.bpExtraGrids = 0
 
         for _cdDic in savedDataDict.get('itemCDList', []):
             self.itemsCDDic[_cdDic['itemId']] = _cdDic['cdTime']
@@ -196,7 +198,7 @@ class Bag(BaseBag.BaseBag):
 
         if notify:
             for item in tmpEquipList:
-                itemsDictList[1].append([item.itemId, item.uniqueId, item.bindType])
+                itemsDictList[1].append([item.itemId, item.uniqueId, item.bindType, item.simpleAttr2Json()])
 
         if src != AAC_AACDD.datas.BONUS_SRC_BAG_SORT:
             itemIdSet = set()
@@ -239,6 +241,7 @@ class Bag(BaseBag.BaseBag):
             )
 
         owner.onItemCountChanged(itemIdList)
+        owner.tryLockExpiredBattlePassBag()
 
     def cleanGridByGridId(self, owner, gridId, itemId, opUUID, srcType, detail, sendClient=True):
         oldObj = self.getItemObjByGridId(gridId)
@@ -265,6 +268,7 @@ class Bag(BaseBag.BaseBag):
         if oldObj.uniqueId in self.item2timer:
             tid = self.item2timer.pop(oldObj.uniqueId)
             owner._cancelDatetimeCallback(tid, gametimer.REPLACE_EXPIRED_ITEM)
+        owner.tryLockExpiredBattlePassBag()
         return _cleanItem
 
     def deductItemsWithPlan(self, owner, itemsDict, itemsObjs, opUUID, srcType, detail, planDic=None, isCheckLock=True):
@@ -572,7 +576,7 @@ class Bag(BaseBag.BaseBag):
             owner.onMessagePre(MMD.datas.equipFail_classNotMatch, [])
             return False
 
-        equipLevel = _gearInfo['equipLevel']
+        equipLevel = _gearInfo['equipLevel'][gridObj.getGrade()-1]
         roleLevel = _roleInfo['level']
         LOG_INFO('     in doDressEquip, level info:', equipLevel, roleLevel)
         if equipLevel > _roleInfo['level']:
@@ -628,7 +632,9 @@ class Bag(BaseBag.BaseBag):
         _equipItem = itemFactory.ItemFactory.createItemWithSavedDict(bodyEquipDic)
         srcType = AAC_AACDD.datas.BONUS_SRC_EQUIP_DRESS
         detail = gameclass.AwardDetailCls(itemId=_equipItem.itemId)
-        self.addItemsWithPlan(owner, [_equipItem],  opUUID, srcType, detail, notify=False, directly=False)
+        _opStat, _planDic = self.addItemsWithPlan(owner, [_equipItem],  opUUID, srcType, detail, notify=False, directly=False)
+        # 把添加结果回传给调用方，背包放不下时由调用方兜底（改走邮件），避免装备被静默丢弃
+        return _opStat, _equipItem, srcType
 
     @utils.checkBagLocked
     def doBagEquipDisassemble(self, owner, gridIdList, uniqueIdList):

@@ -18,6 +18,19 @@ import (
 // 缓存 serverId -> 组别(server_group) 和 serverId -> 所属合并组根服(server_id) 的快照,
 // 供各微服务查询。读路径完全无锁, 写路径通过 atomic.Value 整体替换快照。
 //
+// 另外按 maple 上报的 server_group + server_sub_group 维护一套双向索引:
+//
+//	"组别_子组别" -> 该组合下的 serverId 列表
+//	serverId      -> "组别_子组别"
+// 两个索引由同一份服务器列表同源构建, 保证反查出的 key 一定能在正向索引里命中。
+// 查询入口: GetGameGroupWithSubGroupServerIdMap / GetGameServerIdGroupWithSubGroupKey
+//          / GetGameServerIdListByServerId / GetAllGameGroupWithSubGroupServerIdMap。
+// 由 serverId 反查组别与子组别数值: GetGameServerGroupWithSubGroup(原始分组)
+//          / GetGameServerGroupWithSubGroupByMerge(和服折叠后);
+// 按 组别+子组别 反查 serverId 是否命中: CheckServerIdInGroupWithSubGroup(原始分组)
+//          / CheckServerIdInGroupWithSubGroupByMerge(和服折叠后)。
+// 该索引按 maple 上报的原始分组建立, 不做和服折叠。
+//
 // 接入方式: base.initCommon 会调用 InitGameServerDataFromConfig 自动初始化,
 // 接入方只需在服务配置文件中增加 "mapleHttpAddr" 配置项即为接入,
 // 之后通过 GetGameServerGroup / GetGameServerMergeRoot 等查询对应信息;
@@ -39,8 +52,9 @@ const (
 
 // gameServerInfo /getAllServer 返回的单个游戏服数据, 只保留本组件关心的字段
 type gameServerInfo struct {
-	Id          int `json:"id"`
-	ServerGroup int `json:"server_group"`
+	Id             int `json:"id"`
+	ServerGroup    int `json:"server_group"`
+	ServerSubGroup int `json:"server_sub_group"`
 }
 
 // gameServerDataResponse /getAllServer 的响应, 只解析 servers 字段
@@ -55,8 +69,10 @@ type gameMergeMapResponse struct {
 
 var (
 	// gameServerGroupMap serverId -> 组别 的只读快照, 每次拉取成功整体替换, 读无锁
-	gameServerGroupMap   atomic.Pointer[map[int]int]   // map[int]int
-	gameGroupServerIdMap atomic.Pointer[map[int][]int] // map[int]int
+	gameServerGroupMap               atomic.Pointer[map[int]int]      // map[int]int
+	gameGroupServerIdMap             atomic.Pointer[map[int][]int]    // map[int][]int
+	gameGroupWithSubGroupServerIdMap atomic.Pointer[map[string][]int] // map[string][]int
+	gameServerIdGroupWithSubGroupMap atomic.Pointer[map[int]string]   // map[int]string
 	// gameServerMergeMap serverId -> 所属合并组根服 的只读快照, 语义同上
 	// 未参与和服的服不会出现在 map 中 (调用方可用 ok 区分)
 	gameServerMergeMap       atomic.Pointer[map[int]int] // map[int]int
@@ -184,6 +200,32 @@ func CheckServerIdInGroup(groupId int, serverId uint32) bool {
 	return gId == groupId
 }
 
+// CheckServerIdInGroupWithSubGroup 校验 serverId 是否属于指定的组别与子组别;
+// 数据未就绪或 serverId 不存在时返回 false。
+//
+// 注意: 按 maple 上报的原始分组校验, 不做和服折叠;
+// 需要与 CheckServerIdInGroup 一致的折叠语义请用 CheckServerIdInGroupWithSubGroupByMerge。
+func CheckServerIdInGroupWithSubGroup(groupId, subGroupId int, serverId uint32) bool {
+	gId, sId, ok := GetGameServerGroupWithSubGroup(int(serverId))
+	if !ok {
+		appLog.Error("CheckServerIdInGroupWithSubGroup: missing group info: ", groupId, subGroupId, serverId)
+		return false
+	}
+	return gId == groupId && sId == subGroupId
+}
+
+// CheckServerIdInGroupWithSubGroupByMerge 校验 serverId 是否属于指定的组别与子组别,
+// 与 CheckServerIdInGroup 一样先经过和服折叠: 被合入的服按其根服所在的分组校验;
+// 数据未就绪或 serverId 不存在时返回 false。
+func CheckServerIdInGroupWithSubGroupByMerge(groupId, subGroupId int, serverId uint32) bool {
+	gId, sId, ok := GetGameServerGroupWithSubGroupByMerge(int(serverId))
+	if !ok {
+		appLog.Error("CheckServerIdInGroupWithSubGroupByMerge: missing group info: ", groupId, subGroupId, serverId)
+		return false
+	}
+	return gId == groupId && sId == subGroupId
+}
+
 func getGameServerGroupMap() map[int]int {
 	if v := gameServerGroupMap.Load(); v != nil {
 		return *v
@@ -221,6 +263,30 @@ func addGameGroupServerIdMap(serverGroupMap map[int]int) {
 	gameGroupServerIdMap.Store(&d)
 }
 
+// buildGameGroupWithSubGroupIndexes 由同一份服务器列表构建组别索引与反向索引:
+//
+//	groupWithSubGroupMap: "组别_子组别" -> 该组合下的 serverId 列表
+//	serverIdKeyMap:       serverId      -> "组别_子组别"
+//
+// 两个索引同源构建, 保证任意 serverId 反查出的 key 一定能在正向索引里命中。
+func buildGameGroupWithSubGroupIndexes(servers []gameServerInfo) (map[string][]int, map[int]string) {
+	groupWithSubGroupMap := make(map[string][]int)
+	serverIdKeyMap := make(map[int]string, len(servers))
+	for _, server := range servers {
+		key := GetGroupWithSubGroupKey(server.ServerGroup, server.ServerSubGroup)
+		groupWithSubGroupMap[key] = append(groupWithSubGroupMap[key], server.Id)
+		serverIdKeyMap[server.Id] = key
+	}
+	return groupWithSubGroupMap, serverIdKeyMap
+}
+
+// addGameGroupWithSubGroupIndexes 构建并存储组别索引与反向索引快照, 每次拉取成功整体替换。
+func addGameGroupWithSubGroupIndexes(servers []gameServerInfo) {
+	groupWithSubGroupMap, serverIdKeyMap := buildGameGroupWithSubGroupIndexes(servers)
+	gameGroupWithSubGroupServerIdMap.Store(&groupWithSubGroupMap)
+	gameServerIdGroupWithSubGroupMap.Store(&serverIdKeyMap)
+}
+
 func gameServerDataLoop(baseURL string) {
 	ticker := time.NewTicker(1)
 	defer ticker.Stop()
@@ -243,11 +309,13 @@ func refreshGameServerData(baseURL string) {
 	mergeURL := baseURL + gameServerMergeMapURLPath
 
 	serverGroupMapOK := false
-	if newMap, err := fetchGameServerGroupMap(groupURL); err != nil {
+	if servers, err := fetchGameServers(groupURL); err != nil {
 		appLog.Error("gameServerData: refresh group failed: ", err.Error())
 	} else {
+		newMap := buildGameServerGroupMap(servers)
 		gameServerGroupMap.Store(&newMap)
 		addGameGroupServerIdMap(newMap)
+		addGameGroupWithSubGroupIndexes(servers)
 		serverGroupMapOK = true
 	}
 
@@ -264,7 +332,9 @@ func refreshGameServerData(baseURL string) {
 	}
 }
 
-func fetchGameServerGroupMap(url string) (map[int]int, error) {
+// fetchGameServers 拉取 maple 的全部游戏服数据, 返回解析后的服务器列表。
+// 只做 http + json 解析, 不做业务加工, 由调用方按需构建各类索引。
+func fetchGameServers(url string) ([]gameServerInfo, error) {
 	resp, err := gameServerDataHttpClient.Get(url)
 	if err != nil {
 		return nil, err
@@ -285,11 +355,16 @@ func fetchGameServerGroupMap(url string) (map[int]int, error) {
 		return nil, err
 	}
 
-	newMap := make(map[int]int, len(response.Servers))
-	for _, server := range response.Servers {
+	return response.Servers, nil
+}
+
+// buildGameServerGroupMap 由服务器列表构建 serverId -> 组别 的映射
+func buildGameServerGroupMap(servers []gameServerInfo) map[int]int {
+	newMap := make(map[int]int, len(servers))
+	for _, server := range servers {
 		newMap[server.Id] = server.ServerGroup
 	}
-	return newMap, nil
+	return newMap
 }
 
 func fetchGameServerMergeMap(url string) (map[int]int, error) {
@@ -322,4 +397,109 @@ func fetchGameServerMergeMap(url string) (map[int]int, error) {
 		newMap[from] = to
 	}
 	return newMap, nil
+}
+
+func GetGroupWithSubGroupKey(groupId, subGroupId int) string {
+	return fmt.Sprintf("%v_%v", groupId, subGroupId)
+}
+
+// ParseGroupWithSubGroupKey 解析 GetGroupWithSubGroupKey 生成的 key, 还原组别与子组别
+func ParseGroupWithSubGroupKey(key string) (int, int, bool) {
+	var groupId, subGroupId int
+	if _, err := fmt.Sscanf(key, "%d_%d", &groupId, &subGroupId); err != nil {
+		return 0, 0, false
+	}
+	return groupId, subGroupId, true
+}
+
+// GetGameGroupWithSubGroupServerIdMap 查询指定组别+子组别下的 serverId 列表;
+// 该组合不存在或数据尚未就绪时返回空切片。
+//
+// 注意: 本索引按 maple 上报的原始分组建立, 不做和服折叠(与 GetGameServerGroup 的折叠语义不同);
+// 需要和服语义时先用 GetGameServerMergeRoot 把 serverId 换成根服再查。
+func GetGameGroupWithSubGroupServerIdMap(groupId, subGroupId int) []int {
+	key := GetGroupWithSubGroupKey(groupId, subGroupId)
+	if v := gameGroupWithSubGroupServerIdMap.Load(); v != nil {
+		if d, ok := (*v)[key]; ok {
+			return d
+		}
+	}
+	return []int{}
+}
+
+// GetGameServerIdGroupWithSubGroupKey 反向索引: 由 serverId 反查其所属的 "组别_子组别" key;
+// 游戏服不存在或数据尚未就绪时返回 ("", false)。
+//
+// 注意: 同样是原始分组语义, 不做和服折叠。
+func GetGameServerIdGroupWithSubGroupKey(serverId int) (string, bool) {
+	if v := gameServerIdGroupWithSubGroupMap.Load(); v != nil {
+		if key, ok := (*v)[serverId]; ok {
+			return key, true
+		}
+	}
+	return "", false
+}
+
+// GetGameServerIdListByServerId 由 serverId 反查其所在的 "组别_子组别", 再返回同组的 serverId 列表;
+// serverId 不存在时返回空切片。这是反向索引与正向索引配合使用的常用入口。
+func GetGameServerIdListByServerId(serverId int) []int {
+	key, ok := GetGameServerIdGroupWithSubGroupKey(serverId)
+	if !ok {
+		return []int{}
+	}
+	if v := gameGroupWithSubGroupServerIdMap.Load(); v != nil {
+		if d, ok := (*v)[key]; ok {
+			return d
+		}
+	}
+	return []int{}
+}
+
+// GetGameServerGroupWithSubGroup 由 serverId 反查其所属的组别与子组别;
+// 游戏服不存在或数据尚未就绪时返回 (0, 0, false)。
+//
+// 注意: 按 maple 上报的原始分组返回, 不做和服折叠;
+// 需要与 GetGameServerGroup 一致的折叠语义请用 GetGameServerGroupWithSubGroupByMerge。
+func GetGameServerGroupWithSubGroup(serverId int) (int, int, bool) {
+	key, ok := GetGameServerIdGroupWithSubGroupKey(serverId)
+	if !ok {
+		return 0, 0, false
+	}
+	groupId, subGroupId, ok := ParseGroupWithSubGroupKey(key)
+	if !ok {
+		return 0, 0, false
+	}
+	if groupId <= 0 || subGroupId <= 0 {
+		return 0, 0, false
+	}
+	return groupId, subGroupId, true
+}
+
+// GetGameServerGroupWithSubGroupByMerge 由 serverId 反查其所属的组别与子组别,
+// 与 GetGameServerGroup 一样先经过和服折叠: 被合入的服按其根服所在的分组返回;
+// 游戏服不存在或数据尚未就绪时返回 (0, 0, false)。
+func GetGameServerGroupWithSubGroupByMerge(serverId int) (int, int, bool) {
+	lookupId := serverId
+	if root, ok := getGameServerMergeMap()[serverId]; ok {
+		lookupId = root
+	}
+	return GetGameServerGroupWithSubGroup(lookupId)
+}
+
+// GetAllGameGroupWithSubGroupServerIdMap 返回 "组别_子组别" -> serverId 列表 的全量快照,
+// 快照为只读, 调用方不得修改
+func GetAllGameGroupWithSubGroupServerIdMap() map[string][]int {
+	if v := gameGroupWithSubGroupServerIdMap.Load(); v != nil {
+		return *v
+	}
+	return map[string][]int{}
+}
+
+// GetAllGameServerIdGroupWithSubGroupMap 返回 serverId -> "组别_子组别" 的全量快照,
+// 快照为只读, 调用方不得修改
+func GetAllGameServerIdGroupWithSubGroupMap() map[int]string {
+	if v := gameServerIdGroupWithSubGroupMap.Load(); v != nil {
+		return *v
+	}
+	return map[int]string{}
 }

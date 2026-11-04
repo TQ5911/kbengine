@@ -1641,6 +1641,34 @@ def forwardGMCommand(su, cmdName, *args):
 
 
 def realForwardCommand(superUser, command, args):
+    """GM 指令内部转发（forwardGMCommand）到 base 侧后的统一入口。
+
+    本函数会被广播到所有 baseapp 执行（_callApps(gameconst.BASE, ...)）。
+    旧实现固定在 first baseapp 执行 _doCommand，对于 RARG 类指令存在
+    隐患：若路由参数（实体 id）对应的实体托管在其他 baseapp 上，
+    fetchArgMailBoxes 解析出来的只是远端 mailbox，do() 里
+    KBEngine.entities.get 本地查找必然失败，指令静默丢失
+    （failCallback 在无 data 时也不会给调用方任何反馈）。
+
+    因此 RARG 类、组件为 BASE 且路由参数为实体 id 的指令，改为按实体
+    宿主 baseapp 执行：各 baseapp 本地判断是否为目标实体宿主，仅宿主
+    执行 _doCommand，保证 do() 的实体本地查找成功。
+    实体不在线/不存在时不会有任何 baseapp 执行（现有调用方传入的均是
+    刚在 cell 侧完成操作的在线实体，正常情况下必能找到宿主）。
+
+    其余形态保持原有行为，仍仅在 first baseapp 执行：
+    - '0'（su 自己）与 gbId/角色名等非实体 id 参数：走原链路解析；
+    - RALL/RONE/RSU/RSTUB 路由与 CELL 组件指令：执行点本就与实体宿主
+      无关（CELL 指令最终广播到各 cellapp，由实体所在 cellapp 执行）。
+    """
+    _cmd_name = _splitCommand(command)[0]
+    _cmd = GM_CMDS.get(_cmd_name)
+    if _cmd is not None and _isRARG(_cmd.route) and _cmd.component == gameconst.BASE:
+        _ent_arg = args[_cmd.route] if 0 <= _cmd.route < len(args) else None
+        if _ent_arg is not None and str(_ent_arg) != '0' and utils.isEntityId(_ent_arg):
+            if _checkEntityExist(KBEngine.entities.get(int(_ent_arg))):
+                _doCommand(superUser, command, gmAdmin.ALLSIDE, args)
+            return
     if gameengine.isFirstBaseApp():
         _doCommand(superUser, command, gmAdmin.ALLSIDE, args)
 

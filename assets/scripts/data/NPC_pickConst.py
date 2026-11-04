@@ -65,7 +65,7 @@ datas = _tools.RODict({
     }),
     "autoCollectEnterTime": _tools.RODict({
         "ID": "autoCollectEnterTime",
-        "value": 2,
+        "value": 0.2,
     }),
     "pickTimeLessen": _tools.RODict({
         "ID": "pickTimeLessen",
@@ -73,23 +73,35 @@ datas = _tools.RODict({
     }),
     "pickupPrompt": _tools.RODict({
         "ID": "pickupPrompt",
-        "value": "{0}后可拾取",
+        "value": "<color=#dea050>{0}后可拾取</color>",
     }),
-    "pickupPermissionTime": _tools.RODict({
-        "ID": "pickupPermissionTime",
-        "value": 60,
+    "pickupPrompt2": _tools.RODict({
+        "ID": "pickupPrompt2",
+        "value": "{0}后拾取时间减少",
+    }),
+    "pickupPrompt3": _tools.RODict({
+        "ID": "pickupPrompt3",
+        "value": "<color=#dea050>{0}后可拾取</color>",
+    }),
+    "pickupPrompt2_UITips": _tools.RODict({
+        "ID": "pickupPrompt2_UITips",
+        "value": "非归属者，拾取时间较长",
+    }),
+    "pickupPrompt3_UITips": _tools.RODict({
+        "ID": "pickupPrompt3_UITips",
+        "value": "非归属者，更易被打断",
     }),
     "pickupPermissionRange": _tools.RODict({
         "ID": "pickupPermissionRange",
-        "value": 5,
+        "value": 4,
+    }),
+    "pickupPermissionNum": _tools.RODict({
+        "ID": "pickupPermissionNum",
+        "value": 12,
     }),
     "pickupPermissionValidTime": _tools.RODict({
         "ID": "pickupPermissionValidTime",
-        "value": 300,
-    }),
-    "pickupPermissionId": _tools.RODict({
-        "ID": "pickupPermissionId",
-        "value": 16006166,
+        "value": 900,
     }),
     "dropThrowRange": _tools.RODict({
         "ID": "dropThrowRange",
@@ -114,5 +126,17 @@ datas = _tools.RODict({
     "collection_showVerticalDistance": _tools.RODict({
         "ID": "collection_showVerticalDistance",
         "value": 3,
+    }),
+    "bossLight_dailyPickTimesLimit": _tools.RODict({
+        "ID": "bossLight_dailyPickTimesLimit",
+        "value": 54003436,
+    }),
+    "attackStopCD": _tools.RODict({
+        "ID": "attackStopCD",
+        "value": 1.0,
+    }),
+    "attackStopProbability": _tools.RODict({
+        "ID": "attackStopProbability",
+        "value": 0.5,
     })
 })

@@ -36,7 +36,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHECK_TEXT_SECURITY_REQ)EntityDef.id2datatypes[508]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHECK_TEXT_SECURITY_REQ)EntityDef.id2datatypes[481]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -52,8 +52,8 @@ namespace KBEngine
 			bundle.writeUint8(arg4);
 			bundle.writeUint8(arg5);
 			bundle.writeUint8(arg6);
-			((DATATYPE_OUTFIT_DATA)EntityDef.id2datatypes[33]).addToStreamEx(bundle, arg7);
-			((DATATYPE_FACE_DATA)EntityDef.id2datatypes[28]).addToStreamEx(bundle, arg8);
+			((DATATYPE_OUTFIT_DATA)EntityDef.id2datatypes[34]).addToStreamEx(bundle, arg7);
+			((DATATYPE_FACE_DATA)EntityDef.id2datatypes[29]).addToStreamEx(bundle, arg8);
 			sendCall(null);
 		}
 
@@ -63,7 +63,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_AnonymousArray_10047)EntityDef.id2datatypes[10047]).addToStreamEx(bundle, arg1);
+			((DATATYPE_AnonymousArray_10048)EntityDef.id2datatypes[10048]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 

@@ -39,11 +39,11 @@ datas = _tools.RODict({
         "ID": 3,
         "lowerLimit": -5000,
         "upperLimit": -500,
-        "PVPDmgReduced": 0.3,
-        "DmgFromOtherPVPIncreased": 0.3,
+        "PVPDmgReduced": 0.0,
+        "DmgFromOtherPVPIncreased": 0.0,
         "ExpGainReduced": 0.3,
-        "PotionEffReduced": 0.3,
-        "cantUseTransItem": 1,
+        "PotionEffReduced": 0.0,
+        "cantUseTransItem": 0,
     })
 })
 minKey = 1

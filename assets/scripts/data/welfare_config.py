@@ -49,7 +49,7 @@ datas = _tools.RODict({
     }),
     "AttentionMethod": _tools.RODict({
         "ID": "AttentionMethod",
-        "value": "第一步：关注官方公众号，发送口令\n“炽焰测试”，领取专属兑换码。\n第二步：点击【兑换礼包】使用兑换码。",
+        "value": "第一步：关注官方公众号，发送口令\n“破晓启程”，领取专属兑换码。\n第二步：点击【兑换礼包】使用兑换码。",
     }),
     "AttentionReward": _tools.RODict({
         "ID": "AttentionReward",
@@ -57,7 +57,7 @@ datas = _tools.RODict({
     }),
     "AttentionAccounts": _tools.RODict({
         "ID": "AttentionAccounts",
-        "value": "烽烟",
+        "value": "烽烟破晓",
     }),
     "AttentionCopyMsg": _tools.RODict({
         "ID": "AttentionCopyMsg",
@@ -274,5 +274,17 @@ datas = _tools.RODict({
     "rmbFormat": _tools.RODict({
         "ID": "rmbFormat",
         "value": "￥{0}",
+    }),
+    "promoterSnapWeight": _tools.RODict({
+        "ID": "promoterSnapWeight",
+        "value": "1100",
+    }),
+    "promoterBindWeight": _tools.RODict({
+        "ID": "promoterBindWeight",
+        "value": 1000,
+    }),
+    "returnRewardClose": _tools.RODict({
+        "ID": "returnRewardClose",
+        "value": "202702112359",
     })
 })

@@ -173,10 +173,10 @@ class IRedBag(object):
     # 发布红包
     @gamedecorator.checkGameconfigEnable('redPacket')
     @AuthClsWraper.authWithPermission(A_AFD.UIRedPacketPanel)
-    def reqReleaseRedBag(self, exposed, redbagType, channel, money, num, desc):
-        self._reqReleaseRedBag(redbagType, channel, money, num, desc)
+    def reqReleaseRedBag(self, exposed, redbagType, channel, money, num, desc, isExchange=False):
+        self._reqReleaseRedBag(redbagType, channel, money, num, desc, isExchange=isExchange)
 
-    def _reqReleaseRedBag(self, redbagType, channel, money, num, desc):
+    def _reqReleaseRedBag(self, redbagType, channel, money, num, desc, isExchange=False):
         #
         if not self._checkReleaseLimit(redbagType, channel, money, num, desc):
             return
@@ -185,7 +185,7 @@ class IRedBag(object):
         _realMoney = self.getRBRealMoney(channel, money)
         deductVal = dropAward.DeductWealthVal()
         deductVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, _realMoney)
-        res = self.canDeductWealth(deductVal)
+        res = self.canDeductWealth(deductVal, allowMoneyCoverBindMoney=isExchange)
 
         if not res:
             LOG_WARN("reqReleaseRedBag error no enough money: ", self.gbID, redbagType, channel, money, num, res())
@@ -198,7 +198,7 @@ class IRedBag(object):
         deductWealthVal.addWealthByItemId(self.moneyItemId, _realMoney)
         mDesc = "req-release-redbag-{}-{}-{}-{}".format(redbagType, channel, money, num)
         LOG_INFO('deductWealth', _realMoney, mDesc)
-        self.deductWealth(src, deductWealthVal, redbagId, mDesc)
+        self.deductWealth(src, deductWealthVal, redbagId, mDesc, allowMoneyCoverBindMoney=isExchange)
         self.setTempMiscProp(redbagId, _realMoney)
 
         gameengine.getGlobalBase('RedBagStub').doCreateRedBag(self, redbagId, self.gbID, self.characterName, self.guildUUIDBase, redbagType, channel, money, num, desc)

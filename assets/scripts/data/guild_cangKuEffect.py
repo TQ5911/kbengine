@@ -17,8 +17,8 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "guildCoinLimit": 50000,
-        "guildMoneyLimit": 20000,
+        "guildCoinLimit": 75000,
+        "guildMoneyLimit": 25000,
         "guildTokenLimit": 10000,
         "dailyCoinDonation": 15000,
         "dailyMoneyDonation": 1000,
@@ -26,38 +26,38 @@ datas = _tools.RODict({
     }),
     2: _tools.RODict({
         "ID": 2,
-        "guildCoinLimit": 100000,
-        "guildMoneyLimit": 40000,
+        "guildCoinLimit": 150000,
+        "guildMoneyLimit": 50000,
         "guildTokenLimit": 20000,
         "dailyCoinDonation": 18000,
-        "dailyMoneyDonation": 1100,
+        "dailyMoneyDonation": 1250,
         "dailyTokenDonation": 6000
     }),
     3: _tools.RODict({
         "ID": 3,
-        "guildCoinLimit": 200000,
-        "guildMoneyLimit": 60000,
+        "guildCoinLimit": 250000,
+        "guildMoneyLimit": 75000,
         "guildTokenLimit": 30000,
         "dailyCoinDonation": 21000,
-        "dailyMoneyDonation": 1200,
+        "dailyMoneyDonation": 1500,
         "dailyTokenDonation": 7000
     }),
     4: _tools.RODict({
         "ID": 4,
-        "guildCoinLimit": 500000,
-        "guildMoneyLimit": 80000,
+        "guildCoinLimit": 400000,
+        "guildMoneyLimit": 100000,
         "guildTokenLimit": 40000,
         "dailyCoinDonation": 25500,
-        "dailyMoneyDonation": 1350,
+        "dailyMoneyDonation": 2000,
         "dailyTokenDonation": 8500
     }),
     5: _tools.RODict({
         "ID": 5,
         "guildCoinLimit": 600000,
-        "guildMoneyLimit": 100000,
+        "guildMoneyLimit": 150000,
         "guildTokenLimit": 50000,
         "dailyCoinDonation": 30000,
-        "dailyMoneyDonation": 1500,
+        "dailyMoneyDonation": 2500,
         "dailyTokenDonation": 10000
     })
 })

@@ -41,7 +41,7 @@ datas = _tools.RODict({
     }),
     "auctionTaxRate": _tools.RODict({
         "key": "auctionTaxRate",
-        "value": 5,
+        "value": 10,
     }),
     "auctionRevenueRate": _tools.RODict({
         "key": "auctionRevenueRate",
@@ -233,7 +233,7 @@ datas = _tools.RODict({
     }),
     "auctionPublicityTag": _tools.RODict({
         "key": "auctionPublicityTag",
-        "value": "<color=#b35b00>公示中</color>",
+        "value": "公示中",
     }),
     "auctionSoulSale": _tools.RODict({
         "key": "auctionSoulSale",
@@ -338,5 +338,13 @@ datas = _tools.RODict({
     "auctionSellNeedBP": _tools.RODict({
         "key": "auctionSellNeedBP",
         "value": 54000267,
+    }),
+    "lockedShelf": _tools.RODict({
+        "key": "lockedShelf",
+        "value": 6,
+    }),
+    "goodsCannotUnder": _tools.RODict({
+        "key": "goodsCannotUnder",
+        "value": 54000329,
     })
 })

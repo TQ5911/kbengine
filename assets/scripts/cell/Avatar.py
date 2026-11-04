@@ -33,7 +33,6 @@ import iTimer
 import iFubenSpace
 import iBag
 import impLine
-import impRaidDungeon
 import iMount
 import impOutfit
 import iLargeEnt
@@ -42,20 +41,16 @@ import impTask
 import impCombat
 import EventMgr
 import iComplexTeleport
-import impTeam
-import impRaid
 import iCrossTeamCell
 import impCrossTeamDungeonCell
 import impAutoCombat
 import iScore
 import impAvatarPK
 import iChat
-import impTeamDungeon
 import impSingleDungeon
 import iMonsterGrp
 import impAvatarPet
 import impEquipment
-import iCrusade
 import iRelive
 import iCubeCell
 import iGuildCell
@@ -68,7 +63,6 @@ import iBounty
 import iEmote
 import iDuelCell
 import iSiegeWarCell
-import iChief
 import iNewbie
 import iCrossServer
 import iWorldLevel
@@ -107,14 +101,14 @@ import message_Message_def as M_M_DD
 import ExposedWrapper
 
 class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace, impTask.ImpTask, impCombat.ImpCombat,
-             EventMgr.EventMgr, iComplexTeleport.IComplexTeleport, impTeam.ImpTeam, impRaid.ImpRaid,
+             EventMgr.EventMgr, iComplexTeleport.IComplexTeleport,
              impAutoCombat.ImpAutoCombat, iScore.IScore, impAvatarPK.ImpAvatarPK, iChat.IChat,
-             impTeamDungeon.ImpTeamDungeon, impSingleDungeon.ImpSingleDungeon, impRaidDungeon.ImpRaidDungeon,
+             impSingleDungeon.ImpSingleDungeon,
              iMonsterGrp.IMonsterGrp, impOutfit.ImpOutfit, iMount.IMount, impAvatarPet.ImpAvatarPet,
-             impEquipment.ImpEquipment, iCrusade.ICrusade, iRelive.IRelive, iReplicaAvatar.IReplicaAvatar,
+             impEquipment.ImpEquipment, iRelive.IRelive, iReplicaAvatar.IReplicaAvatar,
              iCubeCell.ICubeCell, iGuildCell.IGuildCell, iGuildTrainCell.IGuildTrainCell,
              iLeaderBoardCell.ILeaderBoardCell, iWonderLandCell.IWonderLandCell,
-             iCollectible.ICollectible, iDuelCell.IDuelCell, iSiegeWarCell.ISiegeWarCell, iChief.IChief, iBounty.IBounty, iEmote.IEmote,
+             iCollectible.ICollectible, iDuelCell.IDuelCell, iSiegeWarCell.ISiegeWarCell, iBounty.IBounty, iEmote.IEmote,
              iNewbie.INewbie, iCrossServer.ICrossServer, iMeridian.IMeridian, iMonthCard.IMonthCard, iMineWarCell.IMineWarCell,
              iGuildBossChallenge.IGuildBossChallenge, impStatistics.IStatistics, iDungeonSettlement.IDungeonSettlement,
              iWorldLevel.IWorldLevel, iSpeedCheck.ISpeedCheck, iAbyssCell.IAbyssCell, iEnmity.IEnmity,
@@ -129,13 +123,11 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         impCombat.ImpCombat.__init__(self)
         impAutoCombat.ImpAutoCombat.__init__(self)
         impAvatarPK.ImpAvatarPK.__init__(self)
-        impRaid.ImpRaid.__init__(self)
         iCubeCell.ICubeCell.__init__(self)
         iWonderLandCell.IWonderLandCell.__init__(self)
         iAbyssCell.IAbyssCell.__init__(self)
         iComplexTeleport.IComplexTeleport.__init__(self)
         iMount.IMount.__init__(self)
-        impTeam.ImpTeam.__init__(self)
         impOutfit.ImpOutfit.__init__(self)
         iLeaderBoardCell.ILeaderBoardCell.__init__(self)
         iSiegeWarCell.ISiegeWarCell.__init__(self)
@@ -223,10 +215,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             self._onTimerCallback(tid)
         elif userData == gametimer.AUTO_COMBAT_CHECK:
             self.autoCombatTick()
-        elif userData == gametimer.TIMER_TEAM_TICK:
-            self.teamTick()
-        elif userData == gametimer.RAID_TICK:
-            self.raidTick()
         elif userData == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
         elif userData == gametimer.CLEAR_TELEPORT_INFO_CACHE:
@@ -244,11 +232,11 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         elif userData == gametimer.SPEED_STAT_CHECK:
             self.calculateOverSpeed()
         elif userData == gametimer.CROSSSERVER_ABYSS_TIME_SYNC:
-            self._onLeftTimeSync()
+            self._onAbyssTimeSync()
         elif userData == gametimer.CHECK_EQUIPMENT_RETURN_EXPIRE:
             self._checkEquipExpire()
         elif userData == gametimer.CROSS_TEAM_AVATAR_STATE_TICK:
-            self._syncCrossTeamState()
+            self.syncCrossTeamState()
         else:
             super(Avatar, self).onTimer(tid, userData)
 
@@ -275,8 +263,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             self.unsetAllHateRecord(gameconst.UnsetAllHateReason.destory)
             self.saveBuffs()
             self.doRemoveAllBuff()
-            self.clearTeamCacheBoxOnOffline()
-            self.clearRaidCacheBoxOnOffline()
         except Exception as e:
             gameengine.panicStack('_preSafeDestory error:', self.id, str(e))
 
@@ -323,6 +309,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     @gamedecorator.crossServer
     def offline(self, exposed, reason):
+        LOG_INFO('offline', exposed, reason)
         if not self._isMyself(exposed):
             return
 
@@ -340,6 +327,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             self._offlineContinue(exposed, reason)
 
     def _offlineContinue(self, exposed, reason):
+        LOG_INFO('_offlineContinue', exposed, reason)
         if exposed < 0:
             self.base.subBackLoginBase()
             return
@@ -367,9 +355,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         self.recordRedisFullPlayerInfoWhenOffline()
         # todo x 玩家下线更新排行榜数据
-        self._clearRaidJoinRecords()
-        self.leaveTeamAuto()
-        self.leaveRaidAuto()
         self.leaveCrossTeamAuto(reason)
         # TODO x: logout log
         self.clearStateOffline()
@@ -403,12 +388,12 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             self.mp = math.ceil(self.fullMp * mpPercent)
 
             # 这里每次上线时候，将变身状态恢复为1
+            utils.traceSkill(self, 'cell.login.resetMorphState', tuple(self.skillDic.keys()),
+                             'targetMorphState=', gameconst.MORPH_BUILD_STATE,
+                             'cellSkillDic=', tuple(self.skillDic.keys()))
             self.changeMorphPreAddSkill(gameconst.MORPH_BUILD_STATE)
             self.appearance.syncAppearanceToAccount(self)
             
-        if self.raidUUID > 0:
-            gameengine.getRaidStub(self.raidUUID).onAvatarLogin(self.base, self.gbId, self.raidUUID)
-
         # TODO:玩家上线时在base.onClientGetCell时调用，此处发送给客户端需要显示但存储在cell的数据，例如技能列表，任务列表等
         LOG_INFO('zt: initClientOnCell', isRelogin)
 
@@ -486,9 +471,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.base.onCellGetWitness(chn)
 
     def clientDeath(self):
-        #raidId = self.raidUUID
-        #if raidId > 0:
-        #    gameengine.getRaidStub(raidId).onAvatarClientDeath(raidId, 0, self.gbId)
         # move状态由客户端控制，如果客户端crash，就不会主动移除，重连回来会原地播move动作
         if not self.hasMovementController():
             self.removeState(gameconst.StateEnum.Moving)
@@ -496,16 +478,13 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     def onBaseGetCell(self):
         LOG_INFO('onBaseGetCell', self.gbId, self.spaceNo)
-        if formula.inLineScene(self.spaceNo) and not self.isCrossServerInOtherServer:
+        self.closeRefugeOnCrossDayLogin()
+        # 本服登录、跨服登录、跨服满线回主城都是直接在分线里创建 cell。
+        # isLogin 只向 LineStub 占坑，不会再次传送。
+        if formula.inLineScene(self.spaceNo):
             lineType = formula.fetchMapId(self.spaceNo)
             _lineNo = formula.parseLineNo(self.spaceNo)
             self.applyEnterLineInternal(lineType, _lineNo, self.position, self.direction, {'isLogin': 1,})
-
-        if self.teamId > 0 and not self.isCrossServerInOtherServer:
-            gameengine.getTeamStub(self.teamId).fetchTeamInfoOnLogin(self.base, self.gbId, self.teamId)
-
-        if self.raidUUID > 0 and not self.isCrossServerInOtherServer:
-            gameengine.getRaidStub(self.raidUUID).onAvatarLogin(self.base, self.gbId, self.raidUUID)
 
         self._initLogonCell()
         self._initNewbieCell()
@@ -539,6 +518,8 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         _mpRatio = int(_mpRatio * 100)
         self.setHealRatio(self.id, _hpRatio, True)
         self.setHealRatio(self.id, _mpRatio, False)
+
+        self.setAutoFightCounterHp(self.id, CONST.datas['lowHPAutoCounter']['value'])
 
         self.autoCombatReliveReturnTimes = CONST.datas['autoFightSettingsReliveTime']['value']
 
@@ -639,6 +620,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             self.resetAllTargetTypeCache()
 
     @utils.isMyself
+    @gamedecorator.crossServer
     def reqTransmitWithMapPoint(self, exposed, mapId, exampleId):
         LOG_DBG('reqTransmitWithMapPoint', mapId, exampleId)
         if not self.onCheckMapUnlocked(mapId):
@@ -659,6 +641,11 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if not formula.inLineScene(self.spaceNo):
             self.showMsg(M_M_DD.datas.areaCannotFly, [])
             return
+
+        if gameconfig.isCrossServer():
+            if not formula.inWolrdBossScene(self.spaceNo) or mapId != formula.fetchMapId(self.spaceNo):
+                self.showMsg(M_M_DD.datas.areaCannotFly, [])
+                return
 
         self._commonNeedCast(
             C_C_DD.datas.teleportCast,
@@ -691,11 +678,21 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
         toPosition = (_anchorData['PosX'], _anchorData['PosY'], _anchorData['PosZ'])
         toDir = (0.0, 0.0, _anchorData['Dir'] * math.pi / 180)
+        extraProps = {"mapId" : mapId, "toPosition" : toPosition, 'toDir': toDir}
 
+        if formula.inWolrdBossScene(self.spaceNo):
+            self.transmitWithMapPointCallback(True, extraProps)
+            return
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(gameconst.ItemIdEnum.COIN, CONST.datas['transportcost'].get("value", 0))
-        extraProps = {"mapId" : mapId, "toPosition" : toPosition, 'toDir': toDir}
-        self.base.onCheckAndCostWealth(gameconst.CELL, AAC_AACDD.datas.BONUS_SRC_TRANSPORT_COST, 'transmitWithMapPointCallback', deductWealthVal, extraProps)
+        self.base.onCheckAndCostWealth(
+            gameconst.CELL, 
+            AAC_AACDD.datas.BONUS_SRC_TRANSPORT_COST, 
+            'transmitWithMapPointCallback', 
+            deductWealthVal, 
+            extraProps,
+            False
+        )
 
     def transmitWithMapPointCallback(self, checkResult, extraProps):
         LOG_INFO("transmitWithMapPointCallback", checkResult, extraProps)
@@ -710,7 +707,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         if mapId == formula.fetchMapId(self.spaceNo):
             self.teleportToCell(self, self.spaceNo,  toPosition, toDir,'', ())
         else:
-            self.applyEnterLineInternal(mapId, -1, toPosition, toDir, {'fromLineNo': formula.parseLineNo(self.spaceNo), 'telToMainCityWhenFull': False, 'mpFailCb': 'transmitWithMapPointEnterFail', 'mpFailCbArgs':(1,)})
+            self.applyEnterLineInternal(mapId, -1, toPosition, toDir, {'allowCrossWorld' : gameconst.AllowCrossWorldType.CHECK_UNLOCK, 'fromLineNo': formula.parseLineNo(self.spaceNo), 'telToMainCityWhenFull': False, 'mpFailCb': 'transmitWithMapPointEnterFail', 'mpFailCbArgs':(1,)})
 
 
     def syncRoleCacheBattlePoint(self):
@@ -775,6 +772,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             spaceMgr = self.spaceMgr
             if spaceMgr:
                 spaceMgr.sendDungeonProps(self)
+                dungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
+                endTime = spaceMgr.getDungeonActualEndTime(dungeonNo)
+                if endTime:
+                    self.client.changeDungeonRemainTime(self.spaceNo, endTime)
             _stub = gameengine.getDungeonStubBySpaceNo(self.spaceNo)
             if _stub:
                 _stub.sendBigWorldDungeonProps(self.base, self.gbId, self.spaceNo)
@@ -799,17 +800,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             self.addTimerCB(0.1, 'onEnteredViewCallback', (e.id,), gametimer.TIMER_TAG_ON_ENTERED_VIEW)
             return
 
-        if e.IsAvatar and self.isInTeam(e.gbId):
+        # 本服组队/团已废弃，AOI 队友统一按跨服队在队判定（残影已在上方拦截）
+        if e.IsAvatar and self.isTeammate(e.gbId):
             self.teammateEntIdInAoiSet.add(e.id)
             self.expAddRatioByTeam = utils.getTeamExpBonus(len(self.teammateEntIdInAoiSet))
-
-        # 跨服讨伐队友（跨服镜像本服 teamId 为 0，用跨服队友集合识别）
-        if e.IsAvatar and not self.isInTeam(e.gbId) and self.isCrossTeammate(e.gbId):
-            self.teammateEntIdInAoiSet.add(e.id)
-            self.expAddRatioByTeam = utils.getTeamExpBonus(len(self.teammateEntIdInAoiSet))
-            
-        if e.IsAvatar and self.inRaid():
-            self.raidmateEntIdInAoiSet.add(e.id)
 
         if self.useTargetTypeCacheFlag and e.IsCombatUnit:
             utils.isEnemy(self, e)
@@ -828,17 +822,10 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             self.checkCollectionGatherFlag(e.id)
 
     def onLeaveView(self, e):
-        if self.isReal() and e.IsAvatar and self.isInTeam(e.gbId):
+        # 本服组队/团已废弃，AOI 队友统一按跨服队在队判定
+        if self.isReal() and e.IsAvatar and self.isTeammate(e.gbId):
             self.teammateEntIdInAoiSet.discard(e.id)
             self.expAddRatioByTeam = utils.getTeamExpBonus(len(self.teammateEntIdInAoiSet))
-
-        # 跨服讨伐队友
-        if self.isReal() and e.IsAvatar and not self.isInTeam(e.gbId) and self.isCrossTeammate(e.gbId):
-            self.teammateEntIdInAoiSet.discard(e.id)
-            self.expAddRatioByTeam = utils.getTeamExpBonus(len(self.teammateEntIdInAoiSet))
-        
-        if self.isReal() and e.IsAvatar and self.inRaid():
-            self.raidmateEntIdInAoiSet.discard(e.id)
 
         if e.IsCombatUnit:
             self.removeTargetTypeCache(e)
@@ -864,6 +851,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self.checkAttachmentEntityRelationType(target)
 
     def onUpdateBegin(self):
+        if not self.isNeedResortView:
+            return
+
         if gameconfig.enableViewMgr():
             _nameNum = utils.fetchShowNameNum()
             _ret = self.viewMgr.reSortRelation(
@@ -1017,7 +1007,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                             src
                         ))
             else:
-                LOG_WARN('teleportByTeleporter::lineNo == lineNo', lineNo, self.spaceNo)
+                LOG_WARN('teleportByTeleporter::lineNo == lineNo', formula.lineInfo(spaceNo=self.spaceNo), '->', formula.lineInfo(lineType, lineNo))
         elif self.onCheckMapUnlocked(formula.fetchMapId(desTelId)):
             self.applyEnterLineInternal(lineType, lineNo, _dstPos, telDirection, {"telToMainCityWhenFull": False})
 
@@ -1061,6 +1051,9 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
                 self.teleportInfoDict.pop(_spaceNo)
 
     def teleportToCell(self, toCell, spaceNo, destPos, dstDir, callback, callbackArgs):
+        if self.isInTransit:
+            LOG_ERR('teleportToCell but isInTransit', spaceNo, destPos, dstDir, callback)
+
         LOG_INFO('in teleportToCell:', self.position, toCell.id, spaceNo, destPos, dstDir, callback, callbackArgs)
         if not self.checkConflictState(C_C_DD.datas.teleport, remConflctState=True):
             LOG_ERR('status conflict while teleporting')
@@ -1090,7 +1083,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         LOG_DBG('myh: onChangeToGhost', self.isReal())
         #清除缓存必须放在最下面
         self.teammateEntIdInAoiSet.clear()
-        self.raidmateEntIdInAoiSet.clear()
+        self.expAddRatioByTeam = 0
         self.doClearAllTargetTypeCache(True)
 
     @gamedecorator.crossServer
@@ -1251,11 +1244,29 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         self._checkAndAddTeleportProtectionBuff()
         return True
 
-    def _doTeleportQueue(self):
+    def _doTeleportQueue(self, _retry=0):
         if not self.teleportQueue:
             return
 
+        # 引擎的跨cellapp传送是两段式握手：到达端在 Cellapp::reqTeleportToCellApp 里置
+        # ENTITY_FLAGS_TELEPORT_START，要等 baseapp 收到 onMigrationCellappEnd 后回发
+        # reqTeleportToCellAppOver 才会清除，中间有两次跨进程往返。这个窗口内发起 teleport，
+        # 会被 Entity::teleportRefEntityCall 直接以 "In transit!" 拒绝并走 onTeleportFailure
+        #（引擎内部 PyErr_PrintEx，Python 侧看不到异常），本次传送就静默丢失了。
+        # 压测下该窗口可长达数百毫秒，与本队列 0.1s 的定时器正面冲突，
+        # 所以这里先不 pop，等标志清除后再取，队列保持原样，天然可重入。
+        # 用 getattr 兜底：引擎改动尚未上线时退化为旧行为，避免脚本先上线报 AttributeError。
+        if self.isInTransit:
+            if _retry < gameconst.TELEPORT_QUEUE_RETRY_MAX:
+                _timerId = self.addTimerCB(gameconst.TELEPORT_QUEUE_RETRY_INTERVAL, '_doTeleportQueue',
+                                           (_retry + 1,), gametimer.TIMER_TAG_TELEPORT_QUEUE)
+                if _timerId:
+                    return
+                # 加不上定时器（实体已销毁或已不是 real），直接往下走，交给引擎原失败流程
+            LOG_ERR('_doTeleportQueue:: still in transit, give up', self.id, _retry, self.spaceNo)
+
         _func, _args, _kwargs = self.teleportQueue.pop(0)
+        LOG_INFO('_doTeleportQueue', _func, _args)
         getattr(self, _func)(*_args, **_kwargs)
 
     def onTeleportFailure(self):
@@ -1305,14 +1316,15 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
     @gamedecorator.crossServer
     @utils.isMyself
     def getAvatarDetailInfo(self, exposed, gbId):
-        if gbId == self.gbId:
-            LOG_ERR('could query detail yourself')
-            return
-
-        stub = gameengine.getGlobalBase('PlayerStub')
-
-        stub.doOnOthersBase([gbId], 'sendMyDetailInfoBase', (self.base,),
-                            self, 'onGetDetailOffline', ())
+        LOG_ERR('getAvatarDetailInfo not implement')
+        # if gbId == self.gbId:
+        #     LOG_ERR('could query detail yourself')
+        #     return
+        #
+        # stub = gameengine.getGlobalBase('PlayerStub')
+        #
+        # stub.doOnOthersBase([gbId], 'sendMyDetailInfoBase', (self.base,),
+        #                     self, 'onGetDetailOffline', ())
 
     def onGetDetailOffline(self, gbIds):
         self.showMsg(MMD.datas.tianyan_targfetOffLine, [])
@@ -1355,11 +1367,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     def modifyNameFailedRestore(self, name):
         self.name = name
-
-    def cancelAllTeamRaidJoinRequest(self):
-        LOG_INFO("cancelAllTeamRaidJoinRequest::")
-        self._cancelAllRaidJoinRequest()
-        self._cancelAllTeamJoinRequest()
 
     def pyWriteToDB(self):
         if self.isCrossServerInOtherServer:
@@ -1416,9 +1423,6 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         elif _load > 0.8:
             if KBEngine.time() - self.lastResortTimes < 20:
                 return
-
-        if not self.isNeedResortView:
-            return
 
         _priorityList = []
         for _idx, _eid in enumerate(self.enterViewList):
@@ -1560,7 +1564,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         getattr(self, funcName)(*args)
 
     def onTelToMainCityWithCast(self, toCell, lineType, dstPos, dstDir, callback, callbackArgs, fCallback, fCallbackArgs):
-        LOG_INFO("onTelToMainCityWithCast::", toCell, lineType, dstPos, dstDir, callback, callbackArgs, self.spaceNo)
+        LOG_INFO("onTelToMainCityWithCast::", formula.lineInfo(spaceNo=self.spaceNo), '->', formula.lineInfo(lineType), toCell, dstPos, dstDir, callback, callbackArgs)
         if dstPos is None or dstDir is None:
             gameengine.panicStack("onTelToMainCityWithCast:: Type ERROR -> pos or dir",
                                       toCell, lineType, dstPos, dstDir, callback, callbackArgs, self.spaceNo)
@@ -1635,7 +1639,7 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
 
     @utils.isMyself
     @gamedecorator.limitcall(1)
-    def tryHealWoundsFromNpc(self, exposed):
+    def tryHealWoundsFromNpc(self, exposed, isExchange=False):
         if not self._hasWoundsCanHeal():
             LOG_INFO('tryHealWoundsFromNpc:: no wounds can heal')
             self.showMsg(MMD.datas.HealingWoundsMsg2, [])
@@ -1648,7 +1652,14 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
             GP_SD.datas['HealingWoundsCostCurrency']['value'],
             cost,
         )
-        self.base.onCheckAndCostWealth(gameconst.CELL, AAC_AACDD.datas.BONUS_SRC_HEAL_WOUNDS, 'healWoundsFromNpcCallback', _deductVal, {})
+        self.base.onCheckAndCostWealth(
+            gameconst.CELL, 
+            AAC_AACDD.datas.BONUS_SRC_HEAL_WOUNDS, 
+            'healWoundsFromNpcCallback', 
+            _deductVal, 
+            {}, 
+            isExchange
+        )
 
     def healWoundsFromNpcCallback(self, checkResult, args):
         if not checkResult:
@@ -1991,28 +2002,16 @@ class Avatar(iTimer.ITimer, iBag.IBag, impLine.ImpLine, iFubenSpace.IFubenSpace,
         LOG_DBG("checkSpecialVisible cell success")
         return True
 
-    def reqUpdateTeamVoiceRoomState(self, exposed, teamId, voiceFlags):
-        """客户端同步队伍语音房间状态（进房/退房/麦克风/扬声器）
-        teamId 为队伍ID，voiceFlags 为状态掩码：0x01=inVoiceRoom, 0x02=enableMics, 0x04=enableSpeaker
-        """
-        if teamId <= 0:
-            return
-        gameengine.getTeamStub(teamId).reqUpdateVoiceRoomState(self.gbId, teamId, voiceFlags)
-
-    def reqUpdateRaidVoiceRoomState(self, exposed, raidId, voiceFlags):
-        """客户端同步团队语音房间状态（进房/退房/麦克风/扬声器）
-        raidId 为团队UUID，voiceFlags 为状态掩码：0x01=inVoiceRoom, 0x02=enableMics, 0x04=enableSpeaker
-        """
-        if raidId <= 0:
-            return
-        gameengine.getRaidStub(raidId).reqUpdateVoiceRoomState(self.gbId, raidId, voiceFlags)
-
     def afterModifyName(self, newName):
         _oldName = self.name
         self.name = newName
         self.pyWriteToDB()
+        # 跨服队伍成员改名即时上行（在队时；中心更新后 memberRenamePush 全队广播）
+        self.reportCrossTeamRename(newName)
 
-        if self.isInTeam():
-            gameengine.getTeamStub(self.teamId).modifyPlayerName(self.base, self.teamId, self.gbId, newName, _oldName)
-        elif self.inRaid():
-            gameengine.getRaidStub(self.raidUUID).modifyPlayerName(self.base, self.raidUUID, self.gbId, newName, _oldName)
+    def syncPromoterInfo(self, promoterTime):
+        LOG_INFO("avatar syncPromoterInfo ", promoterTime)
+        self.promoterTime = promoterTime
+
+    def checkPromoterCD(self):
+        return utils.curTS() < self.promoterTime   

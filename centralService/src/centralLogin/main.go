@@ -1,6 +1,7 @@
 package main
 
 import (
+	"centralService/src/appLog"
 	"centralService/src/base"
 	CentralLogin "centralService/src/centralLogin/centralLoginApp"
 	"centralService/src/common"
@@ -12,6 +13,11 @@ import (
 )
 
 func main() {
+	// serverList.json 的读取发生在 base.Init 之前，读不到会直接 panic。
+	// 这两行保证即使在这里崩，启动 TAG 也已经打出去（starting + failed + exit）。
+	defer appLog.BootFatalRecover()
+	appLog.BootBegin()
+
 	configPath := "./serverList.json"
 	CentralLogin.ServerListCfg.SetConfigFile(configPath)
 	if err := CentralLogin.ServerListCfg.ReadInConfig(); err != nil {

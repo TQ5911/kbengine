@@ -247,7 +247,9 @@ class IMeridian(object):
             self.client.onEnhanceMeridian(slotIdx)
             
             self._syncMeridianDataToClient()
-            
+            self.beginnerJourney_onTaskEvent(
+                    gameconst.BjTaskType.BJ_TASK_TYPE_MERIDIAN,
+                    delta=1, level=newSlot)
             LogTrackingMgr.LogTrackingMgr.Meridian_Enhance(self.gbID, self.accountEntity.clientDistinctId, opUUID, self.gbID, slotIdx, needItems)
         else:
             LOG_DBG("IMeridian.reqEnhanceMeridianSlot: enhance failed {}".format(slotIdx))
@@ -301,17 +303,123 @@ class IMeridian(object):
         self.gmEnhanceMeridianSlot(slotIdx, show)
 
     def gmUnlockAllMeridian(self):
-        """GM命令：解锁所有经脉槽位"""
+        """GM命令：解锁所有经脉槽位（全部穴位满级并贯通）
+
+        旧实现逐槽逐穴逐级升级：20 槽 x 8 穴 x 5 级 = 800 次，每次都会
+        cell.onMeridianAward + client.onLeveUpMeridianPointTo + 一次全量
+        _syncMeridianDataToClient，全部压进同一个 tick（客户端读不过来会直接断连，
+        压测时也足以打满一个 BaseApp 的 tick）。
+        改为构造「全满」的 MeridianVal 一次性走 gmSetMeridianData：
+        cell 侧只收到一次差量加减属性调用，客户端只收到一次全量同步，最终状态与逐级升级一致。
+        """
+        if not self.checkMeridianLimit():
+            LOG_WARN("IMeridian.gmUnlockAllMeridian: meridian system not init")
+            return
         maxSlots = MeridianInfo.MeridianVal().maxSlots
+        newVal = MeridianInfo.MeridianVal()
+        newVal.slotDict = {}
         for slotIdx in range(1, maxSlots + 1):
-            if self.meridianData.curSlot > slotIdx:
-                continue
-            self.gmLevelUpMeridianSlot(slotIdx)
+            slotVal = MeridianInfo.MeridianSlotVal(slotIdx=slotIdx)
+            for pointVal in slotVal.pointDict.values():
+                pointVal.level = pointVal.maxLevel
+            slotVal.hasEnhance = True
+            newVal.slotDict[slotIdx] = slotVal
+        # curSlot 对应的槽位必须存在（toClientDict 依赖），全部贯通时放一个空槽位，与正常流程一致
+        newVal.slotDict[maxSlots + 1] = MeridianInfo.MeridianSlotVal(slotIdx=maxSlots + 1)
+        newVal.curSlot = maxSlots + 1
+        self.gmSetMeridianData(newVal)
 
     def gmResetMeridian(self):
-        """GM命令：重置经脉系统"""
-        self.meridianData = MeridianInfo.MeridianVal()
+        """GM命令：重置经脉系统(统一走gmSetMeridianData, 同步回退cell属性与评分)"""
+        self.gmSetMeridianData(MeridianInfo.MeridianVal())
+        return True, ''
+
+    def _collectMeridianConfigIds(self, meridianVal):
+        """遍历出经脉配置ID全集(穴位每级一个ID, 贯通槽位为slotIdx), 与_refreshMeridianProperty口径一致"""
+        indexList = []
+        for slotIdx, slotVal in meridianVal.slotDict.items():
+            for pointIdx, pointVal in slotVal.pointDict.items():
+                level = pointVal.getCurLevel()
+                for lv in range(1, level + 1):
+                    indexList.append(self.getConfigId(slotIdx, pointIdx, lv))
+            if slotVal.hasEnhance:
+                indexList.append(slotIdx)
+        return indexList
+
+    def gmSetMeridianData(self, newVal):
+        """GM设置经脉数据统一入口: cell侧按差量加减属性, 评分按新数据全量重算"""
+        oldIndexSet = set(self._collectMeridianConfigIds(self.meridianData))
+        newIndexSet = set(self._collectMeridianConfigIds(newVal))
+        addIndexList = list(newIndexSet - oldIndexSet)
+        removeIndexList = list(oldIndexSet - newIndexSet)
+        LOG_INFO("IMeridian.gmSetMeridianData: add {}, remove {}".format(addIndexList, removeIndexList))
+
+        self.meridianData = newVal
+        self.cell.gmSetMeridianProps(addIndexList, removeIndexList, list(newIndexSet), KBEngine.genUUID64())
         self._syncMeridianDataToClient()
+
+        # 刷新新手历程经脉缓存(属性查询型, level=已贯通层数)
+        self.clearBeginnerJourneyBehaviorStatusEx([gameconst.BjTaskType.BJ_TASK_TYPE_MERIDIAN])
+        self.beginnerJourney_onTaskEvent(
+            gameconst.BjTaskType.BJ_TASK_TYPE_MERIDIAN,
+            delta=1,
+            level=newVal.curSlot - 1)
+
+    def gmSetMeridianSlot(self, slotId):
+        """GM设置当前经脉层数: 1~slotId-1层全满并贯通, slotId层0级未贯通, 更高层删除; slotId=maxSlots+1表示全部贯通"""
+        LOG_INFO("IMeridian.gmSetMeridianSlot: {}".format(slotId))
+        if not self.checkMeridianLimit():
+            return False, 'meridian system not init'
+        maxSlots = MeridianInfo.MeridianVal().maxSlots
+        if slotId < 1 or slotId > maxSlots + 1:
+            LOG_ERR("IMeridian.gmSetMeridianSlot: slotId invalid {}".format(slotId))
+            return False, 'slotId invalid, range 1~%d' % (maxSlots + 1)
+        for idx in range(1, slotId):
+            if idx not in MMD.datas:
+                LOG_ERR("IMeridian.gmSetMeridianSlot: slot config not found {}".format(idx))
+                return False, 'slot config not found: %d' % idx
+
+        newVal = MeridianInfo.MeridianVal()
+        newVal.slotDict = {}
+        for idx in range(1, slotId):
+            slotVal = MeridianInfo.MeridianSlotVal(slotIdx=idx)
+            for pointVal in slotVal.pointDict.values():
+                pointVal.level = pointVal.maxLevel
+            slotVal.hasEnhance = True
+            newVal.slotDict[idx] = slotVal
+        # curSlot对应的槽位必须存在(toClientDict依赖), 全部贯通时为空槽位, 与正常流程一致
+        newVal.slotDict[slotId] = MeridianInfo.MeridianSlotVal(slotIdx=slotId)
+        newVal.curSlot = slotId
+        self.gmSetMeridianData(newVal)
+        return True, ''
+
+    def gmSetMeridianPoint(self, slotId, pointId, level):
+        """GM设置指定经脉穴位等级(0~5, 支持降级); 已贯通经脉不允许降低穴位等级, 请用gmSetMeridianSlot整层回退"""
+        LOG_INFO("IMeridian.gmSetMeridianPoint: {}, {}, {}".format(slotId, pointId, level))
+        if not self.checkMeridianLimit():
+            return False, 'meridian system not init'
+        maxLevel = MeridianInfo.MeridianPointVal().maxLevel
+        if level < 0 or level > maxLevel:
+            LOG_ERR("IMeridian.gmSetMeridianPoint: level invalid {}".format(level))
+            return False, 'level invalid, range 0~%d' % maxLevel
+        slotVal = self.meridianData.slotDict.get(slotId, None)
+        if slotVal is None:
+            LOG_ERR("IMeridian.gmSetMeridianPoint: slot not opened {}".format(slotId))
+            return False, 'slot not opened: %d' % slotId
+        if pointId not in slotVal.pointDict:
+            LOG_ERR("IMeridian.gmSetMeridianPoint: pointId invalid {}".format(pointId))
+            return False, 'pointId invalid: %d' % pointId
+        if slotVal.hasEnhance and level < maxLevel:
+            LOG_ERR("IMeridian.gmSetMeridianPoint: slot already enhanced {}, {}".format(slotId, level))
+            return False, 'slot already enhanced, use gmSetMeridianSlot to rollback'
+        if level >= 1 and self.getConfigId(slotId, pointId, level) not in MAD.datas:
+            LOG_ERR("IMeridian.gmSetMeridianPoint: point config not found {}, {}, {}".format(slotId, pointId, level))
+            return False, 'point config not found'
+
+        newVal = copy.deepcopy(self.meridianData)
+        newVal.slotDict[slotId].pointDict[pointId].level = level
+        self.gmSetMeridianData(newVal)
+        return True, ''
         
 
     

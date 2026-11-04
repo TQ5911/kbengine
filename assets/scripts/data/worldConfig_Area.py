@@ -134,7 +134,17 @@ datas = _tools.RODict({
         "deathPenaltyID": 1,
         "ifRide": 1,
         "specialAreaType": 0
+    }),
+    14: _tools.RODict({
+        "ID": 14,
+        "Areaname": "归墟四层",
+        "N4": 100,
+        "N5": 150,
+        "ifSafeArea": 1,
+        "deathPenaltyID": 1,
+        "ifRide": 1,
+        "specialAreaType": 0
     })
 })
 minKey = 1
-maxKey = 13
+maxKey = 14

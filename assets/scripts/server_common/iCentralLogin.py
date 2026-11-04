@@ -164,6 +164,10 @@ class ICentralLogin(object):
         nowTime = utils.curTS()
         openTime = gameconfig.serverOpenTime()
         if nowTime < openTime:
+            # 预创角时间窗内放行登录（登录后只能进行预创角相关操作）
+            if utils.inPreCreatePeriod():
+                LOG_INFO('in preCreate period, permit login.', nowTime)
+                return True
             LOG_INFO('check server open time limit.', nowTime, openTime, str(openTime - nowTime))
             KBEngine.accountLoginResponse(realAccountName, realAccountName, 
                     bytes(str(openTime - nowTime), encoding='utf-8'), 
@@ -185,7 +189,8 @@ class ICentralLogin(object):
 
     # 将在interfaces进程上执行账号验证相关逻辑
     def onVerifyPlayerLogin(self, accountType, userId, accountName, resCode, channelId=0, banAccountTime=0, banPostTime=0,
-                            banAccountReason="", banPostReason="", otherData={}):
+                            banAccountReason="", banPostReason="", otherData=None):
+        otherData = otherData or {}
         realAccountName = utils.mixRealAccountName(accountType, accountName)
         userInfo = self.accountCache.pop(realAccountName, None)
         if not userInfo:
@@ -225,12 +230,14 @@ class ICentralLogin(object):
         curAge = otherData.get('age', gameconst.LEGAL_AGE_OF_MAJORITY)
         antiAddictionSwitch = AASC.datas.get('antiAddictSwitchAge18', {}).get('value', 0)
         LOG_INFO('onVerifyLogin: antiAddictionData', antiAddictionSwitch, gameglobal.antiAddictionData, curAge)
-        if utils.isMinorAccount(curAge) and (antiAddictionSwitch or gameglobal.antiAddictionData[0] == gameconst.AntiAddictionTimeType.PROHIBIT):
+        minorStage = utils.getMinorStage(curAge)
+        code = gameconst.GAME_SERVER_ERR_ANTI_ADDICT1 if minorStage == gameconst.MinorStageType.MINOR1 else gameconst.GAME_SERVER_ERR_ANTI_ADDICT2
+        if minorStage != gameconst.MinorStageType.ADULT and (minorStage == gameconst.MinorStageType.MINOR2 or antiAddictionSwitch or gameglobal.antiAddictionData[0] == gameconst.AntiAddictionTimeType.PROHIBIT):
             #fmtMessage = MMD.datas[AASC.datas['antiAddictForbiddenTime']['value']]['Message']
             fmtMessage = ""
             KBEngine.accountLoginResponse(realAccountName, realAccountName, bytes(fmtMessage, encoding='utf-8'),
                                               _forceCompId,
-                                              gameconst.GAME_SERVER_ERR_ANTI_ADDICT)
+                                              code)
             return
 
         #白名单、激活码用户

@@ -165,8 +165,6 @@ class ISiegeWarCell(object):
 
     def crossServerSiegeWarLeave(self):
         LOG_DBG("[lj]crossServerSiegeWarLeave")
-        self.applyLeaveTeam(self.id)
-        self.leaveRaid(self.id)
         self.spaceMgr.onPlayerLeave(self.gbId, self.id, self)
 
     def onSiegeWarChatMsg(self, channelID, avatarInfo, msg, src):

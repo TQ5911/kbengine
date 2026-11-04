@@ -87,10 +87,12 @@ class CrossSiegeWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def __init__(self):
         self.crossServerGroupID = 2
         if gameconfig.serverId() in gameglobal.mapleServerInfo:
-            self.crossServerGroupID = gameglobal.mapleServerInfo[gameconfig.serverId()]['server_group']
+            # TODO: maple 已不下发 server_group，城战分组待改
+            self.crossServerGroupID = gameglobal.mapleServerInfo[gameconfig.serverId()].get('server_group', 2)
         else:
             LOG_WARN('[lj]cross siege war stub init, server id not found:', gameconfig.serverId())
-        self.GroupServerList = utils.group2ServerIds(self.crossServerGroupID)
+        # 城战暂不开，组内广播列表固定为空；重开时改回 group2ServerIds
+        self.GroupServerList = []
         self.siegeWarStateChanged = True
         self.biddingTime = CBC.datas['cityBattle_biddingTime']['value'] * 24 * 60 * 60
         self.needBroadcastBiddingData = False

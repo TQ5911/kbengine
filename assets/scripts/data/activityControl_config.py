@@ -90,5 +90,9 @@ datas = _tools.RODict({
     "teamDun_freeIconPath": _tools.RODict({
         "ID": "teamDun_freeIconPath",
         "value": "Assets/Res/ui/texturenp/item/item_0352.png",
+    }),
+    "activityTicket_confirmationBox": _tools.RODict({
+        "ID": "activityTicket_confirmationBox",
+        "value": 54003444,
     })
 })

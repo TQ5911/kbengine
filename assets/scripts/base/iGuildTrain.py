@@ -237,3 +237,32 @@ class IGuildTrain(object):
                 self.client.onUpdateGuildTrains(_data)
 
         self.cell.onUpdateGuildTrainScore(self._calcGuildTrainScore())
+
+    def gmSetGuildTrainLevel(self, trainId, targetLv):
+        """GM 直设帮会修炼等级(支持降级, 不返还消耗)。trainId=0 表示全部, targetLv=0 表示清除该修炼。"""
+        if trainId and trainId not in GT_GTD.datas:
+            return False, '修炼id不存在'
+        maxLevel = max(GT_GTUD.datas.keys())
+        if targetLv < 0 or targetLv > maxLevel:
+            return False, '等级超出范围'
+
+        trainIds = [trainId] if trainId else list(GT_GTD.datas.keys())
+        updateData = []
+        for _tId in trainIds:
+            _curLevel = self.trainDic.get(_tId, 0)
+            if _curLevel == targetLv:
+                continue
+
+            if targetLv:
+                self.trainDic[_tId] = targetLv
+            else:
+                self.trainDic.pop(_tId, None)
+            self.cell.gmSetGuildTrainLevelCell(_tId, _curLevel, targetLv)
+            updateData.append({'trainId': _tId, 'level': targetLv})
+
+        if updateData:
+            LOG_INFO('gmSetGuildTrainLevel', trainId, targetLv, updateData)
+            self.trainDic = self.trainDic
+            self.client.onUpdateGuildTrains(updateData)
+            self.cell.onUpdateGuildTrainScore(self._calcGuildTrainScore())
+        return True, ''

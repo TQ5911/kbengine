@@ -30,6 +30,7 @@
             <Arg>       SERVER_ID           </Arg>
             <Arg>       OBJECT_ID           </Arg>
             <Arg>       BOOL                </Arg>
+            <Arg>       SERVER_ID           </Arg>
         </dropEquipItem>
 
         <takeDropEquip>
@@ -97,6 +98,7 @@
             <Arg>       LONGTIME            </Arg>
             <Arg>       PLAYER_GBID         </Arg>
             <Arg>       SERVER_ID           </Arg>
+            <Arg>       BLOB                </Arg>
         </custodyEquipItem>
 
         <checkDropReturnExpire>

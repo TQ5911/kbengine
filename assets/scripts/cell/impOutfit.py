@@ -49,8 +49,6 @@ class ImpOutfit(object):
     def updatePicFrameId(self, picFrameId):
         LOG_INFO('updatePicFrameId ', picFrameId)
         # self.guildBox and self.guildBox.onUpdateAttrAndDiffNotify(self.gbId, {'picFrameId': picFrameId})
-        if self.teamId > 0:
-            self.updateAttrToStub({'picFrameId': picFrameId})
         # gameengine.getGlobalBase('VisitStub').onUpdateVisitInfo(self.gbId, {'picFrameId': picFrameId})
 
     def updatePropByMount(self, mountId, bAdd):

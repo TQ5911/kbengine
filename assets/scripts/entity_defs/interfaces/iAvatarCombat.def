@@ -44,6 +44,14 @@
             <Persistent>           true                </Persistent>
         </exp>
 
+        <!-- 经验负债：扣经验时当前经验不足的部分记入负债，后续获得经验时优先抵偿 -->
+        <expDebt>
+            <Type>                 EXP                 </Type>
+            <Flags>         OWN_CLIENT        </Flags>
+            <Default>               0                  </Default>
+            <Persistent>           true                </Persistent>
+        </expDebt>
+
         <expAddRatioByTeam>
             <Type>                 UINT16               </Type>
             <Flags>                CELL_PRIVATE         </Flags>
@@ -279,6 +287,13 @@
             <Arg>   UINT32      </Arg>
             <Arg>   UINT32      </Arg>
         </gmAddExp>
+
+        <gmDeductExp>
+            <Arg>   INT64       </Arg>
+            <Arg>   OP_UUID     </Arg>
+            <Arg>   UINT32      </Arg>
+            <Arg>   PYTHON      </Arg>
+        </gmDeductExp>
 
         <unlockDodgeSkill>
             <Arg>           LEVEL               </Arg>

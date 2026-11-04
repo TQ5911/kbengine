@@ -16,6 +16,7 @@ import formula
 import gamedecorator
 import gameclass
 
+import dropAward
 import taskGetItems as TID
 import taskCollect as TCD
 import taskLeaveDungeon as TLDD
@@ -25,6 +26,7 @@ import taskAutoClaimMinLevel as TACMLD
 import taskAutoClaimCondItems as TACCID
 import taskMonster as TMD
 import taskdata as TDD
+import taskDesc_taskChapter as TTCD
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import visible_visible as V_VD
 import itemData_itemData as ITEM_DATA
@@ -439,11 +441,6 @@ class ImpTask(TaskProgress, TaskEvent):
     def _offlineInTask(self):
         self.onTaskLeaveSpace(self.baseSpaceNo)
 
-    def taskLeaveTeam(self):
-        # 角色离开队伍，对应任务可能会直接失败
-        self.taskInfo.doLeaveTeam(self)
-        self.sendUpdateTasksToClient()
-
     def onTaskLeaveSpace(self, spaceNo):
         # 离开副本，任务可能失败
         dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)
@@ -741,6 +738,216 @@ class ImpTask(TaskProgress, TaskEvent):
 
         self.forceCompleteTaskNoCond(taskId)
 
+    def _gmForceSubmitOneTask(self, taskId, claimSrc=gameconst.ClaimTaskSrcEnum.TASK_SRC_GM):
+        # 只完成当前任务本身，不递归子任务。调用方按顺序逐个完成。
+        task = self.taskInfo.getTaskObj(taskId)
+        if task and task.isStat(gameconst.TaskStatEnum.TASK_STAT_SUBMITTED):
+            return True
+        if not task and self.taskInfo.taskRecordDic.get(taskId) == gameconst.TaskStatEnum.TASK_STAT_SUBMITTED:
+            return True
+        if not task:
+            self.baseTaskClaim(
+                taskId,
+                actionContext.ClaimTaskCtx(claimSrc=claimSrc),
+                needCheck=False)
+            task = self.taskInfo.getTaskObj(taskId)
+            if not task:
+                LOG_WARN('_gmForceSubmitOneTask, claim failed:', taskId)
+                return False
+            if task.isStat(gameconst.TaskStatEnum.TASK_STAT_SUBMITTED):
+                return True
+        task.setAllTargetsReached(self)
+        if not task.isStat(gameconst.TaskStatEnum.TASK_STAT_SUBMITTED):
+            self.taskInfo.doTaskSubmit(self, taskId)
+        return task.isStat(gameconst.TaskStatEnum.TASK_STAT_SUBMITTED)
+
+    def _gmParseRelateTaskIds(self, taskData):
+        raw = dataUtils.getTaskFieldVal(taskData, 'OpenCondRelateTaskId')
+        if raw is None:
+            return []
+        text = str(raw).strip()
+        if not text or text == '0':
+            return []
+        relateIds = []
+        for part in text.split('|'):
+            part = part.strip()
+            if not part.isdigit():
+                continue
+            relateId = int(part)
+            if relateId > 0:
+                relateIds.append(relateId)
+        return relateIds
+
+    def _collectGmTaskLine(self, taskId):
+        # 从目标任务倒着收集：父任务、开启关联任务、子任务，直到没有更早的任务。
+        # 再补上这些任务带出的解锁任务（日常任务，且开启条件都落在这条链上）。
+        if str(taskId) not in TDD.datas:
+            LOG_WARN('gmForceSubmitTaskLine, no task data:', taskId)
+            return None
+        collected = set()
+        stack = [taskId]
+        while stack:
+            curId = stack.pop()
+            if curId in collected:
+                continue
+            if str(curId) not in TDD.datas:
+                LOG_WARN('gmForceSubmitTaskLine, missing task:', taskId, curId)
+                return None
+            if len(collected) >= 300:
+                LOG_WARN('gmForceSubmitTaskLine, task line too long:', taskId)
+                return None
+            collected.add(curId)
+            taskData = dataUtils.getTaskCfg(curId)
+            fatherId = dataUtils.getTaskFieldVal(taskData, 'FatherTaskId') or 0
+            if fatherId:
+                stack.append(int(fatherId))
+            for relateId in self._gmParseRelateTaskIds(taskData):
+                stack.append(relateId)
+            for childId in dataUtils.getTaskFieldVal(taskData, 'ChildTaskIds') or []:
+                stack.append(int(childId))
+
+        extraStack = []
+        for taskKey, taskData in TDD.datas.items():
+            if dataUtils.getTaskFieldVal(taskData, 'TaskType') != gameconst.TaskType.TASK_TYPE_DAYLY:
+                continue
+            unlockId = int(taskKey)
+            if unlockId in collected:
+                continue
+            relateIds = self._gmParseRelateTaskIds(taskData)
+            if relateIds and all(relateId in collected for relateId in relateIds):
+                extraStack.append(unlockId)
+        while extraStack:
+            curId = extraStack.pop()
+            if curId in collected:
+                continue
+            if str(curId) not in TDD.datas:
+                LOG_WARN('gmForceSubmitTaskLine, missing unlock task:', taskId, curId)
+                return None
+            if len(collected) >= 300:
+                LOG_WARN('gmForceSubmitTaskLine, task line too long:', taskId)
+                return None
+            collected.add(curId)
+            taskData = dataUtils.getTaskCfg(curId)
+            fatherId = dataUtils.getTaskFieldVal(taskData, 'FatherTaskId') or 0
+            if fatherId:
+                extraStack.append(int(fatherId))
+            for childId in dataUtils.getTaskFieldVal(taskData, 'ChildTaskIds') or []:
+                extraStack.append(int(childId))
+        for grantTaskId in self._collectDungeonGrantTasks(collected):
+            if grantTaskId in collected:
+                continue
+            if len(collected) >= 300:
+                LOG_WARN('gmForceSubmitTaskLine, task line too long:', taskId)
+                return None
+            collected.add(grantTaskId)
+        return collected
+
+    def _flowNodeNextIds(self, node):
+        nextIds = []
+        transition = node.get('transition') or {}
+        for target in transition.values():
+            if isinstance(target, (list, tuple)):
+                nextIds.extend(str(nodeId) for nodeId in target)
+            elif isinstance(target, dict):
+                for inner in target.values():
+                    if isinstance(inner, (list, tuple)):
+                        nextIds.extend(str(nodeId) for nodeId in inner)
+        return nextIds
+
+    def _collectDungeonGrantTasks(self, collected):
+        # 副本流程里，完成主线后才会接取的任务没有父任务和关联任务，主线链扫不到。
+        # 自动战斗 86030032 就是新手副本完成 86060075 之后接取的。
+        import tutorConst_newbieStep as TCNSD
+        grantTaskIds = set()
+        lockDuns = set()
+        for stepData in TCNSD.datas.values():
+            lockDun = int(stepData.get('lockDun') or 0)
+            if lockDun > 0:
+                lockDuns.add(lockDun)
+        for dunNo in lockDuns:
+            if not utils.checkDunFlowModuleDataExist(dunNo):
+                continue
+            flow = utils.getDunFLowModuleData(dunNo) or {}
+            startNodes = set()
+            for nodeId, node in flow.items():
+                if not isinstance(node, dict) or node.get('type') != 'taskFinished':
+                    continue
+                if int(node.get('taskID') or 0) in collected:
+                    startNodes.add(str(nodeId))
+            seen = set()
+            stack = list(startNodes)
+            while stack:
+                nodeId = stack.pop()
+                if nodeId in seen or nodeId not in flow:
+                    continue
+                seen.add(nodeId)
+                node = flow[nodeId]
+                if not isinstance(node, dict):
+                    continue
+                nodeType = node.get('type')
+                taskInNode = int(node.get('taskID') or 0)
+                if nodeType == 'taskFinished' and nodeId not in startNodes and taskInNode not in collected:
+                    continue
+                if nodeType == 'taskUndertake' and taskInNode and str(taskInNode) in TDD.datas:
+                    grantTaskIds.add(taskInNode)
+                stack.extend(self._flowNodeNextIds(node))
+        return grantTaskIds
+
+    def _sortGmTaskLine(self, collected):
+        # 先完成开启条件关联的任务和父任务，再完成依赖它们的任务。
+        preds = {tid: set() for tid in collected}
+        succs = {tid: set() for tid in collected}
+
+        def addEdge(beforeId, afterId):
+            if beforeId not in collected or afterId not in collected or beforeId == afterId:
+                return
+            if beforeId in preds[afterId]:
+                return
+            preds[afterId].add(beforeId)
+            succs[beforeId].add(afterId)
+
+        for tid in collected:
+            taskData = dataUtils.getTaskCfg(tid)
+            fatherId = dataUtils.getTaskFieldVal(taskData, 'FatherTaskId') or 0
+            if fatherId:
+                addEdge(int(fatherId), tid)
+            for relateId in self._gmParseRelateTaskIds(taskData):
+                addEdge(relateId, tid)
+
+        ready = sorted([tid for tid, preSet in preds.items() if not preSet])
+        ordered = []
+        while ready:
+            tid = ready.pop(0)
+            ordered.append(tid)
+            newly = []
+            for nxt in succs[tid]:
+                preds[nxt].discard(tid)
+                if not preds[nxt]:
+                    newly.append(nxt)
+            if newly:
+                ready.extend(newly)
+                ready.sort()
+        if len(ordered) != len(collected):
+            LOG_WARN('gmForceSubmitTaskLine, task line cycle:', ordered)
+            return None
+        return ordered
+
+    def gmForceSubmitTaskLine(self, taskId):
+        # 非gm指令不要调用该接口。从最早的任务开始，完成目标任务之前的主线、子任务和解锁任务。
+        collected = self._collectGmTaskLine(taskId)
+        if not collected:
+            return False, '执行失败, 任务ID错误或任务链异常'
+        ordered = self._sortGmTaskLine(collected)
+        if not ordered:
+            return False, '执行失败, 任务链存在循环'
+        LOG_INFO('gmForceSubmitTaskLine:', taskId, ordered)
+        claimSrc = gameconst.ClaimTaskSrcEnum.TASK_SRC_GM_FINISH_NEWBIE
+        for tid in ordered:
+            if not self._gmForceSubmitOneTask(tid, claimSrc):
+                return False, '执行失败, 任务完成失败:%s' % tid
+        self.sendUpdateTasksToClient()
+        return True, 'command success, tasks:' + ','.join([str(tid) for tid in ordered])
+
     def afterTaskClaimed(self, taskId):
         return True, [(taskId, 1)]
 
@@ -756,6 +963,42 @@ class ImpTask(TaskProgress, TaskEvent):
             return
         self.taskInfo.taskEnterSpace(self, task)
 
+    @gamedecorator.checkGameconfigEnable('task')
+    def reqSwitchPosition(self, exposed, taskId):
+        # 数据辅助任务触发 SwitchPosition。坐标只读任务配置，不接受客户端上传。
+        LOG_INFO('reqSwitchPosition:', taskId)
+        task = self.taskInfo.getTaskObj(taskId)
+        if not task:
+            LOG_WARN('reqSwitchPosition, missing task:', taskId)
+            return
+        if task.isInEndStat():
+            LOG_WARN('reqSwitchPosition, task is end:', taskId, task.stat)
+            return
+        taskData = dataUtils.getTaskCfg(taskId)
+        if not taskData:
+            return
+        if taskData.get('DataAidedTaskClientEvent') != 'SwitchPosition':
+            LOG_WARN('reqSwitchPosition, event mismatch:', taskId, taskData.get('DataAidedTaskClientEvent'))
+            return
+        stateStr = taskData.get('DataAidedTaskEventState') or ''
+        if stateStr:
+            if str(task.stat) not in stateStr.split('|'):
+                LOG_WARN('reqSwitchPosition, state mismatch:', taskId, task.stat, stateStr)
+                return
+        elif task.stat != gameconst.TaskStatEnum.TASK_STAT_RUNNING:
+            LOG_WARN('reqSwitchPosition, task not running:', taskId, task.stat)
+            return
+        paramStr = taskData.get('DataAidedTaskEventParam') or ''
+        eventArgs, _ = utils.parseCommEventParams(paramStr)
+        if len(eventArgs) < 4:
+            LOG_WARN('reqSwitchPosition, bad param:', taskId, paramStr)
+            return
+        mapId = int(float(eventArgs[0]))
+        dstX = float(eventArgs[1])
+        dstY = float(eventArgs[2])
+        dstZ = float(eventArgs[3])
+        self.cell.startSwitchPosition(mapId, dstX, dstY, dstZ)
+
     def onCheckSameMap(self, taskID, isSame):
         task = self.taskInfo.getTaskObj(taskID)
         if not task:
@@ -770,4 +1013,47 @@ class ImpTask(TaskProgress, TaskEvent):
 
         self.taskInfo.refreshHookRewardTask(self.getAvatarLevel())
         self.taskInfo.sendHookRewardTaskList(self)
+
+    def sendTaskChapterRewards(self):
+        if not self.client:
+            return
+        self.client.onTaskChapterRewardRecord(self.claimedTaskChapterRewards)
+
+    @gamedecorator.checkGameconfigEnable('task')
+    def reqClaimTaskChapterReward(self, exposed, chapterId):
+        # RewardTasks 已提交后，领取 ChapterReward
+        LOG_INFO('reqClaimTaskChapterReward', self.gbID, chapterId)
+        cfg = TTCD.datas.get(chapterId)
+        if not cfg:
+            LOG_WARN('reqClaimTaskChapterReward invalid chapter', self.gbID, chapterId)
+            return
+        rewardId = int(cfg.get('ChapterReward') or 0)
+        if rewardId <= 0:
+            LOG_WARN('reqClaimTaskChapterReward no reward', self.gbID, chapterId)
+            return
+        if chapterId in self.claimedTaskChapterRewards:
+            LOG_WARN('reqClaimTaskChapterReward already claimed', self.gbID, chapterId)
+            return
+        taskId = int(cfg.get('RewardTasks') or 0)
+        if taskId <= 0 or not self.taskInfo.isTaskComplete(taskId):
+            LOG_WARN('reqClaimTaskChapterReward task not complete', self.gbID, chapterId, taskId)
+            return
+
+        srcType = AAC_AACDD.datas.BONUS_SRC_COMPLETE_TASK
+        ctx = self.getAvatarAwardCtx(rewardId, None)
+        wealthVal = dropAward.getAwardOne(rewardId, ctx)
+        if wealthVal.isEmpty():
+            LOG_WARN('reqClaimTaskChapterReward empty award', self.gbID, chapterId, rewardId)
+            return
+        if not self.canAddWealthVal(srcType, wealthVal, ctx, bMsg=True):
+            LOG_WARN('reqClaimTaskChapterReward bag', self.gbID, chapterId, rewardId)
+            return
+
+        self.claimedTaskChapterRewards.append(chapterId)
+        opUUID = KBEngine.genUUID64()
+        detail = gameclass.AwardDetailCls(chapterId=chapterId)
+        self.addWealth(srcType, wealthVal, opUUID, detail, ctx)
+        if self.client:
+            self.client.onClaimTaskChapterReward(chapterId)
+        LOG_INFO('reqClaimTaskChapterReward ok', self.gbID, chapterId, rewardId, taskId)
 

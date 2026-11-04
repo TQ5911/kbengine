@@ -21,9 +21,5 @@
             <Arg>       SPACE_NO       </Arg>
             <Arg>       ENTITYCALL     </Arg>
         </onSpaceMgrReady>
-
-        <notifyCreateWorldBoss>
-            <Arg>       SPACE_NO       </Arg>
-        </notifyCreateWorldBoss>
    </BaseMethods>
 </root>

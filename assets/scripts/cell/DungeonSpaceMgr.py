@@ -150,6 +150,15 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             return
         self.asyncCallbackAfter(1)._checkDungeonTimeout()
 
+    def getDungeonActualEndTime(self, dungeonNo):
+        # 副本结束时间的事实来源：预结算缓存已写入实际结束时间则以它为准
+        # （结算后倒计时会提前到配置时长之内，中途重进/登录直进副本不能回退为配置推算值）；
+        # 未结算过时回退 dungeonPlayMode.getTEnd 的配置推算
+        _endT = self.dungeonSettlementDataCache.get('endTime', 0)
+        if _endT:
+            return int(_endT)
+        return int(self.dungeonPlayMode.getTEnd(dungeonNo))
+
     def initFlowController(self):
         spaceNo = self.spaceNo
         dungeonNo = formula.fetchMapId(spaceNo)
@@ -197,17 +206,17 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             return False
 
     def _flowStart(self):
-        LOG_WARN('_flowStart:: NOW')
+        LOG_INFO('_flowStart:: NOW')
         # 帮会副本直接开始流程
         if formula.inGuildBossDungeonScene(self.spaceNo):
             self.flowController.trigger_now()
             return
-        
+
         # 针对非团队和队伍的副本，没有人就等待
         if not self.players and not formula.inRaidDungeonScene(self.spaceNo) and not formula.inTeamDungeonScene(self.spaceNo):
             self.asyncCallbackAfter(0.5)._flowStart()
             return
-         
+
         # 团队和队伍的副本，最多等x分钟，自动开启
         realPlayerCount = 0
         ghostPlayerCount = 0
@@ -217,23 +226,22 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                 realPlayerCount += 1
             else:
                 ghostPlayerCount += 1
-            
+
             if realPlayerCount > 0 and ghostPlayerCount > 0:
                 break
-        # 没人就继续等待
-        if realPlayerCount == 0:
-            self.asyncCallbackAfter(0.5)._flowStart()
-            return
-        # 有人没进来，就等待x分钟直接开启
-        if ghostPlayerCount > 0:
+        # 没人进本或有人没进来时继续等待，超过x分钟没人也直接开启，保证副本流程正常推进
+        if realPlayerCount == 0 or ghostPlayerCount > 0:
             if self.dungeonStartWaitTime == 0:
                 self.dungeonStartWaitTime = utils.curTS()
+                LOG_INFO('_flowStart:: wait players,', realPlayerCount, ghostPlayerCount)
 
             # x分钟内继续等待
             if utils.curTS() - self.dungeonStartWaitTime < C_CD.datas['dungeonStartTime']['value'] * 60:
                 self.asyncCallbackAfter(0.5)._flowStart()
                 return
-                
+
+            LOG_WARN('_flowStart:: wait timeout, force start,', realPlayerCount, ghostPlayerCount)
+
         if self.dungeonStage:
             LOG_WARN('_flowStart:: NOW FROM STAGE, {}'.format(self.dungeonStage))
             r = self.resetFlowControllerStartByStage(self.dungeonStage)
@@ -241,6 +249,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
                 gameengine.panicStack('_flowStart:: STAGE NOT FOUND', self.dungeonStage)
                 return
 
+        LOG_INFO('_flowStart:: trigger now,', realPlayerCount, ghostPlayerCount)
         self.flowController.trigger_now()
 
     def changeDungeonStageSet(self, newStageID):
@@ -414,6 +423,7 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         self._doDungeonPreSettlement(guildUUID, spaceNo, win, delay, elapsedTime, gameconst.DungeonPlayModeEnum.GUILD_BOSS, completedReasonType)
     # 副本预结算
     def _doDungeonPreSettlement(self, uniqueID, spaceNo, win, delay, elapsedTime, playMode, completedReasonType):
+        dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)
         opUUID = uniqueID
         LOG_INFO('_doDungeonPreSettlement:: start settlement 1', opUUID, uniqueID, spaceNo, win, delay, elapsedTime, playMode, completedReasonType)
         if playMode not in gameconst.DungeonPlayModeEnum.COLL_ALL:
@@ -423,7 +433,6 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         _now = utils.curTS()
         _endT = int(_now + delay)
         players = {}
-        dungeonNo = formula.parseDungeonNoBySpaceNo(spaceNo)
         # 置副本输赢状态
         self.isDungeonWin = win
         # 筛选有效的玩家
@@ -431,6 +440,11 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             pEnt = KBEngine.entities.get(pid)
             if pEnt and pEnt.isReal():
                 players[pEnt.gbId] = pEnt
+                if win:
+                    # v5.2 新手历程 5=通关讨伐副本
+                    pEnt.base.beginnerJourneyOnTaskEvents(
+                        [(gameconst.BjTaskType.BJ_TASK_TYPE_DUNGEON_PASS,
+                        {'delta':1, 'dungeonId':dungeonNo})])
             else:
                 self.players.pop(pid, None)
         if len(players) == 0:
@@ -667,12 +681,10 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
             cliDungeonData['rankCount'] = rankCountList.get(gameconst.StatisticEnum.STA_TYPE_DAMAGE)
         elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE or playMode == gameconst.DungeonPlayModeEnum.CHIEF \
                 or playMode in gameconst.DungeonPlayModeEnum.COLL_CROSS:
-            rankCountList = self.dungeonSettlementDataCache.get('rankCountList')
-            rewardCount = 0
-            for count in rankCountList.values():
-                if count > rewardCount:
-                    rewardCount = count
-            cliDungeonData['rewardCount'] = rewardCount
+            # rewardCount 语义为"客户端应收到的结算条数"（弹窗条件 rewardCount != 0 且
+            # settlementData.Count >= rewardCount）：取实际下发的 dungeonRewardDatas 条数，
+            # 不能取排名人数——超时失败且全员无战斗贡献时排名全 0 会导致客户端不弹结算窗
+            cliDungeonData['rewardCount'] = len(self.dungeonRewardDatas)
         elif playMode == gameconst.DungeonPlayModeEnum.INNER_DEMON:
             cliDungeonData['rewardCount'] = 1
             cliDungeonData['innerDemonTime'] = self.dungeonSettlementDataCache['innerDemonTime']
@@ -1088,20 +1100,22 @@ class DungeonSpaceMgr(iCell.ICell, iTimer.ITimer, iSpaceMgr.ISpaceMgr, DungeonPl
         return None
         
     def getStatisticRankCfg(self, playMode, statisticType):
+        chiefMode = (gameconst.DungeonPlayModeEnum.CHIEF, gameconst.DungeonPlayModeEnum.CROSS_CHIEF)
+        crusadeMode = (gameconst.DungeonPlayModeEnum.CRUSADE, gameconst.DungeonPlayModeEnum.CROSS_CRUSADE)
         if statisticType == gameconst.StatisticEnum.STA_TYPE_DAMAGE:
-            if playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+            if playMode in chiefMode:
                 return self._doGetStatisticRankCfg('dmg_level2Score15')
-            elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
+            elif playMode in crusadeMode:
                 return self._doGetStatisticRankCfg('dmg_level2Score5')
         elif statisticType == gameconst.StatisticEnum.STA_TYPE_HEAL:
-            if playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+            if playMode in chiefMode:
                 return self._doGetStatisticRankCfg('addHp_level2Score_15')
-            elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
+            elif playMode in crusadeMode:
                 return self._doGetStatisticRankCfg('addHp_level2Score_5')
         elif statisticType == gameconst.StatisticEnum.STA_TYPE_HURT:
-            if playMode == gameconst.DungeonPlayModeEnum.CHIEF:
+            if playMode in chiefMode:
                 return self._doGetStatisticRankCfg('hurt_level2Score_15')
-            elif playMode == gameconst.DungeonPlayModeEnum.CRUSADE:
+            elif playMode in crusadeMode:
                 return self._doGetStatisticRankCfg('hurt_level2Score_5')
         return None
     

@@ -48,6 +48,7 @@ import secondpwd_secondPwdConfig as SP_SPC
 import copy
 import CloudServicesUtils
 
+import iPromoter
 
 class AccountStatus(object):
     normal = 0
@@ -56,7 +57,7 @@ class AccountStatus(object):
     avatarLoaded = 3
 
 
-class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
+class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin, iPromoter.IPromoter):
     """
     账号实体
     客户端登陆到服务端后，服务端将自动创建这个实体，通过这个实体与客户端进行交互
@@ -65,15 +66,17 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
 
     def __init__(self):
         KBEngine.Proxy.__init__(self)
+        
+        self.accountType, self.accountName = utils.fetchAccountTypeAndName(self.__ACCOUNT_NAME__)
+
         iCycleEvent.ICycleEventMixin.__init__(self)
+        iPromoter.IPromoter.__init__(self)
         self.initDatetimeTimerTick()
         self.bindEvents()
         self.avatarID = 0
         self.shouldAutoBackup = False
 
         self.parseClientDatas()
-
-        self.accountType, self.accountName = utils.fetchAccountTypeAndName(self.__ACCOUNT_NAME__)
         self.onDailyEvent()
         self._hasLoadData = False # 先加载角色数据，再加载appearance数据
         self.loginTime = utils.curTS()
@@ -105,6 +108,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         self.pyAddTimer(_interval, _interval, gametimer.ACCOUNT_WRITE_CHAR)
 
         self.pyAddTimer(10, 10, gametimer.CHECK_CHAR_EXPIRE)
+
         self._loadAccountOfflineFunc()
 
         self.secondaryPwdInfo.setDefault(True)
@@ -145,6 +149,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         LOG_INFO('onLoadSwitchServerAvatarInfo:', ret, num, insertId, err)
         if err:
             LOG_ERR('onLoadSwitchServerAvatarInfo:', err)
+            return
+
+        if self.isDestroyed:
             return
 
         gbIdList = []
@@ -191,6 +198,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             self._writeCharacters(True)
         elif userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
+        elif userArg == gametimer.TIMER_PROMOTER_REQUEST_DELAY:
+            self.doPromoterInit()
 
     def checkSecondaryPwdLockedExpired(self, maxStep):
         LOG_INFO("Account::checkSecondaryPwdLockedExpired")
@@ -276,7 +285,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
     def checkGbIdCallback(self, result, nrows, insertid, error, props):
         if error:
             LOG_ERR(f"checkGbIdCallback error: {error}")
-            self._onCreateAvatarFailed(props['name'], gameconst.CreateAvatarRes.CRS_DATABASE_OPR_ERROR)
+            self._onCreateAvatarFailed(
+                props['name'],
+                gameconst.CreateAvatarRes.CRS_DATABASE_OPR_ERROR,
+                not props.get('preCreateId'))
         elif not len(result):
             self.createAvatar(props)
         else:
@@ -285,7 +297,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
                 self.createAvatarGenerateGbId(props)
             else:
                 LOG_ERR('checkGbIdCallback: retry too many times', self.accountName)
-                self._onCreateAvatarFailed(props['name'], gameconst.CreateAvatarRes.CRS_GBID_ERR)
+                self._onCreateAvatarFailed(
+                    props['name'],
+                    gameconst.CreateAvatarRes.CRS_GBID_ERR,
+                    not props.get('preCreateId'))
 
     def _defaultChatChannel(self):
         _retBits = 0
@@ -347,6 +362,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             'newbieStep': TC_NSD.minKey,
             'birthIp': self.getClientIp(),
             'creationOrder': creationOrder,
+            'preCreateId': avatarProps.get('preCreateId', 0),
         }
 
         avatar = KBEngine.createEntityLocally('Avatar', props)
@@ -376,8 +392,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             )
         else:
             LOG_ERR('failed to create avatar', self.accountName)
-            self.accountStatus = AccountStatus.normal
-            self._onCreateAvatarFailed(props['name'], gameconst.CreateAvatarRes.CRS_CREATE_ENTITY_ERR)
+            self._onCreateAvatarFailed(
+                props['name'],
+                gameconst.CreateAvatarRes.CRS_CREATE_ENTITY_ERR,
+                not avatarProps.get('preCreateId'))
             #self.makeCreateAvatarLog(_appearance, str(avatarProps["gbId"]), avatarProps["name"], False)
 
     def _onAvatarSaved(self, props, success, avatar):
@@ -411,6 +429,14 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
 
             self._onAvatarBaseCreated(avatar, gameconst.ClientCallChannel.MAIN_CHANNEL)
 
+            # 预创角转正：回写真实gbId，角色列表不再合并该条预创角数据
+            _preCreateId = props.get('preCreateId', 0)
+            if _preCreateId:
+                _record = self.preCreateAvatars.get(_preCreateId)
+                if _record:
+                    _record['convertedGbId'] = avatar.gbID
+                    LOG_INFO('preCreate avatar converted', self.accountName, _preCreateId, avatar.gbID)
+
             self._writeCharacters(True)
             if gameconfig.enableCentralLogin():
                 createInfo = (self.accountType, self.accountName, avatar.gbID, props['name'], props['school'], props['sex'])
@@ -420,13 +446,26 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
             # TODO X: login avatar directly
             if self.hasClient:
                 self.client.onCreateAvatarResult(gameconst.CreateAvatarRes.OK, avatar.gbID)
+                # if _preCreateId:
+                #     # 预创角转正：直接把客户端切换到新角色进游戏，不依赖客户端再次selectAvatarGame
+                #     # 注意giveClientTo之后self.client即失效，必须放在最后
+                #     _otherChn = avatar.getAvaliableClientChn(self.id)
+                #     if _otherChn is not None:
+                #         self.giveClientTo(
+                #             avatar,
+                #             gameconst.ClientCallChannel.MAIN_CHANNEL,
+                #             _otherChn)
+                #     else:
+                #         LOG_ERR('onAvatarSaved: preCreate convert but no valid client chn', self.accountName)
             else:
                 LOG_INFO('onAvatarSaved: avatar created, account client gone', self.accountName)
                 self.destroyAccount(gameconst.OFFLINE_REASON_NO_CLIENT_NEW_CHAR)
         else:
             LOG_ERR('zt: fail to create avatar')
-            self.accountStatus = AccountStatus.normal
-            self._onCreateAvatarFailed(props['name'], gameconst.CreateAvatarRes.CRS_WRITE_ENTITY_ERR)
+            self._onCreateAvatarFailed(
+                props['name'],
+                gameconst.CreateAvatarRes.CRS_WRITE_ENTITY_ERR,
+                not props.get('preCreateId'))
             avatar.destroy()
 
     # avatar的base创建成功：新建角色或从数据加载
@@ -446,8 +485,15 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         })
         self.makeLoginRoleLog(avatar)
 
-    def _onCreateAvatarFailed(self, name, reason):
-        self.delAvatarName(name)
+    def _onCreateAvatarFailed(self, name, reason, releaseName=True):
+        # 建角失败必须把状态放回 normal，否则 accountStatus 永远卡在 creating，
+        # 之后 reqCreateAvatar / reqCreateBot 会被状态守卫全部拒绝，selectAvatarGame 也会报
+        # 'avatar is loading'（走 creating/avatarLoading 分支）。
+        # 注意：异步路径（checkGbIdCallback 的 DB error、gbId 重试超限）只有这里能复位。
+        self.accountStatus = AccountStatus.normal
+        # 预创角转正的失败场景不释放名字占用（releaseName=False），名字留给玩家重试转正
+        if releaseName:
+            self.delAvatarName(name)
         self.client.onCreateAvatarFailed(reason)
 
     def delAvatarName(self, name):
@@ -484,6 +530,252 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
 
         return False
 
+    def _getUnconvertedPreAvatars(self):
+        """
+        获取未转正的预创角记录 {preId: record}
+        """
+        return {_preId: _record for _preId, _record in self.preCreateAvatars.items()
+                if not _record.get('convertedGbId')}
+
+    def _allocPreCreateId(self):
+        """
+        分配账号内预创角小ID(1~PRE_CREATE_ID_MAX)，用尽返回0
+        """
+        for _preId in range(1, gameconst.PRE_CREATE_ID_MAX + 1):
+            if _preId not in self.preCreateAvatars:
+                return _preId
+
+        return 0
+
+    def _genPreCreateCharacterVal(self, preId):
+        """
+        由预创角记录构造下发用的CharacterVal（gbId填小ID，客户端以gbId<PRE_CREATE_ID_MAX识别预创角色）
+        """
+        _record = self.preCreateAvatars[preId]
+        _appearance = appearance.Appearance()
+        _appearance.faceData = appearance.FaceDataVal().initFromDict(_record['faceData'])
+        return character.CharacterVal(
+            parentID=self.databaseID,
+            selfDbId=0,
+            gbId=preId,
+            dbId=0,
+            school=_record['school'],
+            name=_record['name'],
+            sex=_record['sex'],
+            level=1,
+            birthInDB=_record['createTime'],
+            charAppearance=_appearance,
+        )
+
+    @gamedecorator.preCreateOnly
+    @gamedecorator.limitcall(1)
+    def reqCreatePreAvatar(self, exposed, school, name, sex, isRandName, faceData):
+        """
+        客户端请求预创角（名字预定）
+        """
+        if self.waitingShutdown:
+            self.client.onMessage(L_SD.datas['login_serverClosed']['value'], [])
+            return
+
+        if self.accountStatus != AccountStatus.normal:
+            LOG_INFO('pre avatar is in creating', self.accountStatus)
+            return
+
+        if self.avatarID:
+            LOG_INFO('avatar exists')
+            return
+
+        if len(self._getUnconvertedPreAvatars()) >= gameconst.PRE_CREATE_MAX_PER_ACCOUNT:
+            LOG_INFO('reqCreatePreAvatar over limit', self.accountName)
+            self.client.onCreatePreAvatarResult(
+                gameconst.CreateAvatarRes.CRS_PRE_CREATE_LIMIT,
+                0,
+                school,
+                name,
+                sex,
+                isRandName,
+                faceData)
+            return
+
+        if sex not in (gameconst.Sex.MALE, gameconst.Sex.FEMALE):
+            LOG_ERR("reqCreatePreAvatar sex is invalid", sex)
+            return
+
+        if not self._checkSexSchoolValid(sex, school):
+            LOG_ERR("reqCreatePreAvatar school and sex not open", sex, school)
+            return
+
+        name = name.strip()
+        if not utils.checkAvatarNameLength(name):
+            self.client.onCreatePreAvatarResult(
+                gameconst.CreateAvatarRes.CRS_NAME_LENGTH_OVERLIMIT,
+                0,
+                school,
+                name,
+                sex,
+                isRandName,
+                faceData)
+            return
+
+        if not utils.checkAvatarName(name):
+            self.client.onCreatePreAvatarResult(
+                gameconst.CreateAvatarRes.CRS_NAME_INVALID,
+                0,
+                school,
+                name,
+                sex,
+                isRandName,
+                faceData)
+            return
+
+        if name.isdigit():
+            self.client.onCreatePreAvatarResult(
+                gameconst.CreateAvatarRes.CRS_NAME_INVALID,
+                0,
+                school,
+                name,
+                sex,
+                isRandName,
+                faceData)
+            return
+
+        self.accountStatus = AccountStatus.creating
+        _props = {
+            "school": school,
+            "name": name,
+            'sex': sex,
+            'isRandName': isRandName,
+            'faceData': faceData,
+        }
+        self.checkNameDuplicate(_props, self.onCheckPreCreateNameDuplicate)
+        LOG_INFO('create pre avatar begin：', self.accountName, name)
+
+    def onCheckPreCreateNameDuplicate(self, props, cid, err, result):
+        self.accountStatus = AccountStatus.normal
+        if err:
+            LOG_ERR('onCheckPreCreateNameDuplicate err:', self.accountName, props['name'], err)
+            self.client.onCreatePreAvatarResult(
+                gameconst.CreateAvatarRes.CRS_NAME_DUPLIATED,
+                0,
+                props['school'],
+                props['name'],
+                props['sex'],
+                props['isRandName'],
+                props['faceData'])
+            return
+
+        if result == 0:
+            self.client.onCreatePreAvatarResult(
+                gameconst.CreateAvatarRes.CRS_NAME_DUPLIATED,
+                0,
+                props['school'],
+                props['name'],
+                props['sex'],
+                props['isRandName'],
+                props['faceData'])
+            return
+
+        _preId = self._allocPreCreateId()
+        if not _preId:
+            # 小ID已用尽，释放名字占用
+            self.delAvatarName(props['name'])
+            self.client.onCreatePreAvatarResult(
+                gameconst.CreateAvatarRes.CRS_PRE_CREATE_LIMIT,
+                0,
+                props['school'],
+                props['name'],
+                props['sex'],
+                props['isRandName'],
+                props['faceData'])
+            return
+
+        _createTime = utils.curTS()
+        self.preCreateAvatars[_preId] = {
+            'name': props['name'],
+            'school': props['school'],
+            'sex': props['sex'],
+            'isRandName': props['isRandName'],
+            'faceData': props['faceData'].toStreamSavedDic(),
+            'createTime': _createTime,
+            'convertedGbId': 0,
+        }
+        LogTrackingMgr.LogTrackingMgr.Server_Pre_Create_Role(
+            '',
+            self.clientDistinctId,
+            _preId,
+            gameconfig.serverId(),
+            self.accountName,
+            props['school'],
+            props['name'],
+            self.operatingSystem,
+            self.packageSource,
+            props['faceData'].skinColorId(),
+            props['faceData'].hairColorId(),
+            props['sex'],
+            props['faceData'].hairId(),
+            _createTime,
+            props['faceData'].faceId(),
+        )
+        LOG_INFO('create pre avatar success', self.accountName, _preId, props['name'])
+        if self.hasClient:
+            self.client.onCreatePreAvatarResult(
+                gameconst.CreateAvatarRes.OK,
+                _preId,
+                props['school'],
+                props['name'],
+                props['sex'],
+                props['isRandName'],
+                props['faceData'])
+            self.client.onCharInfoChange(self._genPreCreateCharacterVal(_preId))
+
+    def _convertPreAvatar(self, preId):
+        """
+        预创角转正：校验名字占用归属后，跳过名字检查走正常创角后半段流程
+        """
+        if self.accountStatus != AccountStatus.normal:
+            LOG_INFO('_convertPreAvatar: accountStatus not normal', self.accountStatus)
+            return
+
+        _record = self.preCreateAvatars.get(preId)
+        if not _record or _record.get('convertedGbId'):
+            LOG_ERR('_convertPreAvatar: invalid preId', preId)
+            return
+
+        self.accountStatus = AccountStatus.creating
+        gameglobal.localBaseApp.getRedisClient().get(
+            utils.getAvatarNameRedisKey(_record['name']),
+            functools.partial(self._onConvertPreAvatarCheckNameOwner, preId)
+        )
+
+    def _onConvertPreAvatarCheckNameOwner(self, preId, cid, err, result):
+        _record = self.preCreateAvatars.get(preId)
+        if not _record or _record.get('convertedGbId'):
+            self.accountStatus = AccountStatus.normal
+            return
+
+        if isinstance(result, bytes):
+            _owner = utils.bytesToString(result)
+        else:
+            _owner = result or ''
+        # setnx写入时是str(val.encode('ascii'))形式，两种形式都认
+        if err or _owner not in (str(self.nameRedisTableKey().encode('ascii')), self.nameRedisTableKey()):
+            LOG_ERR('_onConvertPreAvatarCheckNameOwner: name owner invalid', self.accountName, preId, _owner, err)
+            self.accountStatus = AccountStatus.normal
+            self.client.onSelectGameFailed(preId, gameconst.SELECT_GAME_FAILED_PRE_CREATE_ABNORMAL)
+            return
+
+        _props = {
+            'school': _record['school'],
+            'name': _record['name'],
+            'sex': _record['sex'],
+            'gbId': 0,
+            'checkCnt': 0,
+            'faceData': appearance.FaceDataVal().initFromDict(_record['faceData']),
+            'preCreateId': preId,
+        }
+        self.createAvatarGenerateGbId(_props)
+
+    @gamedecorator.serverOpenedOnly
     @gamedecorator.limitcall(1)
     def reqCreateAvatar(self, exposed, school, name, sex, isRandName, faceData):
         """
@@ -528,25 +820,50 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         self.checkNameDuplicate(_props, self.onCheckNameDuplicate)
         LOG_INFO('create avatar begin：', self.accountName, name)
 
+    @gamedecorator.serverOpenedOnly
     @gamedecorator.limitcall(1)
-    def reqCreateBot(self, exposed, name, school, faceData):
-        import character_roleData_r_school
+    def reqCreateBot(self, exposed, name, school, sex, faceData):
+        """
+        exposed.
+        机器人建角（压测用）
+        与 reqCreateAvatar 保持同一套状态守卫：连续建角时 _onAvatarSaved 每次都把 avatarID
+        覆盖成新的（Account.py:410），前一个 Avatar 实体既没有 client 也没有 cell，
+        onClientDeath / startDestroyCountDown / onLoseCell 全都走不到，成了只跑 __init__
+        里那批定时器的孤儿实体（线上 8871/8896 即此成因），账号销毁后仍然常驻。
+        """
+        if self.waitingShutdown:
+            self.client.onMessage(L_SD.datas['login_serverClosed']['value'], [])
+            return
 
-        _datas = {}
-        for k, v in character_roleData_r_school.datas.items():
-            _datas[k] = v[0]['sex']
+        if self.accountStatus != AccountStatus.normal:
+            LOG_INFO('reqCreateBot: account status not normal', self.accountStatus, self.accountName)
+            self._replyCreateBotFailed(gameconst.CreateAvatarRes.CRS_ACCOUNT_STATUS_ERR)
+            return
 
-        _sex = _datas.get(school, None)
-        if _sex:
-            _school = school
-        else:
-            _school = random.choice(list(_datas.keys()))
-            _sex = _datas[_school]
+        if self.avatarID:
+            LOG_INFO('reqCreateBot: avatar already exists', self.avatarID, self.accountName)
+            self._replyCreateBotFailed(gameconst.CreateAvatarRes.CRS_ACCOUNT_STATUS_ERR)
+            return
 
-        props = {"name": name, "gbId": 0, "checkCnt": 0, 'isBotBase': True, 'sex': _sex, 'school': _school, "faceData": faceData}
+        # 置位必须在 checkNameDuplicate 之前：setnx 与后续写库都是异步的，
+        # 不先占住状态的话，异步窗口内到达的下一个请求依然能通过上面的校验
+        self.accountStatus = AccountStatus.creating
+        props = {"name": name, "gbId": 0, "checkCnt": 0, 'isBotBase': True, 'sex': sex, 'school': school, "faceData": faceData}
         LOG_DBG("reqCreateBot: ", props)
         self.checkNameDuplicate(props, self.onCheckNameDuplicate)
 
+    def _replyCreateBotFailed(self, reason):
+        """
+        机器人建角被拒时回包。
+        机器人客户端是"发一个建角请求等一个结果"的同步节奏，拒绝时不回包会让压测脚本静默卡在建角。
+        """
+        if not self.hasClient:
+            LOG_INFO('reqCreateBot rejected but account has no client', self.accountName, reason)
+            return
+
+        self.client.onCreateAvatarFailed(reason)
+
+    @gamedecorator.serverOpenedOnly
     def reqRemoveAvatar(self, exposed, name):
         """
         exposed.
@@ -596,7 +913,8 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
                 gameclass.DuplicatedCallList(stubs).deleteCharacter(gbId, self.centralServerId)
         self.client.onRemoveAvatar(gbId)
 
-    @gamedecorator.limitcall(1)
+    @gamedecorator.serverOpenedOnly
+    @gamedecorator.limitcall(1, keyFun=lambda args: '{1}'.format(*args))
     def selectAvatarGame(self, exposed, gbId, isForceHost):
         """
         exposed.
@@ -606,6 +924,15 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         if self.waitingShutdown:
             self.client.onMessage(L_SD.datas['login_serverClosed']['value'], [])
             return
+
+        # 命中预创角记录：未转正走转正流程，已转正则替换为真实gbId
+        _preRecord = self.preCreateAvatars.get(gbId)
+        if _preRecord:
+            _convertedGbId = _preRecord.get('convertedGbId')
+            if not _convertedGbId:
+                self._convertPreAvatar(gbId)
+                return
+            gbId = _convertedGbId
 
         if not self.isAuthHost(gbId):
             if not gameconfig.visibleConfigEnabled('roleAuthorization'):
@@ -1047,12 +1374,40 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         self._loadFinish()
 
     def _sendAvatarList(self):
+        if self.isDestroyed:
+            return
+
         if self.callbackList is not None:
             self.callbackList.append(('_sendAvatarList', ()))
             return
 
         self._clearExpireChars()
-        self.client.onReqAvatarList(self.characters, False, self.databaseID)
+        _preCreateDict = self._getUnconvertedPreAvatars()
+        if not _preCreateDict:
+            _chars = self.characters
+        else:
+            # 有未转正的预创角数据时构造发送副本，避免污染self.characters被写进game_account_characters表
+            _chars = character.Characters()
+            _chars.isArchiving = self.characters.isArchiving
+            _chars.needArchiveAgain = self.characters.needArchiveAgain
+            for _gbId, _cVal in self.characters.items():
+                _chars.addByCharObj(_gbId, _cVal)
+            for _preId in _preCreateDict:
+                _chars[_preId] = self._genPreCreateCharacterVal(_preId)
+
+        # 预创角阶段从baseapp缓存取等待服数据一起下发（缓存由baseapp定时从redis刷新）
+        _waitMapServers = []
+        if utils.inPreCreatePeriod():
+            _waitMapServers = gameglobal.localBaseApp.getWaitMapServers()
+
+        self._doSendAvatarList(_chars, _waitMapServers)
+
+    def _doSendAvatarList(self, chars, waitMapServers):
+        _preCreateInfo = {
+            'isPreCreatePeriod': utils.inPreCreatePeriod(),
+            'waitMapServers': waitMapServers,
+        }
+        self.client.onReqAvatarList(chars, False, self.databaseID, _preCreateInfo)
 
     def _clearExpireChars(self):
         _now = utils.curTS()
@@ -1668,6 +2023,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
 
     def _onLoadCharacterFromDB(self, ret, num, insertId, err):
         LOG_DBG('authChar _onLoadCharacterFromDB', ret, num, insertId, err)
+        if self.isDestroyed:
+            LOG_DBG('_onLoadCharacterFromDB account is destroyed')
+            return
         if err:
             LOG_ERR('_onLoadCharacterFromDB', err)
             return
@@ -2121,6 +2479,9 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
                         args = cPickle.loads(bytes.fromhex(argData.decode('ascii')))
                         funcName = callbackName.decode('ascii')
                         func = getattr(self, funcName)
+                        if not getattr(func, 'offlineCall', False):
+                            LOG_ERR('account function is not offline callable:', self.__ACCOUNT_NAME__, callbackName, argData)
+                            continue
                         func(*args)
                     except Exception as e:
                         LOG_ERR('account offline callback error:', self.accountName, callbackName, argData, e)
@@ -2134,7 +2495,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
 
 
     def _loadAccountOfflineFunc(self):
-        gamesql.loadAccountOfflineCallbacks(self.accountName, self._onLoadAccountOfflineCallbacks)
+        gamesql.loadAccountOfflineCallbacks(self.__ACCOUNT_NAME__, self._onLoadAccountOfflineCallbacks)
 
     def isMinorAccount(self):
         userAge = self.otherData.get('age', gameconst.LEGAL_AGE_OF_MAJORITY)
@@ -2186,7 +2547,7 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
         return propId in self.baseMiscProps
 
     def kickAccountGm(self, msgId):
-        LOG_DBG('kickAccountGm')
+        LOG_INFO('kickAccountGm', self.waitingShutdown, self.avatar)
         self.waitingShutdown = True
         if self.avatar:
             self.avatar.onMessagePre(msgId, [])
@@ -2197,8 +2558,10 @@ class Account(KBEngine.Proxy, iTimer.ITimer, iCycleEvent.ICycleEventMixin):
 
     def _kickAccountGm(self):
         if self.avatar:
+            LOG_INFO('_kickAccountGm', self.avatar, self.avatar.cell)
             self.avatar.cell.kickGm(gameconst.OFFLINE_REASON_GMKICK, 0)
         else:
+            LOG_INFO('_kickAccountGm not has avatar')
             self.destroyAccount(gameconst.OFFLINE_REASON_GMKICK)
 
     def getAuthOfflineTimeButOffline(self, gbIds):

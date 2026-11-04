@@ -10,6 +10,7 @@ import gameengine
 import appearance
 import gamedecorator
 import gameglobal
+import gameconfig
 import utils
 import chatConfig_channel as CCCH
 
@@ -197,6 +198,16 @@ class Avataring(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
                 item['msg']
             )
 
+    def onOfficialMessage(self, msgType, content, repeatCnt, channelList, seqId, chatChannelList, chatType):
+        LOG_DBG('Avataring::onOfficialMessage', self.id, seqId, msgType)
+        if self.client:
+            self.client.onOfficialMessage(msgType, content, repeatCnt, channelList, seqId, chatChannelList, chatType)
+
+    def stopOfficialMessage(self, seqId):
+        LOG_DBG('Avataring::stopOfficialMessage', self.id, seqId)
+        if self.client:
+            self.client.stopOfficialMessage(seqId)
+
     def _getChatChannelAvatarInfo(self):
         return utils.buildChatChannelAvatarData(
             self.id,
@@ -206,6 +217,7 @@ class Avataring(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
             gameglobal.avataringCache.get(self.id, {}).get('level', 0),
             gameglobal.avataringCache.get(self.id, {}).get('sex', 0),
             gameglobal.avataringCache.get(self.id, {}).get('picFrameId', 0),
+            gameconfig.serverId()
         )
 
     def kickAvataring(self, reason):

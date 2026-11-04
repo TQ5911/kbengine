@@ -80,7 +80,7 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
     def logonEnterWonderLand(self, box, gbId, spaceNo):
         _spaceVal = self.staticSpaces.get(spaceNo)
         if not _spaceVal:
-            LOG_ERR('WonderLandStub::logonEnterWonderLand: spaceVal not found')
+            LOG_ERR('WonderLandStub::logonEnterWonderLand: spaceVal not found', formula.lineInfo(spaceNo=spaceNo), gbId)
             return
 
         self.addEnterPlayer(box, gbId, 0, 0, linePlayers.LinePlayerVal.ENTERING, _spaceVal.getSpaceNo(), {})
@@ -93,13 +93,13 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         if _mapId in B_BD.datas:
             _lineNo = self._autoSelectLine(box, gbId, iLinePlayersStub.EnterLineExtra.new(extra, -1), lineType=_mapId)
         if _lineNo == -1:
-            LOG_ERR('WonderLandStub::doEnterWonderLand: lineNo is -1')
+            LOG_ERR('WonderLandStub::doEnterWonderLand: lineNo is -1', formula.lineInfo(_mapId, _lineNo), gbId)
             return
 
         _spaceNo = formula.combineLineSpaceNo(_mapId, _lineNo)
         _spaceVal = self.staticSpaces.get(_spaceNo)
         if not _spaceVal:
-            LOG_ERR('WonderLandStub::doEnterWonderLand: spaceVal not found')
+            LOG_ERR('WonderLandStub::doEnterWonderLand: spaceVal not found', formula.lineInfo(_mapId, _lineNo, _spaceNo), gbId)
             return
 
         if not self.canSpaceEnter(_spaceVal.getSpaceNo()):
@@ -112,21 +112,22 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
     def onEnterWonderLandSuccess(self, gbId, spaceNo):
         _playerVal = self.allPlayers.get(gbId)
         if not _playerVal:
-            LOG_ERR('WonderLandStub::onEnterWonderLandSuccess: playerVal not found', gbId)
+            LOG_ERR('WonderLandStub::onEnterWonderLandSuccess: playerVal not found', formula.lineInfo(spaceNo=spaceNo), gbId)
             return
 
         if _playerVal.playerStatus == linePlayers.LinePlayerVal.ENTERING:
             _playerVal.playerStatus = linePlayers.LinePlayerVal.INLINE
 
             if _playerVal.curSpaceNo != spaceNo:
-                LOG_ERR('WonderLandStub::onEnterWonderLandSuccess: spaceNo not match: {} {}'.format(_playerVal.curSpaceNo, spaceNo))
+                LOG_ERR('WonderLandStub::onEnterWonderLandSuccess: spaceNo not match', formula.lineInfo(spaceNo=_playerVal.curSpaceNo), '->', formula.lineInfo(spaceNo=spaceNo), gbId)
         else:
             self.switchStaticSpace(gbId, spaceNo)
 
     def onLeaveWonderLand(self, gbId):
         _playerVal = self.allPlayers.get(gbId)
         if not _playerVal:
-            LOG_ERR('WonderLandStub::onLeaveWonderLand: playerVal not found', gbId)
+            _mapId = WL_FD.datas[self.floor]['ID']
+            LOG_ERR('WonderLandStub::onLeaveWonderLand: playerVal not found', formula.lineInfo(_mapId), gbId)
             return
 
         self.removePlayer(gbId)
@@ -134,7 +135,7 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
     def onLeaveWonderLandWithToSpaceNo(self, gbId, toSpaceNo):
         _playerVal = self.allPlayers.get(gbId)
         if not _playerVal:
-            LOG_ERR('WonderLandStub::onLeaveWonderLandWithToSpaceNo: playerVal not found', gbId)
+            LOG_ERR('WonderLandStub::onLeaveWonderLandWithToSpaceNo: playerVal not found', formula.lineInfo(spaceNo=toSpaceNo), gbId)
             return
 
         if toSpaceNo not in self.staticSpaces:
@@ -157,15 +158,21 @@ class WonderLandStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         if _mapId in B_BD.datas:
             res = self._calculateLineInfo(_mapId)
 
-            LOG_DBG('doGetWonderLandLineInfo', res)
+            LOG_DBG('doGetWonderLandLineInfo', formula.lineInfo(_mapId), res)
             box.client.onGetLineInfo(json.dumps(res))
 
     def doSwitchWonderLandLine(self, toLineNo, box, gbId, extra):
         _mapId = WL_FD.datas[self.floor]['ID']
+        if toLineNo < 0 or toLineNo >= self._branchLineNumLimit(_mapId):
+            toLineNo = self._autoSelectLine(box, gbId, iLinePlayersStub.EnterLineExtra.new(extra, -1), lineType=_mapId, isSwitchLine=True)
+            if toLineNo < 0:
+                box.onMessagePre(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
+                return
+
         playerVal = self.allPlayers.get(gbId)
         toSpaceNo = formula.combineLineSpaceNo(_mapId, toLineNo)
         if playerVal and playerVal.curSpaceNo == toSpaceNo:
-            LOG_ERR('WonderLandStub::doSwitchWonderLandLine: player already in space: {} {}'.format(gbId, toSpaceNo))
+            LOG_ERR('WonderLandStub::doSwitchWonderLandLine: player already in space', formula.lineInfo(spaceNo=playerVal.curSpaceNo), '->', formula.lineInfo(_mapId, toLineNo, toSpaceNo), gbId)
             return
 
         _spaceVal = self.staticSpaces[toSpaceNo]

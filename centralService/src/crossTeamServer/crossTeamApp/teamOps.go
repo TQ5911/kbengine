@@ -24,8 +24,23 @@ func checkCaptain(team *CrossTeamData, captainGbId uint64) bool {
 	return captainGbId != 0 && captainGbId == team.CaptainGbId
 }
 
+// logOpResult 操作回执结果日志：成功不打（各 op 成功路径已有日志），失败统一打 INFO
+func logOpResult(uuid uint64, teamId uint64, gbId uint64, code int32) {
+	if code == ERROR_CODE_SUCCESS {
+		return
+	}
+	appLog.Infof(
+		"team op rejected, uuid=%d teamId=%d gbId=%d code=%d",
+		uuid,
+		teamId,
+		gbId,
+		code,
+	)
+}
+
 // replyOpTarget 操作结果回执（显式 target）：直接经请求来源连接回给操作发起人所在服
 func replyOpTarget(gss *GameServerService, uuid uint64, code int32, teamId uint64, gbId uint64, target int32) {
+	logOpResult(uuid, teamId, gbId, code)
 	if gss == nil || gss.ServerEndPoint == nil || gss.GetClientEndPoint() == nil {
 		return
 	}
@@ -57,6 +72,7 @@ func (w *teamWorker) replyOp(gss *GameServerService, uuid uint64, code int32, te
 // 不承载队长审批结果（同意入队由入队推送体现，拒绝/清空列表不再通知申请人）；
 // 携带目标/门槛/密码/申请来源供客户端失败交互；team 为 nil 时相关字段下发零值
 func replyApplyResult(gss *GameServerService, uuid uint64, teamId uint64, applicantGbId uint64, code int32, applySource int32, team *CrossTeamData) {
+	logOpResult(uuid, teamId, applicantGbId, code)
 	if gss == nil || gss.ServerEndPoint == nil || gss.GetClientEndPoint() == nil {
 		return
 	}
@@ -89,7 +105,8 @@ func replyApplyResult(gss *GameServerService, uuid uint64, teamId uint64, applic
 // 游戏服按 gbId 路由到本人 cell；与 replyOp 回执共用 teamOpResult 通道与客户端协议
 // （撮合入队作废/队长申请结果等异步事件用）
 func (cta *CrossTeamApp) pushOpResult(serverId uint32, teamId uint64, gbId uint64, code int32, target int32) {
-	cta.sendToServer(serverId, "teamOpResult", func(client *pb.GameServerClient) error {
+	logOpResult(0, teamId, gbId, code)
+	cta.sendToServer(serverId, gbId, "teamOpResult", func(client *pb.GameServerClient) error {
 		_, err := client.TeamOpResult(&pb.TeamOpResultMsg{
 			ResultCode: code,
 			TeamId:     teamId,
@@ -107,7 +124,7 @@ func (cta *CrossTeamApp) pushTeamCreateSuccess(team *CrossTeamData) {
 		return
 	}
 	msg := &pb.TeamCreateSuccessPushMsg{Team: team.toPb(), ReceiverGbIds: []uint64{team.CaptainGbId}}
-	cta.sendToServer(captain.RouteServerId, "teamCreateSuccessPush", func(client *pb.GameServerClient) error {
+	cta.sendToServer(captain.RouteServerId, team.TeamId, "teamCreateSuccessPush", func(client *pb.GameServerClient) error {
 		_, err := client.TeamCreateSuccessPush(msg)
 		return err
 	})
@@ -115,7 +132,7 @@ func (cta *CrossTeamApp) pushTeamCreateSuccess(team *CrossTeamData) {
 
 // pushTeamJoinSuccess 新成员入队成功：只推新成员本人所在服、只发本人
 func (cta *CrossTeamApp) pushTeamJoinSuccess(team *CrossTeamData, serverId uint32, gbId uint64) {
-	cta.sendToServer(serverId, "teamJoinSuccessPush", func(client *pb.GameServerClient) error {
+	cta.sendToServer(serverId, team.TeamId, "teamJoinSuccessPush", func(client *pb.GameServerClient) error {
 		_, err := client.TeamJoinSuccessPush(&pb.TeamJoinSuccessPushMsg{Team: team.toPb(), ReceiverGbIds: []uint64{gbId}})
 		return err
 	})
@@ -127,7 +144,7 @@ func (cta *CrossTeamApp) pushMemberJoin(gbIdsByServer map[uint32][]uint64, msg *
 	for serverId, gbIds := range gbIdsByServer {
 		perServerMsg := proto.Clone(msg).(*pb.MemberJoinPushMsg)
 		perServerMsg.ReceiverGbIds = gbIds
-		cta.sendToServer(serverId, "memberJoinPush", func(client *pb.GameServerClient) error {
+		cta.sendToServer(serverId, msg.TeamId, "memberJoinPush", func(client *pb.GameServerClient) error {
 			_, err := client.MemberJoinPush(perServerMsg)
 			return err
 		})
@@ -140,7 +157,7 @@ func (cta *CrossTeamApp) pushMemberLeave(gbIdsByServer map[uint32][]uint64, msg 
 	for serverId, gbIds := range gbIdsByServer {
 		perServerMsg := proto.Clone(msg).(*pb.MemberLeavePushMsg)
 		perServerMsg.ReceiverGbIds = gbIds
-		cta.sendToServer(serverId, "memberLeavePush", func(client *pb.GameServerClient) error {
+		cta.sendToServer(serverId, msg.TeamId, "memberLeavePush", func(client *pb.GameServerClient) error {
 			_, err := client.MemberLeavePush(perServerMsg)
 			return err
 		})
@@ -153,7 +170,7 @@ func (cta *CrossTeamApp) pushCaptainChangeMsg(gbIdsByServer map[uint32][]uint64,
 	for serverId, gbIds := range gbIdsByServer {
 		perServerMsg := proto.Clone(msg).(*pb.CaptainChangePushMsg)
 		perServerMsg.ReceiverGbIds = gbIds
-		cta.sendToServer(serverId, "captainChangePush", func(client *pb.GameServerClient) error {
+		cta.sendToServer(serverId, msg.TeamId, "captainChangePush", func(client *pb.GameServerClient) error {
 			_, err := client.CaptainChangePush(perServerMsg)
 			return err
 		})
@@ -166,7 +183,7 @@ func (cta *CrossTeamApp) pushDeputyChangeMsg(gbIdsByServer map[uint32][]uint64, 
 	for serverId, gbIds := range gbIdsByServer {
 		perServerMsg := proto.Clone(msg).(*pb.DeputyChangePushMsg)
 		perServerMsg.ReceiverGbIds = gbIds
-		cta.sendToServer(serverId, "deputyChangePush", func(client *pb.GameServerClient) error {
+		cta.sendToServer(serverId, msg.TeamId, "deputyChangePush", func(client *pb.GameServerClient) error {
 			_, err := client.DeputyChangePush(perServerMsg)
 			return err
 		})
@@ -191,7 +208,7 @@ func (cta *CrossTeamApp) pushMarkChange(team *CrossTeamData, changeType int32, m
 	for gbId := range team.Members {
 		msg.ReceiverGbIds = append(msg.ReceiverGbIds, gbId)
 	}
-	cta.sendToServer(captain.RouteServerId, "markChangePush", func(client *pb.GameServerClient) error {
+	cta.sendToServer(captain.RouteServerId, team.TeamId, "markChangePush", func(client *pb.GameServerClient) error {
 		_, err := client.MarkChangePush(msg)
 		return err
 	})
@@ -203,7 +220,7 @@ func (cta *CrossTeamApp) pushTeamDisband(gbIdsByServer map[uint32][]uint64, msg 
 	for serverId, gbIds := range gbIdsByServer {
 		perServerMsg := proto.Clone(msg).(*pb.TeamDisbandPushMsg)
 		perServerMsg.ReceiverGbIds = gbIds
-		cta.sendToServer(serverId, "teamDisbandPush", func(client *pb.GameServerClient) error {
+		cta.sendToServer(serverId, msg.TeamId, "teamDisbandPush", func(client *pb.GameServerClient) error {
 			_, err := client.TeamDisbandPush(perServerMsg)
 			return err
 		})
@@ -216,7 +233,7 @@ func (cta *CrossTeamApp) pushTeamSettingsChange(gbIdsByServer map[uint32][]uint6
 	for serverId, gbIds := range gbIdsByServer {
 		perServerMsg := proto.Clone(msg).(*pb.TeamSettingsChangePushMsg)
 		perServerMsg.ReceiverGbIds = gbIds
-		cta.sendToServer(serverId, "teamSettingsChangePush", func(client *pb.GameServerClient) error {
+		cta.sendToServer(serverId, msg.TeamId, "teamSettingsChangePush", func(client *pb.GameServerClient) error {
 			_, err := client.TeamSettingsChangePush(perServerMsg)
 			return err
 		})
@@ -229,7 +246,7 @@ func (cta *CrossTeamApp) pushTeamAutoMatchChange(gbIdsByServer map[uint32][]uint
 	for serverId, gbIds := range gbIdsByServer {
 		perServerMsg := proto.Clone(msg).(*pb.TeamAutoMatchChangePushMsg)
 		perServerMsg.ReceiverGbIds = gbIds
-		cta.sendToServer(serverId, "teamAutoMatchChangePush", func(client *pb.GameServerClient) error {
+		cta.sendToServer(serverId, msg.TeamId, "teamAutoMatchChangePush", func(client *pb.GameServerClient) error {
 			_, err := client.TeamAutoMatchChangePush(perServerMsg)
 			return err
 		})
@@ -242,7 +259,7 @@ func (cta *CrossTeamApp) pushTeamMicsModeChange(gbIdsByServer map[uint32][]uint6
 	for serverId, gbIds := range gbIdsByServer {
 		perServerMsg := proto.Clone(msg).(*pb.TeamMicsModeChangePushMsg)
 		perServerMsg.ReceiverGbIds = gbIds
-		cta.sendToServer(serverId, "teamMicsModeChangePush", func(client *pb.GameServerClient) error {
+		cta.sendToServer(serverId, msg.TeamId, "teamMicsModeChangePush", func(client *pb.GameServerClient) error {
 			_, err := client.TeamMicsModeChangePush(perServerMsg)
 			return err
 		})
@@ -255,7 +272,7 @@ func (cta *CrossTeamApp) pushMemberMicBlock(gbIdsByServer map[uint32][]uint64, m
 	for serverId, gbIds := range gbIdsByServer {
 		perServerMsg := proto.Clone(msg).(*pb.MemberMicBlockPushMsg)
 		perServerMsg.ReceiverGbIds = gbIds
-		cta.sendToServer(serverId, "memberMicBlockPush", func(client *pb.GameServerClient) error {
+		cta.sendToServer(serverId, msg.TeamId, "memberMicBlockPush", func(client *pb.GameServerClient) error {
 			_, err := client.MemberMicBlockPush(perServerMsg)
 			return err
 		})
@@ -268,8 +285,21 @@ func (cta *CrossTeamApp) pushMemberVoiceState(gbIdsByServer map[uint32][]uint64,
 	for serverId, gbIds := range gbIdsByServer {
 		perServerMsg := proto.Clone(msg).(*pb.MemberVoiceStatePushMsg)
 		perServerMsg.ReceiverGbIds = gbIds
-		cta.sendToServer(serverId, "memberVoiceStatePush", func(client *pb.GameServerClient) error {
+		cta.sendToServer(serverId, msg.TeamId, "memberVoiceStatePush", func(client *pb.GameServerClient) error {
 			_, err := client.MemberVoiceStatePush(perServerMsg)
+			return err
+		})
+	}
+}
+
+// pushMemberRename 成员改名广播：按服逐一定制 receiverGbIds（全队，含改名者本人）
+func (cta *CrossTeamApp) pushMemberRename(gbIdsByServer map[uint32][]uint64, msg *pb.MemberRenamePushMsg) {
+	appLog.Debugw("pushMemberRename", "teamId", msg.TeamId, "gbId", msg.GbId)
+	for serverId, gbIds := range gbIdsByServer {
+		perServerMsg := proto.Clone(msg).(*pb.MemberRenamePushMsg)
+		perServerMsg.ReceiverGbIds = gbIds
+		cta.sendToServer(serverId, msg.TeamId, "memberRenamePush", func(client *pb.GameServerClient) error {
+			_, err := client.MemberRenamePush(perServerMsg)
 			return err
 		})
 	}
@@ -278,7 +308,7 @@ func (cta *CrossTeamApp) pushMemberVoiceState(gbIdsByServer map[uint32][]uint64,
 // notifyApplyRemove 申请移除通知：申请被同意/拒绝/超时清理时向队长所在服推送，
 // 客户端据此把申请人从申请列表移除（副团长功能期可扩展 receivers）
 func (cta *CrossTeamApp) notifyApplyRemove(serverId uint32, teamId uint64, applicantGbId uint64, captainGbId uint64) {
-	cta.sendToServer(serverId, "applyRemoveNotify", func(client *pb.GameServerClient) error {
+	cta.sendToServer(serverId, teamId, "applyRemoveNotify", func(client *pb.GameServerClient) error {
 		_, err := client.ApplyRemoveNotify(&pb.ApplyRemoveNotifyMsg{
 			TeamId:        teamId,
 			ApplicantGbId: applicantGbId,
@@ -322,7 +352,7 @@ func (cta *CrossTeamApp) pushBecomeCaptainApply(team *CrossTeamData, applicant *
 		},
 		ReceiverGbIds: []uint64{team.CaptainGbId},
 	}
-	cta.sendToServer(captain.RouteServerId, "becomeCaptainApplyPush", func(client *pb.GameServerClient) error {
+	cta.sendToServer(captain.RouteServerId, team.TeamId, "becomeCaptainApplyPush", func(client *pb.GameServerClient) error {
 		_, err := client.BecomeCaptainApplyPush(msg)
 		return err
 	})
@@ -340,7 +370,7 @@ func (cta *CrossTeamApp) pushAdjustMemberPos(team *CrossTeamData, in *pb.AdjustM
 	for serverId, gbIds := range team.serverGbIds() {
 		perServerMsg := proto.Clone(msg).(*pb.AdjustMemberPosPushMsg)
 		perServerMsg.ReceiverGbIds = gbIds
-		cta.sendToServer(serverId, "adjustMemberPosPush", func(client *pb.GameServerClient) error {
+		cta.sendToServer(serverId, msg.TeamId, "adjustMemberPosPush", func(client *pb.GameServerClient) error {
 			_, err := client.AdjustMemberPosPush(perServerMsg)
 			return err
 		})
@@ -372,13 +402,23 @@ func (cta *CrossTeamApp) removeTeamSummary(teamId uint64, target int32) {
 	cta.matchPools.RemoveTeamSummary(teamId, target)
 }
 
-// addMember 加入成员（调用方已完成全部校验）：落数据 + 索引 + 出匹配池 + 推送。
+// addMember 加入成员：落数据 + 索引 + 出匹配池 + 推送，返回是否成功。
+// 各入口的 getPlayerTeam 互斥检查只是快速路径（查与落索引之间锁会释放，跨 worker 并发下
+// 状态可能已变），compareAndSetPlayerTeam 才是最终闸门：闸门失败不落任何数据、不做推送，
+// 返回 false，由调用方决定回执的错误码。
 // 推送语义：新成员本人所在服收全量 TeamJoinSuccessPush，全体成员所在服收"新增成员"增量
 // 新成员入队落位：优先填入人数最少且未满的小组末尾，否则新建小组。
-func (cta *CrossTeamApp) addMember(w *teamWorker, team *CrossTeamData, info *pb.MemberInfo) {
+func (cta *CrossTeamApp) addMember(w *teamWorker, team *CrossTeamData, info *pb.MemberInfo) bool {
+	if !cta.compareAndSetPlayerTeam(info.GbId, team.TeamId) {
+		appLog.Warnf(
+			"member join blocked by playerTeam gate, teamId=%d gbId=%d",
+			team.TeamId,
+			info.GbId,
+		)
+		return false
+	}
 	info.GroupIdx, info.Pos = team.assignNewMemberPos()
 	team.Members[info.GbId] = newMember(info)
-	cta.setPlayerTeam(info.GbId, team.TeamId)
 	// 入队后若曾在散人匹配池中则强制出池
 	cta.matchPools.RemovePlayer(info.GbId)
 	// 新成员本人收全量队伍数据（经 receiverGbIds 指定，仅本人）
@@ -392,7 +432,7 @@ func (cta *CrossTeamApp) addMember(w *teamWorker, team *CrossTeamData, info *pb.
 	})
 	cta.syncTeamSummary(team)
 	cta.markTeamListDirty(team.Target)
-	appLog.Infof(
+	appLog.Debugf(
 		"member join team, teamId=%d gbId=%d serverId=%d members=%d",
 		team.TeamId,
 		info.GbId,
@@ -402,6 +442,7 @@ func (cta *CrossTeamApp) addMember(w *teamWorker, team *CrossTeamData, info *pb.
 
 	// 满员自动进本：开启开关且本次加入后满员则自动发起讨伐
 	cta.maybeAutoCrusade(w, team)
+	return true
 }
 
 // removeMember 移出成员：删数据 + 删索引 + "移除成员"增量（被移出者由游戏服侧清空）；
@@ -420,7 +461,7 @@ func (cta *CrossTeamApp) removeMember(w *teamWorker, team *CrossTeamData, gbId u
 		GbId:   gbId,
 		Reason: reason,
 	})
-	appLog.Infof(
+	appLog.Debugf(
 		"member removed from team, teamId=%d gbId=%d reason=%d members=%d",
 		team.TeamId,
 		gbId,
@@ -461,6 +502,7 @@ func (cta *CrossTeamApp) disbandTeam(w *teamWorker, team *CrossTeamData) {
 // 队长被移出时由 removeMember 立即从剩余成员中移交队长；队伍空则解散）
 func (cta *CrossTeamApp) handleMemberOffline(w *teamWorker, team *CrossTeamData, gbId uint64) {
 	if _, ok := team.Members[gbId]; !ok {
+		appLog.Warnf("member offline but not in team, teamId=%d gbId=%d", team.TeamId, gbId)
 		return
 	}
 	cta.removeMember(w, team, gbId, LEAVE_REASON_OFFLINE)
@@ -471,6 +513,14 @@ func (cta *CrossTeamApp) handleMemberOffline(w *teamWorker, team *CrossTeamData,
 // ---------------------------------------------------------------------------
 
 func (cta *CrossTeamApp) createTeam(w *teamWorker, gss *GameServerService, in *pb.CreateTeamRequest) {
+	appLog.Infof(
+		"createTeam recv, uuid=%d teamId=%d captain=%d target=%d serverId=%d",
+		in.Uuid,
+		in.TeamId,
+		in.GetCaptain().GetGbId(),
+		in.Target,
+		gss.serverId,
+	)
 	captainGbId := uint64(0)
 	if in.Captain != nil {
 		captainGbId = in.Captain.GbId
@@ -484,14 +534,15 @@ func (cta *CrossTeamApp) createTeam(w *teamWorker, gss *GameServerService, in *p
 		replyOpTarget(gss, in.Uuid, ERROR_CODE_DUPLICATED_TEAM, in.TeamId, captainGbId, in.Target)
 		return
 	}
-	if cta.getPlayerTeam(captainGbId) != 0 {
+
+	team := newCrossTeamData(in)
+	// 互斥最终闸门（跨 worker 并发：分步的 getPlayerTeam 检查与 setPlayerTeam 落索引之间
+	// 锁会释放，可能与另一 worker 的入队/建队同时通过检查）；闸门失败放弃建队
+	if !cta.compareAndSetPlayerTeam(captainGbId, team.TeamId) {
 		replyOpTarget(gss, in.Uuid, ERROR_CODE_ALREADY_IN_TEAM, in.TeamId, captainGbId, in.Target)
 		return
 	}
-
-	team := newCrossTeamData(in)
 	w.teams[team.TeamId] = team
-	cta.setPlayerTeam(captainGbId, team.TeamId)
 
 	w.replyOp(gss, in.Uuid, ERROR_CODE_SUCCESS, team.TeamId, captainGbId)
 
@@ -510,6 +561,14 @@ func (cta *CrossTeamApp) createTeam(w *teamWorker, gss *GameServerService, in *p
 }
 
 func (cta *CrossTeamApp) joinApply(w *teamWorker, gss *GameServerService, in *pb.JoinApplyRequest) {
+	appLog.Infof(
+		"joinApply recv, uuid=%d teamId=%d applicant=%d serverId=%d applySource=%d",
+		in.Uuid,
+		in.TeamId,
+		in.GetApplicant().GetGbId(),
+		gss.serverId,
+		in.ApplySource,
+	)
 	applicant := in.Applicant
 	team := w.getTeam(in.TeamId)
 	// 受理回调（申请动作是否完成：受理成功/失败原因）统一经 replyApplyResult
@@ -522,7 +581,7 @@ func (cta *CrossTeamApp) joinApply(w *teamWorker, gss *GameServerService, in *pb
 		return
 	}
 	if team.isInDungeon() {
-		replyResult(ERROR_CODE_TEAM_IN_DUNGEON)
+		replyResult(ERROR_CODE_CRUSADE_IN_PROGRESS)
 		return
 	}
 	// 本服目标队伍仅允许本服玩家（D3-1，以 dunServer 为同服约束基准）
@@ -563,7 +622,7 @@ func (cta *CrossTeamApp) joinApply(w *teamWorker, gss *GameServerService, in *pb
 	// （已超时但尚未被 sweep 清理的残留记录允许覆盖重新申请）
 	if old, ok := team.Applicants[applicant.GbId]; ok &&
 		time.Now().Unix()-old.ApplyTS < APPLY_TIMEOUT_SECONDS {
-		appLog.Infof(
+		appLog.Debugf(
 			"join apply duplicated, pending apply exists, teamId=%d applicant=%d",
 			in.TeamId,
 			applicant.GbId,
@@ -581,7 +640,7 @@ func (cta *CrossTeamApp) joinApply(w *teamWorker, gss *GameServerService, in *pb
 
 	// 通知队长所在服（captainGbId 随推送下发，游戏服 Stub 不再维护队伍缓存）
 	if captain, ok := team.Members[team.CaptainGbId]; ok {
-		cta.sendToServer(captain.ServerId, "joinApplyNotify", func(client *pb.GameServerClient) error {
+		cta.sendToServer(captain.ServerId, team.TeamId, "joinApplyNotify", func(client *pb.GameServerClient) error {
 			_, err := client.JoinApplyNotify(&pb.JoinApplyNotifyMsg{
 				TeamId:      team.TeamId,
 				Applicant:   applicant,
@@ -592,14 +651,22 @@ func (cta *CrossTeamApp) joinApply(w *teamWorker, gss *GameServerService, in *pb
 			return err
 		})
 	}
-	appLog.Infof("join apply, teamId=%d applicant=%d serverId=%d", in.TeamId, applicant.GbId, applicant.ServerId)
+	appLog.Debugf("join apply, teamId=%d applicant=%d serverId=%d", in.TeamId, applicant.GbId, applicant.ServerId)
 }
 
 // reqJoin 免审批快速入队（本服 reqJoinTeam 对应）：不落地申请记录，
 // 校验口径与 joinApply 一致（本服目标队约束/密码细分 25/5/门槛细分 6/26），通过即直接入队；
+// 持队长已批准申请（replyApply 同意置位）时跳过门槛/密码校验，消费批准记录直接入队；
 // 受理结果（入队动作是否完成）经 replyApplyResult 按 uuid 回执申请人
 // （applySource 下发 0，与审批流共用客户端通道）
 func (cta *CrossTeamApp) reqJoin(w *teamWorker, gss *GameServerService, in *pb.ReqJoinRequest) {
+	appLog.Infof(
+		"reqJoin recv, uuid=%d teamId=%d applicant=%d serverId=%d",
+		in.Uuid,
+		in.TeamId,
+		in.GetApplicant().GetGbId(),
+		gss.serverId,
+	)
 	applicant := in.Applicant
 	team := w.getTeam(in.TeamId)
 	// 受理回调（入队动作是否完成）统一经 replyApplyResult 按 uuid 回执请求来源服
@@ -612,7 +679,7 @@ func (cta *CrossTeamApp) reqJoin(w *teamWorker, gss *GameServerService, in *pb.R
 		return
 	}
 	if team.isInDungeon() {
-		replyResult(ERROR_CODE_TEAM_IN_DUNGEON)
+		replyResult(ERROR_CODE_CRUSADE_IN_PROGRESS)
 		return
 	}
 	// 本服目标队伍仅允许本服玩家（D3-1，与 joinApply 同口径）
@@ -628,23 +695,34 @@ func (cta *CrossTeamApp) reqJoin(w *teamWorker, gss *GameServerService, in *pb.R
 		replyResult(ERROR_CODE_TEAM_FULL)
 		return
 	}
-	if code := team.checkConditionCode(applicant); code != ERROR_CODE_SUCCESS {
-		replyResult(code)
-		return
+	// 批准分支：存在本人已批准申请（队长同意后置位，60s 超时清扫原样生效）时，
+	// 消费批准记录（删除即凭证作废）并跳过门槛/密码校验直接入队；
+	// 无批准记录时走原有全量校验
+	approved := false
+	if apply, ok := team.Applicants[applicant.GbId]; ok && apply.Approved {
+		approved = true
+		delete(team.Applicants, applicant.GbId)
 	}
-	// 密码细分（与 joinApply 同口径）：目标队伍有密码而请求未携带 -> 需要密码；携带但不匹配 -> 密码错误
-	if team.Password != "" {
-		if in.Password == "" {
-			replyResult(ERROR_CODE_NEED_PASSWORD)
+	if !approved {
+		if code := team.checkConditionCode(applicant); code != ERROR_CODE_SUCCESS {
+			replyResult(code)
 			return
 		}
-		if team.Password != in.Password {
-			replyResult(ERROR_CODE_PASSWORD_WRONG)
-			return
+		// 密码细分（与 joinApply 同口径）：目标队伍有密码而请求未携带 -> 需要密码；携带但不匹配 -> 密码错误
+		if team.Password != "" {
+			if in.Password == "" {
+				replyResult(ERROR_CODE_NEED_PASSWORD)
+				return
+			}
+			if team.Password != in.Password {
+				replyResult(ERROR_CODE_PASSWORD_WRONG)
+				return
+			}
 		}
 	}
 
 	// 快速入队前清掉可能存在的本人待审批记录，避免队长后续应答时状态错乱
+	// （批准分支已消费本人记录，此处仅处理未批准的残留申请，两者不会同时命中）
 	if _, ok := team.Applicants[applicant.GbId]; ok {
 		delete(team.Applicants, applicant.GbId)
 		if captain, ok := team.Members[team.CaptainGbId]; ok {
@@ -652,9 +730,12 @@ func (cta *CrossTeamApp) reqJoin(w *teamWorker, gss *GameServerService, in *pb.R
 		}
 	}
 
-	cta.addMember(w, team, applicant)
+	if !cta.addMember(w, team, applicant) {
+		replyResult(ERROR_CODE_ALREADY_IN_TEAM)
+		return
+	}
 	replyResult(ERROR_CODE_SUCCESS)
-	appLog.Infof("req join team, teamId=%d applicant=%d serverId=%d", in.TeamId, applicant.GbId, applicant.ServerId)
+	appLog.Debugf("req join team, teamId=%d applicant=%d serverId=%d", in.TeamId, applicant.GbId, applicant.ServerId)
 }
 
 // clearApplyList 一键清空申请列表（本服 clearApplyJoinDic 对应，队长操作）：
@@ -662,6 +743,7 @@ func (cta *CrossTeamApp) reqJoin(w *teamWorker, gss *GameServerService, in *pb.R
 // 申请人侧不再逐个通知（replyApplyNotify 已调整为申请受理回调，不承载审批结果）；
 // 操作结果经 uuid 回执通知队长
 func (cta *CrossTeamApp) clearApplyList(w *teamWorker, gss *GameServerService, in *pb.ClearApplyListRequest) {
+	appLog.Infof("clearApplyList recv, uuid=%d teamId=%d captain=%d", in.Uuid, in.TeamId, in.CaptainGbId)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.CaptainGbId)
@@ -693,6 +775,13 @@ func (cta *CrossTeamApp) clearApplyList(w *teamWorker, gss *GameServerService, i
 // 校验通过更新内存 + 全量快照字段 deputyGbId（toPb 随全量下发），
 // 操作结果经 uuid 回执（成功也回，操作者 UI 闭环），变更全队推送 deputyChangePush
 func (cta *CrossTeamApp) setDeputy(w *teamWorker, gss *GameServerService, in *pb.SetDeputyRequest) {
+	appLog.Infof(
+		"setDeputy recv, uuid=%d teamId=%d captain=%d deputy=%d",
+		in.Uuid,
+		in.TeamId,
+		in.CaptainGbId,
+		in.DeputyGbId,
+	)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.CaptainGbId)
@@ -734,6 +823,7 @@ func (cta *CrossTeamApp) setDeputy(w *teamWorker, gss *GameServerService, in *pb
 // addMark 添加标记（本服 reqAddMarkMember 对应，仅副本内可用）：
 // 同槽位直接覆盖；同目标去重（队友按 gbId、敌方/场景按 entId），换槽先推 DELETE 再推 ADD
 func (cta *CrossTeamApp) addMark(w *teamWorker, gss *GameServerService, in *pb.AddMarkRequest) {
+	appLog.Infof("addMark recv, teamId=%d operator=%d", in.TeamId, in.OperatorGbId)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		appLog.Warnf("add mark but team not found, teamId=%d operator=%d", in.TeamId, in.OperatorGbId)
@@ -744,7 +834,7 @@ func (cta *CrossTeamApp) addMark(w *teamWorker, gss *GameServerService, in *pb.A
 		return
 	}
 	if team.OnlyCaptainCanMark && in.OperatorGbId != team.CaptainGbId {
-		appLog.Infof("add mark blocked by onlyCaptainCanMark, teamId=%d operator=%d", in.TeamId, in.OperatorGbId)
+		appLog.Debugf("add mark blocked by onlyCaptainCanMark, teamId=%d operator=%d", in.TeamId, in.OperatorGbId)
 		return
 	}
 	mark := in.Mark
@@ -770,40 +860,59 @@ func (cta *CrossTeamApp) addMark(w *teamWorker, gss *GameServerService, in *pb.A
 	marks[mark.Index] = mark
 
 	cta.pushMarkChange(team, MARK_CHANGE_ADD, mark)
-	appLog.Infof("add mark, teamId=%d operator=%d type=%d index=%d gbId=%d entId=%d",
+	appLog.Debugf("add mark, teamId=%d operator=%d type=%d index=%d gbId=%d entId=%d",
 		in.TeamId, in.OperatorGbId, mark.Type, mark.Index, mark.GbId, mark.EntId)
 }
 
 // delMark 删除标记（本服 reqDelMarkMember 对应）：按 type+index 删除
 func (cta *CrossTeamApp) delMark(w *teamWorker, gss *GameServerService, in *pb.DelMarkRequest) {
+	appLog.Infof("delMark recv, teamId=%d operator=%d", in.TeamId, in.OperatorGbId)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
+		appLog.Warnf("del mark but team not found, teamId=%d operator=%d", in.TeamId, in.OperatorGbId)
 		return
 	}
-	if _, ok := team.Members[in.OperatorGbId]; !ok {
+	if _, ok := team.Members[in.OperatorGbId]; !ok && in.OperatorGbId != 0 {
+		appLog.Warnf("del mark but operator not in team, teamId=%d operator=%d", in.TeamId, in.OperatorGbId)
 		return
 	}
 	if team.OnlyCaptainCanMark && in.OperatorGbId != 0 && in.OperatorGbId != team.CaptainGbId {
+		appLog.Warnf("del mark blocked by onlyCaptainCanMark, teamId=%d operator=%d", in.TeamId, in.OperatorGbId)
 		return
 	}
 	marks := team.marksOfType(in.Type)
 	mark, ok := marks[in.Index]
 	if !ok {
+		appLog.Warnf(
+			"del mark but mark not found, teamId=%d operator=%d type=%d index=%d",
+			in.TeamId,
+			in.OperatorGbId,
+			in.Type,
+			in.Index,
+		)
 		return
 	}
 	delete(marks, in.Index)
 
 	cta.pushMarkChange(team, MARK_CHANGE_DELETE, mark)
-	appLog.Infof("del mark, teamId=%d operator=%d type=%d index=%d", in.TeamId, in.OperatorGbId, in.Type, in.Index)
+	appLog.Debugf("del mark, teamId=%d operator=%d type=%d index=%d", in.TeamId, in.OperatorGbId, in.Type, in.Index)
 }
 
 // setOnlyCaptainMark 仅队长可标记开关（本服 reqChangeOnlyCaptain 对应，队长操作）
 func (cta *CrossTeamApp) setOnlyCaptainMark(w *teamWorker, gss *GameServerService, in *pb.SetOnlyCaptainMarkRequest) {
+	appLog.Infof(
+		"setOnlyCaptainMark recv, teamId=%d captain=%d onlyCaptain=%v",
+		in.TeamId,
+		in.CaptainGbId,
+		in.OnlyCaptain,
+	)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
+		appLog.Warnf("set onlyCaptainMark but team not found, teamId=%d captain=%d", in.TeamId, in.CaptainGbId)
 		return
 	}
 	if !checkCaptain(team, in.CaptainGbId) {
+		appLog.Warnf("set onlyCaptainMark but not captain, teamId=%d captain=%d", in.TeamId, in.CaptainGbId)
 		return
 	}
 	if team.OnlyCaptainCanMark == in.OnlyCaptain {
@@ -812,7 +921,7 @@ func (cta *CrossTeamApp) setOnlyCaptainMark(w *teamWorker, gss *GameServerServic
 	team.OnlyCaptainCanMark = in.OnlyCaptain
 
 	cta.pushMarkChange(team, MARK_CHANGE_CAPTAIN, nil)
-	appLog.Infof("set onlyCaptainCanMark, teamId=%d captain=%d onlyCaptain=%v",
+	appLog.Debugf("set onlyCaptainCanMark, teamId=%d captain=%d onlyCaptain=%v",
 		in.TeamId, in.CaptainGbId, in.OnlyCaptain)
 }
 
@@ -822,6 +931,7 @@ func (cta *CrossTeamApp) setOnlyCaptainMark(w *teamWorker, gss *GameServerServic
 // receiverGbIds 为全队（不含队长本人），由该服 Stub 按本服实有成员路由转发。
 // 对齐本服静默语义：校验失败仅日志，不走 uuid 回执
 func (cta *CrossTeamApp) followAsk(w *teamWorker, gss *GameServerService, in *pb.FollowAskRequest) {
+	appLog.Infof("followAsk recv, teamId=%d captain=%d", in.TeamId, in.CaptainGbId)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		appLog.Warnf("follow ask but team not found, teamId=%d captain=%d", in.TeamId, in.CaptainGbId)
@@ -833,6 +943,7 @@ func (cta *CrossTeamApp) followAsk(w *teamWorker, gss *GameServerService, in *pb
 	}
 	captain := team.Members[team.CaptainGbId]
 	if captain == nil {
+		appLog.Warnf("follow ask but captain member missing, teamId=%d captain=%d", in.TeamId, in.CaptainGbId)
 		return
 	}
 
@@ -853,11 +964,11 @@ func (cta *CrossTeamApp) followAsk(w *teamWorker, gss *GameServerService, in *pb
 	if len(msg.ReceiverGbIds) == 0 {
 		return
 	}
-	cta.sendToServer(captain.RouteServerId, "followAskPush", func(client *pb.GameServerClient) error {
+	cta.sendToServer(captain.RouteServerId, team.TeamId, "followAskPush", func(client *pb.GameServerClient) error {
 		_, err := client.FollowAskPush(msg)
 		return err
 	})
-	appLog.Infof(
+	appLog.Debugf(
 		"follow ask, teamId=%d captain=%d routeServer=%d receivers=%d",
 		in.TeamId,
 		in.CaptainGbId,
@@ -867,6 +978,14 @@ func (cta *CrossTeamApp) followAsk(w *teamWorker, gss *GameServerService, in *pb
 }
 
 func (cta *CrossTeamApp) replyApply(w *teamWorker, gss *GameServerService, in *pb.ReplyApplyRequest) {
+	appLog.Infof(
+		"replyApply recv, uuid=%d teamId=%d captain=%d applicant=%d agree=%v",
+		in.Uuid,
+		in.TeamId,
+		in.CaptainGbId,
+		in.ApplicantGbId,
+		in.Agree,
+	)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.CaptainGbId)
@@ -881,24 +1000,27 @@ func (cta *CrossTeamApp) replyApply(w *teamWorker, gss *GameServerService, in *p
 		w.replyOp(gss, in.Uuid, ERROR_CODE_NOT_APPLIED, in.TeamId, in.CaptainGbId)
 		return
 	}
-	delete(team.Applicants, in.ApplicantGbId)
-	// 申请移除通知（同意/拒绝/复核失败统一移除），队长客户端同步从申请列表剔除
-	if captain, ok := team.Members[team.CaptainGbId]; ok {
-		cta.notifyApplyRemove(captain.ServerId, in.TeamId, in.ApplicantGbId, team.CaptainGbId)
+	// 移除申请记录并通知队长（拒绝/同意复核失败统一移除），队长客户端同步从申请列表剔除
+	removeApply := func() {
+		delete(team.Applicants, in.ApplicantGbId)
+		if captain, ok := team.Members[team.CaptainGbId]; ok {
+			cta.notifyApplyRemove(captain.ServerId, in.TeamId, in.ApplicantGbId, team.CaptainGbId)
+		}
 	}
 
 	// 拒绝：仅回执队长操作成功；申请人侧不再通知
 	// （replyApplyNotify 为申请受理回调，不承载审批结果）
 	if !in.Agree {
+		removeApply()
 		w.replyOp(gss, in.Uuid, ERROR_CODE_SUCCESS, in.TeamId, in.CaptainGbId)
 		return
 	}
 
-	// 同意：中心复核队伍状态后入队
+	// 同意：中心复核队伍状态，复核不通过按原口径移除申请并回执失败
 	code := int32(ERROR_CODE_SUCCESS)
 	switch {
 	case team.isInDungeon():
-		code = ERROR_CODE_TEAM_IN_DUNGEON
+		code = ERROR_CODE_CRUSADE_IN_PROGRESS
 	case cta.getPlayerTeam(in.ApplicantGbId) != 0:
 		code = ERROR_CODE_ALREADY_IN_TEAM
 	case team.memberCnt() >= team.MaxNum:
@@ -907,17 +1029,55 @@ func (cta *CrossTeamApp) replyApply(w *teamWorker, gss *GameServerService, in *p
 		// 门槛复核：等级/战力不足分别返回细分错误码
 		code = team.checkConditionCode(apply.Info)
 	}
-
-	// 复核结果仅回执队长；申请人侧不再通知（同意成功由 addMember 入队推送闭环）
-	w.replyOp(gss, in.Uuid, code, in.TeamId, in.CaptainGbId)
 	if code != ERROR_CODE_SUCCESS {
+		removeApply()
+		w.replyOp(gss, in.Uuid, code, in.TeamId, in.CaptainGbId)
 		return
 	}
 
-	cta.addMember(w, team, apply.Info)
+	// 复核通过：不再直接 addMember（申请人可能已离线，直接入队会产生幽灵成员），
+	// 改为把申请标记为已批准（记录保留在 Applicants 中作入队凭证，不刷新 ApplyTS，
+	// 60s 超时清扫原样生效），由申请人收通知后经 reqJoin 消费该批准记录完成入队。
+	// 幂等保护：重复同意只回执成功，不重复推送
+	if apply.Approved {
+		w.replyOp(gss, in.Uuid, ERROR_CODE_SUCCESS, in.TeamId, in.CaptainGbId)
+		return
+	}
+	apply.Approved = true
+	// 通知队长把该申请从列表剔除（保持 UI 行为一致；批准记录不出现在后续申请列表下发中）
+	if captain, ok := team.Members[team.CaptainGbId]; ok {
+		cta.notifyApplyRemove(captain.ServerId, in.TeamId, in.ApplicantGbId, team.CaptainGbId)
+	}
+	// 回执队长：语义为"已受理"，最终入队以申请人 reqJoin 消费批准记录为准
+	w.replyOp(gss, in.Uuid, ERROR_CODE_SUCCESS, in.TeamId, in.CaptainGbId)
+
+	// 向申请人所在服推送批准通知（captainGbId 随推送下发，供申请人离线时游戏服回执队长）
+	cta.sendToServer(apply.Info.ServerId, in.ApplicantGbId, "applyApprovedNotify", func(client *pb.GameServerClient) error {
+		_, err := client.ApplyApprovedNotify(&pb.ApplyApprovedNotifyMsg{
+			TeamId:      team.TeamId,
+			GbId:        in.ApplicantGbId,
+			ServerId:    apply.Info.ServerId,
+			CaptainGbId: team.CaptainGbId,
+		})
+		return err
+	})
+	appLog.Debugf(
+		"apply approved, teamId=%d applicant=%d serverId=%d captain=%d",
+		in.TeamId,
+		in.ApplicantGbId,
+		apply.Info.ServerId,
+		team.CaptainGbId,
+	)
 }
 
 func (cta *CrossTeamApp) invite(w *teamWorker, gss *GameServerService, in *pb.InviteRequest) {
+	appLog.Infof(
+		"invite recv, uuid=%d teamId=%d inviter=%d invitee=%d",
+		in.Uuid,
+		in.TeamId,
+		in.InviterGbId,
+		in.InviteeGbId,
+	)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.InviterGbId)
@@ -929,7 +1089,7 @@ func (cta *CrossTeamApp) invite(w *teamWorker, gss *GameServerService, in *pb.In
 		return
 	}
 	if team.isInDungeon() {
-		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_IN_DUNGEON, in.TeamId, in.InviterGbId)
+		w.replyOp(gss, in.Uuid, ERROR_CODE_CRUSADE_IN_PROGRESS, in.TeamId, in.InviterGbId)
 		return
 	}
 	if team.memberCnt() >= team.MaxNum {
@@ -946,7 +1106,7 @@ func (cta *CrossTeamApp) invite(w *teamWorker, gss *GameServerService, in *pb.In
 	w.replyOp(gss, in.Uuid, ERROR_CODE_SUCCESS, in.TeamId, in.InviterGbId)
 
 	// 向被邀请人所在服推送邀请（只带邀请人信息与队伍目标，供客户端弹窗展示）
-	cta.sendToServer(in.InviteeServerId, "inviteNotify", func(client *pb.GameServerClient) error {
+	cta.sendToServer(in.InviteeServerId, team.TeamId, "inviteNotify", func(client *pb.GameServerClient) error {
 		_, err := client.InviteNotify(&pb.InviteNotifyMsg{
 			Inviter:     team.memberToPb(inviter),
 			TeamId:      team.TeamId,
@@ -956,7 +1116,7 @@ func (cta *CrossTeamApp) invite(w *teamWorker, gss *GameServerService, in *pb.In
 		})
 		return err
 	})
-	appLog.Infof(
+	appLog.Debugf(
 		"invite, teamId=%d inviter=%d invitee=%d inviteeServer=%d",
 		in.TeamId,
 		in.InviterGbId,
@@ -966,6 +1126,13 @@ func (cta *CrossTeamApp) invite(w *teamWorker, gss *GameServerService, in *pb.In
 }
 
 func (cta *CrossTeamApp) replyInvite(w *teamWorker, gss *GameServerService, in *pb.ReplyInviteRequest) {
+	appLog.Infof(
+		"replyInvite recv, uuid=%d teamId=%d invitee=%d agree=%v",
+		in.Uuid,
+		in.TeamId,
+		in.GetInvitee().GetGbId(),
+		in.Agree,
+	)
 	invitee := in.Invitee
 	team := w.getTeam(in.TeamId)
 	if team == nil {
@@ -988,7 +1155,7 @@ func (cta *CrossTeamApp) replyInvite(w *teamWorker, gss *GameServerService, in *
 	code := int32(ERROR_CODE_SUCCESS)
 	switch {
 	case team.isInDungeon():
-		code = ERROR_CODE_TEAM_IN_DUNGEON
+		code = ERROR_CODE_CRUSADE_IN_PROGRESS
 	case !team.checkServerMatch(invitee.ServerId):
 		code = ERROR_CODE_SERVER_MISMATCH
 	case cta.getPlayerTeam(invitee.GbId) != 0:
@@ -997,10 +1164,10 @@ func (cta *CrossTeamApp) replyInvite(w *teamWorker, gss *GameServerService, in *
 		code = ERROR_CODE_TEAM_FULL
 	}
 
-	w.replyOp(gss, in.Uuid, code, in.TeamId, invitee.GbId)
-	if code == ERROR_CODE_SUCCESS {
-		cta.addMember(w, team, invitee)
+	if code == ERROR_CODE_SUCCESS && !cta.addMember(w, team, invitee) {
+		code = ERROR_CODE_ALREADY_IN_TEAM
 	}
+	w.replyOp(gss, in.Uuid, code, in.TeamId, invitee.GbId)
 }
 
 // teamUpInvite 无队邀请（邀请人无队伍时发起，仅限同服玩家）：中心无队伍上下文，纯中继——
@@ -1009,6 +1176,13 @@ func (cta *CrossTeamApp) replyInvite(w *teamWorker, gss *GameServerService, in *
 // 经请求来源连接回邀请人所在服；对方应答结果另经 teamUpReplyNotify 下行。
 // 同服限制下双方玩家都在请求来源服，下行目标服=请求来源服（gss.serverId）
 func (cta *CrossTeamApp) teamUpInvite(w *teamWorker, gss *GameServerService, in *pb.TeamUpInviteRequest) {
+	appLog.Infof(
+		"teamUpInvite recv, uuid=%d teamId=%d inviter=%d invitee=%d",
+		in.Uuid,
+		in.TeamId,
+		in.GetInviter().GetGbId(),
+		in.InviteeGbId,
+	)
 	inviterGbId := uint64(0)
 	if in.Inviter != nil {
 		inviterGbId = in.Inviter.GbId
@@ -1030,7 +1204,7 @@ func (cta *CrossTeamApp) teamUpInvite(w *teamWorker, gss *GameServerService, in 
 		// 给邀请人补发一条"拒绝"应答通知，让其客户端即时收口"对方已在队伍"（不必等 30s 超时）；
 		// reason=1 即游戏服 TeamUpReplyReason.INVITEE_IN_TEAM（中心只透传数值）；
 		// invitee 仅带 gbId 最小信息（同服后 serverId 无意义；邀请人邀请过对方，展示不依赖完整资料）
-		cta.sendToServer(gss.serverId, "teamUpReplyNotify", func(client *pb.GameServerClient) error {
+		cta.sendToServer(gss.serverId, in.Inviter.GbId, "teamUpReplyNotify", func(client *pb.GameServerClient) error {
 			_, err := client.TeamUpReplyNotify(&pb.TeamUpReplyNotifyMsg{
 				InviterGbId: in.Inviter.GbId,
 				Invitee:     &pb.MemberInfo{GbId: in.InviteeGbId},
@@ -1045,7 +1219,7 @@ func (cta *CrossTeamApp) teamUpInvite(w *teamWorker, gss *GameServerService, in 
 	// 受理成功（仅表示已转发），向被邀请人所在服（同服限制，=请求来源服）推送邀请
 	// （teamId 为邀请人预分配 id，被邀请人应答/凭它试进队用）
 	replyOpTarget(gss, in.Uuid, ERROR_CODE_SUCCESS, in.TeamId, inviterGbId, 0)
-	cta.sendToServer(gss.serverId, "teamUpInviteNotify", func(client *pb.GameServerClient) error {
+	cta.sendToServer(gss.serverId, in.InviteeGbId, "teamUpInviteNotify", func(client *pb.GameServerClient) error {
 		_, err := client.TeamUpInviteNotify(&pb.TeamUpInviteNotifyMsg{
 			TeamId:      in.TeamId,
 			Inviter:     in.Inviter,
@@ -1054,7 +1228,7 @@ func (cta *CrossTeamApp) teamUpInvite(w *teamWorker, gss *GameServerService, in 
 		})
 		return err
 	})
-	appLog.Infof(
+	appLog.Debugf(
 		"teamUp invite, teamId=%d inviter=%d invitee=%d",
 		in.TeamId,
 		in.Inviter.GbId,
@@ -1067,6 +1241,14 @@ func (cta *CrossTeamApp) teamUpInvite(w *teamWorker, gss *GameServerService, in 
 // "同意时应答人仍无队"复核；uuid 回执应答人（受理结果），应答内容转发邀请人所在服
 // （同服限制，=请求来源服 gss.serverId，纯中继）
 func (cta *CrossTeamApp) replyTeamUpInvite(w *teamWorker, gss *GameServerService, in *pb.ReplyTeamUpInviteRequest) {
+	appLog.Infof(
+		"replyTeamUpInvite recv, uuid=%d teamId=%d inviter=%d invitee=%d agree=%v",
+		in.Uuid,
+		in.TeamId,
+		in.InviterGbId,
+		in.GetInvitee().GetGbId(),
+		in.Agree,
+	)
 	inviteeGbId := uint64(0)
 	if in.Invitee != nil {
 		inviteeGbId = in.Invitee.GbId
@@ -1081,7 +1263,7 @@ func (cta *CrossTeamApp) replyTeamUpInvite(w *teamWorker, gss *GameServerService
 	// 中心只透传数值），邀请人客户端据此即时收口，不再触发建队
 	if in.Agree && cta.getPlayerTeam(in.Invitee.GbId) != 0 {
 		replyOpTarget(gss, in.Uuid, ERROR_CODE_ALREADY_IN_TEAM, in.TeamId, inviteeGbId, 0)
-		cta.sendToServer(gss.serverId, "teamUpReplyNotify", func(client *pb.GameServerClient) error {
+		cta.sendToServer(gss.serverId, in.InviterGbId, "teamUpReplyNotify", func(client *pb.GameServerClient) error {
 			_, err := client.TeamUpReplyNotify(&pb.TeamUpReplyNotifyMsg{
 				InviterGbId: in.InviterGbId,
 				Invitee:     in.Invitee,
@@ -1094,7 +1276,7 @@ func (cta *CrossTeamApp) replyTeamUpInvite(w *teamWorker, gss *GameServerService
 	}
 
 	replyOpTarget(gss, in.Uuid, ERROR_CODE_SUCCESS, in.TeamId, inviteeGbId, 0)
-	cta.sendToServer(gss.serverId, "teamUpReplyNotify", func(client *pb.GameServerClient) error {
+	cta.sendToServer(gss.serverId, in.InviterGbId, "teamUpReplyNotify", func(client *pb.GameServerClient) error {
 		_, err := client.TeamUpReplyNotify(&pb.TeamUpReplyNotifyMsg{
 			InviterGbId: in.InviterGbId,
 			Invitee:     in.Invitee,
@@ -1103,7 +1285,7 @@ func (cta *CrossTeamApp) replyTeamUpInvite(w *teamWorker, gss *GameServerService
 		})
 		return err
 	})
-	appLog.Infof(
+	appLog.Debugf(
 		"reply teamUp invite, teamId=%d inviter=%d invitee=%d agree=%v reason=%d",
 		in.TeamId,
 		in.InviterGbId,
@@ -1118,6 +1300,13 @@ func (cta *CrossTeamApp) replyTeamUpInvite(w *teamWorker, gss *GameServerService
 // gss.serverId），游戏服据此为被邀请人自动发起免审进队（reqJoin）；不做满员/副本/门槛
 // 任何检查，进队成败完全由被邀请人随后的 reqJoin 现有校验决定（先到先得）
 func (cta *CrossTeamApp) teamUpJoinNotify(w *teamWorker, gss *GameServerService, in *pb.TeamUpJoinNotifyRequest) {
+	appLog.Infof(
+		"teamUpJoinNotify recv, uuid=%d teamId=%d inviter=%d invitee=%d",
+		in.Uuid,
+		in.TeamId,
+		in.InviterGbId,
+		in.InviteeGbId,
+	)
 	if in.TeamId == 0 || in.InviterGbId == 0 || in.InviteeGbId == 0 ||
 		in.InviterGbId == in.InviteeGbId {
 		replyOpTarget(gss, in.Uuid, ERROR_CODE_INVALID_PARAM, in.TeamId, in.InviterGbId, 0)
@@ -1130,7 +1319,7 @@ func (cta *CrossTeamApp) teamUpJoinNotify(w *teamWorker, gss *GameServerService,
 	}
 	// 被邀请人已进队：不回执不转发，仅日志（不必打扰，其客户端也无感知）
 	if cta.getPlayerTeam(in.InviteeGbId) != 0 {
-		appLog.Infof(
+		appLog.Warnf(
 			"teamUp join notify dropped, invitee already in team, teamId=%d inviter=%d invitee=%d",
 			in.TeamId,
 			in.InviterGbId,
@@ -1140,7 +1329,7 @@ func (cta *CrossTeamApp) teamUpJoinNotify(w *teamWorker, gss *GameServerService,
 	}
 
 	replyOpTarget(gss, in.Uuid, ERROR_CODE_SUCCESS, in.TeamId, in.InviterGbId, 0)
-	cta.sendToServer(gss.serverId, "teamUpTeamReady", func(client *pb.GameServerClient) error {
+	cta.sendToServer(gss.serverId, in.InviteeGbId, "teamUpTeamReady", func(client *pb.GameServerClient) error {
 		_, err := client.TeamUpTeamReady(&pb.TeamUpTeamReadyMsg{
 			TeamId:      in.TeamId,
 			CaptainGbId: in.InviterGbId,
@@ -1148,7 +1337,7 @@ func (cta *CrossTeamApp) teamUpJoinNotify(w *teamWorker, gss *GameServerService,
 		})
 		return err
 	})
-	appLog.Infof(
+	appLog.Debugf(
 		"teamUp team ready, teamId=%d inviter=%d invitee=%d",
 		in.TeamId,
 		in.InviterGbId,
@@ -1157,6 +1346,7 @@ func (cta *CrossTeamApp) teamUpJoinNotify(w *teamWorker, gss *GameServerService,
 }
 
 func (cta *CrossTeamApp) leaveTeam(w *teamWorker, gss *GameServerService, in *pb.LeaveTeamRequest) {
+	appLog.Infof("leaveTeam recv, uuid=%d teamId=%d gbId=%d", in.Uuid, in.TeamId, in.GbId)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.GbId)
@@ -1173,6 +1363,13 @@ func (cta *CrossTeamApp) leaveTeam(w *teamWorker, gss *GameServerService, in *pb
 }
 
 func (cta *CrossTeamApp) kick(w *teamWorker, gss *GameServerService, in *pb.KickRequest) {
+	appLog.Infof(
+		"kick recv, uuid=%d teamId=%d captain=%d kicked=%d",
+		in.Uuid,
+		in.TeamId,
+		in.CaptainGbId,
+		in.KickedGbId,
+	)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.KickedGbId)
@@ -1191,6 +1388,13 @@ func (cta *CrossTeamApp) kick(w *teamWorker, gss *GameServerService, in *pb.Kick
 }
 
 func (cta *CrossTeamApp) transferCaptain(w *teamWorker, gss *GameServerService, in *pb.TransferCaptainRequest) {
+	appLog.Infof(
+		"transferCaptain recv, uuid=%d teamId=%d captain=%d newCaptain=%d",
+		in.Uuid,
+		in.TeamId,
+		in.CaptainGbId,
+		in.NewCaptainGbId,
+	)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.NewCaptainGbId)
@@ -1217,6 +1421,7 @@ func (cta *CrossTeamApp) transferCaptain(w *teamWorker, gss *GameServerService, 
 // 中心不留存待应答记录（本服语义，队长应答时重新复核身份即可覆盖过期弹窗），
 // 校验通过后直接把申请提示推给队长
 func (cta *CrossTeamApp) applyBecomeCaptain(w *teamWorker, gss *GameServerService, in *pb.ApplyBecomeCaptainRequest) {
+	appLog.Infof("applyBecomeCaptain recv, uuid=%d teamId=%d gbId=%d", in.Uuid, in.TeamId, in.GbId)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.GbId)
@@ -1246,6 +1451,14 @@ func (cta *CrossTeamApp) applyBecomeCaptain(w *teamWorker, gss *GameServerServic
 // （队长永远在第一：新队长换入原队长位，对齐梳理注记 2/决策 D2 服务端行为），
 // 推送队长变更 + 位置变更；拒绝：主动通知申请人
 func (cta *CrossTeamApp) replyBecomeCaptain(w *teamWorker, gss *GameServerService, in *pb.ReplyBecomeCaptainRequest) {
+	appLog.Infof(
+		"replyBecomeCaptain recv, uuid=%d teamId=%d captain=%d applicant=%d agree=%v",
+		in.Uuid,
+		in.TeamId,
+		in.CaptainGbId,
+		in.ApplicantGbId,
+		in.Agree,
+	)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.CaptainGbId)
@@ -1303,6 +1516,7 @@ func (cta *CrossTeamApp) replyBecomeCaptain(w *teamWorker, gss *GameServerServic
 }
 
 func (cta *CrossTeamApp) disband(w *teamWorker, gss *GameServerService, in *pb.DisbandRequest) {
+	appLog.Infof("disband recv, uuid=%d teamId=%d captain=%d", in.Uuid, in.TeamId, in.CaptainGbId)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.CaptainGbId)
@@ -1322,6 +1536,14 @@ func (cta *CrossTeamApp) disband(w *teamWorker, gss *GameServerService, in *pb.D
 // 本函数在旧 worker 完成校验与旧队退役，再 Dispatch 到目标 worker 由 convertTeamInstall 登记新队
 // （跨 worker 重投先例见 queryTeam 的 gbId 反查路径）。
 func (cta *CrossTeamApp) convertTeam(w *teamWorker, gss *GameServerService, in *pb.ConvertTeamRequest) {
+	appLog.Infof(
+		"convertTeam recv, uuid=%d teamId=%d newTeamId=%d captain=%d newTarget=%d",
+		in.Uuid,
+		in.TeamId,
+		in.NewTeamId,
+		in.CaptainGbId,
+		in.NewTarget,
+	)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.CaptainGbId)
@@ -1332,10 +1554,6 @@ func (cta *CrossTeamApp) convertTeam(w *teamWorker, gss *GameServerService, in *
 		return
 	}
 	if team.isInDungeon() {
-		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_IN_DUNGEON, in.TeamId, in.CaptainGbId)
-		return
-	}
-	if team.CrusadeState != CRUSADE_STATE_NONE {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_CRUSADE_IN_PROGRESS, in.TeamId, in.CaptainGbId)
 		return
 	}
@@ -1397,7 +1615,7 @@ func (cta *CrossTeamApp) convertTeam(w *teamWorker, gss *GameServerService, in *
 	}
 
 	// 旧队退役：先取路由快照（冲突兜底推送用），再摘摘要/置脏/清索引/删队伍。
-	// 讨伐状态已校验为 NONE，不涉及 crusadeOngoing 计数
+	// 讨伐状态已校验为 NONE
 	gbIdsByServer := team.serverGbIds()
 	cta.removeTeamSummary(team.TeamId, team.Target)
 	cta.markTeamListDirty(team.Target)
@@ -1436,10 +1654,44 @@ func (cta *CrossTeamApp) convertTeamInstall(w *teamWorker, gss *GameServerServic
 		return
 	}
 
-	w.teams[newTeam.TeamId] = newTeam
+	// 成员逐个过互斥最终闸门：两阶段之间索引被清，成员可能恰在窗口内被拉进别队
+	// （典型为遗留申请被别队队长同意——replyApply 由队长侧发起，不受申请人 cell 互斥约束）。
+	// CAS 失败的成员从新队剔除：其 cell 已被别队的入队/建队全量推送接管，无需补偿通知
 	for gbId := range newTeam.Members {
-		cta.setPlayerTeam(gbId, newTeam.TeamId)
+		if cta.compareAndSetPlayerTeam(gbId, newTeam.TeamId) {
+			continue
+		}
+		appLog.Warnf(
+			"convert team member skipped by playerTeam gate, oldTeamId=%d newTeamId=%d gbId=%d",
+			in.TeamId,
+			in.NewTeamId,
+			gbId,
+		)
+		delete(newTeam.Members, gbId)
 	}
+	// 全员被跳过（理论不发生）：不登记新队，仅回执失败；成员 cell 均已另有队伍，不做解散推送
+	if len(newTeam.Members) == 0 {
+		appLog.Errorf(
+			"convert team but all members skipped, oldTeamId=%d newTeamId=%d captain=%d",
+			in.TeamId,
+			in.NewTeamId,
+			in.CaptainGbId,
+		)
+		replyOpTarget(gss, in.Uuid, ERROR_CODE_COMMON, in.TeamId, in.CaptainGbId, in.NewTarget)
+		return
+	}
+	// 队长被跳过：从剩余成员中选入队最早者接任（与 removeMember 移交同口径）；
+	// 副团长被跳过：清掉悬空引用（新队快照随 pushTeamConvert 全量下发）
+	if _, ok := newTeam.Members[newTeam.CaptainGbId]; !ok {
+		newTeam.CaptainGbId = newTeam.pickNewCaptain()
+	}
+	if newTeam.DeputyGbId != 0 {
+		if _, ok := newTeam.Members[newTeam.DeputyGbId]; !ok {
+			newTeam.DeputyGbId = 0
+		}
+	}
+
+	w.teams[newTeam.TeamId] = newTeam
 
 	w.replyOp(gss, in.Uuid, ERROR_CODE_SUCCESS, newTeam.TeamId, in.CaptainGbId)
 	// 全员全量推送（游戏服 cell 复用 onCrossTeamInfoUpdate 落地）
@@ -1463,7 +1715,7 @@ func (cta *CrossTeamApp) pushTeamConvert(team *CrossTeamData, oldTeamId uint64) 
 	for serverId, gbIds := range team.serverGbIds() {
 		perServerMsg := proto.Clone(msg).(*pb.TeamConvertPushMsg)
 		perServerMsg.ReceiverGbIds = gbIds
-		cta.sendToServer(serverId, "teamConvertPush", func(client *pb.GameServerClient) error {
+		cta.sendToServer(serverId, team.TeamId, "teamConvertPush", func(client *pb.GameServerClient) error {
 			_, err := client.TeamConvertPush(perServerMsg)
 			return err
 		})
@@ -1471,6 +1723,7 @@ func (cta *CrossTeamApp) pushTeamConvert(team *CrossTeamData, oldTeamId uint64) 
 }
 
 func (cta *CrossTeamApp) setTeamSettings(w *teamWorker, gss *GameServerService, in *pb.SetTeamSettingsRequest) {
+	appLog.Infof("setTeamSettings recv, uuid=%d teamId=%d captain=%d", in.Uuid, in.TeamId, in.CaptainGbId)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.CaptainGbId)
@@ -1522,6 +1775,13 @@ func (cta *CrossTeamApp) setTeamSettings(w *teamWorker, gss *GameServerService, 
 // setAutoMatch 自动匹配开关（队长操作，修改频率高，与 setTeamSettings 拆分）：
 // 变更后"自动匹配"增量推送 + 同步撮合摘要（matchable 依赖 AutoMatch）
 func (cta *CrossTeamApp) setAutoMatch(w *teamWorker, gss *GameServerService, in *pb.SetAutoMatchRequest) {
+	appLog.Infof(
+		"setAutoMatch recv, uuid=%d teamId=%d captain=%d autoMatch=%v",
+		in.Uuid,
+		in.TeamId,
+		in.CaptainGbId,
+		in.AutoMatch,
+	)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.CaptainGbId)
@@ -1550,6 +1810,13 @@ func (cta *CrossTeamApp) setAutoMatch(w *teamWorker, gss *GameServerService, in 
 
 // setMicsMode 切换语音麦模式（队长操作），变更后"麦模式"增量推送
 func (cta *CrossTeamApp) setMicsMode(w *teamWorker, gss *GameServerService, in *pb.SetMicsModeRequest) {
+	appLog.Infof(
+		"setMicsMode recv, uuid=%d teamId=%d captain=%d micsMode=%d",
+		in.Uuid,
+		in.TeamId,
+		in.CaptainGbId,
+		in.MicsMode,
+	)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.CaptainGbId)
@@ -1570,6 +1837,14 @@ func (cta *CrossTeamApp) setMicsMode(w *teamWorker, gss *GameServerService, in *
 
 // blockMic 禁麦/解除禁麦（队长操作），变更后"禁麦"增量推送
 func (cta *CrossTeamApp) blockMic(w *teamWorker, gss *GameServerService, in *pb.BlockMicRequest) {
+	appLog.Infof(
+		"blockMic recv, uuid=%d teamId=%d captain=%d target=%d blocked=%v",
+		in.Uuid,
+		in.TeamId,
+		in.CaptainGbId,
+		in.TargetGbId,
+		in.Blocked,
+	)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.TargetGbId)
@@ -1594,13 +1869,21 @@ func (cta *CrossTeamApp) blockMic(w *teamWorker, gss *GameServerService, in *pb.
 		GbId:    in.TargetGbId,
 		Blocked: in.Blocked,
 	})
-	appLog.Infof("block mic, teamId=%d targetGbId=%d blocked=%v", in.TeamId, in.TargetGbId, in.Blocked)
+	appLog.Debugf("block mic, teamId=%d targetGbId=%d blocked=%v", in.TeamId, in.TargetGbId, in.Blocked)
 }
 
 // adjustMemberPos 成员位置调整（队长操作）。
 // - dstGbId != 0：交换 src 与 dst 的 groupIdx + pos（支持组内/组间互换）
 // - dstGbId == 0：将 src 移动到 dstGroupIdx 小组末尾
 func (cta *CrossTeamApp) adjustMemberPos(w *teamWorker, gss *GameServerService, in *pb.AdjustMemberPosRequest) {
+	appLog.Infof(
+		"adjustMemberPos recv, uuid=%d teamId=%d captain=%d src=%d dst=%d",
+		in.Uuid,
+		in.TeamId,
+		in.CaptainGbId,
+		in.SrcGbId,
+		in.DstGbId,
+	)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.CaptainGbId)
@@ -1611,7 +1894,7 @@ func (cta *CrossTeamApp) adjustMemberPos(w *teamWorker, gss *GameServerService, 
 		return
 	}
 	if team.isInDungeon() {
-		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_IN_DUNGEON, in.TeamId, in.CaptainGbId)
+		w.replyOp(gss, in.Uuid, ERROR_CODE_CRUSADE_IN_PROGRESS, in.TeamId, in.CaptainGbId)
 		return
 	}
 	src, ok := team.Members[in.SrcGbId]
@@ -1663,7 +1946,7 @@ func (cta *CrossTeamApp) adjustMemberPos(w *teamWorker, gss *GameServerService, 
 
 	w.replyOp(gss, in.Uuid, ERROR_CODE_SUCCESS, in.TeamId, in.SrcGbId)
 	cta.pushAdjustMemberPos(team, in)
-	appLog.Infof(
+	appLog.Debugf(
 		"adjust member pos, teamId=%d src=%d srcGroup=%d dst=%d dstGroup=%d",
 		in.TeamId, in.SrcGbId, in.SrcGroupIdx, in.DstGbId, in.DstGroupIdx,
 	)
@@ -1696,7 +1979,7 @@ func (cta *CrossTeamApp) setVoiceState(w *teamWorker, gss *GameServerService, in
 		InVoiceRoom:   member.InVoiceRoom,
 		IsBlockMics:   team.BlockedMembers[in.GbId],
 	})
-	appLog.Infof(
+	appLog.Debugf(
 		"set voice state, teamId=%d gbId=%d mics=%v speaker=%v inRoom=%v",
 		in.TeamId,
 		in.GbId,
@@ -1709,6 +1992,7 @@ func (cta *CrossTeamApp) setVoiceState(w *teamWorker, gss *GameServerService, in
 // getApplyList 申请列表拉取（队长查看/断线重建）：仅队长可拉，
 // 按 uuid 经请求来源连接单播 ApplyListPush 回请求者（MemberInfo 透传申请时快照，含 sex 等新字段）
 func (cta *CrossTeamApp) getApplyList(w *teamWorker, gss *GameServerService, in *pb.GetApplyListRequest) {
+	appLog.Infof("getApplyList recv, uuid=%d teamId=%d gbId=%d", in.Uuid, in.TeamId, in.GbId)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
 		w.replyOp(gss, in.Uuid, ERROR_CODE_TEAM_NOT_FOUND, in.TeamId, in.GbId)
@@ -1721,6 +2005,10 @@ func (cta *CrossTeamApp) getApplyList(w *teamWorker, gss *GameServerService, in 
 
 	applicants := make([]*pb.ApplyInfo, 0, len(team.Applicants))
 	for _, apply := range team.Applicants {
+		// 已批准记录仅作入队凭证保留（批准时已通知队长剔除），不再出现在申请列表下发中
+		if apply.Approved {
+			continue
+		}
 		applicants = append(applicants, &pb.ApplyInfo{
 			Member:      apply.Info,
 			ApplySource: apply.ApplySource,
@@ -1756,13 +2044,19 @@ func (cta *CrossTeamApp) getApplyList(w *teamWorker, gss *GameServerService, in 
 // 中心复检队伍（存在/有空位/仍自动匹配/未 InDungeon/门槛仍满足）后正式入队；
 // 任一失败则作废，通知散人所在服"入队作废、需重新发起匹配"
 func (cta *CrossTeamApp) matchJoin(w *teamWorker, gss *GameServerService, in *pb.MatchJoinRequest) {
+	appLog.Infof(
+		"matchJoin recv, teamId=%d gbId=%d serverId=%d",
+		in.TeamId,
+		in.GetMember().GetGbId(),
+		gss.serverId,
+	)
 	team := w.getTeam(in.TeamId)
 	code := int32(ERROR_CODE_SUCCESS)
 	switch {
 	case team == nil:
 		code = ERROR_CODE_TEAM_NOT_FOUND
 	case team.isInDungeon():
-		code = ERROR_CODE_TEAM_IN_DUNGEON
+		code = ERROR_CODE_CRUSADE_IN_PROGRESS
 	case !team.checkServerMatch(in.Member.ServerId):
 		// 本服目标队伍仅撮合同服散人（撮合侧已按 serverId 过滤，此处为中心复核）
 		code = ERROR_CODE_SERVER_MISMATCH
@@ -1780,7 +2074,11 @@ func (cta *CrossTeamApp) matchJoin(w *teamWorker, gss *GameServerService, in *pb
 	// 已删除跨 tick 的 pending：MatchSuccess -> MatchJoin 是服务器事件流转，正常延迟远低于
 	// matchTick 间隔，由最终队满兜底。后续压测评估 MatchJoin 因队满失败的概率。
 	// 结果不走 TeamOpResult uuid 回执（游戏服 Stub 未注册 uuid 缓存，回了也只会查无缓存报错）：
-	// 成功由 addMember 推送，失败由下方 pushOpResult（uuid=0）通知散人重新发起匹配
+	// 成功由 addMember 推送，失败由下方 pushOpResult（uuid=0）通知散人重新发起匹配；
+	// addMember 内 compareAndSetPlayerTeam 为互斥最终闸门，闸门失败同样走入队作废
+	if code == ERROR_CODE_SUCCESS && !cta.addMember(w, team, in.Member) {
+		code = ERROR_CODE_ALREADY_IN_TEAM
+	}
 	if code != ERROR_CODE_SUCCESS {
 		// 入队作废：通知散人重新发起匹配（team 可能为 nil，target 此时补 0）
 		target := int32(0)
@@ -1791,12 +2089,11 @@ func (cta *CrossTeamApp) matchJoin(w *teamWorker, gss *GameServerService, in *pb
 		appLog.Warnf("match join invalid, teamId=%d gbId=%d code=%d", in.TeamId, in.Member.GbId, code)
 		return
 	}
-	cta.addMember(w, team, in.Member)
-	appLog.Infof("match join done, teamId=%d gbId=%d", in.TeamId, in.Member.GbId)
+	appLog.Debugf("match join done, teamId=%d gbId=%d", in.TeamId, in.Member.GbId)
 }
 
-// reportMemberState 成员状态 3s 聚合上报：
-// 更新成员 hp/level/score/pos 等高频快照 -> 向该队伍各成员当前所在服广播。
+// reportMemberState 成员状态上行：即时更新成员 hp/level/score/pos 等高频快照权威字段
+// 并标脏队伍（推送模型常态路径：worker 500ms tick 把脏队全量快照按成员所在服聚合下行）。
 // 上报方即成员当前真实所在服（跨服副本中由跨服服上的镜像上报），据此刷新推送路由；
 // 本服镜像（ghost）不上报（游戏服 cell 侧已拦截），否则路由会在本服/跨服服间抖动。
 // 离线即退队由专门的 MemberOffline RPC 处理，不再通过状态上报接口同步。
@@ -1821,33 +2118,45 @@ func (cta *CrossTeamApp) reportMemberState(w *teamWorker, gss *GameServerService
 		member.PosZ = state.PosZ
 		member.ReportTS = in.ReportTS
 		member.RouteServerId = in.ServerId
-		member.Name = state.Name
 	}
+	// 状态应用成功即标脏，worker 500ms tick 聚合推送（Batch 路径已拆包转调本函数，无需额外处理）
+	w.dirtyTeams[in.TeamId] = true
+}
 
-	// 向各成员当前所在服广播全量状态快照（逐服附上该服接收者 gbId 列表，Stub 不再维护队伍缓存）
-	members := make([]*pb.MemberState, 0, len(team.Members))
-	for _, member := range team.Members {
-		members = append(members, member.toStatePb())
+// renameMember 成员改名上报：低频事件即时上行（阶段一与 MemberState.name 双通道并存，
+// 阶段二移除状态内 name 后为本链路唯一通道）。中心更新成员名后按成员路由服全队广播；
+// 队伍列表队长预览（MemberBasicInfo.name）随快照重建刷新，改名需标脏
+func (cta *CrossTeamApp) renameMember(w *teamWorker, gss *GameServerService, in *pb.RenameMemberRequest) {
+	appLog.Infof("renameMember recv, teamId=%d gbId=%d name=%s", in.TeamId, in.GbId, in.Name)
+	team := w.getTeam(in.TeamId)
+	if team == nil {
+		appLog.Debugf("rename member but team not found, teamId=%d gbId=%d", in.TeamId, in.GbId)
+		return
 	}
-	for serverId, gbIds := range team.serverGbIds() {
-		msg := &pb.BroadcastMemberStateMsg{
-			TeamId:        team.TeamId,
-			ReportTS:      in.ReportTS,
-			Members:       members,
-			ReceiverGbIds: gbIds,
-		}
-		cta.sendToServer(serverId, "broadcastMemberState", func(client *pb.GameServerClient) error {
-			_, err := client.BroadcastMemberState(msg)
-			return err
-		})
+	member, ok := team.Members[in.GbId]
+	if !ok {
+		appLog.Debugf("rename member but not in team, teamId=%d gbId=%d", in.TeamId, in.GbId)
+		return
 	}
+	if in.Name == "" || member.Name == in.Name {
+		return
+	}
+	member.Name = in.Name
+	cta.markTeamListDirty(team.Target)
+	cta.pushMemberRename(team.serverGbIds(), &pb.MemberRenamePushMsg{
+		TeamId: team.TeamId,
+		GbId:   in.GbId,
+		Name:   in.Name,
+	})
+	appLog.Infof("rename member, teamId=%d gbId=%d name=%s", in.TeamId, in.GbId, in.Name)
 }
 
 // memberOffline 游戏服主动上报成员离线：离线即退队，由专门 RPC 处理。
 func (cta *CrossTeamApp) memberOffline(w *teamWorker, in *pb.MemberOfflineRequest) {
+	appLog.Infof("memberOffline recv, teamId=%d gbId=%d", in.TeamId, in.GbId)
 	team := w.getTeam(in.TeamId)
 	if team == nil {
-		appLog.Debugf("member offline but team not found, teamId=%d gbId=%d", in.TeamId, in.GbId)
+		appLog.Warnf("member offline but team not found, teamId=%d gbId=%d", in.TeamId, in.GbId)
 		return
 	}
 	cta.handleMemberOffline(w, team, in.GbId)
@@ -1858,6 +2167,13 @@ func (cta *CrossTeamApp) memberOffline(w *teamWorker, in *pb.MemberOfflineReques
 // gbId 非 0 时按玩家反查所在队伍（客户端主动全量查询/登录恢复），应答 TeamDataRespMsg。
 // 两条路径均按 uuid 单播回请求来源连接
 func (cta *CrossTeamApp) queryTeam(w *teamWorker, gss *GameServerService, in *pb.QueryTeamRequest) {
+	appLog.Infof(
+		"queryTeam recv, uuid=%d teamId=%d gbId=%d serverId=%d",
+		in.Uuid,
+		in.TeamId,
+		in.GbId,
+		gss.serverId,
+	)
 	// teamId 直查路径（队伍预览用）：请求已按 teamId 投到本 worker，直接查
 	if in.TeamId != 0 {
 		resp := &pb.QueryTeamCrossRespMsg{Uuid: in.Uuid}
@@ -1917,7 +2233,7 @@ func (cta *CrossTeamApp) flushTeamChat(w *teamWorker, teamId uint64, msgs []*pb.
 	// 逐服定制：附上该服接收者 gbId 列表（Stub 不再维护队伍缓存，靠 receiverGbIds 路由）
 	for serverId, gbIds := range team.serverGbIds() {
 		batch := &pb.TeamChatBatchMsg{TeamId: teamId, Msgs: msgs, ReceiverGbIds: gbIds}
-		cta.sendToServer(serverId, "teamChatBatch", func(client *pb.GameServerClient) error {
+		cta.sendToServer(serverId, teamId, "teamChatBatch", func(client *pb.GameServerClient) error {
 			_, err := client.TeamChatBatch(batch)
 			return err
 		})

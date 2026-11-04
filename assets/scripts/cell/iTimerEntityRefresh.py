@@ -8,6 +8,7 @@ import gametimer
 import gameconst
 import creep_base
 import copy
+import formula
 import creep_timedRefresh as CTR
 import activityControl_activityNotice as ACAN
 import gameengine
@@ -87,7 +88,7 @@ class ITimerEntityRefresh(object):
         for refreshData in val.refreshDataList:
             (id_, entityType, extraData) = refreshData
             entityID = extraData["EntityID"]
-            if entityType == gameconst.EntityType.MONSTER and creep_base.datas.get(entityID, {}).get('type', 0) == gameconst.MonsterType.ADVANCE and entityID in ACAN.bossIDSet:
+            if entityType == gameconst.EntityType.MONSTER and creep_base.datas.get(entityID, {}).get('nameSuffixID', 0) == gameconst.MonsterSuffix.WORLD_BOSS and entityID in ACAN.bossIDSet:
                 LOG_DBG("checkAnnouncement", entityID, idx)
                 aType = ACAN.bossID2AnnoId.get(entityID, 0)
                 uaType = gameconst.ANNOUNCEMENT_TYPE_2_UPDATE_ANNOUNCEMENT_TYPE.get(aType, [0, 0])[idx]
@@ -252,24 +253,32 @@ class ITimerEntityRefresh(object):
         self.onTimerEntityDestroy(ents, entityID)
 
 ########################################################################################################
-    def onTemporaryDestroyTimerEntities(self, entityTypes):
-        LOG_INFO("onAddTemporaryDestroyTimerEntities", entityTypes)
+    def onTemporaryDestroyTimerEntities(self, entityTypes, subTypes):
+        LOG_INFO("onAddTemporaryDestroyTimerEntities", entityTypes, subTypes)
         for refreshType, refreshQueue in enumerate(self.refreshEntityQueue):
             if not refreshQueue:
                 continue
             for val in refreshQueue:
-                LOG_INFO("onAddTemporaryDestroyTimerEntities", val)
+                LOG_INFO("onAddTemporaryDestroyTimerEntities1", val)
                 tmpVal = copy.deepcopy(val)
                 tmpVal.refreshDataList = []
                 for refreshData in tmpVal.srcRefreshDataList:
                     (id_, entityType, extraData) = refreshData
                     if entityType not in entityTypes:
                         continue
+                    if entityType == gameconst.EntityType.MONSTER:
+                        idx = entityTypes.index(entityType)
+                        types = subTypes[idx]
+                        entityID = extraData["EntityID"]
+                        count_ = extraData["RefreshNum"]
+                        if len(types) > 0 and types[0] != gameconst.MonsterSuffix.NULL and creep_base.datas.get(entityID, {}).get('nameSuffixID', 0) not in types:
+                            continue
 
                     if refreshData in val.refreshDataList:
                         val.refreshDataList.remove(refreshData)
                     tmpVal.refreshDataList.append(refreshData)
 
+                LOG_INFO("onAddTemporaryDestroyTimerEntities2", val)
                 if refreshType == gameconst.TimerEntityRefreshType.TIMED_INTERVALS:
                     self.doTimedIntervalsEntityDestroy(tmpVal)
                 elif refreshType == gameconst.TimerEntityRefreshType.TIME_LIMITED:
@@ -281,8 +290,9 @@ class ITimerEntityRefresh(object):
             if not refreshQueue:
                 continue
             for val in refreshQueue:
-                LOG_INFO("onRestoreTemporaryDestroyTimerEntities", val)
+                LOG_INFO("onRestoreTemporaryDestroyTimerEntities1", val)
                 val.refreshDataList = copy.deepcopy(val.srcRefreshDataList)
+                LOG_INFO("onRestoreTemporaryDestroyTimerEntities2", val)
 
                 if refreshType == gameconst.TimerEntityRefreshType.TIMED_INTERVALS:
                     #self.doTimedIntervalsEntityRefresh(val)
@@ -327,8 +337,23 @@ class ITimerEntityRefresh(object):
                 LOG_ERR("doTimedIntervalsEntityRefresh not WorldLineSpaceMgr", id_)
             else:
                 func()
-        else:
-            self.getCurrentSpace().doLoadSpecifiedEntities([str(id_)], self.id)
+            return
+
+        # 起服不刷新的定时刷新怪没有"第一次必定刷新"的逻辑（需求③），每次生成（含首次）都按世界等级差判定，失败则等下一个刷新点
+        if entityType == gameconst.EntityType.MONSTER:
+            if not self._checkWorldLevelRefreshRate(id_, entityID):
+                return
+
+        self.getCurrentSpace().doLoadSpecifiedEntities([str(id_)], self.id)
+
+    def _checkWorldLevelRefreshRate(self, gid, entityID):
+        _dunData = utils.getDunModuleData(formula.fetchMapId(self.spaceNo))
+        _monData = _dunData.get(str(gid), None)
+        if not _monData:
+            return True
+
+        monsterLevel = int(_monData.get('Props', {}).get('Level', 0) or 0)
+        return utils.checkMonsterRefreshByWorldLevel(entityID, monsterLevel, gid, self.spaceNo)
 
     def onAddEntityRefreshTimer(self, gid, timerId):
         LOG_INFO("onAddEntityRefreshTimer", gid, timerId)

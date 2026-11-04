@@ -31,6 +31,13 @@
             <Arg>      ARRAY    <of>    UINT32  </of>     </Arg>
             <Arg>      INT64                              </Arg>
         </onMeridianAward>
+
+        <gmSetMeridianProps>
+            <Arg>      ARRAY    <of>    UINT32  </of>     </Arg>
+            <Arg>      ARRAY    <of>    UINT32  </of>     </Arg>
+            <Arg>      ARRAY    <of>    UINT32  </of>     </Arg>
+            <Arg>      INT64                              </Arg>
+        </gmSetMeridianProps>
     </CellMethods>
 
     <ClientMethods>

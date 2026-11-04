@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import KBEngine
+import KBEDebug
 import random
 import gameconst
 from KBEDebug import *
@@ -469,7 +470,12 @@ class EventEffect(EffectBase):
 
     @gamedecorator.prevent_instance_reentry
     def onActionEvent(self, owner, callerInfo, event):
-        LOG_DBG('onActionEvent: the event context -', event)
+        # 性能优化：本方法在战斗热路径上每次事件派发都会执行（profile 26523 次/窗口），
+        # LOG_DBG 的级别判断在函数体内，挡不住调用与参数打包开销。
+        # 注意必须引用 KBEDebug 模块属性——本文件的 `from KBEDebug import *`
+        # 是 import 期绑定，读不到 saveDebugLevel 运行时的修改。
+        if KBEDebug.debugLevel <= KBEDebug.DebugLevelType.DEBUG:
+            LOG_DBG('onActionEvent: the event context -', event)
 
         if not self.isValid:
             return

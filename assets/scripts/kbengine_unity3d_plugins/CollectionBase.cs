@@ -30,14 +30,22 @@ namespace KBEngine
 		public virtual void onDropEquipItemIdChanged(UInt32 oldValue) {}
 		public UInt32 fBItemId = 0;
 		public virtual void onFBItemIdChanged(UInt32 oldValue) {}
+		public UInt32 fBItemNum = 0;
+		public virtual void onFBItemNumChanged(UInt32 oldValue) {}
 		public UInt32 fBProtectTime = 0;
 		public virtual void onFBProtectTimeChanged(UInt32 oldValue) {}
+		public Byte fbShareMode = 0;
+		public virtual void onFbShareModeChanged(Byte oldValue) {}
 		
+		public Int32 fromCreepId = 0;
+		public virtual void onFromCreepIdChanged(Int32 oldValue) {}
 		public Int32 fromMonsterId = 0;
 		public virtual void onFromMonsterIdChanged(Int32 oldValue) {}
 		
 		public UInt32 gatherCnt = 0;
 		public virtual void onGatherCntChanged(UInt32 oldValue) {}
+		public Byte gatherShowState = 0;
+		public virtual void onGatherShowStateChanged(Byte oldValue) {}
 		public Byte groupLock = 0;
 		public virtual void onGroupLockChanged(Byte oldValue) {}
 		
@@ -308,6 +316,22 @@ namespace KBEngine
 						}
 
 						break;
+					case 655:
+						UInt32 oldval_fBItemNum = fBItemNum;
+						fBItemNum = stream.readUint32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onFBItemNumChanged(oldval_fBItemNum);
+						}
+						else
+						{
+							if(inWorld)
+								onFBItemNumChanged(oldval_fBItemNum);
+						}
+
+						break;
 					case 601:
 						UInt32 oldval_fBProtectTime = fBProtectTime;
 						fBProtectTime = stream.readUint32();
@@ -324,6 +348,22 @@ namespace KBEngine
 						}
 
 						break;
+					case 654:
+						Byte oldval_fbShareMode = fbShareMode;
+						fbShareMode = stream.readUint8();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onFbShareModeChanged(oldval_fbShareMode);
+						}
+						else
+						{
+							if(inWorld)
+								onFbShareModeChanged(oldval_fbShareMode);
+						}
+
+						break;
 					case 573:
 						Int32 oldval_force = force;
 						force = stream.readInt32();
@@ -337,6 +377,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onForceChanged(oldval_force);
+						}
+
+						break;
+					case 656:
+						Int32 oldval_fromCreepId = fromCreepId;
+						fromCreepId = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onFromCreepIdChanged(oldval_fromCreepId);
+						}
+						else
+						{
+							if(inWorld)
+								onFromCreepIdChanged(oldval_fromCreepId);
 						}
 
 						break;
@@ -385,6 +441,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onGatherCntChanged(oldval_gatherCnt);
+						}
+
+						break;
+					case 77:
+						Byte oldval_gatherShowState = gatherShowState;
+						gatherShowState = stream.readUint8();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onGatherShowStateChanged(oldval_gatherShowState);
+						}
+						else
+						{
+							if(inWorld)
+								onGatherShowStateChanged(oldval_gatherShowState);
 						}
 
 						break;
@@ -614,6 +686,27 @@ namespace KBEngine
 				}
 			}
 
+			UInt32 oldval_fBItemNum = fBItemNum;
+			Property prop_fBItemNum = pdatas[19];
+			if(prop_fBItemNum.isBase())
+			{
+				if(inited && !inWorld)
+					onFBItemNumChanged(oldval_fBItemNum);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_fBItemNum.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onFBItemNumChanged(oldval_fBItemNum);
+					}
+				}
+			}
+
 			UInt32 oldval_fBProtectTime = fBProtectTime;
 			Property prop_fBProtectTime = pdatas[7];
 			if(prop_fBProtectTime.isBase())
@@ -635,6 +728,27 @@ namespace KBEngine
 				}
 			}
 
+			Byte oldval_fbShareMode = fbShareMode;
+			Property prop_fbShareMode = pdatas[18];
+			if(prop_fbShareMode.isBase())
+			{
+				if(inited && !inWorld)
+					onFbShareModeChanged(oldval_fbShareMode);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_fbShareMode.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onFbShareModeChanged(oldval_fbShareMode);
+					}
+				}
+			}
+
 			Int32 oldval_force = force;
 			Property prop_force = pdatas[12];
 			if(prop_force.isBase())
@@ -652,6 +766,27 @@ namespace KBEngine
 					else
 					{
 						onForceChanged(oldval_force);
+					}
+				}
+			}
+
+			Int32 oldval_fromCreepId = fromCreepId;
+			Property prop_fromCreepId = pdatas[21];
+			if(prop_fromCreepId.isBase())
+			{
+				if(inited && !inWorld)
+					onFromCreepIdChanged(oldval_fromCreepId);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_fromCreepId.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onFromCreepIdChanged(oldval_fromCreepId);
 					}
 				}
 			}
@@ -715,6 +850,27 @@ namespace KBEngine
 					else
 					{
 						onGatherCntChanged(oldval_gatherCnt);
+					}
+				}
+			}
+
+			Byte oldval_gatherShowState = gatherShowState;
+			Property prop_gatherShowState = pdatas[20];
+			if(prop_gatherShowState.isBase())
+			{
+				if(inited && !inWorld)
+					onGatherShowStateChanged(oldval_gatherShowState);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_gatherShowState.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onGatherShowStateChanged(oldval_gatherShowState);
 					}
 				}
 			}

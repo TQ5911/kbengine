@@ -1,0 +1,35 @@
+<root>
+    <Properties>
+        <promoterTime>
+            <Type>          INT64                   </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+            <Default>       0                       </Default>
+        </promoterTime>
+
+        <promoterRequestTimerId>
+            <Type>          TIMER_ID                    </Type>
+            <Flags>         BASE                        </Flags>
+            <Default>       0                           </Default>
+        </promoterRequestTimerId>
+
+        <isPromoterInited>
+            <Type>          BOOL                       </Type>
+            <Flags>         BASE                        </Flags>
+            <Default>       false                       </Default>
+        </isPromoterInited>
+    </Properties>
+
+    <BaseMethods>
+        <gmSetPromoter>
+            <Arg>   INT64   </Arg>
+            <Arg>   BOOL    </Arg>
+        </gmSetPromoter>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+    </ClientMethods>
+</root>

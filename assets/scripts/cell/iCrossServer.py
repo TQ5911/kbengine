@@ -12,6 +12,8 @@ import utils
 
 import AvatarScores
 import dungeonSrc
+import conflict_conflict_def as C_C_DD
+import const_const as CONST
 
 CrossServerWaitClientInitTuple = collections.namedtuple(
     "CrossServerWaitClientInitTuple", 
@@ -131,7 +133,9 @@ class ICrossServer(object):
         cellInitData = dict(
             scoresInfo=AvatarScores.avatarScoresInstance.getDictFromObj(self.scoresInfo),
             totalScore=self.totalScore,
-            leagueUUID = self.leagueUUID
+            leagueUUID = self.leagueUUID,
+            guildDspFlag=self.guildDspFlag,
+            guildIcon=self.guildIcon,
         )
         self.base.onCrossServerSyncOtherInitedDataFromLocalServer(crossData, cellInitData)
 
@@ -177,8 +181,6 @@ class ICrossServer(object):
         self.selfStopAutoCombat(gameconst.SuspendAutoCombatReasonEnum.Teleport)
         self.endApplyGather(gameconst.CancelGatherReason.CrossServer)
         self.stopPlayEmote(gameconst.StopPlayEmoteReason.CrossServer)
-        self.applyLeaveTeam(self.id)
-        self.leaveRaid(self.id)
 
     def onCrossServerSuc(self, reasonNo):
         LOG_INFO("onCrossServerSuc::", reasonNo)
@@ -198,11 +200,34 @@ class ICrossServer(object):
 
         # 跨服组队副本：迁移已彻底完成（进本流程结束），本服幽灵回城
         # （野外无客户端挂机防被打）；失败仅报错、幽灵留原地，不影响进本/回程
-        if reasonNo in (gameconst.CrossServerReasonNo.ENTER_CROSS_CRUSADE, gameconst.CrossServerReasonNo.ENTER_CROSS_CHIEF):
+        if reasonNo in (
+                gameconst.CrossServerReasonNo.ENTER_CROSS_CRUSADE, 
+                gameconst.CrossServerReasonNo.ENTER_CROSS_WORLD, 
+                gameconst.CrossServerReasonNo.ENTER_CROSS_CHIEF):
             self.applyCrossGhostReturnCity()
 
     def _syncSaveBuffs(self, buffMgrDic):
         LOG_DBG('_syncSaveBuffs', buffMgrDic)
+        # NOTE(CROSS_SERVER): buff 的 tStartTime 是源服墙钟，跨服迁移耗时可能超过短 buff 的 duration，
+        # 到达本进程时它已经过期。若不在此处剔除，initBuff 会先挂 effect 再走 getBuffRemainTime()<=0 分支，
+        # 以 RTEnumDefault 而非 RTEnumEndByTime 移除（endByTimeAction 不执行），并刷一条 initBuff error ERROR 日志。
+        # getBuffRemainTime(): 永久/非限时 buff 返回 inf，已过期返回 0.0，故 <=0 即「已过期」。
+        _dropNum = 0
+        for buffId in list(buffMgrDic.keys()):
+            buffMap = buffMgrDic.get(buffId)
+            if not buffMap:
+                buffMgrDic.pop(buffId, None)
+                continue
+            for buffSrcKey in list(buffMap.keys()):
+                _buffVal = buffMap.get(buffSrcKey)
+                if _buffVal and _buffVal.getBuffRemainTime() <= 0:
+                    buffMap.pop(buffSrcKey, None)
+                    _dropNum += 1
+            if not buffMap:
+                buffMgrDic.pop(buffId, None)
+        if _dropNum:
+            LOG_INFO('_syncSaveBuffs drop expired buffs', self.id, _dropNum)
+
         self.buffMgrDic.update(buffMgrDic)
 
         for buffId in list(self.buffMgrDic.keys()):
@@ -229,3 +254,27 @@ class ICrossServer(object):
         if self.guildUUID > 0:
             self.client.onAllianceWarEnded(datas)
             LOG_INFO('onAllianceWarEnded ', datas)
+
+    def crossWorldLeave(self):
+        self._commonNeedCast(
+            C_C_DD.datas.teleportCast,
+            gameconst.StateEnum.Teleporting,
+            gameconst.CastEnum.teleportAnchor,
+            '_crossWorldLeave',
+            (),
+            CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR),
+            '_crossServerUnlock',
+            ()
+        )
+
+    def _crossServerUnlock(self):
+        LOG_DBG("_crossServerUnlock")
+        self.base.onCrossServerUnlock()
+        self.syncMethodCallToLocalServerCell('_crossServerUnlock', ())
+
+    def _crossWorldLeave(self):
+        LOG_DBG("_crossWorldLeave")
+        self.base.onDoLeaveCrossWorld()
+
+    def onLeaveCrossWorld(self):
+        LOG_INFO('onLeaveCrossWorld')

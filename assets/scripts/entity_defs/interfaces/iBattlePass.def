@@ -1,0 +1,63 @@
+<root>
+    <Properties>
+        <battlePassInfos>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+            <Default>       {}                      </Default>
+        </battlePassInfos>
+    </Properties>
+
+    <BaseMethods>
+        <reqBattlePassInfo> <Exposed/>
+        </reqBattlePassInfo>
+        <reqBuyBattlePassLv> <Exposed/>
+            <Arg>   UINT32  </Arg>  <!-- groupId -->
+            <Arg>   UINT16  </Arg>  <!-- buyCnt -->
+            <Arg>   BOOL    </Arg>  <!-- isExchange -->
+        </reqBuyBattlePassLv>
+        <reqClaimBattlePassReward> <Exposed/>
+            <Arg>   UINT32  </Arg>  <!-- groupId -->
+            <Arg>   UINT16  </Arg>  <!-- lv, 领取该赛季 1..lv -->
+        </reqClaimBattlePassReward>
+        <onBattlePassTask>
+            <Arg>   UINT8   </Arg>  <!-- taskType -->
+            <Arg>   UINT32  </Arg>  <!-- num -->
+            <Arg>   UINT32  </Arg>  <!-- key: mode/pool/item/activity -->
+            <Arg>   UINT32  </Arg>  <!-- src: srcType -->
+        </onBattlePassTask>
+        <addBattlePassByItem>
+            <Arg>   UINT32  </Arg>  <!-- passId -->
+            <Arg>   UINT32  </Arg>  <!-- itemId -->
+            <Arg>   UINT32  </Arg>  <!-- useNum -->
+            <Arg>   UINT64  </Arg>  <!-- opUUID -->
+            <Arg>   PYTHON  </Arg>  <!-- ctx -->
+        </addBattlePassByItem>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+        <onBattlePassInfo>
+            <Arg>   ARRAY   <of>    UINT32  </of>   </Arg>  <!-- groupId -->
+            <Arg>   ARRAY   <of>    UINT16  </of>   </Arg>  <!-- lv -->
+            <Arg>   ARRAY   <of>    UINT32  </of>   </Arg>  <!-- exp -->
+            <Arg>   ARRAY   <of>    UINT32  </of>   </Arg>  <!-- weekExp -->
+            <Arg>   ARRAY   <of>    UINT32  </of>   </Arg>  <!-- needExp -->
+            <Arg>   ARRAY   <of>    UINT16  </of>   </Arg>  <!-- catchupMul * 10 -->
+            <Arg>   ARRAY   <of>    UINT32  </of>   </Arg>  <!-- unlocked passId -->
+            <Arg>   UINT16  </Arg>  <!-- 战令交易行格子 -->
+            <Arg>   UINT16  </Arg>  <!-- 战令背包格子，当前加在容量上的格数 -->
+        </onBattlePassInfo>
+        <onBattlePassTaskInfo>
+            <Arg>   ARRAY   <of>    UINT32  </of>   </Arg>  <!-- groupId -->
+            <Arg>   ARRAY   <of>    UINT32  </of>   </Arg>  <!-- taskId -->
+            <Arg>   ARRAY   <of>    UINT32  </of>   </Arg>  <!-- progress -->
+        </onBattlePassTaskInfo>
+        <onBattlePassClaimed>
+            <Arg>   ARRAY   <of>    UINT32  </of>   </Arg>  <!-- passId -->
+            <Arg>   ARRAY   <of>    UINT16  </of>   </Arg>  <!-- claimed lv -->
+        </onBattlePassClaimed>
+    </ClientMethods>
+</root>

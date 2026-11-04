@@ -600,7 +600,7 @@ datas = _tools.RODict({
     }),
     17120001: _tools.RODict({
         "ID": 17120001,
-        "name": "流沙故域",
+        "name": "流沙故城",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -622,7 +622,7 @@ datas = _tools.RODict({
     }),
     17120101: _tools.RODict({
         "ID": 17120101,
-        "name": "流沙故域二层",
+        "name": "流沙故城二层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -633,7 +633,7 @@ datas = _tools.RODict({
     }),
     17120102: _tools.RODict({
         "ID": 17120102,
-        "name": "流沙故域一层",
+        "name": "流沙故城一层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -644,7 +644,7 @@ datas = _tools.RODict({
     }),
     17120201: _tools.RODict({
         "ID": 17120201,
-        "name": "流沙故域三层",
+        "name": "流沙故城三层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -655,7 +655,7 @@ datas = _tools.RODict({
     }),
     17120202: _tools.RODict({
         "ID": 17120202,
-        "name": "流沙故域二层",
+        "name": "流沙故城二层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -666,7 +666,7 @@ datas = _tools.RODict({
     }),
     17120301: _tools.RODict({
         "ID": 17120301,
-        "name": "流沙故域四层",
+        "name": "流沙故城四层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -677,7 +677,7 @@ datas = _tools.RODict({
     }),
     17120302: _tools.RODict({
         "ID": 17120302,
-        "name": "流沙故域三层",
+        "name": "流沙故城三层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -688,7 +688,7 @@ datas = _tools.RODict({
     }),
     17120401: _tools.RODict({
         "ID": 17120401,
-        "name": "流沙故域五层·精英",
+        "name": "流沙故城五层·精英",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,
@@ -699,7 +699,7 @@ datas = _tools.RODict({
     }),
     17120402: _tools.RODict({
         "ID": 17120402,
-        "name": "流沙故域四层",
+        "name": "流沙故城四层",
         "isOpen": 1,
         "teleportOffset": 6,
         "Area": 2,

@@ -382,5 +382,9 @@ datas = _tools.RODict({
     "mineBattle_hubRepairMsg": _tools.RODict({
         "ID": "mineBattle_hubRepairMsg",
         "value": 54003274,
+    }),
+    "mineBattle_hubRepairText": _tools.RODict({
+        "ID": "mineBattle_hubRepairText",
+        "value": "修复进度：{0}%",
     })
 })

@@ -108,6 +108,9 @@ datas = _tools.RODict({
     "OpenCondTriggerArea": _tools.RODict({
         "value": _tools.RODict({})
     }),
+    "OpenCondUnlockDay": _tools.RODict({
+        "value": 0
+    }),
     "OpenCondCheckTaskCount": _tools.RODict({
         "value": False
     }),

@@ -158,6 +158,7 @@ type Pipeline struct {
 }
 
 func (p *Pipeline) Run(ctx context.Context) error {
+	slog.Info("table merge start", "table", p.Name)
 	start := time.Now()
 	err := p.runGuts(ctx)
 	elapsed := time.Since(start)

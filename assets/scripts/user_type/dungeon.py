@@ -20,7 +20,8 @@ class DungeonSpaceVal(userType.UserSingleType):
     SPACE_STATUS_TO_DESTORY = 4
     SPACE_STATUS_FAILED = 5
 
-    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel=1, extraPropsDic = {}, dungeonSpaceValType=gameconst.DungeonSpaceValType.NONE):
+    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel=1, extraPropsDic=None, dungeonSpaceValType=gameconst.DungeonSpaceValType.NONE):
+        extraPropsDic = extraPropsDic or {}
         self.spaceUUID = spaceUUID
         self.spaceNo = spaceNo
         self.spaceBox = spaceBox
@@ -38,22 +39,9 @@ class DungeonSpaceVal(userType.UserSingleType):
         self.dungeonSpaceValType = dungeonSpaceValType
         self.completedReasonType = gameconst.DunegonCompleteReasonType.DEFAULT
         self.challengeEndTime = 0
-        # 跨服组队队伍 ID（中心权威）：0=非跨服组队副本空间；
-        # 由副本 stub 建空间时按 extra['crossTeamId'] 记录（本服/跨服服两种模式均记录）。
-        # 空间的玩法枚举只在 DungeonSpaceMgr 侧的 dungeonPlayMode 上（本服模式落
-        # CRUSADE/CHIEF，跨服服落 CROSS_CRUSADE/CROSS_CHIEF），与队伍归属判定无关
-        self.crossTeamId = 0
 
     def isActive(self):
         return self.state == self.SPACE_STATUS_DURING
-
-    def isCrossDungeon(self):
-        # 跨服组队副本空间判定：队伍全量落在组队中心（本服/跨服之分只是业务形态），
-        # 归属唯一按 crossTeamId 识别（记录处见 CrossTeamDungeonStub._teamGetDungeonSpaceVal/
-        # _raidGetDungeonSpaceVal）；与空间 playMode（本服副本/跨服副本行为分支用）无关。
-        # 注：队伍中心化 + 旧链路客户端不可达后，CrossTeamDungeonStub 内本判定恒为 True——
-        # 它只是双轨期标记旧 TeamStub/RaidStub 联动分支的删除锚点，随旧系统下线一并塌缩删除
-        return self.crossTeamId > 0
 
     def completeDungeon(self, win=True):
         self.state = self.SPACE_STATUS_COMPLETE if win else self.SPACE_STATUS_FAILED
@@ -307,7 +295,8 @@ class SingleDungeonFoundersInfo(userType.UserDictType):
 #----------------------------队伍副本--------------------------------------------------------
 class TeamDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin):
     def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, teamUUID,\
-                 spaceLevel=1,extraDic={}, **kwargs):
+                 spaceLevel=1,extraDic=None, **kwargs):
+        extraDic = extraDic or {}
 
         super(TeamDungeonSpaceVal, self).__init__(
             spaceNo, spaceUUID, spaceBox, spaceMgr, 
@@ -322,12 +311,74 @@ class TeamDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin):
         self.markDestroy = 0
 
 
+class TeamDungeonFounders(userType.UserDictType):
+    """小队线副本 founders 簿记容器（自 user_type/team.py 迁入；跨服组队副本空间挂
+    TeamDungeonSpaceVal.founders，见 CrossTeamDungeonStub._teamGetDungeonSpaceVal）"""
+
+    def _lateReload(self):
+        for _v in self.values():
+            _v.reloadScript()
+
+    def addFounder(self, spaceNo, playerGbId, playerBox, *args, **kwargs):
+        self[playerGbId] = TeamDungeonFounderVal(spaceNo, playerGbId, playerBox, *args, **kwargs)
+
+    def getFounderVal(self, playerGbId):
+        if playerGbId in self:
+            return self[playerGbId]
+
+        return None
+
+    def destoryFounder(self, playerGbId):
+        self.pop(playerGbId, None)
+
+
+class TeamDungeonFounderVal(userType.UserSingleType):
+    """小队线副本 founder 记录（自 user_type/team.py 迁入）"""
+    def __init__(self, spaceNo, playerGbId, playerBox, tEnter=0, tLeave=0, isEnter=False):
+        self.playerGbId = playerGbId
+        self.spaceNo = spaceNo
+        self.tEnter = tEnter
+        self.playerBox = playerBox
+        self.isEnter = isEnter
+        self.tLeave = tLeave
+
+    def initFromDict(self, dataDic):
+        for _k, _v in dataDic.items():
+            setattr(self, _k, _v)
+
+    def toStreamSavedDic(self):
+        return {
+            'playerGbId': self.playerGbId,
+            'spaceNo': self.spaceNo,
+            'playerBox': self.playerBox,
+            'tLeave': self.tLeave,
+            'tEnter': self.tEnter,
+            'isEnter': self.isEnter,
+        }
+
+    def onAvatarEnter(self, gbId):
+        if gbId == self.playerGbId:
+            self.tEnter = utils.curTS()
+            self.isEnter = True
+            self.tLeave = 0
+
+    def onAvatarLeave(self, gbId, isOffline=False):
+        if gbId == self.playerGbId:
+            self.tLeave = utils.curTS()
+            self.tEnter = 0
+            if isOffline:
+                self.playerBox = None
+
+    def hasAvatar(self):
+        return self.tEnter and not self.tLeave
+
+
 # ----------------------------------------------------------------------
 # 团队副本
 # ----------------------------------------------------------------------
 
 class RaidDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin):
-    """RaidStub 团队副本Space结构体"""
+    """团队副本Space结构体"""
 
     def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, raidUUID,\
                  spaceLevel=1, **kwargs):
@@ -342,6 +393,7 @@ class RaidDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin):
         self.raidUUID = raidUUID
         self.founders = RaidDungeonFounders()
         self.homeEnts = []
+        self.markCreate = True
         self.tMarkDestroy = 0            # 标记删除时间, 在该时间内保证玩家可以安全离开副本space, 最后销毁副本
         self.extraProps = {}
         self.raidSrc = 0
@@ -358,7 +410,7 @@ class RaidDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin):
 
 
 class RaidDungeonFounders(userType.UserDictType):
-    """RaidStub 团队副本中存在成员集合字典"""
+    """团队副本中存在成员集合字典"""
 
     def _lateReload(self):
         for _founderVal in self.values():
@@ -381,7 +433,7 @@ class RaidDungeonFounders(userType.UserDictType):
 
 
 class RaidDungeonFounderVal(userType.UserSingleType):
-    """RaidStub 团队副本中存在成员结构体"""
+    """团队副本中存在成员结构体"""
 
     def __init__(self, spaceNo, spaceUUID, playerBox, playerGBID, tEnter=0, tLeave=0,
                  playerName="", **kwargs):
@@ -430,8 +482,9 @@ class BaseDungeonStatisticFoundersMixin(userType.UserSingleType):
         self.statisticFounders.reloadScript()
     
 class GuildBossDungeonSpaceVal(DungeonSpaceVal, DungeonSpaceTimeLineMixin, BaseDungeonFoundersMixin, BaseDungeonStatisticFoundersMixin):
-    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, guildUUID, guildBox=None, spaceLevel=1,extraDic={},
+    def __init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, guildUUID, guildBox=None, spaceLevel=1,extraDic=None,
                 school = 0, avatarLv = 0, avatarSex = 0, avatarGbId = 0, avatarId = 0):
+        extraDic = extraDic or {}
         DungeonSpaceVal.__init__(self, spaceNo, spaceUUID, spaceBox, spaceMgr, spaceLevel, extraDic, dungeonSpaceValType=gameconst.DungeonSpaceValType.GUILD_BOSS)
         DungeonSpaceTimeLineMixin.__init__(self)
         BaseDungeonFoundersMixin.__init__(self)

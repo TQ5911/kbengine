@@ -17,6 +17,7 @@ import AvatarScores
 import cityBattle_config as CBC
 import abyss_floor as AB_FD
 import formula
+import gamedecorator
 
 class ICrossServer(object):
     CROSSSERVER_TIMEOUT = 10
@@ -300,13 +301,14 @@ class ICrossServer(object):
 
         self.otherServerAvatarBox.onCrossServerEnd(callbackComponent, callbackName, args)
 
+    def onCrossServerEndAck(self):
         #TODO未来如果有多个跨服玩法，需要再配表设计每个玩法goback的场景
         LOG_INFO("gobackServer", self.crossServerFromSpaceNo)
         self.client.onGobackServer(formula.parseLineType(self.crossServerFromSpaceNo))
         gameengine.getGlobalBase('CrossServerStub').onGobackServer(self.accountEntity.accountName)
 
         self.cell.offline(gameconst.OFFLINE_REASON_END_CROSS_SERVER)
-        
+
         LogTrackingMgr.LogTrackingMgr.teleport(
             self.gbID,
             self.accountEntity.clientDistinctId,
@@ -322,6 +324,7 @@ class ICrossServer(object):
         self.stopBagFnvHashCheck()
         if self.crossServerState != gameconst.CrossServerState.ENUM_IN_CROSS_SERVER:
             LOG_ERR("onCrossServerSuc state is not IN_CROSS_SERVER", self.crossServerState)
+            self.otherServerAvatarBox.onCrossServerEndAck()
             return
 
         self.setCrossServerState(gameconst.CrossServerState.ENUM_IN_CURRENT_SERVER)
@@ -331,9 +334,10 @@ class ICrossServer(object):
             getattr(self, callbackName)(*args)
         elif callbackComponent == gameconst.CrossServerCBComponent.ENUM_CELL:
             self.cell and getattr(self.cell, callbackName)(*args)
-        
+
         self.startDestroyCountDown()
         self.accountEntity.changeDinghaoLock(False)
+        self.otherServerAvatarBox.onCrossServerEndAck()
 
     def onReloginInCrossServerState(self):
         LOG_INFO("onReloginInCrossServerState", self.crossServerDict['crossServerId'], self.crossServerDict['token'])
@@ -392,7 +396,7 @@ class ICrossServer(object):
         self.scoresInfo = AvatarScores.avatarScoresInstance.createObjFromDict(baseInitData['scoresInfo'])
         self.serverOpenTime = baseInitData['serverOpenTime']
         self.cell.onCrossServerSyncOtherInitedDataToCrossServerCell(crossData, cellInitData)
-        self.onSetGuildInfoCross(baseInitData['guildUUID'], baseInitData['guildName'], cellInitData['leagueUUID'], True)
+        self.onSetGuildInfoCross(baseInitData['guildUUID'], baseInitData['guildName'], cellInitData['leagueUUID'], True, cellInitData['guildDspFlag'], cellInitData['guildIcon'])
         self.onUpdateUseCoinTimesTicketInfoCross()
 
     # localServer
@@ -423,10 +427,6 @@ class ICrossServer(object):
         if self.isCrossServerInLocalServer and self.otherServerAvatarBox:
             LOG_DBG("syncMethodCallToCrossServerBase::", fnname, fnargs)
             self.otherServerAvatarBox.beSyncMethodCallFromLocalServerBase(fnname, fnargs)
-        else:
-            # 回传静默失败排查用：跨服期间正常必有镜像 mailbox，缺失即异常
-            LOG_WARN('syncMethodCallToCrossServerBase skipped', fnname,
-                     self.isCrossServerInLocalServer, bool(self.otherServerAvatarBox), self.gbID)
 
     # localServer
     def beSyncMethodCallFromLocalServerBase(self, fnname, fnargs):
@@ -479,3 +479,56 @@ class ICrossServer(object):
         
     def getServerOpenTimestamp(self):
         return self.serverOpenTime if self.serverOpenTime else gameconfig.serverOpenTime()
+
+    def checkDinghaoLockWhenLeaveCrossServer(self, cbFuncName):
+        LOG_DBG('checkDinghaoLockWhenLeaveCrossServer', cbFuncName)
+        if not self.accountEntity.changeDinghaoLock(True):
+            LOG_WARN('checkDinghaoLockWhenLeaveCrossServer set dinghao lock failed')
+            return
+
+        self.syncMethodCallToCrossServerBase(cbFuncName, ())
+    # --------------------------------- 大世界跨服开始 ---------------------------
+    #在跨服中调用
+    def onCrossWorldSuccess(self, fromServerId):
+        LOG_INFO('onCrossWorldSuccess', fromServerId)
+
+    def doEnterCrossWorld(self, serverId, mapId, extra):
+        if not self.accountEntity.changeDinghaoLock(True):
+            LOG_WARN('doEnterCrossWorld set dinghao lock failed')
+            return
+        _spaceNo = formula.combineLineSpaceNo(mapId, 0)
+        self.reqCrossServer(
+            serverId,
+            gameconst.CrossServerReasonNo.ENTER_CROSS_WORLD,
+            gameconst.CrossServerCBComponent.ENUM_BASE,
+            "onCrossWorldSuccess",
+            (serverId,),
+            _spaceNo,
+            0,
+            extra)
+
+    @gamedecorator.crossServer
+    def reqLeaveCrossWorld(self, exposed):
+        LOG_DBG('reqLeaveCrossWorld')
+        self.syncMethodCallToLocalServerBase('checkDinghaoLockWhenLeaveCrossServer', ('onReqLeaveCrossWorld',))
+
+    def onReqLeaveCrossWorld(self):
+        self.cell.crossWorldLeave()
+
+    @gamedecorator.crossServer
+    def doLeaveCrossWorld(self):
+        self.syncMethodCallToLocalServerBase('checkDinghaoLockWhenLeaveCrossServer', ('onDoLeaveCrossWorld',))
+
+    def onDoLeaveCrossWorld(self):
+        self.cell.onLeaveCrossWorld()
+        self.gobackServer(gameconst.CrossServerCBComponent.ENUM_NONE, '', ())
+    
+    def onCrossServerUnlock(self):
+        self.accountEntity.changeDinghaoLock(False)
+    # --------------------------------- 大世界跨服结束 ---------------------------
+    
+
+
+
+
+

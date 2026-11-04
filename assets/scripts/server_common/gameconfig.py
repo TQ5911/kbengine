@@ -291,11 +291,13 @@ def setCustomCfg(name, value, isMasterBaseapp=True, isInitSet=False):
                   (utils.escape_string(str(value)), utils.escape_string(_configName))
             KBEngine.executeRawDatabaseCommand(_sql)
 
+        oldVal = KBEngine.globalData['CONFIG'].get(_configName)
         KBEngine.globalData['CONFIG'][_configName] = value
         KBEngine.globalData['CONFIG'] = KBEngine.globalData['CONFIG']
 
         gameengine.callBaseApps('gameconfig.onGameCfgChanged', (name, value, KBEngine.getComponentGroupOrder()))
         if gameglobal.localBaseApp:
+            gameglobal.localBaseApp.notifyStubGameCfgChanged(name, value, oldVal)
             gameglobal.localBaseApp.notifyInterfaceConfigChanged(name, str(value))
 
     elif KBEngine.component == 'interfaces':
@@ -451,7 +453,7 @@ def smsServiceReqUrl():
         url = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/smsServiceReqUrl')
     except:
         url = ''
-    url = '127.0.0.1:23456/SendCode'
+    #url = '127.0.0.1:23456/SendCode'
     return url
 
 @cache_wraper
@@ -460,7 +462,7 @@ def smsServiceVerifyUrl():
         url = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/smsServiceVerifyUrl')
     except:
         url = ''
-    url = '127.0.0.1:23456/VerifyCode'
+    #url = '127.0.0.1:23456/VerifyCode'
     return url
 
 @cache_wraper
@@ -818,6 +820,27 @@ def crossTeamServerAddress():
 def enableCrossTeam():
     return 1
 
+@cache_wraper
+def crossTeamStubNum():
+    # CrossTeamStub个数（跨服组队本服代理分片数），取xml配置值或默认值2，与baseapp数量取小值
+    try:
+        num = int(ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/crossTeamStubNum'))
+    except:
+        num = 2
+
+    if num > baseAppCount():
+        LOG_ERR('crossTeamStubNum cross team stub conf num too large.', num, baseAppCount())
+        num = baseAppCount()
+
+    return num
+
+@cache_wraper
+def crossTeamStateQueryCacheSeconds():
+    # 跨服队伍成员状态轮询周期（秒）：Avatar cell 状态同步/下行读缓存定时器周期
+    # （iCrossTeamCell.onCrossTeamIdChange 建定时器），默认值与中心 1s 推送节奏对齐；
+    # 支持 GM $setcachecfg 在线调整（不落库，重启恢复默认，仅对新建定时器生效）
+    return 1
+
 # 这里和服务端约定好格式为 android_version;ios_version;windows_version
 @config(Str, '', 'hotfix version')
 def hotfixVersion():
@@ -895,6 +918,22 @@ def serverOpenTime():
     except:
         openTime = int(time.time())
     return openTime
+
+
+@cache_wraper
+def preCreateStartTime():
+    try:
+        return int(ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/preCreateStartTime'))
+    except:
+        return 0
+
+
+@cache_wraper
+def preCreateEndTime():
+    try:
+        return int(ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/preCreateEndTime'))
+    except:
+        return 0
 
 
 @cache_wraper
@@ -1129,9 +1168,9 @@ def enableLease():
 def isCrossServer():
     return getCrossServerId() == serverId()
 
-@config(Bool, 'true', '是否开启城战')
+@config(Bool, 'false', '是否开启城战')
 def enableSiegeWar():
-    return True
+    return False
 
 @cache_wraper
 def enableCrossTeamDungeonStub():
@@ -1182,6 +1221,24 @@ def wxReportUrl():
     except:
         host = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=92de3ed1-9bfe-4428-afc6-f1488f9bb452'
     return host
+
+
+@cache_wraper
+def criticalReportUrl():
+    """
+    紧急告警专用群机器人 webhook, 配置项 game/criticalReportUrl。
+
+    与 errReportUrl(wxReportUrl) 分开发到不同的群: errReportUrl 走的是普通错误
+    上报(量比较大), 紧急告警(如 cellapp 死亡)单独一个群, 避免被刷掉。
+    配置为空时回落到内置测试群的 key。
+    """
+    try:
+        url = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/criticalReportUrl')
+    except:
+        url = ''
+
+    url = (url or '').strip()
+    return url
 
 
 @config(Bool, None, '是否开启工坊制造', (ConfigFlag.FLAG_CLIENT, ConfigFlag.ALWAYS_SEND_CLIENT))
@@ -1268,3 +1325,19 @@ def allianceServiceInfo():
         allianceServersInfo = []
 
     return allianceServersInfo
+
+@config(Bool, None, '是否开启大世界跨服', (ConfigFlag.FLAG_CLIENT, ConfigFlag.ALWAYS_SEND_CLIENT))
+def isCrossWorld():
+    return False
+
+@config(Bool, None, '是否开启跨服联盟', (ConfigFlag.FLAG_CLIENT, ConfigFlag.ALWAYS_SEND_CLIENT))
+def enableAllianceCross():
+    return 0
+
+@cache_wraper
+def promoterAPI():
+    try:
+        url = ResMgr.getStringContentFromPath(ResMgr.kbengineConfig(), 'game/promoterAPI')
+    except:
+        url = ''
+    return url

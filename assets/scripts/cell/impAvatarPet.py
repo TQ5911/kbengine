@@ -37,19 +37,34 @@ class ImpAvatarPet(object):
                 LOG_DBG('onInitPetProps, level prop init:', petId, petLevel, propName, val)
 
     def updateLevelProps(self, petId, oldLevel, newLevel):
-        if oldLevel >= newLevel:
+        if oldLevel == newLevel:
             return
         minLevel = int(PDSD.datas['petMinLevel']['value'])
         petData = PDPDD.datas[petId]
         levelPropList = petData['levelProp']
+        lowLevel = min(oldLevel, newLevel)
+        highLevel = max(oldLevel, newLevel)
+        # 升级加属性, 降级减属性(GM回退场景)
+        sign = 1 if newLevel > oldLevel else -1
         for propName, val in levelPropList:
             minLevel += 1
-            if minLevel <= oldLevel:
+            if minLevel <= lowLevel:
                 continue
-            if minLevel > newLevel:
+            if minLevel > highLevel:
                 break
-            self.addProp(propName, val, gameconst.SourceType.SrcTpPetProp)
-            LOG_DBG('updateLevelProps, level prop add:', petId, oldLevel, newLevel, propName, val)
+            self.addProp(propName, sign * val, gameconst.SourceType.SrcTpPetProp)
+            LOG_DBG('updateLevelProps, level prop change:', petId, oldLevel, newLevel, propName, sign * val)
+
+    def gmRemoveLingShouProps(self, petId, petLevel):
+        # GM反激活精灵: 移除该精灵提供的全部战斗属性; 若正在跟随则清掉跟随状态(ALL_CLIENTS属性自动同步客户端)
+        LOG_INFO('gmRemoveLingShouProps', petId, petLevel)
+        if self.lingShouId == petId:
+            self.lingShouId = 0
+        petData = PDPDD.datas[petId]
+        for propName, val in petData['prop']:
+            self.addProp(propName, -val, gameconst.SourceType.SrcTpPetProp)
+            LOG_DBG('gmRemoveLingShouProps, base prop remove:', petId, propName, val)
+        self.updateLevelProps(petId, petLevel, int(PDSD.datas['petMinLevel']['value']))
 
     # ---------------------------      item  action  ------------------------------------
     def checkLingShouEggItemCond(self, gridId, itemId, useNum, ctx):

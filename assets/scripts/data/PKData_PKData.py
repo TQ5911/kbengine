@@ -63,13 +63,13 @@ datas = _tools.RODict({
         "ID": "PK_changeToPeaceMode_msgID",
         "value": 54001540,
     }),
-    "PK_changeToShaneMode_msgID": _tools.RODict({
-        "ID": "PK_changeToShaneMode_msgID",
-        "value": 54001541,
-    }),
     "PK_changeToAttackMode_msgID": _tools.RODict({
         "ID": "PK_changeToAttackMode_msgID",
         "value": 54001542,
+    }),
+    "PK_changeToShaneMode_msgID": _tools.RODict({
+        "ID": "PK_changeToShaneMode_msgID",
+        "value": 54001541,
     }),
     "PK_changeToDuelMode_msgID": _tools.RODict({
         "ID": "PK_changeToDuelMode_msgID",
@@ -189,7 +189,7 @@ datas = _tools.RODict({
     }),
     "refugePrice": _tools.RODict({
         "ID": "refugePrice",
-        "value": (30000021, 100),
+        "value": (30000021, 10),
     }),
     "specialStatusMapId": _tools.RODict({
         "ID": "specialStatusMapId",
@@ -198,5 +198,37 @@ datas = _tools.RODict({
     "refugeTimeMax": _tools.RODict({
         "ID": "refugeTimeMax",
         "value": 99,
+    }),
+    "PK_modeText1": _tools.RODict({
+        "ID": "PK_modeText1",
+        "value": "防卫",
+    }),
+    "PK_modeText2": _tools.RODict({
+        "ID": "PK_modeText2",
+        "value": "杀戮",
+    }),
+    "enemyListAutoRemove": _tools.RODict({
+        "ID": "enemyListAutoRemove",
+        "value": 30,
+    }),
+    "enemyListAddFailed": _tools.RODict({
+        "ID": "enemyListAddFailed",
+        "value": 54003605,
+    }),
+    "enemyListAddSuccess": _tools.RODict({
+        "ID": "enemyListAddSuccess",
+        "value": 54003606,
+    }),
+    "enemyListRemoveSuccess": _tools.RODict({
+        "ID": "enemyListRemoveSuccess",
+        "value": 54003607,
+    }),
+    "enemyListAddFailed2": _tools.RODict({
+        "ID": "enemyListAddFailed2",
+        "value": 54003608,
+    }),
+    "PK_modeExchangeForbidden": _tools.RODict({
+        "ID": "PK_modeExchangeForbidden",
+        "value": "54003610",
     })
 })

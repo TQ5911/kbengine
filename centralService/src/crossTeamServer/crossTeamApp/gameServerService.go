@@ -14,6 +14,10 @@ type GameServerService struct {
 	*trpc.ServerEndPoint
 	app      *CrossTeamApp
 	serverId uint32
+	// Stub 分片信息（注册时携带）：stubIdx 分片下标，stubNum 本服分片总数；
+	// 0 值表示旧版 Stub 未上报，分片路由对该连接回退广播
+	stubIdx uint32
+	stubNum uint32
 }
 
 func (gss *GameServerService) OnLoseConnection() {
@@ -26,15 +30,32 @@ func (gss *GameServerService) OnLoseConnection() {
 }
 
 func (gss *GameServerService) RegisterGameServer(in *pb.RegisterGameServerRequest) (*pb.Void, error) {
-	appLog.Info("register game server:", in.ServerId)
 	if in.ServerId == 0 {
 		return nil, errors.New(fmt.Sprint("invalid ServerId: ", in.ServerId))
 	}
 
+	// 分片信息合法性：上报了就必须自洽（下标在总数内），否则按无分片信息处理（回退广播）
+	if in.StubNum > 0 && in.StubIdx < in.StubNum {
+		gss.stubIdx = in.StubIdx
+		gss.stubNum = in.StubNum
+	} else if in.StubNum > 0 || in.StubIdx > 0 {
+		appLog.Warnf(
+			"game server %d registered with invalid shard info, stubIdx=%d stubNum=%d, fallback to broadcast",
+			in.ServerId,
+			in.StubIdx,
+			in.StubNum,
+		)
+	}
 	gss.serverId = in.ServerId
 	gss.app.addGameServer(gss)
 
-	appLog.Infof("game server %d registered, total connections: %d", in.ServerId, len(gss.app.getGameServers(in.ServerId)))
+	appLog.Infof(
+		"game server %d registered, stubIdx=%d stubNum=%d, total connections: %d",
+		in.ServerId,
+		gss.stubIdx,
+		gss.stubNum,
+		len(gss.app.getGameServers(in.ServerId)),
+	)
 	return nil, nil
 }
 
@@ -281,7 +302,23 @@ func (gss *GameServerService) ReportMemberStateBatch(in *pb.ReportMemberStateBat
 	return nil, nil
 }
 
+func (gss *GameServerService) RenameMember(in *pb.RenameMemberRequest) (*pb.Void, error) {
+	gss.app.dispatcher.Dispatch(in.TeamId, "RenameMember", func(w *teamWorker) {
+		gss.app.renameMember(w, gss, in)
+	})
+	return nil, nil
+}
+
 func (gss *GameServerService) MemberOffline(in *pb.MemberOfflineRequest) (*pb.Void, error) {
+	// 游戏服本地队伍缓存可能滞后（入队推送未落地即下线），允许 teamId=0 上报：
+	// 按 gbId 反查权威 playerTeam 索引定位真实队伍后再投递；查不到说明本就不在队，不处理
+	if in.TeamId == 0 {
+		in.TeamId = gss.app.getPlayerTeam(in.GbId)
+		if in.TeamId == 0 {
+			appLog.Warnf("member offline but player not in any team, gbId=%d", in.GbId)
+			return nil, nil
+		}
+	}
 	gss.app.dispatcher.Dispatch(in.TeamId, "MemberOffline", func(w *teamWorker) {
 		gss.app.memberOffline(w, in)
 	})

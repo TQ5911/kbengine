@@ -96,10 +96,6 @@ class IWarehouse(object):
         if self.bagData.isLocked():
             LOG_WARN('     in reqMoveItemToWarehouse, bag locked')
             return
-
-        if self.warehouse.isFull():
-            self.onMessagePre(BGDSD.datas['putInFail_bankFull_msg']['value'], [])
-            return
         
         bankForbiddenList = BGDSD.datas['bankForbiddenList']['value']
         if bankForbiddenList and itemId in bankForbiddenList:
@@ -161,10 +157,6 @@ class IWarehouse(object):
         LOG_INFO('in reqMoveItemToBag:', gridId, itemId, itemNum)
         if self.bagData.isLocked():
             LOG_WARN('in reqMoveItemToBag, bag locked')
-            return
-
-        if self.bagData.isFull():
-            self.onMessagePre(BGDSD.datas['takeOutFail_bagFull_msg']['value'], [])
             return
         
         itemObj = self.warehouse.getItemObjByGridId(gridId)

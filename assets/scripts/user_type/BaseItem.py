@@ -205,6 +205,10 @@ class BaseItem(userType.UserSingleType, metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
+    def simpleAttr2Json(self):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
     def attr2Json(self):
         """將其他属性转化为json.dumps str, 该方法需要和`BaseItem.onSpecificItemChanged`一起初始化"""
         raise NotImplementedError

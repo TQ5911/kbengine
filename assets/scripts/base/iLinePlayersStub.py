@@ -17,6 +17,7 @@ import json
 import branchData_branchData as B_BD
 import gamePlay_gamePlay as GGD
 import branchData_set as BDS
+import abyss_floor as AB_FD
 
 
 class EnterLineExtra(object):
@@ -48,17 +49,39 @@ class IBranchLineStub(object):
         self.fightingPlayersCntBase = {}
         self.lastChooseLineNo = 0
 
+    def _branchLineNumLimit(self, lineType):
+        # numChange: ((世界等级, 分线上限), ...)，达到该档后生效，多档同时满足取最高档
+        cfg = B_BD.datas.get(lineType)
+        if not cfg:
+            return 1
+        limit = gameconst.getBranchLineCnt(lineType)
+        numChange = cfg.get('numChange')
+        if not numChange:
+            return limit
+        # 归墟在本服算分线，世界等级用跨服的
+        worldLevel = utils.getWorldLevel(lineType in AB_FD.id2floor)
+        for needLevel, lineNum in numChange:
+            if worldLevel >= needLevel:
+                limit = lineNum
+            else:
+                break
+        return min(limit, gameconst.getBranchLineCnt(lineType))
+
     def _checkSelectLineActivity(self, lineNo, box, gbId, extraInfo, lineType):
         extraInfo = EnterLineExtra.new(extraInfo, lineNo)
         return self._checkSelectLine(lineNo, box, gbId, extraInfo, exlude=None, isSwitchLine=False, lineType=lineType, checkCellAvatarCount=True)
 
     def _checkSelectLine(self, lineNo, box, gbId, extraInfo, exlude=None, isSwitchLine=False, lineType=None, checkCellAvatarCount=True):
-        LOG_DBG("checkSelectLine", lineNo, box, gbId, extraInfo, exlude, isSwitchLine, lineType)
         lineType = lineType or self.lineType
+        LOG_DBG("checkSelectLine", formula.lineInfo(lineType, lineNo), box, gbId, extraInfo, exlude, isSwitchLine)
         needCnt = len(extraInfo.followers) + 1
 
         if exlude and lineNo in exlude:
             return gameconst.EnterLineCodeEnum.ERR_EXLUDE
+
+        # 世界等级把分线收掉之后，大世界、幻境、魔方、归墟都不能再进
+        if lineNo >= self._branchLineNumLimit(lineType):
+            return gameconst.EnterLineCodeEnum.ERR_REACH_MAX_MEMBER
 
         # TODO X: validate line config
         lineMaxCnt = B_BD.datas[lineType]['N1']
@@ -104,7 +127,7 @@ class IBranchLineStub(object):
                 if cellappIndx == 0:
                     cellappIndx = gameconfig.cellAppCount()
                 cellAvatarCount = gameglobal.cellAvatarCountDict.get(cellappIndx, 0)
-                LOG_INFO("checkmaxCellAvatarCount", cellappIndx, cellAvatarCount)
+                LOG_INFO("checkmaxCellAvatarCount", formula.lineInfo(lineType, lineNo), cellappIndx, cellAvatarCount)
                 if cellAvatarCount >= gameconfig.maxCellAvatarCount():
                     return gameconst.EnterLineCodeEnum.ERR_REACH_MAX_AVATAR_COUNT
             else:
@@ -112,7 +135,7 @@ class IBranchLineStub(object):
                 if cellappIndx == 0:
                     cellappIndx = gameconfig.cellAppCount()
                 cellAvatarCount = gameglobal.cellAvatarCountDict.get(cellappIndx, 0)
-                LOG_INFO("checkmaxCellAvatarCount Dungeon", cellappIndx, cellAvatarCount)
+                LOG_INFO("checkmaxCellAvatarCount Dungeon", formula.lineInfo(lineType, lineNo), cellappIndx, cellAvatarCount)
                 if cellAvatarCount >= gameconfig.maxCellAvatarCount():
                     return gameconst.EnterLineCodeEnum.ERR_REACH_MAX_AVATAR_COUNT
 
@@ -126,32 +149,35 @@ class IBranchLineStub(object):
 
         # 优先进入指定分线（如 BOSS 互斥回源分线，由 extraInfo 携带），
         # 进不去则走原有选线逻辑，由后续进入流程校验报错
+        limit = self._branchLineNumLimit(lineType)
         bossMutexLine = getattr(extraInfo, 'bossMutexLine', None)
-        if bossMutexLine is not None and bossMutexLine in allPlayers:
+        if bossMutexLine is not None and bossMutexLine in allPlayers and bossMutexLine < limit:
             checkCode = self._checkSelectLine(bossMutexLine, box, gbId, extraInfo, exlude, isSwitchLine, lineType)
             if checkCode == gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS:
                 return bossMutexLine
-            LOG_INFO('_autoSelectLine bossMutexLine cannot enter, fallback', bossMutexLine, checkCode, gbId)
+            LOG_INFO('_autoSelectLine bossMutexLine cannot enter, fallback', formula.lineInfo(lineType, bossMutexLine), checkCode, gbId)
 
         # 有队伍且不是队长，优先找队长
         if extraInfo.teamUUID and not extraInfo.isLeader:
             for lineNo, lineMembers in allPlayers.items():
+                if lineNo >= limit:
+                    continue
                 if lineMembers.getLeaderGbId(extraInfo.teamUUID) and len(lineMembers) + needCnt <= lineMaxCnt:
                     return lineNo
 
         n5list = []
-        lineNoList = sorted(allPlayers.keys())
+        lineNoList = [ln for ln in sorted(allPlayers.keys()) if ln < limit]
         if BDS.datas["Branch_allocationPlan"]["value"] == 1:
             newLineNoList = []
             usedLineNoSet = set()
             lineInfo = self._calculateLineInfo(lineType)
             if gameconfig.switchLineUselastLineNo():
-                if self.lastChooseLineNo in allPlayers:
+                if self.lastChooseLineNo in allPlayers and self.lastChooseLineNo < self._branchLineNumLimit(lineType):
                     maxNum = 0
                     for k, v in lineInfo['info'].items():
                         if k != self.lastChooseLineNo:
                             maxNum = max(maxNum, v)
-                    LOG_INFO("lastChooseLineNo", self.lastChooseLineNo, lineInfo, maxNum)
+                    LOG_INFO("lastChooseLineNo", formula.lineInfo(lineType, self.lastChooseLineNo), lineInfo, maxNum)
                     if len(allPlayers[self.lastChooseLineNo]) <= maxNum + BDS.datas["Branch_mergeFloatRange"]["value"]:
                         newLineNoList.append(self.lastChooseLineNo)
                         if self.lastChooseLineNo in lineInfo['info']:
@@ -163,7 +189,7 @@ class IBranchLineStub(object):
                 if lineNo not in usedLineNoSet:
                     newLineNoList.append(lineNo)
             lineNoList = newLineNoList
-            LOG_INFO("lineNoList", lineNoList)
+            LOG_INFO("lineNoList", formula.lineInfo(lineType), lineNoList)
 
         for lineNo in lineNoList:
             checkCode = self._checkSelectLine(lineNo, box, gbId, extraInfo, exlude, isSwitchLine, lineType)
@@ -173,9 +199,9 @@ class IBranchLineStub(object):
                 n5list.append(lineNo)
         
         if n5list:
-            LOG_INFO("give n5 list", n5list[0])
+            LOG_INFO("give n5 list", formula.lineInfo(lineType, n5list[0]))
             return n5list[0]
-        LOG_WARN('cannot select line', box.id, gbId, needCnt,
+        LOG_WARN('cannot select line', formula.lineInfo(lineType), box.id, gbId, needCnt,
                     [len(lineMembers) for lineMembers in allPlayers.values()])
 
         return -1
@@ -189,13 +215,13 @@ class IBranchLineStub(object):
             return res
         
         baseLineNum = B_BD.datas[lineType]['num']
-        maxLineNum = gameconst.getBranchLineCnt(lineType)
+        maxLineNum = self._branchLineNumLimit(lineType)
         addRequired = B_BD.datas[lineType]['AddRequired']
 
         needNewLine = True
-        for lineNo in range(gameconst.getBranchLineCnt(lineType)):
+        for lineNo in range(maxLineNum):
             cnt = self.getSpaceAvatarNo(formula.combineLineSpaceNo(lineType, lineNo))
-            LOG_INFO("calculateLineInfo", lineType, lineNo, cnt)
+            LOG_INFO("calculateLineInfo", formula.lineInfo(lineType, lineNo), cnt, maxLineNum)
             if not self.isSpaceReadyEnter(lineType, lineNo):
                 continue
 
@@ -218,7 +244,7 @@ class IBranchLineStub(object):
 
     def _checkLineMerge(self, lineType=None):
         lineType = lineType or self.lineType
-        LOG_DBG('_checkLineMerge', lineType)
+        LOG_DBG('_checkLineMerge', formula.lineInfo(lineType))
         baseLineNum = B_BD.datas[lineType]['num']
         mergeRequired = B_BD.datas[lineType]['MergeRequired']
         allPlayers = self.getMapBranchLinePlayers(lineType)
@@ -232,7 +258,7 @@ class IBranchLineStub(object):
 
         if not sortedData:
             return
-        LOG_DBG('sortedData', sortedData)
+        LOG_DBG('sortedData', formula.lineInfo(lineType), sortedData)
 
         idx = 0
 
@@ -260,7 +286,7 @@ class IBranchLineStub(object):
         if not self.mergeRes[lineType]:
             return
 
-        LOG_DBG('mergeRes', self.mergeRes[lineType])
+        LOG_DBG('mergeRes', formula.lineInfo(lineType), self.mergeRes[lineType])
         msgID = BDS.datas["Branch_mergeNoticeMsg"]["value"]
         for i, res in self.mergeRes[lineType]:
             for lineNo in res:
@@ -276,14 +302,14 @@ class IBranchLineStub(object):
     def _doLineMerge(self, lineType=None):
         lineType = lineType or self.lineType
         if lineType in self.mergeRes:
-            LOG_DBG('_doLineMerge', lineType)
+            LOG_DBG('_doLineMerge', formula.lineInfo(lineType))
             for i, res in self.mergeRes[lineType]:
                 self.mergeLine(i, res, lineType)
             self.mergeRes.pop(lineType)
 
     def mergeLine(self, i, res, lineType=None):
         lineType = lineType or self.lineType
-        LOG_DBG('mergeLine', i, res, lineType)
+        LOG_DBG('mergeLine', formula.lineInfo(lineType, i), res)
         mergeRequired = B_BD.datas[lineType]['MergeRequired']
         allPlayers = self.getMapBranchLinePlayers(lineType)
         for fromLineNo in res:
@@ -294,7 +320,7 @@ class IBranchLineStub(object):
                 _pVal = lineMembers.get(gbId)
                 if not _pVal:
                     continue
-                if not _pVal.playerBox:
+                if not _pVal.playerBox or utils.checkBoxOffline(_pVal.playerBox, reportErr=False):
                     continue
                 _pVal.playerBox.cell.onMergeLine(i)
 
@@ -303,7 +329,7 @@ class IBranchLineStub(object):
         lineType = formula.parseLineType(spaceNo)
         self.fightingPlayersCntBase.setdefault(lineType, {})
         self.fightingPlayersCntBase[lineType][lineNo] = cnt
-        LOG_DBG("onFightingPlayersCntSync", lineType, lineNo, cnt)
+        LOG_DBG("onFightingPlayersCntSync", formula.lineInfo(lineType, lineNo, spaceNo), cnt)
 
 class ILinePlayersStub(IBranchLineStub):
     def __init__(self):
@@ -332,31 +358,32 @@ class ILinePlayersStub(IBranchLineStub):
         _linePlayers = self.allPlayers.get(lineNo)
 
         _timeoutTime = utils.curTS() - timeOutDuration
+        _lineCtx = formula.lineInfo(self.lineType, lineNo)
         if not _linePlayers:
-            LOG_WARN('onClearEnterTimeOut:spaceNo={}, _linePlayers is None'.format(lineNo))
+            LOG_WARN('onClearEnterTimeOut: _linePlayers is None', _lineCtx)
             return
 
         _clearList = _linePlayers.clearTimeOutInfo(_timeoutTime)
         if _clearList:
-            LOG_ERR('onClearEnterTimeOut:spaceNo={}, clearList={}'.format(lineNo, _clearList))
+            LOG_ERR('onClearEnterTimeOut: clear timeout players', _lineCtx, 'clearList', _clearList)
             for _gbId in _clearList:
                 self.allPlayers.pop(_gbId, None)
 
-    def onLineSpaceGone(self, spaceNo, groupOrder):
+    def onLineSpaceGone(self, spaceNo):
         lineNo = formula.parseLineNo(spaceNo)
         self.allPlayers.pop(lineNo)
 
         self.batchlyCall(self.sendLineInfoOnSpaceChanged(), 50)
 
-    def onCellappRelive(self, groupOrder):
+    def onCellappRelive(self, cellId):
         pass
 
-    def handleCellappDeath(self, groupOrder):
+    def handleCellappDeath(self, cellId):
         pass
 
     def enterLine(self, lineNo, box, gbId, position, direction, extra):
         _linePlayers = self.allPlayers.getLinePlayers(lineNo) or ()
-        LOG_INFO('enterLine', box.id, gbId, lineNo, extra, len(_linePlayers))
+        LOG_INFO('enterLine', formula.lineInfo(self.lineType, lineNo), box.id, gbId, extra, len(_linePlayers))
         _ext = EnterLineExtra.new(extra, lineNo)
 
         isAutoSelectedLine = False
@@ -365,8 +392,12 @@ class ILinePlayersStub(IBranchLineStub):
             isAutoSelectedLine = True
 
         elif extra.get('isAuto'):
-            LOG_ERR('enterline: invalid args', lineNo, gbId, extra)
+            LOG_ERR('enterline: invalid args', formula.lineInfo(self.lineType, lineNo), gbId, extra)
             return
+
+        if lineNo >= self._branchLineNumLimit(self.lineType):
+            lineNo = self._autoSelectLine(box, gbId, _ext)
+            isAutoSelectedLine = True
 
         if formula.checkWorldLineType(self.lineType) and isAutoSelectedLine and lineNo < 0:
             if 'telToMainCityWhenFull' in extra:
@@ -387,39 +418,43 @@ class ILinePlayersStub(IBranchLineStub):
                     extra['isForceEnter'] = True
                     extra.pop('telToMainCityWhenFull')
                     position, direction = formula.getSpaceBornPosAndDir(returnMapID)
-                    LOG_DBG('enterLine: telToMainCityWhenFull')
+                    LOG_DBG('enterLine: telToMainCityWhenFull', formula.lineInfo(self.lineType), 'returnMapID', returnMapID, gbId)
                     gameengine.getLineStub(returnMapID).enterLine(-1, box, gbId, position, direction, extra)
                 return
             
             #突破上限强行进入，主城满人的时候再进入才会发生
             if extra.get('isLogin') or extra.get('isForceEnter'):
-                LOG_ERR('enterLine: reach max member', box.id, gbId, extra)
-                lineNo = random.choice(self.getLineNoReadyForEnter())
+                LOG_ERR('enterLine: reach max member', formula.lineInfo(self.lineType), box.id, gbId, extra)
+                maxLineNum = self._branchLineNumLimit(self.lineType)
+                readyLines = [ln for ln in self.getLineNoReadyForEnter() if ln < maxLineNum]
+                if not readyLines:
+                    readyLines = self.getLineNoReadyForEnter()
+                lineNo = random.choice(readyLines)
             else:
                 #没处理到的enterline
                 box.onMessagePre(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
-                gameengine.panicStack('enterLine: unexpected error', box.id, gbId, extra)
+                gameengine.panicStack('enterLine: unexpected error', formula.lineInfo(self.lineType), box.id, gbId, extra)
                 return
 
         if lineNo < 0:
-            LOG_ERR('enterLine _autoSelectLine failed:', box.id, gbId, extra)
+            LOG_ERR('enterLine _autoSelectLine failed:', formula.lineInfo(self.lineType, lineNo), box.id, gbId, extra)
             return
 
         spaceVal = self.getLineSpaceVal(lineNo)
         if not spaceVal:
-            LOG_ERR('enterLine: invalid lineNo', self.lineType, lineNo, box.id, gbId)
+            LOG_ERR('enterLine: invalid lineNo', formula.lineInfo(self.lineType, lineNo), box.id, gbId)
             return
 
         if not extra.get('isLogin'):
             _playerVal = self.allPlayers.getPlayer(-1 if lineNo < 0 else lineNo, gbId)
             if _playerVal:
-                LOG_WARN('enterLine: player is already in line', lineNo, _playerVal, _playerVal.playerStatus)
+                LOG_WARN('enterLine: player is already in line', formula.lineInfo(self.lineType, lineNo), _playerVal, _playerVal.playerStatus)
 
             # 自动选出的已经check过了
             if not isAutoSelectedLine:
                 checkCode = self._checkEnterLine(lineNo, box, gbId, _ext)
                 if checkCode != gameconst.EnterLineCodeEnum.ENTER_CHECK_SUCCESS:
-                    LOG_INFO('enterLine fail:', lineNo, box.id, gbId, extra, checkCode)
+                    LOG_INFO('enterLine fail:', formula.lineInfo(self.lineType, lineNo), box.id, gbId, extra, checkCode)
 
                     # 跟随队长失败需要处理
                     _callback = getattr(box.cell, extra.get('failCallback', ''), None)
@@ -439,13 +474,13 @@ class ILinePlayersStub(IBranchLineStub):
         _playerVal.checkEnterTimer = self.addTimerCB(10, '_checkPlayerEnterLine', (lineNo, box, gbId),
                                                    gametimer.TIMER_TAG_CHECK_PLAYER_ENTER_LINE)
         
-        LOG_INFO("lastChooseLineNo", self.lastChooseLineNo, "->", lineNo)
+        LOG_INFO("lastChooseLineNo", formula.lineInfo(self.lineType, self.lastChooseLineNo), "->", formula.lineInfo(self.lineType, lineNo))
         self.lastChooseLineNo = lineNo
 
     # 进入分线添加playerVal前调用，保证只存在一个playerVal
     def removeLinePlayerWhenExist(self, gbId, reason):
         if reason:
-            LOG_INFO('removeLinePlayerWhenExist', gbId, reason)
+            LOG_INFO('removeLinePlayerWhenExist', formula.lineInfo(self.lineType), gbId, reason)
 
         for lineNo_ in self.allPlayers.keys():
             _playerVal = self.allPlayers.getPlayer(lineNo_, gbId)
@@ -474,7 +509,7 @@ class ILinePlayersStub(IBranchLineStub):
     def _checkPlayerEnterLine(self, lineNo, box, gbId, checkCnt=0):
         _playerVal = self.allPlayers.getPlayer(lineNo, gbId)
         if not _playerVal:
-            LOG_ERR('_checkPlayerEnterLine error: player not in line', lineNo, box.id, gbId)
+            LOG_ERR('_checkPlayerEnterLine error: player not in line', formula.lineInfo(self.lineType, lineNo), box.id, gbId)
             return
 
         _playerVal.checkEnterTimer = 0
@@ -482,7 +517,7 @@ class ILinePlayersStub(IBranchLineStub):
         if _playerVal.playerStatus != _playerVal.INLINE:
             spaceNo = formula.combineLineSpaceNo(self.lineType, lineNo)
             if checkCnt < 5:
-                LOG_ERR('_checkPlayerEnterLine fail:', lineNo, box.id, gbId, checkCnt)
+                LOG_ERR('_checkPlayerEnterLine fail:', formula.lineInfo(self.lineType, lineNo), box.id, gbId, checkCnt)
 
             if checkCnt > 3 and not formula.inWorldLineScene(spaceNo):
                 self.removeLinePlayerFromLine(lineNo, gbId)
@@ -496,7 +531,7 @@ class ILinePlayersStub(IBranchLineStub):
     def enterLineSuccess(self, lineNo, box, gbId, succInfo):
         _playerVal = self.allPlayers.getPlayer(lineNo, gbId)
         if not _playerVal:
-            LOG_ERR('enterLineSuccess:player is not in line', lineNo)
+            LOG_ERR('enterLineSuccess:player is not in line', formula.lineInfo(self.lineType, lineNo), gbId)
             return
 
         if _playerVal.checkEnterTimer:
@@ -506,15 +541,15 @@ class ILinePlayersStub(IBranchLineStub):
         _playerVal.setPlayerStatus(linePlayers.LinePlayerVal.INLINE)
 
     def enterLineFailed(self, lineNo, box, gbId, extra):
-        LOG_INFO('enterLineFailed:', lineNo, box.id, gbId, extra)
+        LOG_INFO('enterLineFailed:', formula.lineInfo(self.lineType, lineNo), box.id, gbId, extra)
         spaceVal = self.getLineSpaceVal(lineNo)
         if not spaceVal:
-            LOG_ERR('enterLineFailed: invalid lineNo', self.lineType, lineNo, box.id, gbId)
+            LOG_ERR('enterLineFailed: invalid lineNo', formula.lineInfo(self.lineType, lineNo), box.id, gbId)
             return
 
         _playerVal = self.allPlayers.getPlayer(lineNo, gbId)
         if not _playerVal:
-            LOG_ERR('enterLineFailed:player is not in line', lineNo)
+            LOG_ERR('enterLineFailed:player is not in line', formula.lineInfo(self.lineType, lineNo), gbId)
             return
 
         self.removeLinePlayerFromLine(lineNo, gbId)
@@ -534,16 +569,16 @@ class ILinePlayersStub(IBranchLineStub):
         if fromLineNo != toLineNo and toLineNo != -1:
             lineMembers = self.allPlayers.getLinePlayers(toLineNo)
             if not lineMembers:
-                LOG_ERR("autoSwitchLine: toLineNo is not in line", toLineNo)
+                LOG_ERR("autoSwitchLine: toLineNo is not in line", formula.lineInfo(self.lineType, toLineNo), formula.lineInfo(spaceNo=fromSpaceNo), gbId)
                 return
             lineMembers.doAddPendingEnterPlayer(self, gbId)
 
         spaceVal = self.getLineSpaceVal(toLineNo) if toLineNo != -1 else self.getLineSpaceVal(0)
-        box.callMethod(cbName, (toLineNo, spaceVal.lineSpaceBox, extra.get('position', None)) + cbArgs)
+        box.callMethod(cbName, (spaceVal.spaceMgrBoxCell.id, toLineNo, spaceVal.lineSpaceBox, extra.get('position', None)) + cbArgs)
 
     #目标线全满了回主城
     def autoSwitchLineToMainCity(self, box, gbId, fromSpaceNo, extra, cbName, cbArgs):
-        LOG_DBG("autoSwitchLineToMainCity", box, gbId, fromSpaceNo, extra, cbName, cbArgs)
+        LOG_DBG("autoSwitchLineToMainCity", formula.lineInfo(self.lineType), formula.lineInfo(spaceNo=fromSpaceNo), box, gbId, extra, cbName, cbArgs)
         ext = EnterLineExtra.new(extra, -1)
         fromLineNo = formula.parseLineNo(fromSpaceNo)
         toLineNo = self._autoSelectLine(box, gbId, ext, exlude=None, isSwitchLine=True)
@@ -551,12 +586,16 @@ class ILinePlayersStub(IBranchLineStub):
         extra['position'] = pos
 
         if formula.checkWorldLineType(self.lineType) and toLineNo < 0:
-            toLineNo = random.choice(self.getLineNoReadyForEnter())
+            maxLineNum = self._branchLineNumLimit(self.lineType)
+            readyLines = [ln for ln in self.getLineNoReadyForEnter() if ln < maxLineNum]
+            if not readyLines:
+                readyLines = self.getLineNoReadyForEnter()
+            toLineNo = random.choice(readyLines)
 
         if fromLineNo != toLineNo:
             _lineMembers = self.allPlayers.getLinePlayers(toLineNo)
             if not _lineMembers:
-                LOG_ERR("autoSwitchLineToMainCity: toLineNo is not in line", toLineNo)
+                LOG_ERR("autoSwitchLineToMainCity: toLineNo is not in line", formula.lineInfo(self.lineType, toLineNo), formula.lineInfo(spaceNo=fromSpaceNo), gbId)
                 return
             _lineMembers.doAddPendingEnterPlayer(self, gbId)
 
@@ -564,22 +603,22 @@ class ILinePlayersStub(IBranchLineStub):
         box.callMethod(cbName, (toLineNo, _spaceVal.lineSpaceBox, extra.get('position', None)) + cbArgs)
 
     def doSwitchLine(self, fromLineNo, toLineNo, box, gbId, extraData):
-        LOG_INFO('doSwitchLine', fromLineNo, toLineNo, box.id, gbId)
+        LOG_INFO('doSwitchLine', formula.lineInfo(self.lineType, fromLineNo), '->', formula.lineInfo(self.lineType, toLineNo), box.id, gbId)
         _ext = EnterLineExtra.new(extraData, toLineNo)
-        if toLineNo < 0:
+        if toLineNo < 0 or toLineNo >= self._branchLineNumLimit(self.lineType):
             toLineNo = self._autoSelectLine(box, gbId, _ext, exlude=(fromLineNo,), isSwitchLine=True)
 
         if toLineNo < 0:
-            LOG_ERR('doSwitchLine _autoSelectLine fail', fromLineNo, toLineNo, box.id, gbId, extraData)
+            LOG_ERR('doSwitchLine _autoSelectLine fail', formula.lineInfo(self.lineType, fromLineNo), '->', formula.lineInfo(self.lineType, toLineNo), box.id, gbId, extraData)
             return False
 
         if toLineNo == fromLineNo:
-            LOG_ERR('doSwitchLine fail: same line')
+            LOG_ERR('doSwitchLine fail: same line', formula.lineInfo(self.lineType, fromLineNo), box.id, gbId)
             return False
 
         spaceVal = self.getLineSpaceVal(toLineNo)
         if not spaceVal:
-            LOG_ERR('doSwitchLine: invalid lineNo', self.lineType, fromLineNo, toLineNo, box.id, gbId)
+            LOG_ERR('doSwitchLine: invalid lineNo', formula.lineInfo(self.lineType, fromLineNo), '->', formula.lineInfo(self.lineType, toLineNo), box.id, gbId)
             return False
 
         _lineMembers = self.allPlayers.getLinePlayers(fromLineNo)
@@ -589,7 +628,7 @@ class ILinePlayersStub(IBranchLineStub):
         _playerVal = self.allPlayers.getPlayer(fromLineNo, gbId)
         if not _playerVal:
             # 可能由于某种异常跑到别的线上了
-            LOG_WARN('doSwitchLine: player is not in line', self.lineType, fromLineNo, toLineNo, box.id, gbId)
+            LOG_WARN('doSwitchLine: player is not in line', formula.lineInfo(self.lineType, fromLineNo), '->', formula.lineInfo(self.lineType, toLineNo), box.id, gbId)
             extraData['loseLine'] = -1
             for _lineNo in self.allPlayers.keys():
                 _playerVal = self.allPlayers.getPlayer(_lineNo, gbId)
@@ -615,7 +654,7 @@ class ILinePlayersStub(IBranchLineStub):
             self.addLinePlayerToLine(toLineNo, box, gbId, 0, 0, linePlayers.LinePlayerVal.SWITCHING, spaceNo, extraData)
 
         box.cell.beginSwitchLine(self.lineType, fromLineNo, toLineNo, spaceVal.lineSpaceBox, extraData)
-        LOG_INFO("lastChooseLineNo", self.lastChooseLineNo, "->", toLineNo)
+        LOG_INFO("lastChooseLineNo", formula.lineInfo(self.lineType, self.lastChooseLineNo), "->", formula.lineInfo(self.lineType, toLineNo))
         self.lastChooseLineNo = toLineNo
         return True
 
@@ -624,40 +663,40 @@ class ILinePlayersStub(IBranchLineStub):
         if _playerVal:
             _playerVal.setPlayerStatus(linePlayers.LinePlayerVal.INLINE)
         else:
-            LOG_ERR('switchLineSuccess: player is not in line', self.lineType, fromLineNo, toLineNo, box.id, gbId)
+            LOG_ERR('switchLineSuccess: player is not in line', formula.lineInfo(self.lineType, fromLineNo), '->', formula.lineInfo(self.lineType, toLineNo), box.id, gbId)
 
         if 'loseLine' in extraData:
             if extraData['loseLine'] > -1 and extraData['loseLine'] != toLineNo:
-                LOG_WARN('doSwitchLine: remove player but not in line', fromLineNo, toLineNo, extraData['loseLine'],
+                LOG_WARN('doSwitchLine: remove player but not in line', formula.lineInfo(self.lineType, fromLineNo), '->', formula.lineInfo(self.lineType, toLineNo), 'loseLine', formula.lineInfo(self.lineType, extraData['loseLine']),
                             box.id, gbId)
                 self.removeLinePlayerFromLine(extraData['loseLine'], gbId)
         else:
             self.removeLinePlayerFromLine(fromLineNo, gbId)
 
     def switchLineFailed(self, fromLineNo, toLineNo, box, gbId, extra):
-        LOG_INFO('switchLineFailed:', fromLineNo, toLineNo, box.id, gbId, extra)
+        LOG_INFO('switchLineFailed:', formula.lineInfo(self.lineType, fromLineNo), '->', formula.lineInfo(self.lineType, toLineNo), box.id, gbId, extra)
         spaceVal = self.getLineSpaceVal(fromLineNo)
         if not spaceVal:
-            LOG_ERR('switchLineFailed: invalid lineNo', self.lineType, fromLineNo, toLineNo, box.id, gbId)
+            LOG_ERR('switchLineFailed: invalid lineNo', formula.lineInfo(self.lineType, fromLineNo), '->', formula.lineInfo(self.lineType, toLineNo), box.id, gbId)
             return
 
         _playerVal = self.allPlayers.getPlayer(fromLineNo, gbId)
         if _playerVal:
             _playerVal.setPlayerStatus(linePlayers.LinePlayerVal.INLINE)
         else:
-            LOG_ERR('switchLineFailed: cannot find from player')
+            LOG_ERR('switchLineFailed: cannot find from player', formula.lineInfo(self.lineType, fromLineNo), '->', formula.lineInfo(self.lineType, toLineNo), box.id, gbId)
 
         self.removeLinePlayerFromLine(toLineNo, gbId)
 
     def goBackLine(self, lineNo, box, gbId, dstPos, dstDir, callback, callbackArgs):
         _spaceVal = self.getLineSpaceVal(lineNo)
         if not _spaceVal:
-            LOG_ERR('goBackLine: invalid lineNo', self.lineType, lineNo, box.id, gbId, callback, callbackArgs)
+            LOG_ERR('goBackLine: invalid lineNo', formula.lineInfo(self.lineType, lineNo), box.id, gbId, callback, callbackArgs)
             return
 
         _playerVal = self.allPlayers.getPlayer(lineNo, gbId)
         if not _playerVal:
-            LOG_ERR('goBackLine: player is not in line', self.lineType, lineNo, box.id, gbId)
+            LOG_ERR('goBackLine: player is not in line', formula.lineInfo(self.lineType, lineNo), box.id, gbId)
             return
 
         box.cell.beginGoBackLine(_spaceVal.getSpaceNo(), _spaceVal.lineSpaceBox, dstPos, dstDir, callback, callbackArgs)
@@ -687,7 +726,7 @@ class ILinePlayersStub(IBranchLineStub):
             toLineNo and self.updateLinePlayerInfo(toLineNo, box, gbId, infoDic)
 
     def leaveLine(self, box, gbId, fromSpaceNo, toSpaceNo, toPosition, toDirection):
-        LOG_INFO('leaveLine', box, gbId, fromSpaceNo, toSpaceNo)
+        LOG_INFO('leaveLine', formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(spaceNo=toSpaceNo), box, gbId)
         _lineNo = formula.parseLineNo(fromSpaceNo)
         self.removeLinePlayerFromLine(_lineNo, gbId)
         box.cell.beginLeaveLine(fromSpaceNo, toSpaceNo, toPosition, toDirection)
@@ -706,12 +745,12 @@ class ILinePlayersStub(IBranchLineStub):
             if extra["needPending"]:
                 lineMembers = self.allPlayers.getLinePlayers(lineNo)
                 lineMembers.doAddPendingEnterPlayer(self, gbId)
-        LOG_DBG('check enter line', lineNo, box, gbId, extra, method, ret)
+        LOG_DBG('check enter line', formula.lineInfo(self.lineType, lineNo), box, gbId, extra, method, ret)
         _callback = getattr(box.cell, method)
         _callback(ret, *args)
 
     def checkCanEnterLineFinallyFailed(self, lineNo, box, gbId, extra, method, args):
-        LOG_WARN("checkCanEnterLineFinallyFailed::", lineNo, box, gbId, extra, method, args)
+        LOG_WARN("checkCanEnterLineFinallyFailed::", formula.lineInfo(self.lineType, lineNo), box, gbId, extra, method, args)
         _lineMembers = self.allPlayers.getLinePlayers(lineNo)
         if not _lineMembers:
             return
@@ -750,14 +789,14 @@ class ILinePlayersStub(IBranchLineStub):
     def doQueryLineInfo(self, spaceNo, box, gbId):
         res = self._calculateLineInfo()
 
-        LOG_DBG('doQueryLineInfo', res)
+        LOG_DBG('doQueryLineInfo', formula.lineInfo(self.lineType), 'from', formula.lineInfo(spaceNo=spaceNo), res)
         box.client.onGetLineInfo(json.dumps(res))
 
     def notifyPlayerOffline(self, lineNo, gbId):
         self.removeLinePlayerFromLine(lineNo, gbId)
 
     def removePendingEnterOnBaseDestroy(self, lineNo, gbId):
-        LOG_DBG('ILinePlayersStub::removePendingEnterOnBaseDestroy', lineNo, gbId)
+        LOG_DBG('ILinePlayersStub::removePendingEnterOnBaseDestroy', formula.lineInfo(self.lineType, lineNo), gbId)
         _lineMembers = self.allPlayers.getLinePlayers(lineNo)
         if not _lineMembers:
             return

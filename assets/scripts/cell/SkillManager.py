@@ -12,6 +12,7 @@ import buff
 import formula
 import collections
 import math, Math, sMath
+import operator
 import utils
 import actionContext
 import effectEventCtx
@@ -39,9 +40,14 @@ import gamePlay_set as GP_SD
 import aureola_aureola as AAD
 import aureole
 import NPC_Pick as NPD
+import NPC_pickConst as NPC_PC
+import creep_coefficient as CCF
 import skillRelevant_summonUnlock as SRSU
 import combatSkill
 import awardContext
+import worldBoss_pickTimes as WB_PT
+import worldBoss_onlinePlayersEffect as WB_OPE
+import worldBoss_timeEffect as WB_TE
 
 
 class AureoleMixin(object):
@@ -155,6 +161,11 @@ def propChangedHandler(changedBySrc, propName):
         return func
 
     return _func
+
+
+# getNearestTarget 排序用：取候选元组里的距离平方。
+# 用 itemgetter 而不是 def，避免每次排序都产生 40~50 次 Python 函数调用。
+_targetDistanceKey = operator.itemgetter(0)
 
 
 class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFlowController,
@@ -320,14 +331,19 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         # hasattr判断先拿掉，好像有点慢
         _oldVal = getattr(self, propName)
         _func = type(_oldVal)
-        setattr(self, propName, type(_oldVal)(value))
-
+        # 先判等再写入。原实现无条件先 setattr，值没变时也会产生一次引擎属性写入 + 脏标记
+        # （可能触发客户端属性同步），然后才在下面 return。战斗高频写属性时这部分是纯浪费。
         if _func is int:
-            if _oldVal == int(value):
+            _newVal = int(value)
+            if _oldVal == _newVal:
                 return
         elif _func is float:
-            if math.isclose(_oldVal, float(value)):
+            _newVal = float(value)
+            if math.isclose(_oldVal, _newVal):
                 return
+        else:
+            _newVal = type(_oldVal)(value)
+        setattr(self, propName, _newVal)
 
         self.checkOnUpdateProp(propName, src)
 
@@ -725,6 +741,9 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         self.setState(gameconst.StateEnum.Death)
         self.killChannelingSkill(gameconst.ChannelingBreak.BREAK_TP_SELF_DIE)
         self.killCastingSkill(gameconst.EndCasting.ECEnumDead)
+        # 致死伤害的 onBeDamaged 在 goDie 之后，死亡掉落采集物会读不到首刀归属
+        if self.IsMonster:
+            self.calcFirstBloodTarget(killer.id)
         self.onDead(killer, srcType, srcId)
 
         if killer.IsAICombatUnit:
@@ -815,6 +834,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             host.checkPKWithAvatar(_targetHost)
             _targetHost.checkBeAttackByAvatarPK(host)
             host.setHateRecord(_targetHost.id)
+            # 切磋双方不加入临时敌对
+            if not host.duelAttr.isDuelEnemy(_targetHost):
+                _targetHost.onTempEnmityAttackedBy(host)
+                host.onTempEnmityCombatWith(_targetHost.gbId)
 
     def onBeDamaged(self, dmgSrcEntityId, damageVal, absorbVal, srcType, srcId):
         _srcTargetHost = utils.getHostEntity(KBEngine.entities.get(dmgSrcEntityId))
@@ -888,10 +911,15 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         # 解锁技能走到了这里,解锁技能需要解锁被铭文升级后的技能
         newSkillId, oldSkillId = self.glyphEquipData.getInscriptionSrcSkillId(skillId)
+        utils.traceSkill(self, 'doActionOnChangeSlot.unlockInscription', (skillId, newSkillId),
+                         'skillId=', skillId, 'inscriptionSkillId=', newSkillId,
+                         'replacedSkillIdx=', self.glyphEquipData.replacedSkillIdx)
         if newSkillId == skillId:
             return
 
         # 这里走eventactions的接口来替换
+        utils.traceSkill(self, 'doActionOnChangeSlot.replaceByInscription', (skillId, newSkillId),
+                         'fromSkillId=', skillId, 'toSkillId=', newSkillId)
         self.changeSkill(None, None, skillId, newSkillId)
 
     @utils.isMyself
@@ -1016,7 +1044,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         if self.IsAvatar and state == gameconst.StateEnum.autoFight:
             if formula.inTeamDungeonScene(self.spaceNo) or formula.inRaidDungeonScene(self.spaceNo):
                 self.setTempMiscProp(gameconst.EntityPropsEnum.autoCombatStartTimestamp, utils.curTS())
-        
+
         return True
 
     def removeState(self, state, removeReason=0):
@@ -1653,6 +1681,12 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             LOG_DBG('attack miss target', ctx)
             return False
 
+        # 传送(34)中不可被攻击：冲突表事件 29100001 对 Teleport(34) 配置硬冲突(val=3)。
+        # 作用目标(AoE 命中)也可能带 34，而 _checkUseSkillTarget 只校验施法目标、doSkillAction
+        # 的 effect-target 校验在延迟结算路径默认不执行，故必须在每次 attack 的闸门统一拦截。
+        if target.hasState(gameconst.StateEnum.Teleport):
+            return False
+
         if not ignoreType:
             attackSrcEnt = ctx.getSrcEntity()
             if attackSrcEnt is None:
@@ -1761,6 +1795,11 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         # AvatarMirror,Pet，召唤物都算自己的，创生算主人的
         if dmgSrcEnt.IsCreation:
             dmgSrcEnt = dmgSrcEnt.getHost() or dmgSrcEnt
+
+        # 参与互斥的 boss（含其召唤物/创生）攻击玩家时，在源怪物上记录该玩家的战斗标记
+        _markSrcEnt = utils.getHostEntity(dmgSrcEnt)
+        if _markSrcEnt and _markSrcEnt.IsMonster and target.IsAvatar:
+            _markSrcEnt.addBossMutexMark(target.gbId)
 
         dmgAfterTransfer = _realDmgVal
 
@@ -2016,6 +2055,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                        'adjMaxPhysicalAtk', 'adjMaxPhysicalAtkAbs','baseMinMagicAtk', 'adjMinMagicAtk', 'adjMinMagicAtkAbs',
                        'baseMaxMagicAtk', 'adjMaxMagicAtk', 'adjMaxMagicAtkAbs', 'baseHit', 'adjHit', 'baseFatal',
                        'adjFatal', 'baseMortal', 'adjMortal', 'baseStunEnh',
+                       'baseMinAllArmor', 'adjMinAllArmor', 'baseMaxAllArmor', 'adjMaxAllArmor',
+                       'baseUniEnh', 'adjUniEnh', 'baseUniAnti', 'adjUniAnti',
                        'adjStunEnh', 'baseSilentEnh', 'adjSilentEnh', 'baseKnockEnh', 'adjKnockEnh', 'baseFrozenEnh', 'adjFrozenEnh'
                        ]
 
@@ -2031,6 +2072,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                        'adjMinPhysicalAtk', 'adjMinPhysicalAtkAbs', 'maxPhysicalAtk', 'baseMaxPhysicalAtk', 'adjMaxPhysicalAtk',
                        'adjMaxPhysicalAtkAbs', 'minMagicAtk', 'baseMinMagicAtk', 'adjMinMagicAtk', 'adjMinMagicAtkAbs',
                        'maxMagicAtk', 'baseMaxMagicAtk', 'adjMaxMagicAtk', 'adjMaxMagicAtkAbs',
+                       'baseMinAllArmor', 'adjMinAllArmor', 'baseMaxAllArmor', 'adjMaxAllArmor',
+                       'baseUniEnh', 'adjUniEnh', 'baseUniAnti', 'adjUniAnti',
                        'adjFatal',
                        'baseAntiFatal',
                        'adjAntiFatal', 'baseMortal', 'adjMortal', 'baseAntiMortal',
@@ -2128,21 +2171,15 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             if len(_value) > 3 and self.IsAvatar:
                 temp_set = set()
                 for _tp in _value[3]:
-                    if _tp == gameconst.TeamType.TEAM and self.isInTeam():
+                    if (_tp == gameconst.TeamType.TEAM and self.inCrossTeam()) or \
+                        (_tp == gameconst.TeamType.RAID and self.inCrossRaid()):
                         teamList = []
-                        for playerBaseVal in self.teamInfo.teamPlayerDict.values():
-                            if playerBaseVal.playerBox:
-                                teamList.append(playerBaseVal.playerBox.id)
+                        for _gbid in self.getTeammateGbIdSet():
+                            player = utils.getAvatarByGbId(_gbid)
+                            if player:
+                                teamList.append(player.id)
  
                         temp_set = temp_set.union(teamList)
-                    elif _tp == gameconst.TeamType.RAID and self.inRaid():
-                        raidList = []
-                        for teamVal in self.raidInfo.raidTeamDic.values():
-                            for playerInfo in teamVal.teamPlayerDict.values():
-                                if playerInfo.playerBox:
-                                    raidList.append(playerInfo.playerBox.id)
-
-                        temp_set = temp_set.union(raidList)
                 if temp_set and _set:
                     for entId in _set.copy():
                         ent = KBEngine.entities.get(entId)
@@ -2155,6 +2192,67 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
             else:
                 return _set
+
+    def getNearestTarget(self, targetId, targetString, targetRange=20, forceTarget=False, beginSkillPos=None):
+        """单目标搜索：按距离升序逐个校验，首个通过即返回。
+
+        等价于 getTargets(...) + getOneNearest(pos, ...)，
+        但谓词（checkCombatRangeY / checkCachedTargetType）的调用次数从 O(候选数) 降到 O(1)：
+        checkCachedTargetType 的第四个参数 target 是固定的施法目标，各候选的判定互不影响，
+        所以「按距离升序，第一个合法的」必然等于「全量过滤后取最近的那个」。
+
+        同屏人数越多候选集越大，收益越大（原先平均每次扫描要过 40~50 个候选）。
+        """
+        # 注意：不在这里判自毁。getTargetIdsByTargetType 对自毁实体返回空集，
+        # 但 forceTarget 仍然会把施法目标放进来——保持与原 getTargets 完全一致的语义。
+        entityIdList = self.getTargetIdsByTargetType(targetString)
+        target = KBEngine.entities.get(targetId)
+
+        if forceTarget and target:
+            entityIdList.add(targetId)
+
+        if not entityIdList:
+            return None
+
+        # 第一遍：只做最廉价的筛选（存在/未销毁/可战斗）并算好距离平方，避免后面重复取实体
+        _entities = KBEngine.entities
+        _pos = beginSkillPos if beginSkillPos else self.position
+        _px, _pz = _pos[0], _pos[2]
+
+        candidates = []
+        _append = candidates.append
+        for eId in entityIdList:
+            _entity = _entities.get(eId)
+            if not _entity or _entity.isDestroyed or not _entity.IsCombatUnit:
+                continue
+            _entityPos = _entity.position
+            _dx = _entityPos[0] - _px
+            _dz = _entityPos[2] - _pz
+            _append((_dx * _dx + _dz * _dz, _entity))
+
+        if len(candidates) > 1:
+            # sort 稳定：距离相同的候选保持原有顺序，与 getOneNearest 的行为一致
+            candidates.sort(key=_targetDistanceKey)
+
+        # 第二遍：距离由近到远校验，命中即返回
+        for _d2, _entity in candidates:
+            if _entity.IsMonster:
+                _targetRange = targetRange + _entity.getCreepData().get('attackDistanceCompensation')
+            else:
+                _targetRange = targetRange
+
+            # 与 sMath.inRectRange2D 等价（矩形范围，非欧氏距离），dx/dz 上面已算过
+            _entityPos = _entity.position
+            if abs(_entityPos[0] - _px) > _targetRange or abs(_entityPos[2] - _pz) > _targetRange:
+                continue
+
+            if not self.checkCombatRangeY(_entity):
+                continue
+
+            if utils.checkCachedTargetType(targetString, self, _entity, target):
+                return _entity
+
+        return None
 
     def getTargets(self, centerEnt, targetId, targetString, targetRange=20, forceTarget=False, beginSkillPos=None):
         targetsList = []
@@ -2862,10 +2960,11 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         # 命中，如果衰减的话要增加控制等级，刷新衰减时间
         elif antiRet.resultCode == antiRet.RET_HIT:
-            csVal = self.setCombatControlState(controlStateId, antiRet.antiDuration)
+            decayOwner = utils.getHostEntity(self)
+            csVal = decayOwner.setCombatControlState(controlStateId, antiRet.antiDuration)
             if antiRet.isDecay:
                 csVal.addControlLv(math.ceil(antiRet.controlDuration))
-                csVal.refreshAntiTimer(self, controlStateId, antiRet.antiDuration)
+                csVal.refreshAntiTimer(decayOwner, controlStateId, antiRet.antiDuration)
 
             self.addBuffBySkill(target, context, antiRet.controlBuffId, buffLv, 1.0, antiRet.controlDuration)
             if antiRet.dispelBuffTag:
@@ -2874,10 +2973,21 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             if hitType == 0:
                 return
             skillDamges.damageInfo.append(combatSkill.SkillDamageVal(target.id, 0, hitType))
-            # 自己造成控制
-            self.onEffectEventCall('onControl', self.id, target.id, effectEventCtx.EE_DEFAULT_CTX)
-            # 目标受到控制
-            target.onEffectEventCall('onControlBeat', self.id, target.id, effectEventCtx.EE_DEFAULT_CTX)
+            
+            if self.id != target.id:
+                # 自己造成控制
+                self.onEffectEventCall('onControl', self.id, target.id, effectEventCtx.EE_DEFAULT_CTX)
+                # 召唤物/造物施加控制时，事件同时上抛给宿主：
+                # 监听 onControl 的 buff（如精灵"人长久"）注册在宿主的
+                # eventDict 上，只派发给召唤物会导致宿主收不到事件不触发。
+                # 宿主侧 triggerId 用宿主 id，保证 Target='other' 的效果
+                # 能正确解析出被控制的目标（见 EventMgr.onEffectEventCall 消费端）。
+                if self.IsCreation:
+                    _ctrlHost = utils.getHostEntity(self)
+                    if _ctrlHost is not None and _ctrlHost is not self:
+                        _ctrlHost.onEffectEventCall('onControl', _ctrlHost.id, target.id, effectEventCtx.EE_DEFAULT_CTX)
+                # 目标受到控制（目标为召唤物时同样上抛宿主，如"被控制时"类精灵 buff）
+                target.onEffectEventCall('onControlBeat', self.id, target.id, effectEventCtx.EE_DEFAULT_CTX)
 
     def dispelBuffByTag(self, target, tag):
         _buffIdList = []
@@ -2931,7 +3041,6 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 _target.unsetHateRecord(self.id)
 
     def removeFightingState(self):
-        self.rmFightStateTimeId = 0
         self.removeState(gameconst.StateEnum.Fighting)
 
     def checkRemoveFightingState(self):
@@ -3103,7 +3212,7 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             utils.isEnemy(self, _target)
             utils.isFriend(self, _target)
 
-            if _target.id not in list(self.cacheSelfSet):
+            if _target.id not in self.cacheSelfSet:
                 continue
 
             _target.removeTargetTypeCache(self)
@@ -3290,14 +3399,15 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         super(SkillManager, self).onTimer(tid, userData)
 
-    def _attachDeathCollectionMonsterCtx(self, collection):
-        if not collection or collection.awardContext is not None:
+    def _attachDeathCollectionMonsterCtx(self, collection, worldLevel=None):
+        if not collection or not self.IsMonster:
             return
-        if not getattr(self, 'IsMonster', False):
-            return
-        collection.awardContext = awardContext.CommonContext(0)
+        if collection.awardContext is None:
+            collection.awardContext = awardContext.CommonContext(0)
         collection.awardContext.addContextVar('level', self.level)
         collection.awardContext.addContextVar('monsterId', self.monsterId)
+        if worldLevel != None:
+            collection.awardContext.addContextVar('worldLevel', worldLevel)
 
     def deathCreateCollection(self, radius, numProb, collectionIdProb, disappearTime, extra=None):
         numList = []
@@ -3307,7 +3417,10 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             numWeightList.append(weight)
 
         boxRadius = 0
-        for weight, collectionId in collectionIdProb:
+        collectionEntries = []
+        for entry in collectionIdProb:
+            weight, collectionId, shareMode = self._splitDeathCollectionEntry(entry)
+            collectionEntries.append((weight, collectionId, shareMode))
             boxRadius = max(boxRadius, NPD.datas.get(collectionId, {}).get('chestRadius', 0))
         createNum = utils.weightChoices(numList, numWeightList)[0][0]
         if createNum == 1:
@@ -3315,17 +3428,19 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
         else:
             posList = self.getRandomPositionByBoxRadius(self.position, radius, boxRadius, createNum)
         
-        if self.IsMonster and self.isFirstBloodMonster:
+        if self.IsMonster and self.isFirstBloodMonster and extra:
             posList = [extra.get('FBPos', self.position)]
 
         for i in range(createNum):
             collectionIdList = []
             collectionIdWeightList = []
-            for weight, collectionId in collectionIdProb:
+            for weight, collectionId, _shareMode in collectionEntries:
                 collectionIdList.append(collectionId)
                 collectionIdWeightList.append(weight)
 
-            collectionId = utils.weightChoices(collectionIdList, collectionIdWeightList)[0][0]
+            chosen, chosenIdx = utils.weightChoices(collectionIdList, collectionIdWeightList)
+            collectionId = chosen[0]
+            shareMode = collectionEntries[chosenIdx[0]][2]
             _pos = posList[i] if i < len(posList) else self.position
             
 
@@ -3347,12 +3462,16 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                         if _props.get('needFBTarget'):
                             FBtar = KBEngine.entities.get(self.FirstBloodTargetId)
                             if FBtar:
-                                FBMembers = FBtar.getAllTeamMemberGbIdSet()
-                                FBMembers.update(FBtar.getAllRaidMemberGbIdSet())
+                                # 本服组队/团已废弃，统一读访问层（跨服队，含本人）
+                                FBMembers = FBtar.getTeammateGbIdSet()
                                 FBMembers.add(FBtar.gbId)
                                 _props['firstBloodTargetGbIds'] = FBMembers
                                 _props['fBItemId'] = extra.get('FBItemId', 0)
                                 _props['fromMonsterId'] = extra.get('fromMonsterId', 0)
+                                _props['fromCreepId'] = extra.get('fromCreepId', 0)
+
+            if shareMode:
+                self._fillDeathCollectionOwner(_props, shareMode)
 
             LOG_INFO("deathCreateCollection", _props)
             collection = KBEngine.createEntity('Collection', self.spaceID, _pos, self.direction, _props)
@@ -3372,7 +3491,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
 
         createNum = 0
         boxRadius = 0
-        for (num, collectionId) in collectionIdProb:
+        for entry in collectionIdProb:
+            num, collectionId, _shareMode = self._splitDeathCollectionEntry(entry)
             createNum += num
             boxRadius = max(boxRadius, NPD.datas.get(collectionId, {}).get('chestRadius', 0))
 
@@ -3391,7 +3511,8 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
             LOG_ERR('deathCreateCollectionByList', self.monsterId, self.spaceNo, self.position)
 
         idx = 0
-        for (num, collectionId) in collectionIdProb:
+        for entry in collectionIdProb:
+            num, collectionId, shareMode = self._splitDeathCollectionEntry(entry)
             for i in range(num):
                 _pos = posList[idx] if idx < len(posList) else self.position
                 idx += 1
@@ -3405,9 +3526,165 @@ class SkillManager(iCell.ICell, iEventActions.IEventActions, iFlowController.IFl
                 if self.spaceMgr:
                     _props['spaceMgrId'] = self.spaceMgr.id
                     _props['spaceMgrBox'] = self.spaceMgr.base
+                if shareMode:
+                    self._fillDeathCollectionOwner(_props, shareMode)
 
                 collection = KBEngine.createEntity('Collection', self.spaceID, _pos, self.direction, _props)
                 self._attachDeathCollectionMonsterCtx(collection)
+
+    def _splitDeathCollectionEntry(self, entry):
+        shareMode = entry[2] if len(entry) > 2 else 0
+        if shareMode and shareMode not in (gameconst.DropShareRewardType.FIRST_BLOOD, gameconst.DropShareRewardType.FIRST_BLOOD_2, gameconst.DropShareRewardType.FIRST_BLOOD_3):
+            LOG_ERR('death collection invalid share', self.monsterId, entry)
+            shareMode = 0
+        return entry[0], entry[1], shareMode
+
+    def _fillDeathCollectionOwner(self, props, shareMode):
+        coeffType = self.getCreepData().get('coefficientType', 0)
+        props['fbShareMode'] = shareMode
+        fbTimes = CCF.datas.get(coeffType, {}).get('pickupPermissionTime') or ()
+        props['FBTime'] = sum(fbTimes)
+        if shareMode == gameconst.DropShareRewardType.FIRST_BLOOD_3:
+            props['FBStrongTime'] = fbTimes[0] if fbTimes else 0
+        members = set()
+        fbTarget = KBEngine.entities.get(self.FirstBloodTargetId) if self.FirstBloodTargetId else None
+        if fbTarget:
+            members = fbTarget.getTeammateGbIdSet()
+            members.add(fbTarget.gbId)
+        props['firstBloodTargetGbIds'] = members
+
+    def deathCreateLightCollectionByList(
+            self, radius, collectionIdProb, 
+            disappearTime, posType=gameconst.DEATH_COLL_POS_TYPE_SELF_POS, 
+            fixedPos=None, gridSize=2, bossSeqId=0):
+
+        createNumList = []
+        boxRadius = 0
+        for entry in collectionIdProb:
+            num, collectionId, _shareMode = self._splitDeathCollectionEntry(entry)
+            createNumList.append(num)
+            boxRadius = max(boxRadius, NPD.datas.get(collectionId, {}).get('chestRadius', 0))
+
+        if posType == gameconst.DEATH_COLL_POS_TYPE_SELF_POS:
+            _targetPos = self.position
+        elif posType == gameconst.DEATH_COLL_POS_TYPE_FIXED_POS:
+            _targetPos = fixedPos
+        else:
+            LOG_ERR('invalid pos type', posType)
+            return
+
+        # 时段系数
+        def _getTimePeriodRatio(curTime):
+            for idx, data in WB_TE.datas.items():
+                if not utils.checkInTimePeriod(curTime, [data['startTimeCron'], data['endTimeCron']]):
+                    continue
+                return data['chestSpawnRate'], data['lightSpawnRate']
+            return 1.0, 1.0
+
+        # 采集次数
+        def _getGatherTotalCnt(level, seqId):
+            cLevel = level
+            if level not in WB_PT.worldLevelList:
+                #cLevel = min(WB_PT.worldLevelList, key=lambda lv: (abs(lv - level), lv))
+                for cfgLevel in reversed(WB_PT.worldLevelList):
+                    if level < cfgLevel:
+                        continue
+                    cLevel = cfgLevel
+                    break
+
+            cfgData = WB_PT.datas.get(cLevel, {})
+            return cfgData.get(str(seqId), 0)
+
+        # 系数
+        def _getOnlineNumRatio(num):
+            cNum = num
+            for cfgNum in reversed(WB_OPE.onlineNumList):
+                if num < cfgNum:
+                    continue
+                cNum = cfgNum
+                break
+
+            cfgData = WB_OPE.datas.get(cNum, {})
+            return cfgData.get('chestSpawnRate', 1.0), cfgData.get('lightSpawnRate', 1.0)
+
+        isCross = gameconfig.isCrossServer() 
+        if isCross:
+            onlineNum = utils.getYesterdayOnlineNum(useCross=True, useTotal=True)
+        else:
+            onlineNum = utils.getYesterdayOnlineNum(useCross=False)
+        curTime = utils.curTS()
+        tpR1, tpR2 = _getTimePeriodRatio(curTime)
+        onR1, onR2 = _getOnlineNumRatio(onlineNum)
+        curRatio1 = tpR1 * onR1
+        curRatio2 = tpR2 * onR2
+
+        createNum = 0
+        maxRatio = max(curRatio1, curRatio2, 0)
+        createRatio = math.ceil(maxRatio)
+        for num in createNumList:
+            createNum += num * createRatio
+        #posList = self.getRandomPositionByBoxRadius(_targetPos, radius, boxRadius, createNum)
+        adjRadius = radius * math.sqrt(maxRatio)
+        radius = adjRadius if adjRadius else radius
+        radius = math.ceil(radius / gridSize) * gridSize
+        posList = utils.collectAndShuffleValidPositions(_targetPos, radius, gridSize, self._getValidPosFunc, createNum)
+
+        if createNum > len(posList):
+            LOG_ERR('deathCreateLightCollectionByList', self.monsterId, self.spaceNo, self.position)
+
+        # 创建
+        def _createCollection(beLightPillar, idx, collectionId, worldLevel, gatherTotalCnt, shareMode):
+            _pos = posList[idx] if idx < len(posList) else self.position
+            _props = {
+                'collectionId': collectionId,
+                'spaceNo': self.spaceNo,
+                'position': _pos,
+                'direction': self.direction,
+                'disappearTime': utils.curTS() + disappearTime
+            }
+            attachWorldLevel = None
+            if beLightPillar:
+                tempMiscProps = _props.setdefault('tempMiscProps', {})
+                tempMiscProps[gameconst.EntityPropsEnum.gatherTotalCnt] = gatherTotalCnt
+                attachWorldLevel = worldLevel
+
+            if self.spaceMgr:
+                _props['spaceMgrId'] = self.spaceMgr.id
+                _props['spaceMgrBox'] = self.spaceMgr.base
+            if shareMode:
+                self._fillDeathCollectionOwner(_props, shareMode)
+
+            collection = KBEngine.createEntity('Collection', self.spaceID, _pos, self.direction, _props)
+            self._attachDeathCollectionMonsterCtx(collection, attachWorldLevel)
+
+        idx = 0
+        worldLevel = utils.getWorldLevel(useCross=gameconfig.isCrossWorld())
+        gatherTotalCnt = _getGatherTotalCnt(worldLevel, bossSeqId)
+        for entry in collectionIdProb:
+            num, collectionId, shareMode = self._splitDeathCollectionEntry(entry)
+            beLightPillar = False
+            collType = NPD.datas.get(collectionId, {}).get('type', 0)
+            if collType == gameconst.CollectionType.LIGHT_PILLAR:
+                beLightPillar = True
+                if not gatherTotalCnt:
+                    continue
+
+            if not beLightPillar and curRatio1 <= 0:
+                continue
+            if beLightPillar and curRatio2 <= 0:
+                continue
+            if beLightPillar:
+                cntDecimal, cntInt = math.modf(curRatio2)
+            else:
+                cntDecimal, cntInt = math.modf(curRatio1)
+
+            for i in range(num):
+                tmpCntInt = int(cntInt)
+                if random.random() < cntDecimal:
+                    tmpCntInt += 1
+                for j in range(tmpCntInt):
+                    _createCollection(beLightPillar, idx, collectionId, worldLevel, gatherTotalCnt, shareMode)
+                    idx += 1
 
     def breakSkillByState(self, ignoreTag=0):
         usingSkills = self.getTempMiscProp(gameconst.EntityPropsEnum.currentUseSkill, default={})

@@ -162,6 +162,7 @@ class IEnemy(object):
         self.client.onEnemyDatas(self.enemyMgr.getAllEnemyies())
         self.scheduleEnemyPosInfo(True)
 
+    @gamedecorator.crossServer
     def getEnemyRecord(self, exposed, gbId):
         _recordData = self.enemyMgr.getRecordByGbId(gbId)
         if not _recordData:
@@ -184,6 +185,7 @@ class IEnemy(object):
             yield lambda : True
 
     @gamedecorator.checkGameconfigEnable('enemy')
+    @gamedecorator.crossServer
     def getRecordList(self, exposed):
         recordList = self.enemyMgr.getAllRecordList()
         recordList = recordList[::-1]

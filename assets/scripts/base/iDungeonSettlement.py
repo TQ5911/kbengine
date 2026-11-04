@@ -32,7 +32,7 @@ class IDungeonSettlement(object):
             return None
 
         addWealthVal = dropAward.AwardVal()
-        ctx = self._getAvatarAwardsCtx(rewardIds, None)
+        ctx = self.getAvatarAwardsCtx(rewardIds, None)
         for rewardId in rewardIds:
             addWealthVal += dropAward.getAwardOne(rewardId, ctx)
 
@@ -107,19 +107,56 @@ class IDungeonSettlement(object):
         goldPassRewards = pack.get('goldPassRewards') or []
         firstPassRewards = pack.get('firstPassRewards') or []
         LOG_INFO('onLocalServerCrossCrusadeSettlementApply::', self.gbID, playMode, dungeonNo, win)
+        crossAwardList = []
         try:
             if win:
                 if playMode == gameconst.DungeonPlayModeEnum.CROSS_CRUSADE:
-                    # 扣次数
-                    self.crusadeInfo.deductRewardNum()
+                    # 扣次数（本服为权威扣减）：扣票失败则不发奖、不记首通（防无票领奖）
+                    if not self.crusadeInfo.deductRewardNum(self, playMode):
+                        LOG_ERR('onLocalServerCrossCrusadeSettlementApply deduct ticket failed:', playMode, dungeonNo)
+                        pack['rewardList'] = []
+                        pack['firstPassEntryId'] = 0
+                    else:
+                        # 门票消耗埋点：事件口径=真实消耗，仅扣票成功才报；
+                        # dungeon_type 映射回旧口径 CRUSADE；enter_type 恒传默认值：新链路暂未记录入队方式
+                        LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Consume(
+                            self.gbID,
+                            self.accountEntity.clientDistinctId,
+                            extra['uniqueID'],
+                            gameconst.DungeonPlayModeEnum.CRUSADE,
+                            dungeonNo,
+                            pack['spaceNo'],
+                            extra['spaceUUID'],
+                            self.crusadeInfo.getUsedTicketType(),
+                            gameconst.TeamJoinType.DEFAULT,
+                            extra['playerCount'],
+                            self.gbID,
+                            self.getTotalScore(),
+                            self.getRoleCacheAttr('level'),
+                            self.crusadeInfo.rewardNumber
+                        )
                     self.crusadeInfo = self.crusadeInfo
 
-                    # 发奖励
+                    # 发奖励（收集 awardVal 用于回传跨服镜像显示，
+                    # 本服 addWealth 已物化物品，保证两边 uniqueId 一致）
                     for src, rewardId, rewards in pack['rewardList']:
-                        self._doAddWealthVal(pack['opUUId'], playMode, dungeonNo, win, 0, pack['uniqueId'], src, rewardId, rewards)
+                        awardVal = self._doAddWealthVal(
+                            pack['opUUId'],
+                            playMode,
+                            dungeonNo,
+                            win,
+                            0,
+                            pack['uniqueId'],
+                            src,
+                            rewardId,
+                            rewards
+                        )
+                        if awardVal and not awardVal.isEmpty():
+                            crossAwardList.append((src, rewardId, awardVal))
 
                     # 首通
-                    if pack.get('firstPassEntryId', 0):
+                    firstPassEntryId = pack.get('firstPassEntryId', 0)
+                    if firstPassEntryId:
                         self.crusadePassRecords.finishEntryStatus(firstPassEntryId)
                         self.crusadePassRecords = self.crusadePassRecords
 
@@ -131,16 +168,52 @@ class IDungeonSettlement(object):
                     )
 
                 elif playMode == gameconst.DungeonPlayModeEnum.CROSS_CHIEF:
-                    # 扣次数
-                    self.chiefInfo.deductRewardNum()
+                    # 扣次数（本服为权威扣减）：扣票失败则不发奖、不记首通（防无票领奖）
+                    if not self.chiefInfo.deductRewardNum(self, playMode):
+                        LOG_ERR('onLocalServerCrossCrusadeSettlementApply deduct ticket failed:', playMode, dungeonNo)
+                        pack['rewardList'] = []
+                        pack['firstPassEntryId'] = 0
+                    else:
+                        # 门票消耗埋点：事件口径=真实消耗，仅扣票成功才报；
+                        # dungeon_type 映射回旧口径 CHIEF；enter_type 恒传默认值：新链路暂未记录入队方式
+                        LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Consume(
+                            self.gbID,
+                            self.accountEntity.clientDistinctId,
+                            extra['uniqueID'],
+                            gameconst.DungeonPlayModeEnum.CHIEF,
+                            dungeonNo,
+                            pack['spaceNo'],
+                            extra['spaceUUID'],
+                            self.chiefInfo.getUsedTicketType(),
+                            gameconst.TeamJoinType.DEFAULT,
+                            extra['playerCount'],
+                            self.gbID,
+                            self.getTotalScore(),
+                            self.getRoleCacheAttr('level'),
+                            self.chiefInfo.rewardNumber
+                        )
                     self.chiefInfo = self.chiefInfo
 
-                    # 发奖励
+                    # 发奖励（收集 awardVal 用于回传跨服镜像显示，
+                    # 本服 addWealth 已物化物品，保证两边 uniqueId 一致）
                     for src, rewardId, rewards in pack['rewardList']:
-                        self._doAddWealthVal(pack['opUUId'], playMode, dungeonNo, win, 0, pack['uniqueId'], src, rewardId, rewards)
+                        awardVal = self._doAddWealthVal(
+                            pack['opUUId'],
+                            playMode,
+                            dungeonNo,
+                            win,
+                            0,
+                            pack['uniqueId'],
+                            src,
+                            rewardId,
+                            rewards
+                        )
+                        if awardVal and not awardVal.isEmpty():
+                            crossAwardList.append((src, rewardId, awardVal))
 
                     # 首通
-                    if pack.get('firstPassEntryId', 0):
+                    firstPassEntryId = pack.get('firstPassEntryId', 0)
+                    if firstPassEntryId:
                         self.chiefPassRecords.finishEntryStatus(firstPassEntryId)
                         self.chiefPassRecords = self.chiefPassRecords
 
@@ -156,6 +229,15 @@ class IDungeonSettlement(object):
 
                 # 任务
                 self.taskCheckCounterTarget(TCCTD.couterTargetDic['CompleteACertainInstance'], (dungeonNo,))
+
+                # 发奖结果同步到跨服服镜像即时显示：本服背包为权威落账，
+                # 镜像上重放 addWealth 刷新镜像 bagData 并即时下发客户端，
+                # 残余偏差由背包 FNV 对账兜底
+                if crossAwardList:
+                    self.syncMethodCallToCrossServerBase(
+                        'onLocalServerCrossTeamDungeonAwardSync',
+                        (crossAwardList, pack['opUUId'], playMode, dungeonNo, win, pack['uniqueId'])
+                    )
 
             self.sendDungeonFinishedMail(playMode, dungeonNo, pack['opUUId'], extra['gbId'], win)
             LogTrackingMgr.LogTrackingMgr.Dungeon_Settlement(
@@ -187,6 +269,24 @@ class IDungeonSettlement(object):
             traceback.print_exc()
             LOG_ERR('onLocalServerCrossCrusadeSettlementApply error::', self.gbID, pack)
 
+    def onLocalServerCrossTeamDungeonAwardSync(self, crossAwardList, opUUID, playMode, dungeonNo, win, uniqueId):
+        # 跨服组队副本结算发奖的镜像显示（在跨服服镜像 Avatar 上执行，由本服发奖落地后同步触发）：
+        # awardVal 中的物品已在本服 addWealth 时物化（两边 uniqueId 一致），
+        # 此处重放 addWealth 仅刷新镜像 bagData 并即时下发客户端显示，权威数据以本服为准
+        LOG_INFO('onLocalServerCrossTeamDungeonAwardSync::', playMode, dungeonNo, win, uniqueId)
+        for src, rewardId, awardVal in crossAwardList:
+            awardCtx = self.getAvatarAwardCtx(rewardId, None)
+            awardCtx.addContextVar('eventTipId', dungeonNo)
+            detail = gameclass.AwardDetailCls(
+                awardIds=rewardId,
+                playMode=playMode,
+                dungeonNo=dungeonNo,
+                win=win,
+                rank=0,
+                uniqueId=uniqueId
+            )
+            self.addWealth(src, awardVal, opUUID, detail, awardCtx)
+
     # 跨服副本奖励等结算数据计算后传回本服落地
     def _doCrossTeamDungeonSettlement(self, playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, box, extra):
         if playMode == gameconst.DungeonPlayModeEnum.CROSS_CRUSADE:
@@ -214,7 +314,11 @@ class IDungeonSettlement(object):
         firstPassEntryId = 0
         try:
             if win:
-                dungeonInfo.deductRewardNum()
+                # 扣票失败兜底：跳过发奖/首通计算，回空结算结果且不再落本服发奖包（防无票领奖）
+                if not dungeonInfo.deductRewardNum(self, playMode):
+                    LOG_ERR('_doCrossTeamDungeonSettlement deduct ticket failed:', playMode, spaceNo, dungeonNo, uniqueId, extra)
+                    box.cell.onNotifySettlementResult(self, playMode, spaceNo, dungeonNo, opUUId, uniqueId, win, extra, [], [], [])
+                    return
 
                 dungeonRewardId = biData.clearPassRewardDic.get(dungeonNo, 0)
                 if dungeonRewardId > 0:
@@ -271,9 +375,32 @@ class IDungeonSettlement(object):
         firstPassRewards = None
         goldPassRewards = None
         dungeonRewards = None
-        if win: 
-            self.chiefInfo.deductRewardNum()
+        # 扣票：扣票失败则本次不发任何奖励（结算通知/邮件/BI 照常，奖励为空）
+        _deductOk = False
+        if win:
+            _deductOk = self.chiefInfo.deductRewardNum(self, gameconst.DungeonPlayModeEnum.CHIEF)
             self.chiefInfo = self.chiefInfo
+            if not _deductOk:
+                LOG_ERR('_doChiefSettlement deduct ticket failed, skip rewards:', spaceNo, dungeonNo, opUUId, uniqueId, extra)
+        if _deductOk:
+            # 门票消耗埋点：事件口径=真实消耗，仅 win 且扣票成功才报（进本点不再上报）；
+            # enter_type 恒传默认值：新链路暂未记录入队方式
+            LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Consume(
+                self.gbID,
+                self.accountEntity.clientDistinctId,
+                extra['uniqueID'],
+                gameconst.DungeonPlayModeEnum.CHIEF,
+                dungeonNo,
+                spaceNo,
+                extra['spaceUUID'],
+                self.chiefInfo.getUsedTicketType(),
+                gameconst.TeamJoinType.DEFAULT,
+                extra['playerCount'],
+                self.gbID,
+                self.getTotalScore(),
+                self.getRoleCacheAttr('level'),
+                self.chiefInfo.rewardNumber
+            )
             dungeonRewardId = RBC_BI.clearPassRewardDic.get(dungeonNo, 0)
             if dungeonRewardId > 0:
                 ctx = self.getAvatarAwardCtx(dungeonRewardId, None)
@@ -315,10 +442,32 @@ class IDungeonSettlement(object):
         firstPassRewards = None
         goldPassRewards = None
         dungeonRewards = None
+        # 扣票：扣票失败则本次不发任何奖励（结算通知/邮件/BI 照常，奖励为空）
+        _deductOk = False
         if win:
-            self.crusadeInfo.deductRewardNum()
+            _deductOk = self.crusadeInfo.deductRewardNum(self, gameconst.DungeonPlayModeEnum.CRUSADE)
             self.crusadeInfo = self.crusadeInfo
-
+            if not _deductOk:
+                LOG_ERR('_doCrusadeSettlement deduct ticket failed, skip rewards:', spaceNo, dungeonNo, opUUId, uniqueId, extra)
+        if _deductOk:
+            # 门票消耗埋点：事件口径=真实消耗，仅 win 且扣票成功才报（进本点不再上报）；
+            # enter_type 恒传默认值：新链路暂未记录入队方式
+            LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Consume(
+                self.gbID,
+                self.accountEntity.clientDistinctId,
+                extra['uniqueID'],
+                gameconst.DungeonPlayModeEnum.CRUSADE,
+                dungeonNo,
+                spaceNo,
+                extra['spaceUUID'],
+                self.crusadeInfo.getUsedTicketType(),
+                gameconst.TeamJoinType.DEFAULT,
+                extra['playerCount'],
+                self.gbID,
+                self.getTotalScore(),
+                self.getRoleCacheAttr('level'),
+                self.crusadeInfo.rewardNumber
+            )
             dungeonRewardId = TDC_BI.clearPassRewardDic.get(dungeonNo, 0)
             if dungeonRewardId > 0:
                 ctx = self.getAvatarAwardCtx(dungeonRewardId, None)
@@ -436,6 +585,7 @@ class IDungeonSettlement(object):
         awardCtx.addContextVar('eventTipId', dungeonNo)
         detail = gameclass.AwardDetailCls(awardIds = rewardId, playMode = playMode, dungeonNo = dungeonNo, win=win, rank=rank, uniqueId=uniqueId)
         self.addWealth(srcType, addWealthVal, opUUID, detail, awardCtx)
+        return addWealthVal
 
     def checkGuildBossRewardRemainTimes(self, dungeonNo):
         return self.guildBossRewardWeeklyCount < int(GC_C.datas['guildRewardTimes']['value'])

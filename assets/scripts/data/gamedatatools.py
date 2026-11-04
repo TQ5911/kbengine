@@ -48,6 +48,15 @@ class RODict(collections.abc.Mapping):
     def __getitem__(self, item):
         return self._data[item]
 
+    # 必须显式委托给底层 dict。collections.abc.Mapping 的 get/__contains__ 是纯 Python 实现，
+    # 靠 try: self[key] / except KeyError 兜底，一次调用包含一个 Python 层函数调用 + 可能的异常对象构造。
+    # 配置表读取是热路径（压测期单进程 66 万次 .get() + 102 万次 __getitem__），这里直接走 C 层 dict 实现。
+    def get(self, key, default=None):
+        return self._data.get(key, default)
+
+    def __contains__(self, item):
+        return item in self._data
+
     def __len__(self):
         return len(self._data)
 
@@ -111,6 +120,10 @@ class ROList(collections.abc.Sequence):
 
     def __getitem__(self, item):
         return self._data[item]
+
+    # 同 RODict：collections.abc.Sequence.__contains__ 是逐元素比较的 Python 循环，直接委托给 list。
+    def __contains__(self, item):
+        return item in self._data
 
     def __setitem__(self, *args, **kwargs):
         raise RuntimeError('ROLIst un-support list[index]=value')

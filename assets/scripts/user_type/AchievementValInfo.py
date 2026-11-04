@@ -60,6 +60,14 @@ def _checkAchieveAddStep(avatar, achieveData, achieveVal, ctx):
     achieveVal.step += 1
     return achieveVal.step >= achieveData['targetParam'][0]
 
+def _checkAchieveCollect(avatar, achieveData, achieveVal, ctx):
+    achieveVal.step = max(achieveVal.step, avatar.getPersistentMiscProp(gameconst.EntityPropsEnum.completeCollectNum, 0))
+    return achieveVal.step >= achieveData['targetParam'][0]
+
+def _checkAchieveUnlockMount(avatar, achieveData, achieveVal, ctx):
+    achieveVal.step = max(achieveVal.step, avatar.getUnlockMountNum())
+    return achieveVal.step >= achieveData['targetParam'][0]
+
 def _checkAchievePetBattleNum(avatar, achieveData, achieveVal, ctx):
     achieveVal.step = max(achieveVal.step, avatar.curBattlePetNum())
     return achieveVal.step >= achieveData['targetParam'][0]
@@ -94,7 +102,7 @@ def _checkAchieveMakeEquipment(avatar, achieveData, achieveVal, ctx):
 
 def _checkAchieveTask(avatar, achieveData, achieveVal, ctx):
     _taskId = achieveData['targetParam'][0]
-    if _taskId != getattr(ctx, 'taskId', 0):
+    if not avatar.taskInfo.isTaskComplete(_taskId):
         return False
 
     achieveVal.step = 1
@@ -149,7 +157,8 @@ def _checkAchieveBounty(avatar, achieveData, achieveVal, ctx):
     return achieveVal.step >= achieveData['targetParam'][0]
 
 def _checkAchieveDungeon(avatar, achieveData, achieveVal, ctx):
-    if ctx.dungeonNo == achieveData['targetParam'][1]:
+    # targetParam[1] 填 0 表示不限副本，默认 step+1
+    if achieveData['targetParam'][1] == 0 or ctx.dungeonNo == achieveData['targetParam'][1]:
         achieveVal.step += 1
     return achieveVal.step >= achieveData['targetParam'][0]
 
@@ -180,6 +189,11 @@ def _checkAchieveAddNum(avatar, achieveData, achieveVal, ctx):
     achieveVal.step += ctx.num
     return achieveVal.step >= achieveData['targetParam'][0]
 
+def _checkAchieveAuctionMoney(avatar, achieveData, achieveVal, ctx):
+    _money = avatar.getPersistentMiscProp(gameconst.EntityPropsEnum.auctionGainMoney, 0)
+    achieveVal.step = max(achieveVal.step, _money)
+    return achieveVal.step >= achieveData['targetParam'][0]
+
 def _checkAchieveMeridian(avatar, achieveData, achieveVal, ctx):
     if ctx.slotIdx == achieveData['targetParam'][1]:
         achieveVal.step += 1
@@ -196,7 +210,7 @@ _CHECK_ACHIEVE_DIC = {
     gameconst.AchieveType.SCORE: (_checkAchieveScoreFinished, True),
     gameconst.AchieveType.KILL_MONSTER: (_checkAchieveAddStep, False),
     gameconst.AchieveType.DRAW_CARD: (_checkAchieveDrawCardFinished, False),
-    gameconst.AchieveType.UNLOCK_MOUNT: (_checkAchieveAddStep, False),
+    gameconst.AchieveType.UNLOCK_MOUNT: (_checkAchieveUnlockMount, True),
     gameconst.AchieveType.JOIN_GUILD: (_checkAchieveAddStep, False),
     gameconst.AchieveType.ADD_FRIEND: (_checkAchieveAddStep, False),
     gameconst.AchieveType.MAKE_EQUIPMENT: (_checkAchieveMakeEquipment, False),
@@ -210,8 +224,8 @@ _CHECK_ACHIEVE_DIC = {
     gameconst.AchieveType.DEAD_TIMES: (_checkAchieveAddStep, False),
     gameconst.AchieveType.DO_COLLECT: (_checkAchieveAddStep, False),
     gameconst.AchieveType.USE_POTION: (_checkAchieveUsePotion, False),
-    gameconst.AchieveType.MAIN_TASK: (_checkAchieveTask, False),
-    gameconst.AchieveType.SUB_TASK: (_checkAchieveTask, False),
+    gameconst.AchieveType.MAIN_TASK: (_checkAchieveTask, True),
+    gameconst.AchieveType.SUB_TASK: (_checkAchieveTask, True),
     gameconst.AchieveType.HOOK_TASK_REWARD: (_checkAchieveHookReward, False),
     gameconst.AchieveType.LEADER_BOARD: (_checkAchieveLeaderBoard, False),
     gameconst.AchieveType.SIEGE_KILL: (_checkAchieveAddStep, False),
@@ -225,12 +239,12 @@ _CHECK_ACHIEVE_DIC = {
     gameconst.AchieveType.BOUNTY: (_checkAchieveBounty, False),
     gameconst.AchieveType.CRUSADE: (_checkAchieveDungeon, False),
     gameconst.AchieveType.CHIEF: (_checkAchieveDungeon, False),
-    gameconst.AchieveType.COLLECT: (_checkAchieveAddStep, False),
+    gameconst.AchieveType.COLLECT: (_checkAchieveCollect, True),
     gameconst.AchieveType.EQUIP_QUALITY: (_checkAchieveEquipQuality, False),
     gameconst.AchieveType.MINE_COLLECT: (_checkAchieveMineCollect, False),
     gameconst.AchieveType.SYNTHESIS: (_checkAchieveSynthesis, False),
     gameconst.AchieveType.MAX_MONEY: (_checkAchieveMaxMoney, False),
-    gameconst.AchieveType.AUCTION_MONEY: (_checkAchieveAddNum, False),
+    gameconst.AchieveType.AUCTION_MONEY: (_checkAchieveAuctionMoney, True),
     gameconst.AchieveType.INSCRIPTION: (_checkAchieveAddStep, False),
     gameconst.AchieveType.MERIDIAN: (_checkAchieveMeridian, False),
     gameconst.AchieveType.GUILD_CONTRIB: (_checkAchieveAddNum, False),
@@ -261,13 +275,14 @@ class AchievementValVal(userType.UserSingleType):
     def checkCouldChangeFinishedState(self, avatar, achieveData, ctx):
         return _CHECK_ACHIEVE_DIC[achieveData['targetType']][0](avatar, achieveData, self, ctx)
 
-    def updateFromNewAchieveData(self, avatar, achieveData, ctx, src):
+    def updateFromNewAchieveData(self, avatar, achieveData, ctx, src, forInit=False):
         if not achieveData['isOpen']:
             return False
 
         _oldIsFinished = self.isFinished()
         _oldStep = self.step
-        if self.checkCouldChangeFinishedState(avatar, achieveData, ctx):
+        # 登录补数据只校验标记过的类型，事件触发仍走原来的完成判断
+        if (not forInit or _CHECK_ACHIEVE_DIC[achieveData['targetType']][1]) and self.checkCouldChangeFinishedState(avatar, achieveData, ctx):
             self.flag = utils.bset(self.flag, gameconst.AchievementFlag.FINISHED)
 
         if _oldIsFinished != self.isFinished():

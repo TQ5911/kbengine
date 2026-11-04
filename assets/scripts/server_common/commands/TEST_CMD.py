@@ -60,9 +60,9 @@ def getAllGMCmds(su):
 
 @gm_cmd('$getAllPlayers', (), RONE, BASE, '获取所有在线用户', ALLSIDE, GOD_GROUPS)
 def getAllPlayers(su):
-    if KBEngine.publish():
-        su.onCommandResult(0, 'can not run in publish server', {})
-        return
+    # if KBEngine.publish():
+    #     su.onCommandResult(0, 'can not run in publish server', {})
+    #     return
     gameengine.callBaseApps("utils.getAllAvatarByGm", (su, gameglobal.localBaseApp))
 
 def _do_remoteCall(su, player, method, args, times):
@@ -223,21 +223,21 @@ def update_skills_by_playerLevel(ent, playerLevel, skillLevel=0):
                 continue
             skill_id_list.append(skill_id)
             skill_lv_list.append(skill_lv)
-            self.cell.onChangeSkillLv(skill_id, skill_lv)
             newLevel = skill_lv
             self.buildDic.skillLevels[skill_id] = newLevel
+            self.onChangeSkillLv(skill_id, newLevel)
             self.updateSkillLevelSetSummonSlotIdx(skill_id, newLevel)
 
             recommendSlot = self.buildDic.getSkillRecommendSlot(self, skill_id)
             if recommendSlot is not None:
                 self.buildDic.changeSkillSlot(self, skill_id, None, recommendSlot)
 
-            # 被动技能替换的技能一并要升级
             relatedSkills = SSD.datas.get(skill_id, {}).get('conflictSkill') or ()
             skillIdList = [skill_id] + list(relatedSkills)
             for sid in relatedSkills:
                 if sid in self.buildDic.skillLevels:
                     self.buildDic.skillLevels[sid] = newLevel
+                    self.onChangeSkillLv(sid, newLevel)
                     self.updateSkillLevelSetSummonSlotIdx(sid, newLevel)
 
                     recommendSlot = self.buildDic.getSkillRecommendSlot(self, sid)
@@ -250,26 +250,50 @@ def update_skills_by_playerLevel(ent, playerLevel, skillLevel=0):
     if school in skill_dicts:
         update_skill_levels(ent, skill_dicts[school])
 
-def getPetItemList():
+def getPetItemList(qualityLimit=0):
     petItemListValid = []
     for itemId, itemData in ID.datas.items():
         itemType = itemData.get('type', None)
         subType = itemData.get('subType', None)
+        quality = itemData.get('quality', None)
+        if qualityLimit and quality > qualityLimit:
+            continue
         if itemType == gameconst.ItemEnum.LingShou and subType == gameconst.ItemSubEnum.LingShouEgg and (itemData.get('indexID', None) in PD.datas):
             petItemListValid.append(itemId)
     return petItemListValid
 
-def activatePets(player, itemId=0, roleLevel=0):
-    #  1.获得道具
-    itemList = getPetItemList() if itemId == 0 else [itemId]
-    bindType = 0
-    for itemId in itemList:
-        player.gmAddItems(0, itemId, 1, 'gm_cmd:$enhanceRole', bindType)
-    #  2.使用道具
+class _LingShouEggTmp(object):
+    """精灵蛋替身。
+    正常流程是「发一颗蛋到宠物背包 → 再把蛋转换成精灵」，蛋在这里唯一的用途就是提供
+    attr2LingShouData()（= dataUtils.createPetInfo(蛋对应的 petId)），并不会被消耗。
+    所以这里直接给个只有 attr2LingShouData 的替身，省掉 49 次 gmAddItems + 背包扫描 + 落库，
+    精灵本身仍然按同一套 addLingShouBase 流程创建，属性/评分口径不变。
+    """
+    __slots__ = ('petId', )
+
+    def __init__(self, petId):
+        self.petId = petId
+
+    def attr2LingShouData(self):
+        return dataUtils.createPetInfo(self.petId)
+
+
+def activatePets(player, itemId=0, roleLevel=0, qualityLimit=0):
+    #  1.直接按宠物模板创建（不再「先获得道具 → 再用道具」）
+    itemList = getPetItemList(qualityLimit) if itemId == 0 else [itemId]
     opUUID = KBEngine.genUUID64()
+    school = player.getAvatarSchool()
     for itemId in itemList:
-        gridId, it = player.petBag.getItemObjByItemID(itemId, bindType)
-        abCtx = actionContext.AddLingShouCtx(gameconst.AddLingShouReason.normal, extra={'opUUID':opUUID, 'item': it, 'school':player.getAvatarSchool()})
+        petId = ID.datas.get(itemId, {}).get('indexID', 0)
+        if not petId or petId not in PD.datas:
+            continue
+        # 已经激活过：跳过（重复 $enhancerole 不会重建精灵、不会重复计分）
+        if player.lingShouInfo.getLingShouByPetId(petId):
+            continue
+        abCtx = actionContext.AddLingShouCtx(
+            gameconst.AddLingShouReason.normal,
+            extra={'opUUID': opUUID, 'item': _LingShouEggTmp(petId), 'school': school},
+        )
         player.addLingShouBase(abCtx)
     #  3.设置出战
     petIds = _setBattlePets(player, roleLevel)
@@ -311,6 +335,30 @@ def _setBattlePets(player, roleLevel=0):
         player.updateLingShouBattleList(player.id, battleIndex, petId, slotId)
     return petIds
 
+def _gearStrengthenMaxByQuality(quality):
+    """按品质取强化等级上限：gearStrengthenMax.value 是按品质下标配的（0,8,8,10,10,10）"""
+    _maxList = GEGCD.datas['gearStrengthenMax']['value'] or ()
+    if not _maxList:
+        return 0
+    if 0 <= quality < len(_maxList):
+        return _maxList[quality]
+    return _maxList[-1]
+
+
+def _clampEnhanceLvByQuality(enhanceLv, quality):
+    """把强化等级夹到该品质的上限内。
+
+    enhanceLv 是 awardCtx 里的全局值，但不同品质的强化上限不同：
+    传了 qualityLimit 时这一批装备是混品质的，如果统一用最大强化等级，
+    低品质装备会算不出 getEnhanceLevelKey（equipType*10000+quality*1000+grade*100+enhanceLv），
+    在 EquipmentItem.initNewItemAttr 里找不到配置、被清成 0（表现为低品质装备没有强化）。
+    """
+    _maxLv = _gearStrengthenMaxByQuality(quality)
+    if _maxLv <= 0:
+        return 0
+    return min(enhanceLv or 0, _maxLv)
+
+
 def _getItems(school, quality, awardCtx, qualityLimit=None):
     _targetList = []
     for k, v in GBE.auctionDic.items():
@@ -322,14 +370,15 @@ def _getItems(school, quality, awardCtx, qualityLimit=None):
 
     print('_targetList', _targetList)
 
-    _itemIds = []
+    _itemIdQuality = []   # [(itemId, quality)]：要按每件自己的品质算强化等级上限
+
     if qualityLimit:
         slotEquips = {6: 2, 7: 2}  # 部位装备限制,未限制的都是1
         
         # 记录每个部位已经获取的数量
         slotCount = {}
         
-        for quality, limitNum in qualityLimit.items():
+        for _quality, limitNum in qualityLimit.items():
             if limitNum <= 0:
                 continue
             _limitNum = limitNum  # 当前品质剩余配额
@@ -347,14 +396,14 @@ def _getItems(school, quality, awardCtx, qualityLimit=None):
                 if stillNeed <= 0:
                     continue  # 该部位已经满足需求，跳过
                 
-                key = (slot, school, quality)
+                key = (slot, school, _quality)
                 if key not in GBG.auctionDic:
                     continue
                 itemList = GBG.auctionDic[key]
                 itemIndex = 0
                 while stillNeed > 0 and _limitNum > 0:
                     i = itemList[itemIndex % len(itemList)]
-                    _itemIds.append(i)
+                    _itemIdQuality.append((i, _quality))
                     _limitNum -= 1
                     stillNeed -= 1
                     slotCount[slot] = slotCount.get(slot, 0) + 1
@@ -367,27 +416,32 @@ def _getItems(school, quality, awardCtx, qualityLimit=None):
             if k[2] != quality:
                 continue
             for i in v:
-                _itemIds.append(i)
+                _itemIdQuality.append((i, quality))
                 if k[0] == 6 or k[0] == 7:
-                    _itemIds.append(i)
+                    _itemIdQuality.append((i, quality))
 
+    # 逐件生成：按每件装备自己的品质把 awardCtx.enhanceLv 夹到该品质的强化上限，
+    # 生成完再复原，避免影响调用方后续用同一个 awardCtx（如 addWealth）
+    _originEnhanceLv = awardCtx.enhanceLv
     _items = []
-    for _itemId in _itemIds:
+    for _itemId, _itemQuality in _itemIdQuality:
+        awardCtx.addContextVar('enhanceLv', _clampEnhanceLvByQuality(_originEnhanceLv, _itemQuality))
         _items.extend(dropAward._genEquipItemList(_itemId, 1, 0, quality, awardCtx))
+    awardCtx.addContextVar('enhanceLv', _originEnhanceLv)
 
     return _items
 
 @gm_cmd('$dropEquip', (Player("gbId or Id"), Int("int slotId")), RARG(0), CELL, '丢装备', ALLSIDE, GOD_GROUPS)
 def dropEquip(su, player, slotId):
-    if gameconfig.isCrossServer():
-        return False, '跨服禁止执行'
+    # if gameconfig.isCrossServer():
+    #     return False, '跨服禁止执行'
 
     player.dropEquip(slotId, player.gbId, player.name)
     return True, 'command success'
 
 @gm_cmd('$dropWithoutDress', (Player("gbId or Id"), Int('count')), RARG(0), CELL, '丢装备', ALLSIDE, GOD_GROUPS)
 def dropWithoutDress(su, player, count):
-    _items = _getItems(player.school, 3, 3, awardContext.CommonContext(0))
+    _items = _getItems(player.school, 3, awardContext.CommonContext(0))
     for _item in _items[:count]:
         player.dropEquipByItem(_item, player.name)
 
@@ -451,8 +505,9 @@ def enhanceRole(su, player, roleLevel=0):
             vaildQuality[quality] = limitNum
     maxQuality = max(vaildQuality.keys())
     maxClassLevel = GEGCD.datas['equipmentClassLevel']['value']
-    maxEnhanceLevel = len(GEGCD.datas['strengthenPercent']['value'])
-    _, _, items = _gmGetEquipment(player, 0, maxQuality, maxClassLevel, maxEnhanceLevel, vaildQuality)
+    maxEnhanceLevel = max(GEGCD.datas['gearStrengthenMax']['value'])
+    # 品质固定传4先过判断
+    _, _, items = _gmGetEquipment(player, 0, 4, maxClassLevel, maxEnhanceLevel, vaildQuality)
 
     # 装备改造
     # 1.铭文 因为gm穿戴有延迟，所以先在包里处理铭文
@@ -468,37 +523,38 @@ def enhanceRole(su, player, roleLevel=0):
     # forwardGMCommand(su, "$glyphWashingEquipmentsInEquip", player.id)
     # 2.祝福
     # 3.穿戴
-    # 下面的流程不分步执行的话，客户端会断连
-    gm_step = 1 
+    # 下面的流程必须错开 tick 执行（全部塞进一个 tick 会产生巨量属性同步/客户端消息，客户端会断连）。
+    # 原来是 6 步 x 1s = 6s，实测只有「穿戴」和「后续系统」需要分开：
+    #   * 穿戴：gmBaseDressEquips 内部用 0.2s 定时器逐件穿，本身不阻塞；
+    #   * 技能 + 精灵：互不依赖，可合并到同一步；
+    #   * 收集：_gmFinishCollect 内部已按 GM_COLLECT_BATCH/0.1s 分片，发出即返回；
+    #   * 经脉：gmUnlockAllMeridian 已改为一次性差量设置（原来 800 次 cell 调用 + 800 次全量同步）。
+    # 所以总时长从 6s 降到 ~1.5s，单 tick 的消息量反而比原来更小。
+    ENHANCE_STEP_INTERVAL = 0.3
+    gm_step = 1
     def _delay_call():
         nonlocal gm_step
         if gm_step == 1:
             dressSlotIds = list(range(gameconst.BodyEquipSlot.EQUIP_WEAPON_SLOT, gameconst.BodyEquipSlot.EQUIP_BELT_SLOT + 1))
             player.gmBaseDressEquips(dressSlotIds, -1)
-            gm_step += 1
         elif gm_step == 2:
-            # 技能改造 
-            # 1.技能升级
+            # 技能改造（技能升级）
             update_skills_by_playerLevel(player, maxRoleLevel)
-            gm_step += 1
-        elif gm_step == 3:
-            # 精灵穿戴
+            # 精灵穿戴（技能与精灵互不依赖，合到同一步）
             activatePets(player, 0, maxRoleLevel)
-            gm_step += 1
-        elif gm_step == 4:
-            # 收集系统
+        elif gm_step == 3:
+            # 收集系统：内部按批次异步跑完，不阻塞后续步骤
             _gmFinishCollect(player, 0)
-            gm_step += 1
-        elif gm_step == 5:
-            # 经脉系统
+        elif gm_step == 4:
+            # 经脉系统：一次性设置（见 IMeridian.gmUnlockAllMeridian）
             player.gmUnlockAllMeridian()
-            gm_step += 1
-        elif gm_step >= 6:
+        else:
             LOG_DBG(f'enhanceRole: finished for player {player.id}')
             return su.onCommandResult(0, 'ok', {})
-            
-        KBEngine.addTimer(1, 0, lambda tid: _delay_call())    
-    KBEngine.addTimer(1, 0, lambda tid: _delay_call())    
+
+        gm_step += 1
+        KBEngine.addTimer(ENHANCE_STEP_INTERVAL, 0, lambda tid: _delay_call())
+    KBEngine.addTimer(ENHANCE_STEP_INTERVAL, 0, lambda tid: _delay_call())
     # return su.onCommandResult(0, 'ok', {})
 
 @gm_cmd('$modifyAttrByLevel', (Player("gbId or Id"),Int('level')), RARG(0), gameconst.CELL, '根据等级设置角色属性', ALLSIDE, GOD_GROUPS)
@@ -532,11 +588,15 @@ def modifyAttrByLevel(su, player, level):
             continue
         oldVal = player.getProp(attrName)
         delta = type(oldVal)(attrVal - oldVal)  # 根据当前属性差值补足
+        if delta == 0:
+            continue
         if prefix:
             attrList.append((prefix + attrName[0].upper() + attrName[1:], delta))
         else:
             attrList.append((attrName, delta))
-    forwardGMCommand(su, '$addAwardFightProps', player.id, str(attrList))
+    player.base.runGmCommand(f'$addAwardFightProps 0 {str(attrList).replace(" ", "")}')
+    # 用下面这个逻辑目前的表现是游戏内执行gm，会只对base1的玩家生效
+    # forwardGMCommand(su, '$addAwardFightProps', player.id, str(attrList))
 
 @gm_cmd('$activeMount', (Player("gbId or Id"), Int("itemId"),), RARG(0), gameconst.CELL, '激活坐骑', ALLSIDE, GOD_GROUPS, minArgs=0)
 def activeMount(su, player, itemId=0):
@@ -566,9 +626,9 @@ def activeMount(su, player, itemId=0):
     player._enterRidingWithCast(True, False)
     return True, 'command success'
 
-@gm_cmd('$activePet', (Player("gbId or Id"), Int("itemId"),), RARG(0), gameconst.BASE, '激活宠物', ALLSIDE, GOD_GROUPS, minArgs=0)
-def activePet(su, player, itemId=0):
-    activatePets(player, itemId)
+@gm_cmd('$activePet', (Player("gbId or Id"), Int("itemId"), Int("qualityLimit"),), RARG(0), gameconst.BASE, '激活宠物', ALLSIDE, GOD_GROUPS, minArgs=0)
+def activePet(su, player, itemId=0, qualityLimit=0):
+    activatePets(player, itemId, 0, qualityLimit)
 
 @gm_cmd('$changeBattlePet', (Player("gbId or Id"),), RARG(0), gameconst.BASE, '更换出战精灵', ALLSIDE, GOD_GROUPS, minArgs=0)
 def changeBattlePet(su, player):
@@ -976,6 +1036,36 @@ def _translateValue(value, valueType, module_dict=None):
     except Exception as e:
         return False, f"转换失败: {str(e)}", value
 
+# 某些数据模块在 datas 之外还维护了额外的冗余数据结构，修改 datas 后需要同步更新这些结构
+# 格式：{ moduleName: { 额外结构属性名: { "keyField": 额外结构键在 datas 条目中的字段, "matchField": 额外结构条目中用于匹配 datas key 的字段 } } }
+EXTRA_DATA_MAPPING = {
+    "drop_drop_package": {
+        "dropPackageData": {"keyField": "dropPackage", "matchField": "ID"},
+    },
+    "drop_drop_sub_package": {
+        "dropPackageData": {"keyField": "dropPackage", "matchField": "ID"},
+    },
+}
+
+def _syncExtraDataStructures(mod, moduleName, key, target_data, attrName, value):
+    """同步更新模块中额外的冗余数据结构，如 drop_drop_package 的 dropPackageData"""
+    extra_map = EXTRA_DATA_MAPPING.get(moduleName)
+    if not extra_map:
+        return
+    for extraAttrName, cfg in extra_map.items():
+        extra_data = getattr(mod, extraAttrName, None)
+        if extra_data is None:
+            continue
+        group_key = target_data.get(cfg["keyField"])
+        if group_key is None:
+            continue
+        entries = extra_data.get(group_key)
+        if entries is None:
+            continue
+        for entry in entries:
+            if entry.get(cfg["matchField"]) == key:
+                entry[attrName] = value
+
 def _setMemoryDataInProcess(su, moduleName, key, attrName, value, isBase64, processType):
     """在指定进程中修改内存数据的公共逻辑"""
     try:
@@ -1024,6 +1114,8 @@ def _setMemoryDataInProcess(su, moduleName, key, attrName, value, isBase64, proc
                 target_data[attrName] = parsed_value
         except Exception as e:
             return su.onCommandResult(1, f'{processType}进程: 值设置失败: {str(e)}', {})
+        # 同步更新额外的冗余数据结构
+        _syncExtraDataStructures(mod, moduleName, key_cast, target_data, attrName, parsed_value)
         gamerefresh.refreshData(' ') # 主要为了调用clearCacheInTick
         return su.onCommandResult(0, f'{processType}进程修改 {moduleName}.datas[{key_cast}].{attrName} 成功 {target_data[attrName]}', {attrName: value})
     except Exception as e:
@@ -1450,12 +1542,13 @@ def broadcastSystemMsg(su, message):
     try:
         strmessage = base64.b64decode(message).decode('utf-8')
         system_avatar_info = {
-            'gbId': 0, 
+            'gbId': 0,
             'name': '系统',
             'level': 0,
             'vipLevel': 0,
             'school': 0,
-            'sex': 0
+            'sex': 0,
+            'serverId': gameconfig.serverId()
         }
         
         # 只在一个BaseApp进程中执行，然后向所有BaseApp广播
@@ -1582,6 +1675,134 @@ def modifyGuildIron(su, player, addCount):
     player.guildBox.modifyGuildIronMine(addCount, src, opUUID, detail)
     return True, 'command success'
 
+@gm_cmd('$_setGuildJoinTimeByGuild', (Entity("guild entity id"), Int("int gbId"), Int("int hoursAgo")),
+        RARG(0), gameconst.BASE, '内部：在公会宿主 baseapp 上改成员入会时间', ALLSIDE, GOD_GROUPS)
+def gmSetJoinTimeByGuild(su, guildBox, gbId, hoursAgo):
+    ret = _applyMemberJoinTime(guildBox, gbId, hoursAgo)
+    if ret is not True:
+        return False, ret
+    return True, 'command success'
+
+
+@gm_cmd('$setGuildJoinTime', (Player("gbId or Id"), Int("int hoursAgo")), RARG(0), gameconst.BASE,
+        '测试：把公会成员入会时间前推 N 小时（验证新成员限制用）', ALLSIDE, GOD_GROUPS)
+def setGuildMemberJoinTime(su, player, hoursAgo):
+    """仅测试用：改 Guild.members[gbId].joinTime，业务判断逻辑一行不改。
+
+    业务判据在 Guild.isForbidNewMember：
+        now - members[gbId].joinTime <= guild_limitActionTime(24h) * 3600
+    用例需要「已满 24h」「未满 24h」两种成员状态，直接改 joinTime 是最小侵入做法。
+
+    两个技术点（都是实测踩出来的）：
+    1. 公会实体可能托管在**另一个 baseapp**，`KBEngine.entities.get` 本地取不到
+       → 先试本地，取不到就转发给宿主 app。`realForwardCommand` 对 RARG+BASE 指令
+       按「实体宿主」路由（gmCommand.py:1657-1673），所以内部指令 `$_setGuildJoinTimeByGuild`
+       以**公会实体 id** 作为路由参数。
+    2. `player.guildBox` 是 ENTITYCALL，只能调 Guild.def 里声明过的方法；
+       运行时新挂的方法调不到（实测静默丢弃），所以不走 EntityCall，直接拿实体改字段。
+    """
+    if player.guildBox is None:
+        return False, '当前玩家没有帮会'
+
+    guildId = player.guildBox.id
+    gbId = player.gbID
+    if KBEngine.entities.get(guildId) is not None:
+        ret = _applyMemberJoinTime(player.guildBox, gbId, hoursAgo)
+        if ret is not True:
+            return False, ret
+        return True, 'command success'
+
+    LOG_INFO('setGuildJoinTime: guild not local, forward to host app', guildId, gbId)
+    forwardGMCommand(su, '$_setguildjointimebyguild', guildId, gbId, int(hoursAgo))
+    return True, 'command success'
+
+
+@gm_cmd('$_setGuildTenureByGuild', (Entity("guild entity id"), Int("int gbId"), Int("int minutes")),
+        RARG(0), gameconst.BASE, '内部：在公会宿主 baseapp 上改成员累计任职时长', ALLSIDE, GOD_GROUPS)
+def gmSetTenureByGuild(su, guildBox, gbId, minutes):
+    ret = _applyMemberTenure(guildBox, gbId, minutes)
+    if ret is not True:
+        return False, ret
+    return True, 'command success'
+
+
+@gm_cmd('$setGuildTenure', (Player("gbId or Id"), Int("int minutes")), RARG(0), gameconst.BASE,
+        '测试：把公会成员累计任职时长设为 N 分钟（验证分红任期门槛用）', ALLSIDE, GOD_GROUPS)
+def setGuildMemberTenure(su, player, minutes):
+    """仅测试用：改 Guild.members[gbId].commissionCumTenure，业务判断逻辑一行不改。
+
+    业务判据在 Guild.doShareCommission（帮会佣金分红，即「发放俸禄」）：
+        tenureReq = guild_dividendTime(=5) * 24 * 60 = 7200 分钟
+        if gmVal.commissionCumTenure < tenureReq:  # 直接 return，客户端无任何回调
+            LOG_WARN('doShareCommission: not enough tenure', ...)
+    新号 commissionCumTenure 恒为 0（职位任职时长从 0 开始累计），
+    所以「发放成功」分支在本环境不可达。改这个字段是打开该分支的最小侵入手段。
+
+    与 $setGuildJoinTime 的区别：
+        * joinTime            → 判 Guild.isForbidNewMember（捐献/协助的 24h 新成员限制）
+        * commissionCumTenure → 判佣金分红的任职时长门槛（5 天）
+    两者是**不同**的判据，不能互相替代，所以各需要一个 GM。
+    """
+    if player.guildBox is None:
+        return False, '当前玩家没有帮会'
+
+    guildId = player.guildBox.id
+    gbId = player.gbID
+    if KBEngine.entities.get(guildId) is not None:
+        ret = _applyMemberTenure(player.guildBox, gbId, minutes)
+        if ret is not True:
+            return False, ret
+        return True, 'command success'
+
+    LOG_INFO('setGuildTenure: guild not local, forward to host app', guildId, gbId)
+    forwardGMCommand(su, '$_setguildtenurebyguild', guildId, gbId, int(minutes))
+    return True, 'command success'
+
+
+def _applyMemberTenure(guildBox, gbId, minutes):
+    """改 Guild.members[gbId].commissionCumTenure；调用方必须保证 guildBox 在本进程。"""
+    guildId = getattr(guildBox, 'id', 0)
+    _guild = KBEngine.entities.get(guildId)
+    if _guild is None:
+        LOG_WARN('setGuildMemberTenure: guild not local', guildId, gbId)
+        return '公会实体不在本进程，无法直接修改'
+
+    _gmVal = _guild.members.get(int(gbId))
+    if _gmVal is None:
+        LOG_WARN('setGuildMemberTenure: not a member', gbId,
+                 list(getattr(_guild, 'members', {}).keys()))
+        return '玩家不在该公会成员列表'
+
+    _old = _gmVal.commissionCumTenure
+    _gmVal.setProperty('commissionCumTenure', int(minutes))
+    LOG_INFO('setGuildMemberTenure:', gbId, _old, '->', _gmVal.commissionCumTenure)
+    return True
+
+
+def _applyMemberJoinTime(guildBox, gbId, hoursAgo):
+    """改 Guild.members[gbId].joinTime；调用方必须保证 guildBox 在本进程。"""
+    guildId = getattr(guildBox, 'id', 0)
+    _guild = KBEngine.entities.get(guildId)
+    if _guild is None:
+        LOG_WARN('setGuildMemberJoinTime: guild not local', guildId, gbId)
+        return '公会实体不在本进程，无法直接修改'
+
+    _gmVal = _guild.members.get(int(gbId))
+    if _gmVal is None:
+        LOG_WARN('setGuildMemberJoinTime: not a member', gbId,
+                 list(getattr(_guild, 'members', {}).keys()))
+        return '玩家不在该公会成员列表'
+
+    _old = _gmVal.joinTime
+    _gmVal.setProperty('joinTime', utils.curTS() - int(hoursAgo) * 3600)
+    LOG_INFO('setGuildMemberJoinTime:', gbId, _old, '->', _gmVal.joinTime, 'hoursAgo', hoursAgo)
+    try:
+        _guild._braodcastAsync(lambda box: box.client.onGetGuildMemberDatas(_guild._getMembersData()), 0)
+    except Exception as e:
+        LOG_WARN('setGuildMemberJoinTime broadcast fail:', e)
+    return True
+
+
 @gm_cmd('$modifyGuildDungeonStatus', (Player("gbId or Id"), Int("int status")), RARG(0), gameconst.BASE, '修改公会副本状态', ALLSIDE, GOD_GROUPS)
 def modifyGuildDungeonStatus(su, player, status):
     if player.guildBox is None:
@@ -1682,72 +1903,119 @@ def showPetDraw(su, player, petItemList):
     player.client.onRandomSummonPet(petItemList)
     return True, 'command success'
 
+# 完成「全部收集品」是 980 条的重活：全同步跑会把 BaseApp 的一个 tick 卡死（一批机器人同时
+# $enhancerole 就是崩溃点）。这里做四件事：
+#   1) 已全部完成的收集项直接跳过（重复 $enhancerole 不再逐格子刷、也不会重复加属性/评分）
+#   2) 已完成的格子不再重复 onComplete
+#   3) 计分合并成一次 cell 调用（原来每条收集品一次 onCollectAward，980 次跨进程调用）
+#   4) 分批：同步跑前 GM_COLLECT_BATCH 条，剩下的用一次性定时器分片继续，客户端信息最后一次性同步
+GM_COLLECT_BATCH = 120
+GM_COLLECT_INTERVAL = 0.1
+
+
+def _gmCollectClassInvalid(info, school):
+    unavailableClass = info.get('unavailableClass', [])
+    return bool(unavailableClass) and school in unavailableClass
+
+
+def _gmCollectOne(player, collectId, info, schoolIdx, school):
+    """完成单条收集品。@return True=本次由「未完成」变为「全部完成」（需要计分）"""
+    equipment_len = len(info['equip']) if info['equip'] else 0
+    prop_len = len(info['props']) if info['props'] else 0
+    total_len = equipment_len + prop_len
+    if total_len <= 0:
+        return False
+
+    collDict = player.collectibleData.collectibleDict
+    coll = collDict.get(collectId)
+    if coll is None:
+        coll = collectItem(collectId)
+        collDict[collectId] = coll
+    # 之前已经全部完成过：不再逐格子刷，也不再重复计分
+    if coll.isCompleteAll(total_len):
+        return False
+
+    for collectGridID in range(total_len):
+        if coll.isCompleteAt(collectGridID):
+            continue
+        propGridID = collectGridID - equipment_len
+        if propGridID < 0:
+            indexId = info['equip'][collectGridID]
+            equipInfo = CEIDX.datas.get(indexId, None)
+            if not equipInfo or schoolIdx >= len(equipInfo['propList']):
+                continue
+        elif propGridID >= prop_len:
+            continue
+        coll.onComplete(collectGridID)
+
+    return coll.isCompleteAll(total_len)
+
+
+def _gmCollectSweepStep(player, sweep):
+    """跑一个批次。@return (本批新完成的 collectId 列表, 是否还有剩余)"""
+    ids = sweep['ids']
+    begin = sweep['idx']
+    end = min(begin + GM_COLLECT_BATCH, len(ids))
+    school, schoolIdx = sweep['school'], sweep['schoolIdx']
+    done = []
+    for i in range(begin, end):
+        collectId = ids[i]
+        info = PDETAIL.datas.get(collectId, None)
+        if not info or _gmCollectClassInvalid(info, school):
+            continue
+        if _gmCollectOne(player, collectId, info, schoolIdx, school):
+            done.append(collectId)
+    sweep['idx'] = end
+    return done, end < len(ids)
+
+
+def _gmCollectSweepTick(tid, player, sweep):
+    """定时器回调：继续跑下一批（实体已销毁就放弃）"""
+    if player is None or player.isDestroyed:
+        return 0
+    done, remain = _gmCollectSweepStep(player, sweep)
+    if done:
+        player.cell.onCollectAward(done, 0)
+    if remain:
+        KBEngine.addTimer(GM_COLLECT_INTERVAL, 0, lambda _tid: _gmCollectSweepTick(_tid, player, sweep))
+    else:
+        player.sendCollectInfo()
+    return 0
+
+
 def _gmFinishCollect(player, collectId):
     school = player.getAvatarSchool()
     if school not in CCDATA.allSchoolList:
         return False, '执行失败，玩家职业无效'
     schoolIdx = CCDATA.allSchoolList.index(school)
-    
-    if collectId == 0:
-        propIndexList = []
-        for collectId, info in PDETAIL.datas.items():
-            unavailableClass = info.get('unavailableClass', [])
-            if unavailableClass and school in unavailableClass:
-                continue
-            equipment_len = len(info['equip']) if info['equip'] else 0
-            prop_len = len(info['props']) if info['props'] else 0
-            total_len = equipment_len + prop_len
-            
-            player.collectibleData.collectibleDict.setdefault(collectId, collectItem(collectId))
-            for collectGridID in range(total_len):
-                propGridID = collectGridID - equipment_len
-                if propGridID < 0:
-                    indexId = info['equip'][collectGridID]
-                    equipInfo = CEIDX.datas.get(indexId, None)
-                    if not equipInfo or schoolIdx >= len(equipInfo['propList']):
-                        continue
-                elif propGridID >= prop_len:
-                    continue
-                    
-                player.collectibleData.collectibleDict[collectId].onComplete(collectGridID)
-                
-            if player.collectibleData.collectibleDict[collectId].isCompleteAll(total_len):
-                propIndexList.append(collectId)
-                
-        for validCollectId in propIndexList:
-            player._onScore(validCollectId, 0)
-            
-        player.sendCollectInfo()
-        
-    else:
+
+    if collectId:
         info = PDETAIL.datas.get(collectId, None)
         if not info:
             return False, '执行失败，收集项不存在'
-        unavailableClass = info.get('unavailableClass', [])
-        if unavailableClass and school in unavailableClass:
+        if _gmCollectClassInvalid(info, school):
             return False, '执行失败，收集项本职业不可用'
-        equipment_len = len(info['equip']) if info['equip'] else 0
-        prop_len = len(info['props']) if info['props'] else 0
-        total_len = equipment_len + prop_len
-        
-        player.collectibleData.collectibleDict.setdefault(collectId, collectItem(collectId))
-        for collectGridID in range(total_len):
-            propGridID = collectGridID - equipment_len
-            if propGridID < 0:
-                indexId = info['equip'][collectGridID]
-                equipInfo = CEIDX.datas.get(indexId, None)
-                if not equipInfo or schoolIdx >= len(equipInfo['propList']):
-                    continue
-            elif propGridID >= prop_len:
-                continue
-                
-            player.collectibleData.collectibleDict[collectId].onComplete(collectGridID)
-            
-        if player.collectibleData.collectibleDict[collectId].isCompleteAll(total_len):
-            player._onScore(collectId, 0)
-            
-        player.client.onGetCollectInfo([player.collectibleData.collectibleDict[collectId].toStreamSavedDic()])
-        
+        if _gmCollectOne(player, collectId, info, schoolIdx, school):
+            player.cell.onCollectAward([collectId], 0)
+        coll = player.collectibleData.collectibleDict.get(collectId)
+        if coll is not None:
+            player.client.onGetCollectInfo([coll.toStreamSavedDic()])
+        return True, 'command success'
+
+    # 全部收集品：先同步跑一批，剩下的交给定时器分片，避免一次调用占满一个 tick
+    sweep = {
+        'ids': [cid for cid, info in PDETAIL.datas.items() if not _gmCollectClassInvalid(info, school)],
+        'idx': 0,
+        'school': school,
+        'schoolIdx': schoolIdx,
+    }
+    done, remain = _gmCollectSweepStep(player, sweep)
+    if done:
+        player.cell.onCollectAward(done, 0)
+    if remain:
+        KBEngine.addTimer(GM_COLLECT_INTERVAL, 0, lambda _tid: _gmCollectSweepTick(_tid, player, sweep))
+    else:
+        player.sendCollectInfo()
     return True, 'command success'
 
 
@@ -1771,9 +2039,8 @@ def gmFinishCollect(su, player, collectId):
 def gmFinishAllCollect(su, player):
     if player is None:
         return False, '执行失败'
-    for collectId in PDETAIL.datas:
-        _gmFinishCollect(player, collectId)
-    return True, 'command success'
+    # 走统一的分批扫描（原来逐条调 980 次，每条还要给客户端推一条信息）
+    return _gmFinishCollect(player, 0)
 
 @gm_cmd('$gmUnlockAllMeridian', (Player("gbId or Id"),), RARG(0), gameconst.BASE, '经脉升至满级', ALLSIDE, GOD_GROUPS)
 def gmUnlockAllMeridian(su,player):
@@ -1898,4 +2165,21 @@ def testrecyclelingshouequip(su, player, petId, slotId):
     player.recycleLingShouEquip(player.id, petId, slotId)
     return True, 'command success'
 
+@gm_cmd('$testbeginngerJourneyTask', (Player("gbId or Id"), Int('taskType'), Str('taskArg')), RARG(0), gameconst.BASE, '测试新手历程任务', ALLSIDE, GOD_GROUPS)
+def testbeginngerJourneyTask(su, player, taskType, taskArg):
+    if player is None:
+        return False, '执行失败'
+    import ast
+    taskArg = ast.literal_eval(taskArg)
+    LOG_INFO("testbeginngerJourneyTask:",taskArg, type(taskArg))
+    player.beginnerJourneyOnTaskEvents([(taskType, taskArg)])
+    return True, 'command success'
+
+@gm_cmd('$gmSetBeginnerJourneyStat', (Player("gbId or Id"), Int('taskId'), Int('taskValue')), RARG(0), gameconst.BASE, '完成新手历程任务', ALLSIDE, GOD_GROUPS)
+def gmSetBeginnerJourneyStat(su, player, taskId, taskValue):
+    if player is None:
+        return False, '执行失败'
+    LOG_INFO("gmSetBeginnerJourneyStat:", taskId, taskValue)
+    player.gmSetBeginnerJourneyStat(taskId, taskValue)
+    return True, 'command success'
 # --------------------------dev test only cmd segment-----------------------------------------------------------------------------------------------------------------------------------------

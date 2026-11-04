@@ -56,6 +56,10 @@ class IReplicaAvatar(object):
         return 0
 
     def changeMorphPreAddSkill(self, morphState):
+        # 形态切换的统一入口: 施放符咒召唤/变身、死亡、上线都会走这里
+        utils.traceSkill(self, 'cell.changeMorphPreAddSkill.in', tuple(self.skillDic.keys()),
+                         'morphState=', morphState,
+                         'cellSkillDic=', tuple(self.skillDic.keys()))
         for oldSkillId, _skillVal in list(self.skillDic.items()):
             _modId = SSD.skillToModDic.get(oldSkillId)
             if not _modId:
@@ -64,6 +68,10 @@ class IReplicaAvatar(object):
             _newSkillId = SSD.modDic[_modId][morphState]
             if _newSkillId == oldSkillId:
                 continue
+
+            utils.traceSkill(self, 'cell.changeMorphPreAddSkill.swap', (oldSkillId, _newSkillId),
+                             'oldSkillId=', oldSkillId, 'newSkillId=', _newSkillId,
+                             'skillLv=', _skillVal.skillLv, 'morphState=', morphState)
 
             _newSkillVal = self.skillDic.doGetSkill(_newSkillId, False)
             if not _newSkillVal:

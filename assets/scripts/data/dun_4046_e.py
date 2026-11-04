@@ -61,7 +61,7 @@ datas ={
       40460013
     ],
     "num": 0,
-    "lv": "25",
+    "lv": "34",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -97,7 +97,7 @@ datas ={
       40460014
     ],
     "num": 0,
-    "lv": "25",
+    "lv": "34",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

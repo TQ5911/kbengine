@@ -139,20 +139,27 @@ class MonsterHate(object):
             return self._isEmptySkipVisible()
         return False if self._hateDict else True
 
-    def getFirstVisibleHateTargetByRange(self, skillRange, withOutArea = None):
+    def getFirstVisibleHateTargetByRange(self, skillRange, withOutArea = None, onlyPlayer=False):
+        _owner = self.owner
+        if not _owner:
+            return 0, None
+
         _square = skillRange * skillRange
-        _canSeeHiddenEnt = self.owner and self.owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt)
+        _canSeeHiddenEnt = _owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt)
         _maxHate = None
         _maxTid = 0
         for _tid, hateVal in self._hateDict.items():
             ent = KBEngine.entities.get(_tid)
-            if not ent or not self.owner:
+            if not ent:
                 continue
-            if sMath.distance2DToCompareFrom3DPosition(ent.position, self.owner.position) > _square:
+            if sMath.distance2DToCompareFrom3DPosition(ent.position, _owner.position) > _square:
                 continue
-            if not self.owner.isVisible(ent) and not _canSeeHiddenEnt:
+            if not _owner.isVisible(ent) and not _canSeeHiddenEnt:
                 continue
-            if not ent.canAttackable(self.owner):
+            if not ent.canAttackable(_owner):
+                continue
+            if onlyPlayer and not ent.IsAvatar:
+                # PlayerEnemy：只认玩家（avatar），与 checkTargetTypeValid('PlayerEnemy') 口径一致
                 continue
             if withOutArea:
                 if ent.position.x > withOutArea[0].x and ent.position.x < withOutArea[1].x:
@@ -166,34 +173,42 @@ class MonsterHate(object):
 
         return _maxTid, _maxHate
 
-    def getFirstVisibleHateTarget(self):
-        _canSeeHiddenEnt = self.owner and self.owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt)
-        
+    def getFirstVisibleHateTarget(self, onlyPlayer=False):
+        _owner = self.owner
+        if not _owner:
+            return 0, None
+
+        _canSeeHiddenEnt = _owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt)
+
         best_tid = 0
         best_hate_val = None
         max_hate = -1  # 初始化一个极小值
-        
+
         for _tid, hateVal in self._hateDict.items():
-            # 1. 实体与所有者检查
+            # 1. 实体检查
             _ent = KBEngine.entities.get(_tid)
-            if not _ent or not self.owner:
+            if not _ent:
                 continue
-                
+
             # 2. 可见性检查
-            if not self.owner.isVisible(_ent) and not _canSeeHiddenEnt:
+            if not _owner.isVisible(_ent) and not _canSeeHiddenEnt:
                 continue
-                
+
             # 3. 可攻击性检查
-            if not _ent.canAttackable(self.owner):
+            if not _ent.canAttackable(_owner):
                 continue
-                
-            # 4. 动态比较仇恨值（替代 max 函数）
+
+            # 4. PlayerEnemy：只认玩家（avatar）
+            if onlyPlayer and not _ent.IsAvatar:
+                continue
+
+            # 5. 动态比较仇恨值（替代 max 函数）
             current_hate = hateVal.currentHate
             if current_hate > max_hate:
                 max_hate = current_hate
                 best_tid = _tid
                 best_hate_val = hateVal
-                
+
         return (best_tid, best_hate_val)
 
     def iterHatedEntities(self):
@@ -443,4 +458,18 @@ class MonsterHate(object):
 
         return 0
 
+    def getRandomHatePlayerTarget(self):
+        # PlayerEnemy + tag=98(randomTarget)：只在仇恨列表中的玩家（avatar/avatarReplica）里随机
+        if not self._hateDict:
+            return 0
+
+        _playerIds = []
+        for _tid in self._hateDict:
+            _ent = KBEngine.entities.get(_tid)
+            if _ent and (_ent.IsAvatar or _ent.IsAvatarReplica):
+                _playerIds.append(_tid)
+
+        if not _playerIds:
+            return 0
+        return random.choice(_playerIds)
 

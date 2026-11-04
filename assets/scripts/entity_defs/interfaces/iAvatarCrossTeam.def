@@ -32,12 +32,22 @@
             <Default>       0                       </Default>
         </crossTeamStateSyncTimer>
 
-        <!-- 跨服副本内队友 gbId 集合（跨服镜像 cell 的 AOI 队友识别/刷怪加成用） -->
-        <crossTeammateGbIds>
+        <!-- 跨服队伍成员状态关注列表（小组下标，0 起始；运行时为 int list，None 取默认
+             gameconst.CROSS_TEAM_WATCH_GROUPS_DEFAULT）：每秒拉取中心状态时按此过滤，
+             客户端经 setCrossTeamWatchGroups 设置，空列表表示不更新任何成员状态 -->
+        <crossTeamWatchGroups>
+            <Type>          PYTHON                  </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+        </crossTeamWatchGroups>
+
+        <!-- AOI 内队友实体 id 集合（自旧本服组队接口迁入；本服组队/团已废弃，只承载跨服队友）。
+             由 Avatar.onEnteredView/onLeaveView 经 isTeammate 增量维护，
+             跨服队全量落地/成员增删/离队时由 iCrossTeamCell 重建或清空 -->
+        <teammateEntIdInAoiSet>
             <Type>          PY_SET                  </Type>
             <Flags>         CELL_PRIVATE            </Flags>
             <Default>       set()                   </Default>
-        </crossTeammateGbIds>
+        </teammateEntIdInAoiSet>
 
         <!-- 跨服队伍聊天上次发送时间（CD 控制，沿用本服队伍频道 CD） -->
         <sendCrossTeamMsgTime>
@@ -56,16 +66,6 @@
     </Properties>
 
     <BaseMethods>
-        <!-- 向中心全量查询自身跨服队伍数据（登录自愈/断连重连对账共用；cell 侧经
-             self.base 调用，回包经 Stub remoteCallCache 回调 cell.onCrossTeamInfoUpdate） -->
-        <queryCrossTeamInfo>
-        </queryCrossTeamInfo>
-
-        <!-- 客户端 -> base：跨服队伍聊天（敏感词/禁言/CD 检查在发送方本服完成后上行中心） -->
-        <sendCrossTeamChatMsg> <Exposed/>
-            <Arg>           CHAT_MSG_DATA           </Arg>
-        </sendCrossTeamChatMsg>
-
         <!-- Stub -> base：跨服队伍聊天批量下行（base 收到后拆包逐条推送给客户端） -->
         <onCrossTeamChatBatch>
             <Arg>           CROSS_TEAM_CHAT_MSG_LIST </Arg>
@@ -109,6 +109,14 @@
             <Arg>           PY_DICT                 </Arg>
         </onLocalServerCrossCrusadeSettlementApply>
 
+        <!-- 讨伐：进本落地埋点/活动计数（跨服服镜像 -> 本服 base，
+             经 syncMethodCallToLocalServerBase 动态分发；声明仅为接口留档，
+             实际传输走 beSyncMethodCallFromCrossServerBase 的 PYTHON fnargs） -->
+        <onTrackTeamDungeonEnter>
+            <Arg>           SPACE_NO                </Arg>
+            <Arg>           PY_DICT                 </Arg>
+        </onTrackTeamDungeonEnter>
+
         <!-- 讨伐：本服幽灵回城落地完成（cell -> base），同步镜像的回程落点为主城 -->
         <onCrossGhostReturnCityDone>
             <Arg>           SPACE_NO                </Arg>
@@ -126,6 +134,11 @@
             <Arg>           PYTHON                  </Arg>
         </onCrossTeamCellRelay>
 
+        <!-- Guild base -> 目标 base：帮会邀请入团的目标侧检查（不在队/黑名单） -->
+        <doCrossGuildInviteCheck>
+            <Arg>           PY_DICT                 </Arg>
+        </doCrossGuildInviteCheck>
+
         <!-- cell -> base：同步跨服队伍 id 镜像（聊天等 base 方法用） -->
         <syncCrossTeamIdToBase>
             <Arg>           TEAMID                  </Arg>
@@ -142,6 +155,12 @@
             <Arg>           UNICODE                 </Arg>
             <Arg>           BOOL                    </Arg>
         </applyCreateCrossTeam>
+
+        <!-- 设置跨服队伍成员状态关注列表（小组下标，0 起始）：客户端常态化只需本组
+             成员状态，每秒拉取（syncCrossTeamState）按此过滤；空列表=不更新 -->
+        <setCrossTeamWatchGroups> <Exposed/>
+            <Arg>           ARRAY <of> INT8 </of>   </Arg>
+        </setCrossTeamWatchGroups>
 
         <applyJoinCrossTeam> <Exposed/>
             <Arg>           TEAMID                  </Arg>
@@ -161,6 +180,24 @@
             <Arg>           UNICODE                 </Arg>
         </applyInviteCrossTeam>
 
+        <!-- 邀请前目标条件判定（等级/战力/功能是否解锁）：发起人 cell 经 PlayerStub
+             路由到被邀请人 cell 执行，inviterBox 为发起人 base 邮箱（ENTITYCALL），
+             结果经 inviterBox.cell 回调 onCrossTeamInviteCheckResult -->
+        <checkCrossTeamInviteCondition>
+            <Arg>           ENTITYCALL              </Arg>
+            <Arg>           TEAMTARGET              </Arg>
+            <Arg>           UINT32                  </Arg>
+            <Arg>           UINT32                  </Arg>
+        </checkCrossTeamInviteCondition>
+
+        <!-- 被邀请人 cell -> 发起人 cell：邀请条件判定结果回调
+             （msgId=0 通过，正常发中心；否则为提示消息 id，发起人侧 showMsg） -->
+        <onCrossTeamInviteCheckResult>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UNICODE                 </Arg>
+            <Arg>           INT32                   </Arg>
+        </onCrossTeamInviteCheckResult>
+
         <replyCrossTeamInvite> <Exposed/>
             <Arg>           TEAMID                  </Arg>
             <Arg>           BOOL                    </Arg>
@@ -168,6 +205,65 @@
             <Arg>           PLAYER_GBID             </Arg>
             <Arg>           UINT8                   </Arg>
         </replyCrossTeamInvite>
+
+        <!-- 无队邀请组队（InviteType.TEAM_UP，客户端仅邀请/应答两个动作，其余服务端闭环）：
+             Stub -> cell 无队邀请到达，teamId 为邀请人预分配 id（建队复用/应答回传/试进队用） -->
+        <onTeamUpInvite>
+            <Arg>           CROSS_TEAM_INVITE_VAL   </Arg>
+        </onTeamUpInvite>
+
+        <!-- Stub -> cell 无队邀请应答到达（A 侧）：展示提示，同意时驱动服务端自动建队 -->
+        <onTeamUpInviteReply>
+            <Arg>           CROSS_TEAM_TEAM_UP_REPLY_VAL </Arg>
+        </onTeamUpInviteReply>
+
+        <!-- Stub -> cell 队伍就绪（B 侧）：命中已答应记录后服务端自动发起免审进队 -->
+        <onTeamUpTeamReady>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           PLAYER_GBID             </Arg>
+        </onTeamUpTeamReady>
+
+        <!-- 流程内部进队（teamUpReqJoin）专用受理回执：与用户主动 reqJoin 的客户端透传通道
+             onCrossTeamApplyJoinResult 隔离，静默+日志；参数口径与中心回包固定结构一致 -->
+        <onTeamUpAutoJoinResult>
+            <Arg>           INT32                   </Arg>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           TEAMTARGET              </Arg>
+            <Arg>           INT32                   </Arg>
+            <Arg>           INT32                   </Arg>
+            <Arg>           STRING                  </Arg>
+            <Arg>           INT32                   </Arg>
+        </onTeamUpAutoJoinResult>
+
+        <!-- 申请审批同意自证入队（队长 replyApply 同意后中心标记 Approved 并通知申请人
+             所在服）：Stub -> cell 审批同意到达，cell 二次检查（互斥）后自动进队，
+             中心为带 Approved 记录的申请人跳过密码与门槛校验 -->
+        <onCrossTeamApplyApproved>
+            <Arg>           TEAMID                  </Arg>
+        </onCrossTeamApplyApproved>
+
+        <!-- 自证入队（approvedReqJoin）专用受理回执：与用户主动 reqJoin 的客户端透传通道
+             onCrossTeamApplyJoinResult 隔离，静默+日志；参数口径与中心回包固定结构一致 -->
+        <onTeamApprovedJoinResult>
+            <Arg>           INT32                   </Arg>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           TEAMTARGET              </Arg>
+            <Arg>           INT32                   </Arg>
+            <Arg>           INT32                   </Arg>
+            <Arg>           STRING                  </Arg>
+            <Arg>           INT32                   </Arg>
+        </onTeamApprovedJoinResult>
+
+        <!-- 邀请帮会成员入团（对应旧本服帮会邀请入团接口，仅跨服团队线可发起）：
+             游戏服自闭环广播帮会邀请，不经组队中心；被邀请人接受后走申请审批流 -->
+        <tryApplyInviteCrossGuild> <Exposed/>
+        </tryApplyInviteCrossGuild>
+
+        <!-- Guild base -> cell：帮会邀请入团落地（目标侧复核不在队后弹邀请窗，
+             inviteInfo 为 CROSS_TEAM_INVITE_VAL 同构 dict） -->
+        <doApplyCrossGuildInvite>
+            <Arg>           PY_DICT                 </Arg>
+        </doApplyCrossGuildInvite>
 
         <applyLeaveCrossTeam> <Exposed/>
         </applyLeaveCrossTeam>
@@ -182,6 +278,12 @@
 
         <applyDisbandCrossTeam> <Exposed/>
         </applyDisbandCrossTeam>
+
+        <!-- 小队转团队（队长操作，本服 createRaidWithTeam 对应）：target 为新的团队线目标；
+             成功后全员收全量 onCrossTeamInfoUpdate（含新 teamId/target/maxNum） -->
+        <applyConvertCrossTeamToRaid> <Exposed/>
+            <Arg>           TEAMTARGET              </Arg>
+        </applyConvertCrossTeamToRaid>
 
         <!-- 修改队伍设置：门槛/介绍/满员自动进本/密码（队长操作，队长身份中心复核）；
              目标创建后不可改，不在本接口范围内；autoMatch 修改频率高，已拆分到 reqSetCrossTeamAutoMatch -->
@@ -250,7 +352,7 @@
         <turnOffCrossTeamMics> <Exposed/>
         </turnOffCrossTeamMics>
 
-        <!-- 语音房状态位图同步（本服 reqUpdateTeamVoiceRoomState 对应） -->
+        <!-- 语音房状态位图同步（对应旧本服语音房状态接口） -->
         <reqUpdateCrossTeamVoiceRoomState> <Exposed/>
             <Arg>           TEAMID                  </Arg>
             <Arg>           UINT8                   </Arg>
@@ -361,6 +463,17 @@
             <Arg>           TEAMTARGET              </Arg>
         </onCrossTeamOpResult>
 
+        <!-- 入队申请受理回调（中心 uuid 回执：replyApplyNotify -> Stub 按 remoteCallCache 原路回调 -> cell 透传客户端） -->
+        <onCrossTeamApplyJoinResult>
+            <Arg>           INT32                   </Arg>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           TEAMTARGET              </Arg>
+            <Arg>           INT32                   </Arg>
+            <Arg>           INT32                   </Arg>
+            <Arg>           STRING                  </Arg>
+            <Arg>           INT32                   </Arg>
+        </onCrossTeamApplyJoinResult>
+
         <onCrossTeamMatchTimeout>
             <Arg>           TEAMTARGET              </Arg>
         </onCrossTeamMatchTimeout>
@@ -384,6 +497,12 @@
         <onCrossTeamCaptainChange>
             <Arg>           PLAYER_GBID             </Arg>
         </onCrossTeamCaptainChange>
+
+        <!-- CrossTeamStub -> Avatar cell：申请成为队长的队伍频道消息（仅队长本人） -->
+        <onCrossTeamBecomeCaptainApplyMsg>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UNICODE                 </Arg>
+        </onCrossTeamBecomeCaptainApplyMsg>
 
         <onCrossTeamSettingsChange>
             <Arg>           PY_DICT                 </Arg>
@@ -440,6 +559,13 @@
             <Arg>           UINT8                   </Arg>
         </onCrossTeamMemberVoiceState>
 
+        <!-- 成员改名广播落地（Stub -> cell）：teamId 校验当前队伍，防换队/离队后旧推送落地 -->
+        <onCrossTeamMemberRename>
+            <Arg>           TEAMID                  </Arg>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UNICODE                 </Arg>
+        </onCrossTeamMemberRename>
+
         <onCrossTeamDeputyChange>
             <Arg>           PLAYER_GBID             </Arg>
         </onCrossTeamDeputyChange>
@@ -452,7 +578,6 @@
             <Arg>           UINT8                   </Arg>
             <Arg>           CLIENT_TEAM_MARK_VAL    </Arg>
             <Arg>           BOOL                    </Arg>
-            <Arg>           UINT64                  </Arg>
         </onCrossTeamMarkChange>
 
         <onCrossTeamFollowCaptainAsk>
@@ -469,6 +594,74 @@
         <onCrossTeamCenterReconnected>
             <Arg>           UINT8                   </Arg>
         </onCrossTeamCenterReconnected>
+
+        <!-- 玩家详情组包（跨服轨）：base/iFriendship.getAvatarInterInfo 链路调用，
+             承接旧本服组队的玩家详情接口 -->
+        <onGetCrossAvatarInterInfo>
+            <Arg>           ENTITYCALL              </Arg>
+            <Arg>           UNICODE                 </Arg>
+        </onGetCrossAvatarInterInfo>
+
+        <!-- ================ 跨服组队副本进本/退本 RPC 终点（自 iAvatarTeamDungeon.def/
+             iAvatarRaidDungeon.def 迁入，方法名与参数签名保持不变，DungeonSpaceMgr.cell/
+             CrossTeamDungeonStub 调用方零改动；旧 def 文件随旧组队系统整体删除，
+             删除前同名声明并存由引擎按序覆盖、声明内容一致无副作用） ================ -->
+
+        <!-- 小队线进本：CrossTeamDungeonStub._teamDoEnterDungeon ->
+             DungeonSpaceMgr.cell.doEnterTeamDungeon -> 玩家 cell 本方法 -->
+        <doEnterTeamDungeon>
+            <Arg>           SPACE_NO           </Arg>
+            <Arg>           UUID               </Arg>
+            <Arg>           MAILBOX            </Arg>  <!--spaceBox-->
+            <Arg>           MAILBOX            </Arg>  <!--spaceMgrBox-->
+            <Arg>           PYTHON             </Arg>  <!--extra-->
+        </doEnterTeamDungeon>
+
+        <!-- GM 建本拉成员入本（测试用）：CrossTeamDungeonStub._gmEnterDungeon 经
+             PlayerStub.doOnOthersCell 调用，成员各自补 src/结算字段后走既有进本链路 -->
+        <gmEnterDungeonAsMember>
+            <Arg>           DUNGEON_NO         </Arg>
+            <Arg>           UINT8              </Arg>  <!--isRaid-->
+            <Arg>           SPACE_NO           </Arg>
+            <Arg>           UUID               </Arg>
+            <Arg>           MAILBOX            </Arg>  <!--spaceBox-->
+            <Arg>           MAILBOX            </Arg>  <!--spaceMgrBox-->
+            <Arg>           PYTHON             </Arg>  <!--extra-->
+        </gmEnterDungeonAsMember>
+
+        <!-- 小队线进本传送执行（doEnterTeamDungeon 内部直连调用，声明仅为接口留档；
+             state=0 恒成功，门票检查已由中心协调完成） -->
+        <readyUseItemAndEnterTeamDungeon>
+            <Arg>           UINT8              </Arg>
+            <Arg>           SPACE_NO           </Arg>
+            <Arg>           UUID               </Arg>
+            <Arg>           MAILBOX            </Arg>  <!--spaceBox-->
+            <Arg>           MAILBOX            </Arg>  <!--spaceMgrBox-->
+            <Arg>           PYTHON             </Arg>  <!--extra-->
+        </readyUseItemAndEnterTeamDungeon>
+
+        <!-- 本服模式小队线完成踢人：CrossTeamDungeonStub._kickOutTeamDungeonFounders -> 玩家 cell -->
+        <selfLeaveTeamDungeon>
+            <Arg>   PYTHON  </Arg>  <!--src（KickoutFromDungeon，_extra 带 spaceNo）-->
+        </selfLeaveTeamDungeon>
+
+        <!-- 首领线进本：CrossTeamDungeonStub._raidDoEnterDungeon ->
+             DungeonSpaceMgr.cell.enterRaidDunDirectly -> 玩家 cell 本方法
+             （跨服队伍镜像标记 crossTeamId 为唯一放行依据） -->
+        <doEnterRaidDungeonAfterCheck>
+            <Arg>   DUNGEON_NO  </Arg>
+            <Arg>   SPACE_NO    </Arg>
+            <Arg>   UUID        </Arg>
+            <Arg>   MAILBOX     </Arg>  <!--spaceBox-->
+            <Arg>   MAILBOX     </Arg>  <!--spaceMgrBox-->
+            <Arg>   DUNGEON_SRC     </Arg>  <!--src（跨服链路为 DungeonFromClientSrc）-->
+            <Arg>   PYTHON  </Arg>  <!--extraProps-->
+        </doEnterRaidDungeonAfterCheck>
+
+        <!-- 本服模式首领线踢人：CrossTeamDungeonStub._kickOutAllFounders -> 玩家 cell -->
+        <selfLeaveRaidDungeon>
+            <Arg>   PYTHON  </Arg>  <!--src（KickoutFromDungeon）-->
+        </selfLeaveRaidDungeon>
     </CellMethods>
 
     <ClientMethods>
@@ -502,13 +695,19 @@
             <Arg>           CROSS_TEAM_INVITE_VAL   </Arg>
         </onCrossTeamInvite>
 
+        <!-- 无队邀请组队应答结果（InviteType.TEAM_UP）：纯展示（拒绝/对方已在队伍/同意提示），
+             客户端不做任何后续动作，建队/进队全部服务端闭环 -->
+        <onTeamUpInviteReply>
+            <Arg>           CROSS_TEAM_TEAM_UP_REPLY_VAL </Arg>
+        </onTeamUpInviteReply>
+
         <onCrossTeamOpResult>
             <Arg>           INT32                   </Arg>
             <Arg>           TEAMID                  </Arg>
             <Arg>           TEAMTARGET              </Arg>
         </onCrossTeamOpResult>
 
-        <!-- 入队申请结果（成功/失败统一）：游戏服 Stub 经 doOnOthersClient 直发客户端的专用协议，
+        <!-- 入队申请受理回调（成功/失败统一）：cell 透传客户端，
              字段口径对齐本服 onApplyJoinRaidLonelyFailed -->
         <onCrossTeamApplyJoinResult>
             <Arg>           INT32                   </Arg>
@@ -613,6 +812,12 @@
             <Arg>           UINT8                   </Arg>
         </onCrossTeamMemberVoiceState>
 
+        <!-- 成员改名通知（中心 renameMember 后 memberRenamePush 全队广播，客户端刷新成员名展示） -->
+        <onCrossTeamMemberRename>
+            <Arg>           PLAYER_GBID             </Arg>
+            <Arg>           UNICODE                 </Arg>
+        </onCrossTeamMemberRename>
+
         <!-- 副团长变更（空接口配套占位） -->
         <onCrossTeamDeputyChange>
             <Arg>           PLAYER_GBID             </Arg>
@@ -636,6 +841,18 @@
         <onCrossTeamRefreshDungeonCD>
             <Arg>           LONGTIME                </Arg>
         </onCrossTeamRefreshDungeonCD>
+
+        <!-- 挑战次数不足提示（沿用旧组队客户端协议，原 iAvatarTeamDungeon.def 迁入）：
+             onLackChallengeNum 发给进本发起者，携带次数不足成员名列表；
+             onMemberNoRewardNum 发给次数不足的成员本人 -->
+        <onLackChallengeNum>
+            <Arg>           DUNGEON_NO              </Arg>
+            <Arg>           ARRAY <of>  UNICODE </of> </Arg>
+        </onLackChallengeNum>
+
+        <onMemberNoRewardNum>
+            <Arg>           DUNGEON_NO              </Arg>
+        </onMemberNoRewardNum>
     </ClientMethods>
 
 </root>

@@ -4,6 +4,7 @@ from KBEDebug import *
 import KBEngine
 
 import math
+import random
 import time
 import sMath
 import formula
@@ -40,6 +41,7 @@ import performanceLevel_set as PLSD
 import skillRelevant_skillConst as SR_SCD
 import PKData_PKData as PKD
 import creep_base as CBD
+import NPC_pickConst as NPCST
 import guild_guildConst as G_GCD
 import experience_config as EXPC
 import gameengine
@@ -149,6 +151,10 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.baseFatal = C_CDD.datas[self.school].get('baseFatal', 0)
         self.baseAccuracy = C_CDD.datas[self.school].get('baseAccuracy', 0)
         self.baseEvasion = C_CDD.datas[self.school].get('baseEvasion', 0)
+        self.baseMinAllArmor = C_CDD.datas[self.school].get('baseMinAllArmor', 0)
+        self.baseMaxAllArmor = C_CDD.datas[self.school].get('baseMaxAllArmor', 0)
+        self.baseUniEnh = C_CDD.datas[self.school].get('baseUniEnh', 0)
+        self.baseUniAnti = C_CDD.datas[self.school].get('baseUniAnti', 0)
 
     def restoreBuffs(self):
         LOG_DBG('restoreBuffs')
@@ -184,6 +190,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     def addSkillInEntity(self, skillId, skillLv, tNextCast=0):
         skill = SkillManager.SkillManager.addSkillInEntity(self, skillId, skillLv, tNextCast)
         if skill:
+            utils.traceSkill(self, 'cell.addSkillInEntity.syncToBase', (skillId,),
+                             'skillId=', skillId, 'skillLv=', skillLv,
+                             'cellSkillDic=', tuple(self.skillDic.keys()))
             self.base.buildAddActiveSkill(skillId, skillLv)
 
             skillSwitch = self.skillDic.getSkillSwitch(skillId)
@@ -288,6 +297,9 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
 
         spaceMgr and spaceMgr.onPlayerDead(self.base, self.gbId)
 
+        utils.traceSkill(self, 'cell.death.resetMorphState', tuple(self.skillDic.keys()),
+                         'targetMorphState=', gameconst.MORPH_BUILD_STATE,
+                         'cellSkillDic=', tuple(self.skillDic.keys()))
         self.changeMorphPreAddSkill(gameconst.MORPH_BUILD_STATE)
 
         if _hostIsAvatar:
@@ -388,8 +400,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         eventName = self._fetchConflictEventName(eventId)
         cfgData = self.fetchConflictEventCfgData(eventId)
         for state in self.stateList:
-            _stateEventId = C_SD.datas[state].get('event')
-            if isInit and _stateEventId == eventId:
+            if isInit and C_SD.datas[state].get('event') == eventId:
                 continue
 
             val = cfgData.get(str(state))
@@ -579,11 +590,34 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.startReportStatistics()
         self.directlyOutOfProtect()
 
-        if self.rmFightStateTimeId > 0:
-            self.cancelTimerCB(self.rmFightStateTimeId, gametimer.TIMER_TAG_REMOVE_FIGHTING_STATE)
-        removeTime = CONST.datas.get('leaveFightStateTime', {}).get('value')
-        self.rmFightStateTimeId = self.addTimerCB(removeTime, 'removeFightingState', (), gametimer.TIMER_TAG_REMOVE_FIGHTING_STATE)
+        # 性能：不再每次受击都 cancelTimerCB + addTimerCB 重建退战定时器（同屏混战时这是
+        # 定时器 churn 的最大来源，profile 中该路径占 addTimerCB/cancelTimerCB 的大头）。
+        # 受击时只刷新 lastFightTime，退战判定交给 1s 周期的 _checkFightStateExpire 统一处理。
+        # lastFightTime 同时供各 SpaceMgr 统计战斗人数使用（now - ent.lastFightTime < dt），
+        # 每次受击照旧刷新，语义不变；退战时机误差最多为 FIGHT_STATE_CHECK_INTERVAL 秒。
+        _dur = CONST.datas['leaveFightStateTime']['value']
         self.lastFightTime = utils.curTS()
+        if not self.rmFightStateTimeId:
+            self.rmFightStateTimeId = self.addTimerCB(
+                _dur, '_checkFightStateExpire', (),
+                gametimer.TIMER_TAG_REMOVE_FIGHTING_STATE, 'rmFightStateTimeId')
+
+    def _checkFightStateExpire(self):
+        # 由 1s 周期定时器驱动：距上次受击超过 LEAVE_FIGHT_STATE_TIME 才退战，否则继续复查，
+        # 保持“最后一次受击 + LEAVE_FIGHT_STATE_TIME 后退战”的原语义（精度 FIGHT_STATE_CHECK_INTERVAL 秒）。
+        if not self.hasState(gameconst.StateEnum.Fighting):
+            # 战斗状态已通过其他路径移除（如手动取消自动战斗、死亡等），无需继续复查
+            return
+
+        _dur = CONST.datas['leaveFightStateTime']['value']
+        _now = utils.curTS()
+        if _now - self.lastFightTime < _dur:
+            _dur = max(0.1, _dur - _now + self.lastFightTime)
+            self.rmFightStateTimeId = self.addTimerCB(
+                _dur, '_checkFightStateExpire', (),
+                gametimer.TIMER_TAG_REMOVE_FIGHTING_STATE, 'rmFightStateTimeId')
+            return
+        self.removeFightingState()
 
     def leaveFightingState(self):
         if self.hasBuff(64000067):
@@ -643,10 +677,19 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         # 由gm指令调用，不考虑给宠物增加经验；不占用当日经验额度
         self._modifyExp(baseExp, opUUID, src, detail, srcSubType=srcSubType, idipSource=idipSource)
 
+    def gmDeductExp(self, deductVal, opUUID, src, detail):
+        # 由gm指令调用，扣经验，当前经验不足的部分记入经验负债expDebt
+        # deductVal传负数等于加经验（会先抵偿经验负债）
+        self._modifyExp(-int(deductVal), opUUID, src, detail)
+
     def addExpByKill(self, baseExp, level, opUUID, src, detail, isNeedAddition=False):
         LOG_DBG("impCombat->addExpByKill ", baseExp, level, opUUID, src, detail, isNeedAddition)
         if src == AAC_AACDD.datas.BONUS_SRC_GATHER_DROP or src == AAC_AACDD.datas.BONUS_SRC_GATHER:
-            self.client and self.client.onAddGatherRewardRecord([{'itemId': gameconst.ItemIdEnum.EXP, 'itemNum': baseExp, 'bindType': gameconst.ItemBindType.BIND}])
+            gatherExpRecord = [{'itemId': gameconst.ItemIdEnum.EXP, 'itemNum': baseExp, 'bindType': gameconst.ItemBindType.BIND}]
+            if self.isCrossServerInLocalServer:
+                self.base.syncMethodCallToCrossClient('onAddGatherRewardRecord', (gatherExpRecord,))
+            elif self.client:
+                self.client.onAddGatherRewardRecord(gatherExpRecord)
 
         self._addExp(int(baseExp), opUUID, src, detail, isNeedAddition=isNeedAddition)
 
@@ -658,7 +701,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             return
 
         if isNeedAddition:
-            expRatio = utils.getExpDecayRate(self.moralLevel, self.level, self.worldLevel - self.level, src)
+            expRatio = utils.getExpDecayRate(self.moralLevel, self.level, utils.getWorldLevel() - self.level, src)
             totalExpVal = int(expVal * ( 1 + self.getProp('expGrow'))* expRatio)
             itemId = gameconst.ItemIdEnum.EXP
             itemData = dataUtils.getCommItemData(itemId)
@@ -724,11 +767,41 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
             return
         # oldLevel = self.level
         expVal = int(expVal)
+        origExpVal = expVal
         befExpVal = self.exp
         if expVal <= 0:
-            self.exp = max(0, self.exp + expVal)
-            self.makeUpdateExpLog(expVal, self.exp - befExpVal, opUUID, src, detail, befExpVal)
+            # 扣经验：当前经验不足的部分记入经验负债expDebt，后续获得经验时优先抵偿
+            # 注意：负值分支禁止加跨服回同步，跨服死亡扣经验的回同步由iRelive.onLocalServerDeadSync独立完成，否则会双重扣减
+            newExp = self.exp + expVal
+            logDetail = detail
+            if newExp >= 0:
+                self.exp = newExp
+            else:
+                self.exp = 0
+                self.expDebt = self.expDebt + (-newExp)
+                logDetail = '%s, 记入经验负债%s, 当前负债%s' % (detail, -newExp, self.expDebt)
+            self.makeUpdateExpLog(expVal, self.exp - befExpVal, opUUID, src, logDetail, befExpVal)
+            self._updateExpRateToBase()
             return
+
+        if self.expDebt > 0:
+            # 获得经验时优先抵偿经验负债
+            repayVal = min(self.expDebt, expVal)
+            self.expDebt -= repayVal
+            expVal -= repayVal
+            self.makeUpdateExpLog(
+                repayVal,
+                0,
+                opUUID,
+                src,
+                '%s, 抵偿经验负债%s, 剩余负债%s' % (detail, repayVal, self.expDebt),
+                befExpVal
+            )
+            if expVal <= 0:
+                self._updateExpRateToBase()
+                # 跨服镜像重放必须传抵债前的原始expVal，保证镜像重放同样的抵债逻辑、两侧结果一致
+                self.syncMethodCallToCrossServerCell("onLocalServerModifyExp", (origExpVal, opUUID, src, detail))
+                return
 
         exp = self.exp + expVal
         if exp <= 0:
@@ -764,7 +837,8 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.exp = int(exp)
         self.makeUpdateExpLog(expVal, expVal, opUUID, src, detail, befExpVal)
         self._updateExpRateToBase()
-        self.syncMethodCallToCrossServerCell("onLocalServerModifyExp", (expVal, opUUID, src, detail))
+        # 跨服镜像重放必须传抵债前的原始expVal，保证镜像重放同样的抵债逻辑、两侧结果一致
+        self.syncMethodCallToCrossServerCell("onLocalServerModifyExp", (origExpVal, opUUID, src, detail))
 
     # 本服收到来自跨服的加经验请求
     def onCrossServerModifyExp(self, expVal, opUUID, src, detail):
@@ -804,10 +878,6 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         self.modifyMP(newFullMp - oldFullMp)
 
         self.unlockDodgeSkill(oldLevel, level)
-        if self.teamId > 0:
-            self.updateAttrToStub({'level': level})
-
-        self.playerMatchInfoUpdate()
 
         self.base.onAvatarLevelUpBase(oldLevel, level)
         self.resetAllTargetTypeCache()
@@ -1041,17 +1111,39 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
         return super().isVisible(target)
 
     def onBeDamaged(self, srcEntId, damageVal, absorbVal, srcType, srcId):
-        # 采集时受到伤害
-        gatherTarget = self.getTempMiscProp(gameconst.EntityPropsEnum.gatherTarget)
-        isGather = False
-        if gatherTarget and gatherTarget['isUnstoppble']:
-            isGather = True
-            self.endApplyGather(gameconst.CancelGatherReason.BeDamaged)
+        # 采集时受到伤害：1必定打断，2按概率打断且判定有内置CD
+        isGather = self._checkGatherStopOnBeDamaged()
         self.stopPlayEmote(gameconst.StopPlayEmoteReason.BeDamaged)
 
         super(ImpCombat, self).onBeDamaged(srcEntId, damageVal, absorbVal, srcType, srcId)
         self._checkFightBack(srcEntId, isGather)
         self.onBeDamagedInDuel(srcEntId)
+
+    def _checkGatherStopOnBeDamaged(self):
+        gatherTarget = self.getTempMiscProp(gameconst.EntityPropsEnum.gatherTarget)
+        if not gatherTarget:
+            return False
+        stopType = gatherTarget.get('stopType', 0)
+        if stopType == gameconst.CollectionStopType.ATTACK:
+            self.endApplyGather(gameconst.CancelGatherReason.BeDamaged)
+            return True
+        if stopType == gameconst.CollectionStopType.ATTACK_PROB and self._rollGatherAttackStop(gatherTarget):
+            self.endApplyGather(gameconst.CancelGatherReason.BeDamaged)
+            return True
+        return False
+
+    def _rollGatherAttackStop(self, gatherTarget):
+        # 受击按概率打断，判定有内置CD：未打断则CD结束后的下一次受击再判定
+        now = time.time()
+        lastCheck = gatherTarget.get('attackStopCheckTime', 0)
+        cd = NPCST.datas['attackStopCD']['value']
+        if lastCheck and now - lastCheck < cd:
+            return False
+        gatherTarget['attackStopCheckTime'] = now
+        prob = NPCST.datas['attackStopProbability']['value']
+        hit = random.random() < prob
+        LOG_DBG('_rollGatherAttackStop', hit, prob, cd)
+        return hit
 
     def removeAllClones(self):
         for cid in list(self.cloneList):
@@ -1386,7 +1478,7 @@ class ImpCombat(SkillManager.SkillManager, AvatarBuildsMixin):
     @property
     def expAddRatioSum(self):
         ratioSum = 100
-        if self.isInTeam(self.gbId):
+        if self.inCrossTeam(self.gbId) or self.inCrossRaid(self.gbId):
             ratioSum += self.expAddRatioByTeam
         return ratioSum
 

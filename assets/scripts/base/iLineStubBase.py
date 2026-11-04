@@ -13,21 +13,21 @@ class ILineStubBase(iLineSpaceStub.ILineSpaceStub, iLinePlayersStub.ILinePlayers
         iLineSpaceStub.ILineSpaceStub.__init__(self)
         iLinePlayersStub.ILinePlayersStub.__init__(self)
 
-    def onLineSpaceGone(self, spaceNo, groupOrderNum):
-        iLinePlayersStub.ILinePlayersStub.onLineSpaceGone(self, spaceNo, groupOrderNum)
-        iLineSpaceStub.ILineSpaceStub.onLineSpaceGone(self, spaceNo, groupOrderNum)
+    def onLineSpaceGone(self, spaceNo):
+        iLinePlayersStub.ILinePlayersStub.onLineSpaceGone(self, spaceNo)
+        iLineSpaceStub.ILineSpaceStub.onLineSpaceGone(self, spaceNo)
 
     def onSpaceLineReady(self, spaceNo):
         iLinePlayersStub.ILinePlayersStub.onSpaceLineReady(self, spaceNo)
         iLineSpaceStub.ILineSpaceStub.onSpaceLineReady(self, spaceNo)
 
-    def handleCellappDeath(self, groupOrderNum):
-        iLinePlayersStub.ILinePlayersStub.handleCellappDeath(self, groupOrderNum)
-        iLineSpaceStub.ILineSpaceStub.handleCellappDeath(self, groupOrderNum)
+    def handleCellappDeath(self, cellId):
+        iLinePlayersStub.ILinePlayersStub.handleCellappDeath(self, cellId)
+        iLineSpaceStub.ILineSpaceStub.handleCellappDeath(self, cellId)
 
-    def onCellappRelive(self, groupOrderNum):
-        iLinePlayersStub.ILinePlayersStub.onCellappRelive(self, groupOrderNum)
-        iLineSpaceStub.ILineSpaceStub.onCellappRelive(self, groupOrderNum)
+    def onCellappRelive(self, cellId):
+        iLinePlayersStub.ILinePlayersStub.onCellappRelive(self, cellId)
+        iLineSpaceStub.ILineSpaceStub.onCellappRelive(self, cellId)
 
     def onTimer(self, tid, userArg):
         self._onTimerTrigger(tid, userArg)

@@ -48,15 +48,32 @@ class EventMgr(object):
             self.eventDict.pop(name)
 
     def onEffectEventCall(self, name, triggerId, targetId, eventContext):
-        _event = EffectEvent(name, triggerId, targetId, eventContext)
-        self.raiseEvent(name, _event)
+        # 性能优化：无监听者时直接返回，不再无条件构造 EffectEvent。
+        # 同屏战斗时约一半广播落此分支（profile: onEffectEventCall 40525 次 vs
+        # notifyEffectActionEvent 26523 次），空转路径原要付：对象构造 +
+        # .get 默认空 dict 分配 + list(keys()) 空 list 分配 + 一轮空循环。
+        _cbMap = self.eventDict.get(name)
+        if not _cbMap:
+            return
 
-    def raiseEvent(self, name, event):
-        _cbMap = self.eventDict.get(name, {})
+        _event = EffectEvent(name, triggerId, targetId, eventContext)
+        self.raiseEvent(name, _event, _cbMap)
+
+    def raiseEvent(self, name, event, _cbMap=None):
+        # _cbMap 由 onEffectEventCall 预取传入，避免重复访问 eventDict 属性；
+        # 直接调用（不带 _cbMap）时自行查表并同样走空判快速路径。
+        if _cbMap is None:
+            _cbMap = self.eventDict.get(name)
+            if not _cbMap:
+                return
+
+        # 拷贝 key 列表：回调执行时可能连锁 removeListener，防迭代中修改
         for _cbKey in list(_cbMap.keys()):
-            if _cbKey not in _cbMap:
+            # 单次查找替代原来的 `not in` 成员测试 + `[]` 取值两次查找
+            _cb = _cbMap.get(_cbKey)
+            if _cb is None:
                 continue
-            callback, callbackArgs = _cbMap[_cbKey]
+            callback, callbackArgs = _cb
 
             _func = getattr(self, callback, None)
             _func and _func(event, *callbackArgs)

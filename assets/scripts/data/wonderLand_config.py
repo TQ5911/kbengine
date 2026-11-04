@@ -15,22 +15,6 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    "dailyWonderLandNum": _tools.RODict({
-        "ID": "dailyWonderLandNum",
-        "value": 1,
-    }),
-    "wonderLandNumCoin": _tools.RODict({
-        "ID": "wonderLandNumCoin",
-        "value": 100,
-    }),
-    "wonderLandNumCoinDailyLimit": _tools.RODict({
-        "ID": "wonderLandNumCoinDailyLimit",
-        "value": 2,
-    }),
-    "wonderLandNumCoinCost": _tools.RODict({
-        "ID": "wonderLandNumCoinCost",
-        "value": ((1, 30000021, 50), (2, 30000001, 100)),
-    }),
     "wonderLandNumItem": _tools.RODict({
         "ID": "wonderLandNumItem",
         "value": 30000304,

@@ -22,6 +22,8 @@ avataringCache = {}
 mallItemPriceCache = {}
 mallItemLastUpdateTime = {}
 mallItemPriceInfoDict = {}
+materialSalePriceDict = {}
+materialSalePriceTs = 0
 
 # 记录role gbId到entityId的映射
 roleGBIDToEntId = {}
@@ -101,6 +103,15 @@ cellSpaceDungeonMap = {}
 worldLevel = 0
 # 跨服世界等级（跨服算出后广播到各服）
 crossWorldLevel = 0
+
+# 昨日在线人数峰值(0:当前服, 1:跨服平均, 2:跨服总)
+yesterdayOnlineNum = None
+
+# 是否为第一个启动的 baseapp（由 base/game.py::onBaseAppReady 赋值；cellapp 上恒为 False）
+
+# 怪物刷新的时段概率系数，由 WorldRefreshEntityStub 定时计算后 callAllApps 广播到每个进程各自的 gameglobal
+# key: experience_refreshRateOfTime 的列类型(int)，value: 系数(float)
+refreshRateOfTime = {}
 
 requiredClientVersion = {}
 

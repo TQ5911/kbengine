@@ -70,14 +70,14 @@
 
         <refugeOpen>
             <Type>          UINT8                   </Type>
-            <Flags>         OWN_CLIENT              </Flags>
+            <Flags>         ALL_CLIENTS             </Flags>
             <Persistent>    true                    </Persistent>
             <Default>       0                       </Default>
         </refugeOpen>
 
         <refugeConsumeStart>
             <Type>          LONGTIME                </Type>
-            <Flags>         OWN_CLIENT              </Flags>
+            <Flags>         ALL_CLIENTS             </Flags>
             <Persistent>    true                    </Persistent>
             <Default>       0                       </Default>
         </refugeConsumeStart>
@@ -89,11 +89,24 @@
             <Default>       0                       </Default>
         </refugeDailyRefreshTs>
 
+        <refugeOfflineTime>
+            <Type>          LONGTIME                </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Persistent>    true                    </Persistent>
+            <Default>       0                       </Default>
+        </refugeOfflineTime>
+
         <refugeExpireTimerId>
             <Type>          TIMER_ID                </Type>
             <Flags>         CELL_PRIVATE            </Flags>
             <Default>       0                       </Default>
         </refugeExpireTimerId>
+
+        <refugePKActive>
+            <Type>          BOOL                    </Type>
+            <Flags>         CELL_PRIVATE            </Flags>
+            <Default>       false                   </Default>
+        </refugePKActive>
     </Properties>
 
     <CellMethods>
@@ -116,6 +129,7 @@
 
         <buyRefugeTime> <Exposed/>
             <Arg>           UINT8           </Arg>
+            <Arg>           BOOL            </Arg>
         </buyRefugeTime>
 
         <openRefuge> <Exposed/>

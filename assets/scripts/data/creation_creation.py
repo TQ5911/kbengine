@@ -343,12 +343,16 @@ def _66000015_enter(self, target, context):
         return
 
     if target.hasBuff(64004028):
+
+        # 目标不存在 Buff 64004016 时，触发技能
         if not target.hasBuff(64004016):
             self.castSkill(target, context, 91020022, 1)
-            self.destroySelf(context, 0)
-        # 触发后销毁
-        else:
-            self.destroySelf(context, 0)
+
+        # 移除目标身上的 Buff 64004028
+        self.removeBuffBySkill(target, context, 64004028)
+
+        # 销毁当前实体
+        self.destroySelf(context, 0)
 
 def _66000016(self, target, context):
     self.castSkill(target, context, 91020090)
@@ -1780,9 +1784,9 @@ datas = _tools.RODict({
         "selectability": 0,
         "target": "Enemy",
         "areaAction": _65000013,
-        "time": 3.0,
+        "time": 3.2,
         "triggeredTime": 0.0,
-        "loopIntervalTime": 0.375,
+        "loopIntervalTime": 0.4,
         "hurtNumber": 10,
         "areaLoop": 8,
         "enterAction": None,
@@ -1808,9 +1812,9 @@ datas = _tools.RODict({
         "selectability": 0,
         "target": "Enemy",
         "areaAction": _65000015,
-        "time": 3.0,
+        "time": 3.2,
         "triggeredTime": 0.0,
-        "loopIntervalTime": 0.375,
+        "loopIntervalTime": 0.4,
         "hurtNumber": 10,
         "areaLoop": 10,
         "enterAction": None,

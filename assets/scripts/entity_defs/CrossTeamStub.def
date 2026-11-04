@@ -18,7 +18,7 @@
         <!-- 本服队伍缓存已移除：Stub 为纯转发层，下行推送的本服成员路由由中心随推送
              下发的 receiverGbIds / 全量成员列表（含 serverId）承担 -->
 
-        <!-- 本服成员状态聚合缓冲：{gbId: stateDict}，3s 定时上报中心 -->
+        <!-- 本服成员状态聚合缓冲：{gbId: stateDict}，0.2s 定时定量上报中心 -->
         <stateReportCache>
             <Type>          PY_DICT         </Type>
             <Flags>         BASE                </Flags>
@@ -122,6 +122,92 @@
             <Arg>       UINT8                   </Arg>
         </replyInvite>
 
+        <!-- 无队邀请组队上行（InviteType.TEAM_UP，方案 §4.3，仅限同服邀请，中心纯透传不解读）：
+             teamUpInvite=无队邀请（teamId 为邀请人 cell 预分配，inviterInfo 为邀请人全量信息） -->
+        <teamUpInvite>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PY_DICT                 </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </teamUpInvite>
+
+        <!-- 无队邀请应答上行：reason 为 agree=false 时的原因细分（TeamUpReplyReason），主动拒绝=0 -->
+        <replyTeamUpInvite>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PY_DICT                 </Arg>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       UINT8                   </Arg>
+            <Arg>       UINT8                   </Arg>
+        </replyTeamUpInvite>
+
+        <!-- 队伍就绪通知上行（邀请人已有队伍/刚建成）：中心复核邀请人确在该队后转发被邀请人
+             （同服限制，目标服=请求来源服，中心侧处理） -->
+        <teamUpJoinNotify>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </teamUpJoinNotify>
+
+        <!-- 流程内部免审进队上行：与 reqJoinTeam 同报文（无密码），
+             uuid 回执注册专用回调 onTeamUpAutoJoinResult（与用户主动 reqJoin 透传通道隔离） -->
+        <teamUpReqJoin>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PY_DICT                 </Arg>
+        </teamUpReqJoin>
+
+        <!-- 下行投递失败回调（PlayerStub.doOnOthersCell failCallback，首参为投递失败目标 gbId，
+             仅记日志静默收口：不代答/不建队/不入队） -->
+        <onTeamUpInviteDeliverFail>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PY_DICT                 </Arg>
+        </onTeamUpInviteDeliverFail>
+
+        <onTeamUpReplyDeliverFail>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </onTeamUpReplyDeliverFail>
+
+        <onTeamUpReadyDeliverFail>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </onTeamUpReadyDeliverFail>
+
+        <!-- 申请审批同意自证入队上行（cell onCrossTeamApplyApproved 二次检查后调用）：
+             与 reqJoinTeam 同报文（无密码，中心凭 Approved 记录跳过密码与门槛校验），
+             uuid 回执注册专用回调 onTeamApprovedJoinResult（与用户主动 reqJoin 透传通道隔离） -->
+        <approvedReqJoin>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PY_DICT                 </Arg>
+        </approvedReqJoin>
+
+        <!-- 审批同意通知下行投递失败回调（PlayerStub.doOnOthersCell failCallback，
+             首参为投递失败的申请人 gbId）：回执队长系统提示 54003535（该玩家已下线） -->
+        <onApplyApprovedNotifyFail>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       TEAMID                  </Arg>
+        </onApplyApprovedNotifyFail>
+
+        <!-- 建队/入队成功推送下行投递失败回调（PlayerStub.doOnOthersCell failCallback，
+             首参为投递失败的创建人/新成员 gbId）：玩家已离线，离线时缓存滞后上报的
+             memberOffline(0) 可能先于中心建队落索引被丢弃，此处用真实 teamId 补偿
+             上报离线退队，防幽灵队残留 -->
+        <onTeamCreateSuccessDeliverFail>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       TEAMID                  </Arg>
+        </onTeamCreateSuccessDeliverFail>
+
+        <onTeamJoinSuccessDeliverFail>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       TEAMID                  </Arg>
+        </onTeamJoinSuccessDeliverFail>
+
         <leaveTeam>
             <Arg>       ENTITYCALL              </Arg>
             <Arg>       TEAMID                  </Arg>
@@ -163,6 +249,20 @@
             <Arg>       TEAMID                  </Arg>
             <Arg>       PLAYER_GBID             </Arg>
         </disbandTeam>
+
+        <!-- 小队转团队（本服 createRaidWithTeam 对应）：旧 teamId / 新 teamId（游戏服生成）/
+             新目标及其配表参数（maxNum/dungeonMap/isCross/dunServer，同 createTeam 口径）/ 操作人队长 -->
+        <convertTeamToRaid>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       TEAMTARGET              </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       BOOL                    </Arg>
+            <Arg>       UINT32                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </convertTeamToRaid>
 
         <!-- 修改队伍设置：门槛/介绍/满员自动进本/密码（目标创建后不可改，不在本接口范围内；
              autoMatch 修改频率高，已拆分到 setAutoMatch；password 空串=取消密码转公开队） -->
@@ -211,11 +311,38 @@
             <Arg>       PY_DICT                 </Arg>
         </doMatchJoin>
 
+        <!-- 成员状态每秒合并同步（上行上报 + 下行拉取合并为一次 RPC）：box 为请求方 base
+             邮箱；stateDict 传空 dict 表示脏检查未通过、跳过上行；groupIdxs 为下行关注小组
+             下标（空列表=跳过下行拉取，全量对账走 queryTeamMemberState） -->
         <syncMemberState>
+            <Arg>       ENTITYCALL              </Arg>
             <Arg>       TEAMID                  </Arg>
             <Arg>       PLAYER_GBID             </Arg>
             <Arg>       PY_DICT                 </Arg>
+            <Arg>       ARRAY <of> INT8 </of>   </Arg>
         </syncMemberState>
+
+        <!-- 丢弃尚未上报的旧状态快照（迁移/即时全量上报时防旧缓存反向覆盖） -->
+        <clearMemberStateReport>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+        </clearMemberStateReport>
+
+        <!-- 单成员即时状态上报（不进定时聚合缓存）：路由敏感时点由 cell 调用，
+             中心据上报方 serverId 即时刷新成员 RouteServerId -->
+        <reportMemberStateNow>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       PY_DICT                 </Arg>
+        </reportMemberStateNow>
+
+        <!-- 成员改名上报（改名事件即时上行，低频；中心更新后 memberRenamePush 广播全队，
+             无回执静默语义） -->
+        <renameMember>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       UNICODE                 </Arg>
+        </renameMember>
 
         <memberOffline>
             <Arg>       TEAMID                  </Arg>
@@ -226,6 +353,16 @@
             <Arg>       ENTITYCALL              </Arg>
             <Arg>       PLAYER_GBID             </Arg>
         </queryPlayerTeam>
+
+        <!-- 成员状态查询（推送模型常态下行：纯读本地快照缓存，按版本号去重——缓存 version
+             未前进（相对该 gbId 已收版本）则跳过不回复）：box 为请求方 base 邮箱；
+             groupIdxs 为关注小组下标过滤（空=全量，对账用） -->
+        <queryTeamMemberState>
+            <Arg>       ENTITYCALL              </Arg>
+            <Arg>       TEAMID                  </Arg>
+            <Arg>       PLAYER_GBID             </Arg>
+            <Arg>       ARRAY <of> INT8 </of>   </Arg>
+        </queryTeamMemberState>
 
         <!-- 队伍预览（决策 D4）：queryTeam 的 teamId 直查路径，回包回调 cell.onCrossTeamPreview -->
         <queryTeamById>
@@ -340,10 +477,13 @@
             <Arg>       PLAYER_GBID             </Arg>
         </startCrusade>
 
+        <!-- failName：检查失败成员名（仅挑战次数不足 REWARD_NUM_CHECK_FAIL 时携带，
+             中心透传，abort 时游戏服据此提示队长 54001744） -->
         <crusadeCheckResult>
             <Arg>       TEAMID                  </Arg>
             <Arg>       PLAYER_GBID             </Arg>
             <Arg>       INT32                   </Arg>
+            <Arg>       UNICODE                 </Arg>
         </crusadeCheckResult>
 
         <enterCrusadeSpace>
@@ -356,6 +496,7 @@
         <crusadeFinished>
             <Arg>       TEAMID                  </Arg>
             <Arg>       INT32                   </Arg>
+            <Arg>       UINT32                  </Arg>
         </crusadeFinished>
 
         <!-- 跨服讨伐副本空间创建结果回报（per-dungeonNo 副本 stub -> 本 Stub，跨服服上；
@@ -375,6 +516,13 @@
             <Arg>       PLAYER_GBID             </Arg>
             <Arg>       PY_DICT                 </Arg>
         </logonEnterCrusadeDungeon>
+
+        <!-- GM 禁止进入副本临时开关（GAME_API $banEnterDungeon/$disbanEnterDungeon 向全分片广播写入内存，
+             isBan=true 禁止 / false 解除；判定见 onCrusadeCheck） -->
+        <gmSetForbidEnterDungeons>
+            <Arg>       ARRAY <of> DUNGEON_NO </of>     </Arg>
+            <Arg>       BOOL                    </Arg>
+        </gmSetForbidEnterDungeons>
     </BaseMethods>
 
 </root>

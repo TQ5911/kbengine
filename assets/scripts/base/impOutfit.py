@@ -203,3 +203,50 @@ class ImpOutfit(object):
                     for propName, val in prop:
                         totalScore += dataUtils.calcFightPropScore(self.getAvatarSchool(), propName, val)
         return totalScore
+
+    # --------------------------------------------------------------
+    # GM
+
+    def _gmDeactiveOutfit(self, outfitType, outfitId):
+        """GM反激活坐骑/外观统一入口: 删除记录(坐骑自动回退属性与评分), 卸下穿戴, 回收关联外观属性"""
+        outfit = self.outfitInfo.getOutfitInfo(outfitType, outfitId)
+        if not outfit:
+            LOG_ERR("_gmDeactiveOutfit outfit not activated", outfitType, outfitId)
+            return False, 'outfit not activated'
+
+        self.outfitInfo.removeOutfit(self, outfitType, outfitId)
+        # 若正穿戴/骑着则卸下(checkOutfitExpired内含下骑与外观穿戴清理)
+        self.cell.checkOutfitExpired([(outfitType, outfitId)])
+        # 回收关联外观属性(一个outfitId可能对应多个appearanceId, 如永久+体验, outfitId2appeId反查不全需遍历)
+        for appearanceId, appearanceData in AMRD.datas.items():
+            if appearanceData['part'] != outfitType or appearanceData['appearanceId'] != outfitId:
+                continue
+            if appearanceId in self.purchasedappearanceIds:
+                self.purchasedappearanceIds.pop(appearanceId)
+                self.cell.updatePropByAppearance(appearanceId, False)
+        self.client.onRemoveOutfit(outfitType, outfitId)
+        self.sendOutfitData()
+        return True, ''
+
+    def gmDeactiveMount(self, mountId):
+        """GM反激活坐骑: 删除记录并回退属性/评分, 骑着则下骑; 成就/任务计数等累积记录不回滚"""
+        LOG_INFO("gmDeactiveMount", mountId)
+        if not dataUtils.getOutfitConfigData(gameconst.OutfitEnum.mount, mountId):
+            LOG_ERR("gmDeactiveMount mountId not exist", mountId)
+            return False, 'mountId not exist'
+        return self._gmDeactiveOutfit(gameconst.OutfitEnum.mount, mountId)
+
+    def gmDeactiveOutfit(self, outfitType, outfitId):
+        """GM反激活外观: 删除记录, 若正穿戴则卸下, 同步回收关联外观属性"""
+        LOG_INFO("gmDeactiveOutfit", outfitType, outfitId)
+        if outfitType == gameconst.OutfitEnum.mount:
+            LOG_ERR("gmDeactiveOutfit mount type", outfitType, outfitId)
+            return False, 'mount use gmDeactiveMount'
+        if outfitType not in (gameconst.OutfitEnum.wing, gameconst.OutfitEnum.hair,
+                              gameconst.OutfitEnum.clothes, gameconst.OutfitEnum.picFrame):
+            LOG_ERR("gmDeactiveOutfit outfitType invalid", outfitType)
+            return False, 'outfitType invalid'
+        if not dataUtils.getOutfitConfigData(outfitType, outfitId):
+            LOG_ERR("gmDeactiveOutfit outfitId not exist", outfitType, outfitId)
+            return False, 'outfitId not exist'
+        return self._gmDeactiveOutfit(outfitType, outfitId)

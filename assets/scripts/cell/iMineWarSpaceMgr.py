@@ -837,7 +837,7 @@ class IMineWarSpaceMgr(object):
     def killAllOtherMonster(self):
         """删除场景内所有非矿战怪物"""
         #
-        self.onTemporaryDestroyTimerEntities([gameconst.EntityType.MONSTER])
+        self.onTemporaryDestroyTimerEntities([gameconst.EntityType.MONSTER], [(gameconst.MonsterSuffix.NULL,)])
         self.batchlyCall(self._killAllOtherMonsterIter(), 30, 0.5)
         gameengine.getGlobalBase('WorldRefreshEntityStub').pauseTimeLimitedGroupEntityRefresh(
             formula.fetchMapId(self.spaceNo)

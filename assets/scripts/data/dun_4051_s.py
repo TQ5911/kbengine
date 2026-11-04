@@ -51,6 +51,7 @@ datas ={
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 1,
             "LightPillar": "",
             "MapEntityScale": 0,
@@ -138,9 +139,9 @@ datas ={
           "EliteCustomID": "",
           "EntityID": 16000160,
           "ID": 40518004,
-          "PosX": 263.6631,
-          "PosY": 214.225,
-          "PosZ": 494.1742,
+          "PosX": 403.2141,
+          "PosY": 169.2537,
+          "PosZ": 346.7654,
           "Props": {
             "ChestGroupID": "",
             "IsOnGround": 1,
@@ -322,19 +323,19 @@ datas ={
         "ClassName": "CustomFuncPos",
         "ClassNameType": 10,
         "CustomID": "",
-        "Dir": 0.0,
+        "Dir": 182.8701,
         "DisplayName": "",
         "EliteCustomID": "",
         "EntityID": 0,
         "ID": 40518009,
-        "PosX": 205.1287,
-        "PosY": 215.2577,
-        "PosZ": 460.6959,
+        "PosX": 403.5688,
+        "PosY": 169.3249,
+        "PosZ": 354.542,
         "Props": {
           "Num": 0,
           "Radius": 0.0,
           "RefreshTimedID": 0,
-          "Remark": "86010405",
+          "Remark": "",
           "ShowInSceneMap": 1
         }
       }

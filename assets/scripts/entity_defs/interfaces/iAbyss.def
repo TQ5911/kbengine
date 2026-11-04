@@ -52,12 +52,14 @@
             <Arg>          UINT8                        </Arg>
             <Arg>          UINT8                        </Arg>
             <Arg>          OP_UUID                      </Arg>
+            <Arg>          BOOL                         </Arg>
         </doAddAbyssTicket>
 
         <addAbyssTicket> <Exposed/>
             <Arg>          ITEM_ID                      </Arg>
             <Arg>          UINT8                        </Arg>
             <Arg>          UINT8                        </Arg>
+            <Arg>          BOOL                         </Arg>
         </addAbyssTicket>
 
         <addAbyssDurFailed>
@@ -165,6 +167,7 @@
             <Arg>           PYTHON                      </Arg>
             <Arg>           UINT8                       </Arg>
             <Arg>           OP_UUID                     </Arg>
+            <Arg>           BOOL                        </Arg>
         </checkAddAbyssDurationCondition>
 
         <doSendAbyssLoginData>

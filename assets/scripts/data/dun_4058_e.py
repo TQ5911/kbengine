@@ -27,7 +27,7 @@ datas ={
       40580006
     ],
     "num": 0,
-    "lv": "23",
+    "lv": "32",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -71,7 +71,7 @@ datas ={
       40580015
     ],
     "num": 0,
-    "lv": "23",
+    "lv": "32",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -107,7 +107,7 @@ datas ={
       40580016
     ],
     "num": 0,
-    "lv": "23",
+    "lv": "32",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

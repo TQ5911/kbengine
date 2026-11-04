@@ -510,5 +510,33 @@ datas = _tools.RODict({
     "gearPkSwitchMsg": _tools.RODict({
         "ID": "gearPkSwitchMsg",
         "value": 54003432,
+    }),
+    "soulWashMsg": _tools.RODict({
+        "ID": "soulWashMsg",
+        "value": 54482029,
+    }),
+    "gearSoulWashBindMsg": _tools.RODict({
+        "ID": "gearSoulWashBindMsg",
+        "value": 54482028,
+    }),
+    "soulWashPowerDownMsg": _tools.RODict({
+        "ID": "soulWashPowerDownMsg",
+        "value": 54482030,
+    }),
+    "equipmentClassMsg": _tools.RODict({
+        "ID": "equipmentClassMsg",
+        "value": 54003536,
+    }),
+    "soulWashCancelMsg": _tools.RODict({
+        "ID": "soulWashCancelMsg",
+        "value": 54482031,
+    }),
+    "equipmentReturnMail": _tools.RODict({
+        "ID": "equipmentReturnMail",
+        "value": 37000002,
+    }),
+    "blessTeedCountText": _tools.RODict({
+        "ID": "blessTeedCountText",
+        "value": "{0}级降级次数：",
     })
 })

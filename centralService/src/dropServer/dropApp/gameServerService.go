@@ -81,28 +81,29 @@ func (gss *GameServerService) Drop(in *gameServerService.DropRequest) (*gameServ
 		}
 		// 2026-10-08 改走 store (cache-aside + write-through): 写内存 + 同步 mysql.
 		rec := &DropInfoRecord{
-			ServerId:       in.ServerId,
-			UniqueId:       in.UniqueId,
-			DropGbId:       in.DropGbId,
-			DropType:       TYPE_DROP,
-			EndTime:        in.EndTime,
-			EquipInfo:      in.EquipInfo,
-			DropTime:       in.DropTime,
-			TakerGbId:      0,
-			TakerServerId:  0,
-			CollExpireTime: in.CollExpireTime,
-			Price:          in.Price,
-			MaxPrice:       in.MaxPrice,
-			ExtraInfo:      in.ExtraInfo,
-			GiveUpTime:     0,
-			CollectionId:   in.CollectionId,
-			RedeemWaitTime: 0,
-			HasRedeemPrice: 0,
-			HasPayment:     0,
-			ReturnTime:     returnTime,
-			OwnerGbId:      in.OwnerId,
-			OwnerServerId:  common.GetGameServerMergeRoot(in.OwnerServerId),
-			ReturnTimeBack: in.ReturnTime,
+			ServerId:           in.ServerId,
+			UniqueId:           in.UniqueId,
+			DropGbId:           in.DropGbId,
+			DropType:           TYPE_DROP,
+			EndTime:            in.EndTime,
+			EquipInfo:          in.EquipInfo,
+			DropTime:           in.DropTime,
+			TakerGbId:          0,
+			TakerServerId:      0,
+			CollExpireTime:     in.CollExpireTime,
+			Price:              in.Price,
+			MaxPrice:           in.MaxPrice,
+			ExtraInfo:          in.ExtraInfo,
+			GiveUpTime:         0,
+			CollectionId:       in.CollectionId,
+			CollectionServerId: in.CollectionServerId,
+			RedeemWaitTime:     0,
+			HasRedeemPrice:     0,
+			HasPayment:         0,
+			ReturnTime:         returnTime,
+			OwnerGbId:          in.OwnerId,
+			OwnerServerId:      common.GetGameServerMergeRoot(in.OwnerServerId),
+			ReturnTimeBack:     in.ReturnTime,
 		}
 		err := gss.app.store.InsertDropInfo(rec)
 		if err != nil {
@@ -124,6 +125,7 @@ func (gss *GameServerService) Drop(in *gameServerService.DropRequest) (*gameServ
 				ReturnTime:     in.ReturnTime,
 				OwnerGbId:      in.OwnerId,
 				OwnerServerId:  in.OwnerServerId,
+				ExtraInfo:      in.ExtraInfo,
 			}
 			if err := gss.app.store.UpsertCustodyHolder(custodyRec); err != nil {
 				appLog.Error("Drop: insert custody info error: ", err.Error())
@@ -251,6 +253,7 @@ func (gss *GameServerService) Take(in *gameServerService.TakeRequest) (*gameServ
 				ReturnTime:     returnTime,
 				OwnerGbId:      ownerGbId,
 				OwnerServerId:  ownerServerId,
+				ExtraInfo:      rec.ExtraInfo,
 			}
 			if err := gss.app.store.UpsertCustodyHolder(custodyRec); err != nil {
 				gss.Client.(*gameServerService.GameServerClient).OnTake(&gameServerService.TakeResponse{
@@ -425,7 +428,8 @@ func (gss *GameServerService) _notifyCleanCollections(
 	serverId uint32,
 	collectionIds []uint32,
 	uniqueIds []uint64,
-	collExpireTimes []int64) (*gameServerService.Void, error) {
+	collExpireTimes []int64,
+	collectionServerIds []uint32) (*gameServerService.Void, error) {
 	gameServer := gss.app.getGameServer(serverId)
 	if gameServer == nil {
 		appLog.Error("_notifyCleanCollections: get game server error: ", serverId)
@@ -433,9 +437,10 @@ func (gss *GameServerService) _notifyCleanCollections(
 	}
 
 	gameServer.Client.(*gameServerService.GameServerClient).OnNotifyCleanCollection(&gameServerService.NotifyCleanCollections{
-		CollectionIds:   collectionIds,
-		UniqueIds:       uniqueIds,
-		CollExpireTimes: collExpireTimes,
+		CollectionIds:       collectionIds,
+		UniqueIds:           uniqueIds,
+		CollExpireTimes:     collExpireTimes,
+		CollectionServerIds: collectionServerIds,
 	})
 	return nil, nil
 }
@@ -614,6 +619,7 @@ func (gss *GameServerService) Redeem(in *gameServerService.RedeemRequest) (*game
 				ReturnTime:     returnTime,
 				OwnerGbId:      ownerGbId,
 				OwnerServerId:  ownerServerId,
+				ExtraInfo:      rec.ExtraInfo,
 			}
 			if err := gss.app.store.UpsertCustodyHolder(custodyRec); err != nil {
 				appLog.Error("Redeem: insert custody info error: ", err.Error())
@@ -748,6 +754,7 @@ func (gss *GameServerService) GetDropInfo(in *gameServerService.GetDropInfoReque
 				EquipInfo:  rec.EquipInfo,
 				DropType:   rec.DropType,
 				ReturnTime: rec.ReturnTime,
+				ExtraInfo:  rec.ExtraInfo,
 			})
 		}
 
@@ -953,6 +960,7 @@ func (gss *GameServerService) CheckDropReturnExpire(in *gameServerService.CheckD
 			takerGbId := dropRec.TakerGbId
 			collExpireTime := dropRec.CollExpireTime
 			collectionId := dropRec.CollectionId
+			collectionServerId := dropRec.CollectionServerId
 
 			ownerReturnCacheData, ok := ownerReturnCacheDatas[dropGbId]
 			if !ok || !slices.Contains(ownerReturnCacheData.UniqueIds, uniqueId) {
@@ -986,17 +994,19 @@ func (gss *GameServerService) CheckDropReturnExpire(in *gameServerService.CheckD
 			}
 
 			if curTime < collExpireTime {
-				collectionData, ok := collectionDatas[dropServerId]
+				collectionData, ok := collectionDatas[collectionServerId]
 				if !ok {
 					collectionData = &gameServerService.NotifyCollectionCacheData{
-						CollectionIds: make([]uint32, 0),
-						UniqueIds:     make([]uint64, 0),
+						CollectionIds:       make([]uint32, 0),
+						UniqueIds:           make([]uint64, 0),
+						CollectionServerIds: make([]uint32, 0),
 					}
-					collectionDatas[dropServerId] = collectionData
+					collectionDatas[collectionServerId] = collectionData
 				}
 				collectionData.CollectionIds = append(collectionData.CollectionIds, collectionId)
 				collectionData.UniqueIds = append(collectionData.UniqueIds, uniqueId)
 				collectionData.CollExpireTimes = append(collectionData.CollExpireTimes, collExpireTime)
+				collectionData.CollectionServerIds = append(collectionData.CollectionServerIds, collectionServerId)
 			}
 		}
 
@@ -1030,7 +1040,7 @@ func (gss *GameServerService) CheckDropReturnExpire(in *gameServerService.CheckD
 		}
 		// 9.广播指定服, 清理创生物
 		for serverId, collectionData := range collectionDatas {
-			gss._notifyCleanCollections(serverId, collectionData.CollectionIds, collectionData.UniqueIds, collectionData.CollExpireTimes)
+			gss._notifyCleanCollections(serverId, collectionData.CollectionIds, collectionData.UniqueIds, collectionData.CollExpireTimes, collectionData.CollectionServerIds)
 		}
 	})
 

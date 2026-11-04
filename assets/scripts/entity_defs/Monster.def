@@ -95,6 +95,12 @@
             <Flags>     CELL_PRIVATE     </Flags>
         </beAttackAvatarIds>
 
+        <!-- boss 战斗标记，结构：{宿主Avatar的gbId: 标记过期时间戳}，用于 boss 防垄断死亡时设定冷却 -->
+        <bossMutexMarkDict>
+            <Type>      PY_DICT          </Type>
+            <Flags>     CELL_PRIVATE     </Flags>
+        </bossMutexMarkDict>
+
         <lastClearBeAttackAvatarsTime>
             <Type>          LONGTIME         </Type>
             <Flags>         CELL_PRIVATE     </Flags>

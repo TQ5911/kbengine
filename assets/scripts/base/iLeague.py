@@ -10,6 +10,7 @@ import guild_guildConst as G_GCD
 import agent_agentFunction as A_AFD
 import AuthClsWraper
 import GuildStub
+import dataUtils
 
 class ILeague:
     def _inGuild(self):
@@ -142,6 +143,9 @@ class ILeague:
         LOG_INFO('iLeague::inviteLeagueGuild', exposed, targetGuildId, targetServerId, self.gbID)
         if not self._inGuild():
             return
+        if not dataUtils.checkAllianceCross() and targetServerId != gameconfig.serverId():
+            LOG_ERR('iLeague::inviteLeagueGuild, cross server is closed, wrong args', exposed, targetGuildId, targetServerId, targetServerId, self.gbID)
+            return
         self.guildBox.onInviteGuild(self.gbID, targetGuildId, targetServerId, self)
 
     @gamedecorator.checkGameconfigEnable('guild_union')
@@ -218,7 +222,9 @@ class ILeague:
         if attackType not in gameconst.EnemyActionType.VALID_TYPES or targetType not in gameconst.EnemyActionType.VALID_TYPES:
             LOG_ERR('iLeague::declareLeagueWar, wrong args', exposed, attackType, targetType, targetId, targetServerId, self.gbID)
             return
-        
+        if not dataUtils.checkAllianceCross() and targetServerId != gameconfig.serverId():
+            LOG_ERR('iLeague::declareLeagueWar, cross server is closed, wrong args', exposed, attackType, targetType, targetId, targetServerId, self.gbID)
+            return
         self.guildBox.onDeclareLeagueWar(self.gbID, attackType, targetType, targetId, targetServerId, self)
 
     @gamedecorator.checkGameconfigEnable('guild_union')

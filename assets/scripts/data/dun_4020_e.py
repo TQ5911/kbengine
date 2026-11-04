@@ -10,7 +10,7 @@ datas ={
       40200008
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -71,7 +71,7 @@ datas ={
       40200020
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -107,7 +107,7 @@ datas ={
       40200001
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -151,7 +151,7 @@ datas ={
       40200029
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -187,7 +187,7 @@ datas ={
       40200030
     ],
     "num": 0,
-    "lv": "30",
+    "lv": "35",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

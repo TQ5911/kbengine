@@ -64,13 +64,13 @@ datas = _tools.RODict({
         "openID": "",
         "resRefreshMode": 0,
     }),
-    8: _tools.RODict({
-        "ID": 8,
-        "name": "巧匠令",
-        "itemID": 30000242,
+    9: _tools.RODict({
+        "ID": 9,
+        "name": "坐骑召唤券",
+        "itemID": 30000563,
         "openID": "",
         "resRefreshMode": 0,
     })
 })
 minKey = 1
-maxKey = 8
+maxKey = 9

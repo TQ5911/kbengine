@@ -80,6 +80,7 @@ LEASE_DB_ERROR = 9
 LEASE_RATE_LIMIT = 10
 LEASE_SELF_LEASE = 11
 LEASE_SHELF_FULL = 12
+LEASE_GROUP_MISMATCH = 13
 
 class ILease(object):
     """Avatar 租赁系统 Mixin"""
@@ -93,6 +94,8 @@ class ILease(object):
             self.leaseCoolDownList = {}
         if not hasattr(self, '_leasePending'):
             self._leasePending = {}
+        if not hasattr(self, '_leasePrepareExchange'):
+            self._leasePrepareExchange = {}
         if not hasattr(self, 'leasePendingReturnItems'):
             self.leasePendingReturnItems = {}
         if not hasattr(self, 'leasePendingRemoveItems'):
@@ -353,7 +356,7 @@ class ILease(object):
 
     @gamedecorator.limitcall(2)
     @gamedecorator.checkGameconfigEnable('lease')
-    def reqLeaseItem(self, exposed, uniqueId):
+    def reqLeaseItem(self, exposed, uniqueId, isExchange=False):
         LOG_INFO("reqLeaseItem", uniqueId)
         if not self.checkAuthDisassembleAndMsg(
                 A_AFD.Rental, 
@@ -365,6 +368,7 @@ class ILease(object):
             return
 
         opUUID = KBEngine.genUUID64()
+        self._leasePrepareExchange[opUUID] = isExchange
         # 费率配置在调用时读取并透传给租赁中心服，保证热更后立即生效
         prop01 = AUC_CONST.datas['rentalProp01']['value']
         prop02 = AUC_CONST.datas['rentalProp02']['value']
@@ -396,9 +400,10 @@ class ILease(object):
             return
 
         feeType, feeAmount = gameconst.ItemIdEnum.MONEY, totalPrice
+        isExchange = self._leasePrepareExchange.pop(opUUID, False)
         deductVal = dropAward.DeductWealthVal()
         deductVal.addWealthByItemId(feeType, feeAmount)
-        res = self.canDeductWealth(deductVal)
+        res = self.canDeductWealth(deductVal, allowMoneyCoverBindMoney=isExchange)
         if not res:
             LOG_INFO("onReplyLeaseItemPrepare not enough gold", uniqueId, res())
             self.leaseStub.leaseItemRollback(uniqueId, opUUID)
@@ -407,7 +412,7 @@ class ILease(object):
         
         srcType = ACACD.datas.BONUS_SRC_LEASE
         detail = gameclass.AwardDetailCls(costId=feeType, costNum=feeAmount)
-        self.deductWealth(srcType, deductVal, opUUID, detail)
+        self.deductWealth(srcType, deductVal, opUUID, detail, allowMoneyCoverBindMoney=isExchange)
 
         # 暂存费用信息，commit 失败时通过邮件返还
         self._leasePending[uniqueId] = {

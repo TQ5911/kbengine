@@ -16,6 +16,7 @@ import dataUtils
 import formula
 import time
 import math
+import random
 import iGameEntity
 import creep_base as C_BD
 import gameconst
@@ -34,11 +35,13 @@ import sMath
 import creep_coefficient as CCF
 
 import gamePlay_gamePlay as GP_GP
+import battlePassUtils as BPU
 import message_Message_def as M_M_D
 import creep_countRefresh as CCR
 import creep_tag as C_TD
 import NPC_pickConst as NPC_PC
 import NPC_Pick as NPD
+import mutex_set as MUTEX_SET_MD
 
 import iSiegeWarMonster
 import iMineWarMonster
@@ -137,7 +140,8 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             self.pyAddTimer(self.ttl, 0, gametimer.TIMER_ON_CELL_TTL_DESTROY)
         
         coefficientType = _monData.get('coefficientType', 0)
-        coefficient = CCF.datas.get(coefficientType, {}).get('coefficient', None)
+        coefficientCfg = CCF.datas.get(coefficientType, {})
+        coefficient = coefficientCfg.get('coefficient', None)
         
         self.coefficientTimer = None
         self.firstBloodTimer = None
@@ -174,8 +178,6 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self._initCountRefresh()
 
         # 标记相关
-        self.teamMarkDict = {}
-        self.raidMarkDict = {}
         # 跨服组队标记记录：{crossTeamId: 槽位 index}（跨服队标怪物的死亡自动摘除依据，
         # 死亡时经本服 CrossTeamStub 上行中心摘除并广播）
         self.crossTeamMarkDict = {}
@@ -186,6 +188,13 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         # 统计世界boss的刷新
         if _monData.get('nameSuffixID', 0) == gameconst.MonsterSuffix.WORLD_BOSS:
             gameengine.getGlobalBase('GuildStub').statGuildData(gameconst.GuildDataType.WORLD_BOSS_REFRESH)
+
+        self._refreshMsg(coefficientCfg.get('refreshMsg', None))
+
+    def _refreshMsg(self, refreshMsg):
+        if not refreshMsg:
+            return
+        self.spaceMgr and self.spaceMgr.batchlySyncPlayer(lambda playerEnt: playerEnt.showMsg(refreshMsg, [str(self.name),]))
 
     def _checkCombatArea(self, combatAreaData):
         posX = combatAreaData["PosX"]
@@ -387,6 +396,66 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
     def getCreepData(self):
         return C_BD.datas.get(self.monsterId, {})
 
+    def checkActiveAttack(self):
+        value = int(self.getCreepData().get('activeAttack', 0))
+        isActive = True if value else False
+
+        syncAttackValue = int(self.getCreepData().get('SyncAttack', 0))
+        if not syncAttackValue:
+            return isActive
+        else:
+            mapId = formula.fetchMapId(self.spaceNo)
+            dunData = utils.getDunModuleData(mapId)
+            if not dunData:
+                return isActive
+            gid, gct = utils.splitFromGameEntityId(self.gameEntityId)
+            cfgData = dunData.get(str(gid), None)
+            if not cfgData:
+                return isActive
+            props = cfgData.get('Props', None)
+            if not props:
+                return isActive
+            isAttackValue = props.get('IsAttack', None)
+            if isAttackValue == None:
+                return isActive
+            return True if int(isAttackValue) else False
+
+    def getMutexGroup(self):
+        """boss 互斥组 ID（creep_base 表 mutexGroup 字段），0 表示不参与互斥"""
+        return self.getCreepData().get('mutexGroup', 0)
+
+    def addBossMutexMark(self, gbId):
+        """记录/刷新玩家的 boss 战斗标记，并惰性清理过期标记"""
+        if self.getMutexGroup() <= 0:
+            return
+
+        now = utils.curTS()
+        for _gbId, expireTs in list(self.bossMutexMarkDict.items()):
+            if expireTs <= now:
+                self.bossMutexMarkDict.pop(_gbId)
+
+        markDur = MUTEX_SET_MD.datas['mutexTime']['value']
+        self.bossMutexMarkDict[gbId] = now + markDur
+
+    def _setBossMutexCoolDownOnDead(self):
+        """boss 死亡时，对战斗标记未过期的玩家设定互斥冷却（实体不可达的忽略）"""
+        mutexGroup = self.getMutexGroup()
+        if mutexGroup <= 0:
+            return
+
+        deathTs = utils.curTS()
+        srcMapId = formula.fetchMapId(self.spaceNo)
+        srcLineNo = formula.parseLineNo(self.spaceNo)
+        for gbId, expireTs in list(self.bossMutexMarkDict.items()):
+            if expireTs <= deathTs:
+                continue
+
+            avatar = utils.getAvatarByGbId(gbId)
+            if avatar is None:
+                continue
+
+            avatar.addBossMutexCoolDown(mutexGroup, srcMapId, srcLineNo)
+
     def overwriteProps(self):
         _overwriteProps = self.tmpProps.pop('overwriteProps', {})
         _initHpPercent = _overwriteProps.pop('initHpPercent', 0)
@@ -542,10 +611,13 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         _msgId = int(C_TD.datas[gameconst.CREEP_TAG_TIP_MSG]['value'])
         entity.showMsg(_msgId, [])
-        if entity.teamId > 0:
-            gameengine.getTeamStub(entity.teamId).broadcastToAllMembers(entity.base, entity.gbId, entity.teamId, (entity.gbId,), gameconst.BASE,  'onMessagePre', (_msgId, []))
-        elif entity.raidUUID > 0:
-            gameengine.getRaidStub(entity.raidUUID).broadcastToAllMembers(entity.base, entity.gbId, entity.raidUUID, (entity.gbId,), gameconst.BASE, 'onMessagePre', (_msgId, []))
+        # 本服组队/团已废弃，统一走访问层"广播给队友"通道（跨服队；触发者本人已 showMsg，排除）
+        entity.broadcastToTeammates(
+            gameconst.BASE,
+            'onMessagePre',
+            (_msgId, []),
+            excludeGbIds=(entity.gbId,)
+        )
         self.popTempMiscProp(gameconst.EntityPropsEnum.enterEnemyId, 0)
 
     def enterFightingState(self):
@@ -599,7 +671,11 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         super(Monster, self).onDead(killer)
         if formula.inTeamDungeonScene(self.spaceNo) or formula.inRaidDungeonScene(self.spaceNo):
             self.spaceMgr.doDungeonMonsterDead(self.monsterId, self.createTime)
+
         self.doMonsterDestroy()
+
+        # 参与互斥的 boss 死亡时，对战斗标记未过期的玩家设定冷却
+        self._setBossMutexCoolDownOnDead()
     
         if killer:
 
@@ -617,11 +693,12 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             opUUID = KBEngine.genUUID64()
             srcType = AAC_AACDD.datas.BONUS_SRC_KILL_MONSTER
             detail = gameclass.AwardDetailCls(monsterId=self.monsterId, spaceNo=self.spaceNo)
-            rewardIDList, shareRewardIDList, displayModeList = self.getDeathDrop()
+            rewardIDList, shareRewardIDList, displayModeList, expMode = self.getDeathDrop()
             factor = 1.0
             if formula.inLineScene(self.spaceNo):
-                nameSuffixID = self.getCreepData().get('nameSuffixID', 0)
-                if nameSuffixID == gameconst.MonsterSuffix.NORMAL or nameSuffixID == gameconst.MonsterSuffix.ELITE:
+                # 新手期杀怪奖励倍率：creep_coefficient.dropBuff 为 1 时生效
+                coefficientType = self.getCreepData().get('coefficientType', 0)
+                if CCF.datas.get(coefficientType, {}).get('dropBuff', 0) == 1:
                     host = utils.getEntityRealEntity(killer)
                     if host and host.IsAvatar:
                         factor = host.getKillMonsterAwardFactor(self.level)
@@ -636,51 +713,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             dropCtx.addContextVar('opUUID', opUUID)
             dropCtx.addContextVar('detail', detail)
 
-            fbTargetKiller = None
-            if gameconst.DropShareRewardType.FIRST_BLOOD in shareRewardIDList:
-                if not self.FirstBloodTargetId:
-                    host = utils.getEntityRealEntity(killer)
-                    if host and host.IsAvatar:
-                        self.FirstBloodTargetId = host.id
-                    else:
-                        self.FirstBloodTargetId = killer.id
-                        LOG_ERR('unknown FirstBloodTargetId', killer, self.FirstBloodTargetId)
-
-                fbTarget = KBEngine.entities.get(self.FirstBloodTargetId, None)
-                if not fbTarget:
-                    fbTarget = killer
-                fbTargetKiller = fbTarget
-
-                for i in range(len(rewardIDList)):
-                    if shareRewardIDList[i] == gameconst.DropShareRewardType.FIRST_BLOOD:
-                        _ctx = fbTarget.getAvatarAwardCtxCell(rewardIDList[i], dropCtx)
-                        award = dropAward.getAwardOne(
-                            rewardIDList[i],
-                            _ctx
-                        )
-                        worldRatio = utils.getMonsterWorldLevelDropRatio(self.monsterId, self.level)
-                        if worldRatio != 1.0:
-                            award *= worldRatio
-                            LOG_INFO("FB worldLevel drop ratio", self.monsterId, self.level, utils.getWorldLevel(), worldRatio)
-                        items = award.itemWealth.getItemObjs() + award.petItemWealth.getItemObjs()
-                        radius = NPC_PC.datas['pickupPermissionRange']['value']
-                        collectionId = NPC_PC.datas['pickupPermissionId']['value']
-                        boxRadius = NPD.datas.get(collectionId, {}).get('chestRadius', 0)
-                        posList = self.getRandomPositionByBoxRadius(self.position, radius, boxRadius, len(items))
-                        LOG_INFO("FB posList", posList, len(items))
-                        for j in range(len(items)):
-                            # (1, 1)第一个1表示随机的权重，第二个表示数量，后面的(1,NPC_PC.datas['pickupPermissionId']['value'])里的1也是权重, 这里因为只有一个，所以权重没用
-                            self.deathCreateCollection(radius,((1,1),),
-                            ((1,NPC_PC.datas['pickupPermissionId']['value']),),
-                            NPC_PC.datas['pickupPermissionValidTime']['value'],
-                            {"needFBTarget":True, "FBTime":NPC_PC.datas['pickupPermissionTime']['value'], "FBItemId": items[j].itemId,
-                            "fromMonsterId": self.id, "FBPos": posList[j], "FBBind":items[j].bindType})
-
-            # 只要包含首刀归属，那么击杀奖励也由首刀归属者领取
-            if fbTargetKiller:
-                self.doDispatchAward(fbTargetKiller, rewardIDList, shareRewardIDList, displayModeList, dropCtx)
-            else:
-                self.doDispatchAward(killer, rewardIDList, shareRewardIDList, displayModeList, dropCtx)
+            self._dispatchDeathRewards(killer, rewardIDList, shareRewardIDList, displayModeList, expMode, dropCtx)
 
         # 【【程序自主】【副本编辑器】服务流程编辑器怪物原型ID检测支持临时Entity(没有副本ID的Entity)】
         self.addDungeonKillCount()
@@ -705,23 +738,27 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             host.base.triggerAchievement(gameconst.AchieveType.KILL_MONSTER)
             host.base.triggerAchievementWithCtx(gameconst.AchieveType.KILL_TAR_SUFFIX_MONSTER, {'suffixId': self.getCreepData().get('nameSuffixID', 0)})
             host.base.triggerAchievementWithCtx(gameconst.AchieveType.KILL_TAR_MONSTER, {'monsterId': self.monsterId})
+            mapId = formula.fetchMapId(self.spaceNo)
+            mode = GP_GP.datas.get(mapId, {}).get('ModeType', 0)
+            host.base.onBattlePassTask(BPU.TASK_KILL, 1, mode, 0)
             # 尾刀击杀世界boss
             if self.getCreepData().get('nameSuffixID', 0) == gameconst.MonsterSuffix.WORLD_BOSS:
                 host.doKillMonster()
-
+            
+            # v5.2 新手历程 4=击杀怪物
+            _monData = C_BD.datas[self.monsterId]
+            monsterType = _monData['nameSuffixID']
+            mapId = formula.fetchMapId(self.spaceNo)
+            host.base.beginnerJourneyOnTaskEvents(
+                [(gameconst.BjTaskType.BJ_TASK_TYPE_KILL_MONSTER, 
+                {'delta':1, 'monsterType':monsterType, 'mapId':mapId})])
         # 需要计数或者刷新的怪物:
         if self.needCountRefresh or self.needCountNum:
             self.spaceMgr.onMonsterDestroy(self.combatRefreshID, self.monsterId, self.instanceId, self.spaceMgrId, self.monsterGroupId, self.refreshDataKey)
 
         try:
-            for teamId in self.teamMarkDict.keys():
-                gameengine.getTeamStub(teamId).onMarkMonsterDead(self.id)
-
-            for raidId in self.raidMarkDict.keys():
-                gameengine.getRaidStub(raidId).onMarkMonsterDead(self.id)
-
             # 跨服组队标记摘除：上行本服 CrossTeamStub 转中心删除并广播
-            for crossTeamId, markIdx in self.crossTeamMarkDict.values():
+            for crossTeamId, markIdx in self.crossTeamMarkDict.items():
                 gameengine.getCrossTeamStub(crossTeamId).onCrossMarkMonsterDead(crossTeamId, markIdx)
         except Exception as e:
             LOG_ERR("Error in onDead for clear team record: ", e)
@@ -729,7 +766,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         coefficientType = C_BD.datas.get(self.monsterId, {}).get('coefficientType', 0)
         if CCF.datas.get(coefficientType, {}).get('ifRecordDie', 0) == 1:
             LogTrackingMgr.LogTrackingMgr.Kill_Monster(
-                'Monster',
+                host.gbId if host and host.IsAvatar else -1,
                 '',
                 self.monsterId,
                 formula.fetchMapId(self.spaceNo),
@@ -739,15 +776,198 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self.destroyAttach()
 
 
-    def doDispatchAward(self, killer, deathDropIds, shareRewardIds, displayModes, dropCtx):
+    def _resolveAwardAvatar(self, ent):
+        if not ent:
+            return None
+        if ent.IsAvatar:
+            return ent
+        host = utils.getEntityRealEntity(ent)
+        if host and host.IsAvatar:
+            return host
+        if ent.IsSummon or ent.IsCreation:
+            hostRole = KBEngine.entities.get(ent.hostId, None)
+            if hostRole and hostRole.IsAvatar:
+                return hostRole
+        return None
+
+    def _firstBloodAvatar(self, killer):
+        if not self.FirstBloodTargetId:
+            host = utils.getEntityRealEntity(killer)
+            if host and host.IsAvatar:
+                self.FirstBloodTargetId = host.id
+            elif killer:
+                self.FirstBloodTargetId = killer.id
+                LOG_ERR('unknown FirstBloodTargetId', killer, self.FirstBloodTargetId)
+        fbTarget = KBEngine.entities.get(self.FirstBloodTargetId, None) if self.FirstBloodTargetId else None
+        return self._resolveAwardAvatar(fbTarget) or self._resolveAwardAvatar(killer)
+
+    def _randomTeamOrRaidAvatar(self, avatar):
+        # 首刀进包，以及经验模式 3 的满额经验：AOI 内的小队/团队成员（含本人）里随机一人；不在队或 AOI 内没有队友则本人
+        if not avatar:
+            return None
+        if not avatar.inCrossTeam() and not avatar.inCrossRaid():
+            return avatar
+        candidates = [avatar]
+        for entId in avatar.teammateEntIdInAoiSet:
+            mem = KBEngine.entities.get(entId)
+            if not mem or not mem.IsAvatar:
+                continue
+            candidates.append(mem)
+        chosen = random.choice(candidates)
+        LOG_INFO('first blood bag award random member', avatar.id, chosen.id, len(candidates))
+        return chosen
+
+    def _ownerTeamGbIds(self, owner):
+        # 在队用全队 gbId（含本人）；不在队只有本人。owner 为空则没有名单。
+        if not owner:
+            return []
+        return list(owner.getTeammateGbIdSet() or [owner.gbId])
+
+    def _dispatchDeathRewards(self, killer, rewardIDList, shares, displays, expMode, dropCtx):
+        fbModes = (gameconst.DropShareRewardType.FIRST_BLOOD, gameconst.DropShareRewardType.FIRST_BLOOD_2, gameconst.DropShareRewardType.FIRST_BLOOD_3)
+        needFb = expMode in fbModes or any(share in fbModes for share in shares)
+        fbAvatar = self._firstBloodAvatar(killer) if needFb else None
+        killerAvatar = self._resolveAwardAvatar(killer)
+        # 死亡当时记下两份队伍。之后入队的人不改这两份名单。
+        tailGbIds = self._ownerTeamGbIds(killerAvatar)
+        fbGbIds = self._ownerTeamGbIds(fbAvatar) if needFb else []
+        tailIds, tailShares, tailDisplays = [], [], []
+        fbIds, fbShares, fbDisplays = [], [], []
+        splitTailIds, splitTailDisplays = [], []
+        splitFbIds, splitFbDisplays = [], []
+        for i, rewardId in enumerate(rewardIDList):
+            share, display = shares[i], displays[i]
+            if display == 2 and share not in fbModes:
+                LOG_ERR('Monster drop displayMode ground requires first blood share', self.monsterId, rewardId, share)
+                display = 0
+            if display == 2 and share in fbModes:
+                owner = fbAvatar or killerAvatar
+                if owner:
+                    self._spawnShareGroundDrops(owner, rewardId, share, dropCtx)
+                else:
+                    LOG_ERR('Monster first blood ground drop missing owner', self.monsterId, rewardId)
+                continue
+            # 尾刀归属1、首刀归属3的进包奖励按锁定队伍拆份。地上采集物仍走上面的归属保护。
+            if share == gameconst.DropShareRewardType.RANDOM_ONE:
+                splitTailIds.append(rewardId)
+                splitTailDisplays.append(display)
+                continue
+            if share == gameconst.DropShareRewardType.FIRST_BLOOD_3:
+                splitFbIds.append(rewardId)
+                splitFbDisplays.append(display)
+                continue
+            if share in fbModes:
+                fbIds.append(rewardId)
+                fbShares.append(gameconst.DropShareRewardType.SELF)
+                fbDisplays.append(display)
+            else:
+                tailIds.append(rewardId)
+                tailShares.append(share)
+                tailDisplays.append(display)
+        expIsFb = expMode in fbModes
+        self.doDispatchAward(killerAvatar, tailIds, tailShares, tailDisplays, dropCtx, None if expIsFb else expMode, not expIsFb)
+        # 尾刀归属1、首刀归属3的进包：死亡时的名单每人按本人结算一份，再乘 1/人数。
+        for gbIds, rewardIds, rewardDisplays in (
+                (tailGbIds, splitTailIds, splitTailDisplays),
+                (fbGbIds, splitFbIds, splitFbDisplays)):
+            if not rewardIds or not gbIds:
+                continue
+            dropCtx.addContextVar('teamShareRatio', 1.0 / len(gbIds))
+            selfShares = [gameconst.DropShareRewardType.SELF] * len(rewardIds)
+            LOG_INFO('Monster team share bag', self.monsterId, len(gbIds), gbIds, rewardIds)
+            for gbId in gbIds:
+                self.doDispatchAward(utils.getAvatarByGbId(gbId), rewardIds, selfShares, rewardDisplays, dropCtx, None, False)
+            dropCtx.extra.pop('teamShareRatio', None)
+        # 首刀2：进包奖励给归属队伍随机一人，经验在归属队伍内平分
+        # 首刀3：进包已按锁定队伍拆份；经验仍在归属队伍内平分
+        if expMode in (gameconst.DropShareRewardType.FIRST_BLOOD_2, gameconst.DropShareRewardType.FIRST_BLOOD_3):
+            if fbIds:
+                fbReceiver = self._randomTeamOrRaidAvatar(fbAvatar or killerAvatar)
+                self.doDispatchAward(fbReceiver, fbIds, fbShares, fbDisplays, dropCtx, None, False)
+            self.doDispatchAward(fbAvatar or killerAvatar, [], [], [], dropCtx, expMode, True)
+        elif fbIds or expIsFb:
+            fbReceiver = self._randomTeamOrRaidAvatar(fbAvatar or killerAvatar)
+            self.doDispatchAward(fbReceiver, fbIds, fbShares, fbDisplays, dropCtx, gameconst.DropShareRewardType.SELF if expIsFb else None, expIsFb)
+
+    def _spawnShareGroundDrops(self, owner, rewardId, shareMode, dropCtx):
+        # 非主分线掉落系数：0 不掉任何，直接跳过整轮奖励生成；1 完整掉落；0.3 表示掉落产物按 0.3 缩放
+        branchRatio = utils.getMonsterBranchDropRatio(self.monsterId, self.spaceNo)
+        if not branchRatio:
+            LOG_DBG("FB branch drop rate is 0, skip ground drop", self.monsterId, self.spaceNo)
+            return
+        award = dropAward.getAwardOne(rewardId, owner.getAvatarAwardCtxCell(rewardId, dropCtx))
+        if branchRatio != 1.0:
+            LOG_DBG("FB branch drop ratio", self.monsterId, self.spaceNo, branchRatio)
+            award *= branchRatio
+        worldRatio = utils.getMonsterWorldLevelDropRatio(self.monsterId, self.level)
+        if worldRatio != 1.0:
+            award *= worldRatio
+            LOG_INFO("FB worldLevel drop ratio", self.monsterId, self.level, utils.getWorldLevel(), worldRatio)
+        timeRatio = utils.getMonsterTimePeriodDropRatio(self.monsterId)
+        if timeRatio != 1.0:
+            award *= timeRatio
+            LOG_INFO("FB timePeriod drop ratio", self.monsterId, timeRatio)
+        peakRatio = utils.getMonsterOnlinePeakDropRatio(self.monsterId)
+        if peakRatio != 1.0:
+            award *= peakRatio
+            LOG_INFO("FB onlinePeak drop ratio", self.monsterId, peakRatio)
+        items = award.itemWealth.getItemObjs() + award.petItemWealth.getItemObjs()
+        dropItems = []
+        maxBoxRadius = 0
+        for item in items:
+            itemData = dataUtils.getCommItemData(item.itemId) or {}
+            dropId = itemData.get('dropID', 0) or 0
+            if not dropId or dropId not in NPD.datas:
+                LOG_ERR('first blood item missing dropID', self.monsterId, rewardId, item.itemId, dropId)
+                continue
+            chestRadius = NPD.datas[dropId].get('chestRadius', 0)
+            if chestRadius > maxBoxRadius:
+                maxBoxRadius = chestRadius
+            if itemData.get('ifStacked') == 1:
+                dropItems.append((item, dropId, item.itemNum))
+            else:
+                spawnNum = int(item.itemNum)
+                if spawnNum > 20:
+                    LOG_ERR('first blood unstacked drop exceed max', self.monsterId, rewardId, item.itemId, spawnNum)
+                    spawnNum = 20
+                for _ in range(spawnNum):
+                    dropItems.append((item, dropId, 1))
+        if not dropItems:
+            return
+        baseRadius = NPC_PC.datas['pickupPermissionRange']['value']
+        baseNum = NPC_PC.datas['pickupPermissionNum']['value'] or 1
+        radius = math.ceil(baseRadius * math.sqrt(len(dropItems) / baseNum))
+        posList = self.getRandomPositionByBoxRadius(self.position, radius, maxBoxRadius, len(dropItems))
+        coeffType = self.getCreepData().get('coefficientType', 0)
+        fbTimes = CCF.datas.get(coeffType, {}).get('pickupPermissionTime') or ()
+        fbTime = sum(fbTimes)
+        validTime = NPC_PC.datas['pickupPermissionValidTime']['value']
+        for j, (item, dropId, count) in enumerate(dropItems):
+            extra = {
+                "needFBTarget": True,
+                "FBTime": fbTime,
+                "FBItemId": item.itemId,
+                "fBItemNum": count,
+                "fromMonsterId": self.id,
+                "fromCreepId": self.monsterId,
+                "FBPos": posList[j] if j < len(posList) else self.position,
+                "FBBind": item.bindType,
+                "fbShareMode": shareMode,
+            }
+            if shareMode == gameconst.DropShareRewardType.FIRST_BLOOD_3:
+                extra["FBStrongTime"] = fbTimes[0] if fbTimes else 0
+            self.deathCreateCollection(radius, ((1, 1),), ((1, dropId),), validTime, extra)
+
+    def doDispatchAward(self, killer, deathDropIds, shareRewardIds, displayModes, dropCtx, expShareMode=None, applyExp=True):
         LOG_DBG("Monster-->doDispatchAward 1 ", killer, deathDropIds, shareRewardIds, displayModes)
-        if killer:
-            if killer.IsAvatar:
-                killer.preAwardOnKillMonster(dropCtx, deathDropIds, shareRewardIds, displayModes)
-            elif killer.IsSummon or killer.IsCreation:
-                hostRole = KBEngine.entities.get(killer.hostId, None)
-                if hostRole and hostRole.IsAvatar:
-                    hostRole.preAwardOnKillMonster(dropCtx, deathDropIds, shareRewardIds, displayModes)
+        if not killer or (not deathDropIds and not applyExp):
+            return
+        if killer.IsAvatar:
+            killer.preAwardOnKillMonster(dropCtx, deathDropIds, shareRewardIds, displayModes, expShareMode, applyExp)
+        elif killer.IsSummon or killer.IsCreation:
+            hostRole = KBEngine.entities.get(killer.hostId, None)
+            if hostRole and hostRole.IsAvatar:
+                hostRole.preAwardOnKillMonster(dropCtx, deathDropIds, shareRewardIds, displayModes, expShareMode, applyExp)
 
     def onBeAttacked(self, arg):
         self._addAttackAvatarId(arg.triggerRoleId)
@@ -774,11 +994,9 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
                     continue
 
             triggerTaskAvatars[attackerId] = ent
-            for _member in ent.teamInfo.teamPlayerDict.values():
-                if not _member.playerBox:
-                    continue
-
-                _player = KBEngine.entities.get(_member.playerBox.id, None)
+            # 本服组队/团已废弃，队友集合统一走跨服队访问层
+            for _memberGbId in ent.getTeammateGbIdSet():
+                _player = utils.getAvatarByGbId(_memberGbId)
                 if not _player:
                     continue
 
@@ -808,6 +1026,9 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
 
         if not host.IsAvatar:
             return
+
+        # 玩家攻击参与互斥的 boss 时，在怪物上记录战斗标记
+        self.addBossMutexMark(host.gbId)
 
         self.beAttackAvatarIds[host.id] = utils.curTS()
         _now = utils.curTS()
@@ -858,7 +1079,7 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         self.aiController = aiController.AIControllerCls(
             self.id, 
             self.aiName,
-            C_BD.datas[self.monsterId].get('activeAttack', 0) == 1)
+            self.checkActiveAttack())
 
         if not self.aiController:
             return
@@ -918,22 +1139,12 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
         super().onEntityRefresh(self.spaceNo, _refreshTime)
 
     def onBeMarkedAsEnemy(self, teamId, teamType, index):
-        if teamType == gameconst.TeamType.TEAM:
-            self.teamMarkDict[teamId] = index
-        elif teamType == gameconst.TeamType.RAID:
-            self.raidMarkDict[teamId] = index
-        elif teamType == gameconst.TeamType.CROSS_TEAM:
+        if teamType == gameconst.TeamType.CROSS_TEAM:
             self.crossTeamMarkDict[teamId] = index
         LOG_DBG("Monster::onBeMarkedAsEnemy: {}, {}, {}, {}".format(self.id, teamId, teamType, index))
 
     def delBeMarkedAsEnemy(self, teamId, teamType):
-        if teamType == gameconst.TeamType.TEAM:
-            if teamId in self.teamMarkDict:
-                self.teamMarkDict.pop(teamId)
-        elif teamType == gameconst.TeamType.RAID:
-            if teamId in self.raidMarkDict:
-                self.raidMarkDict.pop(teamId)
-        elif teamType == gameconst.TeamType.CROSS_TEAM:
+        if teamType == gameconst.TeamType.CROSS_TEAM:
             if teamId in self.crossTeamMarkDict:
                 self.crossTeamMarkDict.pop(teamId)
         LOG_DBG("Monster::delBeMarkedAsEnemy: {}, {}, {}".format(self.id, teamId, teamType))
@@ -1004,9 +1215,13 @@ class Monster(iAICombatUnit.IAICombatUnit, iTimer.ITimer, EventMgr.EventMgr, iFu
             self.coefficientTimer = None
     
     def isFirstBloodRewardMonster(self):
-        shareRewardIDList = self.getCreepData().get('shareReward', [])
-        LOG_INFO("isFirstBloodRewardMonster", gameconst.DropShareRewardType.FIRST_BLOOD in shareRewardIDList, shareRewardIDList)
-        return gameconst.DropShareRewardType.FIRST_BLOOD in shareRewardIDList
+        shareRewardIDList, _, expMode = self._coefficientDropModes()
+        fbModes = (gameconst.DropShareRewardType.FIRST_BLOOD, gameconst.DropShareRewardType.FIRST_BLOOD_2, gameconst.DropShareRewardType.FIRST_BLOOD_3)
+        coeffType = self.getCreepData().get('coefficientType', 0)
+        ifDisplayOwner = CCF.datas.get(coeffType, {}).get('ifDisplayOwner', 0)
+        isFb = ifDisplayOwner == 1 or expMode in fbModes or any(share in fbModes for share in shareRewardIDList)
+        LOG_INFO("isFirstBloodRewardMonster", isFb, shareRewardIDList, ifDisplayOwner)
+        return isFb
 
     def resetFirstBlood(self):
         if not self.isFirstBloodMonster:

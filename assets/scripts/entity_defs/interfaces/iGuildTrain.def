@@ -34,6 +34,12 @@
             <Arg>       PYTHON          </Arg>
             <Arg>       INT64           </Arg>
         </onResetGuildTrain>
+
+        <gmSetGuildTrainLevelCell>
+            <Arg>       OBJECT_ID       </Arg>
+            <Arg>       LEVEL           </Arg>
+            <Arg>       LEVEL           </Arg>
+        </gmSetGuildTrainLevelCell>
     </CellMethods>
 
     <ClientMethods>

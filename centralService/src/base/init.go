@@ -13,33 +13,47 @@ import (
 )
 
 func Init(config interface{}, serverInstance func() common.IApp) bool {
+	// 最早的一行启动日志：此时配置没读、zap 也没起，只能走 stdout，
+	// 但它是"进程确实被 systemd 拉起来了"的唯一证据，配置丢失时尤其重要
+	appLog.BootBegin()
+
 	ret := initCfg(config)
 	if !ret {
+		appLog.BootFailed("init_config")
 		return ret
 	}
 
 	cfg := common.GetServerCfg()
 	if nil == cfg {
 		log.Println("base server init fail:", "server config is not inited properly")
+		appLog.BootFailed("init_config")
 		return false
 	}
 
 	ret = initLog(cfg)
 	if !ret {
+		appLog.BootFailed("init_log")
 		return ret
 	}
 
+	// 配置已读到、业务日志已就绪，回填 serverName/serverId，
+	// 让后续的 ready / failed / exit 行带上完整标识
+	appLog.SetBootServerInfo(cfg.GetString("serverName"), cfg.GetInt("serverId"))
+
 	ret = initCommon(cfg)
 	if !ret {
+		appLog.BootFailed("init_common")
 		return ret
 	}
 
 	ret = initReport(cfg)
 	if !ret {
+		appLog.BootFailed("init_report")
 		return ret
 	}
 	ret = initServer(serverInstance)
 	if !ret {
+		appLog.BootFailed("init_server")
 		return ret
 	}
 	return ret
@@ -72,6 +86,9 @@ func initCommon(cfg *viper.Viper) bool {
 	ok := common.WritePidFile()
 	if !ok {
 		log.Println("base server init fail:", "common init failed")
+		// 这里不能走 common.ExitProgram：它会删 pid 文件，而写失败恰恰说明
+		// 该文件属于另一个还活着的进程，删掉等于把别人踢出保护
+		appLog.BootFailed("write_pid_file")
 		os.Exit(2)
 	}
 
@@ -150,10 +167,16 @@ func getLocalIPv4Addresses() ([]string, error) {
 
 func initServer(serverInstance func() common.IApp) bool {
 	app := serverInstance()
-	if app != nil {
-		common.Run(app)
-	} else {
-		common.ExitProgram(1)
+	if app == nil {
+		appLog.BootFailed("app_init_return_nil")
+		common.ExitProgram(1, "app_init_return_nil")
 	}
+
+	common.Run(app)
+
+	// Run 返回说明服务循环已经结束（正常情况不会走到这里）。
+	// 补一条 exit 并标记干净退出，让 starting / exit 能配对、下次 prev=clean。
+	appLog.BootExit(0, "run_returned")
+	appLog.MarkCleanExit()
 	return true
 }

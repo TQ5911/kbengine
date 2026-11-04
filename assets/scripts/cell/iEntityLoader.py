@@ -10,7 +10,7 @@ import gameengine
 import gameconfig
 import BalancedObjectGenerator
 import creep_base as CBD
-import branchData_set as BDS
+import creep_title as CTD
 import branchData_branchData as B_BD
 
 
@@ -162,14 +162,18 @@ class IEntityLoader(object):
 
     def doLoadEntitiesEnd(self):
         LOG_DBG("iEntityLoader doLoadEntitiesEnd ", self.spaceNo)
+        notify = False
         if formula.inWonderLandScene(self.spaceNo):
+            notify = True
             gameengine.getWonderLandStubBySpaceNo(self.spaceNo).onLoadEntitiesEnd(self.spaceNo)
 
         elif formula.inWorldLineScene(self.spaceNo):
+            notify = True
             lineType = formula.fetchMapId(self.spaceNo)
             gameengine.getLineStub(lineType).onLoadEntitiesEnd(self.spaceNo)
 
         elif formula.inCubeScene(self.spaceNo):
+            notify = True
             gameengine.getCubeStubBySpaceNo(self.spaceNo).onLoadEntitiesEnd(self.spaceNo)
 
         elif formula.inSiegeWarScene(self.spaceNo):
@@ -180,9 +184,21 @@ class IEntityLoader(object):
         else:
             LOG_INFO('iEntityLoader::doLoadEntitiesEnd::unknown space type', self.spaceNo)
 
+        if notify and KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_GAME_READY):
+            gameengine.getGlobalBase('WorldRefreshEntityStub').onSpaceCellAppRelive(self.spaceNo)
+            utils.randomBaseApp().notifyStubGameCfgInited(formula.parseLineType(self.spaceNo), formula.parseLineNo(self.spaceNo))
+
     def doEntityRefresh(self, gameEntityId, spaceMgrId, pointData):
         _entityProps = []
         utils.loadLineReadyEntities(self.spaceNo, [gameEntityId], _entityProps, True)
+
+        # 死亡后的刷新需要按"本身等级与世界等级差值"判定刷新概率，判定失败按新刷新间隔顺延到下一次
+        # 分线怪物按 refreshRateWorldLevelOnBranch 判定，1 线/非分线按 refreshRateWorldLevel
+        _canRefresh, _retryRefreshTime = utils.checkRefreshRateByWorldLevel(_entityProps, self.spaceNo)
+        if not _canRefresh:
+            self.addEntityRefreshTimer(gameEntityId, spaceMgrId, pointData, _retryRefreshTime)
+            return
+
         for _, _, _className, _, _pos, _dir, _params, _ in _entityProps:
             spaceMgr = None
             if spaceMgrId:
@@ -196,6 +212,19 @@ class IEntityLoader(object):
                 self.createCellLocally(_className, _pos, _dir, _params)
 
         self.removeEntityRefreshTimer(gameEntityId, spaceMgrId, pointData)
+
+    def addEntityRefreshTimer(self, gameEntityId, spaceMgrId, pointData, refreshTime):
+        LOG_INFO("addEntityRefreshTimer", gameEntityId, spaceMgrId, pointData, refreshTime)
+        timerId = self.addTimerCB(refreshTime, 'doEntityRefresh', (gameEntityId, spaceMgrId, pointData),
+                                  gametimer.TIMER_TAG_SPACE_DO_REFRESH)
+        pointData["refreshTimerId"] = timerId
+        if not spaceMgrId:
+            return
+        spaceMgr = KBEngine.entities.get(spaceMgrId)
+        if not spaceMgr:
+            return
+        gid = utils.parseGidFromGameEntityId(gameEntityId)
+        spaceMgr.onAddEntityRefreshTimer(gid, timerId)
 
     def removeEntityRefreshTimer(self, gameEntityId, spaceMgrId, pointData):
         LOG_DBG("removeEntityRefreshTimer", gameEntityId, spaceMgrId, pointData)
@@ -284,7 +313,7 @@ class IEntityLoader(object):
                 if entityID in CBD.datas:
                     nameSuffixID = CBD.datas[entityID]['nameSuffixID']
 
-                if nameSuffixID in BDS.datas["Branch_creepNotRefresh"]["value"] and lineNo != 0 and lineNo != -1:
+                if not CTD.datas.get(nameSuffixID, {}).get('ifBranchRefresh', 1) and lineNo != 0 and lineNo != -1:
                     LOG_DBG("skip create monster", spaceNo, entityID, nameSuffixID, lineNo)
                     continue
 
@@ -301,7 +330,7 @@ class IEntityLoader(object):
             count_ = int(_d.get('RefreshNum', 1))
 
             if not count_:
-                LOG_WARN("loadTimerEntities::RefreshNum not exist",spaceNo)
+                LOG_ERR("看到这条报错请联系策划，这个怪没有配置刷新数量:", spaceNo, id_, className)
                 continue
 
             if count_ > 999:

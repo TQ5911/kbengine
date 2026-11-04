@@ -15,20 +15,12 @@
         <mallItemPriceDict>
             <Type>          PY_DICT                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>    true                    </Persistent>
         </mallItemPriceDict>
 
         <mallItemLastUpdateTime>
             <Type>          PY_DICT                 </Type>
             <Flags>         BASE                    </Flags>
-            <Persistent>    true                    </Persistent>
         </mallItemLastUpdateTime>
-
-        <auctionSnatchRecords>
-            <Type>          PY_DICT                 </Type>
-            <Flags>         BASE                    </Flags>
-            <Persistent>    true                    </Persistent>
-        </auctionSnatchRecords>
     </Properties>
 
     <BaseMethods>

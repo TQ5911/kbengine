@@ -176,6 +176,20 @@
             <Arg>      ARRAY <of> UINT8     </of>   </Arg>
         </bagEquipSoulSocket>
 
+        <bodyEquipSoulSocket>
+            <Arg>      UINT8                        </Arg> <!-- equipQuality -->
+            <Arg>      UINT8                        </Arg> <!-- equipType -->
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      PYTHON                       </Arg>
+            <Arg>      PYTHON                       </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      BONUS_SRC                    </Arg>
+            <Arg>      PYTHON                       </Arg>
+            <Arg>      METHOD_ARGS                  </Arg>
+        </bodyEquipSoulSocket>
+
         <bagEquipSoulSocketDeductItemsCB>
             <Arg>      OP_STAT      </Arg>
             <Arg>      UINT16       </Arg>
@@ -184,6 +198,220 @@
             <Arg>      GRIDID       </Arg>
             <Arg>      GRIDID       </Arg>
         </bagEquipSoulSocketDeductItemsCB>
+
+        <reqSoulWash> <Exposed/>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+        </reqSoulWash>
+
+        <bagSoulWashDeductCB>
+            <Arg>      OP_STAT      </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UUID         </Arg>
+        </bagSoulWashDeductCB>
+
+        <reqSoulWashConfirm> <Exposed/>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UUID         </Arg>
+        </reqSoulWashConfirm>
+
+        <reqSoulWashDiscard> <Exposed/>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UUID         </Arg>
+        </reqSoulWashDiscard>
+
+        <reqSoulClash> <Exposed/>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+        </reqSoulClash>
+
+        <bagSoulClashDeductCB>
+            <Arg>      OP_STAT      </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      UINT8        </Arg>
+        </bagSoulClashDeductCB>
+
+        <reqSoulClashConfirm> <Exposed/>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UUID         </Arg>
+        </reqSoulClashConfirm>
+
+        <reqSoulClashDiscard> <Exposed/>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UUID         </Arg>
+        </reqSoulClashDiscard>
+
+        <reqSoulDefReplace> <Exposed/>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+        </reqSoulDefReplace>
+
+        <bagSoulDefReplaceDeductCB>
+            <Arg>      OP_STAT      </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      UINT8        </Arg>
+        </bagSoulDefReplaceDeductCB>
+
+        <bagEquipSoulWash>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+        </bagEquipSoulWash>
+
+        <bagEquipSoulWashDeductCB>
+            <Arg>      OP_STAT      </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      UINT32       </Arg>
+            <Arg>      UUID         </Arg>
+        </bagEquipSoulWashDeductCB>
+
+        <bagEquipSoulWashConfirm>
+            <Arg>      UINT32       </Arg>
+            <Arg>      UUID         </Arg>
+        </bagEquipSoulWashConfirm>
+
+        <bagEquipSoulWashDiscard>
+            <Arg>      UINT32       </Arg>
+            <Arg>      UUID         </Arg>
+        </bagEquipSoulWashDiscard>
+
+        <bodyEquipSoulWash>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+        </bodyEquipSoulWash>
+
+        <bagEquipSoulClash>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+        </bagEquipSoulClash>
+
+        <bagEquipSoulClashDeductCB>
+            <Arg>      OP_STAT      </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      UINT32       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      UINT8        </Arg>
+        </bagEquipSoulClashDeductCB>
+
+        <bagEquipSoulClashConfirm>
+            <Arg>      UINT32       </Arg>
+            <Arg>      UUID         </Arg>
+        </bagEquipSoulClashConfirm>
+
+        <bagEquipSoulClashDiscard>
+            <Arg>      UINT32       </Arg>
+            <Arg>      UUID         </Arg>
+        </bagEquipSoulClashDiscard>
+
+        <bodyEquipSoulClash>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      ITEM_ID                      </Arg>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+            <Arg>      UINT8                        </Arg>
+        </bodyEquipSoulClash>
+
+        <bodyEquipSoulClashDeductCB>
+            <Arg>      OP_STAT      </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      UINT32       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      ITEM_ID      </Arg>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      UINT8        </Arg>
+            <Arg>      UINT8        </Arg>
+        </bodyEquipSoulClashDeductCB>
+
+        <bagEquipSoulDefReplace>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+        </bagEquipSoulDefReplace>
+
+        <bagEquipSoulDefReplaceDeductCB>
+            <Arg>      OP_STAT      </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      UINT32       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      UINT8        </Arg>
+        </bagEquipSoulDefReplaceDeductCB>
+
+        <bodyEquipSoulDefReplace>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      ITEM_ID                      </Arg>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+            <Arg>      UINT8                        </Arg>
+        </bodyEquipSoulDefReplace>
+
+        <bodyEquipSoulDefReplaceDeductCB>
+            <Arg>      OP_STAT      </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UINT16       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      UINT32       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      ITEM_ID      </Arg>
+            <Arg>      GRIDID       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      UINT8        </Arg>
+            <Arg>      UINT8        </Arg>
+        </bodyEquipSoulDefReplaceDeductCB>
 
         <bagEquipGlyphWashing>
             <Arg>      GRIDID                       </Arg>
@@ -296,6 +524,7 @@
             <Arg>       OBJECT_ID           </Arg>
             <Arg>       LONGTIME            </Arg>
             <Arg>       BOOL                </Arg>
+            <Arg>       SERVER_ID           </Arg>
         </onDropEquipBase>
 
         <onGetBackDropEquip>
@@ -524,6 +753,81 @@
             <Arg>      ARRAY <of> UINT8     </of>   </Arg>
         </reqEquipSoulSocket>
 
+        <reqEquipSoulWash> <Exposed/>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+        </reqEquipSoulWash>
+
+        <reqEquipSoulWashConfirm> <Exposed/>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UUID                         </Arg>
+        </reqEquipSoulWashConfirm>
+
+        <reqEquipSoulWashDiscard> <Exposed/>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UUID                         </Arg>
+        </reqEquipSoulWashDiscard>
+
+        <cellEquipSoulWashPreview>
+            <Arg>      UINT8       </Arg>
+            <Arg>      UINT16      </Arg>
+            <Arg>      UINT16      </Arg>
+            <Arg>      UUID        </Arg>
+            <Arg>      UINT32      </Arg>
+            <Arg>      UUID        </Arg>
+        </cellEquipSoulWashPreview>
+
+        <reqEquipSoulClash> <Exposed/>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+        </reqEquipSoulClash>
+
+        <reqEquipSoulClashConfirm> <Exposed/>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UUID                         </Arg>
+        </reqEquipSoulClashConfirm>
+
+        <reqEquipSoulClashDiscard> <Exposed/>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UUID                         </Arg>
+        </reqEquipSoulClashDiscard>
+
+        <cellEquipSoulClashPreview>
+            <Arg>      UINT8       </Arg>
+            <Arg>      UINT32      </Arg>
+            <Arg>      UUID        </Arg>
+            <Arg>      PYTHON      </Arg>
+        </cellEquipSoulClashPreview>
+
+        <reqEquipSoulDefReplace> <Exposed/>
+            <Arg>      UINT8                        </Arg>
+            <Arg>      UINT32                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      GRIDID                       </Arg>
+            <Arg>      UUID                         </Arg>
+            <Arg>      ARRAY <of> ITEM_ID   </of>   </Arg>
+            <Arg>      ARRAY <of> UINT8     </of>   </Arg>
+        </reqEquipSoulDefReplace>
+
+        <cellEquipSoulDefReplace>
+            <Arg>      UINT8        </Arg>
+            <Arg>      UINT32       </Arg>
+            <Arg>      UUID         </Arg>
+            <Arg>      UINT8        </Arg>
+        </cellEquipSoulDefReplace>
+
         <reqEquipGlyphWashing> <Exposed/>
             <Arg>      UINT8                        </Arg>
             <Arg>      UINT16                       </Arg>
@@ -695,6 +999,51 @@
             <Arg>   ITEM_ID  </Arg>
             <Arg>   UNIQUE_ID   </Arg>
         </cellGmQueryEquip>
+
+        <cellGmSetEquipEnhance>
+            <Arg>   PYTHON  </Arg>
+            <Arg>   ITEM_ID  </Arg>
+            <Arg>   UNIQUE_ID   </Arg>
+            <Arg>   UINT32  </Arg>
+            <Arg>   INT32  </Arg>
+            <Arg>   UINT8  </Arg>
+        </cellGmSetEquipEnhance>
+
+        <cellGmSetEquipGrade>
+            <Arg>   PYTHON  </Arg>
+            <Arg>   ITEM_ID  </Arg>
+            <Arg>   UNIQUE_ID   </Arg>
+            <Arg>   UINT32  </Arg>
+            <Arg>   INT32  </Arg>
+        </cellGmSetEquipGrade>
+
+        <cellGmSetEquipSpirit>
+            <Arg>   PYTHON  </Arg>
+            <Arg>   ITEM_ID  </Arg>
+            <Arg>   UNIQUE_ID   </Arg>
+            <Arg>   UINT8  </Arg>
+            <Arg>   STRING  </Arg>
+            <Arg>   INT32  </Arg>
+        </cellGmSetEquipSpirit>
+
+        <cellGmSetEquipGlyph>
+            <Arg>   PYTHON  </Arg>
+            <Arg>   ITEM_ID  </Arg>
+            <Arg>   UNIQUE_ID   </Arg>
+            <Arg>   UINT8  </Arg>
+            <Arg>   STRING  </Arg>
+            <Arg>   INT32  </Arg>
+        </cellGmSetEquipGlyph>
+
+        <cellGmSetEquipBless>
+            <Arg>   PYTHON  </Arg>
+            <Arg>   ITEM_ID  </Arg>
+            <Arg>   UNIQUE_ID   </Arg>
+            <Arg>   UINT32  </Arg>
+            <Arg>   INT32  </Arg>
+            <Arg>   INT32  </Arg>
+            <Arg>   INT32  </Arg>
+        </cellGmSetEquipBless>
 
         <cellGmCheckRestoreEquip>
             <Arg>   PYTHON  </Arg>
@@ -924,7 +1273,133 @@
             <Arg>      UINT8            </Arg>
             <Arg>      UINT8            </Arg>
             <Arg>      ITEMID           </Arg>
+            <Arg>      UINT8            </Arg> <!-- soulDefLevel -->
+            <Arg>      ARRAY <of>  SOUL_AFFIX_VAL </of>  </Arg> <!-- soulRareAffixes -->
+            <Arg>      ARRAY <of>  SOUL_AFFIX_VAL </of>  </Arg> <!-- soulLuckyAffix -->
+            <Arg>      UINT8            </Arg> <!-- bindFromWash -->
+            <Arg>      UINT8            </Arg> <!-- bindFromClash -->
+            <Arg>      UINT8            </Arg> <!-- bindFromInherit -->
         </onEquipSoulSocketSucc>
+
+        <onSoulWashPreview>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      GRIDID                           </Arg>
+            <Arg>      UUID                             </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      ARRAY <of>  SOUL_AFFIX_VAL </of> </Arg>
+            <Arg>      ARRAY <of>  SOUL_AFFIX_VAL </of> </Arg>
+        </onSoulWashPreview>
+
+        <onSoulWashConfirm>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      GRIDID                           </Arg>
+            <Arg>      UUID                             </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      ARRAY <of>  SOUL_AFFIX_VAL </of> </Arg>
+            <Arg>      ARRAY <of>  SOUL_AFFIX_VAL </of> </Arg>
+        </onSoulWashConfirm>
+
+        <onSoulWashDiscardResult>
+            <Arg>      GRIDID                           </Arg>
+            <Arg>      UUID                             </Arg>
+            <Arg>      UINT8                            </Arg>
+        </onSoulWashDiscardResult>
+
+        <onEquipSoulWashPreview>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT32                           </Arg>
+            <Arg>      UUID                             </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      ARRAY <of>  SOUL_AFFIX_VAL </of> </Arg>
+            <Arg>      ARRAY <of>  SOUL_AFFIX_VAL </of> </Arg>
+            <Arg>      UINT8                            </Arg> <!-- materialBound -->
+        </onEquipSoulWashPreview>
+
+        <onEquipSoulWashConfirm>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT32                           </Arg>
+            <Arg>      UUID                             </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      ARRAY <of>  SOUL_AFFIX_VAL </of> </Arg>
+            <Arg>      ARRAY <of>  SOUL_AFFIX_VAL </of> </Arg>
+            <Arg>      UINT8                            </Arg> <!-- soulBindFromWash -->
+        </onEquipSoulWashConfirm>
+
+        <onEquipSoulWashDiscardResult>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT32                           </Arg>
+            <Arg>      UUID                             </Arg>
+            <Arg>      UINT8                            </Arg>
+        </onEquipSoulWashDiscardResult>
+
+        <onSoulClashPreview>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      GRIDID                           </Arg>
+            <Arg>      UUID                             </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      ARRAY <of>  SOUL_AFFIX_VAL </of> </Arg>
+        </onSoulClashPreview>
+
+        <onSoulClashConfirm>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      GRIDID                           </Arg>
+            <Arg>      UUID                             </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      ARRAY <of>  SOUL_AFFIX_VAL </of> </Arg>
+        </onSoulClashConfirm>
+
+        <onSoulClashDiscardResult>
+            <Arg>      GRIDID                           </Arg>
+            <Arg>      UUID                             </Arg>
+            <Arg>      UINT8                            </Arg>
+        </onSoulClashDiscardResult>
+
+        <onEquipSoulClashPreview>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT32                           </Arg>
+            <Arg>      UUID                             </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      ARRAY <of>  SOUL_AFFIX_VAL </of> </Arg>
+            <Arg>      UINT8                            </Arg> <!-- materialBound -->
+        </onEquipSoulClashPreview>
+
+        <onEquipSoulClashConfirm>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT32                           </Arg>
+            <Arg>      UUID                             </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      ARRAY <of>  SOUL_AFFIX_VAL </of> </Arg>
+            <Arg>      UINT8                            </Arg> <!-- soulBindFromClash -->
+        </onEquipSoulClashConfirm>
+
+        <onEquipSoulClashDiscardResult>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT32                           </Arg>
+            <Arg>      UUID                             </Arg>
+            <Arg>      UINT8                            </Arg>
+        </onEquipSoulClashDiscardResult>
+
+        <onSoulDefReplace>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      GRIDID                           </Arg>
+            <Arg>      UUID                             </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT8                            </Arg>
+        </onSoulDefReplace>
+
+        <onEquipSoulDefReplace>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT32                           </Arg>
+            <Arg>      UUID                             </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT8                            </Arg>
+            <Arg>      UINT8                            </Arg> <!-- soulBindFromInherit -->
+        </onEquipSoulDefReplace>
 
         <onSetEquipTakeInfo>
             <Arg>   UNIQUE_ID           </Arg>

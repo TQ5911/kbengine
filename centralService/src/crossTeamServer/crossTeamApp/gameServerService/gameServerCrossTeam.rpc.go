@@ -181,6 +181,13 @@ func CrossTeamServer_ReportMemberStateBatch_Handler(endPoint prpc.IEndPoint, dec
     }
     return endPoint.(ICrossTeamServerInterface).ReportMemberStateBatch(in)
 }
+func CrossTeamServer_RenameMember_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(RenameMemberRequest)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(ICrossTeamServerInterface).RenameMember(in)
+}
 func CrossTeamServer_TeamChatMsg_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
     in := new(TeamChatMsgRequest)
     if err := dec(in); err != nil {
@@ -443,98 +450,103 @@ var CrossTeamServerServiceDesc = prpc.ServiceDesc{
             Handler:     CrossTeamServer_ReportMemberStateBatch_Handler,
         },
         {
-            MethodName:  "TeamChatMsg",
+            MethodName:  "RenameMember",
             MethodIndex: 25,
+            Handler:     CrossTeamServer_RenameMember_Handler,
+        },
+        {
+            MethodName:  "TeamChatMsg",
+            MethodIndex: 26,
             Handler:     CrossTeamServer_TeamChatMsg_Handler,
         },
         {
             MethodName:  "StartCrusade",
-            MethodIndex: 26,
+            MethodIndex: 27,
             Handler:     CrossTeamServer_StartCrusade_Handler,
         },
         {
             MethodName:  "CrusadeCheckResult",
-            MethodIndex: 27,
+            MethodIndex: 28,
             Handler:     CrossTeamServer_CrusadeCheckResult_Handler,
         },
         {
             MethodName:  "CrusadeSpaceReady",
-            MethodIndex: 28,
+            MethodIndex: 29,
             Handler:     CrossTeamServer_CrusadeSpaceReady_Handler,
         },
         {
             MethodName:  "CrusadeFinished",
-            MethodIndex: 29,
+            MethodIndex: 30,
             Handler:     CrossTeamServer_CrusadeFinished_Handler,
         },
         {
             MethodName:  "MemberOffline",
-            MethodIndex: 30,
+            MethodIndex: 31,
             Handler:     CrossTeamServer_MemberOffline_Handler,
         },
         {
             MethodName:  "SetMicsMode",
-            MethodIndex: 31,
+            MethodIndex: 32,
             Handler:     CrossTeamServer_SetMicsMode_Handler,
         },
         {
             MethodName:  "BlockMic",
-            MethodIndex: 32,
+            MethodIndex: 33,
             Handler:     CrossTeamServer_BlockMic_Handler,
         },
         {
             MethodName:  "AdjustMemberPos",
-            MethodIndex: 33,
+            MethodIndex: 34,
             Handler:     CrossTeamServer_AdjustMemberPos_Handler,
         },
         {
             MethodName:  "SetVoiceState",
-            MethodIndex: 34,
+            MethodIndex: 35,
             Handler:     CrossTeamServer_SetVoiceState_Handler,
         },
         {
             MethodName:  "GetApplyList",
-            MethodIndex: 35,
+            MethodIndex: 36,
             Handler:     CrossTeamServer_GetApplyList_Handler,
         },
         {
             MethodName:  "AddMark",
-            MethodIndex: 36,
+            MethodIndex: 37,
             Handler:     CrossTeamServer_AddMark_Handler,
         },
         {
             MethodName:  "DelMark",
-            MethodIndex: 37,
+            MethodIndex: 38,
             Handler:     CrossTeamServer_DelMark_Handler,
         },
         {
             MethodName:  "SetOnlyCaptainMark",
-            MethodIndex: 38,
+            MethodIndex: 39,
             Handler:     CrossTeamServer_SetOnlyCaptainMark_Handler,
         },
         {
             MethodName:  "FollowAsk",
-            MethodIndex: 39,
+            MethodIndex: 40,
             Handler:     CrossTeamServer_FollowAsk_Handler,
         },
         {
             MethodName:  "ConvertTeam",
-            MethodIndex: 40,
+            MethodIndex: 41,
             Handler:     CrossTeamServer_ConvertTeam_Handler,
         },
         {
             MethodName:  "TeamUpInvite",
-            MethodIndex: 41,
+            MethodIndex: 42,
             Handler:     CrossTeamServer_TeamUpInvite_Handler,
         },
         {
             MethodName:  "ReplyTeamUpInvite",
-            MethodIndex: 42,
+            MethodIndex: 43,
             Handler:     CrossTeamServer_ReplyTeamUpInvite_Handler,
         },
         {
             MethodName:  "TeamUpJoinNotify",
-            MethodIndex: 43,
+            MethodIndex: 44,
             Handler:     CrossTeamServer_TeamUpJoinNotify_Handler,
         },
     },
@@ -651,80 +663,84 @@ func (self *CrossTeamServerClient) ReportMemberStateBatch(in *ReportMemberStateB
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[24], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) TeamChatMsg(in *TeamChatMsgRequest) (*Void, error) {
+func (self *CrossTeamServerClient) RenameMember(in *RenameMemberRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[25], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) StartCrusade(in *StartCrusadeRequest) (*Void, error) {
+func (self *CrossTeamServerClient) TeamChatMsg(in *TeamChatMsgRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[26], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) CrusadeCheckResult(in *CrusadeCheckResultRequest) (*Void, error) {
+func (self *CrossTeamServerClient) StartCrusade(in *StartCrusadeRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[27], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) CrusadeSpaceReady(in *CrusadeSpaceReadyRequest) (*Void, error) {
+func (self *CrossTeamServerClient) CrusadeCheckResult(in *CrusadeCheckResultRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[28], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) CrusadeFinished(in *CrusadeFinishedRequest) (*Void, error) {
+func (self *CrossTeamServerClient) CrusadeSpaceReady(in *CrusadeSpaceReadyRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[29], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) MemberOffline(in *MemberOfflineRequest) (*Void, error) {
+func (self *CrossTeamServerClient) CrusadeFinished(in *CrusadeFinishedRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[30], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) SetMicsMode(in *SetMicsModeRequest) (*Void, error) {
+func (self *CrossTeamServerClient) MemberOffline(in *MemberOfflineRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[31], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) BlockMic(in *BlockMicRequest) (*Void, error) {
+func (self *CrossTeamServerClient) SetMicsMode(in *SetMicsModeRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[32], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) AdjustMemberPos(in *AdjustMemberPosRequest) (*Void, error) {
+func (self *CrossTeamServerClient) BlockMic(in *BlockMicRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[33], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) SetVoiceState(in *SetVoiceStateRequest) (*Void, error) {
+func (self *CrossTeamServerClient) AdjustMemberPos(in *AdjustMemberPosRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[34], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) GetApplyList(in *GetApplyListRequest) (*Void, error) {
+func (self *CrossTeamServerClient) SetVoiceState(in *SetVoiceStateRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[35], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) AddMark(in *AddMarkRequest) (*Void, error) {
+func (self *CrossTeamServerClient) GetApplyList(in *GetApplyListRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[36], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) DelMark(in *DelMarkRequest) (*Void, error) {
+func (self *CrossTeamServerClient) AddMark(in *AddMarkRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[37], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) SetOnlyCaptainMark(in *SetOnlyCaptainMarkRequest) (*Void, error) {
+func (self *CrossTeamServerClient) DelMark(in *DelMarkRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[38], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) FollowAsk(in *FollowAskRequest) (*Void, error) {
+func (self *CrossTeamServerClient) SetOnlyCaptainMark(in *SetOnlyCaptainMarkRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[39], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) ConvertTeam(in *ConvertTeamRequest) (*Void, error) {
+func (self *CrossTeamServerClient) FollowAsk(in *FollowAskRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[40], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) TeamUpInvite(in *TeamUpInviteRequest) (*Void, error) {
+func (self *CrossTeamServerClient) ConvertTeam(in *ConvertTeamRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[41], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) ReplyTeamUpInvite(in *ReplyTeamUpInviteRequest) (*Void, error) {
+func (self *CrossTeamServerClient) TeamUpInvite(in *TeamUpInviteRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[42], in)
     return &Void{}, err
 }
-func (self *CrossTeamServerClient) TeamUpJoinNotify(in *TeamUpJoinNotifyRequest) (*Void, error) {
+func (self *CrossTeamServerClient) ReplyTeamUpInvite(in *ReplyTeamUpInviteRequest) (*Void, error) {
     err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[43], in)
+    return &Void{}, err
+}
+func (self *CrossTeamServerClient) TeamUpJoinNotify(in *TeamUpJoinNotifyRequest) (*Void, error) {
+    err := self.Channel.CallMethod(&CrossTeamServerServiceDesc.Methods[44], in)
     return &Void{}, err
 }
 type ICrossTeamServerInterface interface {
@@ -753,6 +769,7 @@ type ICrossTeamServerInterface interface {
     MatchJoin(*MatchJoinRequest) (*Void, error)
     ReportMemberState(*ReportMemberStateRequest) (*Void, error)
     ReportMemberStateBatch(*ReportMemberStateBatchRequest) (*Void, error)
+    RenameMember(*RenameMemberRequest) (*Void, error)
     TeamChatMsg(*TeamChatMsgRequest) (*Void, error)
     StartCrusade(*StartCrusadeRequest) (*Void, error)
     CrusadeCheckResult(*CrusadeCheckResultRequest) (*Void, error)
@@ -907,12 +924,19 @@ func GameServer_MatchTimeout_Handler(endPoint prpc.IEndPoint, dec func(interface
     }
     return endPoint.(IGameServerInterface).MatchTimeout(in)
 }
-func GameServer_BroadcastMemberState_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
-    in := new(BroadcastMemberStateMsg)
+func GameServer_TeamMemberStatesPush_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(TeamMemberStatesPushMsg)
     if err := dec(in); err != nil {
         return nil, err
     }
-    return endPoint.(IGameServerInterface).BroadcastMemberState(in)
+    return endPoint.(IGameServerInterface).TeamMemberStatesPush(in)
+}
+func GameServer_MemberRenamePush_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(MemberRenamePushMsg)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameServerInterface).MemberRenamePush(in)
 }
 func GameServer_TeamChatBatch_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
     in := new(TeamChatBatchMsg)
@@ -976,6 +1000,13 @@ func GameServer_InviteNotify_Handler(endPoint prpc.IEndPoint, dec func(interface
         return nil, err
     }
     return endPoint.(IGameServerInterface).InviteNotify(in)
+}
+func GameServer_ApplyApprovedNotify_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
+    in := new(ApplyApprovedNotifyMsg)
+    if err := dec(in); err != nil {
+        return nil, err
+    }
+    return endPoint.(IGameServerInterface).ApplyApprovedNotify(in)
 }
 func GameServer_MemberVoiceStatePush_Handler(endPoint prpc.IEndPoint, dec func(interface{}) error) (interface{}, error) {
     in := new(MemberVoiceStatePushMsg)
@@ -1160,113 +1191,123 @@ var GameServerServiceDesc = prpc.ServiceDesc{
             Handler:     GameServer_MatchTimeout_Handler,
         },
         {
-            MethodName:  "BroadcastMemberState",
+            MethodName:  "TeamMemberStatesPush",
             MethodIndex: 19,
-            Handler:     GameServer_BroadcastMemberState_Handler,
+            Handler:     GameServer_TeamMemberStatesPush_Handler,
+        },
+        {
+            MethodName:  "MemberRenamePush",
+            MethodIndex: 20,
+            Handler:     GameServer_MemberRenamePush_Handler,
         },
         {
             MethodName:  "TeamChatBatch",
-            MethodIndex: 20,
+            MethodIndex: 21,
             Handler:     GameServer_TeamChatBatch_Handler,
         },
         {
             MethodName:  "CrusadeCheck",
-            MethodIndex: 21,
+            MethodIndex: 22,
             Handler:     GameServer_CrusadeCheck_Handler,
         },
         {
             MethodName:  "CrusadeGo",
-            MethodIndex: 22,
+            MethodIndex: 23,
             Handler:     GameServer_CrusadeGo_Handler,
         },
         {
             MethodName:  "CrusadeAbort",
-            MethodIndex: 23,
+            MethodIndex: 24,
             Handler:     GameServer_CrusadeAbort_Handler,
         },
         {
             MethodName:  "CreateCrusadeSpace",
-            MethodIndex: 24,
+            MethodIndex: 25,
             Handler:     GameServer_CreateCrusadeSpace_Handler,
         },
         {
             MethodName:  "TeamDataResp",
-            MethodIndex: 25,
+            MethodIndex: 26,
             Handler:     GameServer_TeamDataResp_Handler,
         },
         {
             MethodName:  "QueryTeamCrossResp",
-            MethodIndex: 26,
+            MethodIndex: 27,
             Handler:     GameServer_QueryTeamCrossResp_Handler,
         },
         {
             MethodName:  "JoinApplyNotify",
-            MethodIndex: 27,
+            MethodIndex: 28,
             Handler:     GameServer_JoinApplyNotify_Handler,
         },
         {
             MethodName:  "InviteNotify",
-            MethodIndex: 28,
+            MethodIndex: 29,
             Handler:     GameServer_InviteNotify_Handler,
         },
         {
+            MethodName:  "ApplyApprovedNotify",
+            MethodIndex: 30,
+            Handler:     GameServer_ApplyApprovedNotify_Handler,
+        },
+        {
             MethodName:  "MemberVoiceStatePush",
-            MethodIndex: 29,
+            MethodIndex: 31,
             Handler:     GameServer_MemberVoiceStatePush_Handler,
         },
         {
             MethodName:  "MatchStart",
-            MethodIndex: 30,
+            MethodIndex: 32,
             Handler:     GameServer_MatchStart_Handler,
         },
         {
             MethodName:  "MatchStop",
-            MethodIndex: 31,
+            MethodIndex: 33,
             Handler:     GameServer_MatchStop_Handler,
         },
         {
             MethodName:  "ApplyListPush",
-            MethodIndex: 32,
+            MethodIndex: 34,
             Handler:     GameServer_ApplyListPush_Handler,
         },
         {
             MethodName:  "ApplyRemoveNotify",
-            MethodIndex: 33,
+            MethodIndex: 35,
             Handler:     GameServer_ApplyRemoveNotify_Handler,
         },
         {
             MethodName:  "DungeonCDRefreshPush",
-            MethodIndex: 34,
+            MethodIndex: 36,
             Handler:     GameServer_DungeonCDRefreshPush_Handler,
         },
         {
             MethodName:  "MarkChangePush",
-            MethodIndex: 35,
+            MethodIndex: 37,
             Handler:     GameServer_MarkChangePush_Handler,
         },
         {
             MethodName:  "FollowAskPush",
-            MethodIndex: 36,
+            MethodIndex: 38,
             Handler:     GameServer_FollowAskPush_Handler,
         },
         {
             MethodName:  "TeamConvertPush",
-            MethodIndex: 37,
+            MethodIndex: 39,
             Handler:     GameServer_TeamConvertPush_Handler,
         },
         {
             MethodName:  "TeamUpInviteNotify",
-            MethodIndex: 38,
+            MethodIndex: 40,
             Handler:     GameServer_TeamUpInviteNotify_Handler,
         },
         {
             MethodName:  "TeamUpReplyNotify",
-            MethodIndex: 39,
+            MethodIndex: 41,
             Handler:     GameServer_TeamUpReplyNotify_Handler,
         },
         {
             MethodName:  "TeamUpTeamReady",
-            MethodIndex: 40,
+            MethodIndex: 42,
             Handler:     GameServer_TeamUpTeamReady_Handler,
         },
     },
@@ -1359,92 +1400,100 @@ func (self *GameServerClient) MatchTimeout(in *MatchTimeoutMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[18], in)
     return &Void{}, err
 }
-func (self *GameServerClient) BroadcastMemberState(in *BroadcastMemberStateMsg) (*Void, error) {
+func (self *GameServerClient) TeamMemberStatesPush(in *TeamMemberStatesPushMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[19], in)
     return &Void{}, err
 }
-func (self *GameServerClient) TeamChatBatch(in *TeamChatBatchMsg) (*Void, error) {
+func (self *GameServerClient) MemberRenamePush(in *MemberRenamePushMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[20], in)
     return &Void{}, err
 }
-func (self *GameServerClient) CrusadeCheck(in *CrusadeCheckMsg) (*Void, error) {
+func (self *GameServerClient) TeamChatBatch(in *TeamChatBatchMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[21], in)
     return &Void{}, err
 }
-func (self *GameServerClient) CrusadeGo(in *CrusadeGoMsg) (*Void, error) {
+func (self *GameServerClient) CrusadeCheck(in *CrusadeCheckMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[22], in)
     return &Void{}, err
 }
-func (self *GameServerClient) CrusadeAbort(in *CrusadeAbortMsg) (*Void, error) {
+func (self *GameServerClient) CrusadeGo(in *CrusadeGoMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[23], in)
     return &Void{}, err
 }
-func (self *GameServerClient) CreateCrusadeSpace(in *CreateCrusadeSpaceMsg) (*Void, error) {
+func (self *GameServerClient) CrusadeAbort(in *CrusadeAbortMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[24], in)
     return &Void{}, err
 }
-func (self *GameServerClient) TeamDataResp(in *TeamDataRespMsg) (*Void, error) {
+func (self *GameServerClient) CreateCrusadeSpace(in *CreateCrusadeSpaceMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[25], in)
     return &Void{}, err
 }
-func (self *GameServerClient) QueryTeamCrossResp(in *QueryTeamCrossRespMsg) (*Void, error) {
+func (self *GameServerClient) TeamDataResp(in *TeamDataRespMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[26], in)
     return &Void{}, err
 }
-func (self *GameServerClient) JoinApplyNotify(in *JoinApplyNotifyMsg) (*Void, error) {
+func (self *GameServerClient) QueryTeamCrossResp(in *QueryTeamCrossRespMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[27], in)
     return &Void{}, err
 }
-func (self *GameServerClient) InviteNotify(in *InviteNotifyMsg) (*Void, error) {
+func (self *GameServerClient) JoinApplyNotify(in *JoinApplyNotifyMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[28], in)
     return &Void{}, err
 }
-func (self *GameServerClient) MemberVoiceStatePush(in *MemberVoiceStatePushMsg) (*Void, error) {
+func (self *GameServerClient) InviteNotify(in *InviteNotifyMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[29], in)
     return &Void{}, err
 }
-func (self *GameServerClient) MatchStart(in *MatchStartMsg) (*Void, error) {
+func (self *GameServerClient) ApplyApprovedNotify(in *ApplyApprovedNotifyMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[30], in)
     return &Void{}, err
 }
-func (self *GameServerClient) MatchStop(in *MatchStopMsg) (*Void, error) {
+func (self *GameServerClient) MemberVoiceStatePush(in *MemberVoiceStatePushMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[31], in)
     return &Void{}, err
 }
-func (self *GameServerClient) ApplyListPush(in *ApplyListPushMsg) (*Void, error) {
+func (self *GameServerClient) MatchStart(in *MatchStartMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[32], in)
     return &Void{}, err
 }
-func (self *GameServerClient) ApplyRemoveNotify(in *ApplyRemoveNotifyMsg) (*Void, error) {
+func (self *GameServerClient) MatchStop(in *MatchStopMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[33], in)
     return &Void{}, err
 }
-func (self *GameServerClient) DungeonCDRefreshPush(in *DungeonCDRefreshPushMsg) (*Void, error) {
+func (self *GameServerClient) ApplyListPush(in *ApplyListPushMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[34], in)
     return &Void{}, err
 }
-func (self *GameServerClient) MarkChangePush(in *MarkChangePushMsg) (*Void, error) {
+func (self *GameServerClient) ApplyRemoveNotify(in *ApplyRemoveNotifyMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[35], in)
     return &Void{}, err
 }
-func (self *GameServerClient) FollowAskPush(in *FollowAskPushMsg) (*Void, error) {
+func (self *GameServerClient) DungeonCDRefreshPush(in *DungeonCDRefreshPushMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[36], in)
     return &Void{}, err
 }
-func (self *GameServerClient) TeamConvertPush(in *TeamConvertPushMsg) (*Void, error) {
+func (self *GameServerClient) MarkChangePush(in *MarkChangePushMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[37], in)
     return &Void{}, err
 }
-func (self *GameServerClient) TeamUpInviteNotify(in *TeamUpInviteNotifyMsg) (*Void, error) {
+func (self *GameServerClient) FollowAskPush(in *FollowAskPushMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[38], in)
     return &Void{}, err
 }
-func (self *GameServerClient) TeamUpReplyNotify(in *TeamUpReplyNotifyMsg) (*Void, error) {
+func (self *GameServerClient) TeamConvertPush(in *TeamConvertPushMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[39], in)
     return &Void{}, err
 }
-func (self *GameServerClient) TeamUpTeamReady(in *TeamUpTeamReadyMsg) (*Void, error) {
+func (self *GameServerClient) TeamUpInviteNotify(in *TeamUpInviteNotifyMsg) (*Void, error) {
     err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[40], in)
+    return &Void{}, err
+}
+func (self *GameServerClient) TeamUpReplyNotify(in *TeamUpReplyNotifyMsg) (*Void, error) {
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[41], in)
+    return &Void{}, err
+}
+func (self *GameServerClient) TeamUpTeamReady(in *TeamUpTeamReadyMsg) (*Void, error) {
+    err := self.Channel.CallMethod(&GameServerServiceDesc.Methods[42], in)
     return &Void{}, err
 }
 type IGameServerInterface interface {
@@ -1467,7 +1516,8 @@ type IGameServerInterface interface {
     TeamListResult(*TeamListResultMsg) (*Void, error)
     MatchSuccess(*MatchSuccessMsg) (*Void, error)
     MatchTimeout(*MatchTimeoutMsg) (*Void, error)
-    BroadcastMemberState(*BroadcastMemberStateMsg) (*Void, error)
+    TeamMemberStatesPush(*TeamMemberStatesPushMsg) (*Void, error)
+    MemberRenamePush(*MemberRenamePushMsg) (*Void, error)
     TeamChatBatch(*TeamChatBatchMsg) (*Void, error)
     CrusadeCheck(*CrusadeCheckMsg) (*Void, error)
     CrusadeGo(*CrusadeGoMsg) (*Void, error)
@@ -1477,6 +1527,7 @@ type IGameServerInterface interface {
     QueryTeamCrossResp(*QueryTeamCrossRespMsg) (*Void, error)
     JoinApplyNotify(*JoinApplyNotifyMsg) (*Void, error)
     InviteNotify(*InviteNotifyMsg) (*Void, error)
+    ApplyApprovedNotify(*ApplyApprovedNotifyMsg) (*Void, error)
     MemberVoiceStatePush(*MemberVoiceStatePushMsg) (*Void, error)
     MatchStart(*MatchStartMsg) (*Void, error)
     MatchStop(*MatchStopMsg) (*Void, error)

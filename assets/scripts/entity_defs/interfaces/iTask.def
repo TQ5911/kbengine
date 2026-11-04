@@ -6,6 +6,13 @@
             <Persistent>    true        </Persistent>
         </taskInfo>
 
+        <!-- 已领取的任务章节奖励，章节ID -->
+        <claimedTaskChapterRewards>
+            <Type>          ARRAY   <of>    UINT32      </of>    </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </claimedTaskChapterRewards>
+
         <checkAreaTgtTaskTimer>
             <Type>          TIMER_ID        </Type>
             <Flags>         CELL_PRIVATE    </Flags>
@@ -16,6 +23,9 @@
         <reqSubmitTask><Exposed/>
             <Arg>   ARRAY    <of>    TASK_ID                  </of>   </Arg>
         </reqSubmitTask>
+        <reqClaimTaskChapterReward><Exposed/>
+            <Arg>       UINT32      </Arg>
+        </reqClaimTaskChapterReward>
         <reqDeductTaskTargetItems><Exposed/>
             <Arg>       TASK_ID     </Arg>
         </reqDeductTaskTargetItems>
@@ -118,6 +128,11 @@
             <Arg>       TASK_ID         </Arg>
         </reqTaskEnterSpace>
 
+        <!-- 点击任务触发 SwitchPosition：校验后按配置读条传送 -->
+        <reqSwitchPosition><Exposed/>
+            <Arg>       TASK_ID         </Arg>
+        </reqSwitchPosition>
+
         <onCheckSameMap>
             <Arg>      TASK_ID         </Arg>
             <Arg>      BOOL            </Arg>
@@ -187,6 +202,13 @@
             <Arg>       PYTHON          </Arg>
             <Arg>       PYTHON          </Arg>
         </taskPreEnterSpace>
+
+        <startSwitchPosition>
+            <Arg>       UINT32          </Arg>
+            <Arg>       FLOAT           </Arg>
+            <Arg>       FLOAT           </Arg>
+            <Arg>       FLOAT           </Arg>
+        </startSwitchPosition>
 
         <prepareStartPlayCinema>
             <Arg>       UINT32       </Arg>
@@ -276,5 +298,12 @@
             <Arg>      TASK_ID         </Arg>
             <Arg>      UINT8           </Arg>
         </onSubmitCheckResult>
+        <!-- 登录下发已领取的章节奖励 -->
+        <onTaskChapterRewardRecord>
+            <Arg>  ARRAY <of> UINT32 </of> </Arg>
+        </onTaskChapterRewardRecord>
+        <onClaimTaskChapterReward>
+            <Arg>  UINT32  </Arg>
+        </onClaimTaskChapterReward>
     </ClientMethods>
 </root>

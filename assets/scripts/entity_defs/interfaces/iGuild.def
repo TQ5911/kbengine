@@ -21,6 +21,18 @@
             <Flags>         BASE                        </Flags>
         </guildNameBase>
 
+        <guildDspFlag>
+            <Type>          UINT8                       </Type>
+            <Flags>         ALL_CLIENTS                 </Flags>
+            <WitnessName>   true                        </WitnessName>
+        </guildDspFlag>
+
+        <guildIcon>
+            <Type>          GUILD_ICON_ID               </Type>
+            <Flags>         ALL_CLIENTS                 </Flags>
+            <WitnessName>   true                        </WitnessName>
+        </guildIcon>
+
         <guildContrib>
             <Type>          GUILD_CONTRIB               </Type>
             <Flags>         BASE_AND_CLIENT             </Flags>
@@ -377,12 +389,22 @@
             <Arg>      UNICODE              </Arg>
             <Arg>      LEAGUE_UUID          </Arg>
             <Arg>      BOOL                 </Arg>
+            <Arg>      UINT8                </Arg>
+            <Arg>      GUILD_ICON_ID        </Arg>
         </onSetGuildInfoCross>
 
         <onGuildNameChange>
             <Arg>      UNICODE              </Arg>
             <Arg>      UINT8                </Arg>
         </onGuildNameChange>
+
+        <onGuildDspFlagChanged>
+            <Arg>      UINT8                </Arg>
+        </onGuildDspFlagChanged>
+
+        <onGuildIconSync>
+            <Arg>      GUILD_ICON_ID        </Arg>
+        </onGuildIconSync>
 
         <guildAssistAfterCheck>
             <Arg>       GUILD_BUILDING_ID       </Arg>
@@ -546,10 +568,6 @@
         <onGuildBuildingChanged>
             <Arg>       GUILD_BUILDING_DATA_INFO            </Arg>
         </onGuildBuildingChanged>
-
-        <onGuildIconChanged>
-            <Arg>       GUILD_ICON_ID                       </Arg>
-        </onGuildIconChanged>
 
         <onGuildDispChanged>
             <Arg>       UINT8                               </Arg>

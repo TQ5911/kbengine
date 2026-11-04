@@ -58,6 +58,7 @@
             <Type>      TIMER_ID    </Type>
             <Flags>     BASE        </Flags>
         </auctionPaymentTimerId>
+
     </Properties>
 
     <BaseMethods>
@@ -123,20 +124,21 @@
             <Exposed/>
             <Arg> AUCTION_ITEM_UUID </Arg>
             <Arg> UINT32            </Arg>
+            <Arg> BOOL              </Arg>
         </buyItemInCoinAuctionByAuctionItemUUID>
 
         <doBuyItemInCoinAuctionByAuctionItemUUID>
             <Arg> AUCTION_ITEM_UUID </Arg>
             <Arg> MONEY             </Arg>
             <Arg> LONGTIME          </Arg>
-            <Arg> UINT8             </Arg>
             <Arg> PYTHON            </Arg>
         </doBuyItemInCoinAuctionByAuctionItemUUID>
 
         <onBuyItemInCoinAuctionByAuctionItemUUID>
-            <Arg> AUCTION_ITEM </Arg>
-            <Arg> MONEY </Arg>
-            <Arg> PYTHON </Arg>
+            <Arg> AUCTION_ITEM  </Arg>
+            <Arg> MONEY         </Arg>
+            <Arg> PYTHON        </Arg>
+            <Arg> BOOL          </Arg>
         </onBuyItemInCoinAuctionByAuctionItemUUID>
 
         <!-- API: 根据交易物品UUID列表批量购买CoinAuction中物品(整格购买) -->
@@ -294,6 +296,12 @@
             <Arg>   ARRAY <of>  AUCTION_ITEM  </of>      </Arg>
         </onGetAuctionItemsByAuctionIdsResp>
 
+        <onSnatchRefund>
+            <Arg>   UINT64  </Arg>
+            <Arg>   UINT32  </Arg>
+            <Arg>   UINT32  </Arg>
+            <Arg>   BOOL    </Arg>
+        </onSnatchRefund>
     </BaseMethods>
 
     <CellMethods>

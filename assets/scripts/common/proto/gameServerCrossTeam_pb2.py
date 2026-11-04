@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='CrossTeamServer',
   syntax='proto3',
   serialized_options=_b('Z\024../gameServerService\220\001\001'),
-  serialized_pb=_b('\n\x19gameServerCrossTeam.proto\x12\x0f\x43rossTeamServer\"\x06\n\x04Void\"-\n\x19RegisterGameServerRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\"\x8d\x02\n\nMemberInfo\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\r\n\x05level\x18\x04 \x01(\x05\x12\x0e\n\x06school\x18\x05 \x01(\x05\x12\r\n\x05score\x18\x06 \x01(\x05\x12\x10\n\x08groupIdx\x18\x07 \x01(\x05\x12\x0b\n\x03pos\x18\x08 \x01(\x05\x12\x0b\n\x03sex\x18\t \x01(\x05\x12\x12\n\npicFrameId\x18\n \x01(\x05\x12\x12\n\nenableMics\x18\x0b \x01(\x08\x12\x13\n\x0bisBlockMics\x18\x0c \x01(\x08\x12\x15\n\renableSpeaker\x18\r \x01(\x08\x12\x13\n\x0binVoiceRoom\x18\x0e \x01(\x08\x12\x0e\n\x06openId\x18\x0f \x01(\t\"z\n\x0fMemberBasicInfo\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x0b\n\x03sex\x18\x04 \x01(\x05\x12\x0e\n\x06school\x18\x05 \x01(\x05\x12\r\n\x05score\x18\x06 \x01(\x05\x12\r\n\x05level\x18\x07 \x01(\x05\"\xa6\x01\n\x0bMemberState\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\n\n\x02hp\x18\x02 \x01(\x03\x12\r\n\x05maxHp\x18\x03 \x01(\x03\x12\r\n\x05level\x18\x04 \x01(\x05\x12\r\n\x05score\x18\x05 \x01(\x05\x12\x0f\n\x07spaceNo\x18\x06 \x01(\x05\x12\x0c\n\x04posX\x18\x07 \x01(\x02\x12\x0c\n\x04posY\x18\x08 \x01(\x02\x12\x0c\n\x04posZ\x18\t \x01(\x02\x12\x15\n\rrouteServerId\x18\n \x01(\r\"\x9f\x01\n\x08MarkInfo\x12\x0c\n\x04type\x18\x01 \x01(\x05\x12\r\n\x05index\x18\x02 \x01(\x05\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x0c\n\x04gbId\x18\x04 \x01(\x04\x12\r\n\x05\x65ntId\x18\x05 \x01(\x05\x12\x0c\n\x04posX\x18\x06 \x01(\x02\x12\x0c\n\x04posY\x18\x07 \x01(\x02\x12\x0c\n\x04posZ\x18\x08 \x01(\x02\x12\x0f\n\x07spaceNo\x18\t \x01(\r\x12\x10\n\x08serverId\x18\n \x01(\r\"\xf3\x04\n\rCrossTeamInfo\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0e\n\x06target\x18\x02 \x01(\x05\x12\x10\n\x08minLevel\x18\x03 \x01(\x05\x12\x10\n\x08minScore\x18\x04 \x01(\x05\x12\x10\n\x08password\x18\x05 \x01(\t\x12\r\n\x05intro\x18\x06 \x01(\t\x12\x13\n\x0b\x63\x61ptainGbId\x18\x07 \x01(\x04\x12\x0e\n\x06maxNum\x18\x08 \x01(\x05\x12\x11\n\tautoMatch\x18\t \x01(\x08\x12,\n\x07members\x18\n \x03(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x11\n\tinDungeon\x18\x0b \x01(\x08\x12\x10\n\x08\x63reateTS\x18\x0c \x01(\x03\x12\x10\n\x08updateTS\x18\r \x01(\x03\x12\x10\n\x08micsMode\x18\x0e \x01(\x05\x12\x16\n\x0e\x62lockedMembers\x18\x0f \x03(\x04\x12\x12\n\ndungeonMap\x18\x10 \x01(\x05\x12\x11\n\tautoEnter\x18\x11 \x01(\x08\x12\x11\n\tisPublish\x18\x12 \x01(\x08\x12\x12\n\ndeputyGbId\x18\x13 \x01(\x04\x12\x1f\n\x17lastDungeonFinishedTime\x18\x14 \x01(\x03\x12\x15\n\rautoMatchTime\x18\x15 \x01(\x03\x12\x11\n\tmemberNum\x18\x16 \x01(\x05\x12\x0f\n\x07isCross\x18\x17 \x01(\x08\x12\x11\n\tdunServer\x18\x18 \x01(\r\x12.\n\x0bplayerMarks\x18\x19 \x03(\x0b\x32\x19.CrossTeamServer.MarkInfo\x12-\n\nsceneMarks\x18\x1a \x03(\x0b\x32\x19.CrossTeamServer.MarkInfo\x12\x1a\n\x12onlyCaptainCanMark\x18\x1b \x01(\x08\"\xe1\x01\n\x0cTeamListItem\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0e\n\x06target\x18\x02 \x01(\x05\x12\x10\n\x08minLevel\x18\x03 \x01(\x05\x12\x10\n\x08minScore\x18\x04 \x01(\x05\x12\x11\n\tmemberCnt\x18\x06 \x01(\x05\x12\x0e\n\x06maxNum\x18\x07 \x01(\x05\x12\r\n\x05intro\x18\x08 \x01(\t\x12\x11\n\tisPublish\x18\t \x01(\x08\x12\x15\n\rautoMatchTime\x18\n \x01(\x03\x12\x31\n\x07\x63\x61ptain\x18\x0b \x01(\x0b\x32 .CrossTeamServer.MemberBasicInfo\"]\n\x0fMatchPlayerInfo\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\r\n\x05level\x18\x04 \x01(\x05\x12\r\n\x05score\x18\x05 \x01(\x05\"\xd7\x01\n\x07\x43hatMsg\x12\x12\n\nsenderGbId\x18\x01 \x01(\x04\x12\x12\n\nsenderName\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\x12\n\n\x02ts\x18\x04 \x01(\x03\x12\x0f\n\x07msgType\x18\x05 \x01(\x05\x12\x10\n\x08voiceUrl\x18\x06 \x01(\t\x12\x0c\n\x04\x63ode\x18\x07 \x01(\x05\x12\x14\n\x0csenderSchool\x18\x08 \x01(\x05\x12\x13\n\x0bsenderLevel\x18\t \x01(\x05\x12\x11\n\tsenderSex\x18\n \x01(\x05\x12\x18\n\x10senderPicFrameId\x18\x0b \x01(\x05\"\xa2\x02\n\x11\x43reateTeamRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0e\n\x06target\x18\x03 \x01(\x05\x12\x10\n\x08minLevel\x18\x04 \x01(\x05\x12\x10\n\x08minScore\x18\x05 \x01(\x05\x12\x10\n\x08password\x18\x06 \x01(\t\x12\r\n\x05intro\x18\x07 \x01(\t\x12\x11\n\tautoMatch\x18\x08 \x01(\x08\x12\x0e\n\x06maxNum\x18\t \x01(\x05\x12,\n\x07\x63\x61ptain\x18\n \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x12\n\ndungeonMap\x18\x0b \x01(\x05\x12\x11\n\tautoEnter\x18\x0c \x01(\x08\x12\x0f\n\x07isCross\x18\r \x01(\x08\x12\x11\n\tdunServer\x18\x0e \x01(\r\"\x87\x01\n\x10JoinApplyRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x10\n\x08password\x18\x03 \x01(\t\x12.\n\tapplicant\x18\x04 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x13\n\x0b\x61pplySource\x18\x05 \x01(\x05\"p\n\x0eReqJoinRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x10\n\x08password\x18\x03 \x01(\t\x12.\n\tapplicant\x18\x04 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\"J\n\x15\x43learApplyListRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\"Y\n\x10SetDeputyRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\x12\x12\n\ndeputyGbId\x18\x04 \x01(\x04\"l\n\x11ReplyApplyRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\x12\x15\n\rapplicantGbId\x18\x04 \x01(\x04\x12\r\n\x05\x61gree\x18\x05 \x01(\x08\"m\n\x0e\x41\x64\x64MarkRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x14\n\x0coperatorGbId\x18\x03 \x01(\x04\x12\'\n\x04mark\x18\x04 \x01(\x0b\x32\x19.CrossTeamServer.MarkInfo\"a\n\x0e\x44\x65lMarkRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x14\n\x0coperatorGbId\x18\x03 \x01(\x04\x12\x0c\n\x04type\x18\x04 \x01(\x05\x12\r\n\x05index\x18\x05 \x01(\x05\"c\n\x19SetOnlyCaptainMarkRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\x12\x13\n\x0bonlyCaptain\x18\x04 \x01(\x08\"r\n\x10\x46ollowAskRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x02 \x01(\x04\x12\x0f\n\x07spaceNo\x18\x03 \x01(\r\x12\x0c\n\x04posX\x18\x04 \x01(\x02\x12\x0c\n\x04posY\x18\x05 \x01(\x02\x12\x0c\n\x04posZ\x18\x06 \x01(\x02\"\x84\x01\n\rInviteRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0binviterGbId\x18\x03 \x01(\x04\x12\x13\n\x0binviteeGbId\x18\x04 \x01(\x04\x12\x17\n\x0finviteeServerId\x18\x05 \x01(\r\x12\x12\n\ninviteType\x18\x06 \x01(\x05\"\x83\x01\n\x12ReplyInviteRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12,\n\x07invitee\x18\x03 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\r\n\x05\x61gree\x18\x04 \x01(\x08\x12\x12\n\ninviteType\x18\x05 \x01(\x05\">\n\x10LeaveTeamRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\"T\n\x0bKickRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x12\n\nkickedGbId\x18\x03 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x04 \x01(\x04\"c\n\x16TransferCaptainRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x16\n\x0enewCaptainGbId\x18\x03 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x04 \x01(\x04\"G\n\x19\x41pplyBecomeCaptainRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\"t\n\x19ReplyBecomeCaptainRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\x12\x15\n\rapplicantGbId\x18\x04 \x01(\x04\x12\r\n\x05\x61gree\x18\x05 \x01(\x08\"C\n\x0e\x44isbandRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\"\xa3\x01\n\x16SetTeamSettingsRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x10\n\x08minLevel\x18\x03 \x01(\x05\x12\x10\n\x08minScore\x18\x04 \x01(\x05\x12\r\n\x05intro\x18\x05 \x01(\t\x12\x13\n\x0b\x63\x61ptainGbId\x18\x06 \x01(\x04\x12\x11\n\tautoEnter\x18\x07 \x01(\x08\x12\x10\n\x08password\x18\x08 \x01(\t\"[\n\x13SetAutoMatchRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x11\n\tautoMatch\x18\x03 \x01(\x08\x12\x13\n\x0b\x63\x61ptainGbId\x18\x04 \x01(\x04\"Y\n\x12SetMicsModeRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x10\n\x08micsMode\x18\x03 \x01(\x05\x12\x13\n\x0b\x63\x61ptainGbId\x18\x04 \x01(\x04\"i\n\x0f\x42lockMicRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x12\n\ntargetGbId\x18\x03 \x01(\x04\x12\x0f\n\x07\x62locked\x18\x04 \x01(\x08\x12\x13\n\x0b\x63\x61ptainGbId\x18\x05 \x01(\x04\"\x97\x01\n\x16\x41\x64justMemberPosRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\x12\x0f\n\x07srcGbId\x18\x04 \x01(\x04\x12\x13\n\x0bsrcGroupIdx\x18\x05 \x01(\x05\x12\x0f\n\x07\x64stGbId\x18\x06 \x01(\x04\x12\x13\n\x0b\x64stGroupIdx\x18\x07 \x01(\x05\"\x82\x01\n\x14SetVoiceStateRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\x12\x12\n\nenableMics\x18\x04 \x01(\x08\x12\x15\n\renableSpeaker\x18\x05 \x01(\x08\x12\x13\n\x0binVoiceRoom\x18\x06 \x01(\x08\"D\n\x12GetTeamListRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06target\x18\x02 \x01(\x05\x12\x10\n\x08serverId\x18\x05 \x01(\r\"\x7f\n\x15\x45nterMatchPoolRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06target\x18\x02 \x01(\x05\x12\x30\n\x06player\x18\x03 \x01(\x0b\x32 .CrossTeamServer.MatchPlayerInfo\x12\x16\n\x0etimeoutSeconds\x18\x04 \x01(\x05\"3\n\x15LeaveMatchPoolRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\"m\n\x10MatchJoinRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0e\n\x06target\x18\x03 \x01(\x05\x12+\n\x06member\x18\x04 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\"}\n\x18ReportMemberStateRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12-\n\x07members\x18\x03 \x03(\x0b\x32\x1c.CrossTeamServer.MemberState\x12\x10\n\x08reportTS\x18\x04 \x01(\x03\"\xf2\x01\n\x12TeamChatMsgRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x12\n\nsenderGbId\x18\x02 \x01(\x04\x12\x12\n\nsenderName\x18\x03 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x04 \x01(\t\x12\n\n\x02ts\x18\x05 \x01(\x03\x12\x0f\n\x07msgType\x18\x06 \x01(\x05\x12\x10\n\x08voiceUrl\x18\x07 \x01(\t\x12\x0c\n\x04\x63ode\x18\x08 \x01(\x05\x12\x14\n\x0csenderSchool\x18\t \x01(\x05\x12\x13\n\x0bsenderLevel\x18\n \x01(\x05\x12\x11\n\tsenderSex\x18\x0b \x01(\x05\x12\x18\n\x10senderPicFrameId\x18\x0c \x01(\x05\"A\n\x13StartCrusadeRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\"U\n\x19\x43rusadeCheckResultRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\n\n\x02ok\x18\x03 \x01(\x08\x12\x0e\n\x06reason\x18\x04 \x01(\t\"I\n\x18\x43rusadeSpaceReadyRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x11\n\tspaceUUID\x18\x02 \x01(\t\x12\n\n\x02ok\x18\x03 \x01(\x08\">\n\x10QueryTeamRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\"4\n\x14MemberOfflineRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\"8\n\x16\x43rusadeFinishedRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0e\n\x06result\x18\x02 \x01(\x05\"A\n\x13GetApplyListRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\"a\n\x0fTeamOpResultMsg\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x12\n\nresultCode\x18\x02 \x01(\x05\x12\x0e\n\x06teamId\x18\x03 \x01(\x04\x12\x0c\n\x04gbId\x18\x04 \x01(\x04\x12\x0e\n\x06target\x18\x05 \x01(\x05\"\xb3\x01\n\x13ReplyApplyNotifyMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x15\n\rapplicantGbId\x18\x02 \x01(\x04\x12\x12\n\nresultCode\x18\x03 \x01(\x05\x12\x0e\n\x06target\x18\x04 \x01(\x05\x12\x10\n\x08password\x18\x05 \x01(\t\x12\x13\n\x0b\x61pplySource\x18\x06 \x01(\x05\x12\x14\n\x0crequireLevel\x18\x07 \x01(\x05\x12\x14\n\x0crequireScore\x18\x08 \x01(\x05\"_\n\x18TeamCreateSuccessPushMsg\x12,\n\x04team\x18\x01 \x01(\x0b\x32\x1e.CrossTeamServer.CrossTeamInfo\x12\x15\n\rreceiverGbIds\x18\x02 \x03(\x04\"]\n\x16TeamJoinSuccessPushMsg\x12,\n\x04team\x18\x01 \x01(\x0b\x32\x1e.CrossTeamServer.CrossTeamInfo\x12\x15\n\rreceiverGbIds\x18\x02 \x03(\x04\"g\n\x11MemberJoinPushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12+\n\x06member\x18\x02 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"Y\n\x12MemberLeavePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x0e\n\x06reason\x18\x03 \x01(\x05\x12\x15\n\rreceiverGbIds\x18\x04 \x03(\x04\"U\n\x14\x43\x61ptainChangePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x16\n\x0enewCaptainGbId\x18\x02 \x01(\x04\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"P\n\x13\x44\x65putyChangePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x12\n\ndeputyGbId\x18\x02 \x01(\x04\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"\x93\x01\n\x11MarkChangePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x12\n\nchangeType\x18\x02 \x01(\x05\x12\'\n\x04mark\x18\x03 \x01(\x0b\x32\x19.CrossTeamServer.MarkInfo\x12\x1a\n\x12onlyCaptainCanMark\x18\x04 \x01(\x08\x12\x15\n\rreceiverGbIds\x18\x05 \x03(\x04\"t\n\x10\x46ollowAskPushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0f\n\x07spaceNo\x18\x02 \x01(\r\x12\x0c\n\x04posX\x18\x03 \x01(\x02\x12\x0c\n\x04posY\x18\x04 \x01(\x02\x12\x0c\n\x04posZ\x18\x05 \x01(\x02\x12\x15\n\rreceiverGbIds\x18\x06 \x03(\x04\"w\n\x19\x42\x65\x63omeCaptainApplyPushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x33\n\tapplicant\x18\x02 \x01(\x0b\x32 .CrossTeamServer.MemberBasicInfo\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\";\n\x12TeamDisbandPushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x15\n\rreceiverGbIds\x18\x02 \x03(\x04\"\x9a\x01\n\x19TeamSettingsChangePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x10\n\x08minLevel\x18\x02 \x01(\x05\x12\x10\n\x08minScore\x18\x03 \x01(\x05\x12\r\n\x05intro\x18\x04 \x01(\t\x12\x15\n\rreceiverGbIds\x18\x05 \x03(\x04\x12\x11\n\tautoEnter\x18\x06 \x01(\x08\x12\x10\n\x08password\x18\x07 \x01(\t\"V\n\x1aTeamAutoMatchChangePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x11\n\tautoMatch\x18\x02 \x01(\x08\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"T\n\x19TeamMicsModeChangePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x10\n\x08micsMode\x18\x02 \x01(\x05\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"]\n\x15MemberMicBlockPushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x0f\n\x07\x62locked\x18\x03 \x01(\x08\x12\x15\n\rreceiverGbIds\x18\x04 \x03(\x04\"\xa3\x01\n\x17MemberVoiceStatePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x12\n\nenableMics\x18\x03 \x01(\x08\x12\x15\n\renableSpeaker\x18\x04 \x01(\x08\x12\x13\n\x0binVoiceRoom\x18\x05 \x01(\x08\x12\x13\n\x0bisBlockMics\x18\x06 \x01(\x08\x12\x15\n\rreceiverGbIds\x18\x07 \x03(\x04\"\x8b\x01\n\x16\x41\x64justMemberPosPushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0f\n\x07srcGbId\x18\x02 \x01(\x04\x12\x13\n\x0bsrcGroupIdx\x18\x03 \x01(\x05\x12\x0f\n\x07\x64stGbId\x18\x04 \x01(\x04\x12\x13\n\x0b\x64stGroupIdx\x18\x05 \x01(\x05\x12\x15\n\rreceiverGbIds\x18\x06 \x03(\x04\"_\n\x11TeamListResultMsg\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12,\n\x05teams\x18\x03 \x03(\x0b\x32\x1d.CrossTeamServer.TeamListItem\x12\x0e\n\x06target\x18\x06 \x01(\x05\"?\n\x0fMatchSuccessMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0e\n\x06target\x18\x02 \x01(\x05\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\"V\n\rMatchStartMsg\x12\x0e\n\x06target\x18\x01 \x01(\x05\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x0f\n\x07\x65nterTS\x18\x03 \x01(\x03\x12\x16\n\x0etimeoutSeconds\x18\x04 \x01(\x05\",\n\x0cMatchStopMsg\x12\x0e\n\x06target\x18\x01 \x01(\x05\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\"/\n\x0fMatchTimeoutMsg\x12\x0e\n\x06target\x18\x01 \x01(\x05\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\"\x81\x01\n\x17\x42roadcastMemberStateMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12-\n\x07members\x18\x02 \x03(\x0b\x32\x1c.CrossTeamServer.MemberState\x12\x10\n\x08reportTS\x18\x03 \x01(\x03\x12\x15\n\rreceiverGbIds\x18\x04 \x03(\x04\"a\n\x10TeamChatBatchMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12&\n\x04msgs\x18\x02 \x03(\x0b\x32\x18.CrossTeamServer.ChatMsg\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"V\n\x0f\x43rusadeCheckMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x11\n\tdungeonNo\x18\x02 \x01(\x05\x12\x11\n\ttimeoutTS\x18\x03 \x01(\x03\x12\r\n\x05gbIds\x18\x04 \x03(\x04\"\x97\x01\n\x0c\x43rusadeGoMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x15\n\rcrossServerId\x18\x02 \x01(\r\x12\x11\n\tspaceUUID\x18\x03 \x01(\t\x12\x0f\n\x07\x63ontext\x18\x04 \x01(\x0c\x12\x0e\n\x06maxNum\x18\x05 \x01(\x05\x12,\n\x07members\x18\x06 \x03(\x0b\x32\x1b.CrossTeamServer.MemberInfo\"H\n\x0f\x43rusadeAbortMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0e\n\x06reason\x18\x02 \x01(\x05\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"K\n\x15\x43reateCrusadeSpaceMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x11\n\tdungeonNo\x18\x02 \x01(\x05\x12\x0f\n\x07\x63ontext\x18\x03 \x01(\x0c\"\x8e\x01\n\x12JoinApplyNotifyMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0e\n\x06target\x18\x02 \x01(\x05\x12.\n\tapplicant\x18\x03 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x13\n\x0b\x63\x61ptainGbId\x18\x04 \x01(\x04\x12\x13\n\x0b\x61pplySource\x18\x05 \x01(\x05\"\x88\x01\n\x0fInviteNotifyMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0e\n\x06target\x18\x02 \x01(\x05\x12,\n\x07inviter\x18\x03 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x13\n\x0binviteeGbId\x18\x04 \x01(\x04\x12\x12\n\ninviteType\x18\x05 \x01(\x05\"^\n\x0fTeamDataRespMsg\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12,\n\x04team\x18\x03 \x01(\x0b\x32\x1e.CrossTeamServer.CrossTeamInfo\"d\n\x15QueryTeamCrossRespMsg\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12,\n\x04team\x18\x03 \x01(\x0b\x32\x1e.CrossTeamServer.CrossTeamInfo\"^\n\tApplyInfo\x12+\n\x06member\x18\x01 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x13\n\x0b\x61pplySource\x18\x02 \x01(\x05\x12\x0f\n\x07\x61pplyTS\x18\x03 \x01(\x03\"v\n\x10\x41pplyListPushMsg\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x14\n\x0creceiverGbId\x18\x03 \x01(\x04\x12.\n\napplicants\x18\x04 \x03(\x0b\x32\x1a.CrossTeamServer.ApplyInfo\"T\n\x14\x41pplyRemoveNotifyMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x15\n\rapplicantGbId\x18\x02 \x01(\x04\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"a\n\x17\x44ungeonCDRefreshPushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x1f\n\x17lastDungeonFinishedTime\x18\x02 \x01(\x03\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\x32\xb3\x17\n\x0f\x43rossTeamServer\x12W\n\x12registerGameServer\x12*.CrossTeamServer.RegisterGameServerRequest\x1a\x15.CrossTeamServer.Void\x12:\n\nactiveTick\x12\x15.CrossTeamServer.Void\x1a\x15.CrossTeamServer.Void\x12G\n\ncreateTeam\x12\".CrossTeamServer.CreateTeamRequest\x1a\x15.CrossTeamServer.Void\x12\x45\n\tjoinApply\x12!.CrossTeamServer.JoinApplyRequest\x1a\x15.CrossTeamServer.Void\x12\x41\n\x07reqJoin\x12\x1f.CrossTeamServer.ReqJoinRequest\x1a\x15.CrossTeamServer.Void\x12O\n\x0e\x63learApplyList\x12&.CrossTeamServer.ClearApplyListRequest\x1a\x15.CrossTeamServer.Void\x12\x45\n\tsetDeputy\x12!.CrossTeamServer.SetDeputyRequest\x1a\x15.CrossTeamServer.Void\x12G\n\nreplyApply\x12\".CrossTeamServer.ReplyApplyRequest\x1a\x15.CrossTeamServer.Void\x12?\n\x06invite\x12\x1e.CrossTeamServer.InviteRequest\x1a\x15.CrossTeamServer.Void\x12I\n\x0breplyInvite\x12#.CrossTeamServer.ReplyInviteRequest\x1a\x15.CrossTeamServer.Void\x12\x45\n\tleaveTeam\x12!.CrossTeamServer.LeaveTeamRequest\x1a\x15.CrossTeamServer.Void\x12;\n\x04kick\x12\x1c.CrossTeamServer.KickRequest\x1a\x15.CrossTeamServer.Void\x12Q\n\x0ftransferCaptain\x12\'.CrossTeamServer.TransferCaptainRequest\x1a\x15.CrossTeamServer.Void\x12W\n\x12\x61pplyBecomeCaptain\x12*.CrossTeamServer.ApplyBecomeCaptainRequest\x1a\x15.CrossTeamServer.Void\x12W\n\x12replyBecomeCaptain\x12*.CrossTeamServer.ReplyBecomeCaptainRequest\x1a\x15.CrossTeamServer.Void\x12\x41\n\x07\x64isband\x12\x1f.CrossTeamServer.DisbandRequest\x1a\x15.CrossTeamServer.Void\x12\x45\n\tqueryTeam\x12!.CrossTeamServer.QueryTeamRequest\x1a\x15.CrossTeamServer.Void\x12Q\n\x0fsetTeamSettings\x12\'.CrossTeamServer.SetTeamSettingsRequest\x1a\x15.CrossTeamServer.Void\x12K\n\x0csetAutoMatch\x12$.CrossTeamServer.SetAutoMatchRequest\x1a\x15.CrossTeamServer.Void\x12I\n\x0bgetTeamList\x12#.CrossTeamServer.GetTeamListRequest\x1a\x15.CrossTeamServer.Void\x12O\n\x0e\x65nterMatchPool\x12&.CrossTeamServer.EnterMatchPoolRequest\x1a\x15.CrossTeamServer.Void\x12O\n\x0eleaveMatchPool\x12&.CrossTeamServer.LeaveMatchPoolRequest\x1a\x15.CrossTeamServer.Void\x12\x45\n\tmatchJoin\x12!.CrossTeamServer.MatchJoinRequest\x1a\x15.CrossTeamServer.Void\x12U\n\x11reportMemberState\x12).CrossTeamServer.ReportMemberStateRequest\x1a\x15.CrossTeamServer.Void\x12I\n\x0bteamChatMsg\x12#.CrossTeamServer.TeamChatMsgRequest\x1a\x15.CrossTeamServer.Void\x12K\n\x0cstartCrusade\x12$.CrossTeamServer.StartCrusadeRequest\x1a\x15.CrossTeamServer.Void\x12W\n\x12\x63rusadeCheckResult\x12*.CrossTeamServer.CrusadeCheckResultRequest\x1a\x15.CrossTeamServer.Void\x12U\n\x11\x63rusadeSpaceReady\x12).CrossTeamServer.CrusadeSpaceReadyRequest\x1a\x15.CrossTeamServer.Void\x12Q\n\x0f\x63rusadeFinished\x12\'.CrossTeamServer.CrusadeFinishedRequest\x1a\x15.CrossTeamServer.Void\x12M\n\rmemberOffline\x12%.CrossTeamServer.MemberOfflineRequest\x1a\x15.CrossTeamServer.Void\x12I\n\x0bsetMicsMode\x12#.CrossTeamServer.SetMicsModeRequest\x1a\x15.CrossTeamServer.Void\x12\x43\n\x08\x62lockMic\x12 .CrossTeamServer.BlockMicRequest\x1a\x15.CrossTeamServer.Void\x12Q\n\x0f\x61\x64justMemberPos\x12\'.CrossTeamServer.AdjustMemberPosRequest\x1a\x15.CrossTeamServer.Void\x12M\n\rsetVoiceState\x12%.CrossTeamServer.SetVoiceStateRequest\x1a\x15.CrossTeamServer.Void\x12K\n\x0cgetApplyList\x12$.CrossTeamServer.GetApplyListRequest\x1a\x15.CrossTeamServer.Void\x12\x41\n\x07\x61\x64\x64Mark\x12\x1f.CrossTeamServer.AddMarkRequest\x1a\x15.CrossTeamServer.Void\x12\x41\n\x07\x64\x65lMark\x12\x1f.CrossTeamServer.DelMarkRequest\x1a\x15.CrossTeamServer.Void\x12W\n\x12setOnlyCaptainMark\x12*.CrossTeamServer.SetOnlyCaptainMarkRequest\x1a\x15.CrossTeamServer.Void\x12\x45\n\tfollowAsk\x12!.CrossTeamServer.FollowAskRequest\x1a\x15.CrossTeamServer.Void2\xa0\x17\n\nGameServer\x12\x42\n\x12\x61\x63tiveTickCallback\x12\x15.CrossTeamServer.Void\x1a\x15.CrossTeamServer.Void\x12G\n\x0cteamOpResult\x12 .CrossTeamServer.TeamOpResultMsg\x1a\x15.CrossTeamServer.Void\x12O\n\x10replyApplyNotify\x12$.CrossTeamServer.ReplyApplyNotifyMsg\x1a\x15.CrossTeamServer.Void\x12Y\n\x15teamCreateSuccessPush\x12).CrossTeamServer.TeamCreateSuccessPushMsg\x1a\x15.CrossTeamServer.Void\x12U\n\x13teamJoinSuccessPush\x12\'.CrossTeamServer.TeamJoinSuccessPushMsg\x1a\x15.CrossTeamServer.Void\x12K\n\x0ememberJoinPush\x12\".CrossTeamServer.MemberJoinPushMsg\x1a\x15.CrossTeamServer.Void\x12M\n\x0fmemberLeavePush\x12#.CrossTeamServer.MemberLeavePushMsg\x1a\x15.CrossTeamServer.Void\x12Q\n\x11\x63\x61ptainChangePush\x12%.CrossTeamServer.CaptainChangePushMsg\x1a\x15.CrossTeamServer.Void\x12O\n\x10\x64\x65putyChangePush\x12$.CrossTeamServer.DeputyChangePushMsg\x1a\x15.CrossTeamServer.Void\x12[\n\x16\x62\x65\x63omeCaptainApplyPush\x12*.CrossTeamServer.BecomeCaptainApplyPushMsg\x1a\x15.CrossTeamServer.Void\x12M\n\x0fteamDisbandPush\x12#.CrossTeamServer.TeamDisbandPushMsg\x1a\x15.CrossTeamServer.Void\x12[\n\x16teamSettingsChangePush\x12*.CrossTeamServer.TeamSettingsChangePushMsg\x1a\x15.CrossTeamServer.Void\x12]\n\x17teamAutoMatchChangePush\x12+.CrossTeamServer.TeamAutoMatchChangePushMsg\x1a\x15.CrossTeamServer.Void\x12[\n\x16teamMicsModeChangePush\x12*.CrossTeamServer.TeamMicsModeChangePushMsg\x1a\x15.CrossTeamServer.Void\x12S\n\x12memberMicBlockPush\x12&.CrossTeamServer.MemberMicBlockPushMsg\x1a\x15.CrossTeamServer.Void\x12U\n\x13\x61\x64justMemberPosPush\x12\'.CrossTeamServer.AdjustMemberPosPushMsg\x1a\x15.CrossTeamServer.Void\x12K\n\x0eteamListResult\x12\".CrossTeamServer.TeamListResultMsg\x1a\x15.CrossTeamServer.Void\x12G\n\x0cmatchSuccess\x12 .CrossTeamServer.MatchSuccessMsg\x1a\x15.CrossTeamServer.Void\x12G\n\x0cmatchTimeout\x12 .CrossTeamServer.MatchTimeoutMsg\x1a\x15.CrossTeamServer.Void\x12W\n\x14\x62roadcastMemberState\x12(.CrossTeamServer.BroadcastMemberStateMsg\x1a\x15.CrossTeamServer.Void\x12I\n\rteamChatBatch\x12!.CrossTeamServer.TeamChatBatchMsg\x1a\x15.CrossTeamServer.Void\x12G\n\x0c\x63rusadeCheck\x12 .CrossTeamServer.CrusadeCheckMsg\x1a\x15.CrossTeamServer.Void\x12\x41\n\tcrusadeGo\x12\x1d.CrossTeamServer.CrusadeGoMsg\x1a\x15.CrossTeamServer.Void\x12G\n\x0c\x63rusadeAbort\x12 .CrossTeamServer.CrusadeAbortMsg\x1a\x15.CrossTeamServer.Void\x12S\n\x12\x63reateCrusadeSpace\x12&.CrossTeamServer.CreateCrusadeSpaceMsg\x1a\x15.CrossTeamServer.Void\x12G\n\x0cteamDataResp\x12 .CrossTeamServer.TeamDataRespMsg\x1a\x15.CrossTeamServer.Void\x12S\n\x12queryTeamCrossResp\x12&.CrossTeamServer.QueryTeamCrossRespMsg\x1a\x15.CrossTeamServer.Void\x12M\n\x0fjoinApplyNotify\x12#.CrossTeamServer.JoinApplyNotifyMsg\x1a\x15.CrossTeamServer.Void\x12G\n\x0cinviteNotify\x12 .CrossTeamServer.InviteNotifyMsg\x1a\x15.CrossTeamServer.Void\x12W\n\x14memberVoiceStatePush\x12(.CrossTeamServer.MemberVoiceStatePushMsg\x1a\x15.CrossTeamServer.Void\x12\x43\n\nmatchStart\x12\x1e.CrossTeamServer.MatchStartMsg\x1a\x15.CrossTeamServer.Void\x12\x41\n\tmatchStop\x12\x1d.CrossTeamServer.MatchStopMsg\x1a\x15.CrossTeamServer.Void\x12I\n\rapplyListPush\x12!.CrossTeamServer.ApplyListPushMsg\x1a\x15.CrossTeamServer.Void\x12Q\n\x11\x61pplyRemoveNotify\x12%.CrossTeamServer.ApplyRemoveNotifyMsg\x1a\x15.CrossTeamServer.Void\x12W\n\x14\x64ungeonCDRefreshPush\x12(.CrossTeamServer.DungeonCDRefreshPushMsg\x1a\x15.CrossTeamServer.Void\x12K\n\x0emarkChangePush\x12\".CrossTeamServer.MarkChangePushMsg\x1a\x15.CrossTeamServer.Void\x12I\n\rfollowAskPush\x12!.CrossTeamServer.FollowAskPushMsg\x1a\x15.CrossTeamServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x19gameServerCrossTeam.proto\x12\x0f\x43rossTeamServer\"\x06\n\x04Void\"O\n\x19RegisterGameServerRequest\x12\x10\n\x08serverId\x18\x01 \x01(\r\x12\x0f\n\x07stubIdx\x18\x02 \x01(\r\x12\x0f\n\x07stubNum\x18\x03 \x01(\r\"\xa8\x02\n\nMemberInfo\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\r\n\x05level\x18\x04 \x01(\x05\x12\x0e\n\x06school\x18\x05 \x01(\x05\x12\r\n\x05score\x18\x06 \x01(\x05\x12\x10\n\x08groupIdx\x18\x07 \x01(\x05\x12\x0b\n\x03pos\x18\x08 \x01(\x05\x12\x0b\n\x03sex\x18\t \x01(\x05\x12\x12\n\npicFrameId\x18\n \x01(\x05\x12\x12\n\nenableMics\x18\x0b \x01(\x08\x12\x13\n\x0bisBlockMics\x18\x0c \x01(\x08\x12\x15\n\renableSpeaker\x18\r \x01(\x08\x12\x13\n\x0binVoiceRoom\x18\x0e \x01(\x08\x12\x0e\n\x06openId\x18\x0f \x01(\t\x12\n\n\x02hp\x18\x10 \x01(\x03\x12\r\n\x05maxHp\x18\x11 \x01(\x03\"z\n\x0fMemberBasicInfo\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x0b\n\x03sex\x18\x04 \x01(\x05\x12\x0e\n\x06school\x18\x05 \x01(\x05\x12\r\n\x05score\x18\x06 \x01(\x05\x12\r\n\x05level\x18\x07 \x01(\x05\"\xb8\x01\n\x0bMemberState\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\n\n\x02hp\x18\x02 \x01(\x03\x12\r\n\x05maxHp\x18\x03 \x01(\x03\x12\r\n\x05level\x18\x04 \x01(\x05\x12\r\n\x05score\x18\x05 \x01(\x05\x12\x0f\n\x07spaceNo\x18\x06 \x01(\x05\x12\x0c\n\x04posX\x18\x07 \x01(\x02\x12\x0c\n\x04posY\x18\x08 \x01(\x02\x12\x0c\n\x04posZ\x18\t \x01(\x02\x12\x15\n\rrouteServerId\x18\n \x01(\r\x12\x10\n\x08groupIdx\x18\x0b \x01(\x05\"\x9f\x01\n\x08MarkInfo\x12\x0c\n\x04type\x18\x01 \x01(\x05\x12\r\n\x05index\x18\x02 \x01(\x05\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x0c\n\x04gbId\x18\x04 \x01(\x04\x12\r\n\x05\x65ntId\x18\x05 \x01(\x05\x12\x0c\n\x04posX\x18\x06 \x01(\x02\x12\x0c\n\x04posY\x18\x07 \x01(\x02\x12\x0c\n\x04posZ\x18\x08 \x01(\x02\x12\x0f\n\x07spaceNo\x18\t \x01(\r\x12\x10\n\x08serverId\x18\n \x01(\r\"\xf3\x04\n\rCrossTeamInfo\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0e\n\x06target\x18\x02 \x01(\x05\x12\x10\n\x08minLevel\x18\x03 \x01(\x05\x12\x10\n\x08minScore\x18\x04 \x01(\x05\x12\x10\n\x08password\x18\x05 \x01(\t\x12\r\n\x05intro\x18\x06 \x01(\t\x12\x13\n\x0b\x63\x61ptainGbId\x18\x07 \x01(\x04\x12\x0e\n\x06maxNum\x18\x08 \x01(\x05\x12\x11\n\tautoMatch\x18\t \x01(\x08\x12,\n\x07members\x18\n \x03(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x11\n\tinDungeon\x18\x0b \x01(\x08\x12\x10\n\x08\x63reateTS\x18\x0c \x01(\x03\x12\x10\n\x08updateTS\x18\r \x01(\x03\x12\x10\n\x08micsMode\x18\x0e \x01(\x05\x12\x16\n\x0e\x62lockedMembers\x18\x0f \x03(\x04\x12\x12\n\ndungeonMap\x18\x10 \x01(\x05\x12\x11\n\tautoEnter\x18\x11 \x01(\x08\x12\x11\n\tisPublish\x18\x12 \x01(\x08\x12\x12\n\ndeputyGbId\x18\x13 \x01(\x04\x12\x1f\n\x17lastDungeonFinishedTime\x18\x14 \x01(\x03\x12\x15\n\rautoMatchTime\x18\x15 \x01(\x03\x12\x11\n\tmemberNum\x18\x16 \x01(\x05\x12\x0f\n\x07isCross\x18\x17 \x01(\x08\x12\x11\n\tdunServer\x18\x18 \x01(\r\x12.\n\x0bplayerMarks\x18\x19 \x03(\x0b\x32\x19.CrossTeamServer.MarkInfo\x12-\n\nsceneMarks\x18\x1a \x03(\x0b\x32\x19.CrossTeamServer.MarkInfo\x12\x1a\n\x12onlyCaptainCanMark\x18\x1b \x01(\x08\"\xe1\x01\n\x0cTeamListItem\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0e\n\x06target\x18\x02 \x01(\x05\x12\x10\n\x08minLevel\x18\x03 \x01(\x05\x12\x10\n\x08minScore\x18\x04 \x01(\x05\x12\x11\n\tmemberCnt\x18\x06 \x01(\x05\x12\x0e\n\x06maxNum\x18\x07 \x01(\x05\x12\r\n\x05intro\x18\x08 \x01(\t\x12\x11\n\tisPublish\x18\t \x01(\x08\x12\x15\n\rautoMatchTime\x18\n \x01(\x03\x12\x31\n\x07\x63\x61ptain\x18\x0b \x01(\x0b\x32 .CrossTeamServer.MemberBasicInfo\"]\n\x0fMatchPlayerInfo\x12\x0c\n\x04gbId\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\r\n\x05level\x18\x04 \x01(\x05\x12\r\n\x05score\x18\x05 \x01(\x05\"\x84\x02\n\x07\x43hatMsg\x12\x12\n\nsenderGbId\x18\x01 \x01(\x04\x12\x12\n\nsenderName\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\x12\n\n\x02ts\x18\x04 \x01(\x03\x12\x0f\n\x07msgType\x18\x05 \x01(\x05\x12\x10\n\x08voiceUrl\x18\x06 \x01(\t\x12\x0c\n\x04\x63ode\x18\x07 \x01(\x05\x12\x14\n\x0csenderSchool\x18\x08 \x01(\x05\x12\x13\n\x0bsenderLevel\x18\t \x01(\x05\x12\x11\n\tsenderSex\x18\n \x01(\x05\x12\x18\n\x10senderPicFrameId\x18\x0b \x01(\x05\x12\x16\n\x0esenderServerId\x18\x0c \x01(\r\x12\x13\n\x0bsenderEntId\x18\r \x01(\x05\"\xa2\x02\n\x11\x43reateTeamRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0e\n\x06target\x18\x03 \x01(\x05\x12\x10\n\x08minLevel\x18\x04 \x01(\x05\x12\x10\n\x08minScore\x18\x05 \x01(\x05\x12\x10\n\x08password\x18\x06 \x01(\t\x12\r\n\x05intro\x18\x07 \x01(\t\x12\x11\n\tautoMatch\x18\x08 \x01(\x08\x12\x0e\n\x06maxNum\x18\t \x01(\x05\x12,\n\x07\x63\x61ptain\x18\n \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x12\n\ndungeonMap\x18\x0b \x01(\x05\x12\x11\n\tautoEnter\x18\x0c \x01(\x08\x12\x0f\n\x07isCross\x18\r \x01(\x08\x12\x11\n\tdunServer\x18\x0e \x01(\r\"\x87\x01\n\x10JoinApplyRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x10\n\x08password\x18\x03 \x01(\t\x12.\n\tapplicant\x18\x04 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x13\n\x0b\x61pplySource\x18\x05 \x01(\x05\"p\n\x0eReqJoinRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x10\n\x08password\x18\x03 \x01(\t\x12.\n\tapplicant\x18\x04 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\"J\n\x15\x43learApplyListRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\"Y\n\x10SetDeputyRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\x12\x12\n\ndeputyGbId\x18\x04 \x01(\x04\"l\n\x11ReplyApplyRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\x12\x15\n\rapplicantGbId\x18\x04 \x01(\x04\x12\r\n\x05\x61gree\x18\x05 \x01(\x08\"m\n\x0e\x41\x64\x64MarkRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x14\n\x0coperatorGbId\x18\x03 \x01(\x04\x12\'\n\x04mark\x18\x04 \x01(\x0b\x32\x19.CrossTeamServer.MarkInfo\"a\n\x0e\x44\x65lMarkRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x14\n\x0coperatorGbId\x18\x03 \x01(\x04\x12\x0c\n\x04type\x18\x04 \x01(\x05\x12\r\n\x05index\x18\x05 \x01(\x05\"c\n\x19SetOnlyCaptainMarkRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\x12\x13\n\x0bonlyCaptain\x18\x04 \x01(\x08\"r\n\x10\x46ollowAskRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x02 \x01(\x04\x12\x0f\n\x07spaceNo\x18\x03 \x01(\r\x12\x0c\n\x04posX\x18\x04 \x01(\x02\x12\x0c\n\x04posY\x18\x05 \x01(\x02\x12\x0c\n\x04posZ\x18\x06 \x01(\x02\"\x84\x01\n\rInviteRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0binviterGbId\x18\x03 \x01(\x04\x12\x13\n\x0binviteeGbId\x18\x04 \x01(\x04\x12\x17\n\x0finviteeServerId\x18\x05 \x01(\r\x12\x12\n\ninviteType\x18\x06 \x01(\x05\"\x83\x01\n\x12ReplyInviteRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12,\n\x07invitee\x18\x03 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\r\n\x05\x61gree\x18\x04 \x01(\x08\x12\x12\n\ninviteType\x18\x05 \x01(\x05\"\x8a\x01\n\x13TeamUpInviteRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12,\n\x07inviter\x18\x03 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x13\n\x0binviteeGbId\x18\x04 \x01(\x04\x12\x12\n\ninviteType\x18\x05 \x01(\x05\"\xae\x01\n\x18ReplyTeamUpInviteRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0binviterGbId\x18\x03 \x01(\x04\x12,\n\x07invitee\x18\x04 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\r\n\x05\x61gree\x18\x05 \x01(\x08\x12\x12\n\ninviteType\x18\x06 \x01(\x05\x12\x0e\n\x06reason\x18\x07 \x01(\x05\"a\n\x17TeamUpJoinNotifyRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0binviterGbId\x18\x03 \x01(\x04\x12\x13\n\x0binviteeGbId\x18\x04 \x01(\x04\">\n\x10LeaveTeamRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\"T\n\x0bKickRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x12\n\nkickedGbId\x18\x03 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x04 \x01(\x04\"c\n\x16TransferCaptainRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x16\n\x0enewCaptainGbId\x18\x03 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x04 \x01(\x04\"G\n\x19\x41pplyBecomeCaptainRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\"t\n\x19ReplyBecomeCaptainRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\x12\x15\n\rapplicantGbId\x18\x04 \x01(\x04\x12\r\n\x05\x61gree\x18\x05 \x01(\x08\"C\n\x0e\x44isbandRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\"\xbb\x01\n\x12\x43onvertTeamRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\x12\x11\n\tnewTeamId\x18\x04 \x01(\x04\x12\x11\n\tnewTarget\x18\x05 \x01(\x05\x12\x11\n\tnewMaxNum\x18\x06 \x01(\x05\x12\x15\n\rnewDungeonMap\x18\x07 \x01(\x05\x12\x0f\n\x07isCross\x18\x08 \x01(\x08\x12\x11\n\tdunServer\x18\t \x01(\r\"\xa3\x01\n\x16SetTeamSettingsRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x10\n\x08minLevel\x18\x03 \x01(\x05\x12\x10\n\x08minScore\x18\x04 \x01(\x05\x12\r\n\x05intro\x18\x05 \x01(\t\x12\x13\n\x0b\x63\x61ptainGbId\x18\x06 \x01(\x04\x12\x11\n\tautoEnter\x18\x07 \x01(\x08\x12\x10\n\x08password\x18\x08 \x01(\t\"[\n\x13SetAutoMatchRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x11\n\tautoMatch\x18\x03 \x01(\x08\x12\x13\n\x0b\x63\x61ptainGbId\x18\x04 \x01(\x04\"Y\n\x12SetMicsModeRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x10\n\x08micsMode\x18\x03 \x01(\x05\x12\x13\n\x0b\x63\x61ptainGbId\x18\x04 \x01(\x04\"i\n\x0f\x42lockMicRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x12\n\ntargetGbId\x18\x03 \x01(\x04\x12\x0f\n\x07\x62locked\x18\x04 \x01(\x08\x12\x13\n\x0b\x63\x61ptainGbId\x18\x05 \x01(\x04\"\x97\x01\n\x16\x41\x64justMemberPosRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x03 \x01(\x04\x12\x0f\n\x07srcGbId\x18\x04 \x01(\x04\x12\x13\n\x0bsrcGroupIdx\x18\x05 \x01(\x05\x12\x0f\n\x07\x64stGbId\x18\x06 \x01(\x04\x12\x13\n\x0b\x64stGroupIdx\x18\x07 \x01(\x05\"\x82\x01\n\x14SetVoiceStateRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\x12\x12\n\nenableMics\x18\x04 \x01(\x08\x12\x15\n\renableSpeaker\x18\x05 \x01(\x08\x12\x13\n\x0binVoiceRoom\x18\x06 \x01(\x08\"D\n\x12GetTeamListRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06target\x18\x02 \x01(\x05\x12\x10\n\x08serverId\x18\x05 \x01(\r\"\x7f\n\x15\x45nterMatchPoolRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06target\x18\x02 \x01(\x05\x12\x30\n\x06player\x18\x03 \x01(\x0b\x32 .CrossTeamServer.MatchPlayerInfo\x12\x16\n\x0etimeoutSeconds\x18\x04 \x01(\x05\"3\n\x15LeaveMatchPoolRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\"m\n\x10MatchJoinRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0e\n\x06target\x18\x03 \x01(\x05\x12+\n\x06member\x18\x04 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\"}\n\x18ReportMemberStateRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x10\n\x08serverId\x18\x02 \x01(\r\x12-\n\x07members\x18\x03 \x03(\x0b\x32\x1c.CrossTeamServer.MemberState\x12\x10\n\x08reportTS\x18\x04 \x01(\x03\"Y\n\x1dReportMemberStateBatchRequest\x12\x38\n\x05teams\x18\x01 \x03(\x0b\x32).CrossTeamServer.ReportMemberStateRequest\"A\n\x13RenameMemberRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\"\x87\x02\n\x12TeamChatMsgRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x12\n\nsenderGbId\x18\x02 \x01(\x04\x12\x12\n\nsenderName\x18\x03 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x04 \x01(\t\x12\n\n\x02ts\x18\x05 \x01(\x03\x12\x0f\n\x07msgType\x18\x06 \x01(\x05\x12\x10\n\x08voiceUrl\x18\x07 \x01(\t\x12\x0c\n\x04\x63ode\x18\x08 \x01(\x05\x12\x14\n\x0csenderSchool\x18\t \x01(\x05\x12\x13\n\x0bsenderLevel\x18\n \x01(\x05\x12\x11\n\tsenderSex\x18\x0b \x01(\x05\x12\x18\n\x10senderPicFrameId\x18\x0c \x01(\x05\x12\x13\n\x0bsenderEntId\x18\r \x01(\x05\"A\n\x13StartCrusadeRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\"g\n\x19\x43rusadeCheckResultRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\n\n\x02ok\x18\x03 \x01(\x08\x12\x0e\n\x06reason\x18\x04 \x01(\t\x12\x10\n\x08\x66\x61ilName\x18\x05 \x01(\t\"I\n\x18\x43rusadeSpaceReadyRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x11\n\tspaceUUID\x18\x02 \x01(\t\x12\n\n\x02ok\x18\x03 \x01(\x08\">\n\x10QueryTeamRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\"4\n\x14MemberOfflineRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\"N\n\x16\x43rusadeFinishedRequest\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0e\n\x06result\x18\x02 \x01(\x05\x12\x14\n\x0c\x66inishedTime\x18\x03 \x01(\x03\"A\n\x13GetApplyListRequest\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\"a\n\x0fTeamOpResultMsg\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x12\n\nresultCode\x18\x02 \x01(\x05\x12\x0e\n\x06teamId\x18\x03 \x01(\x04\x12\x0c\n\x04gbId\x18\x04 \x01(\x04\x12\x0e\n\x06target\x18\x05 \x01(\x05\"\xc1\x01\n\x13ReplyApplyNotifyMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x15\n\rapplicantGbId\x18\x02 \x01(\x04\x12\x12\n\nresultCode\x18\x03 \x01(\x05\x12\x0e\n\x06target\x18\x04 \x01(\x05\x12\x10\n\x08password\x18\x05 \x01(\t\x12\x13\n\x0b\x61pplySource\x18\x06 \x01(\x05\x12\x14\n\x0crequireLevel\x18\x07 \x01(\x05\x12\x14\n\x0crequireScore\x18\x08 \x01(\x05\x12\x0c\n\x04uuid\x18\t \x01(\x04\"_\n\x18TeamCreateSuccessPushMsg\x12,\n\x04team\x18\x01 \x01(\x0b\x32\x1e.CrossTeamServer.CrossTeamInfo\x12\x15\n\rreceiverGbIds\x18\x02 \x03(\x04\"]\n\x16TeamJoinSuccessPushMsg\x12,\n\x04team\x18\x01 \x01(\x0b\x32\x1e.CrossTeamServer.CrossTeamInfo\x12\x15\n\rreceiverGbIds\x18\x02 \x03(\x04\"l\n\x12TeamConvertPushMsg\x12,\n\x04team\x18\x01 \x01(\x0b\x32\x1e.CrossTeamServer.CrossTeamInfo\x12\x11\n\toldTeamId\x18\x02 \x01(\x04\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"g\n\x11MemberJoinPushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12+\n\x06member\x18\x02 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"Y\n\x12MemberLeavePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x0e\n\x06reason\x18\x03 \x01(\x05\x12\x15\n\rreceiverGbIds\x18\x04 \x03(\x04\"U\n\x14\x43\x61ptainChangePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x16\n\x0enewCaptainGbId\x18\x02 \x01(\x04\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"P\n\x13\x44\x65putyChangePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x12\n\ndeputyGbId\x18\x02 \x01(\x04\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"\x93\x01\n\x11MarkChangePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x12\n\nchangeType\x18\x02 \x01(\x05\x12\'\n\x04mark\x18\x03 \x01(\x0b\x32\x19.CrossTeamServer.MarkInfo\x12\x1a\n\x12onlyCaptainCanMark\x18\x04 \x01(\x08\x12\x15\n\rreceiverGbIds\x18\x05 \x03(\x04\"t\n\x10\x46ollowAskPushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0f\n\x07spaceNo\x18\x02 \x01(\r\x12\x0c\n\x04posX\x18\x03 \x01(\x02\x12\x0c\n\x04posY\x18\x04 \x01(\x02\x12\x0c\n\x04posZ\x18\x05 \x01(\x02\x12\x15\n\rreceiverGbIds\x18\x06 \x03(\x04\"w\n\x19\x42\x65\x63omeCaptainApplyPushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x33\n\tapplicant\x18\x02 \x01(\x0b\x32 .CrossTeamServer.MemberBasicInfo\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\";\n\x12TeamDisbandPushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x15\n\rreceiverGbIds\x18\x02 \x03(\x04\"\x9a\x01\n\x19TeamSettingsChangePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x10\n\x08minLevel\x18\x02 \x01(\x05\x12\x10\n\x08minScore\x18\x03 \x01(\x05\x12\r\n\x05intro\x18\x04 \x01(\t\x12\x15\n\rreceiverGbIds\x18\x05 \x03(\x04\x12\x11\n\tautoEnter\x18\x06 \x01(\x08\x12\x10\n\x08password\x18\x07 \x01(\t\"V\n\x1aTeamAutoMatchChangePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x11\n\tautoMatch\x18\x02 \x01(\x08\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"T\n\x19TeamMicsModeChangePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x10\n\x08micsMode\x18\x02 \x01(\x05\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"]\n\x15MemberMicBlockPushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x0f\n\x07\x62locked\x18\x03 \x01(\x08\x12\x15\n\rreceiverGbIds\x18\x04 \x03(\x04\"\xa3\x01\n\x17MemberVoiceStatePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x12\n\nenableMics\x18\x03 \x01(\x08\x12\x15\n\renableSpeaker\x18\x04 \x01(\x08\x12\x13\n\x0binVoiceRoom\x18\x05 \x01(\x08\x12\x13\n\x0bisBlockMics\x18\x06 \x01(\x08\x12\x15\n\rreceiverGbIds\x18\x07 \x03(\x04\"\x8b\x01\n\x16\x41\x64justMemberPosPushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0f\n\x07srcGbId\x18\x02 \x01(\x04\x12\x13\n\x0bsrcGroupIdx\x18\x03 \x01(\x05\x12\x0f\n\x07\x64stGbId\x18\x04 \x01(\x04\x12\x13\n\x0b\x64stGroupIdx\x18\x05 \x01(\x05\x12\x15\n\rreceiverGbIds\x18\x06 \x03(\x04\"_\n\x11TeamListResultMsg\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12,\n\x05teams\x18\x03 \x03(\x0b\x32\x1d.CrossTeamServer.TeamListItem\x12\x0e\n\x06target\x18\x06 \x01(\x05\"?\n\x0fMatchSuccessMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0e\n\x06target\x18\x02 \x01(\x05\x12\x0c\n\x04gbId\x18\x03 \x01(\x04\"V\n\rMatchStartMsg\x12\x0e\n\x06target\x18\x01 \x01(\x05\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x0f\n\x07\x65nterTS\x18\x03 \x01(\x03\x12\x16\n\x0etimeoutSeconds\x18\x04 \x01(\x05\",\n\x0cMatchStopMsg\x12\x0e\n\x06target\x18\x01 \x01(\x05\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\"/\n\x0fMatchTimeoutMsg\x12\x0e\n\x06target\x18\x01 \x01(\x05\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\"j\n\x17TeamMemberStatePushItem\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12-\n\x07members\x18\x02 \x03(\x0b\x32\x1c.CrossTeamServer.MemberState\x12\x10\n\x08reportTS\x18\x03 \x01(\x03\"R\n\x17TeamMemberStatesPushMsg\x12\x37\n\x05teams\x18\x01 \x03(\x0b\x32(.CrossTeamServer.TeamMemberStatePushItem\"X\n\x13MemberRenamePushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\rreceiverGbIds\x18\x04 \x03(\x04\"a\n\x10TeamChatBatchMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12&\n\x04msgs\x18\x02 \x03(\x0b\x32\x18.CrossTeamServer.ChatMsg\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"V\n\x0f\x43rusadeCheckMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x11\n\tdungeonNo\x18\x02 \x01(\x05\x12\x11\n\ttimeoutTS\x18\x03 \x01(\x03\x12\r\n\x05gbIds\x18\x04 \x03(\x04\"\x97\x01\n\x0c\x43rusadeGoMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x15\n\rcrossServerId\x18\x02 \x01(\r\x12\x11\n\tspaceUUID\x18\x03 \x01(\t\x12\x0f\n\x07\x63ontext\x18\x04 \x01(\x0c\x12\x0e\n\x06maxNum\x18\x05 \x01(\x05\x12,\n\x07members\x18\x06 \x03(\x0b\x32\x1b.CrossTeamServer.MemberInfo\"\x83\x01\n\x0f\x43rusadeAbortMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0e\n\x06reason\x18\x02 \x01(\x05\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x04 \x01(\x04\x12\x10\n\x08\x66\x61ilName\x18\x05 \x01(\t\x12\x12\n\nfailReason\x18\x06 \x01(\t\"K\n\x15\x43reateCrusadeSpaceMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x11\n\tdungeonNo\x18\x02 \x01(\x05\x12\x0f\n\x07\x63ontext\x18\x03 \x01(\x0c\"\x8e\x01\n\x12JoinApplyNotifyMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0e\n\x06target\x18\x02 \x01(\x05\x12.\n\tapplicant\x18\x03 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x13\n\x0b\x63\x61ptainGbId\x18\x04 \x01(\x04\x12\x13\n\x0b\x61pplySource\x18\x05 \x01(\x05\"\x88\x01\n\x0fInviteNotifyMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0e\n\x06target\x18\x02 \x01(\x05\x12,\n\x07inviter\x18\x03 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x13\n\x0binviteeGbId\x18\x04 \x01(\x04\x12\x12\n\ninviteType\x18\x05 \x01(\x05\"]\n\x16\x41pplyApprovedNotifyMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x0c\n\x04gbId\x18\x02 \x01(\x04\x12\x10\n\x08serverId\x18\x03 \x01(\r\x12\x13\n\x0b\x63\x61ptainGbId\x18\x04 \x01(\x04\"~\n\x15TeamUpInviteNotifyMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12,\n\x07inviter\x18\x02 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x13\n\x0binviteeGbId\x18\x03 \x01(\x04\x12\x12\n\ninviteType\x18\x04 \x01(\x05\"x\n\x14TeamUpReplyNotifyMsg\x12\x13\n\x0binviterGbId\x18\x01 \x01(\x04\x12,\n\x07invitee\x18\x02 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\r\n\x05\x61gree\x18\x03 \x01(\x08\x12\x0e\n\x06reason\x18\x04 \x01(\x05\"N\n\x12TeamUpTeamReadyMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x13\n\x0b\x63\x61ptainGbId\x18\x02 \x01(\x04\x12\x13\n\x0binviteeGbId\x18\x03 \x01(\x04\"^\n\x0fTeamDataRespMsg\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12,\n\x04team\x18\x03 \x01(\x0b\x32\x1e.CrossTeamServer.CrossTeamInfo\"d\n\x15QueryTeamCrossRespMsg\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12,\n\x04team\x18\x03 \x01(\x0b\x32\x1e.CrossTeamServer.CrossTeamInfo\"^\n\tApplyInfo\x12+\n\x06member\x18\x01 \x01(\x0b\x32\x1b.CrossTeamServer.MemberInfo\x12\x13\n\x0b\x61pplySource\x18\x02 \x01(\x05\x12\x0f\n\x07\x61pplyTS\x18\x03 \x01(\x03\"v\n\x10\x41pplyListPushMsg\x12\x0c\n\x04uuid\x18\x01 \x01(\x04\x12\x0e\n\x06teamId\x18\x02 \x01(\x04\x12\x14\n\x0creceiverGbId\x18\x03 \x01(\x04\x12.\n\napplicants\x18\x04 \x03(\x0b\x32\x1a.CrossTeamServer.ApplyInfo\"T\n\x14\x41pplyRemoveNotifyMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x15\n\rapplicantGbId\x18\x02 \x01(\x04\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\"a\n\x17\x44ungeonCDRefreshPushMsg\x12\x0e\n\x06teamId\x18\x01 \x01(\x04\x12\x1f\n\x17lastDungeonFinishedTime\x18\x02 \x01(\x03\x12\x15\n\rreceiverGbIds\x18\x03 \x03(\x04\x32\xa5\x1b\n\x0f\x43rossTeamServer\x12W\n\x12registerGameServer\x12*.CrossTeamServer.RegisterGameServerRequest\x1a\x15.CrossTeamServer.Void\x12:\n\nactiveTick\x12\x15.CrossTeamServer.Void\x1a\x15.CrossTeamServer.Void\x12G\n\ncreateTeam\x12\".CrossTeamServer.CreateTeamRequest\x1a\x15.CrossTeamServer.Void\x12\x45\n\tjoinApply\x12!.CrossTeamServer.JoinApplyRequest\x1a\x15.CrossTeamServer.Void\x12\x41\n\x07reqJoin\x12\x1f.CrossTeamServer.ReqJoinRequest\x1a\x15.CrossTeamServer.Void\x12O\n\x0e\x63learApplyList\x12&.CrossTeamServer.ClearApplyListRequest\x1a\x15.CrossTeamServer.Void\x12\x45\n\tsetDeputy\x12!.CrossTeamServer.SetDeputyRequest\x1a\x15.CrossTeamServer.Void\x12G\n\nreplyApply\x12\".CrossTeamServer.ReplyApplyRequest\x1a\x15.CrossTeamServer.Void\x12?\n\x06invite\x12\x1e.CrossTeamServer.InviteRequest\x1a\x15.CrossTeamServer.Void\x12I\n\x0breplyInvite\x12#.CrossTeamServer.ReplyInviteRequest\x1a\x15.CrossTeamServer.Void\x12\x45\n\tleaveTeam\x12!.CrossTeamServer.LeaveTeamRequest\x1a\x15.CrossTeamServer.Void\x12;\n\x04kick\x12\x1c.CrossTeamServer.KickRequest\x1a\x15.CrossTeamServer.Void\x12Q\n\x0ftransferCaptain\x12\'.CrossTeamServer.TransferCaptainRequest\x1a\x15.CrossTeamServer.Void\x12W\n\x12\x61pplyBecomeCaptain\x12*.CrossTeamServer.ApplyBecomeCaptainRequest\x1a\x15.CrossTeamServer.Void\x12W\n\x12replyBecomeCaptain\x12*.CrossTeamServer.ReplyBecomeCaptainRequest\x1a\x15.CrossTeamServer.Void\x12\x41\n\x07\x64isband\x12\x1f.CrossTeamServer.DisbandRequest\x1a\x15.CrossTeamServer.Void\x12\x45\n\tqueryTeam\x12!.CrossTeamServer.QueryTeamRequest\x1a\x15.CrossTeamServer.Void\x12Q\n\x0fsetTeamSettings\x12\'.CrossTeamServer.SetTeamSettingsRequest\x1a\x15.CrossTeamServer.Void\x12K\n\x0csetAutoMatch\x12$.CrossTeamServer.SetAutoMatchRequest\x1a\x15.CrossTeamServer.Void\x12I\n\x0bgetTeamList\x12#.CrossTeamServer.GetTeamListRequest\x1a\x15.CrossTeamServer.Void\x12O\n\x0e\x65nterMatchPool\x12&.CrossTeamServer.EnterMatchPoolRequest\x1a\x15.CrossTeamServer.Void\x12O\n\x0eleaveMatchPool\x12&.CrossTeamServer.LeaveMatchPoolRequest\x1a\x15.CrossTeamServer.Void\x12\x45\n\tmatchJoin\x12!.CrossTeamServer.MatchJoinRequest\x1a\x15.CrossTeamServer.Void\x12U\n\x11reportMemberState\x12).CrossTeamServer.ReportMemberStateRequest\x1a\x15.CrossTeamServer.Void\x12_\n\x16reportMemberStateBatch\x12..CrossTeamServer.ReportMemberStateBatchRequest\x1a\x15.CrossTeamServer.Void\x12K\n\x0crenameMember\x12$.CrossTeamServer.RenameMemberRequest\x1a\x15.CrossTeamServer.Void\x12I\n\x0bteamChatMsg\x12#.CrossTeamServer.TeamChatMsgRequest\x1a\x15.CrossTeamServer.Void\x12K\n\x0cstartCrusade\x12$.CrossTeamServer.StartCrusadeRequest\x1a\x15.CrossTeamServer.Void\x12W\n\x12\x63rusadeCheckResult\x12*.CrossTeamServer.CrusadeCheckResultRequest\x1a\x15.CrossTeamServer.Void\x12U\n\x11\x63rusadeSpaceReady\x12).CrossTeamServer.CrusadeSpaceReadyRequest\x1a\x15.CrossTeamServer.Void\x12Q\n\x0f\x63rusadeFinished\x12\'.CrossTeamServer.CrusadeFinishedRequest\x1a\x15.CrossTeamServer.Void\x12M\n\rmemberOffline\x12%.CrossTeamServer.MemberOfflineRequest\x1a\x15.CrossTeamServer.Void\x12I\n\x0bsetMicsMode\x12#.CrossTeamServer.SetMicsModeRequest\x1a\x15.CrossTeamServer.Void\x12\x43\n\x08\x62lockMic\x12 .CrossTeamServer.BlockMicRequest\x1a\x15.CrossTeamServer.Void\x12Q\n\x0f\x61\x64justMemberPos\x12\'.CrossTeamServer.AdjustMemberPosRequest\x1a\x15.CrossTeamServer.Void\x12M\n\rsetVoiceState\x12%.CrossTeamServer.SetVoiceStateRequest\x1a\x15.CrossTeamServer.Void\x12K\n\x0cgetApplyList\x12$.CrossTeamServer.GetApplyListRequest\x1a\x15.CrossTeamServer.Void\x12\x41\n\x07\x61\x64\x64Mark\x12\x1f.CrossTeamServer.AddMarkRequest\x1a\x15.CrossTeamServer.Void\x12\x41\n\x07\x64\x65lMark\x12\x1f.CrossTeamServer.DelMarkRequest\x1a\x15.CrossTeamServer.Void\x12W\n\x12setOnlyCaptainMark\x12*.CrossTeamServer.SetOnlyCaptainMarkRequest\x1a\x15.CrossTeamServer.Void\x12\x45\n\tfollowAsk\x12!.CrossTeamServer.FollowAskRequest\x1a\x15.CrossTeamServer.Void\x12I\n\x0b\x63onvertTeam\x12#.CrossTeamServer.ConvertTeamRequest\x1a\x15.CrossTeamServer.Void\x12K\n\x0cteamUpInvite\x12$.CrossTeamServer.TeamUpInviteRequest\x1a\x15.CrossTeamServer.Void\x12U\n\x11replyTeamUpInvite\x12).CrossTeamServer.ReplyTeamUpInviteRequest\x1a\x15.CrossTeamServer.Void\x12S\n\x10teamUpJoinNotify\x12(.CrossTeamServer.TeamUpJoinNotifyRequest\x1a\x15.CrossTeamServer.Void2\x8e\x1b\n\nGameServer\x12\x42\n\x12\x61\x63tiveTickCallback\x12\x15.CrossTeamServer.Void\x1a\x15.CrossTeamServer.Void\x12G\n\x0cteamOpResult\x12 .CrossTeamServer.TeamOpResultMsg\x1a\x15.CrossTeamServer.Void\x12O\n\x10replyApplyNotify\x12$.CrossTeamServer.ReplyApplyNotifyMsg\x1a\x15.CrossTeamServer.Void\x12Y\n\x15teamCreateSuccessPush\x12).CrossTeamServer.TeamCreateSuccessPushMsg\x1a\x15.CrossTeamServer.Void\x12U\n\x13teamJoinSuccessPush\x12\'.CrossTeamServer.TeamJoinSuccessPushMsg\x1a\x15.CrossTeamServer.Void\x12K\n\x0ememberJoinPush\x12\".CrossTeamServer.MemberJoinPushMsg\x1a\x15.CrossTeamServer.Void\x12M\n\x0fmemberLeavePush\x12#.CrossTeamServer.MemberLeavePushMsg\x1a\x15.CrossTeamServer.Void\x12Q\n\x11\x63\x61ptainChangePush\x12%.CrossTeamServer.CaptainChangePushMsg\x1a\x15.CrossTeamServer.Void\x12O\n\x10\x64\x65putyChangePush\x12$.CrossTeamServer.DeputyChangePushMsg\x1a\x15.CrossTeamServer.Void\x12[\n\x16\x62\x65\x63omeCaptainApplyPush\x12*.CrossTeamServer.BecomeCaptainApplyPushMsg\x1a\x15.CrossTeamServer.Void\x12M\n\x0fteamDisbandPush\x12#.CrossTeamServer.TeamDisbandPushMsg\x1a\x15.CrossTeamServer.Void\x12[\n\x16teamSettingsChangePush\x12*.CrossTeamServer.TeamSettingsChangePushMsg\x1a\x15.CrossTeamServer.Void\x12]\n\x17teamAutoMatchChangePush\x12+.CrossTeamServer.TeamAutoMatchChangePushMsg\x1a\x15.CrossTeamServer.Void\x12[\n\x16teamMicsModeChangePush\x12*.CrossTeamServer.TeamMicsModeChangePushMsg\x1a\x15.CrossTeamServer.Void\x12S\n\x12memberMicBlockPush\x12&.CrossTeamServer.MemberMicBlockPushMsg\x1a\x15.CrossTeamServer.Void\x12U\n\x13\x61\x64justMemberPosPush\x12\'.CrossTeamServer.AdjustMemberPosPushMsg\x1a\x15.CrossTeamServer.Void\x12K\n\x0eteamListResult\x12\".CrossTeamServer.TeamListResultMsg\x1a\x15.CrossTeamServer.Void\x12G\n\x0cmatchSuccess\x12 .CrossTeamServer.MatchSuccessMsg\x1a\x15.CrossTeamServer.Void\x12G\n\x0cmatchTimeout\x12 .CrossTeamServer.MatchTimeoutMsg\x1a\x15.CrossTeamServer.Void\x12W\n\x14teamMemberStatesPush\x12(.CrossTeamServer.TeamMemberStatesPushMsg\x1a\x15.CrossTeamServer.Void\x12O\n\x10memberRenamePush\x12$.CrossTeamServer.MemberRenamePushMsg\x1a\x15.CrossTeamServer.Void\x12I\n\rteamChatBatch\x12!.CrossTeamServer.TeamChatBatchMsg\x1a\x15.CrossTeamServer.Void\x12G\n\x0c\x63rusadeCheck\x12 .CrossTeamServer.CrusadeCheckMsg\x1a\x15.CrossTeamServer.Void\x12\x41\n\tcrusadeGo\x12\x1d.CrossTeamServer.CrusadeGoMsg\x1a\x15.CrossTeamServer.Void\x12G\n\x0c\x63rusadeAbort\x12 .CrossTeamServer.CrusadeAbortMsg\x1a\x15.CrossTeamServer.Void\x12S\n\x12\x63reateCrusadeSpace\x12&.CrossTeamServer.CreateCrusadeSpaceMsg\x1a\x15.CrossTeamServer.Void\x12G\n\x0cteamDataResp\x12 .CrossTeamServer.TeamDataRespMsg\x1a\x15.CrossTeamServer.Void\x12S\n\x12queryTeamCrossResp\x12&.CrossTeamServer.QueryTeamCrossRespMsg\x1a\x15.CrossTeamServer.Void\x12M\n\x0fjoinApplyNotify\x12#.CrossTeamServer.JoinApplyNotifyMsg\x1a\x15.CrossTeamServer.Void\x12G\n\x0cinviteNotify\x12 .CrossTeamServer.InviteNotifyMsg\x1a\x15.CrossTeamServer.Void\x12U\n\x13\x61pplyApprovedNotify\x12\'.CrossTeamServer.ApplyApprovedNotifyMsg\x1a\x15.CrossTeamServer.Void\x12W\n\x14memberVoiceStatePush\x12(.CrossTeamServer.MemberVoiceStatePushMsg\x1a\x15.CrossTeamServer.Void\x12\x43\n\nmatchStart\x12\x1e.CrossTeamServer.MatchStartMsg\x1a\x15.CrossTeamServer.Void\x12\x41\n\tmatchStop\x12\x1d.CrossTeamServer.MatchStopMsg\x1a\x15.CrossTeamServer.Void\x12I\n\rapplyListPush\x12!.CrossTeamServer.ApplyListPushMsg\x1a\x15.CrossTeamServer.Void\x12Q\n\x11\x61pplyRemoveNotify\x12%.CrossTeamServer.ApplyRemoveNotifyMsg\x1a\x15.CrossTeamServer.Void\x12W\n\x14\x64ungeonCDRefreshPush\x12(.CrossTeamServer.DungeonCDRefreshPushMsg\x1a\x15.CrossTeamServer.Void\x12K\n\x0emarkChangePush\x12\".CrossTeamServer.MarkChangePushMsg\x1a\x15.CrossTeamServer.Void\x12I\n\rfollowAskPush\x12!.CrossTeamServer.FollowAskPushMsg\x1a\x15.CrossTeamServer.Void\x12M\n\x0fteamConvertPush\x12#.CrossTeamServer.TeamConvertPushMsg\x1a\x15.CrossTeamServer.Void\x12S\n\x12teamUpInviteNotify\x12&.CrossTeamServer.TeamUpInviteNotifyMsg\x1a\x15.CrossTeamServer.Void\x12Q\n\x11teamUpReplyNotify\x12%.CrossTeamServer.TeamUpReplyNotifyMsg\x1a\x15.CrossTeamServer.Void\x12M\n\x0fteamUpTeamReady\x12#.CrossTeamServer.TeamUpTeamReadyMsg\x1a\x15.CrossTeamServer.VoidB\x19Z\x14../gameServerService\x90\x01\x01\x62\x06proto3')
 )
 
 
@@ -65,6 +65,20 @@ _REGISTERGAMESERVERREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='stubIdx', full_name='CrossTeamServer.RegisterGameServerRequest.stubIdx', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='stubNum', full_name='CrossTeamServer.RegisterGameServerRequest.stubNum', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -78,7 +92,7 @@ _REGISTERGAMESERVERREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=54,
-  serialized_end=99,
+  serialized_end=133,
 )
 
 
@@ -194,6 +208,20 @@ _MEMBERINFO = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='hp', full_name='CrossTeamServer.MemberInfo.hp', index=15,
+      number=16, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='maxHp', full_name='CrossTeamServer.MemberInfo.maxHp', index=16,
+      number=17, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -206,8 +234,8 @@ _MEMBERINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=102,
-  serialized_end=371,
+  serialized_start=136,
+  serialized_end=432,
 )
 
 
@@ -279,8 +307,8 @@ _MEMBERBASICINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=373,
-  serialized_end=495,
+  serialized_start=434,
+  serialized_end=556,
 )
 
 
@@ -361,6 +389,13 @@ _MEMBERSTATE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='groupIdx', full_name='CrossTeamServer.MemberState.groupIdx', index=10,
+      number=11, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -373,8 +408,8 @@ _MEMBERSTATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=498,
-  serialized_end=664,
+  serialized_start=559,
+  serialized_end=743,
 )
 
 
@@ -467,8 +502,8 @@ _MARKINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=667,
-  serialized_end=826,
+  serialized_start=746,
+  serialized_end=905,
 )
 
 
@@ -680,8 +715,8 @@ _CROSSTEAMINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=829,
-  serialized_end=1456,
+  serialized_start=908,
+  serialized_end=1535,
 )
 
 
@@ -774,8 +809,8 @@ _TEAMLISTITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1459,
-  serialized_end=1684,
+  serialized_start=1538,
+  serialized_end=1763,
 )
 
 
@@ -833,8 +868,8 @@ _MATCHPLAYERINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1686,
-  serialized_end=1779,
+  serialized_start=1765,
+  serialized_end=1858,
 )
 
 
@@ -922,6 +957,20 @@ _CHATMSG = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='senderServerId', full_name='CrossTeamServer.ChatMsg.senderServerId', index=11,
+      number=12, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='senderEntId', full_name='CrossTeamServer.ChatMsg.senderEntId', index=12,
+      number=13, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -934,8 +983,8 @@ _CHATMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1782,
-  serialized_end=1997,
+  serialized_start=1861,
+  serialized_end=2121,
 )
 
 
@@ -1056,8 +1105,8 @@ _CREATETEAMREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2000,
-  serialized_end=2290,
+  serialized_start=2124,
+  serialized_end=2414,
 )
 
 
@@ -1115,8 +1164,8 @@ _JOINAPPLYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2293,
-  serialized_end=2428,
+  serialized_start=2417,
+  serialized_end=2552,
 )
 
 
@@ -1167,8 +1216,8 @@ _REQJOINREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2430,
-  serialized_end=2542,
+  serialized_start=2554,
+  serialized_end=2666,
 )
 
 
@@ -1212,8 +1261,8 @@ _CLEARAPPLYLISTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2544,
-  serialized_end=2618,
+  serialized_start=2668,
+  serialized_end=2742,
 )
 
 
@@ -1264,8 +1313,8 @@ _SETDEPUTYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2620,
-  serialized_end=2709,
+  serialized_start=2744,
+  serialized_end=2833,
 )
 
 
@@ -1323,8 +1372,8 @@ _REPLYAPPLYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2711,
-  serialized_end=2819,
+  serialized_start=2835,
+  serialized_end=2943,
 )
 
 
@@ -1375,8 +1424,8 @@ _ADDMARKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2821,
-  serialized_end=2930,
+  serialized_start=2945,
+  serialized_end=3054,
 )
 
 
@@ -1434,8 +1483,8 @@ _DELMARKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2932,
-  serialized_end=3029,
+  serialized_start=3056,
+  serialized_end=3153,
 )
 
 
@@ -1486,8 +1535,8 @@ _SETONLYCAPTAINMARKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3031,
-  serialized_end=3130,
+  serialized_start=3155,
+  serialized_end=3254,
 )
 
 
@@ -1552,8 +1601,8 @@ _FOLLOWASKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3132,
-  serialized_end=3246,
+  serialized_start=3256,
+  serialized_end=3370,
 )
 
 
@@ -1618,8 +1667,8 @@ _INVITEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3249,
-  serialized_end=3381,
+  serialized_start=3373,
+  serialized_end=3505,
 )
 
 
@@ -1677,8 +1726,192 @@ _REPLYINVITEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3384,
-  serialized_end=3515,
+  serialized_start=3508,
+  serialized_end=3639,
+)
+
+
+_TEAMUPINVITEREQUEST = _descriptor.Descriptor(
+  name='TeamUpInviteRequest',
+  full_name='CrossTeamServer.TeamUpInviteRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='CrossTeamServer.TeamUpInviteRequest.uuid', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='teamId', full_name='CrossTeamServer.TeamUpInviteRequest.teamId', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='inviter', full_name='CrossTeamServer.TeamUpInviteRequest.inviter', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='inviteeGbId', full_name='CrossTeamServer.TeamUpInviteRequest.inviteeGbId', index=3,
+      number=4, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='inviteType', full_name='CrossTeamServer.TeamUpInviteRequest.inviteType', index=4,
+      number=5, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=3642,
+  serialized_end=3780,
+)
+
+
+_REPLYTEAMUPINVITEREQUEST = _descriptor.Descriptor(
+  name='ReplyTeamUpInviteRequest',
+  full_name='CrossTeamServer.ReplyTeamUpInviteRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='CrossTeamServer.ReplyTeamUpInviteRequest.uuid', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='teamId', full_name='CrossTeamServer.ReplyTeamUpInviteRequest.teamId', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='inviterGbId', full_name='CrossTeamServer.ReplyTeamUpInviteRequest.inviterGbId', index=2,
+      number=3, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='invitee', full_name='CrossTeamServer.ReplyTeamUpInviteRequest.invitee', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='agree', full_name='CrossTeamServer.ReplyTeamUpInviteRequest.agree', index=4,
+      number=5, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='inviteType', full_name='CrossTeamServer.ReplyTeamUpInviteRequest.inviteType', index=5,
+      number=6, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='reason', full_name='CrossTeamServer.ReplyTeamUpInviteRequest.reason', index=6,
+      number=7, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=3783,
+  serialized_end=3957,
+)
+
+
+_TEAMUPJOINNOTIFYREQUEST = _descriptor.Descriptor(
+  name='TeamUpJoinNotifyRequest',
+  full_name='CrossTeamServer.TeamUpJoinNotifyRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='CrossTeamServer.TeamUpJoinNotifyRequest.uuid', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='teamId', full_name='CrossTeamServer.TeamUpJoinNotifyRequest.teamId', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='inviterGbId', full_name='CrossTeamServer.TeamUpJoinNotifyRequest.inviterGbId', index=2,
+      number=3, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='inviteeGbId', full_name='CrossTeamServer.TeamUpJoinNotifyRequest.inviteeGbId', index=3,
+      number=4, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=3959,
+  serialized_end=4056,
 )
 
 
@@ -1722,8 +1955,8 @@ _LEAVETEAMREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3517,
-  serialized_end=3579,
+  serialized_start=4058,
+  serialized_end=4120,
 )
 
 
@@ -1774,8 +2007,8 @@ _KICKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3581,
-  serialized_end=3665,
+  serialized_start=4122,
+  serialized_end=4206,
 )
 
 
@@ -1826,8 +2059,8 @@ _TRANSFERCAPTAINREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3667,
-  serialized_end=3766,
+  serialized_start=4208,
+  serialized_end=4307,
 )
 
 
@@ -1871,8 +2104,8 @@ _APPLYBECOMECAPTAINREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3768,
-  serialized_end=3839,
+  serialized_start=4309,
+  serialized_end=4380,
 )
 
 
@@ -1930,8 +2163,8 @@ _REPLYBECOMECAPTAINREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3841,
-  serialized_end=3957,
+  serialized_start=4382,
+  serialized_end=4498,
 )
 
 
@@ -1975,8 +2208,95 @@ _DISBANDREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3959,
-  serialized_end=4026,
+  serialized_start=4500,
+  serialized_end=4567,
+)
+
+
+_CONVERTTEAMREQUEST = _descriptor.Descriptor(
+  name='ConvertTeamRequest',
+  full_name='CrossTeamServer.ConvertTeamRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='CrossTeamServer.ConvertTeamRequest.uuid', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='teamId', full_name='CrossTeamServer.ConvertTeamRequest.teamId', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='captainGbId', full_name='CrossTeamServer.ConvertTeamRequest.captainGbId', index=2,
+      number=3, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='newTeamId', full_name='CrossTeamServer.ConvertTeamRequest.newTeamId', index=3,
+      number=4, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='newTarget', full_name='CrossTeamServer.ConvertTeamRequest.newTarget', index=4,
+      number=5, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='newMaxNum', full_name='CrossTeamServer.ConvertTeamRequest.newMaxNum', index=5,
+      number=6, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='newDungeonMap', full_name='CrossTeamServer.ConvertTeamRequest.newDungeonMap', index=6,
+      number=7, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='isCross', full_name='CrossTeamServer.ConvertTeamRequest.isCross', index=7,
+      number=8, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='dunServer', full_name='CrossTeamServer.ConvertTeamRequest.dunServer', index=8,
+      number=9, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=4570,
+  serialized_end=4757,
 )
 
 
@@ -2055,8 +2375,8 @@ _SETTEAMSETTINGSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4029,
-  serialized_end=4192,
+  serialized_start=4760,
+  serialized_end=4923,
 )
 
 
@@ -2107,8 +2427,8 @@ _SETAUTOMATCHREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4194,
-  serialized_end=4285,
+  serialized_start=4925,
+  serialized_end=5016,
 )
 
 
@@ -2159,8 +2479,8 @@ _SETMICSMODEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4287,
-  serialized_end=4376,
+  serialized_start=5018,
+  serialized_end=5107,
 )
 
 
@@ -2218,8 +2538,8 @@ _BLOCKMICREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4378,
-  serialized_end=4483,
+  serialized_start=5109,
+  serialized_end=5214,
 )
 
 
@@ -2291,8 +2611,8 @@ _ADJUSTMEMBERPOSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4486,
-  serialized_end=4637,
+  serialized_start=5217,
+  serialized_end=5368,
 )
 
 
@@ -2357,8 +2677,8 @@ _SETVOICESTATEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4640,
-  serialized_end=4770,
+  serialized_start=5371,
+  serialized_end=5501,
 )
 
 
@@ -2402,8 +2722,8 @@ _GETTEAMLISTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4772,
-  serialized_end=4840,
+  serialized_start=5503,
+  serialized_end=5571,
 )
 
 
@@ -2454,8 +2774,8 @@ _ENTERMATCHPOOLREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4842,
-  serialized_end=4969,
+  serialized_start=5573,
+  serialized_end=5700,
 )
 
 
@@ -2492,8 +2812,8 @@ _LEAVEMATCHPOOLREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4971,
-  serialized_end=5022,
+  serialized_start=5702,
+  serialized_end=5753,
 )
 
 
@@ -2544,8 +2864,8 @@ _MATCHJOINREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5024,
-  serialized_end=5133,
+  serialized_start=5755,
+  serialized_end=5864,
 )
 
 
@@ -2596,8 +2916,84 @@ _REPORTMEMBERSTATEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5135,
-  serialized_end=5260,
+  serialized_start=5866,
+  serialized_end=5991,
+)
+
+
+_REPORTMEMBERSTATEBATCHREQUEST = _descriptor.Descriptor(
+  name='ReportMemberStateBatchRequest',
+  full_name='CrossTeamServer.ReportMemberStateBatchRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='teams', full_name='CrossTeamServer.ReportMemberStateBatchRequest.teams', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=5993,
+  serialized_end=6082,
+)
+
+
+_RENAMEMEMBERREQUEST = _descriptor.Descriptor(
+  name='RenameMemberRequest',
+  full_name='CrossTeamServer.RenameMemberRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='teamId', full_name='CrossTeamServer.RenameMemberRequest.teamId', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='gbId', full_name='CrossTeamServer.RenameMemberRequest.gbId', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='name', full_name='CrossTeamServer.RenameMemberRequest.name', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=6084,
+  serialized_end=6149,
 )
 
 
@@ -2692,6 +3088,13 @@ _TEAMCHATMSGREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='senderEntId', full_name='CrossTeamServer.TeamChatMsgRequest.senderEntId', index=12,
+      number=13, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -2704,8 +3107,8 @@ _TEAMCHATMSGREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5263,
-  serialized_end=5505,
+  serialized_start=6152,
+  serialized_end=6415,
 )
 
 
@@ -2749,8 +3152,8 @@ _STARTCRUSADEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5507,
-  serialized_end=5572,
+  serialized_start=6417,
+  serialized_end=6482,
 )
 
 
@@ -2789,6 +3192,13 @@ _CRUSADECHECKRESULTREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='failName', full_name='CrossTeamServer.CrusadeCheckResultRequest.failName', index=4,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -2801,8 +3211,8 @@ _CRUSADECHECKRESULTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5574,
-  serialized_end=5659,
+  serialized_start=6484,
+  serialized_end=6587,
 )
 
 
@@ -2846,8 +3256,8 @@ _CRUSADESPACEREADYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5661,
-  serialized_end=5734,
+  serialized_start=6589,
+  serialized_end=6662,
 )
 
 
@@ -2891,8 +3301,8 @@ _QUERYTEAMREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5736,
-  serialized_end=5798,
+  serialized_start=6664,
+  serialized_end=6726,
 )
 
 
@@ -2929,8 +3339,8 @@ _MEMBEROFFLINEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5800,
-  serialized_end=5852,
+  serialized_start=6728,
+  serialized_end=6780,
 )
 
 
@@ -2955,6 +3365,13 @@ _CRUSADEFINISHEDREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='finishedTime', full_name='CrossTeamServer.CrusadeFinishedRequest.finishedTime', index=2,
+      number=3, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -2967,8 +3384,8 @@ _CRUSADEFINISHEDREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5854,
-  serialized_end=5910,
+  serialized_start=6782,
+  serialized_end=6860,
 )
 
 
@@ -3012,8 +3429,8 @@ _GETAPPLYLISTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5912,
-  serialized_end=5977,
+  serialized_start=6862,
+  serialized_end=6927,
 )
 
 
@@ -3071,8 +3488,8 @@ _TEAMOPRESULTMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=5979,
-  serialized_end=6076,
+  serialized_start=6929,
+  serialized_end=7026,
 )
 
 
@@ -3139,6 +3556,13 @@ _REPLYAPPLYNOTIFYMSG = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='CrossTeamServer.ReplyApplyNotifyMsg.uuid', index=8,
+      number=9, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -3151,8 +3575,8 @@ _REPLYAPPLYNOTIFYMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6079,
-  serialized_end=6258,
+  serialized_start=7029,
+  serialized_end=7222,
 )
 
 
@@ -3189,8 +3613,8 @@ _TEAMCREATESUCCESSPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6260,
-  serialized_end=6355,
+  serialized_start=7224,
+  serialized_end=7319,
 )
 
 
@@ -3227,8 +3651,53 @@ _TEAMJOINSUCCESSPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6357,
-  serialized_end=6450,
+  serialized_start=7321,
+  serialized_end=7414,
+)
+
+
+_TEAMCONVERTPUSHMSG = _descriptor.Descriptor(
+  name='TeamConvertPushMsg',
+  full_name='CrossTeamServer.TeamConvertPushMsg',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='team', full_name='CrossTeamServer.TeamConvertPushMsg.team', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='oldTeamId', full_name='CrossTeamServer.TeamConvertPushMsg.oldTeamId', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='receiverGbIds', full_name='CrossTeamServer.TeamConvertPushMsg.receiverGbIds', index=2,
+      number=3, type=4, cpp_type=4, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=7416,
+  serialized_end=7524,
 )
 
 
@@ -3272,8 +3741,8 @@ _MEMBERJOINPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6452,
-  serialized_end=6555,
+  serialized_start=7526,
+  serialized_end=7629,
 )
 
 
@@ -3324,8 +3793,8 @@ _MEMBERLEAVEPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6557,
-  serialized_end=6646,
+  serialized_start=7631,
+  serialized_end=7720,
 )
 
 
@@ -3369,8 +3838,8 @@ _CAPTAINCHANGEPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6648,
-  serialized_end=6733,
+  serialized_start=7722,
+  serialized_end=7807,
 )
 
 
@@ -3414,8 +3883,8 @@ _DEPUTYCHANGEPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6735,
-  serialized_end=6815,
+  serialized_start=7809,
+  serialized_end=7889,
 )
 
 
@@ -3473,8 +3942,8 @@ _MARKCHANGEPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6818,
-  serialized_end=6965,
+  serialized_start=7892,
+  serialized_end=8039,
 )
 
 
@@ -3539,8 +4008,8 @@ _FOLLOWASKPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=6967,
-  serialized_end=7083,
+  serialized_start=8041,
+  serialized_end=8157,
 )
 
 
@@ -3584,8 +4053,8 @@ _BECOMECAPTAINAPPLYPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7085,
-  serialized_end=7204,
+  serialized_start=8159,
+  serialized_end=8278,
 )
 
 
@@ -3622,8 +4091,8 @@ _TEAMDISBANDPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7206,
-  serialized_end=7265,
+  serialized_start=8280,
+  serialized_end=8339,
 )
 
 
@@ -3695,8 +4164,8 @@ _TEAMSETTINGSCHANGEPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7268,
-  serialized_end=7422,
+  serialized_start=8342,
+  serialized_end=8496,
 )
 
 
@@ -3740,8 +4209,8 @@ _TEAMAUTOMATCHCHANGEPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7424,
-  serialized_end=7510,
+  serialized_start=8498,
+  serialized_end=8584,
 )
 
 
@@ -3785,8 +4254,8 @@ _TEAMMICSMODECHANGEPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7512,
-  serialized_end=7596,
+  serialized_start=8586,
+  serialized_end=8670,
 )
 
 
@@ -3837,8 +4306,8 @@ _MEMBERMICBLOCKPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7598,
-  serialized_end=7691,
+  serialized_start=8672,
+  serialized_end=8765,
 )
 
 
@@ -3910,8 +4379,8 @@ _MEMBERVOICESTATEPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7694,
-  serialized_end=7857,
+  serialized_start=8768,
+  serialized_end=8931,
 )
 
 
@@ -3976,8 +4445,8 @@ _ADJUSTMEMBERPOSPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=7860,
-  serialized_end=7999,
+  serialized_start=8934,
+  serialized_end=9073,
 )
 
 
@@ -4021,8 +4490,8 @@ _TEAMLISTRESULTMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8001,
-  serialized_end=8096,
+  serialized_start=9075,
+  serialized_end=9170,
 )
 
 
@@ -4066,8 +4535,8 @@ _MATCHSUCCESSMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8098,
-  serialized_end=8161,
+  serialized_start=9172,
+  serialized_end=9235,
 )
 
 
@@ -4118,8 +4587,8 @@ _MATCHSTARTMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8163,
-  serialized_end=8249,
+  serialized_start=9237,
+  serialized_end=9323,
 )
 
 
@@ -4156,8 +4625,8 @@ _MATCHSTOPMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8251,
-  serialized_end=8295,
+  serialized_start=9325,
+  serialized_end=9369,
 )
 
 
@@ -4194,41 +4663,117 @@ _MATCHTIMEOUTMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8297,
-  serialized_end=8344,
+  serialized_start=9371,
+  serialized_end=9418,
 )
 
 
-_BROADCASTMEMBERSTATEMSG = _descriptor.Descriptor(
-  name='BroadcastMemberStateMsg',
-  full_name='CrossTeamServer.BroadcastMemberStateMsg',
+_TEAMMEMBERSTATEPUSHITEM = _descriptor.Descriptor(
+  name='TeamMemberStatePushItem',
+  full_name='CrossTeamServer.TeamMemberStatePushItem',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='teamId', full_name='CrossTeamServer.BroadcastMemberStateMsg.teamId', index=0,
+      name='teamId', full_name='CrossTeamServer.TeamMemberStatePushItem.teamId', index=0,
       number=1, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='members', full_name='CrossTeamServer.BroadcastMemberStateMsg.members', index=1,
+      name='members', full_name='CrossTeamServer.TeamMemberStatePushItem.members', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='reportTS', full_name='CrossTeamServer.BroadcastMemberStateMsg.reportTS', index=2,
+      name='reportTS', full_name='CrossTeamServer.TeamMemberStatePushItem.reportTS', index=2,
       number=3, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=9420,
+  serialized_end=9526,
+)
+
+
+_TEAMMEMBERSTATESPUSHMSG = _descriptor.Descriptor(
+  name='TeamMemberStatesPushMsg',
+  full_name='CrossTeamServer.TeamMemberStatesPushMsg',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
     _descriptor.FieldDescriptor(
-      name='receiverGbIds', full_name='CrossTeamServer.BroadcastMemberStateMsg.receiverGbIds', index=3,
+      name='teams', full_name='CrossTeamServer.TeamMemberStatesPushMsg.teams', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=9528,
+  serialized_end=9610,
+)
+
+
+_MEMBERRENAMEPUSHMSG = _descriptor.Descriptor(
+  name='MemberRenamePushMsg',
+  full_name='CrossTeamServer.MemberRenamePushMsg',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='teamId', full_name='CrossTeamServer.MemberRenamePushMsg.teamId', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='gbId', full_name='CrossTeamServer.MemberRenamePushMsg.gbId', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='name', full_name='CrossTeamServer.MemberRenamePushMsg.name', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='receiverGbIds', full_name='CrossTeamServer.MemberRenamePushMsg.receiverGbIds', index=3,
       number=4, type=4, cpp_type=4, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -4246,8 +4791,8 @@ _BROADCASTMEMBERSTATEMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8347,
-  serialized_end=8476,
+  serialized_start=9612,
+  serialized_end=9700,
 )
 
 
@@ -4291,8 +4836,8 @@ _TEAMCHATBATCHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8478,
-  serialized_end=8575,
+  serialized_start=9702,
+  serialized_end=9799,
 )
 
 
@@ -4343,8 +4888,8 @@ _CRUSADECHECKMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8577,
-  serialized_end=8663,
+  serialized_start=9801,
+  serialized_end=9887,
 )
 
 
@@ -4409,8 +4954,8 @@ _CRUSADEGOMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8666,
-  serialized_end=8817,
+  serialized_start=9890,
+  serialized_end=10041,
 )
 
 
@@ -4442,6 +4987,27 @@ _CRUSADEABORTMSG = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='captainGbId', full_name='CrossTeamServer.CrusadeAbortMsg.captainGbId', index=3,
+      number=4, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='failName', full_name='CrossTeamServer.CrusadeAbortMsg.failName', index=4,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='failReason', full_name='CrossTeamServer.CrusadeAbortMsg.failReason', index=5,
+      number=6, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -4454,8 +5020,8 @@ _CRUSADEABORTMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8819,
-  serialized_end=8891,
+  serialized_start=10044,
+  serialized_end=10175,
 )
 
 
@@ -4499,8 +5065,8 @@ _CREATECRUSADESPACEMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8893,
-  serialized_end=8968,
+  serialized_start=10177,
+  serialized_end=10252,
 )
 
 
@@ -4558,8 +5124,8 @@ _JOINAPPLYNOTIFYMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=8971,
-  serialized_end=9113,
+  serialized_start=10255,
+  serialized_end=10397,
 )
 
 
@@ -4617,8 +5183,209 @@ _INVITENOTIFYMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9116,
-  serialized_end=9252,
+  serialized_start=10400,
+  serialized_end=10536,
+)
+
+
+_APPLYAPPROVEDNOTIFYMSG = _descriptor.Descriptor(
+  name='ApplyApprovedNotifyMsg',
+  full_name='CrossTeamServer.ApplyApprovedNotifyMsg',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='teamId', full_name='CrossTeamServer.ApplyApprovedNotifyMsg.teamId', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='gbId', full_name='CrossTeamServer.ApplyApprovedNotifyMsg.gbId', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='serverId', full_name='CrossTeamServer.ApplyApprovedNotifyMsg.serverId', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='captainGbId', full_name='CrossTeamServer.ApplyApprovedNotifyMsg.captainGbId', index=3,
+      number=4, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=10538,
+  serialized_end=10631,
+)
+
+
+_TEAMUPINVITENOTIFYMSG = _descriptor.Descriptor(
+  name='TeamUpInviteNotifyMsg',
+  full_name='CrossTeamServer.TeamUpInviteNotifyMsg',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='teamId', full_name='CrossTeamServer.TeamUpInviteNotifyMsg.teamId', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='inviter', full_name='CrossTeamServer.TeamUpInviteNotifyMsg.inviter', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='inviteeGbId', full_name='CrossTeamServer.TeamUpInviteNotifyMsg.inviteeGbId', index=2,
+      number=3, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='inviteType', full_name='CrossTeamServer.TeamUpInviteNotifyMsg.inviteType', index=3,
+      number=4, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=10633,
+  serialized_end=10759,
+)
+
+
+_TEAMUPREPLYNOTIFYMSG = _descriptor.Descriptor(
+  name='TeamUpReplyNotifyMsg',
+  full_name='CrossTeamServer.TeamUpReplyNotifyMsg',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='inviterGbId', full_name='CrossTeamServer.TeamUpReplyNotifyMsg.inviterGbId', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='invitee', full_name='CrossTeamServer.TeamUpReplyNotifyMsg.invitee', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='agree', full_name='CrossTeamServer.TeamUpReplyNotifyMsg.agree', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='reason', full_name='CrossTeamServer.TeamUpReplyNotifyMsg.reason', index=3,
+      number=4, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=10761,
+  serialized_end=10881,
+)
+
+
+_TEAMUPTEAMREADYMSG = _descriptor.Descriptor(
+  name='TeamUpTeamReadyMsg',
+  full_name='CrossTeamServer.TeamUpTeamReadyMsg',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='teamId', full_name='CrossTeamServer.TeamUpTeamReadyMsg.teamId', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='captainGbId', full_name='CrossTeamServer.TeamUpTeamReadyMsg.captainGbId', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='inviteeGbId', full_name='CrossTeamServer.TeamUpTeamReadyMsg.inviteeGbId', index=2,
+      number=3, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=10883,
+  serialized_end=10961,
 )
 
 
@@ -4662,8 +5429,8 @@ _TEAMDATARESPMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9254,
-  serialized_end=9348,
+  serialized_start=10963,
+  serialized_end=11057,
 )
 
 
@@ -4707,8 +5474,8 @@ _QUERYTEAMCROSSRESPMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9350,
-  serialized_end=9450,
+  serialized_start=11059,
+  serialized_end=11159,
 )
 
 
@@ -4752,8 +5519,8 @@ _APPLYINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9452,
-  serialized_end=9546,
+  serialized_start=11161,
+  serialized_end=11255,
 )
 
 
@@ -4804,8 +5571,8 @@ _APPLYLISTPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9548,
-  serialized_end=9666,
+  serialized_start=11257,
+  serialized_end=11375,
 )
 
 
@@ -4849,8 +5616,8 @@ _APPLYREMOVENOTIFYMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9668,
-  serialized_end=9752,
+  serialized_start=11377,
+  serialized_end=11461,
 )
 
 
@@ -4894,8 +5661,8 @@ _DUNGEONCDREFRESHPUSHMSG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=9754,
-  serialized_end=9851,
+  serialized_start=11463,
+  serialized_end=11560,
 )
 
 _CROSSTEAMINFO.fields_by_name['members'].message_type = _MEMBERINFO
@@ -4907,20 +5674,27 @@ _JOINAPPLYREQUEST.fields_by_name['applicant'].message_type = _MEMBERINFO
 _REQJOINREQUEST.fields_by_name['applicant'].message_type = _MEMBERINFO
 _ADDMARKREQUEST.fields_by_name['mark'].message_type = _MARKINFO
 _REPLYINVITEREQUEST.fields_by_name['invitee'].message_type = _MEMBERINFO
+_TEAMUPINVITEREQUEST.fields_by_name['inviter'].message_type = _MEMBERINFO
+_REPLYTEAMUPINVITEREQUEST.fields_by_name['invitee'].message_type = _MEMBERINFO
 _ENTERMATCHPOOLREQUEST.fields_by_name['player'].message_type = _MATCHPLAYERINFO
 _MATCHJOINREQUEST.fields_by_name['member'].message_type = _MEMBERINFO
 _REPORTMEMBERSTATEREQUEST.fields_by_name['members'].message_type = _MEMBERSTATE
+_REPORTMEMBERSTATEBATCHREQUEST.fields_by_name['teams'].message_type = _REPORTMEMBERSTATEREQUEST
 _TEAMCREATESUCCESSPUSHMSG.fields_by_name['team'].message_type = _CROSSTEAMINFO
 _TEAMJOINSUCCESSPUSHMSG.fields_by_name['team'].message_type = _CROSSTEAMINFO
+_TEAMCONVERTPUSHMSG.fields_by_name['team'].message_type = _CROSSTEAMINFO
 _MEMBERJOINPUSHMSG.fields_by_name['member'].message_type = _MEMBERINFO
 _MARKCHANGEPUSHMSG.fields_by_name['mark'].message_type = _MARKINFO
 _BECOMECAPTAINAPPLYPUSHMSG.fields_by_name['applicant'].message_type = _MEMBERBASICINFO
 _TEAMLISTRESULTMSG.fields_by_name['teams'].message_type = _TEAMLISTITEM
-_BROADCASTMEMBERSTATEMSG.fields_by_name['members'].message_type = _MEMBERSTATE
+_TEAMMEMBERSTATEPUSHITEM.fields_by_name['members'].message_type = _MEMBERSTATE
+_TEAMMEMBERSTATESPUSHMSG.fields_by_name['teams'].message_type = _TEAMMEMBERSTATEPUSHITEM
 _TEAMCHATBATCHMSG.fields_by_name['msgs'].message_type = _CHATMSG
 _CRUSADEGOMSG.fields_by_name['members'].message_type = _MEMBERINFO
 _JOINAPPLYNOTIFYMSG.fields_by_name['applicant'].message_type = _MEMBERINFO
 _INVITENOTIFYMSG.fields_by_name['inviter'].message_type = _MEMBERINFO
+_TEAMUPINVITENOTIFYMSG.fields_by_name['inviter'].message_type = _MEMBERINFO
+_TEAMUPREPLYNOTIFYMSG.fields_by_name['invitee'].message_type = _MEMBERINFO
 _TEAMDATARESPMSG.fields_by_name['team'].message_type = _CROSSTEAMINFO
 _QUERYTEAMCROSSRESPMSG.fields_by_name['team'].message_type = _CROSSTEAMINFO
 _APPLYINFO.fields_by_name['member'].message_type = _MEMBERINFO
@@ -4947,12 +5721,16 @@ DESCRIPTOR.message_types_by_name['SetOnlyCaptainMarkRequest'] = _SETONLYCAPTAINM
 DESCRIPTOR.message_types_by_name['FollowAskRequest'] = _FOLLOWASKREQUEST
 DESCRIPTOR.message_types_by_name['InviteRequest'] = _INVITEREQUEST
 DESCRIPTOR.message_types_by_name['ReplyInviteRequest'] = _REPLYINVITEREQUEST
+DESCRIPTOR.message_types_by_name['TeamUpInviteRequest'] = _TEAMUPINVITEREQUEST
+DESCRIPTOR.message_types_by_name['ReplyTeamUpInviteRequest'] = _REPLYTEAMUPINVITEREQUEST
+DESCRIPTOR.message_types_by_name['TeamUpJoinNotifyRequest'] = _TEAMUPJOINNOTIFYREQUEST
 DESCRIPTOR.message_types_by_name['LeaveTeamRequest'] = _LEAVETEAMREQUEST
 DESCRIPTOR.message_types_by_name['KickRequest'] = _KICKREQUEST
 DESCRIPTOR.message_types_by_name['TransferCaptainRequest'] = _TRANSFERCAPTAINREQUEST
 DESCRIPTOR.message_types_by_name['ApplyBecomeCaptainRequest'] = _APPLYBECOMECAPTAINREQUEST
 DESCRIPTOR.message_types_by_name['ReplyBecomeCaptainRequest'] = _REPLYBECOMECAPTAINREQUEST
 DESCRIPTOR.message_types_by_name['DisbandRequest'] = _DISBANDREQUEST
+DESCRIPTOR.message_types_by_name['ConvertTeamRequest'] = _CONVERTTEAMREQUEST
 DESCRIPTOR.message_types_by_name['SetTeamSettingsRequest'] = _SETTEAMSETTINGSREQUEST
 DESCRIPTOR.message_types_by_name['SetAutoMatchRequest'] = _SETAUTOMATCHREQUEST
 DESCRIPTOR.message_types_by_name['SetMicsModeRequest'] = _SETMICSMODEREQUEST
@@ -4964,6 +5742,8 @@ DESCRIPTOR.message_types_by_name['EnterMatchPoolRequest'] = _ENTERMATCHPOOLREQUE
 DESCRIPTOR.message_types_by_name['LeaveMatchPoolRequest'] = _LEAVEMATCHPOOLREQUEST
 DESCRIPTOR.message_types_by_name['MatchJoinRequest'] = _MATCHJOINREQUEST
 DESCRIPTOR.message_types_by_name['ReportMemberStateRequest'] = _REPORTMEMBERSTATEREQUEST
+DESCRIPTOR.message_types_by_name['ReportMemberStateBatchRequest'] = _REPORTMEMBERSTATEBATCHREQUEST
+DESCRIPTOR.message_types_by_name['RenameMemberRequest'] = _RENAMEMEMBERREQUEST
 DESCRIPTOR.message_types_by_name['TeamChatMsgRequest'] = _TEAMCHATMSGREQUEST
 DESCRIPTOR.message_types_by_name['StartCrusadeRequest'] = _STARTCRUSADEREQUEST
 DESCRIPTOR.message_types_by_name['CrusadeCheckResultRequest'] = _CRUSADECHECKRESULTREQUEST
@@ -4976,6 +5756,7 @@ DESCRIPTOR.message_types_by_name['TeamOpResultMsg'] = _TEAMOPRESULTMSG
 DESCRIPTOR.message_types_by_name['ReplyApplyNotifyMsg'] = _REPLYAPPLYNOTIFYMSG
 DESCRIPTOR.message_types_by_name['TeamCreateSuccessPushMsg'] = _TEAMCREATESUCCESSPUSHMSG
 DESCRIPTOR.message_types_by_name['TeamJoinSuccessPushMsg'] = _TEAMJOINSUCCESSPUSHMSG
+DESCRIPTOR.message_types_by_name['TeamConvertPushMsg'] = _TEAMCONVERTPUSHMSG
 DESCRIPTOR.message_types_by_name['MemberJoinPushMsg'] = _MEMBERJOINPUSHMSG
 DESCRIPTOR.message_types_by_name['MemberLeavePushMsg'] = _MEMBERLEAVEPUSHMSG
 DESCRIPTOR.message_types_by_name['CaptainChangePushMsg'] = _CAPTAINCHANGEPUSHMSG
@@ -4995,7 +5776,9 @@ DESCRIPTOR.message_types_by_name['MatchSuccessMsg'] = _MATCHSUCCESSMSG
 DESCRIPTOR.message_types_by_name['MatchStartMsg'] = _MATCHSTARTMSG
 DESCRIPTOR.message_types_by_name['MatchStopMsg'] = _MATCHSTOPMSG
 DESCRIPTOR.message_types_by_name['MatchTimeoutMsg'] = _MATCHTIMEOUTMSG
-DESCRIPTOR.message_types_by_name['BroadcastMemberStateMsg'] = _BROADCASTMEMBERSTATEMSG
+DESCRIPTOR.message_types_by_name['TeamMemberStatePushItem'] = _TEAMMEMBERSTATEPUSHITEM
+DESCRIPTOR.message_types_by_name['TeamMemberStatesPushMsg'] = _TEAMMEMBERSTATESPUSHMSG
+DESCRIPTOR.message_types_by_name['MemberRenamePushMsg'] = _MEMBERRENAMEPUSHMSG
 DESCRIPTOR.message_types_by_name['TeamChatBatchMsg'] = _TEAMCHATBATCHMSG
 DESCRIPTOR.message_types_by_name['CrusadeCheckMsg'] = _CRUSADECHECKMSG
 DESCRIPTOR.message_types_by_name['CrusadeGoMsg'] = _CRUSADEGOMSG
@@ -5003,6 +5786,10 @@ DESCRIPTOR.message_types_by_name['CrusadeAbortMsg'] = _CRUSADEABORTMSG
 DESCRIPTOR.message_types_by_name['CreateCrusadeSpaceMsg'] = _CREATECRUSADESPACEMSG
 DESCRIPTOR.message_types_by_name['JoinApplyNotifyMsg'] = _JOINAPPLYNOTIFYMSG
 DESCRIPTOR.message_types_by_name['InviteNotifyMsg'] = _INVITENOTIFYMSG
+DESCRIPTOR.message_types_by_name['ApplyApprovedNotifyMsg'] = _APPLYAPPROVEDNOTIFYMSG
+DESCRIPTOR.message_types_by_name['TeamUpInviteNotifyMsg'] = _TEAMUPINVITENOTIFYMSG
+DESCRIPTOR.message_types_by_name['TeamUpReplyNotifyMsg'] = _TEAMUPREPLYNOTIFYMSG
+DESCRIPTOR.message_types_by_name['TeamUpTeamReadyMsg'] = _TEAMUPTEAMREADYMSG
 DESCRIPTOR.message_types_by_name['TeamDataRespMsg'] = _TEAMDATARESPMSG
 DESCRIPTOR.message_types_by_name['QueryTeamCrossRespMsg'] = _QUERYTEAMCROSSRESPMSG
 DESCRIPTOR.message_types_by_name['ApplyInfo'] = _APPLYINFO
@@ -5165,6 +5952,27 @@ ReplyInviteRequest = _reflection.GeneratedProtocolMessageType('ReplyInviteReques
   ))
 _sym_db.RegisterMessage(ReplyInviteRequest)
 
+TeamUpInviteRequest = _reflection.GeneratedProtocolMessageType('TeamUpInviteRequest', (_message.Message,), dict(
+  DESCRIPTOR = _TEAMUPINVITEREQUEST,
+  __module__ = 'gameServerCrossTeam_pb2'
+  # @@protoc_insertion_point(class_scope:CrossTeamServer.TeamUpInviteRequest)
+  ))
+_sym_db.RegisterMessage(TeamUpInviteRequest)
+
+ReplyTeamUpInviteRequest = _reflection.GeneratedProtocolMessageType('ReplyTeamUpInviteRequest', (_message.Message,), dict(
+  DESCRIPTOR = _REPLYTEAMUPINVITEREQUEST,
+  __module__ = 'gameServerCrossTeam_pb2'
+  # @@protoc_insertion_point(class_scope:CrossTeamServer.ReplyTeamUpInviteRequest)
+  ))
+_sym_db.RegisterMessage(ReplyTeamUpInviteRequest)
+
+TeamUpJoinNotifyRequest = _reflection.GeneratedProtocolMessageType('TeamUpJoinNotifyRequest', (_message.Message,), dict(
+  DESCRIPTOR = _TEAMUPJOINNOTIFYREQUEST,
+  __module__ = 'gameServerCrossTeam_pb2'
+  # @@protoc_insertion_point(class_scope:CrossTeamServer.TeamUpJoinNotifyRequest)
+  ))
+_sym_db.RegisterMessage(TeamUpJoinNotifyRequest)
+
 LeaveTeamRequest = _reflection.GeneratedProtocolMessageType('LeaveTeamRequest', (_message.Message,), dict(
   DESCRIPTOR = _LEAVETEAMREQUEST,
   __module__ = 'gameServerCrossTeam_pb2'
@@ -5206,6 +6014,13 @@ DisbandRequest = _reflection.GeneratedProtocolMessageType('DisbandRequest', (_me
   # @@protoc_insertion_point(class_scope:CrossTeamServer.DisbandRequest)
   ))
 _sym_db.RegisterMessage(DisbandRequest)
+
+ConvertTeamRequest = _reflection.GeneratedProtocolMessageType('ConvertTeamRequest', (_message.Message,), dict(
+  DESCRIPTOR = _CONVERTTEAMREQUEST,
+  __module__ = 'gameServerCrossTeam_pb2'
+  # @@protoc_insertion_point(class_scope:CrossTeamServer.ConvertTeamRequest)
+  ))
+_sym_db.RegisterMessage(ConvertTeamRequest)
 
 SetTeamSettingsRequest = _reflection.GeneratedProtocolMessageType('SetTeamSettingsRequest', (_message.Message,), dict(
   DESCRIPTOR = _SETTEAMSETTINGSREQUEST,
@@ -5283,6 +6098,20 @@ ReportMemberStateRequest = _reflection.GeneratedProtocolMessageType('ReportMembe
   # @@protoc_insertion_point(class_scope:CrossTeamServer.ReportMemberStateRequest)
   ))
 _sym_db.RegisterMessage(ReportMemberStateRequest)
+
+ReportMemberStateBatchRequest = _reflection.GeneratedProtocolMessageType('ReportMemberStateBatchRequest', (_message.Message,), dict(
+  DESCRIPTOR = _REPORTMEMBERSTATEBATCHREQUEST,
+  __module__ = 'gameServerCrossTeam_pb2'
+  # @@protoc_insertion_point(class_scope:CrossTeamServer.ReportMemberStateBatchRequest)
+  ))
+_sym_db.RegisterMessage(ReportMemberStateBatchRequest)
+
+RenameMemberRequest = _reflection.GeneratedProtocolMessageType('RenameMemberRequest', (_message.Message,), dict(
+  DESCRIPTOR = _RENAMEMEMBERREQUEST,
+  __module__ = 'gameServerCrossTeam_pb2'
+  # @@protoc_insertion_point(class_scope:CrossTeamServer.RenameMemberRequest)
+  ))
+_sym_db.RegisterMessage(RenameMemberRequest)
 
 TeamChatMsgRequest = _reflection.GeneratedProtocolMessageType('TeamChatMsgRequest', (_message.Message,), dict(
   DESCRIPTOR = _TEAMCHATMSGREQUEST,
@@ -5367,6 +6196,13 @@ TeamJoinSuccessPushMsg = _reflection.GeneratedProtocolMessageType('TeamJoinSucce
   # @@protoc_insertion_point(class_scope:CrossTeamServer.TeamJoinSuccessPushMsg)
   ))
 _sym_db.RegisterMessage(TeamJoinSuccessPushMsg)
+
+TeamConvertPushMsg = _reflection.GeneratedProtocolMessageType('TeamConvertPushMsg', (_message.Message,), dict(
+  DESCRIPTOR = _TEAMCONVERTPUSHMSG,
+  __module__ = 'gameServerCrossTeam_pb2'
+  # @@protoc_insertion_point(class_scope:CrossTeamServer.TeamConvertPushMsg)
+  ))
+_sym_db.RegisterMessage(TeamConvertPushMsg)
 
 MemberJoinPushMsg = _reflection.GeneratedProtocolMessageType('MemberJoinPushMsg', (_message.Message,), dict(
   DESCRIPTOR = _MEMBERJOINPUSHMSG,
@@ -5501,12 +6337,26 @@ MatchTimeoutMsg = _reflection.GeneratedProtocolMessageType('MatchTimeoutMsg', (_
   ))
 _sym_db.RegisterMessage(MatchTimeoutMsg)
 
-BroadcastMemberStateMsg = _reflection.GeneratedProtocolMessageType('BroadcastMemberStateMsg', (_message.Message,), dict(
-  DESCRIPTOR = _BROADCASTMEMBERSTATEMSG,
+TeamMemberStatePushItem = _reflection.GeneratedProtocolMessageType('TeamMemberStatePushItem', (_message.Message,), dict(
+  DESCRIPTOR = _TEAMMEMBERSTATEPUSHITEM,
   __module__ = 'gameServerCrossTeam_pb2'
-  # @@protoc_insertion_point(class_scope:CrossTeamServer.BroadcastMemberStateMsg)
+  # @@protoc_insertion_point(class_scope:CrossTeamServer.TeamMemberStatePushItem)
   ))
-_sym_db.RegisterMessage(BroadcastMemberStateMsg)
+_sym_db.RegisterMessage(TeamMemberStatePushItem)
+
+TeamMemberStatesPushMsg = _reflection.GeneratedProtocolMessageType('TeamMemberStatesPushMsg', (_message.Message,), dict(
+  DESCRIPTOR = _TEAMMEMBERSTATESPUSHMSG,
+  __module__ = 'gameServerCrossTeam_pb2'
+  # @@protoc_insertion_point(class_scope:CrossTeamServer.TeamMemberStatesPushMsg)
+  ))
+_sym_db.RegisterMessage(TeamMemberStatesPushMsg)
+
+MemberRenamePushMsg = _reflection.GeneratedProtocolMessageType('MemberRenamePushMsg', (_message.Message,), dict(
+  DESCRIPTOR = _MEMBERRENAMEPUSHMSG,
+  __module__ = 'gameServerCrossTeam_pb2'
+  # @@protoc_insertion_point(class_scope:CrossTeamServer.MemberRenamePushMsg)
+  ))
+_sym_db.RegisterMessage(MemberRenamePushMsg)
 
 TeamChatBatchMsg = _reflection.GeneratedProtocolMessageType('TeamChatBatchMsg', (_message.Message,), dict(
   DESCRIPTOR = _TEAMCHATBATCHMSG,
@@ -5556,6 +6406,34 @@ InviteNotifyMsg = _reflection.GeneratedProtocolMessageType('InviteNotifyMsg', (_
   # @@protoc_insertion_point(class_scope:CrossTeamServer.InviteNotifyMsg)
   ))
 _sym_db.RegisterMessage(InviteNotifyMsg)
+
+ApplyApprovedNotifyMsg = _reflection.GeneratedProtocolMessageType('ApplyApprovedNotifyMsg', (_message.Message,), dict(
+  DESCRIPTOR = _APPLYAPPROVEDNOTIFYMSG,
+  __module__ = 'gameServerCrossTeam_pb2'
+  # @@protoc_insertion_point(class_scope:CrossTeamServer.ApplyApprovedNotifyMsg)
+  ))
+_sym_db.RegisterMessage(ApplyApprovedNotifyMsg)
+
+TeamUpInviteNotifyMsg = _reflection.GeneratedProtocolMessageType('TeamUpInviteNotifyMsg', (_message.Message,), dict(
+  DESCRIPTOR = _TEAMUPINVITENOTIFYMSG,
+  __module__ = 'gameServerCrossTeam_pb2'
+  # @@protoc_insertion_point(class_scope:CrossTeamServer.TeamUpInviteNotifyMsg)
+  ))
+_sym_db.RegisterMessage(TeamUpInviteNotifyMsg)
+
+TeamUpReplyNotifyMsg = _reflection.GeneratedProtocolMessageType('TeamUpReplyNotifyMsg', (_message.Message,), dict(
+  DESCRIPTOR = _TEAMUPREPLYNOTIFYMSG,
+  __module__ = 'gameServerCrossTeam_pb2'
+  # @@protoc_insertion_point(class_scope:CrossTeamServer.TeamUpReplyNotifyMsg)
+  ))
+_sym_db.RegisterMessage(TeamUpReplyNotifyMsg)
+
+TeamUpTeamReadyMsg = _reflection.GeneratedProtocolMessageType('TeamUpTeamReadyMsg', (_message.Message,), dict(
+  DESCRIPTOR = _TEAMUPTEAMREADYMSG,
+  __module__ = 'gameServerCrossTeam_pb2'
+  # @@protoc_insertion_point(class_scope:CrossTeamServer.TeamUpTeamReadyMsg)
+  ))
+_sym_db.RegisterMessage(TeamUpTeamReadyMsg)
 
 TeamDataRespMsg = _reflection.GeneratedProtocolMessageType('TeamDataRespMsg', (_message.Message,), dict(
   DESCRIPTOR = _TEAMDATARESPMSG,
@@ -5608,8 +6486,8 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=9854,
-  serialized_end=12849,
+  serialized_start=11563,
+  serialized_end=15056,
   methods=[
   _descriptor.MethodDescriptor(
     name='registerGameServer',
@@ -5828,9 +6706,27 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
+    name='reportMemberStateBatch',
+    full_name='CrossTeamServer.CrossTeamServer.reportMemberStateBatch',
+    index=24,
+    containing_service=None,
+    input_type=_REPORTMEMBERSTATEBATCHREQUEST,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='renameMember',
+    full_name='CrossTeamServer.CrossTeamServer.renameMember',
+    index=25,
+    containing_service=None,
+    input_type=_RENAMEMEMBERREQUEST,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
     name='teamChatMsg',
     full_name='CrossTeamServer.CrossTeamServer.teamChatMsg',
-    index=24,
+    index=26,
     containing_service=None,
     input_type=_TEAMCHATMSGREQUEST,
     output_type=_VOID,
@@ -5839,7 +6735,7 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='startCrusade',
     full_name='CrossTeamServer.CrossTeamServer.startCrusade',
-    index=25,
+    index=27,
     containing_service=None,
     input_type=_STARTCRUSADEREQUEST,
     output_type=_VOID,
@@ -5848,7 +6744,7 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='crusadeCheckResult',
     full_name='CrossTeamServer.CrossTeamServer.crusadeCheckResult',
-    index=26,
+    index=28,
     containing_service=None,
     input_type=_CRUSADECHECKRESULTREQUEST,
     output_type=_VOID,
@@ -5857,7 +6753,7 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='crusadeSpaceReady',
     full_name='CrossTeamServer.CrossTeamServer.crusadeSpaceReady',
-    index=27,
+    index=29,
     containing_service=None,
     input_type=_CRUSADESPACEREADYREQUEST,
     output_type=_VOID,
@@ -5866,7 +6762,7 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='crusadeFinished',
     full_name='CrossTeamServer.CrossTeamServer.crusadeFinished',
-    index=28,
+    index=30,
     containing_service=None,
     input_type=_CRUSADEFINISHEDREQUEST,
     output_type=_VOID,
@@ -5875,7 +6771,7 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='memberOffline',
     full_name='CrossTeamServer.CrossTeamServer.memberOffline',
-    index=29,
+    index=31,
     containing_service=None,
     input_type=_MEMBEROFFLINEREQUEST,
     output_type=_VOID,
@@ -5884,7 +6780,7 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='setMicsMode',
     full_name='CrossTeamServer.CrossTeamServer.setMicsMode',
-    index=30,
+    index=32,
     containing_service=None,
     input_type=_SETMICSMODEREQUEST,
     output_type=_VOID,
@@ -5893,7 +6789,7 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='blockMic',
     full_name='CrossTeamServer.CrossTeamServer.blockMic',
-    index=31,
+    index=33,
     containing_service=None,
     input_type=_BLOCKMICREQUEST,
     output_type=_VOID,
@@ -5902,7 +6798,7 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='adjustMemberPos',
     full_name='CrossTeamServer.CrossTeamServer.adjustMemberPos',
-    index=32,
+    index=34,
     containing_service=None,
     input_type=_ADJUSTMEMBERPOSREQUEST,
     output_type=_VOID,
@@ -5911,7 +6807,7 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='setVoiceState',
     full_name='CrossTeamServer.CrossTeamServer.setVoiceState',
-    index=33,
+    index=35,
     containing_service=None,
     input_type=_SETVOICESTATEREQUEST,
     output_type=_VOID,
@@ -5920,7 +6816,7 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='getApplyList',
     full_name='CrossTeamServer.CrossTeamServer.getApplyList',
-    index=34,
+    index=36,
     containing_service=None,
     input_type=_GETAPPLYLISTREQUEST,
     output_type=_VOID,
@@ -5929,7 +6825,7 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='addMark',
     full_name='CrossTeamServer.CrossTeamServer.addMark',
-    index=35,
+    index=37,
     containing_service=None,
     input_type=_ADDMARKREQUEST,
     output_type=_VOID,
@@ -5938,7 +6834,7 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='delMark',
     full_name='CrossTeamServer.CrossTeamServer.delMark',
-    index=36,
+    index=38,
     containing_service=None,
     input_type=_DELMARKREQUEST,
     output_type=_VOID,
@@ -5947,7 +6843,7 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='setOnlyCaptainMark',
     full_name='CrossTeamServer.CrossTeamServer.setOnlyCaptainMark',
-    index=37,
+    index=39,
     containing_service=None,
     input_type=_SETONLYCAPTAINMARKREQUEST,
     output_type=_VOID,
@@ -5956,9 +6852,45 @@ _CROSSTEAMSERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='followAsk',
     full_name='CrossTeamServer.CrossTeamServer.followAsk',
-    index=38,
+    index=40,
     containing_service=None,
     input_type=_FOLLOWASKREQUEST,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='convertTeam',
+    full_name='CrossTeamServer.CrossTeamServer.convertTeam',
+    index=41,
+    containing_service=None,
+    input_type=_CONVERTTEAMREQUEST,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='teamUpInvite',
+    full_name='CrossTeamServer.CrossTeamServer.teamUpInvite',
+    index=42,
+    containing_service=None,
+    input_type=_TEAMUPINVITEREQUEST,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='replyTeamUpInvite',
+    full_name='CrossTeamServer.CrossTeamServer.replyTeamUpInvite',
+    index=43,
+    containing_service=None,
+    input_type=_REPLYTEAMUPINVITEREQUEST,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='teamUpJoinNotify',
+    full_name='CrossTeamServer.CrossTeamServer.teamUpJoinNotify',
+    index=44,
+    containing_service=None,
+    input_type=_TEAMUPJOINNOTIFYREQUEST,
     output_type=_VOID,
     serialized_options=None,
   ),
@@ -5974,8 +6906,8 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=12852,
-  serialized_end=15828,
+  serialized_start=15059,
+  serialized_end=18529,
   methods=[
   _descriptor.MethodDescriptor(
     name='activeTickCallback',
@@ -6149,18 +7081,27 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
-    name='broadcastMemberState',
-    full_name='CrossTeamServer.GameServer.broadcastMemberState',
+    name='teamMemberStatesPush',
+    full_name='CrossTeamServer.GameServer.teamMemberStatesPush',
     index=19,
     containing_service=None,
-    input_type=_BROADCASTMEMBERSTATEMSG,
+    input_type=_TEAMMEMBERSTATESPUSHMSG,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='memberRenamePush',
+    full_name='CrossTeamServer.GameServer.memberRenamePush',
+    index=20,
+    containing_service=None,
+    input_type=_MEMBERRENAMEPUSHMSG,
     output_type=_VOID,
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
     name='teamChatBatch',
     full_name='CrossTeamServer.GameServer.teamChatBatch',
-    index=20,
+    index=21,
     containing_service=None,
     input_type=_TEAMCHATBATCHMSG,
     output_type=_VOID,
@@ -6169,7 +7110,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='crusadeCheck',
     full_name='CrossTeamServer.GameServer.crusadeCheck',
-    index=21,
+    index=22,
     containing_service=None,
     input_type=_CRUSADECHECKMSG,
     output_type=_VOID,
@@ -6178,7 +7119,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='crusadeGo',
     full_name='CrossTeamServer.GameServer.crusadeGo',
-    index=22,
+    index=23,
     containing_service=None,
     input_type=_CRUSADEGOMSG,
     output_type=_VOID,
@@ -6187,7 +7128,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='crusadeAbort',
     full_name='CrossTeamServer.GameServer.crusadeAbort',
-    index=23,
+    index=24,
     containing_service=None,
     input_type=_CRUSADEABORTMSG,
     output_type=_VOID,
@@ -6196,7 +7137,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='createCrusadeSpace',
     full_name='CrossTeamServer.GameServer.createCrusadeSpace',
-    index=24,
+    index=25,
     containing_service=None,
     input_type=_CREATECRUSADESPACEMSG,
     output_type=_VOID,
@@ -6205,7 +7146,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='teamDataResp',
     full_name='CrossTeamServer.GameServer.teamDataResp',
-    index=25,
+    index=26,
     containing_service=None,
     input_type=_TEAMDATARESPMSG,
     output_type=_VOID,
@@ -6214,7 +7155,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='queryTeamCrossResp',
     full_name='CrossTeamServer.GameServer.queryTeamCrossResp',
-    index=26,
+    index=27,
     containing_service=None,
     input_type=_QUERYTEAMCROSSRESPMSG,
     output_type=_VOID,
@@ -6223,7 +7164,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='joinApplyNotify',
     full_name='CrossTeamServer.GameServer.joinApplyNotify',
-    index=27,
+    index=28,
     containing_service=None,
     input_type=_JOINAPPLYNOTIFYMSG,
     output_type=_VOID,
@@ -6232,16 +7173,25 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='inviteNotify',
     full_name='CrossTeamServer.GameServer.inviteNotify',
-    index=28,
+    index=29,
     containing_service=None,
     input_type=_INVITENOTIFYMSG,
     output_type=_VOID,
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
+    name='applyApprovedNotify',
+    full_name='CrossTeamServer.GameServer.applyApprovedNotify',
+    index=30,
+    containing_service=None,
+    input_type=_APPLYAPPROVEDNOTIFYMSG,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
     name='memberVoiceStatePush',
     full_name='CrossTeamServer.GameServer.memberVoiceStatePush',
-    index=29,
+    index=31,
     containing_service=None,
     input_type=_MEMBERVOICESTATEPUSHMSG,
     output_type=_VOID,
@@ -6250,7 +7200,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='matchStart',
     full_name='CrossTeamServer.GameServer.matchStart',
-    index=30,
+    index=32,
     containing_service=None,
     input_type=_MATCHSTARTMSG,
     output_type=_VOID,
@@ -6259,7 +7209,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='matchStop',
     full_name='CrossTeamServer.GameServer.matchStop',
-    index=31,
+    index=33,
     containing_service=None,
     input_type=_MATCHSTOPMSG,
     output_type=_VOID,
@@ -6268,7 +7218,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='applyListPush',
     full_name='CrossTeamServer.GameServer.applyListPush',
-    index=32,
+    index=34,
     containing_service=None,
     input_type=_APPLYLISTPUSHMSG,
     output_type=_VOID,
@@ -6277,7 +7227,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='applyRemoveNotify',
     full_name='CrossTeamServer.GameServer.applyRemoveNotify',
-    index=33,
+    index=35,
     containing_service=None,
     input_type=_APPLYREMOVENOTIFYMSG,
     output_type=_VOID,
@@ -6286,7 +7236,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='dungeonCDRefreshPush',
     full_name='CrossTeamServer.GameServer.dungeonCDRefreshPush',
-    index=34,
+    index=36,
     containing_service=None,
     input_type=_DUNGEONCDREFRESHPUSHMSG,
     output_type=_VOID,
@@ -6295,7 +7245,7 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='markChangePush',
     full_name='CrossTeamServer.GameServer.markChangePush',
-    index=35,
+    index=37,
     containing_service=None,
     input_type=_MARKCHANGEPUSHMSG,
     output_type=_VOID,
@@ -6304,9 +7254,45 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='followAskPush',
     full_name='CrossTeamServer.GameServer.followAskPush',
-    index=36,
+    index=38,
     containing_service=None,
     input_type=_FOLLOWASKPUSHMSG,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='teamConvertPush',
+    full_name='CrossTeamServer.GameServer.teamConvertPush',
+    index=39,
+    containing_service=None,
+    input_type=_TEAMCONVERTPUSHMSG,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='teamUpInviteNotify',
+    full_name='CrossTeamServer.GameServer.teamUpInviteNotify',
+    index=40,
+    containing_service=None,
+    input_type=_TEAMUPINVITENOTIFYMSG,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='teamUpReplyNotify',
+    full_name='CrossTeamServer.GameServer.teamUpReplyNotify',
+    index=41,
+    containing_service=None,
+    input_type=_TEAMUPREPLYNOTIFYMSG,
+    output_type=_VOID,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='teamUpTeamReady',
+    full_name='CrossTeamServer.GameServer.teamUpTeamReady',
+    index=42,
+    containing_service=None,
+    input_type=_TEAMUPTEAMREADYMSG,
     output_type=_VOID,
     serialized_options=None,
   ),

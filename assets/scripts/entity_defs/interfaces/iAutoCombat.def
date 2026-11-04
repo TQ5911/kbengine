@@ -72,6 +72,13 @@
             <Persistent>    true               </Persistent>
         </autoCombatSkillFrequent>
 
+        <autoFightCounterHp>
+            <Type>          UINT8              </Type>
+            <Flags>         OWN_CLIENT         </Flags>
+            <Default>       50                 </Default>
+            <Persistent>    true               </Persistent>
+        </autoFightCounterHp>
+
         <doubleBarFlag>
             <Type>          BOOL               </Type>
             <Flags>         CELL_PRIVATE       </Flags>
@@ -114,6 +121,10 @@
         <setAutoCombatReliveReturnTimes> <Exposed/>
             <Arg>        UINT8              </Arg>
         </setAutoCombatReliveReturnTimes>
+
+        <setAutoFightCounterHp> <Exposed/>
+            <Arg>        UINT8              </Arg>
+        </setAutoFightCounterHp>
 
         <onGetEnemyPosInfo>
             <Arg>        ENTITYCALL             </Arg>

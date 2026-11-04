@@ -5,6 +5,7 @@ import gameconst
 import functools
 import random
 import math
+import time
 import cube_room
 import cube_config
 
@@ -14,7 +15,10 @@ import KBEngine
 import mineBattle_miningArea as MBMA
 import experience_revenue as ERD
 import experience_revenueWorldLevel as ERWL
+import experience_revenueTimePeriod as ERTP
+import experience_revenueOnlinePeak as EROP
 import experience_bindWorldLevel as EBWL
+import experience_refreshRateWorldLv as EFRL
 
 @functools.lru_cache(maxsize=1024)
 def fetchMapId(spaceNo):
@@ -204,6 +208,20 @@ def parseLineType(spaceNo):
         return 0
 
     return spaceNo // gameconst.SPACE_NO_INTERVAL
+
+
+def lineInfo(mapId=None, lineNo=None, spaceNo=None):
+    # 分线日志上下文：缺的地图ID、分线号、spaceNo 互相补齐
+    if spaceNo is not None and spaceNo >= gameconst.COPIED_SPACE_NO_START:
+        if mapId is None:
+            mapId = spaceNo // gameconst.SPACE_NO_INTERVAL
+        if lineNo is None:
+            lineNo = spaceNo % gameconst.SPACE_NO_INTERVAL
+    elif spaceNo is not None and mapId is None:
+        mapId = spaceNo
+    if spaceNo is None and mapId is not None and lineNo is not None and lineNo >= 0:
+        spaceNo = int(mapId) * gameconst.SPACE_NO_INTERVAL + int(lineNo)
+    return 'mapId={}, lineNo={}, spaceNo={}'.format(mapId, lineNo, spaceNo)
 
 
 def parseDungeonNoBySpaceNo(spaceNo):
@@ -422,29 +440,88 @@ def getKillMonsterRewardConfig(monsterLevel, playerLevel):
     config = ERD.revenueLevelGapDic[levelDelta]
     return config
 
-def getKillMonsterWorldLevelDropRatio(monsterLevel, worldLevel):
-    """世界等级掉落系数。差值 = 世界等级 - 怪物等级，只处理世界等级高于怪物的情况。"""
-    if not monsterLevel or not worldLevel:
+def getKillMonsterTimePeriodDropRatio(hour=None):
+    """时段掉落系数。配表 ID 就是小时，未配到的小时为 1。"""
+    if hour is None:
+        hour = time.localtime().tm_hour
+    row = ERTP.datas.get(int(hour))
+    if not row:
         return 1.0
-    delta = int(worldLevel - monsterLevel)
-    if delta <= 0:
-        return 1.0
-    for i in range(ERWL.minKey, ERWL.maxKey + 1):
-        if delta <= -ERWL.datas[i]['levelgap']:
-            return ERWL.datas[i]['rewardprop']
-    return ERWL.datas[ERWL.maxKey]['rewardprop']
+    return row['rewardprop']
 
-def getKillMonsterWorldLevelBindRatio(monsterLevel, worldLevel):
-    """世界等级跨级绑定比例。差值 = 世界等级 - 怪物等级，只处理世界等级高于怪物的情况。"""
-    if not monsterLevel or not worldLevel:
+def getKillMonsterOnlinePeakDropRatio(groupId, onlineNum, useCross=False):
+    """在线峰值掉落系数。在指定组别内取 onlinePeak 不超过当前峰值的最大一档。
+    跨服用 crossRewardprop，本服用 rewardprop。"""
+    if not groupId:
+        return 1.0
+    onlineNum = int(onlineNum or 0)
+    rewardProp = None
+    matchedPeak = None
+    for i in range(EROP.minKey, EROP.maxKey + 1):
+        row = EROP.datas[i]
+        if int(row['groupID']) != int(groupId):
+            continue
+        peak = int(row['onlinePeak'])
+        if peak > onlineNum:
+            continue
+        if matchedPeak is None or peak >= matchedPeak:
+            matchedPeak = peak
+            rewardProp = row['crossRewardprop'] if useCross else row['rewardprop']
+    if rewardProp is None:
+        return 1.0
+    return rewardProp
+
+def getKillMonsterWorldLevelDropRatio(groupId, monsterLevel, worldLevel, effectiveLevel=0):
+    """世界等级掉落系数。effectiveLevel 为 0 时按怪物等级，大于 0 时按生效等级。"""
+    if not groupId or not monsterLevel or not worldLevel:
+        return 1.0
+    if effectiveLevel > 0:
+        if worldLevel < effectiveLevel or monsterLevel > effectiveLevel:
+            return 1.0
+        delta = worldLevel - effectiveLevel
+    else:
+        delta = worldLevel - monsterLevel
+        if delta <= 0:
+            return 1.0
+    rewardProp = None
+    for i in range(ERWL.minKey, ERWL.maxKey + 1):
+        row = ERWL.datas[i]
+        if row['groupID'] != groupId:
+            continue
+        rewardProp = row['rewardprop']
+        if delta <= -row['levelgap']:
+            return rewardProp
+    return rewardProp if rewardProp is not None else 1.0
+
+def getKillMonsterWorldLevelBindRatio(groupId, monsterLevel, worldLevel):
+    """世界等级跨级绑定比例。差值 = 世界等级 - 怪物等级。
+    只读取 experience_bindWorldLevel 中 groupID 与 groupId 相同的行，超出该组范围时取组内末行。"""
+    if not groupId or not monsterLevel or not worldLevel:
         return 0.0
     delta = int(worldLevel - monsterLevel)
-    if delta <= 0:
-        return 0.0
+    rewardBind = None
     for i in range(EBWL.minKey, EBWL.maxKey + 1):
-        if delta <= -EBWL.datas[i]['levelGap']:
-            return EBWL.datas[i]['rewardBind']
-    return EBWL.datas[EBWL.maxKey]['rewardBind']
+        row = EBWL.datas[i]
+        if row['groupID'] != groupId:
+            continue
+        rewardBind = row['rewardBind']
+        if delta <= -row['levelGap']:
+            return rewardBind
+    return rewardBind if rewardBind is not None else 0.0
+
+def getMonsterRefreshRateByWorldLevel(monsterLevel, worldLevel, refreshType):
+    """怪物刷新概率。差值 = 世界等级 - 怪物等级（怪越高级概率越低）。
+    差值左闭右开，超出表格范围时取首/末行，即小于 -10 取 -10 行，大于 10 取 10 行。"""
+    if not refreshType or not monsterLevel or not worldLevel:
+        return 1.0
+
+    delta = int(monsterLevel - worldLevel)
+    delta = max(-10, min(10, delta))
+    rowData = EFRL.datas.get(delta, None)
+    if not rowData:
+        return 1.0
+
+    return rowData.get(str(int(refreshType)), 1.0)
 
 def _isArenaSpace(spaceNo):
     _mapId = fetchMapId(spaceNo)

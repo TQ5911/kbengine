@@ -60,7 +60,7 @@ datas = _tools.RODict({
     8: _tools.RODict({
         "ID": 8,
         "name": "副本内传送门怪物刷新",
-        "refreshTime": 1.0,
+        "refreshTime": 0.0,
         "bornStateTime": 1.0,
     }),
     9: _tools.RODict({

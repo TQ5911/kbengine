@@ -91,6 +91,7 @@ datas ={
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 25,
             "LightPillar": "",
             "MapEntityScale": 0,
@@ -127,6 +128,7 @@ datas ={
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 33,
             "LightPillar": 51008360,
             "MapEntityScale": 0,
@@ -136,8 +138,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              5400.0,
-              6300.0
+              6900.0,
+              7500.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",
@@ -160,7 +162,9 @@ datas ={
           "PosY": 57.2359,
           "PosZ": 392.1776,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 33,
             "LightPillar": 51008361,
             "MapEntityScale": 0,
@@ -170,8 +174,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              5400.0,
-              6300.0
+              6900.0,
+              7500.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",
@@ -194,7 +198,9 @@ datas ={
           "PosY": 36.22639,
           "PosZ": 243.0157,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 29,
             "LightPillar": 51008362,
             "MapEntityScale": 0,
@@ -204,8 +210,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              3600.0,
-              4500.0
+              5100.0,
+              5700.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",
@@ -228,7 +234,9 @@ datas ={
           "PosY": 18.00691,
           "PosZ": 302.0142,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 29,
             "LightPillar": 51008363,
             "MapEntityScale": 0,
@@ -238,8 +246,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              3600.0,
-              4500.0
+              5100.0,
+              5700.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",
@@ -262,7 +270,9 @@ datas ={
           "PosY": 0.2852588,
           "PosZ": 186.1493,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 25,
             "LightPillar": 51008364,
             "MapEntityScale": 0,

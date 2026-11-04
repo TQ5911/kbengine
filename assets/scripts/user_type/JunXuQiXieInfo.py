@@ -30,6 +30,10 @@ class JunXuQiXieVal(userType.UserSingleType):
     def upgradeFundCost(self):
         _id = GWE_WEUD.typeLevelDic[self.qixieType][self.level]
         return GWE_WEUD.datas[_id]['upgradeCost']
+
+    def upgradeExp(self):
+        _id = GWE_WEUD.typeLevelDic[self.qixieType][self.level]
+        return GWE_WEUD.datas[_id]['upgradeExp']
     
     def isExpSufficient(self):
         _id = GWE_WEUD.typeLevelDic[self.qixieType][self.level]

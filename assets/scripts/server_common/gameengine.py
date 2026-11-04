@@ -8,6 +8,7 @@ from rpc import RpcChannel
 
 import traceback
 import sys
+import os
 import hashlib
 
 import utils
@@ -184,6 +185,17 @@ def isFirstCellApp():
     return _cellappGroupOrders[0] == 2
 
 
+def getComponentId():
+    """当前进程的 componentID (实体id), 与 baseapp onCellAppDeath 回调里的 cid 同源。
+
+    注意: cellapp 的死亡/恢复配对必须使用该 id, 不要用
+    KBEngine.getComponentGroupOrder()。groupOrder 是各进程本地推导的,
+    同一个 cellapp 在不同的 baseapp 上可能给出不同的值 (例如 3 和 4),
+    用它去重会导致一次死亡被记成两个不同的 cellapp, 进而卡住重建流程。
+    """
+    return int(os.getenv('KBE_COMPONENTID', '0'))
+
+
 # 查询所有开着的spaceno，包括静态场景和副本场景
 def chooseAllSpace():
     return gameglobal.spaceNOIDCache
@@ -241,8 +253,7 @@ def getDungeonEnterTypeBySpaceNo(spaceNo):
 
 def getDungeonStubBySpaceNo(spaceNo):
     # 副本空间归属每 dungeonNo 一个的副本 stub（跨服讨伐空间同样由对应 dungeonNo 的
-    # TeamDungeonStub/RaidDungeonStub 管理，跨服判定走空间 playMode，见
-    # DungeonSpaceVal.isCrossDungeon）
+    # CrossTeamDungeonStub 管理）
     et = getDungeonEnterTypeBySpaceNo(spaceNo)
     return getDungeonStubByDungeonNo(formula.fetchMapId(spaceNo), et)
 
@@ -422,21 +433,11 @@ def playerStubHashIdx(gbId):
 def buildIndexStubName(stubName, idx):
     return '%s_%s' % (stubName, idx)
 
-def getTeamStub(teamId):
-    id = teamId % gameconst.TEAMSTUB_CONF_NUM
-    teamStubName = 'TeamStub' + str(id)
-    return getGlobalBase(teamStubName)
-
 def getCrossTeamStub(teamId):
     # 跨服组队本服代理分片路由：teamId % M；无 teamId 的入口传 gbId
-    id = teamId % gameconst.CROSS_TEAMSTUB_CONF_NUM
+    id = teamId % gameconfig.crossTeamStubNum()
     crossTeamStubName = gameconst.GLOBAL_BASE_STUB_CROSSTEAMSTUB + str(id)
     return getGlobalBase(crossTeamStubName)
-
-def getRaidStub(raidId):
-    id = raidId % gameconst.RAIDSTUB_CONFIG_NUM
-    raidStubName = gameconst.GLOBAL_BASE_STUB_RAIDSTUB + str(id)
-    return getGlobalBase(raidStubName)
 
 def getLeaderStub(leaderBoardType, reportErr=True):
     _leaderStubName = 'LeaderBoardStub' + str(leaderBoardType)
@@ -574,7 +575,6 @@ def setMapleServerInfo(serverInfo, alias, serverName):
 
 
 def removeEquipDropDestroyCollection(collectionId, dropEquipId):
-    # 因为装备列表太长导致之前的被删掉了，这时候需要删除掉落物
     _ent = KBEngine.entities.get(collectionId)
     if _ent:
         _ent.onEquipDropDestroy(dropEquipId)
@@ -666,6 +666,11 @@ def setMineCanAttackBits(bitFlag, isSet):
         gameglobal.mineCanAttackBits |= bitFlag
     else:
         gameglobal.mineCanAttackBits &= ~bitFlag
+
+def setRefreshRateOfTime(rates):
+    """怪物刷新的时段概率系数{时段表列类型: 系数}，由 WorldRefreshEntityStub 定时算好后
+    通过 callAllApps 广播到每个 base/cell 进程各自的 gameglobal，怪物刷新时直接读，不跑 cron。"""
+    gameglobal.refreshRateOfTime = rates or {}
 
 def updateChatForbiddenState(gbid, state):
     LOG_DBG("gameengine updateChatForbiddenState", gbid, state, gameglobal.chatForbiddenSet)

@@ -5,7 +5,8 @@ datas ={
       "finished": [
         1046,
         1064,
-        1065
+        1065,
+        1070
       ]
     }
   },
@@ -20,8 +21,7 @@ datas ={
   "1064": {
     "type": "createCollection",
     "entityID": [
-      40298003,
-      40298004
+      40298003
     ],
     "num": 0,
     "randomCollectionNum": 0,
@@ -53,7 +53,7 @@ datas ={
       40290009
     ],
     "num": 0,
-    "lv": "16",
+    "lv": "25",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -89,7 +89,7 @@ datas ={
       40290010
     ],
     "num": 0,
-    "lv": "16",
+    "lv": "25",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -97,6 +97,27 @@ datas ={
     "ifSetBoss": 0,
     "aiName": 0,
     "hpPercent": 0.0,
+    "transition": {}
+  },
+  "1070": {
+    "type": "taskFinished",
+    "taskID": 86010093,
+    "checkNow": 0,
+    "checkOnce": 0,
+    "transition": {
+      "finished": [
+        1071
+      ]
+    }
+  },
+  "1071": {
+    "type": "createCollection",
+    "entityID": [
+      40298004
+    ],
+    "num": 0,
+    "randomCollectionNum": 0,
+    "checkHaveInFixed": 0,
     "transition": {}
   }
 }

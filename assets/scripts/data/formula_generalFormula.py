@@ -59,7 +59,7 @@ def _34000010(lv):
 def _34000011(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*0.003
+        a = i*0.002
         sum = a
     return sum
 def _34000012(lv):
@@ -107,7 +107,7 @@ def _34000015(e):
 def _34000016(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*0.002
+        a = i*0.0025
         sum = a
     return sum
 def _34000017(lv):
@@ -119,13 +119,13 @@ def _34000017(lv):
 def _34000018(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*80
+        a = i*60
         sum = a
     return sum
 def _34000019(lv):
     sum = 0
     for i in range(1, lv+1):
-        a = i*13
+        a = i*11
         sum = a
     return sum
 def _34000020(lv):
@@ -141,11 +141,11 @@ def _34000021(lv):
         sum = a
     return sum
 def _34010001(e):
-    return int(e.level*100+300)
+    return int(e.level*120+300)
 def _34010002(e):
-    return int(e.level*100+300)
+    return int(e.level*120+300)
 def _34010003(e):
-    return int(e.level*100+300)
+    return int(e.level*120+300)
 def _34010004(e):
     return int(e.level*10+30)
 def _34010005(e):
@@ -218,6 +218,15 @@ def _34010038(e):
      return int(e.level*0)
 def _34010039(e):
     return min(int(e*1), 180)
+def _34010040(fr,to):
+    space2order = {
+        1036: 1,
+        1026: 2,
+        5302: 2,
+        1126: 3,
+        5303: 3,
+    }
+    return 300+300*abs(space2order.get(fr,0)-space2order.get(to,0))
 def _34990001(e):
     return 1
 datas = _tools.RODict({ 
@@ -251,11 +260,11 @@ datas = _tools.RODict({
     }),
     34000008: _tools.RODict({
         "ID": 34000008,
-        'serverFormula':lambda exp: int(exp/200+50000),
+        'serverFormula':lambda exp: int(exp/500+50000),
     }),
     34000009: _tools.RODict({
         "ID": 34000009,
-        'serverFormula':lambda exp: int(exp/2500000+10),
+        'serverFormula':lambda exp: int(exp/5000000+10),
     }),
     34000010: _tools.RODict({
         "ID": 34000010,
@@ -484,6 +493,10 @@ datas = _tools.RODict({
     34010039: _tools.RODict({
         "ID": 34010039,
         'serverFormula':_34010039,
+    }),
+    34010040: _tools.RODict({
+        "ID": 34010040,
+        'serverFormula':_34010040,
     }),
     34990001: _tools.RODict({
         "ID": 34990001,

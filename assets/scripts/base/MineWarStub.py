@@ -344,7 +344,9 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
 
         gameengine.broadcastBaseapp('broadcastToAllAvatar', (gameconst.BASE, 'onMineWarFlagSync', (self.playerGetMineWarFlagState(),), ()))        
 
-    def callAllMineWarSpaceMgr(self, funcName, args=[], kwargs={}):
+    def callAllMineWarSpaceMgr(self, funcName, args=None, kwargs=None):
+        args = args or []
+        kwargs = kwargs or {}
         LOG_INFO('callAllMineWarSpaceMgr with:', funcName, 'args:', args, 'kwargs:', kwargs)
         for mapId, mineWarVal in self.mineMapData.items():
             arg = []
@@ -759,6 +761,10 @@ class MineWarStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycl
                         guildMemberList.append(val)
                     if val.totalScore >= MBC.datas['mineBattle_rewardThreshold']['value']:
                         otherList.append(val)
+                
+                gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                    [val.gbId], 'beginnerJourneyOnTaskEvents',
+                    ([(gameconst.BjTaskType.BJ_TASK_TYPE_MINE_WAR_SCORE, {'delta':1, 'score':val.totalScore})]), None, '', ())
 
             rankList.sort(key=lambda x: x.totalScore, reverse=True)
             guildMemberList.sort(key=lambda x: x.totalScore, reverse=True)

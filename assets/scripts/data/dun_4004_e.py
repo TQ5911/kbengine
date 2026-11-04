@@ -7,7 +7,7 @@ datas ={
       40040003
     ],
     "num": 0,
-    "lv": "17",
+    "lv": "25",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -88,7 +88,7 @@ datas ={
       40040009
     ],
     "num": 0,
-    "lv": "17",
+    "lv": "25",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -180,7 +180,7 @@ datas ={
       40040018
     ],
     "num": 0,
-    "lv": "17",
+    "lv": "25",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -216,7 +216,7 @@ datas ={
       40040019
     ],
     "num": 0,
-    "lv": "17",
+    "lv": "25",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

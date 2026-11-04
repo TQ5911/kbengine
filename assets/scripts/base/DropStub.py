@@ -140,8 +140,8 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         for _key in _deleteList:
             self.remoteCallCache.pop(_key, None)
 
-    def dropEquipItem(self, ownerServerId, ownerId, returnTime, gbId, uniqueId, box, equipData, extraBlob, collEndTime, endTime, price, maxPrice, serverId, collectionId, isFirst):
-        LOG_DBG('Drop dropEquipItem', ownerServerId, ownerId, returnTime, gbId, uniqueId, box, equipData, extraBlob, collEndTime, endTime, price, maxPrice, serverId, collectionId, isFirst)
+    def dropEquipItem(self, ownerServerId, ownerId, returnTime, gbId, uniqueId, box, equipData, extraBlob, collEndTime, endTime, price, maxPrice, serverId, collectionId, isFirst, collectionServerId):
+        LOG_DBG('Drop dropEquipItem', ownerServerId, ownerId, returnTime, gbId, uniqueId, box, equipData, extraBlob, collEndTime, endTime, price, maxPrice, serverId, collectionId, isFirst, collectionServerId)
         if uniqueId in self.remoteCallCache:
             LOG_ERR('dropEquipItem uniqueId in remoteCallCache', gbId, uniqueId)
             return
@@ -158,6 +158,8 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         req.extraInfo = extraBlob
         req.collExpireTime = collEndTime
         req.collectionId = collectionId
+        # 采集物所在服(与 collectionId 并列): 跨服掉落时与 serverId 不同, 掉落服务靠它路由清理
+        req.collectionServerId = collectionServerId
         req.ownerId = ownerId
         req.returnTime = returnTime
         req.ownerServerId = ownerServerId
@@ -445,7 +447,7 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
                     cPickle.loads(_returnData.equipInfo),
                     0,
                     _returnData.dropType,
-                    {},
+                    cPickle.loads(_returnData.extraInfo),
                     0,
                     0,
                     0,
@@ -582,8 +584,8 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         }
         _client.dsStub.getBackEquip(None, _req, None)
 
-    def custodyEquipItem(self, gbId, box, uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId):
-        LOG_DBG('Drop custodyEquipItem', gbId, uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId)
+    def custodyEquipItem(self, gbId, box, uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId, extraInfo):
+        LOG_DBG('Drop custodyEquipItem', gbId, uniqueId, dropType, equipInfo, holderGbId, holderServerId, returnTime, ownerGbId, ownerServerId, extraInfo)
         if uniqueId in self.remoteCallCache:
             LOG_ERR('custodyEquipItem uniqueId in remoteCallCache', gbId, uniqueId)
             return
@@ -597,6 +599,7 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
         req.ownerServerId = ownerServerId
         req.ownerId = ownerGbId
         req.returnTime = returnTime
+        req.extraInfo = extraInfo
 
         _client = self.getRandomClient()
         if not _client:
@@ -730,12 +733,18 @@ class DropStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCentral
     def onNotifyCleanCollection(self, reply):
         LOG_DBG('Drop onNotifyCleanCollection', reply)
         curTime = utils.curTS()
+        # collectionServerIds 与 collectionIds 并列: 采集物建在哪个游戏服的 cellapp 上。
+        # 跨服掉落时它与掉落发生服不同, 清理必须按它路由, 否则跨服采集物清不掉。
+        serverId = gameconfig.serverId()
         for idx in range(0, len(reply.collectionIds)):
             collExpireTime = reply.collExpireTimes[idx]
             # 创生物还有时间，广播下删除
             if curTime < collExpireTime:
                 collectionId = reply.collectionIds[idx]
                 uniqueId = reply.uniqueIds[idx]
+                collectionServerId = reply.collectionServerIds[idx]
+                if serverId != collectionServerId:
+                    continue
                 gameengine.callCellApps('removeEquipDropDestroyCollection', (collectionId, uniqueId))
 
     def onNotifyRemoveEquip(self, reply):

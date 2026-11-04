@@ -30,11 +30,13 @@
             <Arg>   UINT16       </Arg>
             <Arg>   UINT32       </Arg>
             <Arg>   UINT16       </Arg>
+            <Arg>   BOOL         </Arg>
         </reqFreeTicketRecovery>
 
         <reqFreeTicketOneClickRecovery> <Exposed/>
             <Arg>   UINT16       </Arg>
             <Arg>   UINT16       </Arg>
+            <Arg>   BOOL         </Arg>
         </reqFreeTicketOneClickRecovery>
         
         <onUpdateFreeTicketNumConfig>

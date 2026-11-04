@@ -24,7 +24,9 @@ datas = _tools.RODict({
         "N2": 380,
         "N3": 370,
         "AddRequired": 100,
-        "MergeRequired": 50
+        "MergeRequired": 50,
+        "switchCd": 10,
+        "numChange": None
     }),
     1002: _tools.RODict({
         "ID": 1002,
@@ -35,7 +37,9 @@ datas = _tools.RODict({
         "N2": 380,
         "N3": 370,
         "AddRequired": 100,
-        "MergeRequired": 50
+        "MergeRequired": 50,
+        "switchCd": 10,
+        "numChange": None
     }),
     1003: _tools.RODict({
         "ID": 1003,
@@ -46,7 +50,9 @@ datas = _tools.RODict({
         "N2": 380,
         "N3": 370,
         "AddRequired": 100,
-        "MergeRequired": 50
+        "MergeRequired": 50,
+        "switchCd": 10,
+        "numChange": None
     }),
     1004: _tools.RODict({
         "ID": 1004,
@@ -57,7 +63,9 @@ datas = _tools.RODict({
         "N2": 380,
         "N3": 370,
         "AddRequired": 100,
-        "MergeRequired": 50
+        "MergeRequired": 50,
+        "switchCd": 10,
+        "numChange": None
     }),
     1005: _tools.RODict({
         "ID": 1005,
@@ -68,7 +76,9 @@ datas = _tools.RODict({
         "N2": 380,
         "N3": 370,
         "AddRequired": 100,
-        "MergeRequired": 50
+        "MergeRequired": 50,
+        "switchCd": 10,
+        "numChange": None
     }),
     1006: _tools.RODict({
         "ID": 1006,
@@ -79,7 +89,9 @@ datas = _tools.RODict({
         "N2": 380,
         "N3": 370,
         "AddRequired": 100,
-        "MergeRequired": 50
+        "MergeRequired": 50,
+        "switchCd": 10,
+        "numChange": None
     }),
     1010: _tools.RODict({
         "ID": 1010,
@@ -89,8 +101,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1011: _tools.RODict({
         "ID": 1011,
@@ -100,8 +114,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 40,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1020: _tools.RODict({
         "ID": 1020,
@@ -111,8 +127,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 25,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1021: _tools.RODict({
         "ID": 1021,
@@ -122,8 +140,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 30,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1024: _tools.RODict({
         "ID": 1024,
@@ -133,8 +153,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 40,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1027: _tools.RODict({
         "ID": 1027,
@@ -144,30 +166,36 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 30,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1028: _tools.RODict({
         "ID": 1028,
-        "name": "祖珂地堡五层",
+        "name": "祖珂地堡五层·矿战",
         "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1026: _tools.RODict({
         "ID": 1026,
-        "name": "祖珂地堡六层",
-        "subType": 1,
+        "name": "祖珂世界boss本服",
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1030: _tools.RODict({
         "ID": 1030,
@@ -177,8 +205,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 35,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1031: _tools.RODict({
         "ID": 1031,
@@ -188,8 +218,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 35,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1032: _tools.RODict({
         "ID": 1032,
@@ -199,8 +231,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 30,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1035: _tools.RODict({
         "ID": 1035,
@@ -210,19 +244,23 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 40,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1036: _tools.RODict({
         "ID": 1036,
-        "name": "月光海港五层",
+        "name": "月光世界boss本服",
         "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1101: _tools.RODict({
         "ID": 1101,
@@ -232,8 +270,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1102: _tools.RODict({
         "ID": 1102,
@@ -243,8 +283,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1103: _tools.RODict({
         "ID": 1103,
@@ -254,8 +296,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1110: _tools.RODict({
         "ID": 1110,
@@ -265,8 +309,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1111: _tools.RODict({
         "ID": 1111,
@@ -276,8 +322,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1112: _tools.RODict({
         "ID": 1112,
@@ -287,8 +335,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 30,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1113: _tools.RODict({
         "ID": 1113,
@@ -298,8 +348,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 40,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1120: _tools.RODict({
         "ID": 1120,
@@ -309,8 +361,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 35,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1121: _tools.RODict({
         "ID": 1121,
@@ -320,8 +374,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 35,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1123: _tools.RODict({
         "ID": 1123,
@@ -331,8 +387,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 35,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1124: _tools.RODict({
         "ID": 1124,
@@ -342,30 +400,36 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 30,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1125: _tools.RODict({
         "ID": 1125,
-        "name": "五毒石窟五层",
+        "name": "五毒石窟五层·矿战",
         "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 30,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1126: _tools.RODict({
         "ID": 1126,
-        "name": "五毒石窟六层",
-        "subType": 1,
+        "name": "五毒世界boss本服",
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1901: _tools.RODict({
         "ID": 1901,
@@ -375,8 +439,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1902: _tools.RODict({
         "ID": 1902,
@@ -386,107 +452,127 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 40,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     1903: _tools.RODict({
         "ID": 1903,
         "name": "月光海港一层(精英）",
-        "subType": 2,
+        "subType": 3,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 35,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": ((1, 5), (30, 3), (35, 2), (40, 1))
     }),
     1904: _tools.RODict({
         "ID": 1904,
         "name": "月光海港二层(精英）",
-        "subType": 2,
+        "subType": 3,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 35,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": ((1, 5), (30, 3), (35, 2), (40, 1))
     }),
     1905: _tools.RODict({
         "ID": 1905,
         "name": "月光海港三层(精英）",
-        "subType": 2,
+        "subType": 3,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 30,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": ((1, 5), (30, 3), (35, 2), (40, 1))
     }),
     1906: _tools.RODict({
         "ID": 1906,
         "name": "月光海港四层(精英）",
-        "subType": 2,
+        "subType": 3,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 40,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": ((1, 5), (30, 3), (35, 2), (40, 1))
     }),
     1907: _tools.RODict({
         "ID": 1907,
         "name": "祖珂地堡一层(精英）",
-        "subType": 2,
+        "subType": 3,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 25,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": ((1, 3), (40, 2), (45, 1))
     }),
     1908: _tools.RODict({
         "ID": 1908,
         "name": "祖珂地堡二层(精英）",
-        "subType": 2,
+        "subType": 3,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 30,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": ((1, 3), (40, 2), (45, 1))
     }),
     1909: _tools.RODict({
         "ID": 1909,
         "name": "祖珂地堡三层(精英）",
-        "subType": 2,
+        "subType": 3,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 40,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": ((1, 3), (40, 2), (45, 1))
     }),
     1910: _tools.RODict({
         "ID": 1910,
         "name": "祖珂地堡四层(精英）",
-        "subType": 2,
+        "subType": 3,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 30,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": ((1, 3), (40, 2), (45, 1))
     }),
     1911: _tools.RODict({
         "ID": 1911,
         "name": "祖珂地堡五层(精英）",
-        "subType": 2,
+        "subType": 3,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": ((1, 3), (40, 2), (45, 1))
     }),
     1912: _tools.RODict({
         "ID": 1912,
@@ -496,8 +582,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 35,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": None
     }),
     1913: _tools.RODict({
         "ID": 1913,
@@ -507,8 +595,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 35,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": None
     }),
     1914: _tools.RODict({
         "ID": 1914,
@@ -518,8 +608,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 35,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": None
     }),
     1915: _tools.RODict({
         "ID": 1915,
@@ -529,8 +621,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 30,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": None
     }),
     1916: _tools.RODict({
         "ID": 1916,
@@ -540,8 +634,62 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": None
+    }),
+    1917: _tools.RODict({
+        "ID": 1917,
+        "name": "流沙故城一层(精英）",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": None
+    }),
+    1918: _tools.RODict({
+        "ID": 1918,
+        "name": "流沙故城二层精英）",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": None
+    }),
+    1919: _tools.RODict({
+        "ID": 1919,
+        "name": "流沙故城三层(精英）",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 30,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": None
+    }),
+    1920: _tools.RODict({
+        "ID": 1920,
+        "name": "流沙故城四层(精英）",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 40,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": None
     }),
     7000: _tools.RODict({
         "ID": 7000,
@@ -552,7 +700,9 @@ datas = _tools.RODict({
         "N2": 380,
         "N3": 370,
         "AddRequired": 100,
-        "MergeRequired": 50
+        "MergeRequired": 50,
+        "switchCd": 10,
+        "numChange": None
     }),
     3100: _tools.RODict({
         "ID": 3100,
@@ -563,7 +713,9 @@ datas = _tools.RODict({
         "N2": 380,
         "N3": 370,
         "AddRequired": 100,
-        "MergeRequired": 50
+        "MergeRequired": 50,
+        "switchCd": 10,
+        "numChange": None
     }),
     3101: _tools.RODict({
         "ID": 3101,
@@ -573,8 +725,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3102: _tools.RODict({
         "ID": 3102,
@@ -584,8 +738,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3103: _tools.RODict({
         "ID": 3103,
@@ -595,8 +751,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3104: _tools.RODict({
         "ID": 3104,
@@ -606,8 +764,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3105: _tools.RODict({
         "ID": 3105,
@@ -617,8 +777,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3106: _tools.RODict({
         "ID": 3106,
@@ -628,8 +790,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 60,
+        "numChange": None
     }),
     3107: _tools.RODict({
         "ID": 3107,
@@ -639,8 +803,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 60,
+        "numChange": None
     }),
     3108: _tools.RODict({
         "ID": 3108,
@@ -650,8 +816,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 60,
+        "numChange": None
     }),
     3109: _tools.RODict({
         "ID": 3109,
@@ -661,8 +829,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 60,
+        "numChange": None
     }),
     3110: _tools.RODict({
         "ID": 3110,
@@ -672,8 +842,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3111: _tools.RODict({
         "ID": 3111,
@@ -683,8 +855,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3112: _tools.RODict({
         "ID": 3112,
@@ -694,8 +868,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3113: _tools.RODict({
         "ID": 3113,
@@ -705,8 +881,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3114: _tools.RODict({
         "ID": 3114,
@@ -716,8 +894,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3115: _tools.RODict({
         "ID": 3115,
@@ -727,8 +907,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3116: _tools.RODict({
         "ID": 3116,
@@ -738,8 +920,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3117: _tools.RODict({
         "ID": 3117,
@@ -749,8 +933,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3118: _tools.RODict({
         "ID": 3118,
@@ -760,8 +946,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3119: _tools.RODict({
         "ID": 3119,
@@ -771,30 +959,36 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3120: _tools.RODict({
         "ID": 3120,
         "name": "回廊一层-狂潮",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 60,
+        "numChange": None
     }),
     3121: _tools.RODict({
         "ID": 3121,
         "name": "回廊一层-混沌之境",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3122: _tools.RODict({
         "ID": 3122,
@@ -804,8 +998,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3123: _tools.RODict({
         "ID": 3123,
@@ -815,8 +1011,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3124: _tools.RODict({
         "ID": 3124,
@@ -826,8 +1024,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 6,
+        "MergeRequired": 1,
+        "switchCd": 10,
+        "numChange": None
     }),
     3201: _tools.RODict({
         "ID": 3201,
@@ -837,8 +1037,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3202: _tools.RODict({
         "ID": 3202,
@@ -848,8 +1050,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3203: _tools.RODict({
         "ID": 3203,
@@ -859,8 +1063,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3204: _tools.RODict({
         "ID": 3204,
@@ -870,8 +1076,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3205: _tools.RODict({
         "ID": 3205,
@@ -881,8 +1089,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3206: _tools.RODict({
         "ID": 3206,
@@ -892,8 +1102,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3207: _tools.RODict({
         "ID": 3207,
@@ -903,8 +1115,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3208: _tools.RODict({
         "ID": 3208,
@@ -914,8 +1128,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3209: _tools.RODict({
         "ID": 3209,
@@ -925,8 +1141,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3210: _tools.RODict({
         "ID": 3210,
@@ -936,8 +1154,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3211: _tools.RODict({
         "ID": 3211,
@@ -947,8 +1167,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3212: _tools.RODict({
         "ID": 3212,
@@ -958,8 +1180,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3213: _tools.RODict({
         "ID": 3213,
@@ -969,8 +1193,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3214: _tools.RODict({
         "ID": 3214,
@@ -980,8 +1206,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3215: _tools.RODict({
         "ID": 3215,
@@ -991,8 +1219,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3216: _tools.RODict({
         "ID": 3216,
@@ -1002,8 +1232,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3217: _tools.RODict({
         "ID": 3217,
@@ -1013,8 +1245,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3218: _tools.RODict({
         "ID": 3218,
@@ -1024,8 +1258,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3219: _tools.RODict({
         "ID": 3219,
@@ -1035,30 +1271,36 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3220: _tools.RODict({
         "ID": 3220,
         "name": "回廊二层-狂潮",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3221: _tools.RODict({
         "ID": 3221,
         "name": "回廊二层-混沌之境",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3222: _tools.RODict({
         "ID": 3222,
@@ -1068,8 +1310,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3223: _tools.RODict({
         "ID": 3223,
@@ -1079,8 +1323,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3224: _tools.RODict({
         "ID": 3224,
@@ -1090,8 +1336,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3301: _tools.RODict({
         "ID": 3301,
@@ -1101,8 +1349,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3302: _tools.RODict({
         "ID": 3302,
@@ -1112,8 +1362,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3303: _tools.RODict({
         "ID": 3303,
@@ -1123,8 +1375,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3304: _tools.RODict({
         "ID": 3304,
@@ -1134,8 +1388,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3305: _tools.RODict({
         "ID": 3305,
@@ -1145,8 +1401,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3306: _tools.RODict({
         "ID": 3306,
@@ -1156,8 +1414,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3307: _tools.RODict({
         "ID": 3307,
@@ -1167,8 +1427,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3308: _tools.RODict({
         "ID": 3308,
@@ -1178,8 +1440,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3309: _tools.RODict({
         "ID": 3309,
@@ -1189,8 +1453,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3310: _tools.RODict({
         "ID": 3310,
@@ -1200,8 +1466,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3311: _tools.RODict({
         "ID": 3311,
@@ -1211,8 +1479,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3312: _tools.RODict({
         "ID": 3312,
@@ -1222,8 +1492,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3313: _tools.RODict({
         "ID": 3313,
@@ -1233,8 +1505,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3314: _tools.RODict({
         "ID": 3314,
@@ -1244,8 +1518,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3315: _tools.RODict({
         "ID": 3315,
@@ -1255,8 +1531,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3316: _tools.RODict({
         "ID": 3316,
@@ -1266,8 +1544,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3317: _tools.RODict({
         "ID": 3317,
@@ -1277,8 +1557,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3318: _tools.RODict({
         "ID": 3318,
@@ -1288,8 +1570,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3319: _tools.RODict({
         "ID": 3319,
@@ -1299,30 +1583,36 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3320: _tools.RODict({
         "ID": 3320,
         "name": "回廊三层-狂潮",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3321: _tools.RODict({
         "ID": 3321,
         "name": "回廊三层-混沌之境",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3322: _tools.RODict({
         "ID": 3322,
@@ -1332,8 +1622,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3323: _tools.RODict({
         "ID": 3323,
@@ -1343,8 +1635,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3324: _tools.RODict({
         "ID": 3324,
@@ -1354,8 +1648,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3401: _tools.RODict({
         "ID": 3401,
@@ -1365,8 +1661,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3402: _tools.RODict({
         "ID": 3402,
@@ -1376,8 +1674,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3403: _tools.RODict({
         "ID": 3403,
@@ -1387,8 +1687,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3404: _tools.RODict({
         "ID": 3404,
@@ -1398,8 +1700,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3405: _tools.RODict({
         "ID": 3405,
@@ -1409,8 +1713,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3406: _tools.RODict({
         "ID": 3406,
@@ -1420,8 +1726,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3407: _tools.RODict({
         "ID": 3407,
@@ -1431,8 +1739,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3408: _tools.RODict({
         "ID": 3408,
@@ -1442,8 +1752,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3409: _tools.RODict({
         "ID": 3409,
@@ -1453,8 +1765,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3410: _tools.RODict({
         "ID": 3410,
@@ -1464,8 +1778,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3411: _tools.RODict({
         "ID": 3411,
@@ -1475,8 +1791,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3412: _tools.RODict({
         "ID": 3412,
@@ -1486,8 +1804,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3413: _tools.RODict({
         "ID": 3413,
@@ -1497,8 +1817,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3414: _tools.RODict({
         "ID": 3414,
@@ -1508,8 +1830,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3415: _tools.RODict({
         "ID": 3415,
@@ -1519,8 +1843,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3416: _tools.RODict({
         "ID": 3416,
@@ -1530,8 +1856,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3417: _tools.RODict({
         "ID": 3417,
@@ -1541,8 +1869,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3418: _tools.RODict({
         "ID": 3418,
@@ -1552,8 +1882,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3419: _tools.RODict({
         "ID": 3419,
@@ -1563,30 +1895,36 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3420: _tools.RODict({
         "ID": 3420,
         "name": "回廊四层-狂潮",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 60,
+        "numChange": None
     }),
     3421: _tools.RODict({
         "ID": 3421,
         "name": "回廊四层-混沌之境",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3422: _tools.RODict({
         "ID": 3422,
@@ -1596,8 +1934,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3423: _tools.RODict({
         "ID": 3423,
@@ -1607,8 +1947,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     3424: _tools.RODict({
         "ID": 3424,
@@ -1618,8 +1960,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 20,
-        "MergeRequired": 10
+        "AddRequired": 10,
+        "MergeRequired": 3,
+        "switchCd": 10,
+        "numChange": None
     }),
     5100: _tools.RODict({
         "ID": 5100,
@@ -1629,8 +1973,10 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "AddRequired": 20,
+        "MergeRequired": 10,
+        "switchCd": 60,
+        "numChange": ((1, 3), (40, 2), (45, 1))
     }),
     5101: _tools.RODict({
         "ID": 5101,
@@ -1640,30 +1986,36 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "AddRequired": 30,
+        "MergeRequired": 15,
+        "switchCd": 60,
+        "numChange": ((1, 3), (40, 2), (45, 1))
     }),
     5102: _tools.RODict({
         "ID": 5102,
         "name": "天劫崖三层",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 50,
-        "MergeRequired": 20
+        "AddRequired": 40,
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": None
     }),
     5103: _tools.RODict({
         "ID": 5103,
         "name": "天劫崖四层",
-        "subType": 1,
+        "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
         "AddRequired": 50,
-        "MergeRequired": 20
+        "MergeRequired": 20,
+        "switchCd": 60,
+        "numChange": None
     }),
     5201: _tools.RODict({
         "ID": 5201,
@@ -1673,30 +2025,49 @@ datas = _tools.RODict({
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 15,
+        "MergeRequired": 5,
+        "switchCd": 60,
+        "numChange": ((1, 10), (40, 8), (45, 6), (50, 4), (55, 2), (60, 1))
     }),
-    5204: _tools.RODict({
-        "ID": 5204,
-        "name": "祖珂地堡五层·精英",
+    5301: _tools.RODict({
+        "ID": 5301,
+        "name": "月光海港五层(精英)跨服",
         "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
-    5205: _tools.RODict({
-        "ID": 5205,
-        "name": "五毒石窟五层·精英",
+    5302: _tools.RODict({
+        "ID": 5302,
+        "name": "祖珂地堡五层(精英)跨服",
         "subType": 2,
         "num": 1,
         "N1": 400,
         "N2": 380,
         "N3": 370,
-        "AddRequired": 100,
-        "MergeRequired": 50
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
+    }),
+    5303: _tools.RODict({
+        "ID": 5303,
+        "name": "五毒石窟五层(精英)跨服",
+        "subType": 2,
+        "num": 1,
+        "N1": 400,
+        "N2": 380,
+        "N3": 370,
+        "AddRequired": 50,
+        "MergeRequired": 20,
+        "switchCd": 10,
+        "numChange": None
     }),
     9000: _tools.RODict({
         "ID": 9000,
@@ -1707,7 +2078,9 @@ datas = _tools.RODict({
         "N2": 380,
         "N3": 370,
         "AddRequired": 100,
-        "MergeRequired": 50
+        "MergeRequired": 50,
+        "switchCd": 10,
+        "numChange": None
     })
 })
 minKey = 1001

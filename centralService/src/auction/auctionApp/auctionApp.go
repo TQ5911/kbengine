@@ -58,6 +58,7 @@ type AuctionApp struct {
 	funcChan       chan func()
 	groupMutex     *sync.RWMutex
 	groupId        int
+	subGroupId     int
 	waitGroupMutex *sync.RWMutex
 	waitGroupId    bool
 	initedMutex    *sync.RWMutex
@@ -157,6 +158,7 @@ func NewAuctionApp() *AuctionApp {
 		0,
 		make(chan func()),
 		&sync.RWMutex{},
+		0,
 		0,
 		&sync.RWMutex{},
 		false,
@@ -269,24 +271,32 @@ func (au *AuctionApp) doRegisterServer(hostId uint32, compId uint32, hostName st
 
 func (au *AuctionApp) doInitGroupId(serverId int) {
 	appLog.Info("start do init group id~", serverId)
-	common.AfterInitMapleServer(func() {
-		if !au.initGroupId(int(serverId)) {
-			au.doInitGroupId(serverId)
-		}
-	})
+	timer := time.NewTimer(1 * time.Second)
+	defer timer.Stop()
 
+	for {
+		select {
+		case <-timer.C:
+			if !au.initGroupId(int(serverId)) {
+				timer.Reset(5 * time.Second)
+				continue
+			}
+			return
+		}
+	}
 }
 
 func (au *AuctionApp) initGroupId(serverId int) bool {
 	appLog.Info("start init group id~", serverId)
 	au.groupMutex.Lock()
 	defer au.groupMutex.Unlock()
-	groupId, ok := common.GetGameServerGroup(serverId)
+	groupId, subGroupId, ok := common.GetGameServerGroupWithSubGroup(serverId)
 	if !ok {
-		appLog.Warn("register server err: not found group id with serverId:", serverId)
+		appLog.Error("register server err: not found group id with serverId:", serverId)
 		return false
 	}
 	au.groupId = groupId
+	au.subGroupId = subGroupId
 	au.auctionMgr.Init()
 	return true
 }

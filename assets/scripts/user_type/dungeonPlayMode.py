@@ -11,6 +11,7 @@ import userType
 import dropAward
 import awardContext
 import gameengine
+import gameconfig
 
 import gamePlay_gamePlay as GP_GPD
 import teamDunChallenge_config as TDC_CFG
@@ -124,25 +125,46 @@ class DungeonPlayModePlayerMiXin(userType.UserSingleType):
                 newNum = 0
             self.rewardCoinNumber = newNum
 
-    def deductRewardNum(self):
-        LOG_INFO('deductRewardNum begin: ', self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber, self.rewardCommonNumber)
-        if self.rewardNumber > 0:
-            # 看看默认次数是否还有，优先使用默认次数，后面再使用道具购买的，最后使用金币购买的
-            if self.rewardNumber - self.rewardItemNumber - self.rewardCoinNumber - self.rewardCommonNumber > 0:
-                self.addRewardNum(gameconst.DungeonAddRewardNumCountType.DEFAULT_COUNT, -1)
-                self.ticketType = gameconst.DungeonTicketType.NORMAL
-            elif self.rewardCommonNumber > 0:
-                self.addRewardNum(gameconst.DungeonAddRewardNumCountType.COMMON_COUNT, -1)
-                self.ticketType = gameconst.DungeonTicketType.COMMON
-            elif self.rewardItemNumber > 0:
-                self.addRewardNum(gameconst.DungeonAddRewardNumCountType.ITEM_COUNT, -1)
-                self.ticketType = gameconst.DungeonTicketType.ITEM
-            elif self.rewardCoinNumber > 0:
-                self.addRewardNum(gameconst.DungeonAddRewardNumCountType.COIN_COUNT, -1)
-                self.ticketType = gameconst.DungeonTicketType.GOLD
-        else:
+    def deductRewardNum(self, owner, dungeonPlayMode):
+        # 返回是否成功扣到一次；失败（次数为 0 / 计数不变量被破坏）时调用方不应发奖
+        LOG_INFO('deductRewardNum begin: ', dungeonPlayMode, self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber, self.rewardCommonNumber)
+        if self.rewardNumber <= 0:
             gameengine.panicStack(f"{self.__class__.__name__}::deductRewardNum:: remain count is zero !!!", self)
+            return False
+        # 看看默认次数是否还有，优先使用默认次数，后面再使用道具购买的，最后使用金币购买的
+        if self.rewardNumber - self.rewardItemNumber - self.rewardCoinNumber - self.rewardCommonNumber > 0:
+            self.addRewardNum(gameconst.DungeonAddRewardNumCountType.DEFAULT_COUNT, -1)
+            self.ticketType = gameconst.DungeonTicketType.NORMAL
+        elif self.rewardCommonNumber > 0:
+            self.addRewardNum(gameconst.DungeonAddRewardNumCountType.COMMON_COUNT, -1)
+            self.ticketType = gameconst.DungeonTicketType.COMMON
+        elif self.rewardItemNumber > 0:
+            self.addRewardNum(gameconst.DungeonAddRewardNumCountType.ITEM_COUNT, -1)
+            self.ticketType = gameconst.DungeonTicketType.ITEM
+        elif self.rewardCoinNumber > 0:
+            self.addRewardNum(gameconst.DungeonAddRewardNumCountType.COIN_COUNT, -1)
+            self.ticketType = gameconst.DungeonTicketType.GOLD
+        else:
+            # rewardNumber 与各分类次数之和不符（不变量被破坏），拒绝扣票
+            gameengine.panicStack(f"{self.__class__.__name__}::deductRewardNum:: count mismatch !!!", self)
+            return False
         LOG_INFO('deductRewardNum end: ', self.rewardNumber, self.rewardCoinNumber, self.rewardItemNumber, self.rewardCommonNumber)
+        if not gameconfig.isCrossServer():
+            if dungeonPlayMode == gameconst.DungeonPlayModeEnum.CRUSADE or dungeonPlayMode == gameconst.DungeonPlayModeEnum.CROSS_CRUSADE:
+                # v5.2 新手历程 6=门票使用
+                owner.beginnerJourney_onTaskEvent(
+                gameconst.BjTaskType.BJ_TASK_TYPE_TICKET_USE,
+                    delta=1, activityId=int(TDC_CFG.datas["teamDunChallengeActID"]["value"])
+                )
+                owner.onBattlePassTicketUse(TDC_CFG.datas["teamDunChallengeActID"]["value"], 1)
+            elif dungeonPlayMode == gameconst.DungeonPlayModeEnum.CHIEF or dungeonPlayMode == gameconst.DungeonPlayModeEnum.CROSS_CHIEF:
+                # v5.2 新手历程 6=门票使用
+                owner.beginnerJourney_onTaskEvent(
+                gameconst.BjTaskType.BJ_TASK_TYPE_TICKET_USE,
+                    delta=1, activityId=int(RBC_CFG.datas["raidBossChallengeActID"]["value"])
+                )
+                owner.onBattlePassTicketUse(RBC_CFG.datas["raidBossChallengeActID"]["value"], 1)
+        return True
 
     def hasCoinCount(self):
         return self.rewardCoinNumber > 0
@@ -219,8 +241,15 @@ class CrossChiefDungeonPlayMode(_DungeonPlayMode):
         self.mulHurt = mulHurt
         self.teamUUID = teamUUID
 
+    @property
+    def raidUUID(self):
+        # 兼容按本服团本口径取 raidUUID 的逻辑（如 DungeonSpaceMgr 的 BOSS 追踪），返回跨服队伍 ID
+        return self.teamUUID
+
 class DungeonPassRecords(userType.UserSingleType):
-    def __init__(self, entryIds=[], entryStatus=[]):
+    def __init__(self, entryIds=None, entryStatus=None):
+        entryIds = entryIds or []
+        entryStatus = entryStatus or []
         self.passEntryRecords = {}
         for idx in range(0, len(entryIds)):
             self.passEntryRecords[entryIds[idx]] = entryStatus[idx]

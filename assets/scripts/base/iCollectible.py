@@ -18,6 +18,13 @@ class ICollectible(object):
     def collectOnLogin(self):
         LOG_INFO('call collectOnLogin')
         self._refreshProperty()
+        if not self.hasPersistentMiscProp(gameconst.EntityPropsEnum.completeCollectNum):
+            _collectNum = 0
+            for _achieveId in self.achievementInfo.typeDic.get(gameconst.AchieveType.COLLECT, ()):
+                _achieveVal = self.achievementInfo.achieveDic.get(_achieveId)
+                if _achieveVal and _achieveVal.step > _collectNum:
+                    _collectNum = _achieveVal.step
+            self.setPersistentMiscProp(gameconst.EntityPropsEnum.completeCollectNum, _collectNum)
 
     def _refreshProperty(self):
         # 每次登录重新计算当前收集项的属性加成
@@ -137,15 +144,23 @@ class ICollectible(object):
         collectProp = collectID
         # 获得奖励
         self._onScore(collectProp, opUUID)
-        # 发送进度信息给客户端
-        self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toStreamSavedDic()])
-        LOG_INFO('reqCollect Complete, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
 
+        _collectNum = self.getPersistentMiscProp(gameconst.EntityPropsEnum.completeCollectNum, 0) + 1
+        self.setPersistentMiscProp(gameconst.EntityPropsEnum.completeCollectNum, _collectNum)
         self.achievementInfo.triggerAchieveByType(
             self,
             gameconst.AchieveType.COLLECT,
             actionContext.AchievementCtx()
         )
+
+        # 完成了某个品质的收集
+        self.beginnerJourney_onTaskEvent(
+            gameconst.BjTaskType.BJ_TASK_TYPE_COLLECTION_STAT,
+            delta=1, quality=info['type'])
+
+        # 发送进度信息给客户端
+        self.client.onGetCollectInfo([self.collectibleData.collectibleDict[collectID].toStreamSavedDic()])
+        LOG_INFO('reqCollect Complete, collectID ', collectID, ' state ', self.collectibleData.collectibleDict[collectID].state)
 
     def _completeCollect(self, bagType, bagGridID, itemID, itemUniqueID, useBind, enhanceLevel, gradeLevel, opUUID):
         LOG_INFO('in _completeCollect ', bagType, bagGridID, itemID, itemUniqueID, useBind, enhanceLevel, gradeLevel, opUUID)
@@ -188,6 +203,10 @@ class ICollectible(object):
 
             if gradeLevel is None:
                 LOG_WARN('     in _completeCollect, item grade is none:', bagGridID)
+                return False
+
+            if bagItem.itemId != itemID:
+                LOG_WARN('     in _completeCollect, itemId not matched:', bagItem.itemId, itemID)
                 return False
 
             if bagItem.getEnhanceLevel() != enhanceLevel:
@@ -240,3 +259,121 @@ class ICollectible(object):
             return True
 
         return False
+
+    # --------------------------------------------------------------
+    # GM
+
+    def _getCollectTotalGrids(self, info):
+        # 由于策划分表, equip + props 两个表共用了一个index (collectGridID)
+        equipment_len = len(info['equip']) if info['equip'] else 0
+        prop_len = len(info['props']) if info['props'] else 0
+        return equipment_len + prop_len
+
+    def _checkCollectGridValid(self, info, collectGridID):
+        """校验格子配置对本职业有效(与gmFinishCollect口径一致), 仅设完成时需要"""
+        school = self.getAvatarSchool()
+        if school not in CCDATA.allSchoolList:
+            return False
+        schoolIdx = CCDATA.allSchoolList.index(school)
+        equipment_len = len(info['equip']) if info['equip'] else 0
+        propGridID = collectGridID - equipment_len
+        if propGridID < 0:
+            indexId = info['equip'][collectGridID]
+            equipInfo = CEIDX.datas.get(indexId, None)
+            if not equipInfo or schoolIdx >= len(equipInfo['propList']):
+                return False
+        return True
+
+    def _gmRefreshCollectBjCache(self):
+        """刷新新手历程收集统计缓存(累积型, 按当前已集齐的收集项重放)"""
+        self.clearBeginnerJourneyBehaviorStatusEx([gameconst.BjTaskType.BJ_TASK_TYPE_COLLECTION_STAT])
+        for collectId, collectData in self.collectibleData.collectibleDict.items():
+            info = PDETAIL.datas.get(collectId, None)
+            if not info:
+                continue
+            if not collectData.isCompleteAll(self._getCollectTotalGrids(info)):
+                continue
+            self.beginnerJourney_onTaskEvent(
+                gameconst.BjTaskType.BJ_TASK_TYPE_COLLECTION_STAT,
+                delta=1,
+                quality=info['type'])
+
+    def gmSetCollectGrid(self, collectId, gridId, op):
+        """GM设置收集项格子状态: gridId=-1表示整项, op=1完成/0清除(支持回退); 收藏位(bit15)不动"""
+        LOG_INFO('gmSetCollectGrid', collectId, gridId, op)
+        info = PDETAIL.datas.get(collectId, None)
+        if not info:
+            LOG_ERR('gmSetCollectGrid collectId not exist', collectId)
+            return False, 'collectId not exist'
+        if op not in (0, 1):
+            LOG_ERR('gmSetCollectGrid op invalid', op)
+            return False, 'op invalid, 0 clear / 1 complete'
+        total_len = self._getCollectTotalGrids(info)
+        if gridId != -1 and not 0 <= gridId < total_len:
+            LOG_ERR('gmSetCollectGrid gridId invalid', collectId, gridId, total_len)
+            return False, 'gridId invalid, range -1~%d' % (total_len - 1)
+
+        if op == 1:
+            if self._checkInUnavailableClass(info, collectId):
+                LOG_ERR('gmSetCollectGrid unavailable for school', collectId)
+                return False, 'collectId unavailable for school'
+            gridList = [gridId] if gridId != -1 else list(range(total_len))
+            for gid in gridList:
+                if not self._checkCollectGridValid(info, gid):
+                    LOG_ERR('gmSetCollectGrid grid invalid for school', collectId, gid)
+                    return False, 'grid %d invalid for school' % gid
+        else:
+            gridList = [gridId] if gridId != -1 else list(range(total_len))
+
+        collectData = self.collectibleData.collectibleDict.setdefault(collectId, collectItem(collectId))
+        wasCompleteAll = collectData.isCompleteAll(total_len)
+        for gid in gridList:
+            if op == 1:
+                collectData.onComplete(gid)
+            else:
+                collectData.state &= ~(1 << gid)
+        isCompleteAll = collectData.isCompleteAll(total_len)
+
+        # 集齐状态发生翻转时同步cell属性(属性与集齐绑定)
+        opUUID = KBEngine.genUUID64()
+        if not wasCompleteAll and isCompleteAll:
+            self.cell.onCollectAward([collectId], opUUID)
+        elif wasCompleteAll and not isCompleteAll:
+            self.cell.gmRemoveCollectAward([collectId], opUUID)
+
+        # 重赋值触发持久化; 客户端onGetCollectInfo为按id增量更新
+        self.collectibleData = self.collectibleData
+        self.client.onGetCollectInfo([collectData.toStreamSavedDic()])
+        self._gmRefreshCollectBjCache()
+        return True, ''
+
+    def gmResetCollect(self, collectId):
+        """GM重置收集项: collectId=0表示全部; 清掉全部进度位(保留收藏位), 已集齐项回收cell属性"""
+        LOG_INFO('gmResetCollect', collectId)
+        if collectId != 0 and collectId not in PDETAIL.datas:
+            LOG_ERR('gmResetCollect collectId not exist', collectId)
+            return False, 'collectId not exist'
+
+        if collectId == 0:
+            targetItems = list(self.collectibleData.collectibleDict.items())
+        else:
+            collectData = self.collectibleData.collectibleDict.get(collectId, None)
+            targetItems = [(collectId, collectData)] if collectData else []
+
+        removeIndexList = []
+        for cid, collectData in targetItems:
+            info = PDETAIL.datas.get(cid, None)
+            if not info:
+                continue
+            if collectData.isCompleteAll(self._getCollectTotalGrids(info)):
+                removeIndexList.append(cid)
+            # 清进度位(bit0~14), 保留收藏位(bit15)
+            collectData.state &= (1 << 15)
+
+        if removeIndexList:
+            self.cell.gmRemoveCollectAward(removeIndexList, KBEngine.genUUID64())
+
+        self.collectibleData = self.collectibleData
+        self.sendCollectInfo()
+        self._gmRefreshCollectBjCache()
+        return True, ''

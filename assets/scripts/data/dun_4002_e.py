@@ -199,12 +199,11 @@ datas ={
     "hp": 2000,
     "minAtk": 0,
     "maxAtk": 0,
-    "ifSetBoss": 0,
+    "ifSetBoss": 1,
     "aiName": 0,
     "hpPercent": 0.0,
     "transition": {
       "finished": [
-        1230,
         1213,
         1247
       ]
@@ -296,13 +295,6 @@ datas ={
     "type": "removeBuffFromAllPlayer",
     "buffID": [
       64006028
-    ],
-    "transition": {}
-  },
-  "1033": {
-    "type": "removeMonster",
-    "entityID": [
-      40020074
     ],
     "transition": {}
   },
@@ -511,21 +503,6 @@ datas ={
     "angle": 30,
     "transition": {}
   },
-  "1188": {
-    "type": "monsterHp",
-    "monsterID": [
-      40020074
-    ],
-    "compare": 2,
-    "hpPercent": 80.0,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1251
-      ]
-    }
-  },
   "1201": {
     "type": "createRebornPos",
     "entityID": [
@@ -553,110 +530,6 @@ datas ={
       ]
     }
   },
-  "1206": {
-    "type": "castCinemaPlay",
-    "cinemaPlayID": 98010026,
-    "transition": {
-      "finished": [
-        1232
-      ]
-    }
-  },
-  "1207": {
-    "type": "startAiTick",
-    "entityID": [
-      40020086,
-      40020087,
-      40020088,
-      40020089,
-      40020090,
-      40020091,
-      40020092,
-      40020093
-    ],
-    "transition": {}
-  },
-  "1208": {
-    "type": "monsterRestNum",
-    "monsterID": [
-      40020086,
-      40020087,
-      40020088,
-      40020089,
-      40020090,
-      40020091,
-      40020092,
-      40020093
-    ],
-    "compare": 1,
-    "restNum": 0,
-    "usePrototypeID": 0,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1209
-      ]
-    }
-  },
-  "1209": {
-    "type": "startAiTick",
-    "entityID": [
-      40020094,
-      40020095,
-      40020096,
-      40020097,
-      40020098,
-      40020099,
-      40020100,
-      40020101,
-      40020102,
-      40020103,
-      40020104,
-      40020105,
-      40020106,
-      40020107,
-      40020108,
-      40020109
-    ],
-    "transition": {}
-  },
-  "1210": {
-    "type": "taskFinished",
-    "taskID": 86060085,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1212
-      ]
-    }
-  },
-  "1211": {
-    "type": "createMonster",
-    "entityID": [
-      40020085
-    ],
-    "num": 1,
-    "lv": "7",
-    "initState": 0,
-    "hp": 2000,
-    "minAtk": 0,
-    "maxAtk": 0,
-    "ifSetBoss": 0,
-    "aiName": 0,
-    "hpPercent": 0.0,
-    "transition": {}
-  },
-  "1212": {
-    "type": "castCinemaPlay",
-    "cinemaPlayID": 98010027,
-    "transition": {
-      "finished": [
-        1235
-      ]
-    }
-  },
   "1213": {
     "type": "monsterHp",
     "monsterID": [
@@ -669,17 +542,6 @@ datas ={
     "transition": {
       "finished": [
         1236
-      ]
-    }
-  },
-  "1215": {
-    "type": "delayLoop",
-    "firstDelay": 2.0,
-    "loopDelay": 0.0,
-    "loopNum": 1,
-    "transition": {
-      "finished": [
-        1273
       ]
     }
   },
@@ -797,36 +659,6 @@ datas ={
     ],
     "transition": {}
   },
-  "1230": {
-    "type": "popupdialog",
-    "entityID": [
-      40024035
-    ],
-    "dialogID": 19900327,
-    "transition": {}
-  },
-  "1232": {
-    "type": "jumpCinemaPlay",
-    "cinemaPlayID": 98010026,
-    "exitTime": 3.0,
-    "transition": {
-      "finished": [
-        1207,
-        1240,
-        1254
-      ]
-    }
-  },
-  "1235": {
-    "type": "jumpCinemaPlay",
-    "cinemaPlayID": 98010027,
-    "exitTime": 10.0,
-    "transition": {
-      "finished": [
-        1211
-      ]
-    }
-  },
   "1236": {
     "type": "popupdialog",
     "entityID": [
@@ -847,11 +679,6 @@ datas ={
       ]
     }
   },
-  "1240": {
-    "type": "dungeonTaskForceComplete",
-    "taskID": 86060098,
-    "transition": {}
-  },
   "1241": {
     "type": "removeMonster",
     "entityID": [
@@ -870,7 +697,7 @@ datas ={
     "hp": 2000,
     "minAtk": 0,
     "maxAtk": 0,
-    "ifSetBoss": 0,
+    "ifSetBoss": 1,
     "aiName": 0,
     "hpPercent": 0.0,
     "transition": {
@@ -911,38 +738,6 @@ datas ={
     "dialogID": 19900329,
     "transition": {}
   },
-  "1251": {
-    "type": "popupdialog",
-    "entityID": [
-      40020074
-    ],
-    "dialogID": 19900511,
-    "transition": {}
-  },
-  "1253": {
-    "type": "monsterHp",
-    "monsterID": [
-      40020074
-    ],
-    "compare": 2,
-    "hpPercent": 60.0,
-    "checkNow": 0,
-    "checkOnce": 0,
-    "transition": {
-      "finished": [
-        1206,
-        1033
-      ]
-    }
-  },
-  "1254": {
-    "type": "popupdialog",
-    "entityID": [
-      40024035
-    ],
-    "dialogID": 19900510,
-    "transition": {}
-  },
   "1257": {
     "type": "monsterHp",
     "monsterID": [
@@ -973,19 +768,6 @@ datas ={
     ],
     "lv": "1",
     "messageID": 0,
-    "lvlmt": -1,
-    "duration": -1.0,
-    "transition": {}
-  },
-  "1261": {
-    "type": "addBuffToMonster",
-    "monsterID": [
-      40020156
-    ],
-    "buffID": [
-      64000138
-    ],
-    "lv": "1",
     "lvlmt": -1,
     "duration": -1.0,
     "transition": {}
@@ -1058,14 +840,6 @@ datas ={
     "dialogID": 19900520,
     "transition": {}
   },
-  "1273": {
-    "type": "popupdialog",
-    "entityID": [
-      40020085
-    ],
-    "dialogID": 19900512,
-    "transition": {}
-  },
   "1275": {
     "type": "taskUndertake",
     "taskID": 86030008,
@@ -1104,30 +878,6 @@ datas ={
   "1280": {
     "type": "removeMonster",
     "entityID": [
-      40020086,
-      40020087,
-      40020088,
-      40020089,
-      40020090,
-      40020091,
-      40020092,
-      40020093,
-      40020094,
-      40020095,
-      40020096,
-      40020097,
-      40020098,
-      40020099,
-      40020100,
-      40020101,
-      40020102,
-      40020103,
-      40020104,
-      40020105,
-      40020106,
-      40020107,
-      40020108,
-      40020109,
       40020110,
       40020111,
       40020112,

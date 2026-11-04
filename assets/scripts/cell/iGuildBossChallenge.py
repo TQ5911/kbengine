@@ -54,7 +54,7 @@ class IGuildBossChallenge(object):
         spaceType = self._getParamBydungeonNo(formula.parseDungeonNoBySpaceNo(self.spaceNo), 'type')
         _, _mOutsideRecord = self.tryGetLastTeleportOutesideRecord(self.spaceNo, spaceType=spaceType)
         spaceNo = _mOutsideRecord.spaceNo if _mOutsideRecord else formula.combineLineSpaceNo(gameconst.MapIdDef.mapXinYuanCheng)
-        self.doLeaveFromSapceToSpace(self.spaceNo, spaceNo, options, context, spaceType=spaceType)
+        self.doLeaveFromSapceToSpace(self.spaceNo, spaceNo, options, context)
 
     def checkGuildBossChallengeCond(self):
         if not self.guildUUID:

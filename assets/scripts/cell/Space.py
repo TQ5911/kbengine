@@ -8,6 +8,7 @@ import gameconst
 import gameengine
 import utils
 import gameconfig
+import gametimer
 import gameconst
 
 import iCell
@@ -71,12 +72,18 @@ class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.
                 'direction': _dir,
             }
 
-            self.spaceMgrId = self.createCellLocally(
+            self.createCellLocallyRetry(
                 'WorldLineSpaceMgr',
                 _pos,
                 _dir,
-                _params
-            ).id
+                _params,
+                self,
+                '_onCreateWorldLineSpaceMgr',
+                ()
+            )
+
+    def _onCreateWorldLineSpaceMgr(self, entity):
+        self.spaceMgrId = entity.id
 
     def onSpaceGone(self):
         gameglobal.localSpaceNoMap.pop(self.spaceNo, None)
@@ -85,15 +92,33 @@ class Space(iCell.ICell, iTimer.ITimer, SpaceEntityGenerateMixin, iEntityLoader.
         self.destroy()
         return
 
+    def createCellLocallyRetry(self, entType, pos, direction, properties, mailBox, cb, args):
+        if KBEngine.isShuttingDown():
+            return
+
+        direction = (float(direction[0]), float(direction[1]), float(direction[2]))
+        properties['spaceNo'] = self.spaceNo
+        try:
+            _ent = KBEngine.createEntity(entType, self.spaceID, pos, direction, properties)
+            if mailBox:
+                getattr(mailBox, cb)(_ent, *args)
+
+        except SystemError as e:
+            LOG_ERR('createCellLocallyRetry::SystemError', e)
+            self.addTimerCB(
+                1,
+                'createCellLocallyRetry', 
+                (entType, pos, direction, properties, mailBox, cb, args), 
+                gametimer.TIMER_TAG_CREATE_CELL_ENTITY_RETRY,
+            )
+
     def createCellLocally(self, entType, pos, direction, properties):
         if KBEngine.isShuttingDown():
             return
 
         direction = (float(direction[0]), float(direction[1]), float(direction[2]))
-        LOG_DBG('createCellLocally~~~~~~~~~~', pos, direction)
         properties['spaceNo'] = self.spaceNo
         _entity = KBEngine.createEntity(entType, self.spaceID, pos, direction, properties)
-        LOG_DBG('after createCellLocally~~~~~~~~~~', _entity)
         return _entity
 
     def onDestroy(self):

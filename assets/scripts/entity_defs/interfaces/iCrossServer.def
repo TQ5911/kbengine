@@ -132,6 +132,9 @@
             <Arg>           PYTHON                  </Arg>
         </onCrossServerEnd>
 
+        <onCrossServerEndAck>
+        </onCrossServerEndAck>
+
         <onCrossServerSyncOtherInitedDataFromLocalServer>
             <Arg>           PYTHON                  </Arg>
             <Arg>           PYTHON                  </Arg>
@@ -212,9 +215,33 @@
             <Arg>        LEAGUE_UUID      </Arg>
             <Arg>        GUILD_UUID       </Arg>
         </onAfterSyncLeagueUUID>
+
+        <doEnterCrossWorld>
+            <Arg>        SERVER_ID              </Arg>
+            <Arg>        MAP_ID                 </Arg>
+            <Arg>        PY_DICT                </Arg>
+        </doEnterCrossWorld>
+        
+        <reqLeaveCrossWorld> <Exposed/>
+        </reqLeaveCrossWorld>
+
+        <doLeaveCrossWorld>
+        </doLeaveCrossWorld>
+
+        <onDoLeaveCrossWorld>
+        </onDoLeaveCrossWorld>
+
+        <onCrossServerUnlock>
+        </onCrossServerUnlock>
     </BaseMethods>
 
     <CellMethods>
+        <crossWorldLeave>
+        </crossWorldLeave>
+
+        <onLeaveCrossWorld>
+        </onLeaveCrossWorld>  
+
         <onCrossServerStateChanged>
             <Arg>           UINT8                   </Arg>
         </onCrossServerStateChanged>

@@ -15,22 +15,6 @@ import re
 import crontab
 
 datas = _tools.RODict({ 
-    "abyssDailyNum": _tools.RODict({
-        "ID": "abyssDailyNum",
-        "value": 1,
-    }),
-    "abyssNumCoin": _tools.RODict({
-        "ID": "abyssNumCoin",
-        "value": 100,
-    }),
-    "abyssNumCoinDailyLimit": _tools.RODict({
-        "ID": "abyssNumCoinDailyLimit",
-        "value": 2,
-    }),
-    "abyssNumCoinCost": _tools.RODict({
-        "ID": "abyssNumCoinCost",
-        "value": ((1, 30000021, 50), (2, 30000001, 100)),
-    }),
     "abyssNumItem": _tools.RODict({
         "ID": "abyssNumItem",
         "value": 30000314,
@@ -186,5 +170,9 @@ datas = _tools.RODict({
     "abyss_freeIconPath": _tools.RODict({
         "ID": "abyss_freeIconPath",
         "value": "Assets/Res/ui/texturenp/item/item_0354.png",
+    }),
+    "abyss_exitJugeTime": _tools.RODict({
+        "ID": "abyss_exitJugeTime",
+        "value": 5,
     })
 })

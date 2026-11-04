@@ -21,6 +21,7 @@ import branchData_set as BDS
 import iLinePlayersStub
 import formula
 import json
+import random
 
 class AbyssStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
                     iMultiStaticSpace.IMultiStaticSpace, \
@@ -77,15 +78,37 @@ class AbyssStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
 
         return spaceVals[0]
 
+    def _randomAllowedAbyssLine(self, mapId, limit):
+        # 允许的分线里随机，优先还没满的
+        notFull = []
+        allowed = []
+        for lineNo in range(limit):
+            spaceNo = formula.combineLineSpaceNo(mapId, lineNo)
+            if spaceNo not in self.staticSpaces or not self.isSpaceReadyEnter(mapId, lineNo):
+                continue
+            allowed.append(lineNo)
+            if self.canSpaceEnter(spaceNo) and self._canAbyssEnter(spaceNo):
+                notFull.append(lineNo)
+
+        LOG_INFO('AbyssStub::_randomAllowedAbyssLine', formula.lineInfo(mapId), notFull, allowed, limit)
+        if notFull:
+            return random.choice(notFull)
+        if allowed:
+            return random.choice(allowed)
+        return 0
+
     def logonEnterAbyss(self, box, gbId, _):
         _mapId = AB_FD.datas[self.floor]['ID']
         _lineNo = 0
         if _mapId in B_BD.datas:
             _lineNo = self._autoSelectLine(box, gbId, iLinePlayersStub.EnterLineExtra.new({}, -1), lineType=_mapId)
+            limit = self._branchLineNumLimit(_mapId)
+            if not 0 <= _lineNo < limit:
+                _lineNo = self._randomAllowedAbyssLine(_mapId, limit)
         _spaceNo = formula.combineLineSpaceNo(_mapId, _lineNo)
         _spaceVal = self.staticSpaces.get(_spaceNo)
         if not _spaceVal:
-            LOG_ERR('AbyssStub::logonEnterAbyss: spaceVal not found')
+            LOG_ERR('AbyssStub::logonEnterAbyss: spaceVal not found', formula.lineInfo(_mapId, _lineNo, _spaceNo), gbId)
             return
 
         self.addEnterPlayer(box, gbId, 0, 0, linePlayers.LinePlayerVal.ENTERING, _spaceVal.getSpaceNo(), {})
@@ -100,7 +123,7 @@ class AbyssStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         _spaceNo = formula.combineLineSpaceNo(_mapId, _lineNo)
         _spaceVal = self.staticSpaces.get(_spaceNo)
         if not _spaceVal:
-            LOG_ERR('AbyssStub::doEnterAbyss: spaceVal not found')
+            LOG_ERR('AbyssStub::doEnterAbyss: spaceVal not found', formula.lineInfo(_mapId, _lineNo, _spaceNo), gbId)
             return
 
         if not self.canSpaceEnter(_spaceVal.getSpaceNo()):
@@ -113,21 +136,21 @@ class AbyssStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
     def onEnterAbyssSuccess(self, gbId, spaceNo):
         _playerVal = self.allPlayers.get(gbId)
         if not _playerVal:
-            LOG_ERR('AbyssStub::onEnterAbyssSuccess: playerVal not found', gbId)
+            LOG_ERR('AbyssStub::onEnterAbyssSuccess: playerVal not found', formula.lineInfo(spaceNo=spaceNo), gbId)
             return
 
         if _playerVal.playerStatus == linePlayers.LinePlayerVal.ENTERING:
             _playerVal.playerStatus = linePlayers.LinePlayerVal.INLINE
 
             if _playerVal.curSpaceNo != spaceNo:
-                LOG_ERR('AbyssStub::onEnterAbyssSuccess: spaceNo not match: {} {}'.format(_playerVal.curSpaceNo, spaceNo))
+                LOG_ERR('AbyssStub::onEnterAbyssSuccess: spaceNo not match', formula.lineInfo(spaceNo=_playerVal.curSpaceNo), '->', formula.lineInfo(spaceNo=spaceNo), gbId)
         else:
             self.switchStaticSpace(gbId, spaceNo)
 
     def onLeaveAbyss(self, gbId):
         _playerVal = self.allPlayers.get(gbId)
         if not _playerVal:
-            LOG_ERR('AbyssStub::onLeaveAbyss: playerVal not found', gbId)
+            LOG_ERR('AbyssStub::onLeaveAbyss: playerVal not found', formula.lineInfo(AB_FD.datas[self.floor]['ID']), gbId)
             return
 
         self.removePlayer(gbId)
@@ -135,7 +158,7 @@ class AbyssStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
     def onLeaveAbyssWithToSpaceNo(self, gbId, toSpaceNo):
         _playerVal = self.allPlayers.get(gbId)
         if not _playerVal:
-            LOG_ERR('AbyssStub::onLeaveAbyssWithToSpaceNo: playerVal not found', gbId)
+            LOG_ERR('AbyssStub::onLeaveAbyssWithToSpaceNo: playerVal not found', formula.lineInfo(spaceNo=toSpaceNo), gbId)
             return
 
         if toSpaceNo not in self.staticSpaces:
@@ -158,7 +181,7 @@ class AbyssStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         if _mapId in B_BD.datas:
             res = self._calculateLineInfo(_mapId)
 
-            LOG_DBG('doGetAbyssLineInfo', res)
+            LOG_DBG('doGetAbyssLineInfo', formula.lineInfo(_mapId), res)
             box.client.onGetLineInfo(json.dumps(res))
 
     def doSwitchAbyssLine(self, toLineNo, box, gbId, extra):
@@ -166,7 +189,7 @@ class AbyssStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         playerVal = self.allPlayers.get(gbId)
         toSpaceNo = formula.combineLineSpaceNo(_mapId, toLineNo)
         if playerVal and playerVal.curSpaceNo == toSpaceNo:
-            LOG_ERR('AbyssStub::doSwitchAbyssLine: player already in space: {} {}'.format(gbId, toSpaceNo))
+            LOG_ERR('AbyssStub::doSwitchAbyssLine: player already in space', formula.lineInfo(spaceNo=playerVal.curSpaceNo), '->', formula.lineInfo(_mapId, toLineNo, toSpaceNo), gbId)
             return
 
         _spaceVal = self.staticSpaces[toSpaceNo]
@@ -196,7 +219,11 @@ class AbyssStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, \
         return True
 
     def checkCanEnterCrossAbyss(self, box, extra):
+        _mapId = AB_FD.datas[self.floor]['ID']
+        limit = self._branchLineNumLimit(_mapId)
         for spaceNo, spaceVal in self.staticSpaces.items():
+            if formula.parseLineNo(spaceNo) >= limit:
+                continue
             if self.canSpaceEnter(spaceNo) and self._canAbyssEnter(spaceNo):
                 box.onCrossServerCheckCanEnterAbyss(self.floor, True, 0, extra)
                 return

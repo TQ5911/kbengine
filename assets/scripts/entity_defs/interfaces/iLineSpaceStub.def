@@ -51,27 +51,20 @@
 
         <onLineSpaceGone>
             <Arg>       SPACE_NO       </Arg>
-            <Arg>       UINT8       </Arg>
         </onLineSpaceGone>
 
         <handleCellappDeath>
-            <Arg>       UINT8         </Arg>
+            <Arg>       UINT32        </Arg>
         </handleCellappDeath>
 
         <onCellappRelive>
-            <Arg>       UINT8         </Arg>
+            <Arg>       UINT32        </Arg>
         </onCellappRelive>
 
         <createCellEntityInLine>
             <Arg>       MAILBOX        </Arg>
             <Arg>       SPACE_NO       </Arg>
         </createCellEntityInLine>
-
-        <onCollectionBeCollectAndDestroyed>
-            <Arg>       SPACE_NO    </Arg>
-            <Arg>       OBJECT_ID   </Arg>
-            <Arg>       GAME_ENTITY_ID  </Arg>
-        </onCollectionBeCollectAndDestroyed>
 
         <createCellEntityInSpace>
             <Arg>       SPACE_NO       </Arg>
@@ -102,5 +95,9 @@
             <Arg>       MAP_ID          </Arg>
             <Arg>       LINE_NO         </Arg>
         </onGetShowMapEntityInfo>
+
+        <onCrossWorld>
+            <Arg>       PY_DICT         </Arg>
+        </onCrossWorld>
     </BaseMethods>
 </root>

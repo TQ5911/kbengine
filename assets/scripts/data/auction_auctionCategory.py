@@ -21,7 +21,7 @@ datas = _tools.RODict({
     }),
     2: _tools.RODict({
         "ID": 2,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     3: _tools.RODict({
         "ID": 3,
@@ -29,19 +29,19 @@ datas = _tools.RODict({
     }),
     301: _tools.RODict({
         "ID": 301,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     302: _tools.RODict({
         "ID": 302,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     303: _tools.RODict({
         "ID": 303,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     304: _tools.RODict({
         "ID": 304,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     4: _tools.RODict({
         "ID": 4,
@@ -49,35 +49,35 @@ datas = _tools.RODict({
     }),
     401: _tools.RODict({
         "ID": 401,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     402: _tools.RODict({
         "ID": 402,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     403: _tools.RODict({
         "ID": 403,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     5: _tools.RODict({
         "ID": 5,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     6: _tools.RODict({
         "ID": 6,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     7: _tools.RODict({
         "ID": 7,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     8: _tools.RODict({
         "ID": 8,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     9: _tools.RODict({
         "ID": 9,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     10: _tools.RODict({
         "ID": 10,
@@ -85,43 +85,43 @@ datas = _tools.RODict({
     }),
     1001: _tools.RODict({
         "ID": 1001,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     1002: _tools.RODict({
         "ID": 1002,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     1003: _tools.RODict({
         "ID": 1003,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     1004: _tools.RODict({
         "ID": 1004,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     1005: _tools.RODict({
         "ID": 1005,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     1006: _tools.RODict({
         "ID": 1006,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     1007: _tools.RODict({
         "ID": 1007,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     1008: _tools.RODict({
         "ID": 1008,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     11: _tools.RODict({
         "ID": 11,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     }),
     12: _tools.RODict({
         "ID": 12,
-        "linkToSpecificItem": "",
+        "linkToSpecificItem": "1",
     })
 })
 minKey = 1

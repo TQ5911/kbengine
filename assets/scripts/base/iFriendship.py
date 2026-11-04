@@ -1000,7 +1000,7 @@ class IFriendship(object):
         self.cell.sendMyDetailInfo(box, self.accountEntity.accountName, _basePropDic, self.anonymousSwitchConfigs)
 
     def doGetAvatarInterInfoBase(self, box):
-        self.cell.onGetAvatarInterInfo(box, self.accountEntity.accountName)
+        self.cell.onGetCrossAvatarInterInfo(box, self.accountEntity.accountName)
 
     def getInterInfoOnline(self, dataDic):
         self.client.onGetInterInfoClient(dataDic)
@@ -1041,12 +1041,13 @@ class IFriendship(object):
     @AuthClsWraper.onlyHost
     def authorizeRole(self, exposed, gbId, days, authPermission):
         LOG_INFO('authorizeRole', gbId, self.secondaryPwdVerityInfo.getBeEnable())
-        if not (self.secondaryPwdVerityInfo.getBeEnable() and self.getSecondaryPwdInfo().hasSecondaryPassword()):
+        if not self.getSecondaryPwdInfo().hasSecondaryPassword():
             self.onMessagePre(A_ACD.datas['secondPwdNotSet']['value'], [])
             return
 
-        if self.checkPopupSecondaryPassword([(gameconst.SecondaryPasswordCheckType.AUTH,)]):
-            return
+        if self.secondaryPwdVerityInfo.getBeEnable():
+            if self.checkPopupSecondaryPassword([(gameconst.SecondaryPasswordCheckType.AUTH,)]):
+                return
 
         if self.accountEntity.checkHasAuth(self.gbID):
             LOG_ERR('IFriends::authorizeRole already authorized')
@@ -1385,47 +1386,9 @@ class IFriendship(object):
         if self.hasAuthPermission(pem):
             return True
 
-        self.onMessagePre(msgId, [])
+        self.onMessagePre_localCross(msgId, [])
         return False
 
     def setMainChnUIStatus(self, exposed, mainChnUIStatus):
         self.mainChnUIStatus = mainChnUIStatus
     # ------------------------ 角色授权结束 ---------------------------------------
-
-    def doInviteCheck(self, targetGbId, inviteType, teamType, needTransfer):
-        LOG_DBG('doInviteCheck ', targetGbId, inviteType, teamType, needTransfer)
-        if self.friendship.isBlock(targetGbId):
-            if not needTransfer:
-                needMsg = inviteType != gameconst.InviteType.GUILD
-                if needMsg:
-                    gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                                [targetGbId, ], 'onMessagePre', (TM_MCD.datas['inviteDeniedMsg']['value'], [self.getRoleCacheAttr('name')]),
-                                None, '', ())
-                
-            LOG_WARN('doInviteCheck, blocked ', targetGbId)   
-            return
-        if needTransfer:
-            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                                                                [targetGbId],
-                                                                'doInviteCheck',
-                                                                (self.gbID, inviteType, teamType, False),
-                                                                None,
-                                                                '',
-                                                                ())
-        else:
-            if teamType == gameconst.TeamType.TEAM:
-                gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
-                                                                [targetGbId],
-                                                                'doApplyInviteTeam',
-                                                                (self.gbID, self.getRoleCacheAttr('name'), inviteType),
-                                                                None,
-                                                                '',
-                                                                ())
-            elif teamType == gameconst.TeamType.RAID:
-                gameengine.getGlobalBase('PlayerStub').doOnOthersCell(
-                                                                [targetGbId],
-                                                                'doTryApplyInviteRaid',
-                                                                (self.gbID, self.getRoleCacheAttr('name'), inviteType),
-                                                                None,
-                                                                '',
-                                                                ())

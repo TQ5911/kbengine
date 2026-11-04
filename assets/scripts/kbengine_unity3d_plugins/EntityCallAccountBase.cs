@@ -36,7 +36,7 @@ namespace KBEngine
 			if(pBundle == null)
 				return;
 
-			((DATATYPE_CHECK_TEXT_SECURITY_REQ)EntityDef.id2datatypes[508]).addToStreamEx(bundle, arg1);
+			((DATATYPE_CHECK_TEXT_SECURITY_REQ)EntityDef.id2datatypes[481]).addToStreamEx(bundle, arg1);
 			sendCall(null);
 		}
 
@@ -101,11 +101,11 @@ namespace KBEngine
 			bundle.writeUnicode(arg2);
 			bundle.writeUint8(arg3);
 			bundle.writeUint8(arg4);
-			((DATATYPE_FACE_DATA)EntityDef.id2datatypes[28]).addToStreamEx(bundle, arg5);
+			((DATATYPE_FACE_DATA)EntityDef.id2datatypes[29]).addToStreamEx(bundle, arg5);
 			sendCall(null);
 		}
 
-		public void reqCreateBot(string arg1, UInt16 arg2, FACE_DATA arg3)
+		public void reqCreateBot(string arg1, UInt16 arg2, Byte arg3, FACE_DATA arg4)
 		{
 			Bundle pBundle = newCall("reqCreateBot", 0);
 			if(pBundle == null)
@@ -113,7 +113,22 @@ namespace KBEngine
 
 			bundle.writeUnicode(arg1);
 			bundle.writeUint16(arg2);
-			((DATATYPE_FACE_DATA)EntityDef.id2datatypes[28]).addToStreamEx(bundle, arg3);
+			bundle.writeUint8(arg3);
+			((DATATYPE_FACE_DATA)EntityDef.id2datatypes[29]).addToStreamEx(bundle, arg4);
+			sendCall(null);
+		}
+
+		public void reqCreatePreAvatar(UInt16 arg1, string arg2, Byte arg3, Byte arg4, FACE_DATA arg5)
+		{
+			Bundle pBundle = newCall("reqCreatePreAvatar", 0);
+			if(pBundle == null)
+				return;
+
+			bundle.writeUint16(arg1);
+			bundle.writeUnicode(arg2);
+			bundle.writeUint8(arg3);
+			bundle.writeUint8(arg4);
+			((DATATYPE_FACE_DATA)EntityDef.id2datatypes[29]).addToStreamEx(bundle, arg5);
 			sendCall(null);
 		}
 

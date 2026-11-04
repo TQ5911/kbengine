@@ -3,6 +3,7 @@ package allianceApp
 import (
 	"centralService/src/allianceService/allianceApp/gameServerService"
 	"centralService/src/appLog"
+	"centralService/src/common"
 	"centralService/src/common/concurrent_map"
 	"database/sql"
 	"fmt"
@@ -1313,11 +1314,15 @@ func (ad *AllianceData) removeAllianceMemberRelations(app *AllianceApp, cache *A
 }
 
 func (ad *AllianceData) loadFromDB(db *sql.DB) {
-	rows, err := db.Query("SELECT id, alliance_name, declaration, leader_guild_id, approve_type, fund, created_at FROM alliance WHERE alliance_state = 1")
-	if err != nil {
-		appLog.Error("load alliances error:", err.Error())
-		return
-	}
+	// allianceLoadBatchSize controls how many rows we pull per round-trip
+	// in loadFromDB. The alliance table can hold tens of thousands of
+	// rows in mature games; pulling them all in one shot has bitten us
+	// with driver-side memory spikes and slow GC during service start.
+	// We walk the table by primary-key cursor (ORDER BY id, WHERE id > ?)
+	// rather than LIMIT/OFFSET so the per-batch cost stays O(batch_size)
+	// regardless of how deep we are into the table.
+	const allianceLoadBatchSize = 1000
+
 	eventLimit := 0
 	guildCfg, ok := ConfigStore.cfgVipers.Get(CFG_TYPE_GUILD_CONST)
 	if !ok {
@@ -1340,43 +1345,80 @@ func (ad *AllianceData) loadFromDB(db *sql.DB) {
 		appLog.Error("load alliances error: guild const cfg load fail")
 		return
 	}
-	defer rows.Close()
 
-	for rows.Next() {
-		var (
-			id, leaderGuildId, fund uint64
-			name, declaration       string
-			approveType, createdAt  uint32
+	// Primary-key cursor pagination. We bump lastID to the largest id we
+	// successfully scanned in the previous round; if a row fails Scan
+	// we intentionally do NOT advance past it (and instead continue
+	// with the other rows in the same batch — `continue` skips downstream
+	// work but the row is still consumed by rows.Next, so the largest
+	// scanned id IS the right boundary for the next batch even if some
+	// rows in between failed).
+	var lastID uint64
+	for {
+		rows, err := db.Query(
+			"SELECT id, alliance_name, declaration, leader_guild_id, approve_type, fund, created_at FROM alliance WHERE id > ? AND alliance_state = 1 ORDER BY id LIMIT ?",
+			lastID, allianceLoadBatchSize,
 		)
-		err = rows.Scan(&id, &name, &declaration, &leaderGuildId, &approveType, &fund, &createdAt)
 		if err != nil {
-			appLog.Error("scan alliance error:", err.Error())
-			continue
+			appLog.Error("load alliances error:", err.Error())
+			return
 		}
-		info := &gameServerService.AllianceInfo{
-			AllianceId:    id,
-			Name:          name,
-			Declaration:   declaration,
-			LeaderGuildId: leaderGuildId,
-			ApproveType:   approveType,
-			Fund:          fund,
-			CreatedAt:     createdAt,
-		}
-		cache := &AllianceCache{
-			info:    info,
-			members: make(map[uint64]*gameServerService.AllianceMemberInfo),
-			applies: make(map[uint64]*gameServerService.AllianceApplyInfo),
-			invites: make(map[uint64]*gameServerService.AllianceInviteInfo),
-			events:  make([]*gameServerService.AllianceEventInfo, 0, eventLimit),
-		}
-		ad.alliances.Set(id, cache)
-		ad.allianceNamesLock.Lock()
-		ad.allianceNames[strings.ToLower(name)] = id
-		ad.allianceNamesLock.Unlock()
 
-		// Load members (盟主数据已上提 alliance;成员只保留帮会级属性)
-		memberRows, err := db.Query("SELECT guild_id, server_id, guild_score, leader_gb_id, leader_name, leader_level, leader_profession, leader_gender, member_count, member_role, join_time, guild_icon, guild_level, guild_name, dsp_flag, max_member_num FROM alliance_member WHERE alliance_id = ?", id)
-		if err == nil {
+		processed := 0
+		for rows.Next() {
+			processed++
+			var (
+				id, leaderGuildId, fund uint64
+				name, declaration       string
+				approveType, createdAt  uint32
+			)
+			err = rows.Scan(&id, &name, &declaration, &leaderGuildId, &approveType, &fund, &createdAt)
+			if err != nil {
+				appLog.Error("scan alliance error:", err.Error())
+				continue
+			}
+			// Advance cursor every time we successfully Scan a row. All
+			// rows in this batch share the same WHERE id > lastID filter,
+			// so the largest id we see in this batch is the right boundary
+			// for the next one — even if subsequent rows in the same batch
+			// fail Scan, we already covered them (they were emitted from
+			// the same result set, not re-queried).
+			lastID = id
+			info := &gameServerService.AllianceInfo{
+				AllianceId:    id,
+				Name:          name,
+				Declaration:   declaration,
+				LeaderGuildId: leaderGuildId,
+				ApproveType:   approveType,
+				Fund:          fund,
+				CreatedAt:     createdAt,
+			}
+			cache := &AllianceCache{
+				info:    info,
+				members: make(map[uint64]*gameServerService.AllianceMemberInfo),
+				applies: make(map[uint64]*gameServerService.AllianceApplyInfo),
+				invites: make(map[uint64]*gameServerService.AllianceInviteInfo),
+				events:  make([]*gameServerService.AllianceEventInfo, 0, eventLimit),
+			}
+
+			// app.groupId 由 initGroupId 在调用 LoadDatas 之前同步写入,
+			// loadFromDB 与 initGroupId 处于同一调用栈, 无并发修改, 直接
+			// 读字段安全。groupId == 0 表示组别尚未配置(灰度/测试环境),
+			// 此时跳过合服折叠过滤, 保留全部成员以兼容历史行为。
+			appGroupId := ad.app.groupId
+
+			// Load members (盟主数据已上提 alliance;成员只保留帮会级属性)。
+			// 合服期: 每个成员的 serverId 先经 GetGameServerMergeRoot 折叠
+			// 到根服, 再用 CheckServerIdInGroup 判断是否在当前组;
+			// 不在当前组的成员 -> 标 alliance_member_state=2, 不进 cache.members。
+			// 只读 alliance_member_state=1: 已禁用的成员不参与合服期过滤判定,
+			// 避免无谓 Scan + 保证被标 2 的成员不会"洗白"。
+			var disabledGuildIds []uint64
+			memberRows, err := db.Query("SELECT guild_id, server_id, guild_score, leader_gb_id, leader_name, leader_level, leader_profession, leader_gender, member_count, member_role, join_time, guild_icon, guild_level, guild_name, dsp_flag, max_member_num FROM alliance_member WHERE alliance_id = ? AND alliance_member_state = 1", id)
+			if err != nil {
+				appLog.Error("load alliance members with alliance id, error:", err.Error(), id)
+				continue
+			}
 			for memberRows.Next() {
 				var guildId uint64
 				var serverId, leaderLevel, role, joinTime, guildIcon, guildLevel, memberCount, dspFlag, maxMemberNum, leaderGender uint32
@@ -1384,60 +1426,100 @@ func (ad *AllianceData) loadFromDB(db *sql.DB) {
 				var guildName, leaderName string
 				var leaderProfession int32
 				err = memberRows.Scan(&guildId, &serverId, &guildScore, &leaderGbId, &leaderName, &leaderLevel, &leaderProfession, &leaderGender, &memberCount, &role, &joinTime, &guildIcon, &guildLevel, &guildName, &dspFlag, &maxMemberNum)
-				if err == nil {
-					cache.members[guildId] = &gameServerService.AllianceMemberInfo{
-						GuildId:          guildId,
-						GuildName:        guildName,
-						ServerId:         serverId,
-						GuildScore:       guildScore,
-						MemberCount:      memberCount,
-						Role:             role,
-						JoinTime:         joinTime,
-						GuildIcon:        guildIcon,
-						GuildLevel:       guildLevel,
-						DspFlag:          dspFlag,
-						MaxMemberNum:     maxMemberNum,
-						LeaderGbId:       leaderGbId,
-						LeaderName:       leaderName,
-						LeaderLevel:      leaderLevel,
-						LeaderProfession: uint32(leaderProfession),
-						LeaderGender:     leaderGender,
-					}
-					ad.guildToAlliance.Set(guildId, id)
+				if err != nil {
+					appLog.Error("scan alliance member error:", err.Error())
+					continue
+				}
+				mergedServerId := common.GetGameServerMergeRoot(serverId)
+				if appGroupId > 0 && !common.CheckServerIdInGroup(appGroupId, mergedServerId) {
+					// 不在当前组: 标禁用, 不放入联盟成员列表
+					disabledGuildIds = append(disabledGuildIds, guildId)
+					continue
+				}
+				cache.members[guildId] = &gameServerService.AllianceMemberInfo{
+					GuildId:          guildId,
+					GuildName:        guildName,
+					ServerId:         serverId,
+					GuildScore:       guildScore,
+					MemberCount:      memberCount,
+					Role:             role,
+					JoinTime:         joinTime,
+					GuildIcon:        guildIcon,
+					GuildLevel:       guildLevel,
+					DspFlag:          dspFlag,
+					MaxMemberNum:     maxMemberNum,
+					LeaderGbId:       leaderGbId,
+					LeaderName:       leaderName,
+					LeaderLevel:      leaderLevel,
+					LeaderProfession: uint32(leaderProfession),
+					LeaderGender:     leaderGender,
 				}
 			}
 			memberRows.Close()
-		}
 
-		for a := range cache.members {
-			for b := range cache.members {
-				guildRelationCache.AddRelation(a, b, GuildRelationUnion, 0)
+			// 持久化禁用成员 (联盟本身保留, 只是禁用部分成员)
+			if len(disabledGuildIds) > 0 {
+				bulkMarkMembersDisabled(db, id, disabledGuildIds)
 			}
-		}
-		// Load the most recent MaxEventsPerAlliance events for this alliance.
-		// The query returns newest-first; we reverse so the cache is stored
-		// oldest-first to match the append/trim logic in `addEvent`.
-		eventRows, err := db.Query("SELECT id, event_type, params_json, created_at FROM alliance_event WHERE alliance_id = ? ORDER BY created_at DESC, id DESC LIMIT ?", id, eventLimit)
-		if err == nil {
-			loaded := make([]*gameServerService.AllianceEventInfo, 0, eventLimit)
-			for eventRows.Next() {
-				var e gameServerService.AllianceEventInfo
-				var eventArgs string
-				err = eventRows.Scan(&e.EventId, &e.EventType, &eventArgs, &e.CreatedAt)
-				e.EventArgs = strings.Split(eventArgs, "|")
-				if err == nil {
-					loaded = append(loaded, &e)
+
+			// 联盟有效成员为 0 -> 标 alliance_state=2, 不加入联盟服务器缓存
+			if len(cache.members) == 0 {
+				if _, dbErr := db.Exec("UPDATE alliance SET alliance_state = 2 WHERE id = ?", id); dbErr != nil {
+					appLog.Error(fmt.Sprintf("mark empty-alliance disbanded failed: id=%d err=%s", id, dbErr.Error()))
+				}
+				continue
+			}
+
+			ad.alliances.Set(id, cache)
+			ad.allianceNamesLock.Lock()
+			ad.allianceNames[strings.ToLower(name)] = id
+			ad.allianceNamesLock.Unlock()
+
+			for guildId := range cache.members {
+				ad.guildToAlliance.Set(guildId, id)
+			}
+
+			for a := range cache.members {
+				for b := range cache.members {
+					guildRelationCache.AddRelation(a, b, GuildRelationUnion, 0)
 				}
 			}
-			eventRows.Close()
-			// Reverse to ASC order (oldest → newest)
-			for i, j := 0, len(loaded)-1; i < j; i, j = i+1, j-1 {
-				loaded[i], loaded[j] = loaded[j], loaded[i]
+			// Load the most recent MaxEventsPerAlliance events for this alliance.
+			// The query returns newest-first; we reverse so the cache is stored
+			// oldest-first to match the append/trim logic in `addEvent`.
+			eventRows, err := db.Query("SELECT id, event_type, params_json, created_at FROM alliance_event WHERE alliance_id = ? ORDER BY created_at DESC, id DESC LIMIT ?", id, eventLimit)
+			if err == nil {
+				loaded := make([]*gameServerService.AllianceEventInfo, 0, eventLimit)
+				for eventRows.Next() {
+					var e gameServerService.AllianceEventInfo
+					var eventArgs string
+					err = eventRows.Scan(&e.EventId, &e.EventType, &eventArgs, &e.CreatedAt)
+					e.EventArgs = strings.Split(eventArgs, "|")
+					if err == nil {
+						loaded = append(loaded, &e)
+					}
+				}
+				eventRows.Close()
+				// Reverse to ASC order (oldest → newest)
+				for i, j := 0, len(loaded)-1; i < j; i, j = i+1, j-1 {
+					loaded[i], loaded[j] = loaded[j], loaded[i]
+				}
+				cache.events = loaded
 			}
-			cache.events = loaded
-		}
 
-		cache.updateDerivedFields()
+			cache.updateDerivedFields()
+		}
+		rows.Close()
+
+		// Termination rules:
+		//   - processed == 0           → empty round (e.g. all rows failed
+		//                                 Scan); defensive break to avoid
+		//                                 looping with unchanged lastID.
+		//   - processed < batchSize    → tail of the table, we're done.
+		//   - processed == batchSize   → there may be more rows; loop back.
+		if processed == 0 || processed < allianceLoadBatchSize {
+			break
+		}
 	}
 
 	// Build the sortedAlliances index once after the map is fully populated.
@@ -1448,82 +1530,226 @@ func (ad *AllianceData) loadFromDB(db *sql.DB) {
 	}
 }
 
-func (ad *AllianceData) loadEnemiesFromDB(db *sql.DB) {
-	rows, err := db.Query("SELECT attacker_type, attacker_id, attacker_server_id, target_type, target_id, target_server_id, end_time FROM alliance_enemy")
-	if err != nil {
-		appLog.Error("load enemies error:", err.Error())
+// bulkMarkMembersDisabled 把单个联盟中"不在当前组"的成员一次性标为禁用。
+// 调用方需保证 guildIds 非空; IN 占位符按 guild 数量动态展开, 一次 round-trip 完成。
+// 失败仅记录日志, 不阻塞加载流程: 合服期过滤是 best-effort, 下次重启还会再跑。
+func bulkMarkMembersDisabled(db *sql.DB, allianceId uint64, guildIds []uint64) {
+	if len(guildIds) == 0 {
 		return
 	}
-	defer rows.Close()
+	placeholders := make([]string, len(guildIds))
+	args := make([]interface{}, 0, len(guildIds)+1)
+	args = append(args, allianceId)
+	for i, gid := range guildIds {
+		placeholders[i] = "?"
+		args = append(args, gid)
+	}
+	query := fmt.Sprintf(
+		"UPDATE alliance_member SET alliance_member_state = 2 WHERE alliance_id = ? AND guild_id IN (%s)",
+		strings.Join(placeholders, ","),
+	)
+	if _, err := db.Exec(query, args...); err != nil {
+		appLog.Error(fmt.Sprintf("bulk mark disabled members failed: alliance=%d count=%d err=%s", allianceId, len(guildIds), err.Error()))
+	}
+}
 
-	for rows.Next() {
-		var AttackType, targetType, attackerServerId, targetServerId uint32
-		var AttackId, targetId uint64
-		var endTime uint32
-		err = rows.Scan(&AttackType, &AttackId, &attackerServerId, &targetType, &targetId, &targetServerId, &endTime)
+// bulkMarkRowsDisabledByID 按自增 id 攒批把指定表的 state 列标为 2, 用于
+// alliance_apply / alliance_invite 这类没有 (alliance_id, guild_id) 联合键
+// 的表。table 与 stateCol 由调用方传入, 不做白名单校验——只对内部受信任的
+// 表名使用。失败仅记录日志, 不阻塞加载流程。
+func bulkMarkRowsDisabledByID(db *sql.DB, table, stateCol string, ids []uint64) {
+	if len(ids) == 0 {
+		return
+	}
+	placeholders := make([]string, len(ids))
+	args := make([]interface{}, len(ids))
+	for i, id := range ids {
+		placeholders[i] = "?"
+		args[i] = id
+	}
+	query := fmt.Sprintf(
+		"UPDATE %s SET %s = 2 WHERE id IN (%s)",
+		table, stateCol, strings.Join(placeholders, ","),
+	)
+	if _, err := db.Exec(query, args...); err != nil {
+		appLog.Error(fmt.Sprintf("bulk mark %s disabled failed: count=%d err=%s", table, len(ids), err.Error()))
+	}
+}
+
+func (ad *AllianceData) loadEnemiesFromDB(db *sql.DB) {
+	// enemyLoadBatchSize controls how many rows we pull per round-trip in
+	// loadEnemiesFromDB. The alliance_enemy table can hold tens of thousands
+	// of rows in mature games; pulling them all in one shot has bitten us
+	// with driver-side memory spikes and slow GC during service start.
+	// We walk the table by primary-key cursor (ORDER BY id, WHERE id > ?)
+	// rather than LIMIT/OFFSET so the per-batch cost stays O(batch_size)
+	// regardless of how deep we are into the table.
+	const enemyLoadBatchSize = 1000
+
+	// app.groupId 由 initGroupId 在调用 LoadDatas 之前同步写入, 与本函数
+	// 处于同一调用栈, 无并发修改, 直接读字段安全。groupId == 0 表示组别
+	// 尚未配置(灰度/测试环境), 此时跳过合服折叠过滤, 保留全部敌对关系。
+	appGroupId := ad.app.groupId
+
+	// 合服期: attacker_server_id 和 target_server_id 都经 GetGameServerMergeRoot
+	// 折叠到根服, 再用 CheckServerIdInGroup 判断是否在当前组; 任一不在当前
+	// 组 -> 标 alliance_enemy_state=2, 不进 cache。双边判断是为了防止"对
+	// 手在别组, 本组也打不到"的无效战争污染本地敌对关系缓存。
+	// 只读 alliance_enemy_state=1: 已禁用的行不参与合服期过滤判定, 避免无
+	// 谓 Scan + 保证被标 2 的行不会"洗白"。
+	// enemy 没有 alliance_id 字段(只有 type/id 二元组), 也不能像 apply/invite
+	// 那样按已加载联盟 id 集合过滤; 用主键游标分批 + 合服过滤 是当前可接受
+	// 的方案。
+	var lastID uint64
+	for {
+		rows, err := db.Query("SELECT id, attacker_type, attacker_id, attacker_server_id, target_type, target_id, target_server_id, end_time FROM alliance_enemy WHERE id > ? AND alliance_enemy_state = 1 ORDER BY id LIMIT ?", lastID, enemyLoadBatchSize)
 		if err != nil {
-			continue
+			appLog.Error("load enemies error:", err.Error())
+			return
 		}
-		ad.addEnemyPairs(AttackType, targetType, AttackId, targetId, endTime, attackerServerId, targetServerId)
+
+		processed := 0
+		var localDisabledEnemyIds []uint64
+		for rows.Next() {
+			processed++
+			var enemyID uint64
+			var AttackType, targetType, attackerServerId, targetServerId uint32
+			var AttackId, targetId uint64
+			var endTime uint32
+			err = rows.Scan(&enemyID, &AttackType, &AttackId, &attackerServerId, &targetType, &targetId, &targetServerId, &endTime)
+			if err != nil {
+				continue
+			}
+			lastID = enemyID
+			if appGroupId > 0 {
+				mergedAttacker := common.GetGameServerMergeRoot(attackerServerId)
+				mergedTarget := common.GetGameServerMergeRoot(targetServerId)
+				if !common.CheckServerIdInGroup(appGroupId, mergedAttacker) || !common.CheckServerIdInGroup(appGroupId, mergedTarget) {
+					// 任一侧不在当前组: 标禁用, 不放入敌对关系缓存
+					localDisabledEnemyIds = append(localDisabledEnemyIds, enemyID)
+					continue
+				}
+			}
+			ad.addEnemyPairs(AttackType, targetType, AttackId, targetId, endTime, attackerServerId, targetServerId)
+		}
+		rows.Close()
+
+		// 按批攒批: 单批 disabled 上限 = batchSize, 不会触发 max_allowed_packet。
+		if len(localDisabledEnemyIds) > 0 {
+			bulkMarkRowsDisabledByID(db, "alliance_enemy", "alliance_enemy_state", localDisabledEnemyIds)
+		}
+
+		// Termination rules (与 alliance 分批一致):
+		//   - processed == 0        → 空批 (例如全行 Scan 失败) 防御性 break
+		//   - processed < batchSize → 已到表尾
+		//   - processed == batchSize → 可能还有更多, 继续
+		if processed == 0 || processed < enemyLoadBatchSize {
+			break
+		}
 	}
 }
 
 func (ad *AllianceData) loadAppliesAndInvitesFromDB(db *sql.DB) {
-	rows, err := db.Query("SELECT id, alliance_id, guild_id, guild_name, guild_score, server_id, apply_state, created_at, guild_icon, dsp_flag FROM alliance_apply WHERE apply_state = 0")
-	if err != nil {
-		appLog.Error("load applies error:", err.Error())
+	// app.groupId 由 initGroupId 在调用 LoadDatas 之前同步写入, 与本函数
+	// 处于同一调用栈, 无并发修改, 直接读字段安全。groupId == 0 表示组别
+	// 尚未配置(灰度/测试环境), 此时跳过合服折叠过滤, 保留全部申请/邀请。
+	appGroupId := ad.app.groupId
+
+	// 每个已加载的联盟单独发 SELECT, 用 alliance_id 严格限定加载范围——
+	// loadFromDB 完成后 ad.alliances 已收敛为"合服后有效成员 ≥ 1"的联盟
+	// 集合, 这里按 ID 各自加载保证: 联盟不存在时直接跳过, 加载错误不波
+	// 及其他联盟, 每条 SQL 简短且命中 (alliance_id) 索引。
+	// 极端情况: 全部联盟都因为有效成员=0 而被标 alliance_state=2 没进 cache,
+	// 此时 allianceIDs 为空, 直接跳过 (它们对应的联盟都不存在)。
+	allianceIDs := ad.alliances.Keys()
+	if len(allianceIDs) == 0 {
+		appLog.Info("loadAppliesAndInvites: no alliances loaded, skip")
 		return
 	}
-	defer rows.Close()
 
-	for rows.Next() {
-		var a gameServerService.AllianceApplyInfo
-		rows.Scan(&a.ApplyId, &a.AllianceId, &a.GuildId, &a.GuildName, &a.GuildScore, &a.ServerId, &a.Status, &a.CreatedAt, &a.GuildIcon, &a.DspFlag)
-		// Take the address of a fresh copy so each cache entry has its own
-		// backing storage (not a shared loop variable alias).
-		if cache, ok := ad.alliances.Get(a.AllianceId); ok {
-			cache.Lock()
-			cache.applies[a.GuildId] = &a
-			cache.Unlock()
+	// 合服期: 每条 serverId 先经 GetGameServerMergeRoot 折叠到根服, 再用
+	// CheckServerIdInGroup 判断是否在当前组; 不在当前组的行 -> 按联盟攒批标
+	// alliance_*_state=2, 不进 cache。
+	// 只读 *_state=1: 已禁用的行不参与合服期过滤判定, 避免无谓 Scan + 保证
+	// 被标 2 的行不会"洗白"。
+	// 攒批粒度: 每个联盟的禁用行攒成 1 次 IN (...) UPDATE, 单次 SQL 的
+	// IN 列表受单联盟规模限制(几个到几十), 避免 1 万联盟 × 几十申请/邀请
+	// 攒成 1 条巨大 SQL 导致 max_allowed_packet 接近上限。
+	for _, allianceID := range allianceIDs {
+		rows, err := db.Query("SELECT id, alliance_id, guild_id, guild_name, guild_score, server_id, apply_state, created_at, guild_icon, dsp_flag FROM alliance_apply WHERE apply_state = 0 AND alliance_apply_state = 1 AND alliance_id = ?", allianceID)
+		if err != nil {
+			appLog.Error(fmt.Sprintf("load applies for alliance %d error: %s", allianceID, err.Error()))
+			continue
 		}
-		// Also populate the per-guild O(1) lookup index so restart-restore
-		// matches the live ApplyToJoin path.
-		ad.addGuildApply(a.GuildId, &a)
-	}
-
-	rows2, err := db.Query("SELECT id, alliance_id, alliance_name, guild_id, server_id, invite_state, created_at FROM alliance_invite WHERE invite_state = 0")
-	if err != nil {
-		appLog.Error("load invites error:", err.Error())
-		return
-	}
-	defer rows2.Close()
-
-	for rows2.Next() {
-		var inv gameServerService.AllianceInviteInfo
-		rows2.Scan(&inv.InviteId, &inv.AllianceId, &inv.AllianceName, &inv.GuildId, &inv.ServerId, &inv.Status, &inv.CreatedAt)
-		if cache, ok := ad.alliances.Get(inv.AllianceId); ok {
-			cache.Lock()
-			cache.invites[inv.GuildId] = &inv
-			// 刷新下联盟数据
-			inv.AllianceName = cache.info.Name
-			inv.Members = make([]*gameServerService.AllianceInviteMemberInfo, 0)
-			for _, member := range cache.members {
-				inv.Members = append(inv.Members, &gameServerService.AllianceInviteMemberInfo{
-					GuildUUID:    member.GuildId,
-					GuildName:    member.GuildName,
-					GuildScore:   member.GuildScore,
-					GuildIcon:    member.GuildIcon,
-					GuildLevel:   member.GuildLevel,
-					DspFlag:      member.DspFlag,
-					MemberCount:  member.MemberCount,
-					MaxMemberNum: member.MaxMemberNum,
-				})
+		var localDisabledApplyIds []uint64
+		for rows.Next() {
+			var a gameServerService.AllianceApplyInfo
+			rows.Scan(&a.ApplyId, &a.AllianceId, &a.GuildId, &a.GuildName, &a.GuildScore, &a.ServerId, &a.Status, &a.CreatedAt, &a.GuildIcon, &a.DspFlag)
+			mergedServerId := common.GetGameServerMergeRoot(a.ServerId)
+			if appGroupId > 0 && !common.CheckServerIdInGroup(appGroupId, mergedServerId) {
+				localDisabledApplyIds = append(localDisabledApplyIds, a.ApplyId)
+				continue
 			}
-			cache.Unlock()
+			// Take the address of a fresh copy so each cache entry has its own
+			// backing storage (not a shared loop variable alias).
+			if cache, ok := ad.alliances.Get(a.AllianceId); ok {
+				cache.Lock()
+				cache.applies[a.GuildId] = &a
+				cache.Unlock()
+			}
+			// Also populate the per-guild O(1) lookup index so restart-restore
+			// matches the live ApplyToJoin path.
+			ad.addGuildApply(a.GuildId, &a)
 		}
-		// Mirror into the per-guild O(1) lookup index so restart-restore
-		// matches the live InviteGuild / completeInviteGuild path.
-		ad.addGuildInvite(inv.GuildId, &inv)
+		rows.Close()
+		if len(localDisabledApplyIds) > 0 {
+			bulkMarkRowsDisabledByID(db, "alliance_apply", "alliance_apply_state", localDisabledApplyIds)
+		}
+	}
+
+	for _, allianceID := range allianceIDs {
+		rows, err := db.Query("SELECT id, alliance_id, alliance_name, guild_id, server_id, invite_state, created_at FROM alliance_invite WHERE invite_state = 0 AND alliance_invite_state = 1 AND alliance_id = ?", allianceID)
+		if err != nil {
+			appLog.Error(fmt.Sprintf("load invites for alliance %d error: %s", allianceID, err.Error()))
+			continue
+		}
+		var localDisabledInviteIds []uint64
+		for rows.Next() {
+			var inv gameServerService.AllianceInviteInfo
+			rows.Scan(&inv.InviteId, &inv.AllianceId, &inv.AllianceName, &inv.GuildId, &inv.ServerId, &inv.Status, &inv.CreatedAt)
+			mergedServerId := common.GetGameServerMergeRoot(inv.ServerId)
+			if appGroupId > 0 && !common.CheckServerIdInGroup(appGroupId, mergedServerId) {
+				localDisabledInviteIds = append(localDisabledInviteIds, inv.InviteId)
+				continue
+			}
+			if cache, ok := ad.alliances.Get(inv.AllianceId); ok {
+				cache.Lock()
+				cache.invites[inv.GuildId] = &inv
+				// 刷新下联盟数据
+				inv.AllianceName = cache.info.Name
+				inv.Members = make([]*gameServerService.AllianceInviteMemberInfo, 0)
+				for _, member := range cache.members {
+					inv.Members = append(inv.Members, &gameServerService.AllianceInviteMemberInfo{
+						GuildUUID:    member.GuildId,
+						GuildName:    member.GuildName,
+						GuildScore:   member.GuildScore,
+						GuildIcon:    member.GuildIcon,
+						GuildLevel:   member.GuildLevel,
+						DspFlag:      member.DspFlag,
+						MemberCount:  member.MemberCount,
+						MaxMemberNum: member.MaxMemberNum,
+					})
+				}
+				cache.Unlock()
+			}
+			// Mirror into the per-guild O(1) lookup index so restart-restore
+			// matches the live InviteGuild / completeInviteGuild path.
+			ad.addGuildInvite(inv.GuildId, &inv)
+		}
+		rows.Close()
+		if len(localDisabledInviteIds) > 0 {
+			bulkMarkRowsDisabledByID(db, "alliance_invite", "alliance_invite_state", localDisabledInviteIds)
+		}
 	}
 }
 
@@ -1668,8 +1894,8 @@ func (ad *AllianceData) CreateLeague(db *sql.DB, app *AllianceApp, in *gameServe
 
 	// Add leader as first member (盟主数据已上提 alliance,这里只存帮会级属性)
 	_, err = db.Exec(
-		"INSERT INTO alliance_member (alliance_id, guild_id, server_id, guild_score, leader_gb_id, leader_name, leader_level, leader_profession, leader_gender, member_count, member_role, join_time, guild_icon, guild_level, guild_name, dsp_flag, max_member_num) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-		allianceId, in.GuildId, in.ServerId, in.GuildScore, in.PlayerGbId, in.LeaderName, in.LeaderLevel, in.LeaderProfession, in.LeaderGender, in.MemberCount, MemberRoleLeader, nowTS(), in.GuildIcon, in.GuildLevel, in.GuildName, in.DspFlag, in.MaxMemberNum,
+		"INSERT INTO alliance_member (alliance_id, guild_id, server_id, guild_score, leader_gb_id, leader_name, leader_level, leader_profession, leader_gender, member_count, member_role, join_time, guild_icon, guild_level, guild_name, dsp_flag, max_member_num, alliance_member_state) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		allianceId, in.GuildId, in.ServerId, in.GuildScore, in.PlayerGbId, in.LeaderName, in.LeaderLevel, in.LeaderProfession, in.LeaderGender, in.MemberCount, MemberRoleLeader, nowTS(), in.GuildIcon, in.GuildLevel, in.GuildName, in.DspFlag, in.MaxMemberNum, 1,
 	)
 	if err != nil {
 		appLog.Error("insert leader member error:", err.Error())
@@ -2472,12 +2698,12 @@ func (ad *AllianceData) ApplyToJoin(db *sql.DB, app *AllianceApp, in *gameServer
 		// apply request (AllianceMemberInfo minus joinTime, which we stamp here).
 		joinTS := nowTS()
 		_, err := db.Exec(
-			"INSERT INTO alliance_member (alliance_id, guild_id, server_id, guild_score, leader_gb_id, leader_name, leader_level, leader_profession, leader_gender, member_count, member_role, join_time, guild_icon, guild_level, guild_name, dsp_flag, max_member_num) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			"INSERT INTO alliance_member (alliance_id, guild_id, server_id, guild_score, leader_gb_id, leader_name, leader_level, leader_profession, leader_gender, member_count, member_role, join_time, guild_icon, guild_level, guild_name, dsp_flag, max_member_num, alliance_member_state) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			in.AllianceId, in.GuildId, in.ServerId, in.GuildScore,
 			in.LeaderGbId, in.LeaderName, in.LeaderLevel, in.LeaderProfession, in.LeaderGender,
 			in.MemberCount, MemberRoleMember, joinTS,
 			in.GuildIcon, in.GuildLevel, in.GuildName,
-			in.DspFlag, in.MaxMemberNum,
+			in.DspFlag, in.MaxMemberNum, 1,
 		)
 		if err != nil {
 			appLog.Error("auto approve insert member error:", err.Error())
@@ -2515,9 +2741,9 @@ func (ad *AllianceData) ApplyToJoin(db *sql.DB, app *AllianceApp, in *gameServer
 
 	// Manual approval
 	result, err := db.Exec(
-		"INSERT INTO alliance_apply (alliance_id, guild_id, guild_name, guild_score, server_id, apply_state, created_at, guild_icon, dsp_flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		"INSERT INTO alliance_apply (alliance_id, guild_id, guild_name, guild_score, server_id, apply_state, created_at, guild_icon, dsp_flag, alliance_apply_state) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		in.AllianceId, in.GuildId, in.GuildName, in.GuildScore, in.ServerId, ApplyStatusPending, nowTS(),
-		in.GuildIcon, in.DspFlag,
+		in.GuildIcon, in.DspFlag, 1,
 	)
 	if err != nil {
 		appLog.Error("insert apply error:", err.Error())
@@ -2753,7 +2979,7 @@ func (ad *AllianceData) completeApproveJoin(db *sql.DB, app *AllianceApp, p *pen
 	memberInfo := buildMemberInfoFromApplySnapshot(p.applyInfo, joinTS)
 	if db != nil {
 		db.Exec("UPDATE alliance_apply SET apply_state = ? WHERE id = ?", ApplyStatusApproved, p.applyId)
-		db.Exec("INSERT INTO alliance_member (alliance_id, guild_id, server_id, guild_score, leader_gb_id, leader_name, leader_level, leader_profession, leader_gender, member_count, member_role, join_time, guild_icon, guild_level, guild_name, dsp_flag, max_member_num) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		db.Exec("INSERT INTO alliance_member (alliance_id, guild_id, server_id, guild_score, leader_gb_id, leader_name, leader_level, leader_profession, leader_gender, member_count, member_role, join_time, guild_icon, guild_level, guild_name, dsp_flag, max_member_num, alliance_member_state) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			p.allianceId,
 			memberInfo.GuildId,
 			memberInfo.ServerId,
@@ -2771,6 +2997,7 @@ func (ad *AllianceData) completeApproveJoin(db *sql.DB, app *AllianceApp, p *pen
 			memberInfo.GuildName,
 			memberInfo.DspFlag,
 			memberInfo.MaxMemberNum,
+			1,
 		)
 	}
 	cache.members[p.guildId] = memberInfo
@@ -3074,8 +3301,8 @@ func (ad *AllianceData) completeInviteGuild(db *sql.DB, app *AllianceApp, p *pen
 	var inviteId uint64
 	if db != nil {
 		result, err := db.Exec(
-			"INSERT INTO alliance_invite (alliance_id, alliance_name, guild_id, server_id, invite_state, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-			p.allianceId, cache.info.Name, p.targetGuildId, p.targetServerId, InviteStatusPending, nowTS(),
+			"INSERT INTO alliance_invite (alliance_id, alliance_name, guild_id, server_id, invite_state, created_at, alliance_invite_state) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			p.allianceId, cache.info.Name, p.targetGuildId, p.targetServerId, InviteStatusPending, nowTS(), 1,
 		)
 		if err != nil {
 			return ErrCodeAllianceNotFound
@@ -3205,8 +3432,8 @@ func (ad *AllianceData) completeDeclareWar(db *sql.DB, app *AllianceApp, p *pend
 		}
 	}
 
-	_, dbErr := db.Exec("INSERT INTO alliance_enemy (attacker_type, attacker_id, attacker_server_id, target_type, target_id, target_server_id, end_time, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-		p.attackType, p.attackId, p.attackerServerId, p.targetType, p.targetId, p.targetServerId, p.endTime, nowTS())
+	_, dbErr := db.Exec("INSERT INTO alliance_enemy (attacker_type, attacker_id, attacker_server_id, target_type, target_id, target_server_id, end_time, created_at, alliance_enemy_state) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		p.attackType, p.attackId, p.attackerServerId, p.targetType, p.targetId, p.targetServerId, p.endTime, nowTS(), 1)
 	if dbErr != nil {
 		appLog.Error("completeDeclareWar: insert enemy error:", dbErr.Error())
 		return ErrCodeAllianceNotFound, 0
@@ -3386,7 +3613,7 @@ func (ad *AllianceData) AcceptInvite(db *sql.DB, app *AllianceApp, in *gameServe
 	}
 	if db != nil {
 		db.Exec("UPDATE alliance_invite SET invite_state = ? WHERE id = ?", InviteStatusAccepted, invInfo.InviteId)
-		db.Exec("INSERT INTO alliance_member (alliance_id, guild_id, server_id, guild_score, leader_gb_id, leader_name, leader_level, leader_profession, leader_gender, member_count, member_role, join_time, guild_icon, guild_level, guild_name, dsp_flag, max_member_num) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		db.Exec("INSERT INTO alliance_member (alliance_id, guild_id, server_id, guild_score, leader_gb_id, leader_name, leader_level, leader_profession, leader_gender, member_count, member_role, join_time, guild_icon, guild_level, guild_name, dsp_flag, max_member_num, alliance_member_state) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			invInfo.AllianceId,
 			memberInfo.GuildId,
 			memberInfo.ServerId,
@@ -3404,6 +3631,7 @@ func (ad *AllianceData) AcceptInvite(db *sql.DB, app *AllianceApp, in *gameServe
 			memberInfo.GuildName,
 			memberInfo.DspFlag,
 			memberInfo.MaxMemberNum,
+			1,
 		)
 	}
 
@@ -4135,8 +4363,8 @@ func (ad *AllianceData) DeclareWar(db *sql.DB, app *AllianceApp, in *gameServerS
 		db.Exec("UPDATE alliance SET fund = ? WHERE id = ?", in.AttackId, newFund)
 	}
 
-	_, dbErr := db.Exec("INSERT INTO alliance_enemy (attacker_type, attacker_id, attacker_server_id, target_type, target_id, target_server_id, end_time, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-		in.AttackType, in.AttackId, requesterServerId, in.TargetType, in.TargetId, in.TargetServerId, endTime, nowTS())
+	_, dbErr := db.Exec("INSERT INTO alliance_enemy (attacker_type, attacker_id, attacker_server_id, target_type, target_id, target_server_id, end_time, created_at, alliance_enemy_state) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		in.AttackType, in.AttackId, requesterServerId, in.TargetType, in.TargetId, in.TargetServerId, endTime, nowTS(), 1)
 	if dbErr != nil {
 		appLog.Error("insert enemy error:", dbErr.Error())
 		return ErrCodeAllianceNotFound, 0, false

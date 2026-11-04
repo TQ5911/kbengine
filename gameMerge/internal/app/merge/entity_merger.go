@@ -61,15 +61,12 @@ func (e *EntityMerger) Merge(ctx context.Context) error {
 
 	runners := []merger.Runner{rootPipe}
 	if len(spec.Subs) > 0 {
-		subPipes, err := e.buildSubPipelines(ctx, spec.Subs, rootIDMap)
+		stages, err := e.buildSubPipelines(ctx, spec.Subs, spec.Root.Name, rootIDMap)
 		if err != nil {
 			e.RootIDMap = nil
 			return fmt.Errorf("sub pipelines %s: %w", e.Name, err)
 		}
-		runners = append(runners, &merger.Stage{
-			Name:  fmt.Sprintf("%s.children[%d]", spec.Root.Name, len(subPipes)),
-			Items: subPipes,
-		})
+		runners = append(runners, stages...)
 	}
 
 	for _, r := range runners {
@@ -124,25 +121,74 @@ func (e *EntityMerger) buildRootPipeline(ctx context.Context, root RootSpec, roo
 	}, nil
 }
 
-func (e *EntityMerger) buildSubPipelines(ctx context.Context, subs []ChildSpec, rootIDMap *idmap.IDMap) ([]merger.Runner, error) {
-	out := make([]merger.Runner, 0, len(subs))
+func (e *EntityMerger) buildSubPipelines(ctx context.Context, subs []ChildSpec, rootName string, rootIDMap *idmap.IDMap) ([]merger.Runner, error) {
+	// 按 Level 分组：Level 1 是 root（已在外面跑），子表从 Level 2 开始。
+	// 跨 Level 必须顺序：level=N 的 parent 是 level=N-1 中的某张表，
+	// 必须等父表的 pipeline 跑完把 idmap 写入 idmaps 才能 join。
+	byLevel := make(map[int][]ChildSpec, 4)
+	maxLevel := 0
 	for _, sub := range subs {
-		childIDMap := idmap.New(sub.IDBase)
-		pipe, err := transformer.BuildEntityPipeline(ctx, transformer.BuildEntityOptions{
-			Src:         e.Src,
-			Dst:         e.Dst,
-			Table:       sub.Name,
-			ParentIDCol: sub.ParentIDCol,
-			IDCol:       sub.IDCol,
-			IDBase:      sub.IDBase,
-			ReadBatch:   e.ReadBatch,
-			WriteBatch:  e.WriteBatch,
-		}, rootIDMap, childIDMap)
-		if err != nil {
-			slog.Warn("skip sub table", "table", sub.Name, "err", err)
+		if sub.Level < 2 {
+			slog.Warn("skip child with invalid level", "table", sub.Name, "level", sub.Level)
 			continue
 		}
-		out = append(out, pipe)
+		byLevel[sub.Level] = append(byLevel[sub.Level], sub)
+		if sub.Level > maxLevel {
+			maxLevel = sub.Level
+		}
 	}
-	return out, nil
+	if len(byLevel) == 0 {
+		return nil, nil
+	}
+
+	// idmaps 把所有表产出的 idmap 缓存下来：root 先填好，跑完一级就把该级所有
+	// 子表的 childIDMap 注册进来，供下一级 join 父表用。
+	idmaps := make(map[string]*idmap.IDMap, len(subs)+1)
+	idmaps[rootName] = rootIDMap
+
+	stages := make([]merger.Runner, 0, maxLevel-1)
+	for level := 2; level <= maxLevel; level++ {
+		children := byLevel[level]
+		if len(children) == 0 {
+			continue
+		}
+		pipes := make([]merger.Runner, 0, len(children))
+		for _, sub := range children {
+			parentMap, ok := idmaps[sub.ParentName]
+			if !ok || parentMap == nil {
+				slog.Warn("skip child with unknown parent",
+					"table", sub.Name,
+					"level", sub.Level,
+					"parent", sub.ParentName,
+				)
+				continue
+			}
+			childIDMap := idmap.New(sub.IDBase)
+			idmaps[sub.Name] = childIDMap
+			pipe, err := transformer.BuildEntityPipeline(ctx, transformer.BuildEntityOptions{
+				Src:         e.Src,
+				Dst:         e.Dst,
+				Table:       sub.Name,
+				ParentIDCol: sub.ParentIDCol,
+				IDCol:       sub.IDCol,
+				IDBase:      sub.IDBase,
+				ReadBatch:   e.ReadBatch,
+				WriteBatch:  e.WriteBatch,
+			}, parentMap, childIDMap)
+			if err != nil {
+				slog.Warn("skip sub table", "table", sub.Name, "err", err)
+				delete(idmaps, sub.Name)
+				continue
+			}
+			pipes = append(pipes, pipe)
+		}
+		if len(pipes) == 0 {
+			continue
+		}
+		stages = append(stages, &merger.Stage{
+			Name:  fmt.Sprintf("%s.level[%d][%d]", e.Name, level, len(pipes)),
+			Items: pipes,
+		})
+	}
+	return stages, nil
 }

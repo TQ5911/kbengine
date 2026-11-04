@@ -97,7 +97,7 @@ namespace KBEngine
         public string serverScriptVersion = "";
         public string clientScriptVersion = "0.1.0";
         public string serverProtocolMD5 = "9506842A6628D1E732A0FAA2B8FC8CB3";
-        public string serverEntitydefMD5 = "E492AC573198E5915802241E881CA60E";
+        public string serverEntitydefMD5 = "E5B6F5B442A4B1A4B37D94D3238E3E92";
 
         // 当前玩家的实体id与实体类别
         public UInt64 entity_uuid = 0;
@@ -1127,6 +1127,12 @@ namespace KBEngine
 
             baseappIPv6 = stream.readString();
             baseappIP = stream.readString();
+            // 如果baseappIP为"0.0.0.0"，则使用loginapp的IP
+            if (baseappIP == "0.0.0.0")
+            {
+                baseappIP = _args.ip;
+            }
+
             baseappTcpPortIpv6 = stream.readUint16();
             baseappUdpPortIpv6 = stream.readUint16();
             baseappTcpPort = stream.readUint16();

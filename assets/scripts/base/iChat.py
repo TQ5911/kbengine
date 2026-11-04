@@ -220,17 +220,24 @@ class IChat(object):
         self._sendMsgToAlliance(msg)
 
     def _sendMsgToGuild(self, msg, includeMe=False, isTeamZhaomu=False):
+        if gameconfig.isCrossServer():
+            self.syncMethodCallToLocalServerBase(
+                '_sendMsgToGuild',
+                (msg, includeMe, isTeamZhaomu)
+            )
+            return
+
         _now = utils.curTS()
         if _now < self.sendGuildMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.GUILD]['channelCD']):
             _timeDelta = self.sendGuildMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.GUILD]['channelCD']) - _now
-            self.onMessagePre(
+            self.onMessagePre_localCross(
                 int(C_C_DD.datas['msgId_worldChannelCD']['value']),
                 [str(_timeDelta)])
             return
 
         if not self.guildBox:
             LOG_WARN('sendGuildChatMsg failed that not has guild')
-            self.onMessagePre(MMD.datas.guildTrain_notInGuild, [])
+            self.onMessagePre_localCross(MMD.datas.guildTrain_notInGuild, [])
             return
 
         self.sendGuildMsgTime = _now
@@ -267,7 +274,7 @@ class IChat(object):
         LOG_DBG("afterCheckGuildChatMsg", includeMe, isTeamZhaomu, sendByServer, originalMsg)
         self.logChatMsg(originalMsg.get('msgType', 0), self.guildUUIDBase, gameconst.ChatChannelEnum.GUILD, originalMsg.get('msg',''), self.sendGuildMsgTime)
         if isTeamZhaomu:
-            self.onMessagePre(MMD.datas.zhaomuGuildSent, [])
+            self.onMessagePre_localCross(MMD.datas.zhaomuGuildSent, [])
 
         if includeMe:
             self.localCrossClient.onRecvAvatarChannelMsg(gameconst.ChatChannelEnum.GUILD, self._getChatChannelAvatarInfo(), originalMsg)
@@ -321,9 +328,9 @@ class IChat(object):
     @gamedecorator.crossServer
     @gamedecorator.checkGameconfigEnable('chat')
     def sendTeamChatMsg(self, exposed, teamIdDeprecated, msg):
-        teamId = self.teamIdBase
+        teamId = self.crossTeamIdBase
         LOG_DBG('sendTeamChatMsg', teamId, msg)
-        if not teamId:
+        if not teamId or teamId != teamIdDeprecated:
             self.onMessagePre(C_C_DD.datas['teamChannel_NotInTeam_msg']['value'], ())
             return
 
@@ -345,12 +352,35 @@ class IChat(object):
 
     def afterCheckTeamChatMsg(self, teamId, includeMe, originalMsg):
         self.logChatMsg(originalMsg.get('msgType', 0), teamId, gameconst.ChatChannelEnum.TEAM, originalMsg.get('msg',''), self.sendTeamMsgTime)
-        gameengine.getTeamStub(teamId).sendChatMsgFromTeamMember(teamId, self.gbID, self._getChatChannelAvatarInfo(),originalMsg)
-        if includeMe:
-            self.client.onRecvAvatarChannelMsg(gameconst.ChatChannelEnum.TEAM, self._getChatChannelAvatarInfo(), originalMsg)
+        self.sendCrossTeamChatMsg(originalMsg)
 
-        # if not self.isSilentChat(gameconst.SilentSpeakScene.ENUM_CHAT):
-        #     self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannelEnum.TEAM)
+    #@gamedecorator.forwardToLocal
+    @gamedecorator.crossServer
+    @gamedecorator.checkGameconfigEnable('chat')
+    def sendRaidChatMsg(self, exposed, raidUUIDDeprecated, msg):
+        raidUUID = self.crossTeamIdBase
+        LOG_DBG('sendRaidChatMsg::', msg)
+        if not raidUUID or raidUUID != raidUUIDDeprecated:
+            self.onMessagePre(RAID_CONST.datas["raid_notInRaid_msg"]["value"], [])
+            return
+
+        if self.isAllServerForbidChat():
+            self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
+            return
+
+        now = utils.curTS()
+        if now < self.sendRaidMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.RAID]['channelCD']):
+            timeDelta = self.sendRaidMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.RAID]['channelCD']) - now
+            self.onMessagePre(int(C_C_DD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
+            return
+
+        self.sendRaidMsgTime = now
+        self.afterCheckRaidChatMsg(raidUUID, msg)
+
+    def afterCheckRaidChatMsg(self,raidUUID, originalMsg):
+        LOG_DBG("afterCheckRaidChatMsg", raidUUID, originalMsg)
+        self.logChatMsg(originalMsg.get('msgType', 0), raidUUID, gameconst.ChatChannelEnum.RAID, originalMsg.get('msg',''), self.sendRaidMsgTime)
+        self.sendCrossTeamChatMsg(originalMsg)
 
     @gamedecorator.crossServer
     @gamedecorator.checkGameconfigEnable('chat')
@@ -379,39 +409,6 @@ class IChat(object):
         if not self.isSilentChat(gameconst.SilentSpeakScene.ENUM_CHAT):
             self.cell.handleAvatarChannelMsg(gameconst.ChatChannelEnum.NEARBY, self._getChatChannelAvatarInfo(), originalMsg)
             # self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannelEnum.NEARBY)
-
-    #@gamedecorator.forwardToLocal
-    @gamedecorator.crossServer
-    @gamedecorator.checkGameconfigEnable('chat')
-    def sendRaidChatMsg(self, exposed, raidUUIDDeprecated, msg):
-        raidUUID = self.raidUUIDBase
-        LOG_DBG('sendRaidChatMsg::', msg)
-        if not raidUUID:
-            self.onMessagePre(RAID_CONST.datas["raid_notInRaid_msg"]["value"], [])
-            return
-
-        if self.isAllServerForbidChat():
-            self.onMessagePre(int(C_C_DD.datas['chat_banned']['value']), [str(self.idipBanDict.get(gameconst.IDIPBanType.CHAT, 0))])
-            return
-
-        now = utils.curTS()
-        if now < self.sendRaidMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.RAID]['channelCD']):
-            timeDelta = self.sendRaidMsgTime + int(CCCH.datas[gameconst.ChatChannelEnum.RAID]['channelCD']) - now
-            self.onMessagePre(int(C_C_DD.datas['msgId_worldChannelCD']['value']), [str(timeDelta)])
-            return
-
-        avatarInfo = self._getChatChannelAvatarInfo()
-        extraProps = {}
-        self.sendRaidMsgTime = now
-        self.afterCheckRaidChatMsg(raidUUID, avatarInfo, extraProps, msg)
-
-    def afterCheckRaidChatMsg(self,raidUUID, avatarInfo, extraProps, originalMsg):
-        LOG_DBG("afterCheckRaidChatMsg", raidUUID, avatarInfo, extraProps, originalMsg)
-        self.logChatMsg(originalMsg.get('msgType', 0), raidUUID, gameconst.ChatChannelEnum.RAID, originalMsg.get('msg',''), self.sendRaidMsgTime)
-        self.client.onRecvAvatarChannelMsg(gameconst.ChatChannelEnum.RAID, avatarInfo, originalMsg)
-        if not self.isSilentChat(gameconst.SilentSpeakScene.ENUM_CHAT):
-            gameengine.getRaidStub(raidUUID).broadRaidChatMsg(self, self.gbID, raidUUID, avatarInfo, originalMsg, extraProps)
-            # self.checkAchievementTrigger(gameconst.AchieveTargetType.CHANNEL_SPEAK, gameconst.ChatChannelEnum.RAID)
 
     def sendReleaseRedbagMsg(self, redbagId, redbagType, channel, money, desc):
         LOG_INFO("sendReleaseRedbagMsg:", redbagId, redbagType, channel, money, desc)
@@ -460,6 +457,7 @@ class IChat(object):
             _roleData['level'],
             _roleData['sex'],
             _roleData['picFrameId'],
+            gameconfig.serverId()
         )
 
     def handleQueryPlayerLink(self, box):
@@ -545,10 +543,10 @@ class IChat(object):
             self.sendWorldChatMsg(msg)
         elif channel == gameconst.ChatChannelEnum.GUILD:
             self.sendGuildChatMsg(msg)
-        elif channel == gameconst.ChatChannelEnum.TEAM:
-            self.sendTeamChatMsg(self.teamIdBase, msg)
-        elif channel == gameconst.ChatChannelEnum.RAID:
-            self.sendRaidChatMsg(self.raidUUIDBase, msg)
+        elif channel in (gameconst.ChatChannelEnum.TEAM, gameconst.ChatChannelEnum.RAID):
+            # 本服组队/团已删除，队伍频道分享统一走跨服队聊天链路
+            if self.crossTeamIdBase:
+                self.sendCrossTeamChatMsg(msg)
         else:
             LOG_WARN('IChat::sendChannelShareMsg need add share channel !!!')
 

@@ -12,6 +12,12 @@
             <Flags>         BASE                    </Flags>
             <Persistent>    true                    </Persistent>
         </drawCardRecord>
+
+        <curDrawCardRecords>
+            <Type>          PY_DICT                 </Type>
+            <Flags>         BASE                    </Flags>
+            <Default>       {}                      </Default>
+        </curDrawCardRecords>
     </Properties>
 
     <BaseMethods>
@@ -22,21 +28,36 @@
             <Arg>   UINT16      </Arg>
         </reqRandomSummonPet>
 
+        <reqRandomSummonMount> <Exposed/>
+            <Arg>   UINT32      </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT8       </Arg>
+            <Arg>   UINT16      </Arg>
+        </reqRandomSummonMount>
+
         <reqGetGuaranteedPetEgg> <Exposed/>
             <Arg>   UINT32      </Arg>
         </reqGetGuaranteedPetEgg>
+
+        <reqGetGuaranteedMount> <Exposed/>
+            <Arg>   UINT32      </Arg>
+        </reqGetGuaranteedMount>
 
         <reqPetDrawCardRecord> <Exposed/>
             <Arg>   UINT32      </Arg>
         </reqPetDrawCardRecord>
 
-        <reqOpenPetCard> <Exposed/>
-            <Arg>   UINT16      </Arg>
-        </reqOpenPetCard>
+        <reqMountDrawCardRecord> <Exposed/>
+            <Arg>   UINT32      </Arg>
+        </reqMountDrawCardRecord>
 
         <reqOpenPetCards> <Exposed/>
             <Arg>   UINT16      </Arg>
         </reqOpenPetCards>
+
+        <reqOpenMountCards> <Exposed/>
+            <Arg>   UINT16      </Arg>
+        </reqOpenMountCards>
 
         <triggerTimeLimitGuaranteedReward>
             <Arg>   ARRAY <of> UINT32 </of>    </Arg>
@@ -59,10 +80,20 @@
             <Arg>   ARRAY <of> ITEM_ID </of>    </Arg>
         </onRandomSummonPet>
 
+        <onRandomSummonMount>
+            <Arg>   ARRAY <of> ITEM_ID </of>    </Arg>
+        </onRandomSummonMount>
+
         <onGetGuaranteedPetEgg>
             <Arg>   UINT32      </Arg>
             <Arg>   ITEM_ID     </Arg>
             <Arg>   UINT32      </Arg>
         </onGetGuaranteedPetEgg>
+
+        <onGetGuaranteedMount>
+            <Arg>   UINT32      </Arg>
+            <Arg>   ITEM_ID     </Arg>
+            <Arg>   UINT32      </Arg>
+        </onGetGuaranteedMount>
     </ClientMethods>
 </root>

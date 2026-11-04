@@ -20,6 +20,14 @@ class IGuildCell(object):
             if self.guildName != attrDict['guildName']:
                 self.guildName = attrDict['guildName']
 
+        if 'guildDspFlag' in attrDict:
+            if self.guildDspFlag != attrDict['guildDspFlag']:
+                self.guildDspFlag = attrDict['guildDspFlag']
+
+        if 'guildIcon' in attrDict:
+            if self.guildIcon != attrDict['guildIcon']:
+                self.guildIcon = attrDict['guildIcon']
+
         if 'guildBox' in attrDict:
             self.guildBoxCell = attrDict['guildBox']
 

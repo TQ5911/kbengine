@@ -15,7 +15,6 @@ import itemData_itemData as ID_IDD
 import activityControl_config as AC_CD
 import gamedecorator
 import LogTrackingMgr
-import visible_visible as V_VD
 import creep_base as CBD
 import gameconfig
 import conflict_conflict_def as C_C_DD
@@ -113,7 +112,7 @@ class IAbyssBase(object):
 
     @gamedecorator.checkGameconfigEnable('abyss')
     @gamedecorator.crossServer
-    def addAbyssTicket(self, exposed, addType, num, isAddDuration):
+    def addAbyssTicket(self, exposed, addType, num, isAddDuration, isExchange=False):
         LOG_INFO('IAbyssBase::addAbyssTicket: addType: {}, num: {}, isAddDuration: {} {}'.format(addType, num, isAddDuration, self.abyssAddTimes))
         if not utils.isActOpen(AB_CD.datas['abyssActID']['value']) and isAddDuration:
             self.onMessagePre(AC_CD.datas['activity_notOpen']['value'], [])
@@ -149,42 +148,50 @@ class IAbyssBase(object):
                     return
                 costList.append((itemId, itemNum, 1))
         LOG_INFO('IAbyssBase::addAbyssTicket: addType: {}, costList: {}, num: {}'.format(addType, costList, num))
-        self.doAddAbyssTicket(addType, costList, num, isAddDuration, False, gameconst.AbyssAddTicketReason.FROM_CLIENT, _opUUID)
+        self.doAddAbyssTicket(addType, costList, num, isAddDuration, False, gameconst.AbyssAddTicketReason.FROM_CLIENT, _opUUID, isExchange=isExchange)
 
-    def modifyAbyssTicket(self, delta, freeNum, paidNum, src, opUUID, attType=gameconst.addTicketTimesType.NULL):
+    def modifyAbyssTicket(self, changeNum, freeNum, paidNum, src, opUUID, attType=gameconst.addTicketTimesType.NULL):
         befPaidAbyssTicket = self.paidAbyssTicket
         befAbyssTicket = self.abyssTicket
-        if delta > 0:
+        if changeNum > 0:
             if attType == gameconst.addTicketTimesType.COIN:
                 self.abyssTicket = min(1000000000, self.abyssTicket + freeNum)
                 self.paidAbyssTicket = min(1000000000, self.paidAbyssTicket + paidNum)
             else:
-                self.paidAbyssTicket = min(1000000000, self.paidAbyssTicket + delta)
+                self.paidAbyssTicket = min(1000000000, self.paidAbyssTicket + changeNum)
 
         else:
+            # v5.2 新手历程 6=门票使用
+            self.beginnerJourney_onTaskEvent(
+                gameconst.BjTaskType.BJ_TASK_TYPE_TICKET_USE,
+                delta=abs(changeNum), activityId=int(AB_CD.datas['abyssActID']['value'])
+            )
             if attType == gameconst.addTicketTimesType.COIN:
                 self.abyssTicket = max(0, self.abyssTicket + freeNum)
                 self.paidAbyssTicket = max(0, self.paidAbyssTicket + paidNum)
             else:
-                if self.abyssTicket >= -delta:
-                    self.abyssTicket += delta
+                if self.abyssTicket >= -changeNum:
+                    self.abyssTicket += changeNum
 
                 else:
-                    self.paidAbyssTicket = max(0, self.paidAbyssTicket + self.abyssTicket + delta)
+                    self.paidAbyssTicket = max(0, self.paidAbyssTicket + self.abyssTicket + changeNum)
                     self.abyssTicket = 0
 
-        LOG_INFO('modifyAbyssTicket:', attType, delta, freeNum, paidNum, src, befPaidAbyssTicket, self.paidAbyssTicket, befAbyssTicket, self.abyssTicket)
+        LOG_INFO('modifyAbyssTicket:', attType, changeNum, freeNum, paidNum, src, befPaidAbyssTicket, self.paidAbyssTicket, befAbyssTicket, self.abyssTicket)
+        used = (befAbyssTicket - self.abyssTicket) + (befPaidAbyssTicket - self.paidAbyssTicket)
+        if used > 0:
+            self.onBattlePassTicketUse(AB_CD.datas['abyssActID']['value'], used)
         self.cell.doSyncAbyssData()
         return befAbyssTicket - self.abyssTicket, befPaidAbyssTicket - self.paidAbyssTicket
 
-    def doAddAbyssTicket(self, addType, costList, num, isAddDuration, hasCheckCell, reason, opUUID):
+    def doAddAbyssTicket(self, addType, costList, num, isAddDuration, hasCheckCell, reason, opUUID, isExchange=False):
         LOG_INFO('IAbyssBase::doAddAbyssTicket: addType: {}, costList: {}, num: {}, isAddDuration: {}, hasCheckCell: {}, reason: {}'.format(addType, costList, num, isAddDuration, hasCheckCell, reason))
         if isAddDuration and num != 1:
             LOG_ERR('IAbyssBase::addAbyssTicket: invalid num: {}'.format(num))
             return
 
         if isAddDuration and not hasCheckCell:
-            self.cell.checkAddAbyssDurationCondition(addType, costList, num, opUUID)
+            self.cell.checkAddAbyssDurationCondition(addType, costList, num, opUUID, isExchange)
             return
 
         _award = dropAward.DeductWealthVal()
@@ -203,7 +210,7 @@ class IAbyssBase(object):
         for (itemId, itemNum, n) in costList:
             _award.addWealthByItemId(itemId, itemNum * n)
 
-        res = self.canDeductWealth(_award)
+        res = self.canDeductWealth(_award, allowMoneyCoverBindMoney=isExchange)
         if not res:
             LOG_WARN('IAbyssBase::addAbyssTicket: can not deduct wealth', res())
             return
@@ -229,10 +236,10 @@ class IAbyssBase(object):
 
 
         if gameconfig.isCrossServer():
-            self.syncMethodCallToLocalServerBase('_doAddAbyssTicketLocalServer', (addType, costList, num, isAddDuration, _src, _award, opUUID, _detail))
+            self.syncMethodCallToLocalServerBase('_doAddAbyssTicketLocalServer', (addType, costList, num, isAddDuration, _src, _award, opUUID, _detail, isExchange))
             return
         
-        self.deductWealth(_src, _award, opUUID, _detail)
+        self.deductWealth(_src, _award, opUUID, _detail, allowMoneyCoverBindMoney=isExchange)
 
         if isAddDuration:
             self.cell.directlyAddAbyssDuration('addAbyssDurFailed', (opUUID, addType, costList, num))
@@ -248,8 +255,8 @@ class IAbyssBase(object):
         )
 
     #跨服扣道具增加次数和时长
-    def _doAddAbyssTicketLocalServer(self, addType, costList, num, isAddDuration, _src, _award, opUUID, _detail):
-        res = self.deductWealth(_src, _award, opUUID, _detail)
+    def _doAddAbyssTicketLocalServer(self, addType, costList, num, isAddDuration, _src, _award, opUUID, _detail, isExchange=False):
+        res = self.deductWealth(_src, _award, opUUID, _detail, allowMoneyCoverBindMoney=isExchange)
         if res is None:
             gameengine.panicStack('doAddAbyssTicket deduct wealth failed', _src, _award, opUUID, _detail, res)
             return
@@ -260,10 +267,10 @@ class IAbyssBase(object):
             addType,
         )
 
-        self.syncMethodCallToCrossServerBase('_doAddAbyssTicketCrossServer', (addType, costList, num, isAddDuration, _src, _award, opUUID, _detail))
+        self.syncMethodCallToCrossServerBase('_doAddAbyssTicketCrossServer', (addType, costList, num, isAddDuration, _src, _award, opUUID, _detail, isExchange))
 
-    def _doAddAbyssTicketCrossServer(self, addType, costList, num, isAddDuration, _src, _award, opUUID, _detail):
-        self.deductWealth(_src, _award, opUUID, _detail)
+    def _doAddAbyssTicketCrossServer(self, addType, costList, num, isAddDuration, _src, _award, opUUID, _detail, isExchange=False):
+        self.deductWealth(_src, _award, opUUID, _detail, allowMoneyCoverBindMoney=isExchange)
         if isAddDuration:
             self.cell.directlyAddAbyssDuration('addAbyssDurFailed', (opUUID, addType, costList, num))
         else:
@@ -314,7 +321,7 @@ class IAbyssBase(object):
                     return  
                 _deductVal = dropAward.DeductWealthVal()
                 _deductVal.addWealthByItemId(coinType, coinNum)
-                res = self.canDeductWealth(_deductVal)
+                res = self.canDeductWealth(_deductVal, allowMoneyCoverBindMoney=True)
                 if res:
                     self.doAddAbyssTicket(
                         gameconst.CUBE_ADD_TIMES_TYPE_COIN,
@@ -324,6 +331,7 @@ class IAbyssBase(object):
                         True,
                         gameconst.AbyssAddTicketReason.RENEW_USE_COIN,
                         _opUUID,
+                        isExchange=True,
                     )
                     return
                 elif res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
@@ -381,7 +389,8 @@ class IAbyssBase(object):
         LOG_INFO("enterCrossServerAbyssBoss", x, y, z, d)
         self._enterCrossServerAbyss(floor, {'x': x, 'y': y, 'z': z, 'd': d})
 
-    def _enterCrossServerAbyss(self, floor, extra={}):
+    def _enterCrossServerAbyss(self, floor, extra=None):
+        extra = extra or {}
         if not self.accountEntity.changeDinghaoLock(True):
             LOG_WARN('enterCrossServerAbyss set dinghao lock failed')
             return
@@ -395,10 +404,7 @@ class IAbyssBase(object):
         #归墟只可在主城进入
         mapId = formula.parseDungeonNoBySpaceNo(self.baseSpaceNo)
         if not formula.checkWorldLineType(mapId):
-            if self.isAbyssBossFloorBase(floor):
-                self.onMessagePre(AC_CD.datas['crossServer_enterPlaceMsg']['value'], [])
-            else:
-                self.onMessagePre(AB_CD.datas['abyss_enterLimit']['value'], [])
+            self.onMessagePre(AB_CD.datas['abyss_enterLimit']['value'], [])
             return
         
         mapData = G_GP.datas.get(mapId)
@@ -407,10 +413,7 @@ class IAbyssBase(object):
             return
         
         if mapData['isMainCity'] != 1:
-            if self.isAbyssBossFloorBase(floor):
-                self.onMessagePre(AC_CD.datas['crossServer_enterPlaceMsg']['value'], [])
-            else:
-                self.onMessagePre(AB_CD.datas['abyss_enterLimit']['value'], [])
+            self.onMessagePre(AB_CD.datas['abyss_enterLimit']['value'], [])
             return
 
         _stub = iRouter.RemoteServerStubEntityCall(gameconfig.getCrossServerId(), 'AbyssStub%d' % floor)
@@ -418,15 +421,9 @@ class IAbyssBase(object):
         _stub.checkCanEnterCrossAbyss(crossServerBox, extra)
         
 
-    def isAbyssBossFloorBase(self, floor):
-        return floor == 4 or floor == 5
-
     def onCrossServerCheckCanEnterAbyss(self, floor, canEnter, ec, extra):
         if not canEnter:
-            if self.isAbyssBossFloorBase(floor):
-                self.onMessagePre(AC_CD.datas['crossServer_peopleFull']['value'], [])
-            else:
-                self.onMessagePre(AB_CD.datas['abyss_fullyBooked']['value'], [])
+            self.onMessagePre(AB_CD.datas['abyss_fullyBooked']['value'], [])
             return
             
         self._beforeReqCrossServer()
@@ -455,14 +452,7 @@ class IAbyssBase(object):
 
     @gamedecorator.crossServer
     def leaveCrossServerAbyss(self, exposed):
-        self.syncMethodCallToLocalServerBase('checkDinghaoLockWhenLeaveCrossServer', ())
-
-    def checkDinghaoLockWhenLeaveCrossServer(self):
-        if not self.accountEntity.changeDinghaoLock(True):
-            LOG_WARN('checkDinghaoLockWhenLeaveCrossServer set dinghao lock failed')
-            return
-
-        self.syncMethodCallToCrossServerBase('_leaveCrossServerAbyss', ())
+        self.syncMethodCallToLocalServerBase('checkDinghaoLockWhenLeaveCrossServer', ('_leaveCrossServerAbyss',))
 
     def _leaveCrossServerAbyss(self):
         self.cell.crossServerAbyssLeave()

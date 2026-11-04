@@ -11,13 +11,19 @@ const (
 	// MATCH_TICK_SECONDS 撮合轮次周期（秒，同本服 TeamMatchStub 节奏）
 	MATCH_TICK_SECONDS = 3
 	// CHAT_FLUSH_MS 聊天聚合缓冲 flush 周期（毫秒，0.5s 短缓存聚合）
-	CHAT_FLUSH_MS = 500
+	CHAT_FLUSH_MS = 200
 	// WORKER_SWEEP_SECONDS worker 周期扫描间隔（申请超时/队长离线转让等）
 	WORKER_SWEEP_SECONDS = 3
+	// WORKER_PUSH_STATE_MS worker 成员状态推送周期（毫秒）：把脏队伍全量快照
+	// 按成员所在服聚合下行给游戏服（推送模型常态路径）
+	WORKER_PUSH_STATE_MS = 500
 	// MATCH_TIMEOUT_SECONDS 散人匹配入池默认超时（秒），超时出池并下发 MatchTimeout。
 	// 可在配置 matchTimeoutSeconds 覆盖；决策 D5 起游戏服入池时按玩家携带配表 maxMatchTime，
 	// 本值仅作为未携带（<=0）时的回落默认
 	MATCH_TIMEOUT_SECONDS = 300
+	// CRUSADE_START_LIMIT_PER_SECOND 讨伐发起每秒兜底上限（全组共享，硬编码大值）：
+	// 副本次数与进入时间均由游戏侧限制，此处仅作异常流量安全阀，正常不会触发
+	CRUSADE_START_LIMIT_PER_SECOND = 10000
 )
 
 // matchTimeoutSeconds 散人匹配入池回落超时（秒），NewCrossTeamApp 按配置覆盖；
@@ -31,6 +37,13 @@ const (
 	APPLY_TIMEOUT_SECONDS = 60
 	// TEAM_LIST_REFRESH_SECONDS 队伍列表快照后台刷新周期（秒）
 	TEAM_LIST_REFRESH_SECONDS = 5
+	// TEAM_LIST_WARN_TEAMS 队伍列表单服可见条数告警阈值（只告警不截断）：
+	// 超过说明该 target 队伍积压偏多，需关注玩法热度或考虑分页
+	TEAM_LIST_WARN_TEAMS = 200
+	// TEAM_LIST_MAX_TEAMS 队伍列表单次回包条数硬上限：快照按创建时间倒序（新队在前），
+	// 按 serverId 过滤后截取前 N 条下发（1000 队满简介约 200KB pb / gzip 后约 100KB，
+	// 对 trpc 与引擎发送窗口余量仍在一个数量级以上）
+	TEAM_LIST_MAX_TEAMS = 500
 	// CROSS_TEAM_GROUP_SIZE 每个小组人数上限（客户端按 5 人一组显示）
 	CROSS_TEAM_GROUP_SIZE = 5
 )
@@ -62,7 +75,7 @@ const (
 	ERROR_CODE_NOT_APPLIED         = 14 // 无有效申请
 	ERROR_CODE_APPLY_REJECTED      = 15 // 入队申请被拒绝（已停用：审批结果不再经 replyApplyNotify 通知申请人，保留编号兼容协议）
 	ERROR_CODE_MATCH_JOIN_INVALID  = 16 // 撮合入队作废（队伍已满/解散/不再自动匹配等），需重新发起匹配
-	ERROR_CODE_CRUSADE_RATE_LIMIT  = 17 // 讨伐发起被限流（全组并发上限/单服每秒上限）
+	ERROR_CODE_CRUSADE_RATE_LIMIT  = 17 // 讨伐发起被限流（重进 CD 兜底复用；每秒兜底限流同码）
 	ERROR_CODE_CRUSADE_IN_PROGRESS = 18 // 已有进行中的讨伐检查/副本
 	ERROR_CODE_GROUP_FULL          = 19 // 目标小组已满 5 人
 	ERROR_CODE_INVALID_POS         = 20 // 源/目标位置信息与中心不一致
@@ -106,11 +119,6 @@ const (
 
 // CRUSADE_CHECK_TIMEOUT_SECONDS 条件检查/空间创建超时（秒），worker sweep 处理
 const CRUSADE_CHECK_TIMEOUT_SECONDS = 30
-
-// CRUSADE_REJOIN_CD_SECONDS 讨伐重进冷却（秒，同本服 raid_rejoinCdTime）：
-// 副本结束 crusadeFinished 写 LastDungeonFinishedTime = 完成时刻 + 本常量（CD 截止时刻，
-// 对齐本服 refreshLastDungeonFinishedTime 线上值口径），截止前禁止再次发起
-const CRUSADE_REJOIN_CD_SECONDS = 5
 
 // TEAM_MARK_MAX_SLOT 队伍标记槽位上限（1-based，对齐本服 gameconst.TEAM_MARK_MAX_SLOT）
 const TEAM_MARK_MAX_SLOT = 8

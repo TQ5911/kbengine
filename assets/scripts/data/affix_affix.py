@@ -92,12 +92,12 @@ def _78001016(self, target, context, *args):
     self.addPropByGear(target, context, ['adjSlowAnti'])
 
 def _78001017(self, target, context, *args):
-    context.props = ['mulMaxPhysicalAtk']
-    self.addPropByGear(target, context, ['mulMaxPhysicalAtk'])
+    context.props = ['adjUniEnh']
+    self.addPropByGear(target, context, ['adjUniEnh'])
 
 def _78001018(self, target, context, *args):
-    context.props = ['mulMaxMagicAtk']
-    self.addPropByGear(target, context, ['mulMaxMagicAtk'])
+    context.props = ['adjUniAnti']
+    self.addPropByGear(target, context, ['adjUniAnti'])
 
 def _78001019(self, target, context, *args):
     context.props = ['mulFullHp']
@@ -176,160 +176,232 @@ def _78004004(self, target, context, *args):
     self.addPropByGear(target, context, ['adjMaxMagicArmor'])
 
 def _78004005(self, target, context, *args):
+    context.props = ['adjMinAllArmor']
+    self.addPropByGear(target, context, ['adjMinAllArmor'])
+
+def _78004006(self, target, context, *args):
+    context.props = ['adjMaxAllArmor']
+    self.addPropByGear(target, context, ['adjMaxAllArmor'])
+
+def _78004007(self, target, context, *args):
     context.props = ['adjDodge']
     self.addPropByGear(target, context, ['adjDodge'])
 
-def _78004006(self, target, context, *args):
-    context.props = ['adjAntiFatal']
-    self.addPropByGear(target, context, ['adjAntiFatal'])
+def _78004008(self, target, context, *args):
+    context.props = ['adjFullHp']
+    self.addPropByGear(target, context, ['adjFullHp'])
 
-def _78004007(self, target, context, *args):
+def _78004009(self, target, context, *args):
     context.props = ['adjMinPhysicalAtk']
     self.addPropByGear(target, context, ['adjMinPhysicalAtk'])
 
-def _78004008(self, target, context, *args):
+def _78004010(self, target, context, *args):
     context.props = ['adjMaxPhysicalAtk']
     self.addPropByGear(target, context, ['adjMaxPhysicalAtk'])
 
-def _78004009(self, target, context, *args):
+def _78004011(self, target, context, *args):
     context.props = ['adjMinMagicAtk']
     self.addPropByGear(target, context, ['adjMinMagicAtk'])
 
-def _78004010(self, target, context, *args):
+def _78004012(self, target, context, *args):
     context.props = ['adjMaxMagicAtk']
     self.addPropByGear(target, context, ['adjMaxMagicAtk'])
 
-def _78004011(self, target, context, *args):
+def _78004013(self, target, context, *args):
     context.props = ['adjHit']
     self.addPropByGear(target, context, ['adjHit'])
 
-def _78004012(self, target, context, *args):
-    context.props = ['adjFatal']
-    self.addPropByGear(target, context, ['adjFatal'])
-
-def _78004013(self, target, context, *args):
-    context.props = ['adjMinPhysicalArmor']
-    self.addPropByGear(target, context, ['adjMinPhysicalArmor'])
-
 def _78004014(self, target, context, *args):
-    context.props = ['adjMaxPhysicalArmor']
-    self.addPropByGear(target, context, ['adjMaxPhysicalArmor'])
+    context.props = ['adjMaxPhysicalAtk']
+    self.addPropByGear(target, context, ['adjMaxPhysicalAtk'])
 
 def _78004015(self, target, context, *args):
-    context.props = ['adjMinMagicArmor']
-    self.addPropByGear(target, context, ['adjMinMagicArmor'])
+    context.props = ['adjMaxMagicAtk']
+    self.addPropByGear(target, context, ['adjMaxMagicAtk'])
 
 def _78004016(self, target, context, *args):
-    context.props = ['adjMaxMagicArmor']
-    self.addPropByGear(target, context, ['adjMaxMagicArmor'])
-
-def _78004017(self, target, context, *args):
-    context.props = ['adjDodge']
-    self.addPropByGear(target, context, ['adjDodge'])
-
-def _78004018(self, target, context, *args):
     context.props = ['adjMinPhysicalArmor']
     self.addPropByGear(target, context, ['adjMinPhysicalArmor'])
 
-def _78004019(self, target, context, *args):
+def _78004017(self, target, context, *args):
     context.props = ['adjMaxPhysicalArmor']
     self.addPropByGear(target, context, ['adjMaxPhysicalArmor'])
 
-def _78004020(self, target, context, *args):
+def _78004018(self, target, context, *args):
     context.props = ['adjMinMagicArmor']
     self.addPropByGear(target, context, ['adjMinMagicArmor'])
 
-def _78004021(self, target, context, *args):
+def _78004019(self, target, context, *args):
     context.props = ['adjMaxMagicArmor']
     self.addPropByGear(target, context, ['adjMaxMagicArmor'])
+
+def _78004020(self, target, context, *args):
+    context.props = ['adjMinAllArmor']
+    self.addPropByGear(target, context, ['adjMinAllArmor'])
+
+def _78004021(self, target, context, *args):
+    context.props = ['adjMaxAllArmor']
+    self.addPropByGear(target, context, ['adjMaxAllArmor'])
 
 def _78004022(self, target, context, *args):
     context.props = ['adjDodge']
     self.addPropByGear(target, context, ['adjDodge'])
 
 def _78004023(self, target, context, *args):
+    context.props = ['adjFullHp']
+    self.addPropByGear(target, context, ['adjFullHp'])
+
+def _78004024(self, target, context, *args):
     context.props = ['adjMinPhysicalArmor']
     self.addPropByGear(target, context, ['adjMinPhysicalArmor'])
 
-def _78004024(self, target, context, *args):
+def _78004025(self, target, context, *args):
     context.props = ['adjMaxPhysicalArmor']
     self.addPropByGear(target, context, ['adjMaxPhysicalArmor'])
 
-def _78004025(self, target, context, *args):
+def _78004026(self, target, context, *args):
     context.props = ['adjMinMagicArmor']
     self.addPropByGear(target, context, ['adjMinMagicArmor'])
 
-def _78004026(self, target, context, *args):
+def _78004027(self, target, context, *args):
     context.props = ['adjMaxMagicArmor']
     self.addPropByGear(target, context, ['adjMaxMagicArmor'])
 
-def _78004027(self, target, context, *args):
+def _78004028(self, target, context, *args):
+    context.props = ['adjMinAllArmor']
+    self.addPropByGear(target, context, ['adjMinAllArmor'])
+
+def _78004029(self, target, context, *args):
+    context.props = ['adjMaxAllArmor']
+    self.addPropByGear(target, context, ['adjMaxAllArmor'])
+
+def _78004030(self, target, context, *args):
     context.props = ['adjDodge']
     self.addPropByGear(target, context, ['adjDodge'])
 
-def _78004028(self, target, context, *args):
-    context.props = ['adjMinPhysicalAtk']
-    self.addPropByGear(target, context, ['adjMinPhysicalAtk'])
-
-def _78004029(self, target, context, *args):
-    context.props = ['adjMaxPhysicalAtk']
-    self.addPropByGear(target, context, ['adjMaxPhysicalAtk'])
-
-def _78004030(self, target, context, *args):
-    context.props = ['adjMinMagicAtk']
-    self.addPropByGear(target, context, ['adjMinMagicAtk'])
-
 def _78004031(self, target, context, *args):
-    context.props = ['adjMaxMagicAtk']
-    self.addPropByGear(target, context, ['adjMaxMagicAtk'])
+    context.props = ['adjMaxAllArmor']
+    self.addPropByGear(target, context, ['adjMaxAllArmor'])
 
 def _78004032(self, target, context, *args):
-    context.props = ['adjHit']
-    self.addPropByGear(target, context, ['adjHit'])
+    context.props = ['adjMinPhysicalArmor']
+    self.addPropByGear(target, context, ['adjMinPhysicalArmor'])
 
 def _78004033(self, target, context, *args):
+    context.props = ['adjMaxPhysicalArmor']
+    self.addPropByGear(target, context, ['adjMaxPhysicalArmor'])
+
+def _78004034(self, target, context, *args):
+    context.props = ['adjMinMagicArmor']
+    self.addPropByGear(target, context, ['adjMinMagicArmor'])
+
+def _78004035(self, target, context, *args):
+    context.props = ['adjMaxMagicArmor']
+    self.addPropByGear(target, context, ['adjMaxMagicArmor'])
+
+def _78004036(self, target, context, *args):
+    context.props = ['adjMinAllArmor']
+    self.addPropByGear(target, context, ['adjMinAllArmor'])
+
+def _78004037(self, target, context, *args):
+    context.props = ['adjMaxAllArmor']
+    self.addPropByGear(target, context, ['adjMaxAllArmor'])
+
+def _78004038(self, target, context, *args):
+    context.props = ['adjDodge']
+    self.addPropByGear(target, context, ['adjDodge'])
+
+def _78004039(self, target, context, *args):
+    context.props = ['adjMaxAllArmor']
+    self.addPropByGear(target, context, ['adjMaxAllArmor'])
+
+def _78004040(self, target, context, *args):
     context.props = ['adjMinPhysicalAtk']
     self.addPropByGear(target, context, ['adjMinPhysicalAtk'])
 
-def _78004034(self, target, context, *args):
+def _78004041(self, target, context, *args):
     context.props = ['adjMaxPhysicalAtk']
     self.addPropByGear(target, context, ['adjMaxPhysicalAtk'])
 
-def _78004035(self, target, context, *args):
+def _78004042(self, target, context, *args):
     context.props = ['adjMinMagicAtk']
     self.addPropByGear(target, context, ['adjMinMagicAtk'])
 
-def _78004036(self, target, context, *args):
+def _78004043(self, target, context, *args):
     context.props = ['adjMaxMagicAtk']
     self.addPropByGear(target, context, ['adjMaxMagicAtk'])
 
-def _78004037(self, target, context, *args):
+def _78004044(self, target, context, *args):
     context.props = ['adjHit']
     self.addPropByGear(target, context, ['adjHit'])
 
-def _78004038(self, target, context, *args):
+def _78004045(self, target, context, *args):
+    context.props = ['adjFullHp']
+    self.addPropByGear(target, context, ['adjFullHp'])
+
+def _78004046(self, target, context, *args):
+    context.props = ['adjMinPhysicalAtk']
+    self.addPropByGear(target, context, ['adjMinPhysicalAtk'])
+
+def _78004047(self, target, context, *args):
+    context.props = ['adjMaxPhysicalAtk']
+    self.addPropByGear(target, context, ['adjMaxPhysicalAtk'])
+
+def _78004048(self, target, context, *args):
+    context.props = ['adjMinMagicAtk']
+    self.addPropByGear(target, context, ['adjMinMagicAtk'])
+
+def _78004049(self, target, context, *args):
+    context.props = ['adjMaxMagicAtk']
+    self.addPropByGear(target, context, ['adjMaxMagicAtk'])
+
+def _78004050(self, target, context, *args):
+    context.props = ['adjHit']
+    self.addPropByGear(target, context, ['adjHit'])
+
+def _78004051(self, target, context, *args):
+    context.props = ['adjMaxPhysicalAtk']
+    self.addPropByGear(target, context, ['adjMaxPhysicalAtk'])
+
+def _78004052(self, target, context, *args):
+    context.props = ['adjMaxMagicAtk']
+    self.addPropByGear(target, context, ['adjMaxMagicAtk'])
+
+def _78004053(self, target, context, *args):
     context.props = ['adjAtkBless']
     self.addPropByGear(target, context, ['adjAtkBless'])
 
-def _78004039(self, target, context, *args):
+def _78004054(self, target, context, *args):
+    context.props = ['adjAtkBless']
+    self.addPropByGear(target, context, ['adjAtkBless'])
+
+def _78004055(self, target, context, *args):
     context.props = ['adjMinPhysicalAtk']
     self.addPropByGear(target, context, ['adjMinPhysicalAtk'])
 
-def _78004040(self, target, context, *args):
+def _78004056(self, target, context, *args):
     context.props = ['adjMaxPhysicalAtk']
     self.addPropByGear(target, context, ['adjMaxPhysicalAtk'])
 
-def _78004041(self, target, context, *args):
+def _78004057(self, target, context, *args):
     context.props = ['adjMinMagicAtk']
     self.addPropByGear(target, context, ['adjMinMagicAtk'])
 
-def _78004042(self, target, context, *args):
+def _78004058(self, target, context, *args):
     context.props = ['adjMaxMagicAtk']
     self.addPropByGear(target, context, ['adjMaxMagicAtk'])
 
-def _78004043(self, target, context, *args):
+def _78004059(self, target, context, *args):
     context.props = ['adjHit']
     self.addPropByGear(target, context, ['adjHit'])
+
+def _78004060(self, target, context, *args):
+    context.props = ['adjMaxPhysicalAtk']
+    self.addPropByGear(target, context, ['adjMaxPhysicalAtk'])
+
+def _78004061(self, target, context, *args):
+    context.props = ['adjMaxMagicAtk']
+    self.addPropByGear(target, context, ['adjMaxMagicAtk'])
 
 datas = _tools.RODict({ 
     78000030: _tools.RODict({
@@ -452,7 +524,7 @@ datas = _tools.RODict({
         "prop": "adjMortal",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.02, 0.02], [0.04, 0.04], [0.06, 0.06], [0.1, 0.1]]),
+        "assessmentInterval": _tools.ROList([[0.025, 0.025], [0.05, 0.05], [0.075, 0.075], [0.125, 0.125]]),
         "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
         "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
@@ -470,7 +542,7 @@ datas = _tools.RODict({
         "prop": "adjAntiMortal",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.02, 0.02], [0.04, 0.04], [0.06, 0.06], [0.1, 0.1]]),
+        "assessmentInterval": _tools.ROList([[0.025, 0.025], [0.05, 0.05], [0.075, 0.075], [0.125, 0.125]]),
         "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
         "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
@@ -488,7 +560,7 @@ datas = _tools.RODict({
         "prop": "adjIgnoreArmor",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.005, 0.005], [0.01, 0.01], [0.015, 0.015], [0.025, 0.025]]),
+        "assessmentInterval": _tools.ROList([[0.006, 0.006], [0.012, 0.012], [0.018, 0.018], [0.03, 0.03]]),
         "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
         "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
@@ -506,7 +578,7 @@ datas = _tools.RODict({
         "prop": "adjDmgArmor",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.005, 0.005], [0.01, 0.01], [0.015, 0.015], [0.025, 0.025]]),
+        "assessmentInterval": _tools.ROList([[0.006, 0.006], [0.012, 0.012], [0.018, 0.018], [0.03, 0.03]]),
         "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
         "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
@@ -665,10 +737,10 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78001017,
         "inscription": 0,
-        "prop": "mulMaxPhysicalAtk",
+        "prop": "adjUniEnh",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.008, 0.008], [0.014, 0.014], [0.02, 0.02], [0.026, 0.026]]),
+        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
         "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
         "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
@@ -683,10 +755,10 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78001018,
         "inscription": 0,
-        "prop": "mulMaxMagicAtk",
+        "prop": "adjUniAnti",
         "floor": None,
         "ceiling": None,
-        "assessmentInterval": _tools.ROList([[0.008, 0.008], [0.014, 0.014], [0.02, 0.02], [0.026, 0.026]]),
+        "assessmentInterval": _tools.ROList([[2, 2], [4, 4], [6, 6], [10, 10]]),
         "assessmentWeight": _tools.ROList([695, 250, 50, 5]),
         "assessmentRarity": _tools.ROList([1, 2, 3, 4]),
         "qualityValue": None,
@@ -1942,7 +2014,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": 202402,
+        "inscription": 202303,
         "prop": "",
         "floor": lambda alv:[alv*2],
         "ceiling": lambda alv:[alv*2],
@@ -1950,7 +2022,7 @@ datas = _tools.RODict({
         "assessmentWeight": None,
         "assessmentRarity": None,
         "qualityValue": None,
-        "score": 500
+        "score": 250
     }),
     78003108: _tools.RODict({
         "ID": 78003108,
@@ -2248,7 +2320,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": 207303,
+        "inscription": 207402,
         "prop": "",
         "floor": lambda alv:[alv],
         "ceiling": lambda alv:[alv],
@@ -2256,7 +2328,7 @@ datas = _tools.RODict({
         "assessmentWeight": None,
         "assessmentRarity": None,
         "qualityValue": None,
-        "score": 250
+        "score": 500
     }),
     78003125: _tools.RODict({
         "ID": 78003125,
@@ -2824,7 +2896,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": 302403,
+        "inscription": 302402,
         "prop": "",
         "floor": lambda alv:[alv],
         "ceiling": lambda alv:[alv],
@@ -2958,7 +3030,7 @@ datas = _tools.RODict({
         "assessmentWeight": None,
         "assessmentRarity": None,
         "qualityValue": None,
-        "score": 500
+        "score": 250
     }),
     78003215: _tools.RODict({
         "ID": 78003215,
@@ -3148,7 +3220,7 @@ datas = _tools.RODict({
         "type": 2,
         "event": "onDress",
         "actionEffect": None,
-        "inscription": 307304,
+        "inscription": 307303,
         "prop": "",
         "floor": lambda alv:[alv],
         "ceiling": lambda alv:[alv],
@@ -3228,7 +3300,7 @@ datas = _tools.RODict({
         "assessmentWeight": None,
         "assessmentRarity": None,
         "qualityValue": None,
-        "score": 250
+        "score": 500
     }),
     78003230: _tools.RODict({
         "ID": 78003230,
@@ -3605,7 +3677,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 5), (6, 9), (10, 14)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004001: _tools.RODict({
@@ -3623,7 +3695,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 5), (6, 9), (10, 14)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004002: _tools.RODict({
@@ -3641,7 +3713,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 5), (6, 9), (10, 14)),
+        "qualityValue": ((1, 1), (2, 4), (5, 9), (10, 14)),
         "score": 0
     }),
     78004003: _tools.RODict({
@@ -3659,7 +3731,7 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 5), (6, 9), (10, 14)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004004: _tools.RODict({
@@ -3677,17 +3749,53 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 5), (6, 9), (10, 14)),
+        "qualityValue": ((1, 1), (2, 4), (5, 9), (10, 14)),
         "score": 0
     }),
     78004005: _tools.RODict({
         "ID": 78004005,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 1,
+        "rarityLevel": 0,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004005,
+        "inscription": 0,
+        "prop": "adjMinAllArmor",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
+        "score": 0
+    }),
+    78004006: _tools.RODict({
+        "ID": 78004006,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 0,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004006,
+        "inscription": 0,
+        "prop": "adjMaxAllArmor",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 4), (5, 9), (10, 14)),
+        "score": 0
+    }),
+    78004007: _tools.RODict({
+        "ID": 78004007,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 1,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004007,
         "inscription": 0,
         "prop": "adjDodge",
         "floor": None,
@@ -3695,61 +3803,25 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 13), (14, 20)),
-        "score": 0
-    }),
-    78004006: _tools.RODict({
-        "ID": 78004006,
-        "levelGap": 1,
-        "maxLevel": 1,
-        "rarityLevel": 1,
-        "type": 3,
-        "event": "onDress",
-        "actionEffect": _78004006,
-        "inscription": 0,
-        "prop": "adjAntiFatal",
-        "floor": None,
-        "ceiling": None,
-        "assessmentInterval": None,
-        "assessmentWeight": None,
-        "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
-        "score": 0
-    }),
-    78004007: _tools.RODict({
-        "ID": 78004007,
-        "levelGap": 1,
-        "maxLevel": 1,
-        "rarityLevel": 0,
-        "type": 3,
-        "event": "onDress",
-        "actionEffect": _78004007,
-        "inscription": 0,
-        "prop": "adjMinPhysicalAtk",
-        "floor": None,
-        "ceiling": None,
-        "assessmentInterval": None,
-        "assessmentWeight": None,
-        "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 13), (14, 20)),
+        "qualityValue": ((1, 2), (3, 4), (5, 13), (14, 19)),
         "score": 0
     }),
     78004008: _tools.RODict({
         "ID": 78004008,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004008,
         "inscription": 0,
-        "prop": "adjMaxPhysicalAtk",
+        "prop": "adjFullHp",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 13), (14, 20)),
+        "qualityValue": ((40, 80), (120, 160), (200, 520), (560, 760)),
         "score": 0
     }),
     78004009: _tools.RODict({
@@ -3761,13 +3833,13 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004009,
         "inscription": 0,
-        "prop": "adjMinMagicAtk",
+        "prop": "adjMinPhysicalAtk",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 13), (14, 20)),
+        "qualityValue": ((1, 2), (3, 4), (5, 13), (14, 19)),
         "score": 0
     }),
     78004010: _tools.RODict({
@@ -3779,23 +3851,59 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004010,
         "inscription": 0,
-        "prop": "adjMaxMagicAtk",
+        "prop": "adjMaxPhysicalAtk",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 2), (3, 6), (7, 13), (14, 20)),
+        "qualityValue": ((1, 2), (3, 4), (5, 13), (14, 19)),
         "score": 0
     }),
     78004011: _tools.RODict({
         "ID": 78004011,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 1,
+        "rarityLevel": 0,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004011,
+        "inscription": 0,
+        "prop": "adjMinMagicAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 2), (3, 4), (5, 13), (14, 19)),
+        "score": 0
+    }),
+    78004012: _tools.RODict({
+        "ID": 78004012,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 0,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004012,
+        "inscription": 0,
+        "prop": "adjMaxMagicAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 2), (3, 4), (5, 13), (14, 19)),
+        "score": 0
+    }),
+    78004013: _tools.RODict({
+        "ID": 78004013,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 1,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004013,
         "inscription": 0,
         "prop": "adjHit",
         "floor": None,
@@ -3803,79 +3911,43 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
-        "score": 0
-    }),
-    78004012: _tools.RODict({
-        "ID": 78004012,
-        "levelGap": 1,
-        "maxLevel": 1,
-        "rarityLevel": 1,
-        "type": 3,
-        "event": "onDress",
-        "actionEffect": _78004012,
-        "inscription": 0,
-        "prop": "adjFatal",
-        "floor": None,
-        "ceiling": None,
-        "assessmentInterval": None,
-        "assessmentWeight": None,
-        "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 10)),
-        "score": 0
-    }),
-    78004013: _tools.RODict({
-        "ID": 78004013,
-        "levelGap": 1,
-        "maxLevel": 1,
-        "rarityLevel": 0,
-        "type": 3,
-        "event": "onDress",
-        "actionEffect": _78004013,
-        "inscription": 0,
-        "prop": "adjMinPhysicalArmor",
-        "floor": None,
-        "ceiling": None,
-        "assessmentInterval": None,
-        "assessmentWeight": None,
-        "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004014: _tools.RODict({
         "ID": 78004014,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004014,
         "inscription": 0,
-        "prop": "adjMaxPhysicalArmor",
+        "prop": "adjMaxPhysicalAtk",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004015: _tools.RODict({
         "ID": 78004015,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004015,
         "inscription": 0,
-        "prop": "adjMinMagicArmor",
+        "prop": "adjMaxMagicAtk",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004016: _tools.RODict({
@@ -3887,31 +3959,31 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004016,
         "inscription": 0,
-        "prop": "adjMaxMagicArmor",
+        "prop": "adjMinPhysicalArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
         "score": 0
     }),
     78004017: _tools.RODict({
         "ID": 78004017,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 1,
+        "rarityLevel": 0,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004017,
         "inscription": 0,
-        "prop": "adjDodge",
+        "prop": "adjMaxPhysicalArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004018: _tools.RODict({
@@ -3923,13 +3995,13 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004018,
         "inscription": 0,
-        "prop": "adjMinPhysicalArmor",
+        "prop": "adjMinMagicArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
         "score": 0
     }),
     78004019: _tools.RODict({
@@ -3941,13 +4013,13 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004019,
         "inscription": 0,
-        "prop": "adjMaxPhysicalArmor",
+        "prop": "adjMaxMagicArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004020: _tools.RODict({
@@ -3959,13 +4031,13 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004020,
         "inscription": 0,
-        "prop": "adjMinMagicArmor",
+        "prop": "adjMinAllArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
         "score": 0
     }),
     78004021: _tools.RODict({
@@ -3977,13 +4049,13 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004021,
         "inscription": 0,
-        "prop": "adjMaxMagicArmor",
+        "prop": "adjMaxAllArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004022: _tools.RODict({
@@ -4001,25 +4073,25 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004023: _tools.RODict({
         "ID": 78004023,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004023,
         "inscription": 0,
-        "prop": "adjMinPhysicalArmor",
+        "prop": "adjFullHp",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((40, 40), (80, 120), (160, 280), (320, 440)),
         "score": 0
     }),
     78004024: _tools.RODict({
@@ -4031,13 +4103,13 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004024,
         "inscription": 0,
-        "prop": "adjMaxPhysicalArmor",
+        "prop": "adjMinPhysicalArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
         "score": 0
     }),
     78004025: _tools.RODict({
@@ -4049,13 +4121,13 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004025,
         "inscription": 0,
-        "prop": "adjMinMagicArmor",
+        "prop": "adjMaxPhysicalArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004026: _tools.RODict({
@@ -4067,31 +4139,31 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004026,
         "inscription": 0,
-        "prop": "adjMaxMagicArmor",
+        "prop": "adjMinMagicArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
         "score": 0
     }),
     78004027: _tools.RODict({
         "ID": 78004027,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 1,
+        "rarityLevel": 0,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004027,
         "inscription": 0,
-        "prop": "adjDodge",
+        "prop": "adjMaxMagicArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004028: _tools.RODict({
@@ -4103,13 +4175,13 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004028,
         "inscription": 0,
-        "prop": "adjMinPhysicalAtk",
+        "prop": "adjMinAllArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
         "score": 0
     }),
     78004029: _tools.RODict({
@@ -4121,67 +4193,67 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004029,
         "inscription": 0,
-        "prop": "adjMaxPhysicalAtk",
+        "prop": "adjMaxAllArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004030: _tools.RODict({
         "ID": 78004030,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004030,
         "inscription": 0,
-        "prop": "adjMinMagicAtk",
+        "prop": "adjDodge",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004031: _tools.RODict({
         "ID": 78004031,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004031,
         "inscription": 0,
-        "prop": "adjMaxMagicAtk",
+        "prop": "adjMaxAllArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004032: _tools.RODict({
         "ID": 78004032,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 1,
+        "rarityLevel": 0,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004032,
         "inscription": 0,
-        "prop": "adjHit",
+        "prop": "adjMinPhysicalArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
         "score": 0
     }),
     78004033: _tools.RODict({
@@ -4193,13 +4265,13 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004033,
         "inscription": 0,
-        "prop": "adjMinPhysicalAtk",
+        "prop": "adjMaxPhysicalArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004034: _tools.RODict({
@@ -4211,13 +4283,13 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004034,
         "inscription": 0,
-        "prop": "adjMaxPhysicalAtk",
+        "prop": "adjMinMagicArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
         "score": 0
     }),
     78004035: _tools.RODict({
@@ -4229,13 +4301,13 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004035,
         "inscription": 0,
-        "prop": "adjMinMagicAtk",
+        "prop": "adjMaxMagicArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004036: _tools.RODict({
@@ -4247,31 +4319,31 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004036,
         "inscription": 0,
-        "prop": "adjMaxMagicAtk",
+        "prop": "adjMinAllArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
         "score": 0
     }),
     78004037: _tools.RODict({
         "ID": 78004037,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 1,
+        "rarityLevel": 0,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004037,
         "inscription": 0,
-        "prop": "adjHit",
+        "prop": "adjMaxAllArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004038: _tools.RODict({
@@ -4283,31 +4355,31 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004038,
         "inscription": 0,
-        "prop": "adjAtkBless",
+        "prop": "adjDodge",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((0, 0), (0, 0), (1, 1), (2, 2)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004039: _tools.RODict({
         "ID": 78004039,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 0,
+        "rarityLevel": 1,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004039,
         "inscription": 0,
-        "prop": "adjMinPhysicalAtk",
+        "prop": "adjMaxAllArmor",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004040: _tools.RODict({
@@ -4319,13 +4391,13 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004040,
         "inscription": 0,
-        "prop": "adjMaxPhysicalAtk",
+        "prop": "adjMinPhysicalAtk",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004041: _tools.RODict({
@@ -4337,13 +4409,13 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004041,
         "inscription": 0,
-        "prop": "adjMinMagicAtk",
+        "prop": "adjMaxPhysicalAtk",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004042: _tools.RODict({
@@ -4355,23 +4427,41 @@ datas = _tools.RODict({
         "event": "onDress",
         "actionEffect": _78004042,
         "inscription": 0,
-        "prop": "adjMaxMagicAtk",
+        "prop": "adjMinMagicAtk",
         "floor": None,
         "ceiling": None,
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 4), (5, 8), (9, 12)),
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
         "score": 0
     }),
     78004043: _tools.RODict({
         "ID": 78004043,
         "levelGap": 1,
         "maxLevel": 1,
-        "rarityLevel": 1,
+        "rarityLevel": 0,
         "type": 3,
         "event": "onDress",
         "actionEffect": _78004043,
+        "inscription": 0,
+        "prop": "adjMaxMagicAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
+        "score": 0
+    }),
+    78004044: _tools.RODict({
+        "ID": 78004044,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 1,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004044,
         "inscription": 0,
         "prop": "adjHit",
         "floor": None,
@@ -4379,12 +4469,318 @@ datas = _tools.RODict({
         "assessmentInterval": None,
         "assessmentWeight": None,
         "assessmentRarity": None,
-        "qualityValue": ((1, 1), (2, 3), (4, 6), (7, 9)),
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
+        "score": 0
+    }),
+    78004045: _tools.RODict({
+        "ID": 78004045,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 1,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004045,
+        "inscription": 0,
+        "prop": "adjFullHp",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((40, 40), (80, 80), (120, 200), (240, 320)),
+        "score": 0
+    }),
+    78004046: _tools.RODict({
+        "ID": 78004046,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 0,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004046,
+        "inscription": 0,
+        "prop": "adjMinPhysicalAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
+        "score": 0
+    }),
+    78004047: _tools.RODict({
+        "ID": 78004047,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 0,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004047,
+        "inscription": 0,
+        "prop": "adjMaxPhysicalAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
+        "score": 0
+    }),
+    78004048: _tools.RODict({
+        "ID": 78004048,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 0,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004048,
+        "inscription": 0,
+        "prop": "adjMinMagicAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
+        "score": 0
+    }),
+    78004049: _tools.RODict({
+        "ID": 78004049,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 0,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004049,
+        "inscription": 0,
+        "prop": "adjMaxMagicAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
+        "score": 0
+    }),
+    78004050: _tools.RODict({
+        "ID": 78004050,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 1,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004050,
+        "inscription": 0,
+        "prop": "adjHit",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
+        "score": 0
+    }),
+    78004051: _tools.RODict({
+        "ID": 78004051,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 1,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004051,
+        "inscription": 0,
+        "prop": "adjMaxPhysicalAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
+        "score": 0
+    }),
+    78004052: _tools.RODict({
+        "ID": 78004052,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 1,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004052,
+        "inscription": 0,
+        "prop": "adjMaxMagicAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
+        "score": 0
+    }),
+    78004053: _tools.RODict({
+        "ID": 78004053,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 1,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004053,
+        "inscription": 0,
+        "prop": "adjAtkBless",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((0, 0), (0, 0), (1, 1), (0, 0)),
+        "score": 0
+    }),
+    78004054: _tools.RODict({
+        "ID": 78004054,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 1,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004054,
+        "inscription": 0,
+        "prop": "adjAtkBless",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((0, 0), (0, 0), (0, 0), (2, 2)),
+        "score": 0
+    }),
+    78004055: _tools.RODict({
+        "ID": 78004055,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 0,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004055,
+        "inscription": 0,
+        "prop": "adjMinPhysicalAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
+        "score": 0
+    }),
+    78004056: _tools.RODict({
+        "ID": 78004056,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 0,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004056,
+        "inscription": 0,
+        "prop": "adjMaxPhysicalAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
+        "score": 0
+    }),
+    78004057: _tools.RODict({
+        "ID": 78004057,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 0,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004057,
+        "inscription": 0,
+        "prop": "adjMinMagicAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
+        "score": 0
+    }),
+    78004058: _tools.RODict({
+        "ID": 78004058,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 0,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004058,
+        "inscription": 0,
+        "prop": "adjMaxMagicAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 3), (4, 7), (8, 11)),
+        "score": 0
+    }),
+    78004059: _tools.RODict({
+        "ID": 78004059,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 1,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004059,
+        "inscription": 0,
+        "prop": "adjHit",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
+        "score": 0
+    }),
+    78004060: _tools.RODict({
+        "ID": 78004060,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 1,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004060,
+        "inscription": 0,
+        "prop": "adjMaxPhysicalAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
+        "score": 0
+    }),
+    78004061: _tools.RODict({
+        "ID": 78004061,
+        "levelGap": 1,
+        "maxLevel": 1,
+        "rarityLevel": 1,
+        "type": 3,
+        "event": "onDress",
+        "actionEffect": _78004061,
+        "inscription": 0,
+        "prop": "adjMaxMagicAtk",
+        "floor": None,
+        "ceiling": None,
+        "assessmentInterval": None,
+        "assessmentWeight": None,
+        "assessmentRarity": None,
+        "qualityValue": ((1, 1), (2, 2), (3, 5), (6, 8)),
         "score": 0
     })
 })
 minKey = 78000030
-maxKey = 78004043
+maxKey = 78004061
 
 rarityLevelDic = {1: [78001001, 78001002, 78001003, 78001004, 78001005, 78001006, 78001007, 78001008]}
 

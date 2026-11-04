@@ -34,29 +34,29 @@ class IMallStore(object):
 
     @gamedecorator.checkGameconfigEnable('pay')
     @gamedecorator.limitcall(1)
-    def reqBuyGiftStore(self, exposed, storeId):
+    def reqBuyGiftStore(self, exposed, storeId, isExchange=False):
         LOG_INFO('IMallStore::reqBuyGiftStore:', exposed, storeId)
         cfg = MGS.datas.get(storeId)
         if not cfg:
             result = gameconst.MallStoreResult.WRONG_ARGS
             LOG_ERR('reqBuyGiftStore:: storeId not found', storeId)
         else:
-            result = self._processMallPurchase(gameconst.MallStoreType.GIFT, storeId, cfg, self.giftStorePurchaseNumDic)
+            result = self._processMallPurchase(gameconst.MallStoreType.GIFT, storeId, cfg, self.giftStorePurchaseNumDic, isExchange=isExchange)
         self.client.onBuyMallGiftStoreResult(storeId, result)
 
     @gamedecorator.checkGameconfigEnable('pay')
     @gamedecorator.limitcall(1)
-    def reqBuyMountStore(self, exposed, storeId):
+    def reqBuyMountStore(self, exposed, storeId, isExchange=False):
         LOG_INFO('IMallStore::reqBuyMountStore:', exposed, storeId)
         cfg = MMS.datas.get(storeId)
         if not cfg:
             result = gameconst.MallStoreResult.WRONG_ARGS
             LOG_ERR('reqBuyMountStore:: storeId not found', storeId)
         else:
-            result = self._processMallPurchase(gameconst.MallStoreType.MOUNT, storeId, cfg, self.mountsStorePurchaseNumDic)
+            result = self._processMallPurchase(gameconst.MallStoreType.MOUNT, storeId, cfg, self.mountsStorePurchaseNumDic, isExchange=isExchange)
         self.client.onBuyMallMountStoreResult(storeId, result)
 
-    def _processMallPurchase(self, storeType, storeId, cfg, purchaseDic):
+    def _processMallPurchase(self, storeType, storeId, cfg, purchaseDic, isExchange=False):
         LOG_INFO('IMallStore::_processMallPurchase:', storeType, storeId)
         limitNumber = cfg.get('limitNumber', 0)
         if limitNumber > 0:
@@ -76,7 +76,7 @@ class IMallStore(object):
             itemId, qty = costItem
             deductWealth.addWealthByItemId(itemId, qty)
 
-        res = self.canDeductWealth(deductWealth)
+        res = self.canDeductWealth(deductWealth, allowMoneyCoverBindMoney=isExchange)
         if not res:
             if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
                 return gameconst.MallStoreResult.FAIL
@@ -94,7 +94,7 @@ class IMallStore(object):
         if not self.canAddWealthVal(srcType, wealthVal):
             return gameconst.MallStoreResult.BAG_IS_FULL
         
-        self.deductWealth(srcType, deductWealth, opUUID, detail)
+        self.deductWealth(srcType, deductWealth, opUUID, detail, allowMoneyCoverBindMoney=isExchange)
         self.addWealth(srcType, wealthVal, opUUID, detail, awardCtx=awardCtx)
 
         if limitNumber > 0:

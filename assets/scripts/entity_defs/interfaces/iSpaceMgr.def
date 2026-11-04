@@ -166,6 +166,11 @@
             <Arg>       VALUE_SRC     </Arg>
             <Arg>       UNICODE       </Arg>
         </setSpaceVar>
+
+        <callOnSpaceMgr>
+            <Arg>       STRING          </Arg>
+            <Arg>       PYTHON          </Arg>
+        </callOnSpaceMgr>
     </CellMethods>
 
     <ClientMethods>

@@ -49,7 +49,7 @@ datas ={
       40380015
     ],
     "num": 0,
-    "lv": "23",
+    "lv": "32",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -69,7 +69,7 @@ datas ={
       40380016
     ],
     "num": 0,
-    "lv": "23",
+    "lv": "32",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -103,7 +103,7 @@ datas ={
   "1049": {
     "type": "createCollection",
     "entityID": [
-      40388003
+      40388005
     ],
     "num": 0,
     "randomCollectionNum": 0,
@@ -117,7 +117,7 @@ datas ={
   "1050": {
     "type": "createNPC",
     "entityID": [
-      40384001
+      40384003
     ],
     "num": 0,
     "lv": "0",
@@ -127,7 +127,7 @@ datas ={
   "1051": {
     "type": "collBeCollected",
     "entityID": [
-      40388003
+      40388005
     ],
     "usePrototypeID": 0,
     "infLoop": 1,
@@ -143,14 +143,14 @@ datas ={
   "1052": {
     "type": "removeNPC",
     "entityID": [
-      40384001
+      40384003
     ],
     "transition": {}
   },
   "1053": {
     "type": "createNPC",
     "entityID": [
-      40384002
+      40384004
     ],
     "num": 0,
     "lv": "0",

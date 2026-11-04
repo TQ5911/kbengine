@@ -86,6 +86,16 @@
     </BaseMethods>
 
     <CellMethods>
+        <createCellLocallyRetry>
+            <Arg>           ENT_TYPE        </Arg>
+            <Arg>           POSITION_ARG    </Arg>
+            <Arg>           DIRECTION_ARG   </Arg>
+            <Arg>           PYTHON          </Arg>
+            <Arg>           ENTITYCALL      </Arg>
+            <Arg>           STRING          </Arg>
+            <Arg>           PYTHON          </Arg>
+        </createCellLocallyRetry>
+
         <createCellLocally>
             <Arg>           ENT_TYPE        </Arg>
             <Arg>           POSITION_ARG    </Arg>

@@ -139,6 +139,16 @@ namespace KBEngine
 					List<string> onMessage_arg2 = ((DATATYPE_AnonymousArray_10001)method.args[1]).createFromStreamEx(stream);
 					onMessage(onMessage_arg1, onMessage_arg2);
 					break;
+				case 325:
+					Byte onOfficialMessage_arg1 = stream.readUint8();
+					string onOfficialMessage_arg2 = stream.readUnicode();
+					Byte onOfficialMessage_arg3 = stream.readUint8();
+					List<string> onOfficialMessage_arg4 = ((DATATYPE_AnonymousArray_10002)method.args[3]).createFromStreamEx(stream);
+					UInt64 onOfficialMessage_arg5 = stream.readUint64();
+					string onOfficialMessage_arg6 = stream.readString();
+					Byte onOfficialMessage_arg7 = stream.readUint8();
+					onOfficialMessage(onOfficialMessage_arg1, onOfficialMessage_arg2, onOfficialMessage_arg3, onOfficialMessage_arg4, onOfficialMessage_arg5, onOfficialMessage_arg6, onOfficialMessage_arg7);
+					break;
 				case 1194:
 					UInt32 onRecvAvatarChannelMsg_arg1 = stream.readUint32();
 					CHAT_CHANNEL_AVATAR_INFO onRecvAvatarChannelMsg_arg2 = ((DATATYPE_CHAT_CHANNEL_AVATAR_INFO)method.args[1]).createFromStreamEx(stream);
@@ -168,6 +178,10 @@ namespace KBEngine
 					UInt32 showPopoverMsgWithArg_arg1 = stream.readUint32();
 					List<string> showPopoverMsgWithArg_arg2 = ((DATATYPE_AnonymousArray_10001)method.args[1]).createFromStreamEx(stream);
 					showPopoverMsgWithArg(showPopoverMsgWithArg_arg1, showPopoverMsgWithArg_arg2);
+					break;
+				case 326:
+					UInt64 stopOfficialMessage_arg1 = stream.readUint64();
+					stopOfficialMessage(stopOfficialMessage_arg1);
 					break;
 				case 1234:
 					Int64 syncServerTime_arg1 = stream.readInt64();
@@ -220,7 +234,7 @@ namespace KBEngine
 				{
 					case 593:
 						APPEARANCE_INFO oldval_appearance = appearance;
-						appearance = ((DATATYPE_APPEARANCE_INFO)EntityDef.id2datatypes[35]).createFromStreamEx(stream);
+						appearance = ((DATATYPE_APPEARANCE_INFO)EntityDef.id2datatypes[36]).createFromStreamEx(stream);
 
 						if(prop.isBase())
 						{

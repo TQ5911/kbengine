@@ -796,7 +796,7 @@ class AuxFunc(object):
             if skill.hasSkillTag(gameconst.SkillTagEnum.birthDirection):
                 # 有这个tag的monster技能在选择节能方向时候恒定用出生方向
                 _d = owner.bornDirection
-                _direction = Math.Vector3(_d[0], _d[1], _d[2])
+                _direction = sMath.getDirFromYaw(_d[2])
             else:
                 _direction = sMath.vector3WithoutY(target.position - owner.position)
                 if _direction[0] == _direction[1] == _direction[2] == 0:
@@ -987,6 +987,8 @@ class AuxFunc(object):
         if self.isSiegeWarMonster():
             return self.selectSiegeWarTarget()
 
+        targetType = skill.getTarget(skill.skillId)
+
         if skill.hasSkillTag(gameconst.SkillTagEnum.randomTarget):
             _randomTargetId = self.hateDic.getRandomHateTarget()
             _target = KBEngine.entities.get(_randomTargetId)
@@ -1004,14 +1006,16 @@ class AuxFunc(object):
 
         if self.tmpForceTargetId:
             _target = KBEngine.entities.get(self.tmpForceTargetId)
-            targetType = skill.getTarget(skill.skillId)
             if _target and not _target.isDie() and utils.checkTargetTypeValid(targetType, _owner, _target):
                 _owner.doSetSelectedTargetId(self.tmpForceTargetId)
                 return _target
 
-        targetType = skill.getTarget(skill.skillId)
         if targetType == 'Enemy':
             self.selectHateTarget()
+
+        elif targetType == 'PlayerEnemy':
+            # PlayerEnemy：默认选仇恨最高的玩家；需要随机施法目标时由策划打 tag=98(randomTarget)
+            self.selectHateTarget(onlyPlayer=True)
 
         elif targetType == 'None':
             if self.skillId and S_SD.datas[self.skillId]['effectTarget'] in ('Friend', 'Self', 'Any'):
@@ -1042,21 +1046,21 @@ class AuxFunc(object):
 
         return KBEngine.entities.get(_owner.selectedTargetId)
     
-    def getMaxHateTarget(self):
+    def getMaxHateTarget(self, onlyPlayer=False):
         owner = self.owner
         if self.stateMachine.moveable:
-            maxHateTargetId, maxHateTargetHate = self.hateDic.getFirstVisibleHateTarget()
+            maxHateTargetId, maxHateTargetHate = self.hateDic.getFirstVisibleHateTarget(onlyPlayer)
         else:
             _skill = self.owner.skillDic.doGetSkill(self.skillId)
             _range = _skill.getRange(owner, _skill.skillId, _skill.skillLv)
-            maxHateTargetId, maxHateTargetHate = self.hateDic.getFirstVisibleHateTargetByRange(_range)
+            maxHateTargetId, maxHateTargetHate = self.hateDic.getFirstVisibleHateTargetByRange(_range, onlyPlayer=onlyPlayer)
 
         return maxHateTargetId, maxHateTargetHate
 
-    def selectHateTarget(self):
+    def selectHateTarget(self, onlyPlayer=False):
         owner = self.owner
 
-        maxHateTargetId, maxHateTargetHate = self.getMaxHateTarget()
+        maxHateTargetId, maxHateTargetHate = self.getMaxHateTarget(onlyPlayer)
 
         _currentTargetHate = self.hateDic.getHate(owner.selectedTargetId)
         _otRatio = CONST.datas['OTRatio']['value']
@@ -1065,7 +1069,10 @@ class AuxFunc(object):
             owner.doSetSelectedTargetId(0)
 
         _target = KBEngine.entities.get(owner.selectedTargetId)
-        if owner.selectedTargetId != maxHateTargetId and \
+        if onlyPlayer and not (_target and _target.IsAvatar):
+            owner.doSetSelectedTargetId(maxHateTargetId)
+
+        elif owner.selectedTargetId != maxHateTargetId and \
                 ((_target and not owner.isVisible(_target) and not owner.hasBuffTag(gameconst.BuffTag.TagSeeHiddenEnt))
                  or not _currentTargetHate or maxHateTargetHate.currentHate > _currentTargetHate.currentHate * _otRatio):
             owner.doSetSelectedTargetId(maxHateTargetId)
@@ -1319,11 +1326,11 @@ class HateCtrl(object):
 
         if hasattr(_owner, 'getCreepData'):
             iRange = _owner.getCreepData().get('syncHate', 0)
-            activeattack = _owner.getCreepData().get('activeAttack', 0)
+            activeattack = _owner.checkActiveAttack()
             if iRange > 0 and damage > 0:
                 if isFirstHate:
                     self.synMonsterHateInRange(iRange)
-                elif activeattack == 1 and (damage + _owner.hp) == _owner.fullHp :
+                elif activeattack and (damage + _owner.hp) == _owner.fullHp :
                     self.synMonsterHateInRange(iRange)
 
     def decreaseHate(self, targetId, value, byPercentage=False, **kwargs):

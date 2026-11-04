@@ -21,7 +21,7 @@ datas = _tools.RODict({
         "name": "小棕马",
         "quality": 1,
         "speedEnhance": 64000008,
-        "prop": _tools.ROList([['adjMinPhysicalArmor', 5]]),
+        "prop": _tools.ROList([['adjMinPhysicalArmor', 3]]),
         "isOpen": 1
     }),
     2: _tools.RODict({
@@ -30,7 +30,7 @@ datas = _tools.RODict({
         "name": "血影魔熊",
         "quality": 2,
         "speedEnhance": 64000008,
-        "prop": _tools.ROList([['adjMonsterDmg', 0.01]]),
+        "prop": _tools.ROList([['adjMonsterDmg', 0.006]]),
         "isOpen": 1
     }),
     3: _tools.RODict({
@@ -39,7 +39,7 @@ datas = _tools.RODict({
         "name": "锋刃战狼",
         "quality": 3,
         "speedEnhance": 64000008,
-        "prop": _tools.ROList([['adjFinalDmgAnti', 0.0075]]),
+        "prop": _tools.ROList([['adjFinalDmgAnti', 0.005]]),
         "isOpen": 1
     }),
     4: _tools.RODict({
@@ -48,7 +48,7 @@ datas = _tools.RODict({
         "name": "啸月狼",
         "quality": 1,
         "speedEnhance": 64000008,
-        "prop": _tools.ROList([['adjMaxPhysicalArmor', 5]]),
+        "prop": _tools.ROList([['adjMaxPhysicalArmor', 3]]),
         "isOpen": 1
     }),
     5: _tools.RODict({
@@ -57,7 +57,7 @@ datas = _tools.RODict({
         "name": "镇狱虎",
         "quality": 1,
         "speedEnhance": 64000008,
-        "prop": _tools.ROList([['adjMinMagicArmor', 5]]),
+        "prop": _tools.ROList([['adjMinMagicArmor', 3]]),
         "isOpen": 1
     }),
     6: _tools.RODict({
@@ -66,7 +66,7 @@ datas = _tools.RODict({
         "name": "天曜白虎",
         "quality": 2,
         "speedEnhance": 64000008,
-        "prop": _tools.ROList([['adjMonsterDmgAnti', 0.01]]),
+        "prop": _tools.ROList([['adjMonsterDmgAnti', 0.006]]),
         "isOpen": 1
     }),
     7: _tools.RODict({
@@ -75,7 +75,7 @@ datas = _tools.RODict({
         "name": "星瀚狮虎",
         "quality": 3,
         "speedEnhance": 64000008,
-        "prop": _tools.ROList([['adjFinalDmgAnti', 0.0075]]),
+        "prop": _tools.ROList([['adjFinalDmgAnti', 0.005]]),
         "isOpen": 1
     }),
     8: _tools.RODict({
@@ -84,7 +84,7 @@ datas = _tools.RODict({
         "name": "独角兽",
         "quality": 2,
         "speedEnhance": 64000008,
-        "prop": _tools.ROList([['adjFinalDmg', 0.005]]),
+        "prop": _tools.ROList([['adjFinalDmg', 0.003]]),
         "isOpen": 1
     }),
     9: _tools.RODict({
@@ -93,7 +93,7 @@ datas = _tools.RODict({
         "name": "撼山熊",
         "quality": 1,
         "speedEnhance": 64000008,
-        "prop": _tools.ROList([['adjMaxMagicArmor', 5]]),
+        "prop": _tools.ROList([['adjMaxMagicArmor', 3]]),
         "isOpen": 1
     }),
     10: _tools.RODict({
@@ -102,7 +102,7 @@ datas = _tools.RODict({
         "name": "雪谷灵鹿",
         "quality": 3,
         "speedEnhance": 64000008,
-        "prop": _tools.ROList([['adjFinalDmgAnti', 0.0075]]),
+        "prop": _tools.ROList([['adjFinalDmgAnti', 0.005]]),
         "isOpen": 1
     }),
     11: _tools.RODict({
@@ -111,7 +111,7 @@ datas = _tools.RODict({
         "name": "鎏金水墨鹿",
         "quality": 4,
         "speedEnhance": 64000008,
-        "prop": _tools.ROList([['adjFinalDmg', 0.01]]),
+        "prop": _tools.ROList([['adjFinalDmg', 0.0075]]),
         "isOpen": 1
     })
 })

@@ -95,6 +95,12 @@ class IWaitMapGameStart(object):
                 key = gameconst.RedisKey.SERVER_OPEN_STATE + str(gameconfig.serverId())
                 redisUtils.RedisUtils.cmdSet(key, str(gameconfig.permitLogin()), self._onWaitMapServerOpenState)
 
+                # 预创角开始、结束时间写redis（排队微服务放行预创角阶段用，未配置时为'0,0'）
+                key = gameconst.RedisKey.PRE_CREATE_TIME + str(gameconfig.serverId())
+                redisUtils.RedisUtils.cmdSet(
+                    key,
+                    '%s,%s' % (gameconfig.preCreateStartTime(), gameconfig.preCreateEndTime()))
+
             self.pyAddTimer(0.1, 0, gametimer.WAITMAP_TIMER_WAIT_LEADER_BOARD_STUB_READY)
 
         elif userArg == gametimer.WAITMAP_TIMER_WAIT_LEADER_BOARD_STUB_READY:

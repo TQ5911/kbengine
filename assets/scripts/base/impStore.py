@@ -58,21 +58,21 @@ class ImpStore(object):
 
     @gamedecorator.limitcall(1)
     # itemId: mall_coinPrice.datas.ID 不是物品ID
-    def reqBuyItemsInStore(self, exposed, storeId, itemId, itemNum):
+    def reqBuyItemsInStore(self, exposed, storeId, itemId, itemNum, isExchange=False):
         LOG_INFO('in reqBuyItemsInStore:', storeId, itemId, itemNum)
-        self._buyItemsInStore(storeId, itemId, itemNum)
+        self._buyItemsInStore(storeId, itemId, itemNum, isExchange=isExchange)
 
     @gamedecorator.limitcall(1)
-    def reqBuyItemsInStoreWithSelection(self, exposed, storeId, itemId, itemNum, propSlot):
+    def reqBuyItemsInStoreWithSelection(self, exposed, storeId, itemId, itemNum, propSlot, isExchange=False):
         LOG_INFO('in reqBuyItemsInStoreWithSelection:', exposed, storeId, itemId, itemNum, propSlot)
-        self._buyItemsInStore(storeId, itemId, itemNum, propSlot)
+        self._buyItemsInStore(storeId, itemId, itemNum, propSlot, isExchange=isExchange)
 
-    def _buyItemsInStore(self, storeId, itemId, itemNum, propSlot=0):
+    def _buyItemsInStore(self, storeId, itemId, itemNum, propSlot=0, isExchange=False):
         LOG_INFO('in _buyItemsInStore:', storeId, itemId, itemNum, propSlot)
-        self.buyStoreItems(storeId, itemId, itemNum, propSlot)
+        self.buyStoreItems(storeId, itemId, itemNum, propSlot, isExchange=isExchange)
         return
 
-    def buyStoreItems(self, storeId, itemId, itemNum, propSlot):
+    def buyStoreItems(self, storeId, itemId, itemNum, propSlot, isExchange=False):
         LOG_INFO('in buyStoreItems:', storeId, itemId, itemNum, propSlot)
         if self.isDestroyed:
             LOG_INFO('buyStoreItems: avatar is offline', storeId, itemId, itemNum)
@@ -126,7 +126,7 @@ class ImpStore(object):
                 propItemId, num, bindtype = propItem[propSlot]
                 deductWealthVal.addWealthByItemId(propItemId, num*itemNum, bindtype)
 
-        res = self.canDeductWealth(deductWealthVal)
+        res = self.canDeductWealth(deductWealthVal, allowMoneyCoverBindMoney=isExchange)
         if not res:
             LOG_WARN('buyStoreItems: items not enough:', deductWealthVal, res())
             return
@@ -148,7 +148,7 @@ class ImpStore(object):
             if tp == gameconst.STORE_TYPE.EXCHANGE_STORE1 or tp == gameconst.STORE_TYPE.EXCHANGE_STORE2:
                 srcType = AAC_AACDD.datas.BONUS_SRC_EXCHANGE_STORE_ITEMS
 
-        self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+        self.deductWealth(srcType, deductWealthVal, opUUID, detail, allowMoneyCoverBindMoney=isExchange)
         buyNum = 0
         if storeItemData['limitNumber'] > 0 and storeItemData['groupId'] == 0:
             # 限量购买物品

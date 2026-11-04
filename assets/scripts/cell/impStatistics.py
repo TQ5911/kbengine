@@ -50,6 +50,7 @@ class IStatistics(object):
         stub.reportStatistics(self.gbId, self.spaceNo, {key: value})
 
     # @utils.isMyself
+    @gamedecorator.crossServer
     def reqStartGetStatistics(self, exposed, statisticType):
         """
         请求获取统计数据
@@ -63,6 +64,7 @@ class IStatistics(object):
         # self.reqGetStatisticsDetail(exposed, statisticType)
 
     # @utils.isMyself
+    @gamedecorator.crossServer
     def reqStopGetStatistics(self, exposed):
         """
         请求停止获取统计数据
@@ -72,6 +74,7 @@ class IStatistics(object):
         stub.stopGetStatistics(self.gbId, self.spaceNo)
 
     # @utils.isMyself
+    @gamedecorator.crossServer
     @gamedecorator.limitcall(3)
     def reqGetStatisticsDetail(self, exposed, statisticType):
         """
@@ -84,6 +87,7 @@ class IStatistics(object):
         stub.getStatisticsDetail(self.gbId, self.base, self.spaceNo, statisticType, {'batchCount': 10, 'allCount': 80})
 
     # @utils.isMyself
+    @gamedecorator.crossServer
     @gamedecorator.limitcall(3)
     def reqClearStatistics(self, exposed, statisticType):
         """

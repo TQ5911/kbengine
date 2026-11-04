@@ -30,12 +30,13 @@ namespace KBEngine
 		public virtual void onCharInfoChange(CHARACTER_VAL arg1) {} 
 		public virtual void onCreateAvatarFailed(Byte arg1) {} 
 		public virtual void onCreateAvatarResult(Byte arg1, UInt64 arg2) {} 
+		public virtual void onCreatePreAvatarResult(Byte arg1, UInt64 arg2, UInt16 arg3, string arg4, Byte arg5, Byte arg6, FACE_DATA arg7) {} 
 		public virtual void onGetAuthOfflineTimeClient(UInt64 arg1, UInt32 arg2, UInt32 arg3) {} 
 		public virtual void onKickAnotherAvatar() {} 
 		public virtual void onLoginNeedReconnect() {} 
 		public virtual void onRemoveAvatar(UInt64 arg1) {} 
 		public virtual void onReqAvatarGBID(UInt64 arg1) {} 
-		public virtual void onReqAvatarList(CHARACTERS_INFO arg1, Byte arg2, UInt64 arg3) {} 
+		public virtual void onReqAvatarList(CHARACTERS_INFO arg1, Byte arg2, UInt64 arg3, PRE_CREATE_INFO arg4) {} 
 		public virtual void onSelectGameFailed(UInt64 arg1, Byte arg2) {} 
 
 		public AccountBase()
@@ -166,6 +167,16 @@ namespace KBEngine
 					UInt64 onCreateAvatarResult_arg2 = stream.readUint64();
 					onCreateAvatarResult(onCreateAvatarResult_arg1, onCreateAvatarResult_arg2);
 					break;
+				case 1455:
+					Byte onCreatePreAvatarResult_arg1 = stream.readUint8();
+					UInt64 onCreatePreAvatarResult_arg2 = stream.readUint64();
+					UInt16 onCreatePreAvatarResult_arg3 = stream.readUint16();
+					string onCreatePreAvatarResult_arg4 = stream.readUnicode();
+					Byte onCreatePreAvatarResult_arg5 = stream.readUint8();
+					Byte onCreatePreAvatarResult_arg6 = stream.readUint8();
+					FACE_DATA onCreatePreAvatarResult_arg7 = ((DATATYPE_FACE_DATA)method.args[6]).createFromStreamEx(stream);
+					onCreatePreAvatarResult(onCreatePreAvatarResult_arg1, onCreatePreAvatarResult_arg2, onCreatePreAvatarResult_arg3, onCreatePreAvatarResult_arg4, onCreatePreAvatarResult_arg5, onCreatePreAvatarResult_arg6, onCreatePreAvatarResult_arg7);
+					break;
 				case 14:
 					List<string> onGameConfigChanged_arg1 = ((DATATYPE_AnonymousArray_10002)method.args[0]).createFromStreamEx(stream);
 					List<Byte> onGameConfigChanged_arg2 = ((DATATYPE_AnonymousArray_10003)method.args[1]).createFromStreamEx(stream);
@@ -211,7 +222,8 @@ namespace KBEngine
 					CHARACTERS_INFO onReqAvatarList_arg1 = ((DATATYPE_CHARACTERS_INFO)method.args[0]).createFromStreamEx(stream);
 					Byte onReqAvatarList_arg2 = stream.readUint8();
 					UInt64 onReqAvatarList_arg3 = stream.readUint64();
-					onReqAvatarList(onReqAvatarList_arg1, onReqAvatarList_arg2, onReqAvatarList_arg3);
+					PRE_CREATE_INFO onReqAvatarList_arg4 = ((DATATYPE_PRE_CREATE_INFO)method.args[3]).createFromStreamEx(stream);
+					onReqAvatarList(onReqAvatarList_arg1, onReqAvatarList_arg2, onReqAvatarList_arg3, onReqAvatarList_arg4);
 					break;
 				case 1074:
 					UInt64 onSelectGameFailed_arg1 = stream.readUint64();

@@ -17,7 +17,9 @@ datas ={
           "PosY": 51.17073,
           "PosZ": 473.8395,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 43,
             "LightPillar": "",
             "MapEntityScale": 0,
@@ -52,7 +54,9 @@ datas ={
           "PosY": 17.16839,
           "PosZ": 470.8793,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 39,
             "LightPillar": "",
             "MapEntityScale": 0,
@@ -87,7 +91,9 @@ datas ={
           "PosY": 0.278531,
           "PosZ": 29.56204,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 35,
             "LightPillar": "",
             "MapEntityScale": 0,
@@ -122,7 +128,9 @@ datas ={
           "PosY": 52.05371,
           "PosZ": 34.48069,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 43,
             "LightPillar": 51018360,
             "MapEntityScale": 0,
@@ -132,8 +140,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              5400.0,
-              6300.0
+              6900.0,
+              7500.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",
@@ -156,7 +164,9 @@ datas ={
           "PosY": 57.2359,
           "PosZ": 392.1776,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 43,
             "LightPillar": 51018361,
             "MapEntityScale": 0,
@@ -166,8 +176,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              5400.0,
-              6300.0
+              6900.0,
+              7500.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",
@@ -190,7 +200,9 @@ datas ={
           "PosY": 36.22639,
           "PosZ": 243.0157,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 39,
             "LightPillar": 51018362,
             "MapEntityScale": 0,
@@ -200,8 +212,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              3600.0,
-              4500.0
+              5100.0,
+              5700.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",
@@ -224,7 +236,9 @@ datas ={
           "PosY": 18.00691,
           "PosZ": 302.0142,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 39,
             "LightPillar": 51018363,
             "MapEntityScale": 0,
@@ -234,8 +248,8 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": [
-              3600.0,
-              4500.0
+              5100.0,
+              5700.0
             ],
             "RefreshTimedID": 0,
             "Remark": "",
@@ -258,7 +272,9 @@ datas ={
           "PosY": 0.2712817,
           "PosZ": 182.5385,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 35,
             "LightPillar": 51018364,
             "MapEntityScale": 0,
@@ -292,7 +308,9 @@ datas ={
           "PosY": -3.952763,
           "PosZ": 411.9171,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 35,
             "LightPillar": 51018365,
             "MapEntityScale": 0,
@@ -326,7 +344,9 @@ datas ={
           "PosY": 0.08020355,
           "PosZ": 50.00049,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 35,
             "LightPillar": 51018366,
             "MapEntityScale": 0,
@@ -360,7 +380,9 @@ datas ={
           "PosY": 15.03565,
           "PosZ": 283.1153,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 35,
             "LightPillar": 51018367,
             "MapEntityScale": 0,
@@ -394,7 +416,9 @@ datas ={
           "PosY": 32.21093,
           "PosZ": 234.9279,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 35,
             "LightPillar": "",
             "MapEntityScale": 0,
@@ -425,7 +449,9 @@ datas ={
           "PosY": 23.00772,
           "PosZ": 127.962,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 35,
             "LightPillar": "",
             "MapEntityScale": 0,
@@ -487,7 +513,9 @@ datas ={
           "PosY": 0.01773407,
           "PosZ": 184.1045,
           "Props": {
+            "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 35,
             "LightPillar": "",
             "MapEntityScale": 0,

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
 import gc
+import time
+import traceback
 # gc.disable()
 
 import KBEngine
@@ -153,18 +155,54 @@ def onFini():
     LOG_INFO('onFini()')
 
 
+def reportCellAppDeath(cid, groupOrder, addr):
+    """
+    上报 cellapp 死亡的紧急告警。
+
+    注意: 引擎会在**每个** baseapp 上都回调 onCellAppDeath, 进程数一多就会
+    重复报警, 所以调用方必须用 gameglobal.isBootstrap 收敛成只报一次。
+    """
+    try:
+        import iFeiShu
+        serverName = gameglobal.curServerAlias or gameglobal.curServerName
+        gameReady = KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_GAME_READY)
+        msg = (
+            '【严重告警】cellapp died\n'
+            'serverId: %s, server: %s\n'
+            'cid: %s, groupOrder: %s, addr: %s\n'
+            '启动阶段: %s\n'
+            'time: %s\n'
+        ) % (gameconfig.serverId(), serverName, cid, groupOrder, str(addr),
+             '否' if gameReady else '是(将直接关服)',
+             time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()))
+        iFeiShu.instance().criticalReportDirect([msg])
+    except:
+        LOG_ERR('reportCellAppDeath failed: cid=%s\n%s' % (cid, traceback.format_exc()))
+
+
 def onCellAppDeath(addr, cid, groupOrder):
     """
     KBEngine method.
     某个cellapp死亡
+
+    注意:
+        - cid 是死亡 cellapp 的 componentID, 全局唯一且稳定,
+          所有 baseapp 拿到的都是同一个值 -> 用它做死亡/恢复的唯一标识。
+        - groupOrder 是各进程本地推导的, 同一个 cellapp 在不同 baseapp 上
+          可能给出不同的值, 只能用于日志, 不能用于去重。
+        - 每个 baseapp 都会收到这个回调, 报警只由 bootstrap 进程发出,
+          否则进程越多报警越多(isBootstrap 从 onBaseAppReady 拿到)。
     """
     LOG_WARN('onCellAppDeath:', cid, groupOrder, addr)
+    if gameglobal.isBootstrap and gameconfig.criticalReportUrl():
+        reportCellAppDeath(cid, groupOrder, addr)
+
     if gameglobal.isBootstrap and not KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_GAME_READY):
         LOG_ERR('cellapp dead in starting, shutdown...')
         KBEngine.shutdownServer()
     else:
         for lineType in gameconst.lineStubMap():
-            gameengine.getLineStub(lineType).handleCellappDeath(groupOrder)
+            gameengine.getLineStub(lineType).handleCellappDeath(cid)
 
         # 通知 Cube/WonderLand/Abyss stub (multi-static space 系)
         import cube_floor as C_FD
@@ -173,16 +211,17 @@ def onCellAppDeath(addr, cid, groupOrder):
         for _floorNo in C_FD.datas.keys():
             _stub = gameengine.getGlobalBase('CubeStub%d' % _floorNo, reportErr=False)
             if _stub:
-                _stub.handleCellappDeath(groupOrder)
+                _stub.handleCellappDeath(cid)
         for _floorNo in WL_FD.datas.keys():
             _stub = gameengine.getGlobalBase('WonderLandStub%d' % _floorNo, reportErr=False)
             if _stub:
-                _stub.handleCellappDeath(groupOrder)
+                _stub.handleCellappDeath(cid)
         for _floorNo in AB_FD.datas.keys():
             _stub = gameengine.getGlobalBase('AbyssStub%d' % _floorNo, reportErr=False)
             if _stub:
-                _stub.handleCellappDeath(groupOrder)
+                _stub.handleCellappDeath(cid)
 
+        # localBaseApp 只做日志, 保留可读的 groupOrder
         gameglobal.localBaseApp.handleCellappDealth(groupOrder)
 
 
@@ -240,6 +279,10 @@ def onGlobalData(key, val):
         elif key == gameconst.GLOBALDATA_KEY_WORLD_LEVEL:
             gameglobal.worldLevel = val
             LOG_INFO('onGlobalData worldLevel', val)
+
+        elif key == gameconst.GLOBALDATA_KEY_YESTERDAY_ONLINE_NUM:
+            gameglobal.yesterdayOnlineNum = val
+            LOG_INFO('onGlobalData yesterdayOnlineNum', val)
 
         if gameglobal.localBaseApp:
             gameglobal.localBaseApp.doGlobalDataCallback(key, val)

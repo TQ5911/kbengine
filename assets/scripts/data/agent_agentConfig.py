@@ -53,7 +53,7 @@ datas = _tools.RODict({
     }),
     "evilMeterLimit": _tools.RODict({
         "ID": "evilMeterLimit",
-        "value": -1000,
+        "value": -500,
     }),
     "evilMeterLimitMsg": _tools.RODict({
         "ID": "evilMeterLimitMsg",
@@ -170,5 +170,13 @@ datas = _tools.RODict({
     "cannotSwitchMode": _tools.RODict({
         "ID": "cannotSwitchMode",
         "value": 54000266,
+    }),
+    "agentText1": _tools.RODict({
+        "ID": "agentText1",
+        "value": "角色授权",
+    }),
+    "agentText2": _tools.RODict({
+        "ID": "agentText2",
+        "value": "角色代理",
     })
 })

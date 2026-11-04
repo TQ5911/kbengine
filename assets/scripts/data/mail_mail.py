@@ -312,6 +312,39 @@ datas = _tools.RODict({
         "event": "",
         "parm": ""
     }),
+    37000034: _tools.RODict({
+        "ID": 37000034,
+        "type": 2,
+        "title": "赛季战令即将结算",
+        "content": "当前{0}战令将于{1}结束，请注意领取奖励！",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000035: _tools.RODict({
+        "ID": 37000035,
+        "type": 2,
+        "title": "赛季战令结算奖励",
+        "content": "您上赛季战令未领取奖励已发放至邮件，请查收！",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
+    37000036: _tools.RODict({
+        "ID": 37000036,
+        "type": 2,
+        "title": "赛季战令奖励作废",
+        "content": "您离线时长超过3个月，战令为结算奖励作废",
+        "isOpen": 1,
+        "rewardId": 0,
+        "period": "360",
+        "event": "",
+        "parm": ""
+    }),
     37001001: _tools.RODict({
         "ID": 37001001,
         "type": 1,
@@ -839,6 +872,9 @@ MailArgsNumMap = _tools.RODict({
         37000031:0,
         37000032:0,
         37000033:0,
+        37000034:2,
+        37000035:0,
+        37000036:0,
         37001001:0,
         37001002:0,
         37001003:0,

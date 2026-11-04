@@ -18,41 +18,38 @@ datas = _tools.RODict({
     1: _tools.RODict({
         "floor": 1,
         "ID": 5201,
-        "needScore": 25000,
-        "needLv": 40,
+        "needScore": 35000,
+        "needLv": 45,
+        "serverLv": 40,
     }),
     2: _tools.RODict({
         "floor": 2,
         "ID": 5202,
-        "needScore": 30000,
-        "needLv": 43,
+        "needScore": 40000,
+        "needLv": 50,
+        "serverLv": 45,
     }),
     3: _tools.RODict({
         "floor": 3,
         "ID": 5203,
-        "needScore": 35000,
-        "needLv": 47,
+        "needScore": 47500,
+        "needLv": 55,
+        "serverLv": 50,
     }),
     4: _tools.RODict({
         "floor": 4,
         "ID": 5204,
-        "needScore": 0,
-        "needLv": 40,
-    }),
-    5: _tools.RODict({
-        "floor": 5,
-        "ID": 5205,
-        "needScore": 0,
-        "needLv": 51,
+        "needScore": 55000,
+        "needLv": 60,
+        "serverLv": 55,
     })
 })
 minKey = 1
-maxKey = 5
+maxKey = 4
 
 id2floor = _tools.RODict({
     5201: 1,
     5202: 2,
     5203: 3,
     5204: 4,
-    5205: 5,
 })

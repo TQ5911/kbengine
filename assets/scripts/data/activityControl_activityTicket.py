@@ -50,21 +50,21 @@ datas = _tools.RODict({
     203: _tools.RODict({
         "ID": 203,
         "type": 2,
-        "price": (30000021, 100),
+        "price": (30000001, 100),
         "newServePrice": None,
-        "newPlayerPrice": (40, 30000021, 50)
+        "newPlayerPrice": (40, 30000001, 50)
     }),
     301: _tools.RODict({
         "ID": 301,
         "type": 3,
-        "price": (30000021, 50),
+        "price": (30000021, 80),
         "newServePrice": (30, 30000021, 0),
         "newPlayerPrice": None
     }),
     302: _tools.RODict({
         "ID": 302,
         "type": 3,
-        "price": (30000021, 50),
+        "price": (30000001, 100),
         "newServePrice": None,
         "newPlayerPrice": None
     }),

@@ -130,9 +130,9 @@ class ICubeBase(object):
                     return  
                 _deductVal = dropAward.DeductWealthVal()
                 _deductVal.addWealthByItemId(coinType, coinNum)
-                res = self.canDeductWealth(_deductVal)
+                res = self.canDeductWealth(_deductVal, allowMoneyCoverBindMoney=True)
                 if res:
-                    if not self.useItemAddCubeTimes(gameconst.CUBE_ADD_TIMES_TYPE_COIN, [(coinType, coinNum, 1)], 1, True, True, gameconst.CubeAddTimesReason.RENEW_USE_COIN, _opUUID):
+                    if not self.useItemAddCubeTimes(gameconst.CUBE_ADD_TIMES_TYPE_COIN, [(coinType, coinNum, 1)], 1, True, True, gameconst.CubeAddTimesReason.RENEW_USE_COIN, _opUUID, isExchange=True):
                         pass
                     return
                 elif res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
@@ -163,7 +163,7 @@ class ICubeBase(object):
 
     @gamedecorator.checkGameconfigEnable('square')
     @AuthClsWraper.authWithPermission(A_AFD.UISquarePanel)
-    def reqUseItemAddCubeTimes(self, exposed, addType, num, isAddDuration):
+    def reqUseItemAddCubeTimes(self, exposed, addType, num, isAddDuration, isExchange=False):
         LOG_INFO('reqUseItemAddCubeTimes: {} {} {}'.format(addType, num, isAddDuration))
         if not utils.isActOpen(cube_config.datas['cubeActID']['value']) and isAddDuration:
             self.onMessagePre(AC_CD.datas['activity_notOpen']['value'], [])
@@ -200,16 +200,16 @@ class ICubeBase(object):
                     return
                 costList.append((itemId, itemNum, 1))
         LOG_INFO('reqUseItemAddCubeTimes: addType: {}, costList: {}, num: {}'.format(addType, costList, num))
-        self.useItemAddCubeTimes(addType, costList, num, isAddDuration, False, gameconst.CubeAddTimesReason.FROM_CLIENT, _opUUID)
+        self.useItemAddCubeTimes(addType, costList, num, isAddDuration, False, gameconst.CubeAddTimesReason.FROM_CLIENT, _opUUID, isExchange=isExchange)
 
-    def useItemAddCubeTimes(self, addType, costList, num, isAddDuration, hasCheckCell, reason, opUUID):
+    def useItemAddCubeTimes(self, addType, costList, num, isAddDuration, hasCheckCell, reason, opUUID, isExchange=False):
         LOG_INFO('useItemAddCubeTimes: {} {} {} {} {} {}'.format(addType, costList, num, reason, isAddDuration, hasCheckCell))
         if isAddDuration and num != 1:
             LOG_ERR('useItemAddCubeTimes: invalid num', isAddDuration, num)
             return False
 
         if isAddDuration and not hasCheckCell:
-            self.cell.checkAddCubeRoomDurationCondition(addType, costList, num, opUUID)
+            self.cell.checkAddCubeRoomDurationCondition(addType, costList, num, opUUID, isExchange)
             return True
 
         if addType == gameconst.CUBE_ADD_TIMES_TYPE_COIN:
@@ -228,14 +228,14 @@ class ICubeBase(object):
         for (itemId, itemNum, n) in costList:
             _award.addWealthByItemId(itemId, itemNum * n)
 
-        res = self.canDeductWealth(_award)
+        res = self.canDeductWealth(_award, allowMoneyCoverBindMoney=isExchange)
         if not res:
             LOG_WARN('useItemAddCubeTimes: can not deduct wealth', res())
             return False
 
         _src = AAC_AACDD.datas.BONUS_SRC_CUBE_ROOM_ADD_TIMES
         _detail = gameclass.AwardDetailCls(cubeTimes=num)
-        self.deductWealth(_src, _award, opUUID, _detail)
+        self.deductWealth(_src, _award, opUUID, _detail, allowMoneyCoverBindMoney=isExchange)
 
         freeNum = 0
         paidNum = 0
@@ -267,26 +267,31 @@ class ICubeBase(object):
         )
         return True
 
-    def modifyLeftCubeTimes(self, delta, freeNum, paidNum, src, opUUID, attType=gameconst.addTicketTimesType.NULL):
+    def modifyLeftCubeTimes(self, changeNum, freeNum, paidNum, src, opUUID, attType=gameconst.addTicketTimesType.NULL):
         befPaidCubeTimes = self.paidCubeTimes
         befLeftCubeTimes = self.leftCubeTimes
-        if delta > 0:
+        if changeNum > 0:
             if attType == gameconst.addTicketTimesType.COIN:
                 self.leftCubeTimes = min(1000000000, self.leftCubeTimes + freeNum)
                 self.paidCubeTimes = min(1000000000, self.paidCubeTimes + paidNum)
             else:
-                self.paidCubeTimes = min(1000000000, self.paidCubeTimes + delta)
+                self.paidCubeTimes = min(1000000000, self.paidCubeTimes + changeNum)
 
         else:
+            # v5.2 新手历程 6=门票使用
+            self.beginnerJourney_onTaskEvent(
+                gameconst.BjTaskType.BJ_TASK_TYPE_TICKET_USE,
+                delta=abs(changeNum), activityId=int(cube_config.datas['cubeActID']['value'])
+            )
             if attType == gameconst.addTicketTimesType.COIN:
                 self.leftCubeTimes = max(0, self.leftCubeTimes + freeNum)
                 self.paidCubeTimes = max(0, self.paidCubeTimes + paidNum)
             else:
-                if self.leftCubeTimes >= -delta:
-                    self.leftCubeTimes += delta
+                if self.leftCubeTimes >= -changeNum:
+                    self.leftCubeTimes += changeNum
 
                 else:
-                    self.paidCubeTimes = max(0, self.paidCubeTimes + self.leftCubeTimes + delta)
+                    self.paidCubeTimes = max(0, self.paidCubeTimes + self.leftCubeTimes + changeNum)
                     self.leftCubeTimes = 0
 
         LogTrackingMgr.LogTrackingMgr.Cube_Ticket(
@@ -294,12 +299,15 @@ class ICubeBase(object):
             self.accountEntity.clientDistinctId, 
             self.gbID,
             src,
-            delta,
+            changeNum,
             self.leftCubeTimes,
             self.paidCubeTimes,
             opUUID,
         )
-        LOG_INFO('modifyLeftCubeTimes:', attType, delta, freeNum, paidNum, src, befPaidCubeTimes, self.paidCubeTimes, befLeftCubeTimes, self.leftCubeTimes)
+        LOG_INFO('modifyLeftCubeTimes:', attType, changeNum, freeNum, paidNum, src, befPaidCubeTimes, self.paidCubeTimes, befLeftCubeTimes, self.leftCubeTimes)
+        used = (befLeftCubeTimes - self.leftCubeTimes) + (befPaidCubeTimes - self.paidCubeTimes)
+        if used > 0:
+            self.onBattlePassTicketUse(cube_config.datas['cubeActID']['value'], used)
         return befLeftCubeTimes - self.leftCubeTimes, befPaidCubeTimes - self.paidCubeTimes
 
     def addRoomDurationFailed(self, opUUID, addType, costList, num):
@@ -319,8 +327,8 @@ class ICubeBase(object):
 
     # ----------------------- 祈福之间 start ---------------------
     @gamedecorator.checkGameconfigEnable('square')
-    def cubePray(self, exposed, costType):
-        LOG_INFO('ICubeCell::cubePray: isCostItem={}'.format(costType))
+    def cubePray(self, exposed, costType, isExchange):
+        LOG_INFO('ICubeCell::cubePray: isCostItem={}, isExchange={}'.format(costType, isExchange))
         if self.cubePrayTimes >= cube_config.datas['cube_prayTimesEveryDay']['value']:
             self.onMessagePre(cube_config.datas['cube_prayNoTimes']['value'], [])
             return
@@ -334,14 +342,17 @@ class ICubeBase(object):
 
         else:
             _deductVal = dropAward.DeductWealthVal()
+            # 只有走货币(绑定元宝)支付的祈福才允许元宝补齐
+            _coverFlag = False
             if costType == gameconst.CUBE_PRAY_ITEM:
                 _deductVal.addWealthByItemId(cube_config.datas['cube_prayCostItem']['value'], 1)
 
             else:
                 _itemId, _num = cube_config.datas['cube_prayCostCurrency']['value']
                 _deductVal.addWealthByItemId(_itemId, _num)
+                _coverFlag = isExchange
 
-            res = self.canDeductWealth(_deductVal)
+            res = self.canDeductWealth(_deductVal, allowMoneyCoverBindMoney=_coverFlag)
             if not res:
                 LOG_WARN('ICubeCell::qifu: can not deduct wealth', res())
                 return
@@ -350,7 +361,8 @@ class ICubeBase(object):
                 AAC_AACDD.datas.BONUS_SRC_CUBE_PRAY_COST_ITEM, 
                 _deductVal, 
                 KBEngine.genUUID64(), 
-                gameclass.AwardDetailCls(reason='qifu cost item'))
+                gameclass.AwardDetailCls(reason='qifu cost item'),
+                allowMoneyCoverBindMoney=_coverFlag)
 
             for _data in cube_buff.datas.values():
                 if _data['type'] != gameconst.CUBE_PRAY_BUFF:

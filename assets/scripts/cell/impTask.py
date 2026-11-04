@@ -17,6 +17,7 @@ import gamedecorator
 import gamePlay_gamePlay
 import gameengine
 import dungeonSrc
+import conflict_conflict_def as C_C_DD
 
 import taskItemSrc as TISD
 import taskMonster as TMD
@@ -291,113 +292,6 @@ class ImpTask(impTalk.ImpTalk):
         self.base.onCheckTaskCompleteActionTargetCallback(_result, taskId, tgtType, tgtId)
 
 
-    ######################### 组任务相关 ###################################
-    def _claimTeamTask(self, taskId, taskContext):
-        if not self.isCaptain():
-            self.onClaimTaskFailed(taskId, taskContext)
-            return
-        taskContext.teamId = self.teamId
-        self.checkTeamTaskCellCond(taskId, taskContext)
-
-    def checkTeamTaskCellCond(self, taskId, taskCtx):
-        if not self.isInTeam(self.gbId):
-            self.onClaimTaskFailed(taskId, taskCtx)
-            return
-
-        if not self.isCaptain():
-            self.onClaimTaskFailed(taskId, taskCtx, msgId=dataUtils.getTaskMsgId('taskClaimAlert_Team_LeaderCheck'))
-            return
-
-        _rootTaskData = dataUtils.getRootTaskData(taskId)
-        memberNumLimit = _rootTaskData.get('ClaimCondCheckTeam', {}).get('TeamCountLimit', 0)
-        if self.teamInfo.howManyMember() < memberNumLimit:
-            self.onClaimTaskFailed(taskId, taskCtx, msgId=dataUtils.getTaskMsgId('taskClaimAlert_Team_PalNumCheck'),
-                                 msgArgs=[str(memberNumLimit), ])
-            return
-
-        if dataUtils.isSHFSTask(taskId) and taskCtx.claimSrc != gameconst.ClaimTaskSrcEnum.TASK_SRC_FROM_ACTION:
-            #一条龙任务特殊处理，只有在 FROM_ACTION 时候才检查队员条件
-            self.checkTeamTaskPlayerCondSuccess(taskId, taskCtx, [])
-            return
-
-        self.setTempMiscProp(gameconst.EntityPropsEnum.teamTaskCondCheck, {})
-        onlineTeamMemGBIds = self.teamInfo.onlineMembers()
-        for _memGbId in onlineTeamMemGBIds:
-            teamPlayerVal = self.teamInfo.teamPlayerDict[_memGbId]
-            if _memGbId == self.gbId:
-                self.checkTeamTaskMemberCond(taskId, self.base, self.position, taskCtx)
-            else:
-                teamPlayerVal.playerBox.cell.checkTeamTaskMemberCond(
-                    taskId, self.base, self.position, taskCtx)
-
-    def checkTeamTaskMemberCond(self, taskId, captainBox, captainPos, taskCtx):
-        # 任务领取条件只检查根任务
-        _taskData = dataUtils.getRootTaskData(taskId)
-        cellCondResult = self._checkPlayerClaimTaskCellCond(_taskData)
-        if not cellCondResult:
-            captainBox.cell.checkTeamTaskPlayerCondCB(taskId, cellCondResult, self.gbId, taskCtx)
-            return
-
-        #队伍每个玩家都要检查base条件，包括物品条件
-        self.base.checkTeamTaskBasePlayerCond(taskId, captainBox, taskCtx)
-
-    def checkTeamTaskPlayerCondCB(self, taskId, checkResult:gameclass.TaskCondResultCls, fromGbId, taskCtx):
-        _teamCheckDic = self.getTempMiscProp(gameconst.EntityPropsEnum.teamTaskCondCheck, None)
-        if _teamCheckDic is None:
-            LOG_WARN('checkTeamTaskPlayerCondCB, no teamCheckDic')
-            return
-        _teamCheckDic[fromGbId] = checkResult
-        if len(_teamCheckDic) < len(self.teamInfo.onlineMembers()):
-            return
-        self.popTempMiscProp(gameconst.EntityPropsEnum.teamTaskCondCheck)
-        specialFailedMsgIds = [dataUtils.getTaskMsgId('taskClaimAlert_Team_LevelCheck'),
-                               dataUtils.getTaskMsgId('taskClaimAlert_Team_NearbyCheck'),
-                               dataUtils.getTaskMsgId('taskClaimAlert_Team_FollowCheck'),
-                               ]
-        failedPlayerNames = ''
-        failedMsgId = -1
-        failedMsgArgs = ()
-        condFailedGBIDs = []
-        for gbid, _checkResult in _teamCheckDic.items():
-            if _checkResult:
-                continue
-            condFailedGBIDs.append(gbid)
-            msgId = _checkResult.msgId
-            if msgId in specialFailedMsgIds:
-                if failedMsgId not in specialFailedMsgIds:
-                    failedMsgId = msgId
-                    failedPlayerNames = _checkResult.playerName
-                    failedMsgArgs = (failedPlayerNames, )
-                elif msgId == failedMsgId:
-                    failedPlayerNames += ", "
-                    failedPlayerNames += _checkResult.playerName
-                    failedMsgArgs = (failedPlayerNames, )
-            else:
-                failedMsgId = msgId
-                failedMsgArgs = _checkResult.msgArgs
-        #单人支持的组队任务，可以只有部分队员领取成功
-        if len(condFailedGBIDs)>0 and not dataUtils.isSingleSupportTeamTask(taskId):
-            self.onClaimTaskFailed(taskId, taskCtx, failedMsgId, msgArgs=failedMsgArgs)
-            return
-        self.checkTeamTaskPlayerCondSuccess(taskId, taskCtx, condFailedGBIDs)
-
-    def checkTeamTaskPlayerCondSuccess(self, taskId, taskCtx, condFailedGBIDs):
-        _cbArgs = (taskId, taskCtx, condFailedGBIDs)
-        gameengine.getTeamStub(self.teamInfo.teamId).fetchTeamMemberInfo(
-            self, 
-            self.teamInfo.teamId,
-            'teamTaskGetTeamMemberInfoCB', 
-            _cbArgs)
-
-    def teamTaskGetTeamMemberInfoCB(self, teamBaseInfoDic, taskId, taskCtx, condFailedGBIDs):
-        _pointsDic = self._getReachAreaPoints(taskId)
-        if _pointsDic:
-            taskCtx.extra['pointsDic'] = _pointsDic
-        taskCtx.isCaptain = True
-        taskCtx.teamBaseInfoDic = teamBaseInfoDic
-        self.base.onCheckTeamTaskAllCondSucc(taskId, taskCtx, condFailedGBIDs)
-        return
-
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
     def reqStartPlayCinema(self, srcEntityID, cinemaId):
@@ -419,57 +313,16 @@ class ImpTask(impTalk.ImpTalk):
         LOG_INFO('in cinemaPlayingEnd:', cinemaId)
         self.onCinemaPlayingEnd(cinemaId)
 
-    def startSyncTasksFromCaptain(self):
-        if self.isCaptain():
-            return
-        _captainSpaceNo = self.teamInfo.getCaptainSpaceNo()
-        dungonNo = formula.parseDungeonNoBySpaceNo(_captainSpaceNo)
-        if not gamePlay_gamePlay.datas.get(dungonNo, {}).get('isTaskShareScene', 1):
-            LOG_WARN('   in startSyncTasksFromCaptain, cant sync tasks, spaceNo not match:',
-                        dungonNo, _captainSpaceNo, self.spaceNo)
-            return
-        self.teamInfo.fetchCaptainBox().cell.captainSyncTasksToNewMem(self.teamId, self.gbId, self.base)
-
     def onCinemaPlayingEnd(self, cinemaId):
         self.flowCtrlPlayerCinemaPlayEnded(cinemaId)
         # 推进「播放指定id剧情动画」计次任务目标
         if cinemaId:
             self.base.taskCheckCounterTarget(TCCTD.couterTargetDic['SkipSpecifiedTimeline'], (cinemaId,))
 
-    def captainSyncTasksToNewMem(self, teamId, newMemGbId, newMemBox):
-        LOG_INFO("captainSyncTasksToNewMem::", teamId, newMemGbId, newMemBox)
-        _captainInfoDic = {"captainSpaceNo": self.spaceNo,
-                          "captainPosition": self.position}
-        self.base.captainSyncTasksToNewMem(teamId, newMemGbId, newMemBox, _captainInfoDic)
-
     def cellCheckTaskSubmitCond(self, taskId, popRewardUUID):
-        self.base.onCheckCellSubmitCondSucc(taskId, self.isCaptain(), popRewardUUID)
+        self.base.onCheckCellSubmitCondSucc(taskId, self.getActiveCaptainGbId() == self.gbId, popRewardUUID)
         return True
 
-    def captainSubmitTeamTask(self, taskId):
-        # 队长发起提交组队任务
-        if not self.isCaptain():
-            LOG_WARN('     in captainSyncTeamTask, not captain')
-            return
-        self.cellCheckTaskSubmitCond(taskId, 0)
-        return
-
-    def cellTaskCondCheckOnAddTeam(self, teamTaskList, captainInfoDic):
-        LOG_INFO('in onCellTaskNewMemAddTeam:', [_t.taskId for _t in teamTaskList], captainInfoDic)
-        rmIdxList = []
-        for _idx, task in enumerate(teamTaskList):
-            taskData = dataUtils.getTaskCfg(task.taskId)
-            if not self._checkTaskPlayerLevelCond(taskData):
-                rmIdxList.append(_idx)
-                continue
-            if not self._checkTaskGuildCond(taskData, captainInfoDic.get('captainGuildUUID', 0)):
-                rmIdxList.append(_idx)
-        for rmIdx in reversed(rmIdxList):
-            teamTaskList.pop(rmIdx)
-        if teamTaskList:
-            self.base.baseTaskCondCheckOnAddTeam(teamTaskList, captainInfoDic)
-
-    ######################### 组任务相关 end ###################################
     def taskPreEnterSpace(self, taskId, dungeonNo, dstPos, dstDir):
         LOG_INFO("taskPreEnterSpace 1", taskId, dungeonNo, dstPos, dstDir)
 
@@ -496,11 +349,10 @@ class ImpTask(impTalk.ImpTalk):
         dungeonEnterType = gamePlay_gamePlay.datas[dungeonNo]['enterType']
         LOG_INFO('in taskPreEnterSpace:', taskId, dungeonNo, dungeonSpaceType, dungeonEnterType, self.spaceNo, self.direction)
         if gameconst.DungeonTypeJudge.isSingleDungeon(dungeonSpaceType, dungeonEnterType) or gameconst.DungeonTypeJudge.isBothDungeon(dungeonSpaceType, dungeonEnterType):
-            #单人任务才能进单人副本
-            not dataUtils.isTeamTask(taskId) and self.taskSelfEnterSingleDungeon(dungeonNo, dstPos, dstDir, taskId)
-        elif gameconst.DungeonTypeJudge.isTeamDungeon(dungeonSpaceType, dungeonEnterType) or gameconst.DungeonTypeJudge.isBothDungeon(dungeonSpaceType, dungeonEnterType):
-            #组队任务才能进team dungeon
-            dataUtils.isTeamTask(taskId) and self.taskSelfEnterTeamDungeon(taskId, dungeonNo)
+            self.taskSelfEnterSingleDungeon(dungeonNo, dstPos, dstDir, taskId)
+        elif gameconst.DungeonTypeJudge.isTeamDungeon(dungeonSpaceType, dungeonEnterType):
+            # 组队共享任务已下线，任务不再进入组队副本
+            LOG_WARN('taskPreEnterSpace, team dungeon not supported for task:', taskId, dungeonNo)
         # elif gameconst.SpaceType.SpaceGuild == dungeonSpaceType:
         #     #帮会场景
         #     myDungeonNo = formula.parseDungeonNoBySpaceNo(self.spaceNo)
@@ -513,6 +365,26 @@ class ImpTask(impTalk.ImpTalk):
         else:
             gameengine.panicStack('in taskPreEnterSpace:', taskId, dungeonNo)
         return
+
+    def startSwitchPosition(self, mapId, x, y, z):
+        LOG_INFO('startSwitchPosition:', mapId, x, y, z, self.spaceNo)
+        if not formula.checkWorldLineType(mapId):
+            LOG_WARN('startSwitchPosition, dst is not world line:', mapId, self.spaceNo)
+            return
+        if not formula.inWorldLineScene(self.spaceNo) and not formula.inDungeonScene(self.spaceNo):
+            LOG_WARN('startSwitchPosition, unsupported space:', self.spaceNo, mapId)
+            return
+        if formula.fetchMapId(self.spaceNo) != mapId and not self.onCheckMapUnlocked(mapId):
+            LOG_WARN('startSwitchPosition, map locked:', self.spaceNo, mapId)
+            return
+        dstPos = (x, y, z)
+        self._commonNeedCast(
+            C_C_DD.datas.teleportCast,
+            gameconst.StateEnum.Teleporting,
+            gameconst.CastEnum.teleport,
+            'taskEnterWorldLine',
+            (0, mapId, dstPos, self.direction),
+        )
 
     def taskEnterWorldLine(self, taskId, dungeonNo, dstPos, dstDir):
         LOG_INFO('in taskEnterWorldLine:', taskId, dstPos, dstDir, self.spaceNo, dungeonNo)
@@ -563,19 +435,6 @@ class ImpTask(impTalk.ImpTalk):
             _extra = {'position':dstPos, 'direction':dstDir[2]*180/math.pi}
             self._enterSingleDungeon(dungeonNo, src, _extra)
 
-    def taskSelfEnterTeamDungeon(self, taskId, dungeonNo):
-        LOG_INFO('in taskSelfEnterTeamDungeon:', taskId, dungeonNo)
-        if not self.isInTeam(self.gbId) or not self.isCaptain():
-            return
-
-        _myDungeon = formula.parseDungeonNoBySpaceNo(self.spaceNo)
-        if _myDungeon == dungeonNo:
-            LOG_WARN('cant enter same dungeon')
-            return
-
-        _src = dungeonSrc.BasicDungeonSrc(srcId=gameconst.DunSrcEnum.FROM_TASK)
-        self.selfEnterTeamDungeon(dungeonNo, _src)
-
     def onTaskRwdLeaveDungeon(self, taskId, dungeonNo, claimSrc):
         LOG_INFO('in onTaskRwdLeaveDungeon:', taskId, self.spaceNo, dungeonNo)
         if claimSrc==gameconst.ClaimTaskSrcEnum.TASK_SRC_GM_FINISH_NEWBIE and dungeonNo and not formula.inDungeonScene(self.spaceNo):
@@ -597,9 +456,9 @@ class ImpTask(impTalk.ImpTalk):
             if formula.inSingleDungeonScene(self.spaceNo):
                 box.completeSingleDungeon(self.spaceNo, self.gbId, True, leaveDelay)
             elif formula.inTeamDungeonScene(self.spaceNo):
-                box.completeTeamDungeon(self.spaceNo, self.teamId, True, leaveDelay, gameconst.DunegonCompleteReasonType.FINISHED)
+                box.completeTeamDungeon(self.spaceNo, self.getActiveTeamId(), True, leaveDelay, gameconst.DunegonCompleteReasonType.FINISHED)
             elif formula.inRaidDungeonScene(self.spaceNo):
-                box.completeRaidDungeon(self.spaceNo, self.raidUUID, True, leaveDelay, gameconst.DunegonCompleteReasonType.FINISHED)
+                box.completeRaidDungeon(self.spaceNo, self.getActiveTeamId(), True, leaveDelay, gameconst.DunegonCompleteReasonType.FINISHED)
         return
 
     def cellEnterTaskTargetDungeon(self, taskId, dungeonNo, extra):
@@ -613,15 +472,7 @@ class ImpTask(impTalk.ImpTalk):
             playerBox=self.base, playerGBID=self.gbId,
         )
 
-        if dataUtils.isTeamTask(taskId):
-            if not (self.isCaptain()\
-                    or dataUtils.isSingleSupportTeamTask(taskId)\
-                    or extra.get('forceEnter')):
-                LOG_WARN('   cellEnterTaskTargetDungeon, is not captain:', taskId, dungeonNo)
-                return
-            self._enterTeamDungeon(dungeonNo, _src, extra=extra)
-        else:
-            self._enterSingleDungeon(dungeonNo, _src, extra=extra)
+        self._enterSingleDungeon(dungeonNo, _src, extra=extra)
 
     @gamedecorator.checkGameconfigEnable('task')
     @utils.isMyself
@@ -717,10 +568,10 @@ class ImpTask(impTalk.ImpTalk):
 
     def submitTaskCheck(self, taskId):
         LOG_INFO("submitTaskCheck ", taskId)
-        if self.isInTeam():
+        if self.inCrossTeam():
             self.base.submitTaskCheckCB(taskId, gameconst.TeamType.TEAM)
             return
-        if self.inRaid():
+        if self.inCrossRaid():
             self.base.submitTaskCheckCB(taskId, gameconst.TeamType.RAID)
             return
         self.base.submitTaskCheckCB(taskId, gameconst.TeamType.DEFAULT)

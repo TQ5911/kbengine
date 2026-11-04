@@ -2,6 +2,7 @@
 from KBEDebug import *
 
 import utils
+import formula
 
 import userType
 
@@ -142,7 +143,7 @@ class LinePlayers(userType.UserDictType):
             return
 
         if oldTeamUUID and oldTeamUUID != _pVal.teamUUID:
-            LOG_WARN('teamUUID mismatch', _pVal, gbId, oldTeamUUID, newTeamUUID)
+            LOG_WARN('teamUUID mismatch', formula.lineInfo(lineNo=self.lineNo, spaceNo=getattr(_pVal, 'curSpaceNo', None)), gbId, oldTeamUUID, newTeamUUID)
 
         self._removeFromTeamPlayers(_pVal)
         _pVal.onTeamChanged(newTeamUUID)
@@ -234,10 +235,10 @@ class AllLinePlayers(userType.UserDictType):
             return
 
         if not _players.doRemoveLinePlayer(gbId):
-            LOG_ERR('zt: fail to remove player', lineNo, gbId)
+            LOG_ERR('zt: fail to remove player', formula.lineInfo(getattr(owner, 'lineType', None), lineNo), gbId)
             for ln, playersVal in self.items():
                 if ln == lineNo:
                     continue
                 if _players.doRemoveLinePlayer(gbId):
-                    LOG_DBG('zt: remove player', ln, gbId)
+                    LOG_DBG('zt: remove player', formula.lineInfo(getattr(owner, 'lineType', None), ln), gbId)
 

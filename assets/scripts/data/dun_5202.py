@@ -11238,6 +11238,7 @@ datas ={
     "Props": {
       "ChestGroupID": "",
       "GroupID": 1,
+      "IsAttack": 0,
       "Level": 45,
       "LightPillar": "",
       "MapEntityScale": 0,
@@ -11261,7 +11262,44 @@ datas ={
           0.0,
           1.0,
           0.0
-        ],
+        ]
+      ],
+      "RefreshNum": 1,
+      "RefreshTime": 0.0,
+      "RefreshTimedID": 6,
+      "Remark": "",
+      "ShowInSceneMap": 1,
+      "ShowMonsterGroupID": ""
+    }
+  },
+  "52020344": {
+    "ActivityID": 0,
+    "AttachedGIDList": [],
+    "AttachedGIDListStr": "",
+    "ClassName": "Monster",
+    "ClassNameType": 0,
+    "CustomID": "",
+    "Dir": 182.3637,
+    "DisplayName": "",
+    "EliteCustomID": "",
+    "EntityID": 11062001,
+    "ID": 52020344,
+    "Name": "\u533f\u4e8e\u5f71\u9699\u7684\u5de1\u730e\u8005",
+    "PosX": 101.765,
+    "PosY": 417.5476,
+    "PosZ": 221.0021,
+    "Props": {
+      "ChestGroupID": "",
+      "GroupID": 1,
+      "IsAttack": 0,
+      "Level": 45,
+      "LightPillar": "",
+      "MapEntityScale": 0,
+      "MapEntityType": 0,
+      "MonsterGroupID": "",
+      "PathID": 57520201,
+      "Radius": 0.0,
+      "RandomRegion": [
         [
           311.5425,
           394.751862,

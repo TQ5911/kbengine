@@ -34,7 +34,7 @@ datas ={
       40370012
     ],
     "num": 0,
-    "lv": "23",
+    "lv": "32",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,
@@ -70,7 +70,7 @@ datas ={
       40370013
     ],
     "num": 0,
-    "lv": "23",
+    "lv": "32",
     "initState": 0,
     "hp": 0,
     "minAtk": 0,

@@ -469,3 +469,7 @@ class ISpaceMgr(iFlowController.IFlowController, iMapMonsterRefresh.IMapMonsterR
 
     def sendDungeonProps(self, box):
         pass
+
+    def callOnSpaceMgr(self, func, args):
+        LOG_DBG('callOnSpaceMgr')
+        getattr(self, func)(*args)

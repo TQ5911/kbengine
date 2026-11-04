@@ -67,7 +67,7 @@ class ISpeedCheck(object):
             self.moveFlag = False 
             return
          
-        if self.speedCheckCountPerWindowLimit <= 0 \
+        if self.speedCheckWindowSizeLimit <= 0 \
             or self.speedCheckCountPerWindowLimit <= 0:
             return 
         self.speedCheckWindowSize += 1

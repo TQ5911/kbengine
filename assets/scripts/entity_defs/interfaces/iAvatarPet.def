@@ -77,6 +77,7 @@
 
         <levelUpPet> <Exposed/>
             <Arg>   ARRAY <of> GRIDID </of>     </Arg>
+            <Arg>   ARRAY <of> UINT16 </of>     </Arg>
             <Arg>   PETID                       </Arg>
         </levelUpPet>
 
@@ -120,6 +121,11 @@
 			<Arg>   UINT16   </Arg>
             <Arg>   UINT16   </Arg>
         </updateLevelProps>
+
+        <gmRemoveLingShouProps>
+            <Arg>   PETID      </Arg>
+			<Arg>   UINT16     </Arg>
+        </gmRemoveLingShouProps>
         
         <checkPkStatus>
             <Arg>   UINT8   </Arg>
@@ -164,6 +170,10 @@
             <Arg>   ITEMID       </Arg>
             <Arg>   UINT8        </Arg>
         </onRemodelingPet>
+
+        <onRemoveLingShou>
+            <Arg>   PETID        </Arg>
+        </onRemoveLingShou>
 
     </ClientMethods>
 </root>

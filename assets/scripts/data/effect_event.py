@@ -491,21 +491,7 @@ def _13090294(self, target, context):
     return True
 
 def _13090295(self, target, context):
-    curHp = self.getProp("hp")
-    fullHp = self.getProp("fullHp")
-    
-    if fullHp <= 0:
-        return False
-
-    if curHp <= fullHp * 0.75:
-        if self.hasBuff(*context.args.ActionParam):
-            self.removeBuffBySkill(target, context, *context.args.ActionParam)
-        return False
-
-    if not self.hasBuff(*context.args.ActionParam):
-        self.addBuffBySkill(target, context, *context.args.ActionParam)
-
-    return True
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090296(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
@@ -682,7 +668,7 @@ def _13090326(self, target, context):
         if not self.hasBuff(64002149):
             self.addBuffBySkill(target, context, 64002149)
 
-    # 70%以下：4%增伤
+    # 85%以下：4%增伤
     elif hpRate <= 0.85:
 
         self.removeBuffBySkill(self, context, 64002149)
@@ -874,7 +860,8 @@ def _13090355(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090356(self, target, context):
-    self.addBuffBySkill(target, context, *context.args.ActionParam)
+    if target and target.IsAvatar:
+        self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090357(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
@@ -892,11 +879,11 @@ def _13090361(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090362(self, target, context):
-
-    # 如果身上存在 BuffTag 48 的控制，则不生效
+    # 如果自身存在 BuffTag 48，则不执行后续效果
     if self.hasBuffTag(48):
         return
 
+    # 移除自身控制状态
     self.removeStates([
         gameconst.StateEnum.Frozen,
         gameconst.StateEnum.Stunned,
@@ -905,12 +892,14 @@ def _13090362(self, target, context):
         gameconst.StateEnum.Down,
     ])
 
+    # 移除指定标签的 Buff
     removeBuffTag = [14, 15, 16, 17, 56]
 
     for selectTag in removeBuffTag:
         if self.hasBuffTag(selectTag):
             self.removeBuffByTag(selectTag)
 
+    # 给自身添加 Buff
     self.addBuffBySkill(self, context, 64002130, 1, 1.0, 2)
 
 def _13090363(self, target, context):
@@ -1066,7 +1055,7 @@ def _13090369(self, target, context):
     hpRate = curHp / float(fullHp)
 
     # 血量高于30%不触发
-    if hpRate > 0.3:
+    if hpRate > 0.4:
         return False
 
     self.addBuffBySkill(
@@ -1087,6 +1076,9 @@ def _13090370(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 def _13090371(self, target, context):
+    self.addBuffBySkill(target, context, *context.args.ActionParam)
+
+def _13090378(self, target, context):
     self.addBuffBySkill(target, context, *context.args.ActionParam)
 
 datas = _tools.RODict({ 
@@ -1868,11 +1860,11 @@ datas = _tools.RODict({
     }),
     13090295: _tools.RODict({
         "ID": 13090295,
-        "Event": "onHPModify",
+        "Event": "onHit",
         "EventSourceType": 1,
         "Action": _13090295,
         "Target": "self",
-        "EventCD": 0.0
+        "EventCD": 15.0
     }),
     13090296: _tools.RODict({
         "ID": 13090296,
@@ -2140,7 +2132,7 @@ datas = _tools.RODict({
     }),
     13090329: _tools.RODict({
         "ID": 13090329,
-        "Event": "onFatalBeat",
+        "Event": "onFatal",
         "EventSourceType": 1,
         "Action": _13090329,
         "Target": "self",
@@ -2304,7 +2296,7 @@ datas = _tools.RODict({
         "EventSourceType": 1,
         "Action": _13090349,
         "Target": "self",
-        "EventCD": 15.0
+        "EventCD": 20.0
     }),
     13090350: _tools.RODict({
         "ID": 13090350,
@@ -2356,11 +2348,11 @@ datas = _tools.RODict({
     }),
     13090356: _tools.RODict({
         "ID": 13090356,
-        "Event": "onBeat",
+        "Event": "onControl",
         "EventSourceType": 1,
         "Action": _13090356,
-        "Target": "self",
-        "EventCD": 15.0
+        "Target": "other",
+        "EventCD": 30.0
     }),
     13090357: _tools.RODict({
         "ID": 13090357,
@@ -2396,11 +2388,11 @@ datas = _tools.RODict({
     }),
     13090361: _tools.RODict({
         "ID": 13090361,
-        "Event": "onHit",
+        "Event": "onFatalBeat",
         "EventSourceType": 1,
         "Action": _13090361,
         "Target": "self",
-        "EventCD": 15.0
+        "EventCD": 60.0
     }),
     13090362: _tools.RODict({
         "ID": 13090362,
@@ -2476,12 +2468,20 @@ datas = _tools.RODict({
     }),
     13090371: _tools.RODict({
         "ID": 13090371,
-        "Event": "onBeat",
+        "Event": "onHit",
         "EventSourceType": 1,
         "Action": _13090371,
+        "Target": "self",
+        "EventCD": 15.0
+    }),
+    13090378: _tools.RODict({
+        "ID": 13090378,
+        "Event": "onHit",
+        "EventSourceType": 1,
+        "Action": _13090378,
         "Target": "self",
         "EventCD": 15.0
     })
 })
 minKey = 13090001
-maxKey = 13090371
+maxKey = 13090378

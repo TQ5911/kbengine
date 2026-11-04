@@ -200,9 +200,9 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         _lineNo = 0
         if mapId in B_BD.datas:
             _lineNo = self._autoSelectLine(box, gbId, iLinePlayersStub.EnterLineExtra.new(extra, -1), lineType=mapId)
-        LOG_INFO('CubeStub::doEnterCube: {} {} {}'.format(mapId, gbId, _lineNo))
+        LOG_INFO('CubeStub::doEnterCube', formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(mapId, _lineNo), gbId)
         if _lineNo == -1:
-            LOG_ERR('CubeStub::doEnterCube: lineNo is -1')
+            LOG_ERR('CubeStub::doEnterCube: lineNo is -1', formula.lineInfo(mapId, _lineNo), gbId)
             return
         _spaceNo = formula.combineLineSpaceNo(mapId, _lineNo)
         self._doAvatarEnterCubeRoom(fromSpaceNo, _spaceNo, box, gbId, extra)
@@ -210,7 +210,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def _getAvailableReadyRoom(self):
         _mapId = cube_room.floorTypeMapDic[self.cubeNo][gameconst.CubeRoomType.READY][0]
         _enterSpaceNo = None
-        lineCnt = gameconst.getBranchLineCnt(_mapId) if _mapId in B_BD.datas else 1
+        lineCnt = self._branchLineNumLimit(_mapId) if _mapId in B_BD.datas else 1
         for _lineNo in range(lineCnt):
             _spaceNo = formula.combineLineSpaceNo(_mapId, _lineNo)
             if not self.isSpaceReady(_spaceNo):
@@ -265,7 +265,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         if mapId in B_BD.datas:
             _lineNo = self._autoSelectLine(box, gbId, iLinePlayersStub.EnterLineExtra.new(extra, -1), lineType=mapId)
         if _lineNo == -1:
-            LOG_WARN('CubeStub::enterRandomRoom: lineNo is -1')
+            LOG_WARN('CubeStub::enterRandomRoom: lineNo is -1', formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(mapId, _lineNo), gbId)
             box.onMessagePre(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
             return
 
@@ -276,7 +276,7 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         playerVal = self.allPlayers.get(gbId)
         if playerVal:
             if playerVal.curSpaceNo == spaceNo:
-                LOG_ERR('CubeStub::_doAvatarEnterCubeRoom: player already in space: {} {}'.format(gbId, spaceNo))
+                LOG_ERR('CubeStub::_doAvatarEnterCubeRoom: player already in space', formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(spaceNo=spaceNo), gbId)
                 return
 
             self.addPendingEnterPlayer(spaceNo, gbId)
@@ -287,30 +287,30 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
         box.cell.beginEnterCubeRoom(_spaceVal.lineSpaceBox, _spaceVal.spaceMgrBoxCell.id, fromSpaceNo, _spaceVal.getSpaceNo(), extra)
 
     def onEnterCubeSuccess(self, gbId, spaceNo):
-        LOG_INFO('CubeStub::onEnterCubeSuccess: {} {}'.format(gbId, spaceNo))
+        LOG_INFO('CubeStub::onEnterCubeSuccess', formula.lineInfo(spaceNo=spaceNo), gbId)
         _playerVal = self.allPlayers.get(gbId)
         if not _playerVal:
-            LOG_ERR('CubeStub::onEnterCubeSuccess: player not found: {}'.format(gbId))
+            LOG_ERR('CubeStub::onEnterCubeSuccess: player not found', formula.lineInfo(spaceNo=spaceNo), gbId)
             return
 
         if _playerVal.playerStatus == linePlayers.LinePlayerVal.ENTERING:
             _playerVal.playerStatus = linePlayers.LinePlayerVal.INLINE
 
             if _playerVal.curSpaceNo != spaceNo:
-                LOG_ERR('CubeStub::onEnterCubeSuccess: spaceNo not match: {} {}'.format(_playerVal.curSpaceNo, spaceNo))
+                LOG_ERR('CubeStub::onEnterCubeSuccess: spaceNo not match', formula.lineInfo(spaceNo=_playerVal.curSpaceNo), '->', formula.lineInfo(spaceNo=spaceNo), gbId)
 
         else:
             self.switchStaticSpace(gbId, spaceNo)
 
     def onLeaveCube(self, gbId, fromSpaceNo, curSpaceNo):
-        LOG_INFO('onLeaveCube: {} {} {}'.format(gbId, fromSpaceNo, curSpaceNo))
+        LOG_INFO('onLeaveCube', formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(spaceNo=curSpaceNo), gbId)
         _playerVal = self.allPlayers.get(gbId)
         if not _playerVal:
-            LOG_ERR('onLeaveCube: player not found: {}'.format(gbId))
+            LOG_ERR('onLeaveCube: player not found', formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(spaceNo=curSpaceNo), gbId)
             return
 
         if _playerVal.curSpaceNo != fromSpaceNo:
-            LOG_WARN('onLeaveCube: spaceNo not match: {} {}'.format(_playerVal.curSpaceNo, fromSpaceNo))
+            LOG_WARN('onLeaveCube: spaceNo not match', formula.lineInfo(spaceNo=_playerVal.curSpaceNo), formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(spaceNo=curSpaceNo), gbId)
 
         if curSpaceNo not in self.staticSpaces:
             self.removePlayer(gbId)
@@ -377,16 +377,26 @@ class CubeStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer,
     def doGetCubeReadyLineCnt(self, box, mapId):
         res = self._calculateLineInfo(mapId)
 
-        LOG_DBG('doQueryLineInfo', res)
+        LOG_DBG('doQueryLineInfo', formula.lineInfo(mapId), res)
         box.client.onGetLineInfo(json.dumps(res))
 
     def checkSwitchCubeLine(self, box, lineNo, _mapId):
+        if _mapId in B_BD.datas and lineNo >= self._branchLineNumLimit(_mapId):
+            box.cell.onCheckSwitchCubeLineResult(lineNo, False)
+            return
+
         _spaceNo = formula.combineLineSpaceNo(_mapId, lineNo)
 
         _canEnter = self.canSpaceEnter(_spaceNo)
         box.cell.onCheckSwitchCubeLineResult(lineNo, _canEnter)
 
     def doSwitchCubeLine(self, box, fromSpaceNo, gbId, lineNo, extra, _mapId):
+        if _mapId in B_BD.datas and lineNo >= self._branchLineNumLimit(_mapId):
+            lineNo = self._autoSelectLine(box, gbId, iLinePlayersStub.EnterLineExtra.new(extra, -1), lineType=_mapId, isSwitchLine=True)
+            if lineNo < 0:
+                box.onMessagePre(BDS.datas["Branch_fullCapacityMsg"]["value"], [])
+                return
+
         _spaceNo = formula.combineLineSpaceNo(_mapId, lineNo)
 
         if not self.canSpaceEnter(_spaceNo):

@@ -32,6 +32,9 @@ svn propset svn:executable on ./leaseServer/game.sh
 svn propset svn:executable on ./queueServer/queueServer
 svn propset svn:executable on ./queueServer/game.sh
 
+svn propset svn:executable on ./crossTeamServer/crossTeamServer
+svn propset svn:executable on ./crossTeamServer/game.sh
+
 svn propset svn:executable on build_all_server.sh
 
 echo 'Executable permissions on all above are set successfully'

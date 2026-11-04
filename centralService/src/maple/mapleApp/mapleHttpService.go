@@ -5,12 +5,14 @@ import (
 	"centralService/src/maple/model"
 	"crypto/hmac"
 	"crypto/sha256"
+	"database/sql"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -119,7 +121,7 @@ func (mhs *MapleHttpService) getAllServer(w http.ResponseWriter, r *http.Request
 
 	zoneMap := mhs.getAllZone()
 
-	sql := "SELECT server_id, server_name, zone_id, game_server, queue_server, server_group, server_state, server_flag_state, alias, start_time, central_login FROM `maple`"
+	sql := "SELECT server_id, server_name, zone_id, game_server, queue_server, server_group, server_sub_group, server_state, server_flag_state, alias, start_time, central_login FROM `maple`"
 	rows, err := mhs.app.db.Query(sql)
 	if err != nil {
 		appLog.Error("exec sql error: ", err.Error())
@@ -128,7 +130,7 @@ func (mhs *MapleHttpService) getAllServer(w http.ResponseWriter, r *http.Request
 	var serverList []model.Server
 	for rows.Next() {
 		var server model.Server
-		err = rows.Scan(&server.Id, &server.ServerName, &server.ZoneId, &server.GameServer, &server.QueueServer, &server.ServerGroup, &server.ServerState, &server.ServerFlagState, &server.Alias, &server.StartTime, &server.CentralLogin)
+		err = rows.Scan(&server.Id, &server.ServerName, &server.ZoneId, &server.GameServer, &server.QueueServer, &server.ServerGroup, &server.ServerSubGroup, &server.ServerState, &server.ServerFlagState, &server.Alias, &server.StartTime, &server.CentralLogin)
 		if err != nil {
 			appLog.Error("scan row error: ", err.Error())
 		}
@@ -229,8 +231,8 @@ func (mhs *MapleHttpService) handleImport(w http.ResponseWriter, r *http.Request
 			return
 		}
 
-		sql = "INSERT INTO `maple` (`server_id`, `server_name`, `zone_id`, `game_server`, `queue_server`, `server_group`, `server_state`, `server_flag_state`, `alias`, `start_time`, `central_login`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-		if _, err = tx.Exec(sql, server.Id, server.ServerName, server.ZoneId, server.GameServer, server.QueueServer, server.ServerGroup, server.ServerState, server.ServerFlagState, server.Alias, server.StartTime, server.CentralLogin); err != nil {
+		sql = "INSERT INTO `maple` (`server_id`, `server_name`, `zone_id`, `game_server`, `queue_server`, `server_group`, `server_state`, `server_flag_state`, `alias`, `start_time`, `central_login`, `server_sub_group`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+		if _, err = tx.Exec(sql, server.Id, server.ServerName, server.ZoneId, server.GameServer, server.QueueServer, server.ServerGroup, server.ServerState, server.ServerFlagState, server.Alias, server.StartTime, server.CentralLogin, server.ServerSubGroup); err != nil {
 			appLog.Error("exec server sql error: ", err.Error())
 			tx.Rollback()
 			w.WriteHeader(http.StatusInternalServerError)
@@ -263,7 +265,7 @@ func (mhs *MapleHttpService) handleExport(w http.ResponseWriter, r *http.Request
 
 	zoneMap := mhs.getAllZone()
 
-	sql := "SELECT server_id, server_name, zone_id, game_server, queue_server, server_group, server_state, server_flag_state, alias, start_time, central_login FROM `maple`"
+	sql := "SELECT server_id, server_name, zone_id, game_server, queue_server, server_group, server_sub_group, server_state, server_flag_state, alias, start_time, central_login FROM `maple`"
 	rows, err := mhs.app.db.Query(sql)
 	if err != nil {
 		appLog.Error("exec sql error: ", err.Error())
@@ -275,7 +277,7 @@ func (mhs *MapleHttpService) handleExport(w http.ResponseWriter, r *http.Request
 	var list model.ServerList
 	for rows.Next() {
 		var s model.Server
-		if err = rows.Scan(&s.Id, &s.ServerName, &s.ZoneId, &s.GameServer, &s.QueueServer, &s.ServerGroup, &s.ServerState, &s.ServerFlagState, &s.Alias, &s.StartTime, &s.CentralLogin); err != nil {
+		if err = rows.Scan(&s.Id, &s.ServerName, &s.ZoneId, &s.GameServer, &s.QueueServer, &s.ServerGroup, &s.ServerSubGroup, &s.ServerState, &s.ServerFlagState, &s.Alias, &s.StartTime, &s.CentralLogin); err != nil {
 			appLog.Error("scan row error: ", err.Error())
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("scan row error"))
@@ -418,6 +420,88 @@ func (mhs *MapleHttpService) updateZone(w http.ResponseWriter, r *http.Request) 
 	w.Write([]byte("success"))
 }
 
+// serverPatch 是 updateServer 的请求体, 字段全部用指针: nil 表示请求体里没有该字段, 对应列保持库里原值;
+// 传了零值 (0 / "" ) 则表示确实要写成零值。所以前端可以只提交 { "id": 10001, "server_state": 2 } 这样的增量补丁。
+type serverPatch struct {
+	Id              *int    `json:"id"`
+	ServerId        *int    `json:"server_id"` // 兼容用 server_id 当主键的调用方
+	ServerName      *string `json:"server_name"`
+	ZoneId          *int    `json:"zone_id"`
+	ZoneName        *string `json:"zone_name"` // 不是 maple 表的列, 落到 maple_zone
+	GameServer      *string `json:"game_server"`
+	QueueServer     *string `json:"queue_server"`
+	CentralLogin    *string `json:"central_login"`
+	ServerGroup     *int    `json:"server_group"`
+	ServerSubGroup  *int    `json:"server_sub_group"`
+	ServerState     *int    `json:"server_state"`
+	ServerFlagState *int    `json:"server_flag_state"`
+	Alias           *string `json:"alias"`
+	StartTime       *int64  `json:"start_time"`
+}
+
+// serverId 取主键, 同时兼容 id / server_id 两种写法。
+func (p *serverPatch) serverId() (int, bool) {
+	if p.Id != nil {
+		return *p.Id, true
+	}
+	if p.ServerId != nil {
+		return *p.ServerId, true
+	}
+	return 0, false
+}
+
+// patchColumn 是 maple 表上一个待更新的列。
+type patchColumn struct {
+	column string
+	value  interface{}
+}
+
+// mapleColumns 返回请求里实际出现过的 maple 列, 顺序固定, 用于动态拼 UPDATE。
+// 注意 zone_name 不在这里, 它对应 maple_zone 表, 由调用方单独处理。
+func (p *serverPatch) mapleColumns() []patchColumn {
+	var cols []patchColumn
+	addStr := func(col string, v *string) {
+		if v != nil {
+			cols = append(cols, patchColumn{col, *v})
+		}
+	}
+	addInt := func(col string, v *int) {
+		if v != nil {
+			cols = append(cols, patchColumn{col, *v})
+		}
+	}
+
+	addStr("server_name", p.ServerName)
+	addInt("zone_id", p.ZoneId)
+	addStr("game_server", p.GameServer)
+	addStr("queue_server", p.QueueServer)
+	addStr("central_login", p.CentralLogin)
+	addInt("server_group", p.ServerGroup)
+	addInt("server_sub_group", p.ServerSubGroup)
+	addInt("server_state", p.ServerState)
+	addInt("server_flag_state", p.ServerFlagState)
+	addStr("alias", p.Alias)
+	if p.StartTime != nil {
+		cols = append(cols, patchColumn{"start_time", *p.StartTime})
+	}
+	return cols
+}
+
+// valOr: 指针为 nil 时取默认值, 用于插入新服时补齐没传的字段。
+func valOr[T any](p *T, def T) T {
+	if p == nil {
+		return def
+	}
+	return *p
+}
+
+// upsertZone: zone_name 不在 maple 表里, 需要单独维护 maple_zone。
+func upsertZone(tx *sql.Tx, zoneId int, zoneName string) error {
+	sqlStr := "INSERT INTO `maple_zone` (`zone_id`, `zone_name`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `zone_name`=VALUES(`zone_name`)"
+	_, err := tx.Exec(sqlStr, zoneId, zoneName)
+	return err
+}
+
 func (mhs *MapleHttpService) updateServer(w http.ResponseWriter, r *http.Request) {
 	appLog.Info("updateServer")
 	enableCors(&w)
@@ -431,40 +515,118 @@ func (mhs *MapleHttpService) updateServer(w http.ResponseWriter, r *http.Request
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		appLog.Error("read body error: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("internal server error"))
+		return
 	}
 
-	var server model.Server
-	err = json.Unmarshal(body, &server)
-	if err != nil {
+	appLog.Info("updateServer body: ", string(body))
+
+	// 用 serverPatch 反序列化, 才能区分"字段没传"和"字段传了零值"
+	var patch serverPatch
+	if err = json.Unmarshal(body, &patch); err != nil {
 		appLog.Error("unmarshal body error: ", err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("unmarshal body error"))
+		return
+	}
+
+	serverId, ok := patch.serverId()
+	if !ok || serverId <= 0 {
+		appLog.Error("updateServer: missing or invalid server id, body: ", string(body))
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("missing server id"))
+		return
+	}
+
+	tx, err := mhs.app.db.Begin()
+	if err != nil {
+		appLog.Error("begin tx error: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("begin tx error"))
+		return
+	}
+
+	fail := func(msg string, cause error) {
+		if cause != nil {
+			appLog.Error(msg, ": ", cause.Error())
+		}
+		tx.Rollback()
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(msg))
 	}
 
 	// 先判断是否存在
-	sql := "SELECT COUNT(*) FROM `maple` WHERE `server_id` = ?"
 	var count int
-	err = mhs.app.db.QueryRow(sql, server.Id).Scan(&count)
-	if err != nil {
-		appLog.Error("exec sql error: ", err.Error())
+	if err = tx.QueryRow("SELECT COUNT(*) FROM `maple` WHERE `server_id` = ?", serverId).Scan(&count); err != nil {
+		fail("query server error", err)
+		return
+	}
+
+	// zone_name 要落到 maple_zone, 需要用 zone_id 定位: 补丁里没给就沿用库里现有的值
+	zoneId := 0
+	if patch.ZoneId != nil {
+		zoneId = *patch.ZoneId
 	}
 
 	if count == 0 {
-		sql = "INSERT INTO `maple` (`server_id`, `server_name`, `zone_id`, `game_server`, `queue_server`, `server_group`, `server_state`, `server_flag_state`, `alias`, `start_time`, `central_login`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-		_, err = mhs.app.db.Exec(sql, server.Id, server.ServerName, server.ZoneId, server.GameServer, server.QueueServer, server.ServerGroup, server.ServerState, server.ServerFlagState, server.Alias, server.StartTime, server.CentralLogin)
-		if err != nil {
-			appLog.Error("exec sql error: ", err.Error())
+		// 不存在则插入: 补丁里没传的字段按零值落库; server_sub_group 除外, 建表默认值是 1 (见 bin/maple/up.sql)
+		if patch.ZoneName != nil && zoneId != 0 {
+			if err = upsertZone(tx, zoneId, *patch.ZoneName); err != nil {
+				fail("insert zone error", err)
+				return
+			}
 		}
 
-		sql = "INSERT INTO `maple_zone` (`zone_id`, `zone_name`) VALUES (?, ?)"
-		_, err = mhs.app.db.Exec(sql, server.ZoneId, server.ZoneName)
+		sqlStr := "INSERT INTO `maple` (`server_id`, `server_name`, `zone_id`, `game_server`, `queue_server`, `server_group`, `server_state`, `server_flag_state`, `alias`, `start_time`, `central_login`, `server_sub_group`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+		_, err = tx.Exec(sqlStr, serverId, valOr(patch.ServerName, ""), zoneId, valOr(patch.GameServer, ""), valOr(patch.QueueServer, ""), valOr(patch.ServerGroup, 0), valOr(patch.ServerState, 0), valOr(patch.ServerFlagState, 0), valOr(patch.Alias, ""), valOr(patch.StartTime, int64(0)), valOr(patch.CentralLogin, ""), valOr(patch.ServerSubGroup, 1))
 		if err != nil {
-			appLog.Error("exec sql error: ", err.Error())
+			fail("insert server error", err)
+			return
 		}
 	} else {
-		sql = "UPDATE `maple` SET `server_name` = ?, `zone_id` = ?, `game_server` = ?, `queue_server` = ?, `server_group` = ?, `server_state` = ?, `server_flag_state` = ?, `alias` = ?, `start_time` = ?, `central_login` = ? WHERE `server_id` = ?"
-		_, err = mhs.app.db.Exec(sql, server.ServerName, server.ZoneId, server.GameServer, server.QueueServer, server.ServerGroup, server.ServerState, server.ServerFlagState, server.Alias, server.StartTime, server.CentralLogin, server.Id)
-		if err != nil {
-			appLog.Error("exec sql error: ", err.Error())
+		// 增量更新: 只拼请求里出现过的列, 没出现的列保持原值
+		cols := patch.mapleColumns()
+		if len(cols) > 0 {
+			sets := make([]string, 0, len(cols))
+			args := make([]interface{}, 0, len(cols)+1)
+			for _, c := range cols {
+				sets = append(sets, "`"+c.column+"` = ?")
+				args = append(args, c.value)
+			}
+			args = append(args, serverId)
+
+			sqlStr := "UPDATE `maple` SET " + strings.Join(sets, ", ") + " WHERE `server_id` = ?"
+			if _, err = tx.Exec(sqlStr, args...); err != nil {
+				fail("update server error", err)
+				return
+			}
 		}
+
+		// 只有显式传了 zone_name 才动 maple_zone, 否则不要把 zone_name 清空
+		if patch.ZoneName != nil {
+			if patch.ZoneId == nil {
+				if err = tx.QueryRow("SELECT `zone_id` FROM `maple` WHERE `server_id` = ?", serverId).Scan(&zoneId); err != nil {
+					fail("query zone id error", err)
+					return
+				}
+			}
+			if zoneId != 0 {
+				if err = upsertZone(tx, zoneId, *patch.ZoneName); err != nil {
+					fail("update zone error", err)
+					return
+				}
+			} else {
+				appLog.Error("updateServer: zone_id is 0, skip zone update, server_id=", serverId)
+			}
+		}
+	}
+
+	if err = tx.Commit(); err != nil {
+		appLog.Error("commit tx error: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("commit tx error"))
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)

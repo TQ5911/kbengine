@@ -121,6 +121,16 @@ class enmityInfo(userType.UserDictType):
     def remove(self, gbId):
         enmity = self.pop(gbId, None)
         return enmity.toStreamClientDic() if enmity else None
+
+    def applyOnlineState(self, gbId, isOnline, now):
+        item = self.get(gbId)
+        if item is None:
+            return None
+        newOffline = 0 if isOnline else (item.offlineTime or now)
+        if item.offlineTime == newOffline:
+            return None
+        item.offlineTime = newOffline
+        return item.toStreamClientDic()
     
     def getGbIds(self):
         return list(self.keys())

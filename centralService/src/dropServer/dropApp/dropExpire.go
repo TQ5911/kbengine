@@ -104,6 +104,7 @@ func (da *DropApp) checkRedeemExpire() {
 			returnTime := rec.ReturnTime
 			returnTimeBack := rec.ReturnTimeBack
 			ownerGbId := rec.OwnerGbId
+			extraInfo := rec.ExtraInfo
 
 			// 超过返还时间，交给返还系统处理
 			if returnTime > 0 && now >= returnTime {
@@ -131,6 +132,7 @@ func (da *DropApp) checkRedeemExpire() {
 					ReturnTime:     returnTimeBack,
 					OwnerGbId:      dropGbId,
 					OwnerServerId:  dropServerId,
+					ExtraInfo:      extraInfo,
 				}
 				if err := da.store.UpsertCustodyHolder(custodyRec); err != nil {
 					appLog.Error("checkRedeemExpire: insert custody info error: ", err.Error())

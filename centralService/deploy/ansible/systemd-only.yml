@@ -1,0 +1,278 @@
+---
+# ============================================================================
+#  只给 centralService 安装 systemd 单元
+#
+#  适用场景：远程机器上「起服所需的文件已经在位」（二进制、<服务名>.json、
+#  up.sh、data/ 都已分发过），只需要重新生成/刷新 systemd 单元，
+#  不想再走一遍 install.sh 的全量流程（编译、渲染配置、推文件、建库导表）。
+#
+#  它只做这几件事：
+#    1. 校验远程的二进制与配置确实在（不在就直接失败，不做文件分发）
+#    2. 确保服务运行用户/用户组存在
+#    3. 渲染并推送 /etc/systemd/system/<前缀>-<服务名>.service
+#    4. daemon-reload
+#    5. enable + 应用服务状态（默认 restarted）
+#    6. 可选：等探活端口就绪、打印单元状态
+#
+#  关键设计：单元不是另写一份 Jinja2 模板，而是**直接复用**
+#  deploy/templates/centralsvc.service.template —— 该模板用的是 @KEY@ 占位符，
+#  这里通过 template 模块的 variable_start_string / variable_end_string 把
+#  Jinja2 的分隔符改成 @，于是和 install.sh 的 bash 渲染器共用同一份源文件。
+#  已验证两者渲染结果逐字节一致，不会出现「两套模板各自漂移」。
+#
+#  用法：
+#    # 通过 deploy.env 与 instances.conf（推荐，见 install-systemd.sh）
+#    ./deploy/install-systemd.sh --only maple
+#
+#    # 直接用 ansible-playbook
+#    ansible-playbook -i deploy/ansible/hosts deploy/ansible/systemd-only.yml \
+#        -e '{"services":["maple"],"install_root":"/home/fengyan/Server/centralService/bin"}'
+#
+#    # 只生成单元不动服务状态
+#    ansible-playbook ... -e '{"services":["maple"],"svc_state":"none"}'
+#
+#    # 只跑某一段
+#    ansible-playbook ... --tags unit
+#
+#  ⚠ 单元里 WorkingDirectory / ExecStart 都依赖 install_root，
+#    它必须与现有服务文件的实际位置一致，否则服务会以 203/EXEC 起不来。
+# ============================================================================
+
+- name: 仅为 centralService 安装 systemd 单元
+  hosts: all
+  become: true
+  become_user: root
+  gather_facts: false
+
+  # --------------------------------------------------------------------------
+  #  变量（全部可用 -e 覆盖）
+  # --------------------------------------------------------------------------
+  vars:
+    # 必填：要处理的服务名列表。单个服务就写 ["maple"]
+    services: []
+
+    # 服务文件的安装根目录（必须等于现有文件所在的目录）
+    install_root: /home/fengyan/Server/centralService/bin
+
+    # 单元模板。刻意指向 install.sh 用的那一份，不另建副本
+    unit_template: "{{ playbook_dir }}/../templates/centralsvc.service.template"
+
+    unit_prefix: centralsvc
+    service_desc: {}          # {服务名: 中文说明}，缺省就用服务名
+    service_user: fengyan
+    service_group: "{{ service_user }}"
+
+    timezone: Asia/Shanghai
+    gotraceback: crash
+    start_timeout: 90
+    stop_timeout: 30
+    restart_sec: 3
+
+    # file  -> stdout/stderr 追加到 <服务目录>/<服务名>.out.log
+    # journal -> 交给 journald
+    log_stdout_mode: file
+
+    # 留空 = 自动：安装目录在 /home /root /run/user 下时必须是 no，
+    # 否则 systemd 把 /home 挂成空 tmpfs，execve 找不到二进制 → 203/EXEC
+    systemd_protect_home: ""
+
+    ensure_user: true         # 服务用户不存在时创建
+    fix_owner: false         # true 时递归修正 install_root 属主（默认不动已有文件）
+    unit_backup: true        # 覆盖已有单元前先备份
+
+    # restarted（默认）/ started / stopped / none（只落单元，不动服务状态）
+    svc_state: restarted
+    enable_service: true
+
+    check_ports: false
+    service_ports: {}        # {服务名: [端口, ...]}，仅 check_ports=true 时用
+    port_timeout: 60
+
+  # --------------------------------------------------------------------------
+  #  前置
+  # --------------------------------------------------------------------------
+  pre_tasks:
+    - name: 参数校验
+      ansible.builtin.assert:
+        that:
+          - services | length > 0
+        fail_msg: >-
+          services 不能为空。单个服务： -e '{"services":["maple"]}' ；
+          或用 install-systemd.sh --only maple
+      tags: always
+
+    - name: 校验单元模板存在
+      ansible.builtin.stat:
+        path: "{{ unit_template }}"
+      register: tpl_stat
+      delegate_to: localhost
+      become: false
+      tags: always
+
+    - name: 断言模板存在
+      ansible.builtin.assert:
+        that: tpl_stat.stat.exists
+        fail_msg: "找不到单元模板: {{ unit_template }}"
+      tags: always
+
+  # --------------------------------------------------------------------------
+  #  主流程
+  # --------------------------------------------------------------------------
+  tasks:
+    # ---- 1. 校验远程文件（本 playbook 不做文件分发）------------------------
+    - name: 校验远程二进制就位
+      ansible.builtin.stat:
+        path: "{{ install_root }}/{{ item }}/{{ item }}"
+      loop: "{{ services }}"
+      register: bin_stat
+      tags: validate
+
+    - name: 校验远程配置就位
+      ansible.builtin.stat:
+        path: "{{ install_root }}/{{ item }}/{{ item }}.json"
+      loop: "{{ services }}"
+      register: cfg_stat
+      tags: validate
+
+    - name: 断言服务文件齐备
+      ansible.builtin.assert:
+        that:
+          - bin_stat.results | map(attribute='stat.exists') | list is all
+          - cfg_stat.results | map(attribute='stat.exists') | list is all
+        quiet: true
+        fail_msg: >-
+          远程缺少 <install_root>/<服务名>/<服务名> 或 <服务名>.json。
+          本 playbook 假设起服文件已经在位、只负责装单元；
+          需要先做文件分发请改用 install.sh / upgrade.sh。
+        success_msg: "远程服务文件齐备: {{ services | join(', ') }}"
+      tags: validate
+
+    # ---- 2. 运行用户 -------------------------------------------------------
+    - name: 确保服务用户组存在
+      ansible.builtin.group:
+        name: "{{ service_group }}"
+        state: present
+      when: ensure_user | bool
+      tags: user
+
+    - name: 确保服务用户存在
+      ansible.builtin.user:
+        name: "{{ service_user }}"
+        group: "{{ service_group }}"
+        state: present
+      when: ensure_user | bool
+      tags: user
+
+    - name: 修正安装根目录属主（可选，默认关闭）
+      ansible.builtin.file:
+        path: "{{ install_root }}"
+        owner: "{{ service_user }}"
+        group: "{{ service_group }}"
+        recurse: true
+      when: fix_owner | bool
+      tags: owner
+
+    # ---- 3. 渲染参数 -------------------------------------------------------
+    # 这两个 set_fact 必须带 always，否则 --tags unit 单跑时会拿不到值
+    - name: 计算 ProtectHome
+      ansible.builtin.set_fact:
+        protect_home: >-
+          {{ systemd_protect_home
+             if (systemd_protect_home | default('', true) | length > 0)
+             else ('no' if install_root is search('^/(home|root|run/user)(/|$)') else 'true') }}
+      tags: always
+
+    - name: 计算各服务的 stdout/stderr 去向
+      ansible.builtin.set_fact:
+        stdout_targets: >-
+          {{ stdout_targets | default({}) | combine({ item:
+             (('append:' ~ install_root ~ '/' ~ item ~ '/' ~ item ~ '.out.log')
+              if log_stdout_mode == 'file' else 'journal') }) }}
+      loop: "{{ services }}"
+      tags: always
+
+    - name: 展开待探活端口
+      ansible.builtin.set_fact:
+        port_list: "{{ port_list | default([]) + (service_ports[item] | default([], true)) }}"
+      loop: "{{ services }}"
+      when: check_ports | bool
+      tags: always
+
+    # ---- 4. 渲染并推送单元 -------------------------------------------------
+    # variable_start_string / variable_end_string 改成 @，
+    # 于是可以直接吃 deploy/templates/centralsvc.service.template。
+    - name: 渲染并推送 systemd 单元
+      ansible.builtin.template:
+        src: "{{ unit_template }}"
+        dest: "/etc/systemd/system/{{ unit_prefix }}-{{ item }}.service"
+        owner: root
+        group: root
+        mode: "0644"
+        backup: "{{ unit_backup }}"
+        # ↓ 这一行是复用 @KEY@ 模板的关键，不能删
+        variable_start_string: "@"
+        variable_end_string: "@"
+      vars:
+        SERVICE: "{{ item }}"
+        DESCRIPTION: "{{ service_desc[item] | default(item, true) }}"
+        INSTALL_ROOT: "{{ install_root }}"
+        SERVICE_USER: "{{ service_user }}"
+        SERVICE_GROUP: "{{ service_group }}"
+        TIMEZONE: "{{ timezone }}"
+        GOTRACEBACK: "{{ gotraceback }}"
+        START_TIMEOUT: "{{ start_timeout }}"
+        STOP_TIMEOUT: "{{ stop_timeout }}"
+        RESTART_SEC: "{{ restart_sec }}"
+        PROTECT_HOME: "{{ protect_home }}"
+        STDOUT_TARGET: "{{ stdout_targets[item] }}"
+        STDERR_TARGET: "{{ stdout_targets[item] }}"
+      loop: "{{ services }}"
+      register: unit_push
+      tags: unit
+
+    - name: daemon-reload（单元有变化时才做）
+      ansible.builtin.systemd:
+        daemon_reload: true
+      when: unit_push.changed | default(false)
+      tags: reload
+
+    # ---- 5. 应用服务状态 ---------------------------------------------------
+    # 单元里已有 ExecStartPre 负责清理残留 pid 文件，
+    # 所以崩溃过的机器 restart 也不会卡在 WritePidFile fail。
+    - name: 设置开机自启并应用服务状态
+      ansible.builtin.systemd:
+        name: "{{ unit_prefix }}-{{ item }}.service"
+        enabled: "{{ enable_service }}"
+        state: "{{ svc_state }}"
+      loop: "{{ services }}"
+      when: svc_state != 'none'
+      tags: service
+
+    # ---- 6. 可选：等端口 + 打印状态 ---------------------------------------
+    - name: 等待探活端口就绪
+      ansible.builtin.wait_for:
+        host: 127.0.0.1
+        port: "{{ item | int }}"
+        timeout: "{{ port_timeout | int }}"
+      loop: "{{ port_list | default([]) }}"
+      when: check_ports | bool and (port_list | default([]) | length > 0)
+      tags: verify
+
+    - name: 采集单元状态
+      ansible.builtin.command:
+        cmd: "systemctl is-active {{ unit_prefix }}-{{ item }}.service"
+      loop: "{{ services }}"
+      register: svc_active
+      changed_when: false
+      failed_when: false
+      when: svc_state != 'none'
+      tags: status
+
+    - name: 打印单元状态
+      ansible.builtin.debug:
+        msg: "{{ item.item }} -> {{ item.stdout | default('unknown', true) }}"
+      loop: "{{ svc_active.results | default([]) }}"
+      loop_control:
+        label: "{{ item.item }}"
+      when: svc_state != 'none'
+      tags: status

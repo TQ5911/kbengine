@@ -4,6 +4,7 @@ import KBEngine
 
 import random
 
+import gameconfig
 import gameengine
 import gameconst
 import gameglobal
@@ -21,12 +22,12 @@ import itemData_itemData_set as IDID_S
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import petData_set as PDSD
 import petData_unlock as PDUD
+import petData_petGear as PDPGD
+import petData_petData as PDPD
 import taskClass_taskTarget as TCCTD
 import qualityData_qualityData as QD_QDD
 import agent_agentFunction as A_AFD
-import petData_petGear as PDPGD
 import gacha_reroll as GC_RR
-import gameconfig
 
 class ImpAvatarPet(object):
     def initPetProps(self):
@@ -180,6 +181,163 @@ class ImpAvatarPet(object):
             _quality = _itemData['quality']
             for _q in range(QD_QDD.minKey, _quality + 1):
                 _dic[_q] = _dic.get(_q, 0) + 1
+    
+    def doPetEquipChange(self, pet, slotId, itemId):
+        self.removePetEquipNumByPet(pet)
+        pet.modifyPetEquip(self, slotId, itemId)
+        self.addPetEquipNumByPet(pet)
+        # 精灵装备发生变化，计算下新手历程数据
+        self.clearBeginnerJourneyBehaviorStatusEx([gameconst.BjTaskType.BJ_TASK_TYPE_PET_EQUIP])
+        pets = self.lingShouInfo.getAllPets()
+        for pet in pets.values():
+            qualityDatas = {}
+            for itemId in pet.equipList:
+                if not itemId:
+                    continue
+                itemData = IDID.datas.get(itemId)
+                if not itemData:
+                    continue
+                quality = itemData['quality']
+                qualityDatas[quality] = qualityDatas.get(quality, 0) + 1
+            # 整合高品质到低品质数量装备的统计
+            result = {}
+            total = 0
+            for k in sorted(qualityDatas.keys(), reverse=True):
+                total += qualityDatas[k]
+                result[k] = total
+            # 按照一个精灵不同品质的装备触发
+            for quality, count in result.items():
+                self.beginnerJourney_onTaskEvent(
+                    gameconst.BjTaskType.BJ_TASK_TYPE_PET_EQUIP,
+                    delta=1, quality=quality, countPerPet=count)
+
+    def gmSetPetEquip(self, petId, slotId, itemId):
+        # GM设置精灵穿戴装备: 不经背包, 跳过canReplaceEquip换装规则校验, itemId=0表示卸下
+        LOG_INFO("gmSetPetEquip", petId, slotId, itemId)
+        pet = self.lingShouInfo.getLingShouByPetId(petId)
+        if not pet:
+            LOG_ERR("gmSetPetEquip pet not found", petId)
+            return False, 0, 'pet not found'
+        if itemId != 0 and itemId not in PDPGD.datas:
+            LOG_ERR("gmSetPetEquip invalid itemId", petId, slotId, itemId)
+            return False, 0, 'invalid itemId'
+        if slotId < 0 or slotId >= len(pet.equipList):
+            LOG_ERR("gmSetPetEquip slotId invalid", petId, slotId, len(pet.equipList))
+            return False, 0, 'slotId invalid'
+        oldItemId = pet.getPetEquip(slotId)
+        self.doPetEquipChange(pet, slotId, itemId)
+        return True, oldItemId, ''
+
+    def gmSetPetLevelExp(self, petId, level, exp):
+        # GM设置精灵等级和经验, 支持降级(cell侧updateLevelProps已支持负值回退)
+        LOG_INFO("gmSetPetLevelExp", petId, level, exp)
+        pet = self.lingShouInfo.getLingShouByPetId(petId)
+        if not pet:
+            LOG_ERR("gmSetPetLevelExp pet not found", petId)
+            return False, 0, 0, 0, 0, 'pet not found'
+        leveUpExps = dataUtils.getPetLevelUpExp(petId)
+        petMinLevel = int(PDSD.datas['petMinLevel']['value'])
+        petMaxLevel = int(PDSD.datas['petMaxLevel']['value'])
+        topLevel = min(petMaxLevel, len(leveUpExps) + 1)
+        if level < petMinLevel or level > topLevel:
+            LOG_ERR("gmSetPetLevelExp level invalid", petId, level, topLevel)
+            return False, 0, 0, 0, 0, 'level invalid'
+        if level >= topLevel:
+            # 满级精灵经验恒为0, 与正常升级流程保持一致
+            exp = 0
+        elif exp < 0 or exp >= leveUpExps[level - 1]:
+            LOG_ERR("gmSetPetLevelExp exp invalid", petId, level, exp)
+            return False, 0, 0, 0, 0, 'exp invalid'
+        oldLevel = pet.level
+        oldExp = pet.exp
+        pet.setLevelAndExp(oldLevel, level, exp, self, KBEngine.genUUID64())
+        self.client.onLevelUpPet(petId, level, exp, level >= topLevel)
+        # 刷新新手历程精灵等级缓存
+        self.clearBeginnerJourneyBehaviorStatusEx([gameconst.BjTaskType.BJ_TASK_TYPE_PET_LEVEL])
+        pets = self.lingShouInfo.getAllPets()
+        for _petId, _pet in pets.items():
+            self.beginnerJourney_onTaskEvent(
+                gameconst.BjTaskType.BJ_TASK_TYPE_PET_LEVEL,
+                delta=1, level=_pet.level)
+        return True, oldLevel, oldExp, level, exp, ''
+
+    def gmDeductPetExp(self, petId, exp):
+        # GM扣除精灵经验, 不足时自动降级, 最低降到petMinLevel级0经验
+        LOG_INFO("gmDeductPetExp", petId, exp)
+        pet = self.lingShouInfo.getLingShouByPetId(petId)
+        if not pet:
+            LOG_ERR("gmDeductPetExp pet not found", petId)
+            return False, 0, 0, 0, 0, 'pet not found'
+        leveUpExps = dataUtils.getPetLevelUpExp(petId)
+        petMinLevel = int(PDSD.datas['petMinLevel']['value'])
+        petMaxLevel = int(PDSD.datas['petMaxLevel']['value'])
+        topLevel = min(petMaxLevel, len(leveUpExps) + 1)
+        # 折算成最低级以上的累计经验, 扣除后再换算回等级/经验
+        totalExp = pet.exp
+        for lv in range(petMinLevel, min(pet.level, topLevel)):
+            totalExp += leveUpExps[lv - 1]
+        totalExp = max(0, totalExp - exp)
+        newLevel = petMinLevel
+        while newLevel < topLevel and totalExp >= leveUpExps[newLevel - 1]:
+            totalExp -= leveUpExps[newLevel - 1]
+            newLevel += 1
+        return self.gmSetPetLevelExp(petId, newLevel, totalExp)
+
+    def gmDeactivatePet(self, petId):
+        # GM反激活精灵: 精灵及其穿戴装备一并移除(装备不返还), 重新激活后从初始状态开始
+        LOG_INFO("gmDeactivatePet", petId)
+        pet = self.lingShouInfo.getLingShouByPetId(petId)
+        if not pet:
+            LOG_ERR("gmDeactivatePet pet not found", petId)
+            return False, 0, [], 'pet not found'
+        oldLevel = pet.level
+        oldEquipList = list(pet.equipList)
+        # 精灵装备计数缓存同步
+        self.removePetEquipNumByPet(pet)
+        # 从所有出战预设中移除
+        for battleIndex, battleListVal in enumerate(self.lingShouInfo.battleList):
+            for slotId, _petId in enumerate(battleListVal.petIdList):
+                if _petId != petId:
+                    continue
+                battleListVal.setPetIdBySlot(0, slotId)
+                if battleIndex == self.battleIndex:
+                    self.cell.onUpdateLingShouBattleList((0, []), slotId)
+                self.client.onUpdateLingShouBattleList(battleIndex, 0, slotId)
+        # cell侧移除战斗属性并清跟随状态
+        self.cell.gmRemoveLingShouProps(petId, oldLevel)
+        self.lingShouInfo.pets.pop(petId)
+        self.updatePetScore(KBEngine.genUUID64())
+        # 刷新新手历程缓存(激活数/精灵装备/精灵等级均为属性查询型)
+        self.clearBeginnerJourneyBehaviorStatusEx([gameconst.BjTaskType.BJ_TASK_TYPE_PET_ACTIVATE, \
+                                                   gameconst.BjTaskType.BJ_TASK_TYPE_PET_EQUIP, \
+                                                   gameconst.BjTaskType.BJ_TASK_TYPE_PET_LEVEL])
+        pets = self.lingShouInfo.getAllPets()
+        for _petId, _pet in pets.items():
+            self.beginnerJourney_onTaskEvent(
+                gameconst.BjTaskType.BJ_TASK_TYPE_PET_ACTIVATE,
+                delta=1, quality=_pet.quality)
+            self.beginnerJourney_onTaskEvent(
+                gameconst.BjTaskType.BJ_TASK_TYPE_PET_LEVEL,
+                delta=1, level=_pet.level)
+            qualityDatas = self.calculatePetQualityDataCount(_pet)
+            for quality, count in qualityDatas.items():
+                self.beginnerJourney_onTaskEvent(
+                    gameconst.BjTaskType.BJ_TASK_TYPE_PET_EQUIP,
+                    delta=1, quality=quality, countPerPet=count)
+        self.client.onRemoveLingShou(petId)
+        return True, oldLevel, oldEquipList, ''
+
+    def calculatePetQualityDataCount(self, pet):
+        qulityCount = {}
+        for itemId in pet.equipList:
+            if not itemId:
+                continue
+            itemData = IDID.datas.get(itemId)
+            if not itemData:
+                continue
+            quality = itemData['quality']
+            qulityCount[quality] = qulityCount.get(quality, 0) + 1
+        return qulityCount
 
     def initPetEquipNumCache(self):
         _dic = self.getTempMiscProp(gameconst.EntityPropsEnum.petEquipNumCache, None)
@@ -298,7 +456,10 @@ class ImpAvatarPet(object):
             return
 
         abCtx = actionContext.AddLingShouCtx(gameconst.AddLingShouReason.normal, extra={'opUUID':opUUID, 'item': info['gridObj'], 'school':self.getAvatarSchool()})
-        self.addLingShouBase(abCtx)
+        ret = self.addLingShouBase(abCtx)
+        if not ret:
+            self.cell.onPendingUseItemFinished(pendingUseId, gameconst.UseItemEnum.FALSE)
+            return
         self.syncMethodCallToCrossServerBase('onLocalServerAddLingShouBase', (abCtx,))
 
         # self.onMessagePre(MMD.datas.petEggHatchTip, [])
@@ -308,9 +469,13 @@ class ImpAvatarPet(object):
         LOG_INFO('onLocalServerAddLingShouBase')
         self.addLingShouBase(abCtx)
 
-    def calculateRecycleConsume(self, itemId):
+    def calculateRecycleConsume(self, opUUID, petId, itemId, isRecycle):
         if itemId == 0:
+            # 如果卸载回收，旧的不存在，就返回false
+            if isRecycle:
+                return False
             return True
+            
         itemData = IDID.datas.get(itemId)
         if not itemData:
             LOG_ERR('calculateRecycleConsume, missing item:', itemId)
@@ -328,17 +493,29 @@ class ImpAvatarPet(object):
             if q == quality:
                 cost = c
                 break
+        srcType = AAC_AACDD.datas.BONUS_SRC_PET_DROP_EQUIP
+        detail = gameclass.AwardDetailCls(itemId=petGearRemoveItem, itemNum=cost, petEquipItem=itemId)
+        
+        award = dropAward.AwardVal()
+        award.addWealthByItemId(itemId, 1)
+        awardCtx = self.getAvatarAwardCtx(0, None)
+        if not self.canAddWealthVal(srcType, award, awardCtx):
+            LOG_ERR('calculateRecycleConsume, cannot add item to bag', itemId)
+            return False
+
+        costItems = {}
         if cost > 0:
+            costItems = {petGearRemoveItem:cost}
             deductWealthVal = dropAward.DeductWealthVal()
             deductWealthVal.addWealthByItemId(petGearRemoveItem, cost)
             ret = self.canDeductWealth(deductWealthVal)
             if not ret:
                 LOG_ERR('calculateRecycleConsume, item is not enough:', itemId)
                 return False
-            srcType = AAC_AACDD.datas.BONUS_SRC_PET_DROP_EQUIP
-            opUUID = KBEngine.genUUID64()
-            detail = gameclass.AwardDetailCls(itemId=petGearRemoveItem, itemNum=cost)
             self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+
+        self.addWealth(srcType, award, opUUID, detail)
+        LogTrackingMgr.LogTrackingMgr.Pet_Equip_Change(self.gbID, self.accountEntity.clientDistinctId, opUUID, gameconfig.serverId(), gameconfig.gameId(), petId, itemId, gameconst.PetOpType.UNDRESS, costItems)
         return True
 
     @gamedecorator.checkGameconfigEnable('pet')
@@ -356,11 +533,11 @@ class ImpAvatarPet(object):
         if not pet:
             return
         oldItemId = pet.getPetEquip(slotId)
-        if not self.calculateRecycleConsume(oldItemId):
+        opUUID = KBEngine.genUUID64()
+        if not self.calculateRecycleConsume(opUUID, petId, oldItemId, True):
             return
-        self.removePetEquipNumByPet(pet)
-        pet.modifyPetEquip(self, slotId, 0)
-        self.addPetEquipNumByPet(pet)
+        
+        self.doPetEquipChange(pet, slotId, 0)
         
         self.syncMethodCallToCrossServerBase('onLocalServerRecycleLingShouEquip', (petId, slotId))
 
@@ -395,17 +572,18 @@ class ImpAvatarPet(object):
             LOG_ERR('useLingShouEquip not canReplaceEquip', slotId, itemId)
             return
         oldItemId = pet.getPetEquip(slotId)
-        if not self.calculateRecycleConsume(oldItemId):
-            return
         opUUID = KBEngine.genUUID64()
+        if not self.calculateRecycleConsume(opUUID, petId, oldItemId, False):
+            return
+        
         srcType = AAC_AACDD.datas.BONUS_SRC_PETGEAR_DRESS
         detail = gameclass.AwardDetailCls(petId=petId, itemId=itemId)
         self.petBag.deductItemsByGridId(self, {gridId:1}, opUUID, srcType, detail)
 
-        self.removePetEquipNumByPet(pet)
-        pet.modifyPetEquip(self, slotId, itemId)
-        self.addPetEquipNumByPet(pet)
+        self.doPetEquipChange(pet, slotId, itemId)
         
+        LogTrackingMgr.LogTrackingMgr.Pet_Equip_Change(self.gbID, self.accountEntity.clientDistinctId, opUUID, gameconfig.serverId(), gameconfig.gameId(), petId, itemId, gameconst.PetOpType.DRESS, {})
+
         self.syncMethodCallToCrossServerBase('onLocalServerUseLingShouEquip', (gridId, petId, slotId))
 
         self.achievementInfo.triggerAchieveByType(
@@ -427,77 +605,81 @@ class ImpAvatarPet(object):
     def addLingShouBase(self, addContext):
         LOG_INFO("addLingShouBase ", addContext.__dict__)
         if addContext.reason == gameconst.AddLingShouReason.normal:
-            self.lingShouInfo.addLingShou(self, addContext)
+            petId = self.lingShouInfo.addLingShou(self, addContext)
+            if not petId:
+                return False
 
-        self.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetPetUnlock'])
+            self.taskCheckCounterTarget(TCCTD.couterTargetDic['TaskCounterTargetPetUnlock'])
 
-        # if addContext.reason == gameconst.AddLingShouReason.gm:
-        #     self.lingShouInfo.addGmLingShou(self, addContext)
-        #
-        # if addContext.reason == gameconst.AddLingShouReason.gmAll:
-        #     self.lingShouInfo.addGmAllBossLingShou(self, addContext)
-
-        # self.onAvatarVarValueChanged([VLVLD.AvatarDataVarPropDic['amountPet']], [self.lingShouInfo.lingShouNum()])
+            # v5.2 新手历程 8=激活精灵
+            self.beginnerJourney_onTaskEvent(
+                gameconst.BjTaskType.BJ_TASK_TYPE_PET_ACTIVATE,
+                delta=1, quality=PDPD.datas[petId]['petRank']
+            )
+            return True
+        return False
 
     @gamedecorator.checkGameconfigEnable('pet')
     @AuthClsWraper.authWithPermission(A_AFD.UIPetPanel)
     @gamedecorator.crossServer
-    def levelUpPet(self, exposed, gridIds, petId):
+    def levelUpPet(self, exposed, gridIds, gridNums, petId):
         if gameconfig.isCrossServer():
-            self.syncMethodCallToLocalServerBase('_levelUpPet', (gridIds, petId))
+            self.syncMethodCallToLocalServerBase('_levelUpPet', (gridIds, gridNums, petId))
         else:
-            self._levelUpPet(gridIds, petId)
+            self._levelUpPet(gridIds, gridNums, petId)
 
-    def _levelUpPet(self, gridIds, petId):
-        LOG_INFO("levelUpPet ", gridIds, petId)
+    def _levelUpPet(self, gridIds, gridNums, petId):
+        LOG_INFO("levelUpPet ", gridIds, gridNums, petId)
         # 检查消耗的格子数
         tmpGridIds = [gridId for gridId in gridIds]
         tmpGridIds = set(tmpGridIds)
-        if len(tmpGridIds) == 0 or len(tmpGridIds) != len(gridIds):
+        if len(tmpGridIds) == 0 or len(tmpGridIds) != len(gridIds) or len(tmpGridIds) != len(gridNums):
             gameengine.panicStack("levelUpPet, lack of materials, grid id repeated ", gridIds, petId)
-            return
+            return False, 0, 0, 0
         # 检查宠物
         pet = self.lingShouInfo.getLingShouByPetId(petId)
         if not pet:
             LOG_ERR("levelUpPet, petId is invalid ", petId)
-            return
+            return False, 0, 0, 0
         # 升级消耗的物品筛选
         consumeItems = dataUtils.getPetLevelUpConsumeItem(petId)
         if not consumeItems:
             LOG_ERR("levelUpPet, consumeItems is wrong ", petId)
-            return
+            return False, 0, 0, 0
         # 升级所需经验分类
         leveUpExps = dataUtils.getPetLevelUpExp(petId)
         if not leveUpExps:
             LOG_ERR("levelUpPet, leveUpExps is wrong ", petId)
-            return
+            return False, 0, 0, 0
         
         oldLevel = pet.getLevel()
         curLevel = oldLevel
         curExp = pet.getExp()
         if curLevel - 1 >= len(leveUpExps):
             LOG_WARN("levelUpPet, level is in top 1 ", petId, curExp, curLevel, leveUpExps)
-            return
+            return False, 0, 0, 0
         # 看看最大等级限制
         petMaxLevel = int(PDSD.datas['petMaxLevel']['value'])
         if curLevel >= petMaxLevel:
             LOG_WARN("levelUpPet, level is in limit ", petId, curExp, curLevel, petMaxLevel)
-            return
+            return False, 0, 0, 0
         # 总的经验
         totalExp = 0
         deductItems = {}
-        for gridId in gridIds:
+        for idx in range(0, len(gridIds)):
+            gridId = gridIds[idx]
+            gridNum = gridNums[idx]
             itemObj = self.petBag.getItemObjByGridId(gridId)
             if not itemObj:
                 LOG_ERR('levelUpPet pet bag not found', gridId)
-                return
+                return False, 0, 0, 0
             itemData = IDID.datas.get(itemObj.itemId)
             if not itemData:
                 LOG_ERR('levelUpPet item not found', itemObj.itemId)
-                return
-            if itemObj.itemNum < 1:
-                LOG_ERR('levelUpPet item not enough', itemObj.itemId)
-                return
+                return False, 0, 0, 0
+            if gridNum <= 0 or itemObj.itemNum < gridNum:
+                LOG_ERR('levelUpPet item not enough', itemObj.itemId, itemObj.itemNum, gridNum)
+                return False, 0, 0, 0
             # 秘宝类型
             itemType = itemData['type']
             itemSubType = itemData['subType']
@@ -511,15 +693,15 @@ class ImpAvatarPet(object):
             # 检查消耗类型
             if not isValidItem:
                 LOG_ERR('levelUpPet invalid pet consume item', itemObj.itemId, itemType, itemSubType, itemQuality, consumeItems)
-                return
+                return False, 0, 0, 0
             
             # 吞噬经验
             datas = PDPGD.datas.get(itemObj.itemId)
             if not datas:
                 LOG_ERR('levelUpPet invalid pet gear exp', itemObj.itemId)
-                return
-            totalExp += datas['claimExp']
-            deductItems[gridId] = 1
+                return False, 0, 0, 0
+            totalExp += (datas['claimExp'] * gridNum)
+            deductItems[gridId] = gridNum
         # 扣除材料
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_PET_LEVEL_UP
@@ -552,16 +734,23 @@ class ImpAvatarPet(object):
         LOG_INFO("levelUpPet end:", petId, curLevel, curExp, totalExp, isTopLevel)
         # 更新客户端宠物数据   
         self.client.onLevelUpPet(petId, curLevel, curExp, isTopLevel)
-        self.syncMethodCallToCrossServerBase('onLocalServerLevelUpPet', (gridIds, petId, curLevel, curExp, isTopLevel))
+        self.syncMethodCallToCrossServerBase('onLocalServerLevelUpPet', (gridIds, gridNums, petId, curLevel, curExp, isTopLevel))
+        
+        self.clearBeginnerJourneyBehaviorStatusEx([gameconst.BjTaskType.BJ_TASK_TYPE_PET_LEVEL])
+        pets = self.lingShouInfo.getAllPets()
+        for petId, pet in pets.items():
+            self.beginnerJourney_onTaskEvent(
+                gameconst.BjTaskType.BJ_TASK_TYPE_PET_LEVEL,
+                delta=1, level=pet.level)
+        
         return True, curLevel, curExp, isTopLevel
 
-    def onLocalServerLevelUpPet(self, gridIds, petId, curLevel, curExp, isTopLevel):
+    def onLocalServerLevelUpPet(self, gridIds, gridNums, petId, curLevel, curExp, isTopLevel):
         LOG_INFO('onLocalServerLevelUpPet')
-        ret = self._levelUpPet(gridIds, petId)
+        ret, curLevel, curExp, isTopLevel = self._levelUpPet(gridIds, gridNums, petId)
         if not ret:
             gameengine.panicStack('onLocalServerLevelUpPet failed', gridIds, petId, curLevel, curExp, isTopLevel)
         else:
-            ok, curLevel, curExp, isTopLevel = ret
             if curLevel != curLevel or curExp != curExp or isTopLevel != isTopLevel:
                 gameengine.panicStack('onLocalServerLevelUpPet check failed', gridIds, petId, curLevel, curExp, isTopLevel)
     

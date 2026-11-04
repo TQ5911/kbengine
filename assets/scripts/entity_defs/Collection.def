@@ -63,6 +63,12 @@
             <Flags> CELL_PRIVATE    </Flags>
         </extraJson>
 
+        <gatherTotalCnt>
+            <Type>      UINT32          </Type>
+            <Flags>     CELL_PRIVATE    </Flags>
+            <Default>   0               </Default>
+        </gatherTotalCnt>
+
 		<bornState>
             <Type>      UINT8               </Type>
             <Default>   0                   </Default>
@@ -100,6 +106,32 @@
 			<Type>			OBJECT_ID        	</Type>
 			<Flags>			ALL_CLIENTS 		</Flags>
 		</fromMonsterId>
+
+		<!-- creep_base 配置 id -->
+		<fromCreepId>
+			<Type>			OBJECT_ID        	</Type>
+			<Flags>			ALL_CLIENTS 		</Flags>
+			<Default>		0					</Default>
+		</fromCreepId>
+
+		<fbShareMode>
+			<Type>			UINT8				</Type>
+			<Flags>			ALL_CLIENTS 		</Flags>
+			<Default>		0					</Default>
+		</fbShareMode>
+
+		<fBItemNum>
+			<Type>			UINT32				</Type>
+			<Flags>			ALL_CLIENTS 		</Flags>
+			<Default>		0					</Default>
+		</fBItemNum>
+
+        <!-- 0 空闲，1 非首刀归属者正在采集，2 首刀归属者正在采集 -->
+        <gatherShowState>
+            <Type>      UINT8           </Type>
+            <Flags>     ALL_CLIENTS     </Flags>
+            <Default>   0               </Default>
+        </gatherShowState>
     </Properties>
 
     <BaseMethods>

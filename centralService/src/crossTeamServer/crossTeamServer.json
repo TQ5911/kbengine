@@ -9,7 +9,6 @@
     "groupId":1,
     "workerNum":16,
     "crusadeMaxConcurrent":100,
-    "crusadeStartLimitPerSecond":1,
     "redisServer":{
     	"addr":"127.0.0.1:6379",
     	"passwd":"",

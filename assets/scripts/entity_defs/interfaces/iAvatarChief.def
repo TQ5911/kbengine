@@ -16,12 +16,6 @@
     </Properties>
 
     <CellMethods>
-        <enterChiefDungeon>
-            <Exposed/>
-        </enterChiefDungeon>
-
-        <autoStartChiefDungeon>
-        </autoStartChiefDungeon>
     </CellMethods>
 
     <BaseMethods>
@@ -29,6 +23,7 @@
             <Exposed/>
             <Arg>   UINT16   </Arg>
             <Arg>   UINT16   </Arg>
+            <Arg>   BOOL    </Arg>
         </increaseChiefRewardNumber>
         
         <useItemToIncreaseChiefRewardNumber>
@@ -39,6 +34,7 @@
         <useCoinToIncreaseChiefRewardNumber>
             <Exposed/>
             <Arg>   UINT8   </Arg>
+            <Arg>   BOOL    </Arg>
         </useCoinToIncreaseChiefRewardNumber>
 
         <onUseItemToIncreaseChiefRewardNumber>
@@ -47,13 +43,6 @@
             <Arg>   PYTHON      </Arg>
         </onUseItemToIncreaseChiefRewardNumber>
 
-        <onEnterChiefDungeon>
-            <Arg>           UUID              </Arg>
-            <Arg>           SPACE_NO          </Arg>
-            <Arg>           DUNGEON_NO        </Arg>
-            <Arg>           MAILBOX           </Arg>
-            <Arg>           PYTHON            </Arg>
-        </onEnterChiefDungeon>
     </BaseMethods>
 
     <ClientMethods>

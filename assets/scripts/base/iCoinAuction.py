@@ -23,6 +23,8 @@ import awardContext
 import LogTrackingMgr
 import actionContext
 import gametimer
+import mailAssistor
+import gameclass
 
 import message_Message_def as MMD
 import auction_auctionConst as AUT_CONST
@@ -36,6 +38,7 @@ import agent_agentFunction as A_AFD
 import auction_publicityCategory as A_PC
 import itemData_itemData as ITEMDATA
 import auction_publicityAddTime as A_PA
+import welfare_config as W_CDD
 
 def lockCoinAuction(timeout=3):
     def _lockCoinAuction(targetFunc):
@@ -72,6 +75,12 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             self.coinAuctionInfo = auction.AuctionPlayerCache(gameconst.AuctionTypeEnum.COIN_AUCTION, )
         if not gameconfig.isCrossServer():
             self.auctionPaymentTimerId = self.pyAddTimer(0, 5, gametimer.PROCESS_AUCTION_PENDING)
+
+    def _addAuctionGainMoney(self, num):
+        if num <= 0:
+            return
+        _total = self.getPersistentMiscProp(gameconst.EntityPropsEnum.auctionGainMoney, 0) + num
+        self.setPersistentMiscProp(gameconst.EntityPropsEnum.auctionGainMoney, _total)
 
     def calculateAuctionPendingEntries(self):
         self._settlePendingEntries()
@@ -143,7 +152,11 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         LOG_INFO("onGetCoinAuctionPlayerInfo::", auctionItems, extra)
         auctionItemUUIDList = [auctionItem.auctionItemUUID for auctionItem in auctionItems]
         self.coinAuctionInfo.updatePlayerCache(auctionItemUUIDList, extra.get('cacheSyncT', utils.curTS()))
-        self.client.onGetCoinAuctionPlayerInfo(True, self.coinAuctionInfo.unlockedGrids, self.transServerAuctionItemToClientAuctionItemList(auctionItems))
+        self.refreshBattlePassPrivileges()
+        self.client.onGetCoinAuctionPlayerInfo(
+            True,
+            self.coinAuctionInfo.totalGrids - self.coinAuctionInfo.initGrids,
+            self.transServerAuctionItemToClientAuctionItemList(auctionItems))
 
     # def selfGetAuctionPlayerInfo(self):
     #     LOG_INFO("selfGetAuctionPlayerInfo::")
@@ -261,7 +274,8 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         if self.checkPopupSecondaryPassword([(gameconst.SecondaryPasswordCheckType.SALE_ITEM,)]):
             LOG_WARN("saleItemInCoinAuction:: failed, need popup sp")
             return
-        
+
+        self.refreshBattlePassPrivileges()
         (m_itemObj, m_gridDict), mErrno = self._saleItemInCoinAuctionCheck(
             itemId, uniqueId, totalPrice, number, bagType)
         if mErrno != gameconst.AuctionErrno.ERR_AUCTION_OK:
@@ -289,7 +303,11 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             if m_itemObj.isSoul():
                 score = 0
                 auctionSoulScoreRules = AUT_CONST.datas["auctionSoulScoreRule"]["value"]
-                for rollProp in m_itemObj.rollProps:
+                soulPayload = m_itemObj.exportSoulPayload()
+                soulProps = list(soulPayload['baseProps']) + list(soulPayload['rareProps'])
+                if soulPayload['luckyProp']:
+                    soulProps.append(soulPayload['luckyProp'])
+                for rollProp in soulProps:
                     propQuality = rollProp[1]
                     for auctionSoulScoreRule in auctionSoulScoreRules:
                         cfgQuality, cfgScore = auctionSoulScoreRule
@@ -484,7 +502,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
     @gamedecorator.checkGameconfigEnable('business')
     @AuthClsWraper.authWithPermission(A_AFD.UIBusinessPanel)
     @lockCoinAuction(timeout=2)
-    def buyItemInCoinAuctionByAuctionItemUUID(self, exposed, auctionItemUUID, number):
+    def buyItemInCoinAuctionByAuctionItemUUID(self, exposed, auctionItemUUID, number, isExchange=False):
         LOG_INFO("buyItemInCoinAuctionByAuctionItemUUID::", auctionItemUUID, number)
         _, mErrno = self._buyItemInCoinAuctionCheck()
         if mErrno != gameconst.AuctionErrno.ERR_AUCTION_OK:
@@ -492,8 +510,10 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             self.client.onBuyItemInCoinAuctionByAuctionItemUUIDFailed(mErrno.errno, auctionItemUUID)
             return
 
-        m_extra = {}
-        self.stub.buyItem(self.gbID, auctionItemUUID, number, m_extra)
+        m_extra = {'isExchange': isExchange}
+        # 2026-10-08 抢购权重:推广者特权生效 1100,普通玩家 1000;走 BuyItemReq.snatchWeight 协议字段转发到中央 service
+        m_snatchWeight = self._snapshotCurrentSnatchWeight()
+        self.stub.buyItem(self.gbID, auctionItemUUID, number, m_extra, m_snatchWeight)
         return True
 
     # @@AuctionAPI
@@ -568,17 +588,23 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         mOpUUID = KBEngine.genUUID64()
         _tlogProps = dict(role_name=self.getRoleCacheAttr('name', ''))
         extra.update({'opUUID': mOpUUID, 'tlogProps': _tlogProps})
-        deductWealthVal, mErrno = self._doBuyItemInCoinAuction(totalPrice)
+        deductWealthVal, mErrno = self._doBuyItemInCoinAuction(totalPrice, isExchange=True)
         if mErrno != gameconst.AuctionErrno.ERR_AUCTION_OK:
             LOG_ERR("doBuyItemsInCoinAuctionByAuctionItemUUIDs::failed, errno={}".format(mErrno))
             self.stub.doBuyItems(self.gbID, itemInfos, preFailUUIDs, preFailCodes, mErrno.errno, mOpUUID, extra)
             return
 
         mDesc = "buyItem-coinAuction-{}-{}-{}-{}".format(itemIds, itemNums, itemPrices, auctionUUIDs)
-        self.deductWealth(m_src, deductWealthVal, mOpUUID, mDesc)
+        self.deductWealth(m_src, deductWealthVal, mOpUUID, mDesc, allowMoneyCoverBindMoney=True)
 
         self.stub.doBuyItems(self.gbID, itemInfos, preFailUUIDs, preFailCodes, gameconst.AuctionErrno.ERR_AUCTION_OK.errno, mOpUUID, extra)
 
+    def _snapshotCurrentSnatchWeight(self):
+        weight = gameconst.AuctionSnatchWeight.DEFAULT
+        if self.accountEntity.checkPromoterCD():
+           weight = int(W_CDD.datas['promoterSnapWeight']['value'])
+        return weight
+    
     def _buyItemInCoinAuctionCheck(self):
         if self.bagData.isFull():
             return None, gameconst.AuctionErrno.ERR_AUCTION_PLAYER_BAG_GRID_NOT_ENOUGH
@@ -592,11 +618,15 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             return None, gameconst.AuctionErrno.ERR_AUCTION_IDIP_GM_BAN
         return None, gameconst.AuctionErrno.ERR_AUCTION_OK
 
-    def doBuyItemInCoinAuctionByAuctionItemUUID(self, auctionItemUUID, price, publicityEndTime, buyType, extra):
-        LOG_INFO("doBuyItemInCoinAuctionByAuctionItemUUID::", auctionItemUUID, price, publicityEndTime, buyType, extra)
+    def doBuyItemInCoinAuctionByAuctionItemUUID(self, auctionItemUUID, price, publicityEndTime, extra):
+        # 2026-09-21 v3 抢购迁移:v3 拦截由中央 service 在 DoBuyItem 阶段做,game server 不再透传 buyType
+        LOG_INFO("doBuyItemInCoinAuctionByAuctionItemUUID::", auctionItemUUID, price, publicityEndTime, extra)
         code = extra.get("code", gameconst.AuctionErrno.ERR_AUCTION_OK)
         errno = gameconst.AuctionErrno._errno(code)
         if errno != gameconst.AuctionErrno.ERR_AUCTION_OK:
+            if errno == gameconst.AuctionErrno.ERR_AUCTION_SNATCH_PARTICIPATE_SUCCESS:
+                self.onMessagePre(AUT_CONST.datas['auctionLuckyBuyCheck']['value'], [])
+                return
             _i_logErr = True
             if errno in (gameconst.AuctionErrno.ERR_AUCTION_NOT_IN_AUCTION,
                          gameconst.AuctionErrno.ERR_AUCTION_BUY_ITEM_NOT_ENOUGH,
@@ -606,62 +636,32 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
                 _i_logErr = False
             (LOG_ERR if _i_logErr else LOG_WARN)(
                 "buyItemInAuctionByAuctionItemUUID::failed, errno={}".format(errno))
-            
             if errno == gameconst.AuctionErrno.ERR_AUCTION_ITEM_IS_SELF_SALE:
                 self.client.onMessage(AUT_CONST.datas["purchaseSelfForbid"]["value"], [])
             else:
                 self.client.onBuyItemInCoinAuctionByAuctionItemUUIDFailed(code, auctionItemUUID)
             return
-        deductWealthVal, mErrno = self._doBuyItemInCoinAuction(price)
+        deductWealthVal, mErrno = self._doBuyItemInCoinAuction(price, isExchange=extra.get('isExchange', False))
         if mErrno != gameconst.AuctionErrno.ERR_AUCTION_OK:
             LOG_ERR("doBuyItemInCoinAuctionByAuctionItemUUID::failed, errno={}".format(mErrno))
-            self.stub.doBuyItem(auctionItemUUID, self.gbID, mErrno.errno, price, publicityEndTime, buyType, extra)
+            self.stub.doBuyItem(auctionItemUUID, self.gbID, mErrno.errno, price, publicityEndTime, extra)
             return
 
-        # 如果是抢购，从redis进行检查是否已经参与了
-        if buyType == gameconst.AuctionBuyType.SNATCH:
-            gameglobal.localBaseApp.getRedisClient().get(
-                    gameconst.AuctionSnatchData.SNATCH_PARTICIPATE_PREFIX.format(str(self.gbID), str(auctionItemUUID)),
-                    lambda cid, err, result, 
-                    auctionItemUUID=auctionItemUUID, 
-                    deductWealthVal=deductWealthVal, 
-                    mErrno=mErrno, 
-                    price=price, 
-                    publicityEndTime=publicityEndTime, 
-                    buyType=buyType, 
-                    extra=extra:
-                        self._onChekSnatchDoBuyItemResult(cid, err, result, auctionItemUUID, deductWealthVal, mErrno, price, publicityEndTime, buyType, extra))
-            return
-
-        self.afterDoBuyItemInCoinAuctionByAuctionItemUUID(auctionItemUUID, deductWealthVal, mErrno, price, publicityEndTime, buyType, extra)
-
-    def _onChekSnatchDoBuyItemResult(self, cid, err, res, auctionItemUUID, deductWealthVal, mErrno, price, publicityEndTime, buyType, extra):
-        LOG_INFO("_onChekSnatchDoBuyItemResult", cid, err, res, auctionItemUUID, deductWealthVal, mErrno, price, publicityEndTime, buyType, extra)
-        if err:
-            LOG_ERR("_onChekSnatchDoBuyItemResult", "err", err, res, auctionItemUUID, deductWealthVal, mErrno, price, publicityEndTime, buyType, extra)
-            return
-        status = int(res.decode('utf-8')) if res else 0
-        if status == 1:
-            self.onMessagePre(AUT_CONST.datas['auctionLuckyBuyCheck']['value'], [])
-        else:
-            self.afterDoBuyItemInCoinAuctionByAuctionItemUUID(auctionItemUUID, deductWealthVal, mErrno, price, publicityEndTime, buyType, extra)
-
-    def afterDoBuyItemInCoinAuctionByAuctionItemUUID(self, auctionItemUUID, deductWealthVal, mErrno, price, publicityEndTime, buyType, extra):
-        LOG_INFO("afterDoBuyItemInCoinAuctionByAuctionItemUUID", auctionItemUUID, deductWealthVal, mErrno, price, publicityEndTime, buyType, extra)
+        # 旧 SNATCH 路径(Redis 二次校验 + _onChekSnatchDoBuyItemResult)已删除
         _itemId, _number = extra['auctionBuyItemId'], extra['auctionBuyItemNum']
         m_src = AAC_AACDD.datas.BONUS_SRC_COIN_AUCTION_BUY_ITEM
         mOpUUID = KBEngine.genUUID64()
         mDesc = "buyItem-coinAuction-{}-{}-{}-{}".format(_itemId, _number, price, auctionItemUUID)
-        self.deductWealth(m_src, deductWealthVal, mOpUUID, mDesc)
+        self.deductWealth(m_src, deductWealthVal, mOpUUID, mDesc, allowMoneyCoverBindMoney=extra.get('isExchange', False))
 
         _tlogProps = dict(role_name=self.getRoleCacheAttr('name', ''))
         extra.update({'opUUID': mOpUUID, 'tlogProps': _tlogProps})
-        self.stub.doBuyItem(auctionItemUUID, self.gbID, mErrno.errno, price, publicityEndTime, buyType, extra)
+        self.stub.doBuyItem(auctionItemUUID, self.gbID, mErrno.errno, price, publicityEndTime, extra)
 
-    def _doBuyItemInCoinAuction(self, price):
+    def _doBuyItemInCoinAuction(self, price, isExchange=False):
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(self.moneyItemId, price)
-        res = self.canDeductWealth(deductWealthVal)
+        res = self.canDeductWealth(deductWealthVal, allowMoneyCoverBindMoney=isExchange)
         if not res:
             if res() == gameconst.CanDeductWealthRes.FALSE_POPUP_SECOND_PWD:
                 return None, gameconst.AuctionErrno.ERR_AUCTION_FAIL
@@ -670,15 +670,28 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             return None, gameconst.AuctionErrno.ERR_AUCTION_UNKNOWN.initkvbody(reason='zero-price')
         return deductWealthVal, gameconst.AuctionErrno.ERR_AUCTION_OK
 
+    @gamedecorator.offlineCallback
     @unlockCoinAuction
-    def onBuyItemInCoinAuctionByAuctionItemUUID(self, auctionItem, price, extra):
-        LOG_INFO("onBuyItemInCoinAuctionByAuctionItemUUID::", auctionItem, price, extra)
-        isOK = extra.get('isOK')
-        if not isOK:
-            errno = extra.get('errno')
-            self.client.onBuyItemInCoinAuctionByAuctionItemUUIDFailed(errno, auctionItem.auctionItemUUID)
-            return
+    def onBuyItemInCoinAuctionByAuctionItemUUID(self, auctionItem, price, extra, isOffline):
+        LOG_INFO("onBuyItemInCoinAuctionByAuctionItemUUID::", auctionItem, price, extra, isOffline)
+        errno = extra.get('errno')
 
+        errno = gameconst.AuctionErrno._errno(errno)
+        # 抢购道具失败退钱
+        if errno == gameconst.AuctionErrno.ERR_AUCTION_SNATCH_PARTICIPATE_REPEAT:
+            self.onMessagePre(AUT_CONST.datas['auctionLuckyBuyCheck']['value'], [])
+            opUUID = KBEngine.genUUID64()
+            srcType = AAC_AACDD.datas.BONUS_SRC_AUCTION_SNATCH_RETURN_MONEY
+            detail = gameclass.AwardDetailCls(itemId=auctionItem.itemId, uniqueId=auctionItem.uniqueId, auctionItemUUID=auctionItem.auctionItemUUID)
+            
+            awardVal = dropAward.AwardVal()
+            awardVal.addWealthByItemId(self.moneyItemId, price)
+            self.addWealth(srcType, awardVal, opUUID, detail, notify=False)
+            return
+        elif errno == gameconst.AuctionErrno.ERR_AUCTION_SNATCH_PARTICIPATE_SUCCESS:
+            self.onMessagePre(AUT_CONST.datas['auctionLuckyBuyCheck']['value'], [])
+            return
+        
         _m_auctionItemUUID = auctionItem.auctionItemUUID
         _m_uniqueId = auctionItem.uniqueId
         _m_itemId = auctionItem.itemId
@@ -691,43 +704,11 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         m_itemObjList = list(auctionItem.iterToSaledItemDataList(number=extra.get('auctionBuyItemNum')))
 
         mAddWealth = dropAward.AwardVal(itemObjs=m_itemObjList)
-        if not self.canAddWealthVal(m_src, mAddWealth):
-            LOG_ERR("onBuyItemInCoinAuctionByAuctionItemUUID not canAddWealthVal", _m_auctionItemUUID, _m_uniqueId,
-                      _m_itemId, auctionItem.number)
-        else:
-            mAddWealth.scrubWealthItemObjs(createTime=_m_now)
-            self.addWealth(m_src, mAddWealth, mOpUUID, mDesc)
-
-        self.client.onBuyItemInCoinAuctionByAuctionItemUUID(_m_auctionItemUUID, _m_itemId, _m_uniqueId, price, buyItemNum)
-
-    @gamedecorator.offlineCallback
-    def onBuyItemInCoinAuctionByAuctionItemUUIDOffline(self, auctionItem, price, extra):
-        LOG_INFO("onBuyItemInCoinAuctionByAuctionItemUUIDOffline::", auctionItem, price, extra)
-        isOK = extra.get('isOK')
-        if not isOK:
-            return
-
-        _m_auctionItemUUID = auctionItem.auctionItemUUID
-        _m_uniqueId = auctionItem.uniqueId
-        _m_itemId = auctionItem.itemId
-        _m_now = utils.curTS()
-
-        m_src = AAC_AACDD.datas.BONUS_SRC_COIN_AUCTION_BUY_ITEM
-        mOpUUID = KBEngine.genUUID64()
-        buyItemNum = extra.get('auctionBuyItemNum')
-        mDesc = "buy-coinAuction-auctionItemUUID-{}-{}-{}".format(_m_auctionItemUUID, _m_itemId, _m_uniqueId)
-        m_itemObjList = list(auctionItem.iterToSaledItemDataList(number=extra.get('auctionBuyItemNum')))
-
-        mAddWealth = dropAward.AwardVal(itemObjs=m_itemObjList)
-        if not self.canAddWealthVal(m_src, mAddWealth):
-            LOG_ERR("onBuyItemInCoinAuctionByAuctionItemUUIDOffline not canAddWealthVal", _m_auctionItemUUID,
-                      _m_uniqueId,
-                      _m_itemId, auctionItem.number)
-        else:
-            mAddWealth.scrubWealthItemObjs(createTime=_m_now)
-            self.addWealth(m_src, mAddWealth, mOpUUID, mDesc)
-
-        self.client.onBuyItemInCoinAuctionByAuctionItemUUID(_m_auctionItemUUID, _m_itemId, _m_uniqueId, price, buyItemNum)
+        mAddWealth.scrubWealthItemObjs(createTime=_m_now)
+        self.addWealth(m_src, mAddWealth, mOpUUID, mDesc)
+        
+        if not isOffline:
+            self.client.onBuyItemInCoinAuctionByAuctionItemUUID(_m_auctionItemUUID, _m_itemId, _m_uniqueId, price, buyItemNum)
 
     @gamedecorator.offlineCallback
     @unlockCoinAuction
@@ -982,10 +963,11 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
         elif mErrno == gameconst.AuctionErrno.ERR_AUCTION_CANCEL_SALE_ITEM_NOT_FOUND:
             LOG_WARN('onCancelSaleItemInCoinAuctionFail:: cancel sale item not found', auctionItemUUID, extra)
-
         elif mErrno == gameconst.AuctionErrno.ERR_AUCTION_ITEM_IS_LOCKED:
-            LOG_WARN('onCancelSaleItemInCoinAuctionFail:: cancel sale item locked', auctionItemUUID, extra)
-
+            LOG_WARN('onCancelSaleItemInCoinAuctionFail:: cancel sale item is normal locked', auctionItemUUID, extra)
+        elif mErrno == gameconst.AuctionErrno.ERR_AUCTION_ITEM_IS_IN_SNATCH:
+            self.onMessagePre(int(AUT_CONST.datas["goodsCannotUnder"]["value"]), [])
+            LOG_WARN('onCancelSaleItemInCoinAuctionFail:: cancel sale item is in snatch', auctionItemUUID, extra)
         else:
             LOG_ERR('onCancelSaleItemInCoinAuctionFail::', mErrno, auctionItemUUID, extra)
 
@@ -1214,7 +1196,7 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
 
         deductWealthVal, errno = self._doBuyItemInCoinAuction(totalPrice)
         if errno != gameconst.AuctionErrno.ERR_AUCTION_OK:
-            LOG_ERR("doBuyItemInCoinAuctionByAuctionItemUUID::failed, errno={}".format(errno))
+            LOG_ERR("onBuyItemByItemIdResp::failed, errno={}".format(errno))
             self.stub.doBuyItemByItemId(self.gbID, errno.errno, itemId, number, price, remainNum, auctionItemUUIDs,
                                         totalPrice, extra)
             return
@@ -1307,7 +1289,8 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
         mOpUUID = KBEngine.genUUID64()
         mDesc = "getAuctionSaleItemMoney-bindMoney:{}, money:{}".format(self.saleItemBindMoney, self.saleItemMoney)
         _awardVal = dropAward.AwardVal(money=self.saleItemMoney,bindMoney=self.saleItemBindMoney)
-        self.triggerAchievementWithCtx(gameconst.AchieveType.AUCTION_MONEY, actionContext.AchievementCtx(num=self.saleItemBindMoney+self.saleItemMoney))
+        self._addAuctionGainMoney(self.saleItemBindMoney + self.saleItemMoney)
+        self.triggerAchievementWithCtx(gameconst.AchieveType.AUCTION_MONEY, actionContext.AchievementCtx())
         self.saleItemMoney = 0
         self.saleItemBindMoney = 0
         self.addWealth(m_src, _awardVal, mOpUUID, mDesc)
@@ -1433,3 +1416,17 @@ class ICoinAuction(iAuctionMixin.IAuctionMixin):
             for auctionItem in auctionItemList:
                 auctionItemClientList.append(self.transServerAuctionItemToClientAuctionItem(auctionItem))
         return auctionItemClientList
+    
+    @gamedecorator.offlineCallback
+    def onSnatchRefund(self, opUUID, itemId, price, isOffline):
+        LOG_INFO("onSnatchRefund::", opUUID, itemId, price, isOffline)
+        if not isOffline:
+            # 发消息
+            gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
+                                    [self.gbID, ], 'onMessagePre', (AUT_CONST.datas['auctionLuckyBuyFail']['value'], [self.getRoleCacheAttr('name', '')]),
+                                    None, '', ())
+        # 退还消耗
+        attachVal = dropAward.MailAttachVal()
+        attachVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, price)
+        mailAssistor.sendMailToPlayers([self.gbID], AUT_CONST.datas['auctionLuckyBuyMail']['value'], extraAttach=attachVal, opUUID=opUUID,
+                                    despArgs=[str(itemId), str(self.gbID)], srcType=AAC_AACDD.datas.BONUS_SRC_AUCTION_SNATCH_FAIL)

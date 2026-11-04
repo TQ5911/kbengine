@@ -924,8 +924,15 @@ class IEventActions(object):
         fromSkillId = args[0]
         toSkillId = args[1]
 
+        utils.traceSkill(self, 'cell.changeSkill.in', (fromSkillId, toSkillId),
+                         'fromSkillId=', fromSkillId, 'toSkillId=', toSkillId,
+                         'isAvatar=', self.IsAvatar,
+                         'cellSkillDic=', tuple(self.skillDic.keys()))
+
         fromSkill = self.skillDic.doGetSkill(fromSkillId, False)
         if not fromSkill:
+            utils.traceSkill(self, 'cell.changeSkill.fromSkillNotFound', (fromSkillId, toSkillId),
+                             'fromSkillId=', fromSkillId, 'toSkillId=', toSkillId)
             return
 
         if self.IsAvatar:
@@ -937,6 +944,9 @@ class IEventActions(object):
                 toSkill = self.addSkillInEntity(toSkillId, fromSkill.skillLv, fromSkill.tNextCast)
                 if toSkill:
                     toSkill.onChangedFromSkill(fromSkill)
+                utils.traceSkill(self, 'cell.changeSkill.addToSkill', (fromSkillId, toSkillId),
+                                 'fromSkillId=', fromSkillId, 'toSkillId=', toSkillId,
+                                 'addOk=', bool(toSkill), 'skillLv=', fromSkill.skillLv)
 
             self.base.onChangeSkill(fromSkillId, toSkillId, fromSkill.tNextCast)
 
@@ -1234,6 +1244,16 @@ class IEventActions(object):
                 targetEnt.aiController.tauntTimerId = 0
             targetEnt.aiController.tauntTimerId=targetEnt.addTimerCB(tauntTime, 'resetForceTargetId', (),gametimer.TIMER_TAG_RESET_FORCE_TARGET)
 
+    def getAITarget(self, target):
+        if not self.IsAICombatUnit:
+            return target
+
+        _tgtEnt = KBEngine.entities.get(self.aiController.targetId)
+        if not _tgtEnt:
+            return target
+
+        return _tgtEnt
+
     def resetForceTargetId(self):
         if self.isDestroyed:
             return
@@ -1339,6 +1359,7 @@ class IEventActions(object):
                 (),
             )
         )
+        gameengine.getGlobalBase('CrossServerStub').crossBroadcastMsg(msgId)
 
     def challengeInnerDemon(self):
         if not formula.inCubeScene(self.spaceNo):
@@ -1353,7 +1374,5 @@ class IEventActions(object):
         dunPlayMode = dungeonPlayMode.ChallengeInnerDemonPlayMode(ownerGbId=self.gbId)
         extra = {'hasCheck': True, 'dungeonPlayMode': dunPlayMode, 'hasCast': False}
         LOG_DBG('challengeInnerDemon', src, extra)
-        self.applyLeaveTeam(self.id)
-        self.leaveRaid(self.id)
         self.setPersistentMiscProp(gameconst.EntityPropsEnum.innerDemonCDTimestamp, utils.curTS() + cube_config.datas['cube_innerDemonCD']['value'])
         self._enterSingleDungeon(dungeonNo, src, extra)

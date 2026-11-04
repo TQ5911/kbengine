@@ -17,6 +17,12 @@
             <Flags>         BASE_AND_CLIENT         </Flags>
             <Persistent>    true                    </Persistent>
         </newbieGuideVals>
+
+        <growthGuideRewards>
+            <Type>          BIG_BIT_DATA_INFO       </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </growthGuideRewards>
     </Properties>
 
     <BaseMethods>
@@ -31,6 +37,10 @@
             <Arg>           OBJECT_ID               </Arg>
             <Arg>           UINT8                   </Arg>
         </setNewbieGuideId>
+
+        <takeGrowthGuideRewards> <Exposed/>
+            <Arg>           ARRAY   <of>    UINT32  </of>   </Arg>
+        </takeGrowthGuideRewards>
     </BaseMethods>
 
     <CellMethods>
@@ -48,5 +58,9 @@
             <Arg>       OBJECT_ID       </Arg>
             <Arg>       UINT8           </Arg>
         </onNewbieGuideId>
+
+        <onGrowthGuideRewards>
+            <Arg>           BIG_DATA_CLIENT         </Arg>
+        </onGrowthGuideRewards>
     </ClientMethods>
 </root>

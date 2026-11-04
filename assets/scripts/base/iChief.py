@@ -75,9 +75,9 @@ class IChief(object):
         self._useCoinToIncreaseChiefRewardNumber(1, {})
 
     @gamedecorator.checkGameconfigEnable('raidDungeon')
-    def increaseChiefRewardNumber(self, exposed, coinNum, itemNum):
+    def increaseChiefRewardNumber(self, exposed, coinNum, itemNum, isExchange):
         LOG_INFO('increaseChiefRewardNumber::', coinNum, itemNum)
-        retCoin, coinAddCount = self._useCoinToIncreaseChiefRewardNumber(coinNum, {}, needMsg = False)
+        retCoin, coinAddCount = self._useCoinToIncreaseChiefRewardNumber(coinNum, {}, needMsg = False, isExchange=isExchange)
         retItem = self._useItemToIncreaseChiefRewardNumber(itemNum, {}, needMsg = False)
         if retCoin or retItem:
             totalNum = 0
@@ -95,10 +95,10 @@ class IChief(object):
         self._useItemToIncreaseChiefRewardNumber(useNum, {})
 
     @gamedecorator.checkGameconfigEnable('raidDungeon')
-    def useCoinToIncreaseChiefRewardNumber(self, exposed, useNum):
+    def useCoinToIncreaseChiefRewardNumber(self, exposed, useNum, isExchange=False):
         LOG_INFO('useCoinToIncreaseChiefRewardNumber::', useNum)
 
-        self._useCoinToIncreaseChiefRewardNumber(useNum, {})
+        self._useCoinToIncreaseChiefRewardNumber(useNum, {}, isExchange=isExchange)
 
     def _useItemToIncreaseChiefRewardNumber(self, itemNum, extra, needMsg = True):
         itemId = int(RBC_CFG.datas['rewardNumItem']['value'])
@@ -120,17 +120,27 @@ class IChief(object):
         detail = gameclass.AwardDetailCls(itemId=itemId, itemNum=itemNum)
         self.deductWealth(srcType, deductWealthVal, opUUID, detail)
 
-        self.onUseItemToIncreaseChiefRewardNumber(itemId, itemNum, extra, needMsg)
+        self.onUseItemToIncreaseChiefRewardNumber(itemId, itemNum, extra, needMsg, opUUID=opUUID)
         return True
     
-    def onUseItemToIncreaseChiefRewardNumber(self, itemId, itemNum, extra, needMsg = True):
+    def onUseItemToIncreaseChiefRewardNumber(self, itemId, itemNum, extra, needMsg = True, opUUID = 0):
         LOG_INFO('onUseItemToIncreaseChiefRewardNumber::', itemId, itemNum, extra, needMsg)
         self.chiefInfo.addRewardNumByUseSpecialItem(itemNum)
         self.chiefInfo = self.chiefInfo
+        # 获得门票埋点：op_uuid 关联扣道具的 opUUID
+        LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Buy(
+            self.gbID,
+            self.accountEntity.clientDistinctId,
+            opUUID,
+            gameconst.DungeonTicketBuySrc.ITEM_BUY,
+            gameconst.DungeonTicketType.ITEM,
+            itemNum,
+            gameconst.DungeonPlayModeEnum.CHIEF
+        )
         if needMsg:
             self.onMessagePre(int(RBC_CFG.datas["useShanglingdingMsg"]["value"]), [str(itemNum)])
 
-    def _useCoinToIncreaseChiefRewardNumber(self, useNum, extra, needMsg = True):
+    def _useCoinToIncreaseChiefRewardNumber(self, useNum, extra, needMsg = True, isExchange=False):
         LOG_INFO('_useCoinToIncreaseChiefRewardNumber::', useNum)
         if useNum <= 0:
             return False, 0
@@ -138,6 +148,9 @@ class IChief(object):
         addRewardNum = 0
         freeAddNum = 0
         paidAddNum = 0
+        # 一次购买操作全程共用同一 opUUID 与 srcType（埋点 op_uuid 口径）
+        opUUID = KBEngine.genUUID64()
+        srcType = AAC_AACDD.datas.BONUS_SRC_CRUSADE_ADD_REWARD
         for _ in range(0, useNum):
             if not self.chiefInfo.isCanAddRewardByCoin(1):
                 LOG_ERR('useCoinToIncreaseChiefRewardNumber:: rewardNumber not enough')
@@ -147,31 +160,38 @@ class IChief(object):
             if not itemId:
                 break
 
+            deductWealthVal = dropAward.DeductWealthVal()
+            deductWealthVal.addWealthByItemId(itemId, itemNum)
+
+            res = self.canDeductWealth(deductWealthVal, allowMoneyCoverBindMoney=isExchange)
+            if not res:
+                LOG_WARN('_useCoinToIncreaseChiefRewardNumber::check failed', res())
+                break
+
             addRewardNum += 1
             if itemNum:
                 paidAddNum += 1
             else:
                 freeAddNum += 1
 
-            deductWealthVal = dropAward.DeductWealthVal()
-            deductWealthVal.addWealthByItemId(itemId, itemNum)
-
-            res = self.canDeductWealth(deductWealthVal)
-            if not res:
-                LOG_WARN('_useCoinToIncreaseChiefRewardNumber::check failed', res())
-                break
-
-            opUUID = KBEngine.genUUID64()
-            srcType = AAC_AACDD.datas.BONUS_SRC_CRUSADE_ADD_REWARD
             detail = gameclass.AwardDetailCls()
-            self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+            self.deductWealth(srcType, deductWealthVal, opUUID, detail, allowMoneyCoverBindMoney=isExchange)
             self.chiefInfo.deductUsedCoinAddRewardNum(1)
 
         if addRewardNum > 0:
-            self.onUseCoinToIncreaseChiefRewardNumber(useNum, addRewardNum, extra, freeAddNum, paidAddNum, gameconst.addTicketTimesType.COIN, needMsg)
+            self.onUseCoinToIncreaseChiefRewardNumber(
+                useNum,
+                addRewardNum,
+                extra,
+                freeAddNum,
+                paidAddNum,
+                gameconst.addTicketTimesType.COIN,
+                needMsg,
+                opUUID=opUUID
+            )
         return True, addRewardNum
     
-    def onUseCoinToIncreaseChiefRewardNumber(self, useNum, addRewardNum, extra, freeAddNum, paidAddNum, attType, needMsg):
+    def onUseCoinToIncreaseChiefRewardNumber(self, useNum, addRewardNum, extra, freeAddNum, paidAddNum, attType, needMsg, opUUID = 0):
         LOG_INFO('onUseCoinToIncreaseChiefRewardNumber::', useNum, addRewardNum, extra, freeAddNum, paidAddNum, attType, needMsg)
         if freeAddNum:
             if attType == gameconst.addTicketTimesType.RECOVERY:
@@ -181,44 +201,38 @@ class IChief(object):
         if paidAddNum:
             self.chiefInfo.addRewardNumByUseCoin(paidAddNum)
         self.chiefInfo = self.chiefInfo
+        # 获得门票埋点：按桶拆分上报，同一操作共用 opUUID
+        if attType == gameconst.addTicketTimesType.COIN:
+            if freeAddNum:
+                LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Buy(
+                    self.gbID,
+                    self.accountEntity.clientDistinctId,
+                    opUUID,
+                    gameconst.DungeonTicketBuySrc.COIN_BUY,
+                    gameconst.DungeonTicketType.NORMAL,
+                    freeAddNum,
+                    gameconst.DungeonPlayModeEnum.CHIEF
+                )
+            if paidAddNum:
+                LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Buy(
+                    self.gbID,
+                    self.accountEntity.clientDistinctId,
+                    opUUID,
+                    gameconst.DungeonTicketBuySrc.COIN_BUY,
+                    gameconst.DungeonTicketType.GOLD,
+                    paidAddNum,
+                    gameconst.DungeonPlayModeEnum.CHIEF
+                )
+        elif attType == gameconst.addTicketTimesType.RECOVERY:
+            if freeAddNum:
+                LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Buy(
+                    self.gbID,
+                    self.accountEntity.clientDistinctId,
+                    opUUID,
+                    gameconst.DungeonTicketBuySrc.RECOVERY,
+                    gameconst.DungeonTicketType.COMMON,
+                    freeAddNum,
+                    gameconst.DungeonPlayModeEnum.CHIEF
+                )
         if needMsg:
             self.onMessagePre(int(RBC_CFG.datas["useShanglingdingMsg"]["value"]), [str(addRewardNum)])
-
-    def onEnterChiefDungeon(self, spaceUUID, spaceNo, dungeonNo, spaceMgrBox, extra):
-        LOG_INFO('onEnterChiefDungeon::', spaceUUID, spaceNo, dungeonNo, spaceMgrBox, extra)
-        self.onEnterDungeon(spaceNo, spaceMgrBox, extra)
-        self.activityComplete(RBC_CFG.datas['raidBossChallengeActID']['value'])
-
-        LogTrackingMgr.LogTrackingMgr.Dungeon_Ticket_Consume(
-            self.gbID,
-            self.accountEntity.clientDistinctId,
-            extra.get('raidId'),
-            gameconst.DungeonPlayModeEnum.CHIEF,
-            dungeonNo,
-            spaceNo, 
-            spaceUUID,
-            self.chiefInfo.getUsedTicketType(),
-            extra.get('joinType'),
-            extra.get('totalNum'),
-            self.gbID,
-            self.getTotalScore(),
-            self.getRoleCacheAttr('level')
-        )
-
-        LogTrackingMgr.LogTrackingMgr.Dungeon_Entrance(
-                self.gbID,
-                self.accountEntity.clientDistinctId,
-                extra.get('raidId'),
-                gameconst.DungeonPlayModeEnum.CHIEF,
-                dungeonNo,
-                spaceUUID,
-                spaceNo,
-                self.gbID,
-                self.chiefInfo.getUsedTicketType(),
-                extra.get('joinType'),
-                self.getTotalScore(),
-                self.getRoleCacheAttr('level'),
-                self.getRoleCacheAttr('name'),
-            )
-        
-        LOG_INFO('in onEnterChiefDungeon::', spaceNo, dungeonNo, spaceMgrBox, extra)

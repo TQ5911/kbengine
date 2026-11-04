@@ -14,7 +14,6 @@ import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import message_Message_def as MMD
 import agent_agentFunction as A_AFD
 import agent_agentConfig as A_ACD
-import visible_visible as UVVD
 import const_const as CONST
 from BountyInfo import bountyItem
 import dropAward
@@ -93,6 +92,15 @@ class IBounty(object):
         if self.hunterInfo:
             self.cell.setHunterInfo(self.hunterInfo.toSyncDict(), gameconst.UpdateHunterBuffFlag.ADD)
         LOG_INFO("IBounty::bountyOnLogin end")
+
+    def bountyOnOffline(self):
+        prePublishDict = self.getTempMiscProp(gameconst.EntityPropsEnum.assignedHunterBountyInfo, None)
+        LOG_INFO("IBounty::bountyOnOffline", prePublishDict)
+        if not prePublishDict:
+            return
+        prePublishItem = bountyItem()
+        prePublishItem.initFromSyncDict(prePublishDict)
+        self.doReplyAssignedHunter(prePublishItem.uuid, 0)
 ################################################################################
     @gamedecorator.checkGameconfigEnable('order')
     def reqGetAvatarBountyInfo(self, exposed, abType):
@@ -430,19 +438,24 @@ class IBounty(object):
             stubBox.onWaitForPrePublishBounty(playerbox, prePublishDict, False)
             return
         stubBox.onWaitForPrePublishBounty(playerbox, prePublishDict, True)
+        self.setTempMiscProp(gameconst.EntityPropsEnum.assignedHunterBountyInfo, prePublishDict)
         self.client.onNoticeAssignedHunter(prePublishDict)
 
     @gamedecorator.checkGameconfigEnable('order')
     def reqReplyAssignedHunter(self, exposed, uuid, res):
-        LOG_INFO("IBounty::reqReplyAssignedHunter", res)
+        LOG_INFO("IBounty::reqReplyAssignedHunter", uuid, res)
+        self.doReplyAssignedHunter(uuid, res)
 
+    def doReplyAssignedHunter(self, uuid, res):
+        LOG_INFO("IBounty::doReplyAssignedHunter", uuid, res)
         hunterItem = bountyItem()
         hunterItem.uuid = uuid
         hunterItem.hunterGbId = self.gbID
         hunterItem.hunterName = self.characterName
         if res:
             # ztq_todo， 可附带数据数据
-            LOG_INFO("IBounty::reqReplyAssignedHunter carry info")
+            LOG_INFO("IBounty::doReplyAssignedHunter carry info")
+        self.popTempMiscProp(gameconst.EntityPropsEnum.assignedHunterBountyInfo, None)
         gameengine.getGlobalBase('BountyStub').onHunterPrePublishBountyRes(self, hunterItem.toSyncDict(), res)
 ################################################################################
     @gamedecorator.checkGameconfigEnable('order')
@@ -499,6 +512,7 @@ class IBounty(object):
         LOG_INFO("IBounty::acceptBountyRes", bountyDict, resCode)
         
         self.popTempMiscProp(gameconst.EntityPropsEnum.acceptBounty, None)
+        self.popTempMiscProp(gameconst.EntityPropsEnum.assignedHunterBountyInfo, None)
         if resCode != gameconst.AcceptBountyResType.SUCCESS:
             if resCode == gameconst.AcceptBountyResType.ALERADY_HUNTER:
                 self.onMessagePre(MMD.datas.KillerRepeatMsg, [])

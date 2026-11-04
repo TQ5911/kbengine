@@ -24,7 +24,10 @@ class WaitMapSpaceStub(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iGlobal.IGlobal):
 
     def doNext(self):
         LOG_INFO('WaitMapSpaceStub::doNext~')
-        self._waitMapReportTimer = self.pyAddTimer(10, 10, gametimer.TIMER_ID_REPORT_WAITMAP_STATUS)
+        self._waitMapReportTimer = self.pyAddTimer(
+            gameconst.WAITMAP_HEARTBEAT_INTERVAL,
+            gameconst.WAITMAP_HEARTBEAT_INTERVAL,
+            gametimer.TIMER_ID_REPORT_WAITMAP_STATUS)
 
         cellAppCount = gameconfig.cellAppCount()
         baseMapId = gameconst.MapIdDef.mapWaitingServer
@@ -155,10 +158,11 @@ class WaitSpaceFinder(object):
         startCount = (minCount // perCount) * perCount
 
         # 线性填充
-        for i in range(startCount, cellMaxPlayerNum+1, perCount):
+        for i in range(startCount, cellMaxPlayerNum+perCount, perCount):
+            limitNum = min(i, cellMaxPlayerNum)
             for spaceNo, spaceInfo in self.spaces.items():
                 if not spaceInfo['ready']: continue
-                if len(spaceInfo['avataring']) >= i: continue
+                if len(spaceInfo['avataring']) >= limitNum: continue
 
                 spaceInfo['avataring'][gbid] = {
                     'gbid': gbid,

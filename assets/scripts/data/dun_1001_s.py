@@ -90,7 +90,7 @@ datas ={
           "CustomID": "10118001",
           "Dir": 90.6693,
           "DisplayName": "\u65b0\u5143\u57ce\u90ca",
-          "EliteCustomID": "19028004",
+          "EliteCustomID": "19028001",
           "EntityID": 17100102,
           "ID": 10010056,
           "PosX": 34.95,
@@ -115,7 +115,7 @@ datas ={
           "CustomID": "10308001",
           "Dir": 90.6693,
           "DisplayName": "\u6708\u5149\u6d77\u6e2f",
-          "EliteCustomID": "19038004",
+          "EliteCustomID": "19038001",
           "EntityID": 17100201,
           "ID": 10018080,
           "PosX": 323.7228,
@@ -2495,31 +2495,6 @@ datas ={
             "ShowInSceneMap": 1
           }
         },
-        "10014103": {
-          "ActivityID": 0,
-          "AttachedGIDList": [],
-          "ClassName": "Npc",
-          "ClassNameType": 1,
-          "CustomID": "",
-          "Dir": 98.96986,
-          "DisplayName": "",
-          "EliteCustomID": "",
-          "EntityID": 18000002,
-          "ID": 10014103,
-          "PosX": 185.2138,
-          "PosY": 0.9946716,
-          "PosZ": 160.6851,
-          "Props": {
-            "IsOpen": 1,
-            "MapEntityType": 0,
-            "Radius": 0.0,
-            "RefreshNum": 1,
-            "RefreshTime": 1,
-            "RefreshTimedID": 0,
-            "Remark": "",
-            "ShowInSceneMap": 1
-          }
-        },
         "10014105": {
           "ActivityID": 0,
           "AttachedGIDList": [],
@@ -4299,7 +4274,7 @@ datas ={
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
-          "Dir": 179.7299,
+          "Dir": 180.0,
           "DisplayName": "",
           "EliteCustomID": "",
           "EntityID": 18000772,
@@ -7074,14 +7049,14 @@ datas ={
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
-          "Dir": 180.6696,
+          "Dir": 83.5184,
           "DisplayName": "",
           "EliteCustomID": "",
           "EntityID": 18000926,
           "ID": 10014318,
-          "PosX": 94.94,
+          "PosX": 94.04277,
           "PosY": 2.247627,
-          "PosZ": 203.52,
+          "PosZ": 211.8355,
           "Props": {
             "IsOpen": 1,
             "MapEntityType": "11",
@@ -8192,6 +8167,31 @@ datas ={
             "Remark": "",
             "ShowInSceneMap": 1
           }
+        },
+        "10014370": {
+          "ActivityID": 0,
+          "AttachedGIDList": [],
+          "ClassName": "Npc",
+          "ClassNameType": 1,
+          "CustomID": "",
+          "Dir": 327.8775,
+          "DisplayName": "",
+          "EliteCustomID": "",
+          "EntityID": 18000017,
+          "ID": 10014370,
+          "PosX": 320.8849,
+          "PosY": -2.476216,
+          "PosZ": 124.6685,
+          "Props": {
+            "IsOpen": 1,
+            "MapEntityType": 0,
+            "Radius": 0.0,
+            "RefreshNum": 1,
+            "RefreshTime": 1,
+            "RefreshTimedID": 0,
+            "Remark": "86010564",
+            "ShowInSceneMap": 1
+          }
         }
       },
       "Collection": {
@@ -8878,9 +8878,9 @@ datas ={
         "EliteCustomID": "",
         "EntityID": 0,
         "ID": 10018084,
-        "PosX": 0.0,
-        "PosY": 0.0,
-        "PosZ": 0.0,
+        "PosX": 261.0861,
+        "PosY": -0.7345726,
+        "PosZ": 137.5569,
         "Props": {
           "Num": 0,
           "Radius": 0.0,
@@ -8908,6 +8908,28 @@ datas ={
           "Radius": 0.0,
           "RefreshTimedID": 0,
           "Remark": "86050020",
+          "ShowInSceneMap": 1
+        }
+      },
+      "10018086": {
+        "ActivityID": 0,
+        "AttachedGIDList": [],
+        "ClassName": "CustomFuncPos",
+        "ClassNameType": 10,
+        "CustomID": "",
+        "Dir": 0.0,
+        "DisplayName": "",
+        "EliteCustomID": "",
+        "EntityID": 0,
+        "ID": 10018086,
+        "PosX": 318.6785,
+        "PosY": -2.476217,
+        "PosZ": 126.1481,
+        "Props": {
+          "Num": 0,
+          "Radius": 0.0,
+          "RefreshTimedID": 0,
+          "Remark": "86010064",
           "ShowInSceneMap": 1
         }
       }

@@ -203,7 +203,7 @@ class IRelive(object):
             if not self.onCheckMapUnlocked(resSceneId):
                 resSceneId = gameconst.DEFAULT_SCENE
 
-            _src = dungeonSrc.BasicDungeonSrc()
+            _src = dungeonSrc.BasicDungeonSrc(allowCrossWorld=gameconst.AllowCrossWorldType.DIRECTLY)
             _enterPos, _enterDir = formula.getSpaceBornPosAndDir(resSceneId)
             if _enterDir is not None:
                 _enterDir = (0, 0, _enterDir[2] * math.pi / 180)
@@ -219,11 +219,6 @@ class IRelive(object):
     def doRelive(self, reliveType):
         LOG_INFO('in doRelive:', reliveType, self.spaceNo, self.gbId)
         _mapId = formula.fetchMapId(self.spaceNo)
-
-        #归墟boss层死亡，回本服
-        if self.isAbyssBossFloor():
-            self._crossServerAbyssLeave()
-            return
 
         if formula.inMineWarScene(self.spaceNo) \
               and self.mineWarState == gameconst.MINE_WAR_STATE.RUNNING:
@@ -252,8 +247,6 @@ class IRelive(object):
             stub.onReliveInDungeon(self.spaceNo, self.base, self.gbId, reliveType, reliveHp)
         else:
             self.reliveToPos(_pos, _dir, reliveHp, None)
-        if self.teamId > 0:
-            self.updateAttrToStub({'isDead': False})
 
 
     @gamedecorator.crossServer

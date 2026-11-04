@@ -562,6 +562,7 @@ class AuctionPlayerCache(userType.UserSTSoleType):
     def initFromDict(self, dataDic):
         self.auctionType = dataDic['auctionType']
         self.unlockedGrids = dataDic['unlockedGrids']
+        self._privilegeGrids = 0
 
         return self
 
@@ -575,7 +576,7 @@ class AuctionPlayerCache(userType.UserSTSoleType):
 
     @classmethod
     def _checkIgnores_(cls):
-        return '_itemDataCache', '_lastSyncTime', '_cacheInited', '_locked'
+        return '_itemDataCache', '_lastSyncTime', '_cacheInited', '_locked', '_privilegeGrids'
 
     def __init__(self, auctionType=gameconst.AuctionTypeEnum.UNKNOWN, unlockedGrids=0):
         # presistent
@@ -589,6 +590,7 @@ class AuctionPlayerCache(userType.UserSTSoleType):
         self._lastSyncTime = 0
         self._locked = 0
         self._cacheInited = False
+        self._privilegeGrids = 0
 
     @property
     def initGrids(self):
@@ -603,7 +605,7 @@ class AuctionPlayerCache(userType.UserSTSoleType):
 
     @property
     def totalGrids(self):
-        return self.initGrids + self.unlockedGrids
+        return self.initGrids + self.unlockedGrids + self._privilegeGrids
 
     def isSyncTimeOutdate(self, t):
         return self._lastSyncTime > t

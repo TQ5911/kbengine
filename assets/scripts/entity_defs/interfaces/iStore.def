@@ -27,6 +27,7 @@
             <Arg>       STOREID     </Arg>
             <Arg>       ITEMID      </Arg>
             <Arg>       UINT32      </Arg>
+            <Arg>       BOOL        </Arg>
         </reqBuyItemsInStore>
 
         <reqBuyItemsInStoreWithSelection><Exposed/>
@@ -34,6 +35,7 @@
             <Arg>       ITEMID      </Arg>
             <Arg>       UINT32      </Arg>
             <Arg>       UINT8       </Arg>
+            <Arg>       BOOL        </Arg>
         </reqBuyItemsInStoreWithSelection>
     </BaseMethods>
 

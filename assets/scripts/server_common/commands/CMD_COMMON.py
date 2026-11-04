@@ -16,10 +16,11 @@ BASE, CELL, ALL, INSIDE, ALLSIDE = gameconst.BASE, gameconst.CELL,\
 gm_cmd, forwardGMCommand, callOnApps = gmCommand.gm_cmd, gmCommand.forwardGMCommand,\
     gmCommand._callApps
 
-Int, Player, Str, Entity, Float = gmCommand.Int, gmCommand.Player,\
-    gmCommand.Str, gmCommand.Entity, gmCommand.Float
+Int, Str, Float, Player, Entity, PlayerAccount = gmCommand.Int, gmCommand.Str,\
+    gmCommand.Float, gmCommand.Player, gmCommand.Entity, gmCommand.PlayerAccount
 
 RARG, RSU, RSTUB, RONE, SELF, RALL= gmCommand.RARG, gmCommand.RSU, gmCommand.RSTUB,\
     gmCommand.RONE, gmCommand.SELF, gmCommand.RALL
 
 GOD_GROUPS = gmCommand.GOD_GROUPS
+DEVE_GROUPS = gmCommand.DEVE_GROUPS

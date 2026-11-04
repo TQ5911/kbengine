@@ -87,6 +87,7 @@
     <CROSS_ENTITYCALL> PYTHON </CROSS_ENTITYCALL>
     <!-- 跨服end -->
     <AVATARGBID_LIST> ARRAY <of> PLAYER_GBID </of> </AVATARGBID_LIST>
+    <BIG_DATA_CLIENT> ARRAY <of> UINT8     </of>   </BIG_DATA_CLIENT>
 
     <!-- 公会语音成员状态：gbId + flags (MIC_ON | SPEAKER_ON) -->
     <GUILD_VOICE_MEMBER_STATE> FIXED_DICT
@@ -352,6 +353,28 @@
         </Properties>
     </CHARACTERS_INFO>
 
+    <WAIT_MAP_SERVER_INFO> FIXED_DICT
+        <Properties>
+            <serverId>
+                <Type>  SERVER_ID   </Type>
+            </serverId>
+            <freeNum>
+                <Type>  INT32       </Type>
+            </freeNum>
+        </Properties>
+    </WAIT_MAP_SERVER_INFO>
+
+    <PRE_CREATE_INFO> FIXED_DICT
+        <Properties>
+            <isPreCreatePeriod>
+                <Type>  BOOL    </Type>
+            </isPreCreatePeriod>
+            <waitMapServers>
+                <Type>  ARRAY   <of>    WAIT_MAP_SERVER_INFO      </of>   </Type>
+            </waitMapServers>
+        </Properties>
+    </PRE_CREATE_INFO>
+
     <CLIENT_SKILL_VAL> FIXED_DICT
         <Properties>
             <skillId>
@@ -445,6 +468,20 @@
             </affixVal>
         </Properties>
     </AFFIX_VAL>
+
+    <SOUL_AFFIX_VAL> FIXED_DICT
+        <Properties>
+            <affixId>
+                <Type>  UINT32   </Type>
+            </affixId>
+            <affixVal>
+                <Type>  FLOAT   </Type>
+            </affixVal>
+            <quality>
+                <Type>  UINT8   </Type>
+            </quality>
+        </Properties>
+    </SOUL_AFFIX_VAL>
 
     <GLYPH_VAL> FIXED_DICT
         <Properties>
@@ -602,6 +639,43 @@
             <blessFailCounts>
                 <Type>  ARRAY <of> UINT16 </of>   </Type>
             </blessFailCounts>
+
+            <soulDefLevel>
+                <Type>  UINT8   </Type>
+            </soulDefLevel>
+            <soulBaseAffixes>
+                <Type>  ARRAY <of>  SOUL_AFFIX_VAL </of>   </Type>
+            </soulBaseAffixes>
+            <soulRareAffixes>
+                <Type>  ARRAY <of>  SOUL_AFFIX_VAL </of>   </Type>
+            </soulRareAffixes>
+            <soulLuckyAffix>
+                <Type>  ARRAY <of>  SOUL_AFFIX_VAL </of>   </Type>
+            </soulLuckyAffix>
+            <soulBindFromWash>
+                <Type>  UINT8   </Type>
+            </soulBindFromWash>
+            <soulBindFromClash>
+                <Type>  UINT8   </Type>
+            </soulBindFromClash>
+            <soulBindFromInherit>
+                <Type>  UINT8   </Type>
+            </soulBindFromInherit>
+            <soulHasPreviewWash>
+                <Type>  UINT8   </Type>
+            </soulHasPreviewWash>
+            <soulPreviewWashBase>
+                <Type>  ARRAY <of>  SOUL_AFFIX_VAL </of>   </Type>
+            </soulPreviewWashBase>
+            <soulPreviewWashLucky>
+                <Type>  ARRAY <of>  SOUL_AFFIX_VAL </of>   </Type>
+            </soulPreviewWashLucky>
+            <soulHasPreviewClash>
+                <Type>  UINT8   </Type>
+            </soulHasPreviewClash>
+            <soulPreviewClashRare>
+                <Type>  ARRAY <of>  SOUL_AFFIX_VAL </of>   </Type>
+            </soulPreviewClashRare>
             
         </Properties>
     </CLI_EQUIP_ITEM_VAL>
@@ -1284,6 +1358,10 @@
             <picFrameId>
                 <Type>  OUTFIT_ID       </Type>
             </picFrameId>
+            <!-- 发言者归属服 id（跨服标记用）；本服频道填本服 id，0 表示无来源（系统消息等） -->
+            <serverId>
+                <Type>  SERVER_ID       </Type>
+            </serverId>
         </Properties>
     </CHAT_CHANNEL_AVATAR_INFO>
 
@@ -1320,102 +1398,6 @@
 
     <AVATARING_CHAT_MSG_BATCH> ARRAY <of> AVATARING_CHAT_MSG_ITEM </of> </AVATARING_CHAT_MSG_BATCH>
 
-    <!--Team dungeon founders struc-->
-    <TEAM_DUNGEON_FOUNDER_VAL> FIXED_DICT
-        <Properties>
-            <spaceNo>
-                <Type>  SPACE_NO    </Type>
-            </spaceNo>
-            <playerGbId>
-                <Type>  PLAYER_GBID </Type>
-            </playerGbId>
-            <playerBox>
-                <Type>  PYTHON     </Type>
-            </playerBox>
-            <tEnter>
-                <Type>  LONGTIME   </Type>
-            </tEnter>
-            <tLeave>
-                <Type>  LONGTIME   </Type>
-            </tLeave>
-            <isEnter>
-                <Type>  BOOL        </Type>
-            </isEnter>
-        </Properties>
-    </TEAM_DUNGEON_FOUNDER_VAL>
-
-    <TEAM_DUNGEON_SPACE_CACHE_INFO> FIXED_DICT
-        <implementedBy> TeamInfo.teamDungeonSpaceCacheInstance   </implementedBy>
-        <Properties>
-            <dungeonNo>
-                <Type>  DUNGEON_NO    </Type>
-            </dungeonNo>
-            <spaceNo>
-                <Type>  SPACE_NO    </Type>
-            </spaceNo>
-            <spaceUUID>
-                <Type>  UUID        </Type>
-            </spaceUUID>
-            <founders>
-                <Type>  ARRAY <of>  TEAM_DUNGEON_FOUNDER_VAL </of>    </Type>
-            </founders>
-        </Properties>
-    </TEAM_DUNGEON_SPACE_CACHE_INFO>
-    <CLIENT_TEAM_MEMBER_VAL> FIXED_DICT
-        <Properties>
-            <playerGbId>
-                <Type>  PLAYER_GBID     </Type>
-            </playerGbId>
-            <playerName>
-                <Type>  UNICODE         </Type>
-            </playerName>
-            <score>
-                <Type>  SCORE           </Type>
-            </score>
-            <level>
-                <Type>  LEVEL           </Type>
-            </level>
-            <school>
-                <Type>  SCHOOL          </Type>
-            </school>
-            <sex>
-                <Type>  SEX             </Type>
-            </sex>
-            <picFrameId>
-                <Type>  OUTFIT_ID       </Type>
-            </picFrameId>
-            <bOnline>
-                <Type>  BOOL            </Type>
-            </bOnline>
-            <spaceNo>
-                <Type>  SPACE_NO        </Type>
-            </spaceNo>
-            <position>
-                <Type>  POSITION_ARG    </Type>
-            </position>
-            <hp>
-                <Type>  HP              </Type>
-            </hp>
-            <fullHp>
-                <Type>  HP              </Type>
-            </fullHp>
-            <enableMics>
-                <Type>  BOOL            </Type>
-            </enableMics>
-            <isBlockMics>
-                <Type>  BOOL            </Type>
-            </isBlockMics>
-            <enableSpeaker>
-                <Type>  BOOL            </Type>
-            </enableSpeaker>
-            <inVoiceRoom>
-                <Type>  BOOL            </Type>
-            </inVoiceRoom>
-            <openId>
-                <Type> UNICODE </Type>
-            </openId>
-        </Properties>
-    </CLIENT_TEAM_MEMBER_VAL>
     <CLIENT_TEAM_MARK_VAL> FIXED_DICT
         <Properties>
             <type>
@@ -1459,271 +1441,7 @@
         </Properties>
     </CLIENT_TEAM_MARK_INFO>
 
-    <CLIENT_TEAM_INFO> FIXED_DICT
-        <Properties>
-            <teamId>
-                <Type>  TEAMID   </Type>
-            </teamId>
-            <teamTarget>
-                <Type>  TEAMTARGET    </Type>
-            </teamTarget>
-            <teamAutoMatchTime>
-                <Type>  LONGTIME    </Type>
-            </teamAutoMatchTime>
-            <teamMinLv>
-                <Type>  UINT32    </Type>
-            </teamMinLv>
-            <teamMinScore>
-                <Type>  UINT32    </Type>
-            </teamMinScore>
-            <teamCaptainGbId>
-                <Type>  PLAYER_GBID    </Type>
-            </teamCaptainGbId>
-            <teamMemberList>
-                <Type>  ARRAY <of>  CLIENT_TEAM_MEMBER_VAL </of>   </Type>
-            </teamMemberList>
-            <teamMicsSwitch>
-                <Type>  UINT8 </Type>
-            </teamMicsSwitch>
-            <teamMicsBlocked>
-                <Type>  BOOL  </Type>
-            </teamMicsBlocked>
-            <recruitInfo>
-                <Type>  UNICODE  </Type>
-            </recruitInfo>
-            <isPublish>
-                <Type>  BOOL  </Type>
-            </isPublish>
-            <teamMarkInfo>
-                <Type>  CLIENT_TEAM_MARK_INFO   </Type>
-            </teamMarkInfo>
-            <memberNum>
-                <Type> UINT8 </Type>
-            </memberNum>
-            <isAutoExpedition>
-                <Type>  BOOL  </Type>
-            </isAutoExpedition>
-            <password>
-                <Type> STRING </Type>
-            </password>
-            <siegeWarCamp>
-                <Type> UINT8 </Type>
-            </siegeWarCamp>
-            <lastDungeonFinishedTime>
-                <Type>  LONGTIME    </Type>
-            </lastDungeonFinishedTime>
-        </Properties>
-    </CLIENT_TEAM_INFO>
 
-    <TEAM_MEMBER_VAL> FIXED_DICT
-        <Properties>
-            <playerGbId>
-                <Type>  PLAYER_GBID     </Type>
-            </playerGbId>
-            <playerBox>
-                <Type>  MAILBOX         </Type>
-            </playerBox>
-            <playerName>
-                <Type>  UNICODE         </Type>
-            </playerName>
-            <score>
-                <Type>  SCORE           </Type>
-            </score>
-            <level>
-                <Type>  LEVEL           </Type>
-            </level>
-            <school>
-                <Type>  SCHOOL          </Type>
-            </school>
-            <sex>
-                <Type>  SEX             </Type>
-            </sex>
-            <picFrameId>
-                <Type>  OUTFIT_ID       </Type>
-            </picFrameId>
-            <bOnline>
-                <Type>  BOOL            </Type>
-            </bOnline>
-            <spaceNo>
-                <Type>  SPACE_NO        </Type>
-            </spaceNo>
-            <position>
-                <Type>  POSITION_ARG    </Type>
-            </position>
-            <hp>
-                <Type>  HP              </Type>
-            </hp>
-            <fullHp>
-                <Type>  HP              </Type>
-            </fullHp>
-            <mountState>
-                <Type>  UINT8           </Type>
-            </mountState>
-            <raidUUID>
-                <Type> RAID_ID          </Type>
-            </raidUUID>
-            <enableMics>
-                <Type>  BOOL            </Type>
-            </enableMics>
-            <isBlockMics>
-                <Type>  BOOL            </Type>
-            </isBlockMics>
-            <isDead>
-                <Type>  BOOL            </Type>
-            </isDead>
-            <openId>
-                <Type> UNICODE </Type>
-            </openId>
-            <joinType>
-                <Type> INT8 </Type>
-            </joinType>
-        </Properties>
-    </TEAM_MEMBER_VAL>
-    <TEAM_MARK_VAL> FIXED_DICT
-        <Properties>
-            <entId>
-                <Type>  ENTITY_ID   </Type>
-            </entId>
-            <markType>
-                <Type>  UINT8       </Type>
-            </markType>
-            <isPlayer>
-                <Type>  BOOL         </Type>
-            </isPlayer>
-            <spaceNo>
-                <Type>  SPACE_NO      </Type>
-            </spaceNo>
-            <markTimestamp>
-                <Type>  TIMESTAMP           </Type>
-            </markTimestamp>
-        </Properties>
-    </TEAM_MARK_VAL>
-    <TEAM_INFO> FIXED_DICT
-        <implementedBy>     TeamInfo.teamInstance    </implementedBy>
-        <Properties>
-            <teamId>
-                <Type>  TEAMID   </Type>
-            </teamId>
-            <teamTarget>
-                <Type>  TEAMTARGET    </Type>
-            </teamTarget>
-            <teamAutoMatchTime>
-                <Type>  LONGTIME    </Type>
-            </teamAutoMatchTime>
-            <isSilent>
-                <Type>  BOOL    </Type>
-            </isSilent>
-            <teamHonorPKMatchTime>
-                <Type>  LONGTIME    </Type>
-            </teamHonorPKMatchTime>
-            <teamMinLv>
-                <Type>  UINT32    </Type>
-            </teamMinLv>
-            <teamMinScore>
-                <Type>  UINT32    </Type>
-            </teamMinScore>
-            <teamCaptainGbId>
-                <Type>  PLAYER_GBID    </Type>
-            </teamCaptainGbId>
-            <teamMemberList>
-                <Type>  ARRAY <of>  TEAM_MEMBER_VAL </of>   </Type>
-            </teamMemberList>
-            <teamDungeonList>
-                <Type>  ARRAY <of>  TEAM_DUNGEON_SPACE_CACHE_INFO </of> </Type>
-            </teamDungeonList>
-            <teamMicsSwitch>
-                <Type>  UINT8 </Type>
-            </teamMicsSwitch>
-            <teamMicsBlocked>
-                <Type>  BOOL  </Type>
-            </teamMicsBlocked>
-            <recruitInfo>
-                <Type>  UNICODE  </Type>
-            </recruitInfo>
-            <isPublish>
-                <Type>  BOOL    </Type>
-            </isPublish>
-            <isAutoExpedition>
-                <Type>  BOOL  </Type>
-            </isAutoExpedition>
-            <password>
-                <Type> STRING </Type>
-            </password>
-            <isInDungeon>
-                <Type>  BOOL  </Type>
-            </isInDungeon>
-            <lastDungeonFinishedTime>
-                <Type>  LONGTIME    </Type>
-            </lastDungeonFinishedTime>
-        </Properties>
-    </TEAM_INFO>
-
-    <APPLY_JOIN_INFO> FIXED_DICT
-        <implementedBy>     TeamInfo.applyJoinInfoInstance    </implementedBy>
-        <Properties>
-            <gbId>
-                <Type>  PLAYER_GBID   </Type>
-            </gbId>
-            <playerName>
-                <Type>  UNICODE    </Type>
-            </playerName>
-            <score>
-                <Type>  SCORE    </Type>
-            </score>
-            <level>
-                <Type>  LEVEL    </Type>
-            </level>
-            <school>
-                <Type>  SCHOOL   </Type>
-            </school>
-            <sex>
-                <Type>  SEX             </Type>
-            </sex>
-            <applySource>
-                <Type>  INT8             </Type>
-            </applySource>
-        </Properties>
-    </APPLY_JOIN_INFO>
-
-    <TEAM_MEMBER_CACHE_VAL> FIXED_DICT
-        <Properties>
-            <playerGbId>
-                <Type>  PLAYER_GBID   </Type>
-            </playerGbId>
-            <playerBox>
-                <Type>  MAILBOX       </Type>
-            </playerBox>
-            <spaceNo>
-                <Type>  SPACE_NO      </Type>
-            </spaceNo>
-            <mountState>
-                <Type>  UINT8         </Type>
-            </mountState>
-            <score>
-                <Type>  INT64         </Type>
-            </score>
-            <joinType>
-                <Type>  INT8          </Type>
-            </joinType>
-        </Properties>
-    </TEAM_MEMBER_CACHE_VAL>
-    <TEAM_INFO_CACHE> FIXED_DICT
-        <implementedBy>     TeamInfo.teamCacheInstance    </implementedBy>
-        <Properties>
-            <teamId>
-                <Type>  TEAMID   </Type>
-            </teamId>
-            <teamTarget>
-                <Type>  TEAMTARGET    </Type>
-            </teamTarget>
-            <teamCaptainGbId>
-                <Type>  PLAYER_GBID    </Type>
-            </teamCaptainGbId>
-            <teamMemberList>
-                <Type>  ARRAY <of>  TEAM_MEMBER_CACHE_VAL </of>   </Type>
-            </teamMemberList>
-        </Properties>
-    </TEAM_INFO_CACHE>
 
     <CROSS_TEAM_MEMBER_CACHE_VAL> FIXED_DICT
         <Properties>
@@ -1962,6 +1680,33 @@
         </Properties>
     </CROSS_TEAM_INVITE_VAL>
 
+    <!-- 无队邀请组队应答（InviteType.TEAM_UP）：cell 透传客户端纯展示（agree/reason 提示），
+         reason 枚举对齐 gameconst.TeamUpReplyReason 与 proto TeamUpReplyNotifyMsg.reason -->
+    <CROSS_TEAM_TEAM_UP_REPLY_VAL> FIXED_DICT
+        <Properties>
+            <!-- 应答人 -->
+            <gbId>
+                <Type>  PLAYER_GBID   </Type>
+            </gbId>
+            <playerName>
+                <Type>  UNICODE       </Type>
+            </playerName>
+            <school>
+                <Type>  SCHOOL        </Type>
+            </school>
+            <level>
+                <Type>  UINT32        </Type>
+            </level>
+            <agree>
+                <Type>  BOOL          </Type>
+            </agree>
+            <!-- TeamUpReplyReason -->
+            <reason>
+                <Type>  UINT8         </Type>
+            </reason>
+        </Properties>
+    </CROSS_TEAM_TEAM_UP_REPLY_VAL>
+
     <CROSS_TEAM_APPLY_VAL> FIXED_DICT
         <Properties>
             <teamId>
@@ -2035,6 +1780,14 @@
             <code>
                 <Type>  INT32         </Type>
             </code>
+            <!-- 发言者归属服 id：由中心按队伍成员数据（Member.ServerId）盖戳，游戏服上行不带 -->
+            <senderServerId>
+                <Type>  SERVER_ID     </Type>
+            </senderServerId>
+            <!-- 发信人实体 id：由发送方上行，中心透传 -->
+            <senderEntId>
+                <Type>  ENTITY_ID     </Type>
+            </senderEntId>
         </Properties>
     </CROSS_TEAM_CHAT_MSG_VAL>
 
@@ -2092,290 +1845,6 @@
             </founders>
         </Properties>
     </SINGLE_DUNGEON_FOUNDER_INFO>
-    <!--Raid about start-->
-    <RAID_TEAM_VAL>  FIXED_DICT
-        <Properties>
-            <teamIDX>
-                <Type>  UINT8   </Type>
-            </teamIDX>
-            <teamCaptainGBID>
-                <Type>  PLAYER_GBID     </Type>
-            </teamCaptainGBID>
-            <teamPlayerList>
-                <Type>  ARRAY   <of>  TEAM_MEMBER_VAL  </of>   </Type>
-            </teamPlayerList>
-        </Properties>
-    </RAID_TEAM_VAL>
-
-    <RAID_APPLY_JOIN_CLIENT_VAL>    FIXED_DICT
-        <Properties>
-            <raidJoinType>
-                <Type>  UINT8   </Type>
-            </raidJoinType>
-            <joinPlayerGBID>
-                <Type>  PLAYER_GBID     </Type>
-            </joinPlayerGBID>
-            <joinTeamUUID>
-                <Type>  TEAMID  </Type>
-            </joinTeamUUID>
-            <raidJoinPlayerList>
-                <Type>  ARRAY   <of>    APPLY_JOIN_INFO   </of>   </Type>
-            </raidJoinPlayerList>
-            <tCreate>
-                <Type>  LONGTIME    </Type>
-            </tCreate>
-        </Properties>
-    </RAID_APPLY_JOIN_CLIENT_VAL>
-
-    <RAID_APPLY_JOIN_PLAYER_VAL>    FIXED_DICT
-        <Properties>
-            <raidJoinType>
-                <Type>  UINT8   </Type>
-            </raidJoinType>
-            <joinPlayerGBID>
-                <Type>  PLAYER_GBID     </Type>
-            </joinPlayerGBID>
-            <joinTeamUUID>
-                <Type>  TEAMID  </Type>
-            </joinTeamUUID>
-            <raidJoinPlayerList>
-                <Type>  ARRAY   <of>    APPLY_JOIN_INFO   </of>   </Type>
-            </raidJoinPlayerList>
-            <tCreate>
-                <Type>  LONGTIME    </Type>
-            </tCreate>
-            <applyTimeoutTimerId>
-                <Type>  TIMER_ID   </Type>
-            </applyTimeoutTimerId>
-        </Properties>
-    </RAID_APPLY_JOIN_PLAYER_VAL>
-
-    <RAID_DUNGEON_CACHE_VAL>    FIXED_DICT
-        <Properties>
-            <dungeonNo>
-                <Type>  DUNGEON_NO  </Type>
-            </dungeonNo>
-            <spaceNo>
-                <Type>  SPACE_NO    </Type>
-            </spaceNo>
-            <spaceUUID>
-                <Type>  UUID        </Type>
-            </spaceUUID>
-            <spaceBox>
-                <Type>  MAILBOX     </Type>
-            </spaceBox>
-            <spaceMgrBox>
-                <Type>  MAILBOX     </Type>
-            </spaceMgrBox>
-        </Properties>
-    </RAID_DUNGEON_CACHE_VAL>
-
-    <RAID_VAL>  FIXED_DICT
-        <implementedBy>     raidInfo.raidValInstance    </implementedBy>
-        <Properties>
-            <raidUUID>
-                <Type>  RAID_ID      </Type>
-            </raidUUID>
-            <raidCapacity>
-                <Type>  UINT8      </Type>
-            </raidCapacity>
-            <raidLeaderGBID>
-                <Type>  PLAYER_GBID     </Type>
-            </raidLeaderGBID>
-            <raidLeaderTeamIDX>
-                <Type>  UINT8       </Type>
-            </raidLeaderTeamIDX>
-            <raidDeputyGBID>
-                <Type>  PLAYER_GBID     </Type>
-            </raidDeputyGBID>
-            <raidDeputyTeamIDX>
-                <Type>  UINT8       </Type>
-            </raidDeputyTeamIDX>
-            <raidTarget>
-                <Type>  TEAMTARGET  </Type>
-            </raidTarget>
-            <raidMicsSwitch>
-                <Type>  UINT8    </Type>
-            </raidMicsSwitch>
-            <raidMicsBlocked>
-                <Type>  BOOL     </Type>
-            </raidMicsBlocked>
-            <raidDungeonRecords>
-                <Type>  ARRAY   <of>    RAID_DUNGEON_CACHE_VAL  </of>   </Type>
-            </raidDungeonRecords>
-            <raidTeamList>
-                <Type>  ARRAY   <of>    RAID_TEAM_VAL   </of>   </Type>
-            </raidTeamList>
-            <raidApplyJoinList>
-                <Type>  ARRAY   <of>    RAID_APPLY_JOIN_PLAYER_VAL  </of>   </Type>
-            </raidApplyJoinList>
-            <leaderClientDeathTimer>
-                <Type>          TIMER_ID            </Type>
-            </leaderClientDeathTimer>
-        </Properties>
-    </RAID_VAL>
-
-    <RAID_DUNGEON_CLIENT_CACHE_VAL> FIXED_DICT
-        <Properties>
-            <dungeonNo>
-                <Type>  DUNGEON_NO  </Type>
-            </dungeonNo>
-            <spaceNo>
-                <Type>  SPACE_NO    </Type>
-            </spaceNo>
-        </Properties>
-    </RAID_DUNGEON_CLIENT_CACHE_VAL>
-
-    <RAID_TEAM_CLIENT_VAL> FIXED_DICT
-        <Properties>
-            <teamIDX>
-                <Type>  UINT8   </Type>
-            </teamIDX>
-            <teamCaptainGBID>
-                <Type>  PLAYER_GBID     </Type>
-            </teamCaptainGBID>
-            <teamPlayerList>
-                <Type>  ARRAY   <of>  CLIENT_TEAM_MEMBER_VAL  </of>   </Type>
-            </teamPlayerList>
-        </Properties>
-    </RAID_TEAM_CLIENT_VAL>
-
-    <RAID_CLIENT_VAL>   FIXED_DICT
-        <Properties>
-            <raidUUID>
-                <Type>  RAID_ID      </Type>
-            </raidUUID>
-            <raidCapacity>
-                <Type>  UINT8      </Type>
-            </raidCapacity>
-            <raidLeaderGBID>
-                <Type>  PLAYER_GBID     </Type>
-            </raidLeaderGBID>
-            <raidLeaderTeamIDX>
-                <Type>  UINT8       </Type>
-            </raidLeaderTeamIDX>
-            <raidDeputyGBID>
-                <Type>  PLAYER_GBID     </Type>
-            </raidDeputyGBID>
-            <raidDeputyTeamIDX>
-                <Type>  UINT8       </Type>
-            </raidDeputyTeamIDX>
-            <raidTarget>
-                <Type>  TEAMTARGET  </Type>
-            </raidTarget>
-            <raidMicsSwitch>
-                <Type>  UINT8    </Type>
-            </raidMicsSwitch>
-            <raidMicsBlocked>
-                <Type>  BOOL     </Type>
-            </raidMicsBlocked>
-            <raidDungeonRecords>
-                <Type>  ARRAY   <of>    RAID_DUNGEON_CLIENT_CACHE_VAL  </of>    </Type>
-            </raidDungeonRecords>
-            <raidTeamList>
-                <Type>  ARRAY   <of>    RAID_TEAM_CLIENT_VAL   </of>   </Type>
-            </raidTeamList>
-            <raidMinLevel>
-                <Type> LEVEL </Type>
-            </raidMinLevel>
-            <raidMinScore>
-                <Type> SCORE </Type>
-            </raidMinScore>
-            <isPublish>
-                <Type>  BOOL     </Type>
-            </isPublish>
-            <raidAutoMatchTime>
-                <Type>  LONGTIME     </Type>
-            </raidAutoMatchTime>
-            <recruitInfo>
-                <Type>  UNICODE     </Type>
-            </recruitInfo>
-            <memberNum>
-                <Type>  UINT8    </Type>
-            </memberNum>
-            <raidMarkInfo>
-                <Type>  CLIENT_TEAM_MARK_INFO   </Type>
-            </raidMarkInfo>
-            <isAutoExpedition>
-                <Type> BOOL </Type>
-            </isAutoExpedition>
-            <password>
-                <Type> STRING </Type>
-            </password>
-            <siegeWarCamp>
-                <Type> UINT8 </Type>
-            </siegeWarCamp>
-            <lastDungeonFinishedTime>
-                <Type>  LONGTIME    </Type>
-            </lastDungeonFinishedTime>
-        </Properties>
-    </RAID_CLIENT_VAL>
-
-    <PLAYER_RAID_TEAM_CACHE_VAL>    FIXED_DICT
-        <Properties>
-            <teamIDX>
-                <Type>  UINT8   </Type>
-            </teamIDX>
-            <teamCaptainGBID>
-                <Type>  PLAYER_GBID     </Type>
-            </teamCaptainGBID>
-            <teamPlayerList>
-                <Type>  ARRAY   <of>  TEAM_MEMBER_CACHE_VAL  </of>   </Type>
-            </teamPlayerList>
-        </Properties>
-    </PLAYER_RAID_TEAM_CACHE_VAL>
-
-    <PLAYER_RAID_CACHE_VAL> FIXED_DICT
-        <implementedBy>     raidInfo.playerRaidCacheValInstance     </implementedBy>
-        <Properties>
-            <raidUUID>
-                <Type>  RAID_ID     </Type>
-            </raidUUID>
-            <raidTeamIDX>
-                <Type>  UINT8   </Type>
-            </raidTeamIDX>
-            <raidCaptainGBID>
-                <Type>  PLAYER_GBID     </Type>
-            </raidCaptainGBID>
-            <raidLeaderGBID>
-                <Type>  PLAYER_GBID     </Type>
-            </raidLeaderGBID>
-            <raidLeaderTeamIDX>
-                <Type>  UINT8       </Type>
-            </raidLeaderTeamIDX>
-            <raidDeputyGBID>
-                <Type>  PLAYER_GBID     </Type>
-            </raidDeputyGBID>
-            <raidDeputyTeamIDX>
-                <Type>  UINT8       </Type>
-            </raidDeputyTeamIDX>
-            <raidTarget>
-                <Type>  TEAMTARGET  </Type>
-            </raidTarget>
-            <raidMinLevel>
-                <Type> LEVEL </Type>
-            </raidMinLevel>
-            <raidMinScore>
-                <Type> SCORE </Type>
-            </raidMinScore>
-            <raidDungeonRecords>
-                <Type>  ARRAY   <of>    RAID_DUNGEON_CACHE_VAL  </of>   </Type>
-            </raidDungeonRecords>
-            <raidTeamDic>
-                <Type>  ARRAY   <of>    PLAYER_RAID_TEAM_CACHE_VAL   </of>   </Type>
-            </raidTeamDic>
-            <recruitInfo>
-                <Type>  UNICODE     </Type>
-            </recruitInfo>
-            <isAutoExpedition>
-                <Type> BOOL </Type>
-            </isAutoExpedition>
-            <password>
-                <Type> STRING </Type>
-            </password>
-        </Properties>
-    </PLAYER_RAID_CACHE_VAL>
-    <!--Raid about end-->
 
     <FRIEND_VAL> FIXED_DICT
         <Properties>
@@ -5009,6 +4478,9 @@
             <bindType>
                 <Type>  UINT8   </Type>
             </bindType>
+            <attrJson>
+                <Type>  UNICODE     </Type>
+            </attrJson>
         </Properties>
     </POP_REWARD_ITEM_VAL>
 
@@ -5439,6 +4911,16 @@
             </stateList>
         </Properties>
     </BIG_BIT_DATA_INFO>
+
+    <!-- 2026-09-24 v4:新手历程行为累积统计 (taskID -> count) -->
+    <BEGINNER_JOURNEY_BEHAVIOR_STATS> FIXED_DICT
+        <implementedBy>     BeginnerJourneyBehaviorStats.BeginnerJourneyBehaviorStatsInstance    </implementedBy>
+        <Properties>
+            <stats>
+                <Type>  PYTHON              </Type>
+            </stats>
+        </Properties>
+    </BEGINNER_JOURNEY_BEHAVIOR_STATS>
 
     <HATE_COUNTER_DATA_INFO> FIXED_DICT
         <implementedBy>     HateCounterInfo.HateCounterInstance    </implementedBy>
@@ -6355,48 +5837,6 @@
         </Properties>
     </PENDING_AUCTION_ENTRIES>
 
-    <AUCTION_SNATCH_RECORD> FIXED_DICT
-        <implementedBy>     AuctionSnatchRecord.AuctionSnatchRecordInstance    </implementedBy>
-        <Properties>
-            <gbId>
-                <Type>  PLAYER_GBID   </Type>
-            </gbId>
-            <name>
-                <Type>  UNICODE       </Type>
-            </name>
-            <opUUID>
-                <Type>  OP_UUID       </Type>
-            </opUUID>
-        </Properties>
-    </AUCTION_SNATCH_RECORD>
-    
-    <AUCTION_SNATCH_RECORDS> FIXED_DICT
-        <implementedBy>     AuctionSnatchRecords.AuctionSnatchRecordsInstance    </implementedBy>
-        <Properties>
-            <auctionUUID>
-                <Type>  AUCTION_ITEM_UUID                        </Type>
-            </auctionUUID>
-            <itemId>
-                <Type>  ITEM_ID                                  </Type>
-            </itemId>
-            <price>
-                <Type>  UINT64                                   </Type>
-            </price>
-            <number>
-                <Type>  UINT32                                   </Type>
-            </number>
-            <publicityEndTime>
-                <Type>  LONGTIME                                 </Type>
-            </publicityEndTime>
-            <records>
-                <Type>  ARRAY <of> AUCTION_SNATCH_RECORD </of>   </Type>
-            </records>
-            <status>
-                <Type>  UINT8                                    </Type>
-            </status>
-        </Properties>
-    </AUCTION_SNATCH_RECORDS>
-
     <CLI_GLYPH_STATUS_CHANGE_INFO> FIXED_DICT
         <Properties>
             <uniqueId>    
@@ -6416,9 +5856,9 @@
             <groupId>
                 <Type>  UINT8       </Type>
             </groupId>
-            <endTs>
+            <startTs>
                 <Type>  UINT32      </Type>
-            </endTs>
+            </startTs>
             <srcMapId>
                 <Type>  UINT32      </Type>
             </srcMapId>
@@ -7090,6 +6530,17 @@
         </Properties>
     </ENMITY_INFO_DATA>
 
+    <TEMP_ENMITY_ITEM> FIXED_DICT
+        <Properties>
+            <gbId>
+                <Type>  PLAYER_GBID </Type>
+            </gbId>
+            <expireTime>
+                <Type>  LONGTIME </Type>
+            </expireTime>
+        </Properties>
+    </TEMP_ENMITY_ITEM>
+
     <COIN_TICKET_VAL> FIXED_DICT
         <Properties>
             <itemId>
@@ -7233,4 +6684,15 @@
             </powerRank>
         </Properties>
     </TEST_REWARD_OVERVIEW>
+
+    <DAILY_PICKED_VAL> FIXED_DICT
+        <Properties>
+            <id>
+                <Type>  UINT32   </Type>
+            </id>
+            <cnt>
+                <Type>  UINT16   </Type>
+            </cnt>
+        </Properties>
+    </DAILY_PICKED_VAL>
 </root>

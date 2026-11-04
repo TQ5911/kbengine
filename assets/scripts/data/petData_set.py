@@ -293,7 +293,11 @@ datas = _tools.RODict({
     }),
     "petGearReplaceMsg2": _tools.RODict({
         "ID": "petGearReplaceMsg2",
-        "value": 54006095,
+        "value": 54003525,
+    }),
+    "petGearConfirm3": _tools.RODict({
+        "ID": "petGearConfirm3",
+        "value": 54003529,
     })
 })
 

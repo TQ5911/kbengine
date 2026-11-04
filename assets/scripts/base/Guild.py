@@ -1168,6 +1168,8 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
     def toJoinGuildData(self):
         return {
             'guildName': self.guildName,
+            'dspFlag': self.dspFlag,
+            'guildIcon': self.guildIcon,
             'wuHuaLevel': self.guildBuilding.wuHua.level,
             'guildLevel': self.guildLevel,
         }
@@ -1385,6 +1387,66 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             src,
             opUUID,
             str(detail),
+        )
+
+    def gmSetGuildLevel(self, level, exp, src, opUUID, detail):
+        """GM 直设帮会等级/经验(支持降级)。exp<0 表示不修改经验(仍会按当前等级上限钳制)。"""
+        LOG_INFO('gmSetGuildLevel', level, exp, src, opUUID, detail)
+        _oldLevel = self.guildLevel
+        self.guildLevel = level
+        if exp >= 0:
+            self.guildExp = exp
+        self.guildExp = min(self.guildExp, G_GUD.datas[self.guildLevel]['upgradeExp'])
+
+        if _oldLevel != self.guildLevel:
+            self._braodcastAsync(
+                lambda box: box.onGuildLevelChangedBase(self.guildLevel),
+                0
+            )
+            self._syncGuildInfoToAlliance()
+
+        LogTrackingMgr.LogTrackingMgr.Guild_Info(
+            'Guild',
+            '',
+            self.guildUUID,
+            self.guildLevel,
+            self.guildExp,
+            self.guildFund,
+            self.guildMoney,
+            self.guildCommission,
+            self.guildIronMine,
+            self.cityBattleToken,
+            src,
+            opUUID,
+            str(detail),
+        )
+
+    def gmSetJunXuQixie(self, qixieType, level, exp, opUUID):
+        """GM 直设军需处器械等级/进度(支持降级)。exp<0 表示不修改进度(仍会按当前等级上限钳制)。"""
+        LOG_INFO('gmSetJunXuQixie', qixieType, level, exp, opUUID)
+        _qixie = self.junXuArchitecture.getQixie(qixieType)
+        if not _qixie:
+            LOG_WARN('gmSetJunXuQixie: qixieType not in junXuArchitecture', qixieType)
+            return
+
+        _qixie.level = level
+        if exp >= 0:
+            _qixie.exp = exp
+        _qixie.exp = min(_qixie.exp, G_WED.datas[G_WED.typeLevelDic[qixieType][level]]['upgradeExp'])
+
+        self.broadcastMemberClient('onQixieChanged', (_qixie,))
+        self.syncJunXuQiXieLevel()
+        self.syncMineWarSpaceMgrForChange()
+
+        LogTrackingMgr.LogTrackingMgr.Guild_QiXieAssist(
+            'Guild',
+            '',
+            qixieType,
+            0,
+            self.guildUUID,
+            _qixie.level,
+            _qixie.exp,
+            opUUID
         )
 
     def doModifyGuildDesc(self, gbId, box, desc):
@@ -1830,7 +1892,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
 
         self.renameCDEnd = utils.curTS() + 1
 
-        gameengine.getGlobalBase('GuildStub').checkGuildNameValid(self, box, ctx, self.guildName)
+        gameengine.getGlobalBase('GuildStub').checkGuildNameValid(self, box, ctx, self.guildUUID, self.guildName)
 
     def renameGuild(self, avatarBox, ctx):
         self.guildName = ctx['name']
@@ -1955,7 +2017,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
 
         self.guildIcon = icon
         self._braodcastAsync(
-            lambda box: box.client.onGuildIconChanged(self.guildIcon),
+            lambda box: box.onGuildIconSync(self.guildIcon),
             0
         )
 
@@ -2002,7 +2064,7 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
 
         self.dspFlag = dspFlag
         self._braodcastAsync(
-            lambda box: box.client.onGuildDispChanged(self.dspFlag),
+            lambda box: box.onGuildDspFlagChanged(self.dspFlag),
             0
         )
         LOG_INFO('doModifyGuildDisp: dspFlag changed', self.guildUUID, self.dspFlag)
@@ -3138,12 +3200,16 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
         self.guildRankIdx = rank
         LOG_INFO('onLeaderBoardRank: guildRankIdx:', self.guildRankIdx)
 
-    def tryApplyInviteGuild(self, gbId, inviteType, teamType):
-        LOG_INFO('guild: tryApplyInviteGuild:', gbId, inviteType, teamType)
+    def tryApplyInviteCrossGuild(self, gbId, inviteInfo):
+        # 邀请帮会成员入跨服团（跨服组队版，执行清单问题 13）：
+        # 链路自闭环在本服（帮会成员本服可达），不经组队中心；目标侧检查由
+        # doCrossGuildInviteCheck（base）/doApplyCrossGuildInvite（cell）完成，
+        # 被邀请人应答由 replyCrossTeamInvite 按 inviteType=GUILD 分流到申请审批流
+        LOG_INFO('guild: tryApplyInviteCrossGuild:', gbId)
         if not self._checkHasPermission(gbId, GA_AI_DD.datas.teamInvitation):
-            LOG_WARN('tryApplyInviteGuild: no permission', gbId, GA_AI_DD.datas.teamInvitation)
+            LOG_WARN('tryApplyInviteCrossGuild: no permission', gbId, GA_AI_DD.datas.teamInvitation)
             return
-        
+
         for _gmVal in self.members.values():
             if utils.checkBoxOffline(_gmVal.box):
                # 如果我自己下线了，那就不走了
@@ -3153,15 +3219,16 @@ class Guild(iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleEvent.ICycleEventMixin
             # 排除自己
             if _gmVal.gbId == gbId:
                 continue
-            # 转发到邀请人的base上
+            # 转发到目标成员的 base 上做目标侧检查
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                                                                [gbId],
-                                                                'doInviteCheck',
-                                                                (_gmVal.gbId, inviteType, teamType, True),
-                                                                None,
-                                                                '',
-                                                                ())
-    
+                [_gmVal.gbId],
+                'doCrossGuildInviteCheck',
+                (inviteInfo,),
+                None,
+                '',
+                (),
+            )
+
     def statGuildData(self, dataType):
         LOG_INFO('guild: statGuildData: 1', dataType, self.guildStatData)
         

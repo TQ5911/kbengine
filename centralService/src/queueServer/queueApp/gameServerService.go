@@ -52,13 +52,13 @@ func (self *GameServerService) tickQueue() {
 		appLog.Info("tickQueue: ", onlineNum, " ", "g:normal_online_num"+strconv.Itoa(int(self.hostId)), " ", MaxOnlineNum)
 		var items []string
 		for k, v := range self.app.serverVIPQueues {
-			items = append(items, fmt.Sprintf("(%d: %v), ", k, v.Items))
+			items = append(items, fmt.Sprintf("(%d: total=%d)", k, len(v.Items)))
 		}
 		appLog.Info("vip queue: ", items)
 
 		var items2 []string
 		for k, v := range self.app.serverQueues {
-			items2 = append(items2, fmt.Sprintf("(%d: %v), ", k, v.Items))
+			items2 = append(items2, fmt.Sprintf("(%d: total=%d)", k, len(v.Items)))
 		}
 		appLog.Info("queue: ", items2)
 		if onlineNum < MaxOnlineNum {

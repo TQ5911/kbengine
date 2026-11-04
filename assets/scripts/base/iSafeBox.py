@@ -358,7 +358,7 @@ class ISafeBox(object):
         opUUID = KBEngine.genUUID64()
         detail = gameclass.AwardDetailCls(itemId=itemId, itemCount=itemCount, orderId=orderId)
         
-        self.doPreAddWealth(_awardVal, itemData['type'], itemData['subType'], opUUID, srcType, detail)
+        self.doPreAddWealth(_awardVal, itemData['type'], itemData['subType'], opUUID, srcType, detail, True)
 
         if _awardVal.isEmpty():
             return

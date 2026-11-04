@@ -90,6 +90,12 @@
 
         <beginMergeLine>
         </beginMergeLine>
+
+        <!-- 读条前通知本次切线是否可进行。canSwitch：是否成功；leftCd：剩余CD秒，不在CD时为0 -->
+        <onPreSwitchLineResult>
+            <Arg>        BOOL       </Arg>
+            <Arg>        UINT32     </Arg>
+        </onPreSwitchLineResult>
     </ClientMethods>
 
 </root>

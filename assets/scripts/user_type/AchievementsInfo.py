@@ -96,6 +96,37 @@ class AchievementsVal(userType.UserSingleType):
             self._removeTypeDic(_achieveVal)
             return _achieveVal
 
+    def gmResetAchievement(self, achieveId, resetStep):
+        """GM 重置成就项为未完成状态（不回收已发奖励）。
+
+        resetStep=1 进度清零回到未开始；resetStep=0 保留进度仅清完成标记。
+        已领取的成就领奖时进度已丢弃，无论 resetStep 都回到未开始。
+        返回 (ok, errMsg, oldState, oldStep)，oldState: 0未开始 1进行中 2已完成未领取 3已领取。
+        """
+        achieveData = A_DD.datas.get(achieveId, None)
+        if not achieveData:
+            return False, '成就id不存在', 0, 0
+
+        oldState = 0
+        oldStep = 0
+        if achieveId in self.finishedIds:
+            oldState = 3
+            self.finishedIds.remove(achieveId)
+            self.sumPoint = max(0, self.sumPoint - achieveData['achPoint'])
+
+        achieveVal = self.popAchieveVal(achieveId)
+        if achieveVal:
+            oldStep = achieveVal.step
+            if oldState == 0:
+                oldState = 2 if achieveVal.isFinished() else 1
+            if not resetStep and oldState != 3:
+                achieveVal.flag = utils.breset(achieveVal.flag, gameconst.AchievementFlag.FINISHED)
+                self.addAchieveVal(achieveVal)
+
+        if oldState == 0:
+            return False, '成就未开始, 无需重置', 0, 0
+        return True, '', oldState, oldStep
+
     def _checkCouldTakeAchieve(self, avatar, achieveId):
         _achieveData = A_DD.datas[achieveId]
         if not AchievementValInfo.AchievementValVal.checkSupport(_achieveData['targetType']):
@@ -119,7 +150,7 @@ class AchievementsVal(userType.UserSingleType):
 
         return True
 
-    def _updateByWaitList(self, avatar, waitList, ctx):
+    def _updateByWaitList(self, avatar, waitList, ctx, forInit=False):
         waitList = waitList[:] # 复制一份，防止修改原列表
         _updateList = []
         # 貌似成就有一万个了，这个先改大点，这个数主要用来防止无限循环
@@ -141,7 +172,7 @@ class AchievementsVal(userType.UserSingleType):
             _oldIsFinished = False
             if _achieveVal:
                 _oldIsFinished = _achieveVal.isFinished()
-                if _achieveVal.updateFromNewAchieveData(avatar, A_DD.datas[_achieveId], ctx, gameconst.ACHIEVE_SRC_UPDATE):
+                if _achieveVal.updateFromNewAchieveData(avatar, A_DD.datas[_achieveId], ctx, gameconst.ACHIEVE_SRC_UPDATE, forInit):
                     _updateList.append(_achieveVal)
 
             else:
@@ -199,7 +230,7 @@ class AchievementsVal(userType.UserSingleType):
             _achieveList = A_DD.versionDict[_version]
             _waitList.extend(_achieveList)
 
-        self._updateByWaitList(avatar, _waitList, actionContext.AchievementCtx())
+        self._updateByWaitList(avatar, _waitList, actionContext.AchievementCtx(), forInit=True)
 
         self.maxVersion = A_DD.versionList[-1]
 

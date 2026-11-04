@@ -14,6 +14,14 @@ import gameengine
 import gameconfig
 import iRouter
 import gameconst
+import message_chatMessage as MCMD
+import iRouter
+import gameconfig
+
+
+# 游戏服上报间隔，跨服超过 3 次没收到就从广播名单里摘掉
+_HEARTBEAT_INTERVAL = 10
+_HEARTBEAT_TIMEOUT = _HEARTBEAT_INTERVAL * 3
 
 
 class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
@@ -22,14 +30,66 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def doNext(self):
         super().doNext()
+        self.pyAddTimer(1, _HEARTBEAT_INTERVAL, gametimer.TIMER_GAME_CROSS_HEARTBEAT)
 
     def onTimer(self, tid, userArg):
         if utils.isBelongTimerTag(userArg):
             self._onTimerCallback(tid)
         elif userArg == gametimer.TIMER_DATETIME_ITIMER_CALLBACK:
             self._onDatetimeTimerTick()
+        elif userArg == gametimer.TIMER_GAME_CROSS_HEARTBEAT:
+            self._onGameCrossHeartBeatTick()
         else:
             self._onTimerTrigger(tid, userArg)
+
+    def _onGameCrossHeartBeatTick(self):
+        if gameconfig.isCrossServer():
+            self._sweepGameServerHeartBeat()
+            return
+
+        crossId = int(gameconfig.getCrossServerId())
+        if crossId <= 0:
+            return
+        _stub = iRouter.RemoteServerStubEntityCall(crossId, 'CrossServerStub')
+        _stub.onGameServerHeartBeat(int(gameconfig.serverId()))
+
+    def onGameServerHeartBeat(self, serverId):
+        if not gameconfig.isCrossServer():
+            return
+
+        serverId = int(serverId)
+        if serverId <= 0 or serverId == int(gameconfig.serverId()):
+            return
+
+        now = utils.curTS()
+        isNew = serverId not in self.gameServerHeartBeat
+        self.gameServerHeartBeat[serverId] = now
+        self._publishGroupGameServerIds()
+        if isNew:
+            LOG_INFO('game server heartbeat register', serverId)
+
+    def _sweepGameServerHeartBeat(self):
+        if not self.gameServerHeartBeat:
+            return
+
+        now = utils.curTS()
+        expired = [sid for sid, ts in self.gameServerHeartBeat.items() if now - ts > _HEARTBEAT_TIMEOUT]
+        if not expired:
+            return
+        for sid in expired:
+            self.gameServerHeartBeat.pop(sid, None)
+            LOG_INFO('game server heartbeat timeout', sid)
+        self._publishGroupGameServerIds()
+
+    def _aliveGameServerIds(self):
+        if not self.gameServerHeartBeat:
+            return []
+
+        now = utils.curTS()
+        return [sid for sid, ts in self.gameServerHeartBeat.items() if now - ts <= _HEARTBEAT_TIMEOUT]
+
+    def _publishGroupGameServerIds(self):
+        KBEngine.globalData[gameconst.GLOBALDATA_KEY_CROSS_GROUP_SERVERS] = self._aliveGameServerIds()
 
     def test(self):
         LOG_INFO("CrossServerStub test")
@@ -97,7 +157,7 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
     def onGobackServer(self, accountName):
         LOG_INFO("onGobackServer", accountName)
         if accountName not in self.accountDic:
-            LOG_ERR("onGobackServer accountName not in accountDic", accountName)
+            LOG_WARN("onGobackServer accountName not in accountDic", accountName)
             return
 
         self.accountDic.pop(accountName)
@@ -123,16 +183,14 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         LOG_DBG("doGmModifyServertime success", gameconfig.serverId(), modifyTime)
 
-    #gm改变整个跨服组上服务器的时间（包括跨服）
+    # 改跨服和当前心跳在线的游戏服时间
     def onGmModifyAllServertimeInCrossGroup(self, su, modifyTime):
         LOG_INFO("onGmModifyAllServertimeInCrossGroup", su, modifyTime)
-        import gameconfig
-        import iRouter
+        if not gameconfig.isCrossServer():
+            return
 
-        crossServerGroupID = gameglobal.mapleServerInfo[gameconfig.serverId()]['server_group']
-        groupServerList = utils.group2ServerIds(crossServerGroupID)
-
-        for serverID in groupServerList:
+        self.doGmModifyServertime(su, modifyTime)
+        for serverID in self._aliveGameServerIds():
             _stub = iRouter.RemoteServerStubEntityCall(int(serverID), 'CrossServerStub')
             _stub.onGmModifyAllServertimeInCrossGroupResp(su, modifyTime)
 
@@ -144,13 +202,36 @@ class CrossServerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
     def onGlobalEventTips(self, crossServerType, msgId, msgArgs):
         LOG_DBG("onGlobalEventTips", crossServerType, msgId, msgArgs)
-        if crossServerType == gameconst.EventTipCrossServerType.CrossAllServer:
-            if gameconfig.isCrossServer():
-                crossServerGroupID = gameglobal.mapleServerInfo.get(int(gameconfig.getCrossServerId()), {}).get('server_group', 0)
-                groupServerList = utils.group2ServerIds(crossServerGroupID)
-                for serverID in groupServerList:
-                    LOG_INFO('broadcastTips', gameconst.EventTipCrossServerType.Default, msgId, msgArgs, gameconfig.isCrossServer(), serverID)
-                    _stub = iRouter.RemoteServerStubEntityCall(int(serverID), 'CrossServerStub')
-                    _stub.onGlobalEventTips(gameconst.EventTipCrossServerType.Default, msgId, msgArgs)
-                return
+        if crossServerType == gameconst.EventTipCrossServerType.CrossAllServer and gameconfig.isCrossServer():
+            for serverID in self._aliveGameServerIds():
+                LOG_INFO('broadcastTips', gameconst.EventTipCrossServerType.Default, msgId, msgArgs, gameconfig.isCrossServer(), serverID)
+                _stub = iRouter.RemoteServerStubEntityCall(int(serverID), 'CrossServerStub')
+                _stub.onGlobalEventTips(gameconst.EventTipCrossServerType.Default, msgId, msgArgs)
+            gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips', (msgId, msgArgs)))
+            return
         gameengine.broadcastBaseapp('onBroadcastToAllClients', ('onEventTips', (msgId, msgArgs)))
+
+    def crossBroadcastMsg(self, msgId):
+        LOG_DBG("crossBroadcastMsg", msgId)
+        mcData = MCMD.datas.get(msgId)
+        conveyType = mcData.get('conveyType', 0)
+        if conveyType == gameconst.ChatMsgConveyType.NULL:
+            return
+        serverId = gameconfig.serverId()
+        serverIds = utils.crossGroupGameServerIdsEx(serverId)
+        if conveyType == gameconst.ChatMsgConveyType.CROSS_LOCAL or \
+            conveyType == gameconst.ChatMsgConveyType.CROSS_GROUP:
+            for sid in serverIds:
+                iRouter.RemoteServerStubEntityCall(sid, "CrossServerStub").onCrossBroadcastMsg(serverId, msgId, conveyType)
+
+    def onCrossBroadcastMsg(self, fromServerId, msgId, conveyType):
+        LOG_DBG("onCrossBroadcastMsg", fromServerId, msgId, conveyType)
+        gameengine.broadcastBaseapp(
+            'broadcastToAllAvatar',
+            (
+                gameconst.BASE,
+                'onCrossMessagePre',
+                (fromServerId, conveyType, msgId, []),
+                (),
+            )
+        )

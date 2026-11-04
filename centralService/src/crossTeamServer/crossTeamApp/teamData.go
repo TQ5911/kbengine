@@ -37,7 +37,7 @@ type Member struct {
 	EnableSpeaker bool
 	InVoiceRoom   bool
 
-	// 高频状态快照（3s 上报覆盖，随收随广播）
+	// 高频状态快照（3s 上报覆盖，随收随标脏，worker 500ms tick 聚合推送）
 	Hp       int64
 	MaxHp    int64
 	SpaceNo  int32
@@ -108,8 +108,19 @@ func (m *Member) toStatePb() *pb.MemberState {
 		PosY:          m.PosY,
 		PosZ:          m.PosZ,
 		RouteServerId: m.RouteServerId,
-		Name:          m.Name,
+		GroupIdx:      m.GroupIdx,
 	}
+}
+
+// collectMemberStates 组队伍全量成员状态快照（恒全量：关注小组剪裁由游戏服 Stub
+// 缓存快照后本地做，中心不再过滤；MemberState.groupIdx 照常填充，Stub 剪裁依赖它）。
+// 推送组包的唯一入口，字段映射统一走 Member.toStatePb
+func collectMemberStates(team *CrossTeamData) []*pb.MemberState {
+	members := make([]*pb.MemberState, 0, len(team.Members))
+	for _, member := range team.Members {
+		members = append(members, member.toStatePb())
+	}
+	return members
 }
 
 // ApplyInfo 入队申请（60s 超时，瞬态数据）
@@ -117,6 +128,7 @@ type ApplyInfo struct {
 	Info        *pb.MemberInfo
 	ApplyTS     int64
 	ApplySource int32 // 申请来源（枚举复用本服 TeamJoinType，中心只存不解读）
+	Approved    bool  // 队长已批准（记录保留作入队凭证，申请人 reqJoin 时消费，超时清扫原样生效）
 }
 
 // CrossTeamData 队伍权威数据（CrossTeamInfo）。仅由所属 worker goroutine 访问。
@@ -131,7 +143,7 @@ type CrossTeamData struct {
 	CaptainGbId uint64
 	MaxNum      int32
 	AutoMatch   bool
-	AutoEnter   bool // 满员自动进入副本（队长设置，成员加入/选项设置时检查触发）
+	AutoEnter   bool // 满员自动进入副本（队长设置，成员加入/选项设置时检查触发；同队伍仅生效一次，发起成功后自动关回 false）
 	Members     map[uint64]*Member
 	Applicants  map[uint64]*ApplyInfo
 	Invites     map[uint64]*pb.MemberInfo // 待应答邀请：inviteeGbId -> 邀请时快照的被邀请人信息
@@ -140,7 +152,7 @@ type CrossTeamData struct {
 
 	// 客户端接口对齐补充（isPublish 不单独存，按 Password 是否为空派生）
 	DeputyGbId              uint64 // 副团长（setDeputy 任命/取消，唯一名额；0=无；随全量快照下发）
-	LastDungeonFinishedTime int64  // 重进 CD 截止时刻（crusadeFinished 写入 = 完成时刻 + CRUSADE_REJOIN_CD_SECONDS；随全量数据下发）
+	LastDungeonFinishedTime int64  // 重进 CD 截止时刻（crusadeFinished 写入；随全量数据下发）
 	AutoMatchTime           int64  // 本队开启自动匹配的时间（客户端匹配 UI 用，关闭时清 0）
 
 	// 本服链路两字段（创建时固化、永不变化，目标不可改故无需更新路径）：
@@ -168,9 +180,9 @@ type CrossTeamData struct {
 	OnlyCaptainCanMark bool // 仅队长可标记开关（本服 onlyCaptainCanMark 对应）
 }
 
-// isInDungeon 返回队伍是否已在副本中（通过讨伐状态机判断）
+// isInDungeon 讨伐流程中（检查/建空间/副本中）一律视为不可入队状态（通过讨伐状态机判断）
 func (t *CrossTeamData) isInDungeon() bool {
-	return t.CrusadeState == CRUSADE_STATE_IN_DUNGEON
+	return t.CrusadeState != CRUSADE_STATE_NONE
 }
 
 func newCrossTeamData(req *pb.CreateTeamRequest) *CrossTeamData {

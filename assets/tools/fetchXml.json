@@ -3,5 +3,6 @@
     "backup_path": "backup_xml",
     "url": "http://192.168.10.13:3000/central/template/download",
     "net_card": "ens33",
+    "maple_url": "http://192.168.10.13:9527",
     "template_id": "1"
 }

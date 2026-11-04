@@ -105,11 +105,11 @@ datas = _tools.RODict({
     }),
     "100rollGapTime": _tools.RODict({
         "ID": "100rollGapTime",
-        "value": 3,
+        "value": 1,
     }),
     "100rollQualityGapTime": _tools.RODict({
         "ID": "100rollQualityGapTime",
-        "value": 1.5,
+        "value": 0.5,
     }),
     "poolEndMsg": _tools.RODict({
         "ID": "poolEndMsg",
@@ -182,5 +182,113 @@ datas = _tools.RODict({
     "dailyCoinRollTime": _tools.RODict({
         "ID": "dailyCoinRollTime",
         "value": 1,
+    }),
+    "firstMountsGachaID": _tools.RODict({
+        "ID": "firstMountsGachaID",
+        "value": 15000001,
+    }),
+    "mountsRollDailyLimitTips": _tools.RODict({
+        "ID": "mountsRollDailyLimitTips",
+        "value": "今日剩余召唤次数：{0}",
+    }),
+    "mountsRollLimitNotEnough": _tools.RODict({
+        "ID": "mountsRollLimitNotEnough",
+        "value": 54000950,
+    }),
+    "mountsRollTicketNotEnough": _tools.RODict({
+        "ID": "mountsRollTicketNotEnough",
+        "value": 54000951,
+    }),
+    "mountsGuaranteeMaxFull": _tools.RODict({
+        "ID": "mountsGuaranteeMaxFull",
+        "value": 54000956,
+    }),
+    "mountsInProgressStop": _tools.RODict({
+        "ID": "mountsInProgressStop",
+        "value": 54000957,
+    }),
+    "mountsRollStop": _tools.RODict({
+        "ID": "mountsRollStop",
+        "value": 54000958,
+    }),
+    "mountsPityCounter": _tools.RODict({
+        "ID": "mountsPityCounter",
+        "value": "{0}/{1}",
+    }),
+    "mountsPityCounterTips": _tools.RODict({
+        "ID": "mountsPityCounterTips",
+        "value": "召唤{1}次得礼包\n<color=#9e9886>赠送不在统计内</color>",
+    }),
+    "mountsCountdownTips": _tools.RODict({
+        "ID": "mountsCountdownTips",
+        "value": "倒计时：{0}天{1}小时",
+    }),
+    "mountsQuality3Broadcast": _tools.RODict({
+        "ID": "mountsQuality3Broadcast",
+        "value": 58000229,
+    }),
+    "mountsQuality4Broadcast": _tools.RODict({
+        "ID": "mountsQuality4Broadcast",
+        "value": 58000230,
+    }),
+    "mountsPullInfoText": _tools.RODict({
+        "ID": "mountsPullInfoText",
+        "value": "概率",
+    }),
+    "mountspPullRecordText": _tools.RODict({
+        "ID": "mountspPullRecordText",
+        "value": "记录",
+    }),
+    "mountsUpItemText": _tools.RODict({
+        "ID": "mountsUpItemText",
+        "value": "2倍概率",
+    }),
+    "mounts1rollText": _tools.RODict({
+        "ID": "mounts1rollText",
+        "value": "召唤1次",
+    }),
+    "mounts10rollText": _tools.RODict({
+        "ID": "mounts10rollText",
+        "value": "召唤10次",
+    }),
+    "mounts100rollText": _tools.RODict({
+        "ID": "mounts100rollText",
+        "value": "召唤100次",
+    }),
+    "mountsMaxStack": _tools.RODict({
+        "ID": "mountsMaxStack",
+        "value": 1000,
+    }),
+    "mounts100rollCounter": _tools.RODict({
+        "ID": "mounts100rollCounter",
+        "value": "剩余 {0}/{1}",
+    }),
+    "mounts100rollShowText": _tools.RODict({
+        "ID": "mounts100rollShowText",
+        "value": "{0}秒后进入下一轮召唤，将自动跳过动画",
+    }),
+    "mounts100rollGapTime": _tools.RODict({
+        "ID": "mounts100rollGapTime",
+        "value": 1,
+    }),
+    "mounts100rollQualityGapTime": _tools.RODict({
+        "ID": "mounts100rollQualityGapTime",
+        "value": 0.5,
+    }),
+    "mountVideoGoldPath": _tools.RODict({
+        "ID": "mountVideoGoldPath",
+        "value": "drawmount_gold_video.mp4",
+    }),
+    "mountVideoGoldPathMobile": _tools.RODict({
+        "ID": "mountVideoGoldPathMobile",
+        "value": "drawmount_gold_video_mobile.mp4",
+    }),
+    "mountVideoPurplePath": _tools.RODict({
+        "ID": "mountVideoPurplePath",
+        "value": "drawmount_purple_video.mp4",
+    }),
+    "mountVideoPurplePathMobile": _tools.RODict({
+        "ID": "mountVideoPurplePathMobile",
+        "value": "drawmount_purple_video_mobile.mp4",
     })
 })

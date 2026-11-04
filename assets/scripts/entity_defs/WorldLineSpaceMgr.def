@@ -27,8 +27,5 @@
     </Properties>
 
     <CellMethods>
-        <onGetCreateBossTime>
-            <Arg>           LONGTIME                    </Arg>
-        </onGetCreateBossTime>
     </CellMethods>
 </root>

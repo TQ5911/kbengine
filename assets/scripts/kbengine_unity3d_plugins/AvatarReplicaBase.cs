@@ -44,7 +44,9 @@ namespace KBEngine
 		
 		
 		
+		public Int32 maxAllArmor = 0;
 		public float medicineRate = 0f;
+		public Int32 minAllArmor = 0;
 		public float miningRate = 0f;
 		
 		
@@ -62,6 +64,8 @@ namespace KBEngine
 		
 		public Byte summonSlotIdx = 0;
 		public Byte ultraSkillPower = 0;
+		public Int32 uniAnti = 0;
+		public Int32 uniEnh = 0;
 
 
 		public AvatarReplicaBase()
@@ -404,7 +408,7 @@ namespace KBEngine
 						break;
 					case 366:
 						APPEARANCE_INFO oldval_appearance = appearance;
-						appearance = ((DATATYPE_APPEARANCE_INFO)EntityDef.id2datatypes[35]).createFromStreamEx(stream);
+						appearance = ((DATATYPE_APPEARANCE_INFO)EntityDef.id2datatypes[36]).createFromStreamEx(stream);
 
 						if(prop.isBase())
 						{
@@ -754,6 +758,22 @@ namespace KBEngine
 						}
 
 						break;
+					case 33108:
+						Int32 oldval_maxAllArmor = maxAllArmor;
+						maxAllArmor = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onMaxAllArmorChanged(oldval_maxAllArmor);
+						}
+						else
+						{
+							if(inWorld)
+								onMaxAllArmorChanged(oldval_maxAllArmor);
+						}
+
+						break;
 					case 644:
 						float oldval_medicineRate = medicineRate;
 						medicineRate = stream.readFloat();
@@ -767,6 +787,22 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onMedicineRateChanged(oldval_medicineRate);
+						}
+
+						break;
+					case 33105:
+						Int32 oldval_minAllArmor = minAllArmor;
+						minAllArmor = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onMinAllArmorChanged(oldval_minAllArmor);
+						}
+						else
+						{
+							if(inWorld)
+								onMinAllArmorChanged(oldval_minAllArmor);
 						}
 
 						break;
@@ -1043,6 +1079,38 @@ namespace KBEngine
 						{
 							if(inWorld)
 								onUltraSkillPowerChanged(oldval_ultraSkillPower);
+						}
+
+						break;
+					case 33102:
+						Int32 oldval_uniAnti = uniAnti;
+						uniAnti = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onUniAntiChanged(oldval_uniAnti);
+						}
+						else
+						{
+							if(inWorld)
+								onUniAntiChanged(oldval_uniAnti);
+						}
+
+						break;
+					case 33099:
+						Int32 oldval_uniEnh = uniEnh;
+						uniEnh = stream.readInt32();
+
+						if(prop.isBase())
+						{
+							if(inited)
+								onUniEnhChanged(oldval_uniEnh);
+						}
+						else
+						{
+							if(inWorld)
+								onUniEnhChanged(oldval_uniEnh);
 						}
 
 						break;
@@ -1561,6 +1629,27 @@ namespace KBEngine
 				}
 			}
 
+			Int32 oldval_maxAllArmor = maxAllArmor;
+			Property prop_maxAllArmor = pdatas[44];
+			if(prop_maxAllArmor.isBase())
+			{
+				if(inited && !inWorld)
+					onMaxAllArmorChanged(oldval_maxAllArmor);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_maxAllArmor.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onMaxAllArmorChanged(oldval_maxAllArmor);
+					}
+				}
+			}
+
 			float oldval_medicineRate = medicineRate;
 			Property prop_medicineRate = pdatas[39];
 			if(prop_medicineRate.isBase())
@@ -1578,6 +1667,27 @@ namespace KBEngine
 					else
 					{
 						onMedicineRateChanged(oldval_medicineRate);
+					}
+				}
+			}
+
+			Int32 oldval_minAllArmor = minAllArmor;
+			Property prop_minAllArmor = pdatas[45];
+			if(prop_minAllArmor.isBase())
+			{
+				if(inited && !inWorld)
+					onMinAllArmorChanged(oldval_minAllArmor);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_minAllArmor.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onMinAllArmorChanged(oldval_minAllArmor);
 					}
 				}
 			}
@@ -1935,6 +2045,48 @@ namespace KBEngine
 					else
 					{
 						onUltraSkillPowerChanged(oldval_ultraSkillPower);
+					}
+				}
+			}
+
+			Int32 oldval_uniAnti = uniAnti;
+			Property prop_uniAnti = pdatas[46];
+			if(prop_uniAnti.isBase())
+			{
+				if(inited && !inWorld)
+					onUniAntiChanged(oldval_uniAnti);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_uniAnti.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onUniAntiChanged(oldval_uniAnti);
+					}
+				}
+			}
+
+			Int32 oldval_uniEnh = uniEnh;
+			Property prop_uniEnh = pdatas[47];
+			if(prop_uniEnh.isBase())
+			{
+				if(inited && !inWorld)
+					onUniEnhChanged(oldval_uniEnh);
+			}
+			else
+			{
+				if(inWorld)
+				{
+					if(prop_uniEnh.isOwnerOnly() && !isPlayer())
+					{
+					}
+					else
+					{
+						onUniEnhChanged(oldval_uniEnh);
 					}
 				}
 			}

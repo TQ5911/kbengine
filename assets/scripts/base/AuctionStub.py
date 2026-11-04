@@ -16,7 +16,6 @@ import auction
 import itemFactory
 import redisUtils
 import iRouter
-import AuctionSnatchRecords
 import mailAssistor
 import dropAward
 import utils
@@ -47,8 +46,6 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         iTimer.ITimer.__init__(self)
 
         self.auctionService = None
-        self.SNATCH_LOCK_TTL = AUC_CONST.datas['auctionLuckyBuyTime']['value'] * 2
-        self.SNATCH_LOCK_PREFIX = 'auction:snatch:lock:'
         self._needForceCacheAvgPrice = True
 
     def doNext(self):
@@ -60,7 +57,6 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         self.pyAddTimer(gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL, gameconst.CENTRAL_SERVICE_HEARTBEAT_INTERVAL,
                         gametimer.AUCTION_STUB_ACTIVE_TICK)
         self.pyAddTimer(1, gameconst.ONE_MINUTE_COST_SECONDS, gametimer.AUCTION_STUB_AVG_PRICE_CACHE)
-        self.pyAddTimer(1, 1, gametimer.AUCTION_SNATCH)
         gameglobal.mallItemPriceCache.update(self.mallItemPriceDict)
         gameglobal.mallItemLastUpdateTime.update(self.mallItemLastUpdateTime)
 
@@ -72,8 +68,6 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             self._checkAuctionCenterActive()
         elif userArg == gametimer.AUCTION_STUB_AVG_PRICE_CACHE:
             self._cacheAvgPrice()
-        elif userArg == gametimer.AUCTION_SNATCH:
-            self.auctionSnatch()
 
     def reloadScript(self):
         super(AuctionStub, self).reloadScript()
@@ -129,7 +123,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         self.auctionService.serviceStub.doSaleItem(None, request, None)
 
-    def buyItem(self, playerGBID, auctionItemUUID, number, extra):
+    def buyItem(self, playerGBID, auctionItemUUID, number, extra, snatchWeight):
         if not self.isAuctionCenterActive():
             LOG_INFO("buyItem auctionCenter is not active")
             return
@@ -139,40 +133,25 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
         request.auctionItemUUID = auctionItemUUID
         request.number = number
         request.extra = json.dumps(extra)
+        # 2026-10-08 抢购权重字段透传给中央 service(0 由 service 当默认值)
+        request.snatchWeight = snatchWeight
 
         self.auctionService.serviceStub.buyItem(None, request, None)
 
-    def doBuyItem(self, auctionItemUUID, playerGBID, errno, price, publicityEndTime, buyType, extra):
-        LOG_INFO("doBuyItem ", auctionItemUUID, playerGBID, errno, price, publicityEndTime, buyType, extra)    
-        # 成功付钱
-        if errno == 1:
-            # 抢购
-            if buyType == gameconst.AuctionBuyType.SNATCH:
-                gameglobal.localBaseApp.getRedisClient().setnxex(
-                    gameconst.AuctionSnatchData.SNATCH_PARTICIPATE_PREFIX.format(str(playerGBID), str(auctionItemUUID)), 1,
-                    self.SNATCH_LOCK_TTL,
-                    lambda cid, err, result, 
-                    playerGBID=playerGBID,
-                    auctionItemUUID=auctionItemUUID, 
-                    extra=extra, 
-                    price=price,
-                    publicityEndTime=publicityEndTime:
-                        self._onChekResult(cid, err, result, playerGBID, auctionItemUUID, extra, price, publicityEndTime))
-                return
-            
+    def doBuyItem(self, auctionItemUUID, playerGBID, errno, price, publicityEndTime, extra):
+        # 2026-09-21 v3 抢购迁移:v3 删 buyType 形参(game server 不再透传给中央)
+        LOG_INFO("doBuyItem ", auctionItemUUID, playerGBID, errno, price, publicityEndTime, extra)
         if not self.isAuctionCenterActive():
             LOG_INFO("doBuyItem auctionCenter is not active")
             return
-        self.startDoBuyAction(auctionItemUUID, playerGBID, price, extra, errno)
 
-    def startDoBuyAction(self, auctionItemUUID, playerGBID, price, extra, errno):
         request = DoBuyItemReq()
         request.auctionItemUUID = auctionItemUUID
         request.playerGBID = playerGBID
         request.errno = errno
         request.price = price
         request.extra = json.dumps(extra)
-
+        request.buyType = extra.get('buyType')
         self.auctionService.serviceStub.doBuyItem(None, request, None)
 
     def buyItems(self, playerGBID, auctionItemUUIDs, auctionItemNumbers, extra):
@@ -385,115 +364,7 @@ class AuctionStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
             data = mall_coinPrice.datas[mallID]
             itemId = data['itemId']
             self.getItemLastAndAvgPrice(0, itemId, {})
-
-    def _onLockResult(self, cid, err, result, auctionUUID, itemId, price, number, auctionRecord):
-        if err:
-            LOG_ERR('snatch:: lock error', err)
-            # redis报错，全部返还
-            self.doBatchSnatchRetunBack(itemId, price, auctionRecord)
-            return
-
-        if result != 'OK':
-            LOG_INFO('snatch:: already in flight')
-            # 没抢到锁，全部返还
-            self.doBatchSnatchRetunBack(itemId, price, auctionRecord)
-            return
-        # 开始抢购
-        self.startSnatch(auctionUUID, itemId, price, number, auctionRecord)
-
-    def _onChekResult(self, cid, err, result, playerGBID, auctionItemUUID, extra, price, publicityEndTime):
-        if err:
-            LOG_ERR('snatch:: participate error', err)
-            # redis报错，全部返还
-            self.doSnatchReturnBack(playerGBID, extra.get('tlogProps').get('role_name'), extra.get('opUUID'), extra.get('auctionBuyItemId'), price)
-            return
-
-        if result != 'OK':
-            LOG_INFO('snatch:: already in participate')
-            # 重复参加，返还
-            self.doSnatchReturnBack(playerGBID, extra.get('tlogProps').get('role_name'), extra.get('opUUID'), extra.get('auctionBuyItemId'), price)
-            return
         
-        data = self.auctionSnatchRecords.get(auctionItemUUID, None)
-        if not data:
-            data = AuctionSnatchRecords.AuctionSnatchRecords(auctionItemUUID, extra.get('auctionBuyItemId'), price, extra.get('number'), publicityEndTime)
-            self.auctionSnatchRecords[auctionItemUUID] = data
-        # 已完成直接返还
-        if data.isFinished():
-            self.doSnatchReturnBack(playerGBID, extra.get('tlogProps').get('role_name'), extra.get('opUUID'), extra.get('auctionBuyItemId'), price)
-            return
-        data.addAuctionSnatchRecords(playerGBID, extra.get('tlogProps').get('role_name'), extra.get('opUUID'))
-        # 发消息
-        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                                [playerGBID, ], 'onMessagePre', (AUC_CONST.datas['auctionLuckyBuyCheck']['value'], []),
-                                None, '', ())
-
-    def auctionSnatch(self):
-        now = utils.curTS()
-        recordKeys = list(self.auctionSnatchRecords.keys())
-        for recordKey in recordKeys:
-            auctionSnatchRecord = self.auctionSnatchRecords.get(recordKey, None)
-            if auctionSnatchRecord is None:
-                continue
-            # 完成了，不处理
-            if auctionSnatchRecord.isFinished():
-                continue
-            # 交易行关了，全部走返还
-            if not self.isAuctionCenterActive():
-                auctionSnatchRecord.setFinished()
-                self.doBatchSnatchRetunBack(auctionSnatchRecord.itemId, auctionSnatchRecord.price, auctionSnatchRecord)
-                LOG_INFO("auctionSnatch auctionCenter is not active")
-                return
-            if now >= auctionSnatchRecord.publicityEndTime:
-                auctionSnatchRecord.setFinished()
-                # 没人就不抢了
-                if len(auctionSnatchRecord.records) == 0:
-                    continue
-                gameglobal.localBaseApp.getRedisClient().setnxex(
-                    self.SNATCH_LOCK_PREFIX + str(auctionSnatchRecord.auctionUUID), 1,
-                    self.SNATCH_LOCK_TTL,
-                    lambda cid, err, result, 
-                    auctionUUID=auctionSnatchRecord.auctionUUID, 
-                    itemId=auctionSnatchRecord.itemId, 
-                    price=auctionSnatchRecord.price,
-                    number=auctionSnatchRecord.number,
-                    rcd=auctionSnatchRecord:
-                        self._onLockResult(cid, err, result, auctionUUID, itemId, price, number, rcd))    
-
-    def startSnatch(self, auctionUUID, itemId, price, number, auctionRecord):
-        LOG_INFO('startSnatch ', auctionUUID, itemId, price, number)
-        idx = random.randint(0, len(auctionRecord.records) - 1)
-        # 幸运儿随机
-        record = auctionRecord.records.pop(idx)
-        # 其他人走返还
-        self.doBatchSnatchRetunBack(itemId, price, auctionRecord)
-        # 开启去买
-        extra = {}
-        extra['number'] = number
-        extra['selectItemLocked'] = 1
-        extra['auctionBuyItemNum'] = number
-        extra['opUUID'] = record.opUUID
-        props = {'role_name':record.name}
-        extra['tlogProps'] = props
-        self.startDoBuyAction(auctionUUID, record.gbId, price, extra, gameconst.AuctionErrno.ERR_AUCTION_OK.errno)
-
-    def doBatchSnatchRetunBack(self, itemId, price, auctionRecord):
-        for record in auctionRecord.records:
-            self.doSnatchReturnBack(record.gbId, record.name, record.opUUID, itemId, price)
-        auctionRecord.clearRecords()
-        self.auctionSnatchRecords.pop(auctionRecord.auctionUUID, None)
-
-    def doSnatchReturnBack(self, gbId, name, opUUID, itemId, price):
-        # 发消息
-        gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                                [gbId, ], 'onMessagePre', (AUC_CONST.datas['auctionLuckyBuyFail']['value'], [name]),
-                                None, '', ())
-        # 退还消耗
-        attachVal = dropAward.MailAttachVal()
-        attachVal.addWealthByItemId(gameconst.ItemIdEnum.MONEY, price)
-        mailAssistor.sendMailToPlayers([gbId], AUC_CONST.datas['auctionLuckyBuyMail']['value'], extraAttach=attachVal, opUUID=opUUID, 
-                                       despArgs=(itemId, gbId), srcType=AAC_AACDD.datas.BONUS_SRC_AUCTION_SNATCH_FAIL)
-
 class AuctionStubService(GameServer):
     # auctionStub: callback obj
     # address: tuple of (ip, port)
@@ -599,15 +470,31 @@ class AuctionStubService(GameServer):
         auctionItemUUID = request.auctionItemUUID
         price = request.price
         publicityEndTime = request.publicityEndTime
-        buyType = request.buyType
         extra = json.loads(request.extra)
         extra['code'] = request.code
+        extra['buyType'] = request.buyType
+        # 2026-09-21 v3:BuyItemResp.buyType/snatchId 字段已删,game server 不需要透传
         LOG_INFO("replyBuyItem", playerGBID, auctionItemUUID, price, extra)
 
         if playerGBID != 0:
             gameengine.getGlobalBase('PlayerStub').doOnOthersBase(
-                [playerGBID], "doBuyItemInCoinAuctionByAuctionItemUUID", (auctionItemUUID, price, publicityEndTime, buyType, extra),
+                [playerGBID], "doBuyItemInCoinAuctionByAuctionItemUUID", (auctionItemUUID, price, publicityEndTime, extra),
                 None, '', ())
+
+    def replySnatchRefund(self, rpc_controller, request, done):
+        LOG_INFO("replySnatchRefund", request)
+        itemId = request.itemId
+        price = request.price
+        playerGbId = request.playerGBID
+        opUUID = request.opUUID
+
+        stub = gameengine.getGlobalBase('PlayerStub')
+        stub.doOnOthersBase(
+            [playerGbId, ],
+            "onSnatchRefund",
+            (opUUID, itemId, price, False),
+            stub, 'recordOfflineCallback',
+            (playerGbId, 'onSnatchRefund', (opUUID, itemId, price, True)))
 
     def replyBuyItems(self, rpc_controller, request, done):
         playerGBID = request.playerGBID
@@ -641,19 +528,23 @@ class AuctionStubService(GameServer):
                 number = extra.get('auctionBuyItemNum')
                 opUUID = extra.get('opUUID')
                 price = auctionItem.price
+                errno = gameconst.AuctionErrno._errno(extra.get('errno'))
                 if price > 0:
-                    now = utils.curTS()
-                    redisUtils.PlayerBuyAuctionItemRecord.recordMessage(
-                        now, playerGBID, auctionItem.itemId, number, price,
-                        auctionItem.itemData.toItemSavedDict(), opUUID)
+                    if errno == gameconst.AuctionErrno.ERR_AUCTION_OK:
+                        now = utils.curTS()
+                        redisUtils.PlayerBuyAuctionItemRecord.recordMessage(
+                            now, playerGBID, auctionItem.itemId, number, price,
+                            auctionItem.itemData.toItemSavedDict(), opUUID)
                 stub = gameengine.getGlobalBase('PlayerStub')
                 stub.doOnOthersBase(
                     [playerGBID, ],
                     "onBuyItemInCoinAuctionByAuctionItemUUID",
-                    (auctionItem, price, extra),
+                    (auctionItem, price, extra, False),
                     stub, 'recordOfflineCallback',
-                    (playerGBID, 'onBuyItemInCoinAuctionByAuctionItemUUIDOffline', (auctionItem, price, extra)))
-                LogTrackingMgr.LogTrackingMgr.Auction_ItemBuy(playerGBID, '', playerGBID, opUUID, auctionItem.auctionItemUUID, auctionItem.itemId, number, price)
+                    (playerGBID, 'onBuyItemInCoinAuctionByAuctionItemUUID', (auctionItem, price, extra, True)))
+                
+                if errno == gameconst.AuctionErrno.ERR_AUCTION_OK:
+                    LogTrackingMgr.LogTrackingMgr.Auction_ItemBuy(playerGBID, '', playerGBID, opUUID, auctionItem.auctionItemUUID, auctionItem.itemId, number, price)
 
     def replyDoBuyItems(self, rpc_controller, request, done):
         playerGBID = request.playerGBID

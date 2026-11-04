@@ -41,15 +41,21 @@ import NPC_Pick as NPD
 import creep_base as CBD
 import gacha_gachaPool as GGP
 import creep_coefficient as C_CD
-import branchData_set as BDS
+import creep_title as CTD
 import cube_config
 import wonderLand_config
 import abyss_config
 import soul_soul
-import soul_soulNumQuality
 import soul_soulAffix
+import soul_soulLevel
+import soul_soulNumQuality
+import soul_rareSoulNumQuality
+import soul_soulRconst
 import affix_affix
 import character_charData
+import worldBoss_base as WB_BASE
+import gamePlay_gamePlay as GGD
+import gamePlay_singleSceneData as GPSSDD
 
 import KBEngine
 from KBEDebug import *
@@ -78,6 +84,7 @@ import experience_config as EC
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
 import experience_global_EXP_Multiplier as EGM
 import experience_fixedWorldLevel as EFWL
+import experience_refreshRateOfTime as ERT
 import visible_visible as V_VD
 import mall_coinPrice as MCP
 import mall_mallConst as MMC
@@ -111,6 +118,25 @@ class Swallower(object):
 
 def curTS():
     return int(time.time())
+
+
+_preCreateConfigWarned = False
+
+
+def inPreCreatePeriod():
+    """
+    当前是否处于预创角时间窗（预创角结束时间必须不晚于正式开服时间）
+    """
+    global _preCreateConfigWarned
+    startTime = gameconfig.preCreateStartTime()
+    endTime = gameconfig.preCreateEndTime()
+    if not startTime or not endTime or startTime >= endTime or endTime > gameconfig.serverOpenTime():
+        if (startTime or endTime) and not _preCreateConfigWarned:
+            _preCreateConfigWarned = True
+            LOG_WARN('inPreCreatePeriod: invalid preCreate config', startTime, endTime, gameconfig.serverOpenTime())
+        return False
+
+    return startTime <= curTS() < endTime
 
 
 def getAvatarNameRedisKey(name):
@@ -241,11 +267,16 @@ def getEntityList(entityClass):
 
 
 def getAllAvatarByGm(su, box):
-    res = getEntityList("Avatar")
+    avatars = getEntityList("Avatar")
     data = []
     groupOrder = KBEngine.getComponentGroupOrder()
-    for ent in res:
+    for ent in avatars:
         data.append({'entityId': ent.id, 'roleName': ent.getRoleCacheAttr('name'), 'gbId': str(ent.gbID), 'componentInfo': "baseapp%s-%s" % (groupOrder, str(ent.cell))})
+    if not data:
+        avatarings = getEntityList("Avataring")
+        for ent in avatarings:
+            data.append({'entityId': ent.id, 'roleName': gameglobal.avataringCache.get(ent.id, {}).get('name', ''), 'gbId': str(ent.gbID), 'componentInfo': "baseapp%s-%s" % (groupOrder, str(ent.cell))})
+    
     box.onGetAllPlayer(su, {groupOrder: data})
 
 
@@ -600,22 +631,6 @@ def isMyself(fn):
     return _inner
 
 
-def needInTeam(fn):
-    @functools.wraps(fn)
-    def _inner(self, *args, **kwargs):
-        if not hasattr(self, 'teamId'):
-            LOG_ERR('AttributeError, no teamId in instance.')
-            return None
-
-        if self.teamId:
-            return fn(self, *args, **kwargs)
-        else:
-            LOG_WARN('Called fn must in a team: {}'.format(fn))
-            return None
-
-    return _inner
-
-
 def checkBagLocked(fn):
     @functools.wraps(fn)
     def _inner(bag, *args, **kwargs):
@@ -856,6 +871,7 @@ def getAreaId(mapId, pos, scaleSize=1):
     return _areaData.get(_z * _height + _x, 0)
 
 
+@functools.lru_cache(maxsize=1)
 def getSvrOpenDayFiveTS():
     import gameconfig
     svrOpenTime = gameconfig.serverOpenTime()
@@ -1230,6 +1246,41 @@ def parseCommEventParams(paramStr):
     return _args, _kwargs
 
 
+def _isLocalDestroyed(box):
+    return isinstance(box, KBEngine.Entity) and box.isDestroyed
+
+def safeBaseCall(box, methodName, *args, **kwargs):
+    if box is None or _isLocalDestroyed(box):
+        LOG_INFO('safeBaseCall: box is None or destroyed', box)
+        return None
+
+    return getattr(box, methodName)(*args, **kwargs)
+
+def safeCellCall(box, methodName, *args, **kwargs):
+    if box is None or _isLocalDestroyed(box):
+        LOG_INFO('safeCellCall: box is None or destroyed', box)
+        return None
+
+    cellBox = box.cell
+    if not cellBox:
+        LOG_INFO('safeCellCall: cellBox is None', box)
+        return None
+
+    return getattr(cellBox, methodName)(*args, **kwargs)
+
+def safeClientCall(box, methodName, *args, **kwargs):
+    if box is None or _isLocalDestroyed(box):
+        LOG_INFO('safeClientCall: box is None or destroyed', box)
+        return None
+
+    clientBox = box.client
+    if not clientBox:
+        LOG_INFO('safeClientCall: clientBox is None', box)
+        return None
+
+    return getattr(clientBox, methodName)(*args, **kwargs)
+
+
 def checkBoxOffline(box, reportErr=True):
     # 先删除isDestroying判断，正常情况应该在下线销毁时就从stub注销自己，而不是持有一个isDestroyed的对象再判断
     if isinstance(box, KBEngine.Proxy):
@@ -1597,6 +1648,11 @@ def getGuildUUIDPair(guildUUID1, guildUUID2):
         return (guildUUID2, guildUUID1)
 
 
+def refugeBlocksGuildEnemy(src, target):
+    """任一方处于避难中，双方不再按帮会敌对处理。个人敌对列表不受影响。"""
+    return src.inRefugeMode() or target.inRefugeMode()
+
+
 def isEnemyInPK(src, target):
     if utils.bhas(src.cellFlags, gameconst.CELL_FLAGS_PK_SAFE) or utils.bhas(target.cellFlags, gameconst.CELL_FLAGS_PK_SAFE):
         return False
@@ -1617,6 +1673,9 @@ def isEnemyInPK(src, target):
 
         if src.inEnmityList(target.gbId):
             return True
+
+        if refugeBlocksGuildEnemy(src, target):
+            return False
 
         # 实体级敌对判定：帮忙会直接参战或其当前所属联盟参战均算敌对
         return getEntityGuildRelation(src, target) == gameconst.GuildRelationType.ENEMY
@@ -1727,6 +1786,9 @@ def isMineWarEnemy(src, target):
                         return True, True
                     
         if src.IsAvatar and target.IsAvatar and src.mineWarCanAttack and target.mineWarCanAttack:
+            if not src.spaceMgr:
+                return False, True
+
             # 安全区内不可互相攻击
             _srcInSafe = utils.bhas(src.cellFlags, gameconst.CELL_FLAGS_PK_SAFE)
             _tgtInSafe = utils.bhas(target.cellFlags, gameconst.CELL_FLAGS_PK_SAFE)
@@ -1911,11 +1973,7 @@ def _entIsTeam(src, e, tgt):
         if isEnemy(src, tgt):
             return False
 
-        if src.teamId != 0 and src.teamId == tgt.teamId:
-            return True
-
-        # 跨服讨伐队友（跨服镜像上本服 teamId 为 0，用跨服队伍 ID 判定）
-        if src.crossTeamId != 0 and src.crossTeamId == tgt.crossTeamId:
+        if src.inCrossTeam(tgt.gbId):
             return True
 
     return False
@@ -1936,7 +1994,7 @@ def _entIsRaid(src, e, tgt):
         if isEnemy(src, tgt):
             return False
 
-        if src.raidId != 0 and src.raidId == tgt.raidId:
+        if src.inCrossRaid(tgt.gbId):
             return True
 
     return False
@@ -2197,16 +2255,70 @@ def getWorldLevel(useCross=None):
             gameglobal.worldLevel = worldLevel
     return worldLevel
 
-def getMonsterWorldLevelDropRatio(monsterId, monsterLevel, useCross=None):
+def getYesterdayOnlineNum(useCross=None, useTotal=True):
+    if useCross is None:
+        useCross = gameconfig.isCrossServer()
+    onlineNum = getattr(gameglobal, 'yesterdayOnlineNum', None)
+    if not onlineNum:
+        onlineNum = KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_YESTERDAY_ONLINE_NUM, None)
+        if onlineNum:
+            gameglobal.yesterdayOnlineNum = onlineNum
+    if not onlineNum:
+        onlineNum = (0, 0, 0)
+    if not useCross:
+        return onlineNum[0]
+    return onlineNum[2] if useTotal else onlineNum[1]
+
+def getMonsterTimePeriodDropRatio(monsterId, hour=None):
+    """时段掉落系数。creep_coefficient.dropTimePeriod 为 0 时不受影响，恒为 1。
+    按结算掉落时的小时读取 experience_revenueTimePeriod。"""
     coefficientType = CBD.datas.get(monsterId, {}).get('coefficientType', 0)
-    if not C_CD.datas.get(coefficientType, {}).get('dropWorldLevel', 0):
+    if not C_CD.datas.get(coefficientType, {}).get('dropTimePeriod', 0):
+        return 1.0
+    return formula.getKillMonsterTimePeriodDropRatio(hour)
+
+def getMonsterOnlinePeakDropRatio(monsterId, useCross=None):
+    """在线峰值掉落系数。creep_coefficient.dropOnlinePeak 为 0 时不受影响，恒为 1。
+    非 0 时作为组别，按昨日在线峰值读取 experience_revenueOnlinePeak。
+    跨服用 crossRewardprop，昨日峰值取跨服合计峰值。"""
+    coefficientType = CBD.datas.get(monsterId, {}).get('coefficientType', 0)
+    groupId = C_CD.datas.get(coefficientType, {}).get('dropOnlinePeak', 0)
+    if not groupId:
+        return 1.0
+    if useCross is None:
+        useCross = gameconfig.isCrossServer()
+    onlineNum = getYesterdayOnlineNum(useCross, useTotal=True)
+    return formula.getKillMonsterOnlinePeakDropRatio(groupId, onlineNum, useCross)
+
+def getMonsterBranchDropRatio(monsterId, spaceNo):
+    """非主分线掉落系数。主分线（spaceNo 拆分后 lineNo 为 0）与非分线场景恒为 1，不受影响。
+    creep_coefficient.dropRateOnBranch 只在非主分线生效：0 表示不掉落任何，1 表示完整掉落，
+    0.3 表示掉落产物按 0.3 缩放（数量走概率进位，单件物品即 0.3 概率保留）。"""
+    if not formula.inLineScene(spaceNo):
+        return 1.0
+    if formula.parseLineNo(spaceNo) == gameconst.MAIN_LINE_NO:
+        return 1.0
+    coefficientType = CBD.datas.get(monsterId, {}).get('coefficientType', 0)
+    rate = C_CD.datas.get(coefficientType, {}).get('dropRateOnBranch', 0.0)
+    return float(rate or 0.0)
+
+def getMonsterWorldLevelDropRatio(monsterId, monsterLevel, useCross=None):
+    """世界等级掉落系数。creep_coefficient.dropWorldLevel 为 0 时不受影响，恒为 1。
+    非 0 时作为组别，按 experience_revenueWorldLevel 读取。
+    effectiveLevel 为 0 时按怪物等级与世界等级的差值；大于 0 时世界等级达到该等级才生效，
+    只影响不高于该等级的怪物，差值按生效等级减世界等级读取。"""
+    coefficientType = CBD.datas.get(monsterId, {}).get('coefficientType', 0)
+    coeffData = C_CD.datas.get(coefficientType, {})
+    groupId = coeffData.get('dropWorldLevel', 0)
+    if not groupId:
         return 1.0
     if type(monsterLevel) is not int or monsterLevel <= 0:
         return 1.0
     worldLevel = getWorldLevel(useCross)
     if not worldLevel:
         return 1.0
-    return formula.getKillMonsterWorldLevelDropRatio(monsterLevel, worldLevel)
+    effectiveLevel = coeffData.get('effectiveLevel', 0) or 0
+    return formula.getKillMonsterWorldLevelDropRatio(groupId, monsterLevel, worldLevel, effectiveLevel)
 
 def getMonsterWorldLevelBindRatio(monsterId, monsterLevel, useCross=None):
     coefficientType = CBD.datas.get(monsterId, {}).get('coefficientType', 0)
@@ -2217,14 +2329,128 @@ def getMonsterWorldLevelBindRatio(monsterId, monsterLevel, useCross=None):
     worldLevel = getWorldLevel(useCross)
     if not worldLevel:
         return 0.0
-    return formula.getKillMonsterWorldLevelBindRatio(monsterLevel, worldLevel)
+    groupId = C_CD.datas.get(coefficientType, {}).get('bindWorldLevel', 0)
+    return formula.getKillMonsterWorldLevelBindRatio(groupId, monsterLevel, worldLevel)
+
+def calcRefreshRateOfTime(now=None):
+    """按时段表计算当前生效的刷新概率系数，供 WorldRefreshEntityStub 定时计算后广播。
+    experience_refreshRateOfTime 每行是一个时段：startTimeCron 为该时段开始时间（cron 元组列表），
+    列 key（"1"/"2"/"3"...）为该时段各怪物类型的概率系数。
+    当前时段 = 最近一次已开始的时段行（如 02:00/08:00/14:00/20:00 四行，10 点生效的是 08:00 那行）。
+    没有有效 cron 的行永不生效（该行被忽略，缺的类型按"不填"处理）；cron 列表全空的行视为恒生效。
+    返回 ({列类型: 系数}, 距下个时段开始的秒数)。"""
+    now = now or curTS()
+    bestPrev = sys.maxsize
+    bestRow = None
+    nextDelta = sys.maxsize
+    for _, rowData in ERT.datas.items():
+        _prev = sys.maxsize
+        for tp in (rowData.get('startTimeCron') or ()):
+            _prev = min(_prev, previousByTimeTuple(tp, now))
+            nextDelta = min(nextDelta, nextByTimeTuple(tp, now))
+        if _prev < bestPrev:
+            bestPrev = _prev
+            bestRow = rowData
+
+    rates = {}
+    if bestRow:
+        for key, val in bestRow.items():
+            if not str(key).isdigit():
+                continue
+            rates[int(key)] = float(val or 0)
+
+    if nextDelta >= sys.maxsize or nextDelta <= 0:
+        # 表内没有任何可触发的 cron（含 cron 全空即"恒生效"的行）：值不会再变，退化成 1 小时后再试，
+        # 既避免定时器停摆，也避免每分钟重算重播
+        nextDelta = gameconst.ONE_HOUR_COST_SECONDES
+    return rates, nextDelta
+
+def getMonsterRefreshRateOfTime(coeffData, isBranch):
+    """时段刷新概率系数：refreshRateOfTime 仅对 1 线（主分线）生效，refreshRateOfTimeOnBranch 仅对分线生效，
+    取值为 experience_refreshRateOfTime 的列类型；0 或不填表示概率 1 不受影响。
+    系数由 WorldRefreshEntityStub 提前算好广播到 gameglobal，这里只做常数查表。"""
+    if isBranch:
+        timeType = coeffData.get('refreshRateOfTimeOnBranch', 0)
+    else:
+        timeType = coeffData.get('refreshRateOfTime', 0)
+    if not timeType:
+        return 1.0
+
+    rates = gameglobal.refreshRateOfTime
+    if not rates:
+        # 定时器还没跑到（进程刚起，最多差一个 RESYNC 间隔）：按不填处理，概率 1
+        return 1.0
+
+    rate = rates.get(int(timeType))
+    return float(rate) if rate is not None else 1.0
+
+def getMonsterRefreshRate(monsterId, monsterLevel, spaceNo=0):
+    """怪物刷新概率 = 世界等级差系数 × 时段系数。
+    creep_coefficient.refreshRateWorldLevel 为 0 或空时不受影响，恒为 1，仅对 1 线（主分线）怪物生效；
+    非主分线（分线怪物）改读 refreshRateWorldLevelOnBranch，语义相同（0 或不填恒为 1）。
+    refreshRateOfTime / refreshRateOfTimeOnBranch 与之一一同口径（1线×1线、分线×分线），两者相乘得到最终概率。"""
+    coefficientType = CBD.datas.get(monsterId, {}).get('coefficientType', 0)
+    coeffData = C_CD.datas.get(coefficientType, {})
+    isBranch = formula.parseLineNo(spaceNo) != gameconst.MAIN_LINE_NO
+    if isBranch:
+        refreshType = coeffData.get('refreshRateWorldLevelOnBranch', 0)
+    else:
+        refreshType = coeffData.get('refreshRateWorldLevel', 0)
+
+    rate = 1.0
+    if refreshType:
+        if type(monsterLevel) is not int or monsterLevel <= 0:
+            monsterLevel = gameconst.MIN_LEVEL
+        else:
+            monsterLevel = min(monsterLevel, getMaxPlayerLevel())
+
+        worldLevel = getWorldLevel()
+        if worldLevel:
+            rate = formula.getMonsterRefreshRateByWorldLevel(monsterLevel, worldLevel, refreshType)
+
+    return rate * getMonsterRefreshRateOfTime(coeffData, isBranch)
+
+def checkMonsterRefreshByWorldLevel(monsterId, monsterLevel, extraInfo='', spaceNo=0):
+    """单个怪物按世界等级差判定刷新概率，失败返回 False。
+    分线怪物（spaceNo 为非主分线）按 refreshRateWorldLevelOnBranch 判定，其余按 refreshRateWorldLevel。"""
+    rate = getMonsterRefreshRate(monsterId, monsterLevel, spaceNo)
+    if rate >= 1.0:
+        return True
+
+    if random.random() < rate:
+        return True
+
+    LOG_INFO("checkMonsterRefreshByWorldLevel refresh failed", extraInfo, monsterId, monsterLevel,
+             getWorldLevel(), rate)
+    return False
+
+def checkRefreshRateByWorldLevel(entityProps, spaceNo=0):
+    """按世界等级差判定本次刷新是否成功，只在怪物死亡后的刷新逻辑里调用。
+    返回 (是否可以刷新, 刷新失败时下一次刷新所需的间隔)。
+    spaceNo 用于区分分线：分线怪物按 refreshRateWorldLevelOnBranch 判定，其余按 refreshRateWorldLevel。"""
+    for _, _, _className, _, _pos, _dir, _params, _ in entityProps:
+        if _className != 'Monster':
+            continue
+
+        monsterId = _params.get('monsterId', 0)
+        if not monsterId:
+            continue
+
+        if checkMonsterRefreshByWorldLevel(monsterId, _params.get('level', 0) or 0, _params.get('gameEntityId', 0), spaceNo):
+            continue
+
+        return False, (_params.get('refreshTime', 0) or 1)
+
+    return True, 0
 
 def getWorldLevelRatio(playerLevel, worldLevelDelta, src):
+    """世界等级经验倍率。差值 = 世界等级 - 角色等级，按 global_EXP_Multiplier 取档。
+    multiplier 可为负，实际倍率 = 1 + multiplier，例如 -0.5 表示获得 50% 经验。"""
     worldLevelRatio = 1.0
     if gameconfig.isCrossServer():
         worldLevelDelta = getWorldLevel(True) - playerLevel
     if getSvrOpenDays() < EC.datas["activateWorldLevel"]["value"] or src not in EC.datas["bonus_EXP_Sources"]["value"] \
-        or worldLevelDelta <= 0 or playerLevel < V_VD.datas["worldLevel"]["level"]:
+        or playerLevel < V_VD.datas["worldLevel"]["level"]:
         worldLevelRatio = 1.0
     else:
         for i in range(1, EGM.maxKey+1):
@@ -2251,9 +2477,10 @@ def getTeamExpBonus(teammateNum):
     if teammateNum < 1:
         return 0
     teamExpBonus = TMMCD.datas['teamExperienceBonus']['value']
-    return teamExpBonus[teammateNum-1]
+    # 15 人跨服队人数可能超出配置长度，按最高档取
+    return teamExpBonus[min(teammateNum - 1, len(teamExpBonus) - 1)]
 
-def buildChatChannelAvatarData(entityId, playerGBID, school, name, level, sex, picFrameId, *args):
+def buildChatChannelAvatarData(entityId, playerGBID, school, name, level, sex, picFrameId, serverId=0, *args):
     return {
         'id': entityId,
         'sex': sex,
@@ -2261,7 +2488,8 @@ def buildChatChannelAvatarData(entityId, playerGBID, school, name, level, sex, p
         'gbId': playerGBID,
         'level': level,
         'school': school,
-        'picFrameId': picFrameId
+        'picFrameId': picFrameId,
+        'serverId': serverId
     }
 
 def getConfirmMsgCooldown(mid, default=-1):
@@ -2386,13 +2614,37 @@ def checkDrawCardPoolTimeLimit(curTimestamp, checkType):
     #LOG_DBG('checkDrawCardPoolTimeLimit', curTimestamp, poolsInfo, gameglobal.expiredDrawCardPoolCache, checkType)
     return poolsInfo
 
+def crossGroupGameServerIds():
+    # 本组游戏服，来自跨服心跳，不再读 maple 的 server_group
+    raw = KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_CROSS_GROUP_SERVERS) or []
+    crossId = int(gameconfig.getCrossServerId())
+    serverIds = []
+    for sid in raw:
+        sid = int(sid)
+        if sid > 0 and sid != crossId and sid not in serverIds:
+            serverIds.append(sid)
+    return serverIds
+
+def crossGroupGameServerIdsEx(serverId):
+    raw = KBEngine.globalData.get(gameconst.GLOBALDATA_KEY_CROSS_GROUP_SERVERS) or []
+    serverIds = []
+    for sid in raw:
+        sid = int(sid)
+        if sid > 0 and sid != serverId and sid not in serverIds:
+            serverIds.append(sid)
+    return serverIds
+
 def getSiegeWarFirstTimeInfo():
-    firstTime = 0
-    firstTimeValid = False
+    firstTime = curTS() + 20 * 365 * 24 * 60 * 60
+    firstTimeValid = True
     if not gameconfig.serverId() in gameglobal.mapleServerInfo:
         LOG_WARN('[lj]get siege war first time info, server id not found:', gameconfig.serverId())
         return firstTime, firstTimeValid, 0
-    crossServerGroupID = gameglobal.mapleServerInfo[gameconfig.serverId()]['server_group']
+    # TODO: maple 已不下发 server_group，城战分组待改
+    crossServerGroupID = gameglobal.mapleServerInfo[gameconfig.serverId()].get('server_group')
+    if not crossServerGroupID:
+        LOG_WARN('[lj]get siege war first time info, server_group not found:', gameconfig.serverId())
+        return firstTime, firstTimeValid, 0
     GroupServerList = utils.group2ServerIds(crossServerGroupID)
     GroupServerOpenTimes = []
     lastestOpenTime = 0 #group内开服最晚时间
@@ -2403,8 +2655,8 @@ def getSiegeWarFirstTimeInfo():
             lastestOpenTime = _openTime
 
     if CBFT.datas.get(crossServerGroupID, None) is None:
-        LOG_ERR('[lj]cross siege war start time not found group id:', crossServerGroupID)
-        firstTimeValid = False
+        LOG_WARN('[lj]cross siege war start time not found group id:', crossServerGroupID)
+        firstTime = curTS() + 20 * 365 * 24 * 60 * 60
     else:
         _startTimeStr = str(CBFT.datas[crossServerGroupID]['StartTime'])
         y = _startTimeStr[:4]
@@ -2608,7 +2860,10 @@ def transformPosesToSkillArgs(pos1, pos2, skillRange, direction):
     return arr
 
 
-def getRandomPositionFromMultiRegion(randomRegion, entityIDs=[], gid=0, RandomRegionAtLeastInfo=[]):
+def getRandomPositionFromMultiRegion(randomRegion, entityIDs=None, gid=0, RandomRegionAtLeastInfo=None):
+    # RandomRegionAtLeastInfo 是 {gid: {区域序号: 已保底次数}} 结构的**字典**（不是列表）
+    entityIDs = entityIDs or []
+    RandomRegionAtLeastInfo = RandomRegionAtLeastInfo if RandomRegionAtLeastInfo is not None else {}
     chooseRegion = []
     chooseRadii = []
     chooseRegionWeight = []
@@ -2766,7 +3021,7 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
                 if _monsterId in CBD.datas:
                     nameSuffixID = CBD.datas[_monsterId]['nameSuffixID']
 
-                if nameSuffixID in BDS.datas["Branch_creepNotRefresh"]["value"] and lineNo != 0 and lineNo != -1:
+                if not CTD.datas.get(nameSuffixID, {}).get('ifBranchRefresh', 1) and lineNo != 0 and lineNo != -1:
                     LOG_DBG("skip create monster", spaceNo, _monsterId, nameSuffixID, lineNo)
                     continue
             
@@ -2848,6 +3103,9 @@ def loadLineReadyEntities(spaceNo, entityIDs, readyEntitiesList, isRefresh = Fal
                 'name': _mPrm['DisplayName'],
                 'rebornPosId': _RebornPosId,
             })
+
+        elif className == 'CombatArea':
+            continue
 
         else:
             LOG_WARN('could not create entity type', className)
@@ -2932,7 +3190,8 @@ def splitInscriptionKey(dataKey):
 def group2ServerIds(groupId):
     _serverIds = []
     for _serverId, _data in gameglobal.mapleServerInfo.items():
-        _grp = _data['server_group']
+        # TODO: maple 已不下发 server_group，城战分组待改
+        _grp = _data.get('server_group')
         if _grp == groupId:
             _serverIds.append(_serverId)
 
@@ -2998,6 +3257,16 @@ def isAttackArea(tgt, center, radius):
 def isMinorAccount(userAge):
     adultAge = AASC.datas.get('userAge', {}).get('value', gameconst.LEGAL_AGE_OF_MAJORITY)
     return userAge < adultAge
+
+def getMinorStage(userAge):
+    adultAge = AASC.datas.get('userAge', {}).get('value', gameconst.LEGAL_AGE_OF_MAJORITY)
+    minor = gameconst.LEGAL_AGE_OF_MINOR
+    if userAge < minor:
+        return gameconst.MinorStageType.MINOR2
+    elif userAge < adultAge:
+        return gameconst.MinorStageType.MINOR1
+    else:
+        return gameconst.MinorStageType.ADULT
 
 def sizeof(obj, seen=None):
     if seen is None:
@@ -3471,60 +3740,429 @@ def isValidProp(propId, schoolId):
     #LOG_INFO("isValidprop: propId:", propId, "schoolId:", schoolId, "propType:", propType, "excludePropType:", excludePropType)
     return excludePropType != propType
 
-def isRarityLevelProp(propId):
-    return affix_affix.datas[propId]['rarityLevel']
+def _emptySoulPayload(defLevel=0):
+    return {
+        'defLevel': int(defLevel or 0),
+        'baseProps': [],
+        'rareProps': [],
+        'luckyProp': [],
+        'bindFromWash': 0,
+        'bindFromClash': 0,
+        'bindFromInherit': 0,
+        'previewWash': None,
+        'previewClash': None,
+    }
 
-def rollEquipSoulProps(itemId, schoolId):
-    soulSoulData = soul_soul.datas[itemId]
+def _weightedPick(items, weights):
+    if not items or not weights or len(items) != len(weights):
+        return None
+    if sum(weights) <= 0:
+        return None
+    return random.choices(items, weights=weights, k=1)[0]
 
-    #随数量and品质
-    idx = soulSoulData["propertyNumQuality"]
-    qualityStr = soul_soulNumQuality.randomID2qualityStr[idx]
-    weight = soul_soulNumQuality.randomID2weight[idx]
-    qualityStrRes = random.choices(qualityStr, weights=weight, k=1)[0]
-    LOG_DBG("rollEquipSoulProps: qualityStrRes:", qualityStrRes)
+def _rollAffixValue(affixId, quality):
+    propData = affix_affix.datas.get(affixId)
+    if not propData:
+        return None
+    values = propData.get('qualityValue')
+    if not values or quality < 1 or quality > len(values):
+        LOG_ERR('_rollAffixValue, qualityValue missing:', affixId, quality)
+        return None
+    lo, hi = int(values[quality - 1][0]), int(values[quality - 1][1])
+    if lo > hi:
+        lo, hi = hi, lo
+    return random.randint(lo, hi)
 
-    qualityRes = []
-    if qualityStrRes:
-        qualityRes = qualityStrRes.split(',')
-    for i in range(len(qualityRes)):
-        qualityRes[i] = int(qualityRes[i])
-    LOG_DBG("rollEquipSoulProps: qualityRes:", qualityRes)
+def _rollBaseAffix(poolId, quality, schoolId, excludeAffixIds=None):
+    affixIds = soul_soulAffix.randomID2affixID.get(poolId)
+    weights = soul_soulAffix.randomID2weight.get(poolId)
+    if not affixIds or not weights:
+        LOG_ERR('_rollBaseAffix, pool missing:', poolId)
+        return None
+    candIds = []
+    candWeights = []
+    excluded = False
+    for affixId, weight in zip(affixIds, weights):
+        if weight <= 0 or not affix_affix.datas.get(affixId):
+            continue
+        if excludeAffixIds and affixId in excludeAffixIds:
+            excluded = True
+            continue
+        if not isValidProp(affixId, schoolId):
+            continue
+        candIds.append(affixId)
+        candWeights.append(weight)
+    affixId = _weightedPick(candIds, candWeights)
+    if not affixId:
+        if excluded:
+            LOG_DBG('_rollBaseAffix, affix exhausted:', poolId, quality, schoolId, excludeAffixIds)
+        else:
+            LOG_ERR('_rollBaseAffix, no valid affix:', poolId, quality, schoolId)
+        return None
+    value = _rollAffixValue(affixId, quality)
+    if value is None:
+        return None
+    return [affixId, quality, value]
 
-    #随词条and具体数值(基础词条可重复，稀有词条不重复, 稀有词条要词条数量>=3)
-    propRes = []
-    propValueRes = []
-    for qualityIdxStr in qualityRes:
-        qualityIdx = int(qualityIdxStr) - 1
-        randomID = soulSoulData["baseProp"][qualityIdx]
+def _pickSoulQualityCombo(randomId, curLevel):
+    import SoulInfo
+    qualities = SoulInfo.pickBaseQualityCombo(randomId, curLevel)
+    if not qualities:
+        LOG_ERR('_pickSoulQualityCombo, no combo:', randomId, curLevel)
+        return []
+    return qualities
 
-        affixIDList = []
-        affixWeightList = []
-        for i in range(len(soul_soulAffix.randomID2affixID[randomID])):
-            affixID = soul_soulAffix.randomID2affixID[randomID][i]
-            weight = soul_soulAffix.randomID2weight[randomID][i]
-            if isValidProp(affixID, schoolId):
-                if isRarityLevelProp(affixID) and len(qualityRes) < 3:
-                    continue
-                if affixID in propRes and isRarityLevelProp(affixID):
-                    continue
-                affixIDList.append(affixID)
-                affixWeightList.append(weight)
-            
-        affixIDRes = random.choices(affixIDList, weights=affixWeightList, k=1)[0]
-        propRes.append(affixIDRes)
-        valueSection = affix_affix.datas[affixIDRes]['qualityValue'][qualityIdx]
-        propValueRes.append(random.randint(valueSection[0], valueSection[1]))
+def _rollLuckyProp(defLevel, schoolId, itemId, curLucky=None):
+    """项链幸运词缀。蓝色及以下不出。紫色用 loseWeight、atkBlessWeight，橙色及以上用 loseWeight2、atkBlessWeight2。
 
-    finalRes = []
-    for i in range(len(propRes)):
-        finalRes.append([propRes[i], qualityRes[i], propValueRes[i]])
-    return finalRes
+    已有幸运词缀时，loseWeight 是洗没概率，分母 1000000。命中则洗掉，未命中原样保留。
+    没有幸运词缀时，atkBlessWeight 是权重，依次为紫、金、没有幸运。
+    表里只配了前两项时，没有幸运的权重用 1000000 减去这两项。例如 (800, 80) 即 (800, 80, 999120)。
+    蓝色及以下直接返回空，已有的幸运词缀在洗练时也会被清掉。
+    """
+    itemData = dataUtils.getCommItemData(itemId) or {}
+    quality = int(itemData.get('quality', 0) or 0)
+    if quality < gameconst.ItemQuality.PURPLE:
+        return []
+    lvCfg = soul_soulLevel.datas.get(defLevel)
+    if not lvCfg:
+        return []
+    rateBase = 1000000
+    if quality >= gameconst.ItemQuality.ORANGE:
+        loseWeight = lvCfg.get('loseWeight2') or 0
+        blessWeights = list(lvCfg.get('atkBlessWeight2') or [])
+    else:
+        loseWeight = lvCfg.get('loseWeight') or 0
+        blessWeights = list(lvCfg.get('atkBlessWeight') or [])
+    if curLucky:
+        if loseWeight > 0 and random.randint(1, rateBase) <= loseWeight:
+            return []
+        return list(curLucky)
 
-def rollItemProps(itemId, itemSubType, schoolId):
+    blessIds = soul_soulRconst.datas['atkBless1']['value']
+    outcomes = []
+    weights = []
+    count = min(len(blessIds), len(blessWeights), 2)
+    for idx in range(count):
+        weight = blessWeights[idx]
+        if weight <= 0:
+            continue
+        outcomes.append(idx)
+        weights.append(weight)
+    if len(blessWeights) >= 3:
+        noneWeight = blessWeights[2]
+    else:
+        noneWeight = rateBase - sum(blessWeights)
+    if noneWeight > 0:
+        outcomes.append(None)
+        weights.append(noneWeight)
+    idx = _weightedPick(outcomes, weights)
+    if idx is None:
+        return []
+    affixId = blessIds[idx]
+    # 幸运词条只有紫、金，对应品质 3、4
+    quality = 3 + idx
+    if not affix_affix.datas.get(affixId) or not isValidProp(affixId, schoolId):
+        LOG_ERR('_rollLuckyProp, affix invalid:', affixId, schoolId)
+        return []
+    value = _rollAffixValue(affixId, quality)
+    if value is None:
+        return []
+    return [affixId, quality, value]
+
+def _rollSoulAffixes(soulData, schoolId, defLevel, curLucky=None, allowLucky=False):
+    """按默认等级随基础词条。允许幸运时，紫色和橙色项链再随幸运词条。失败返回 None。
+
+    allowLucky 为假时不新出幸运词条。已有幸运词条仍按洗没概率决定是否保留。
+    """
+    lvCfg = soul_soulLevel.datas.get(defLevel)
+    if not lvCfg:
+        LOG_ERR('_rollSoulAffixes, soulLevel missing:', defLevel)
+        return None
+
+    ranges = list(lvCfg['range'])
+    probs = list(lvCfg['probability'])
+    curLevel = _weightedPick(ranges[:len(probs)], probs[:len(ranges)])
+    if not curLevel:
+        LOG_ERR('_rollSoulAffixes, current level roll failed:', defLevel)
+        return None
+
+    qualities = _pickSoulQualityCombo(soulData['propertyNumQuality'], curLevel)
+    basePools = list(soulData['baseProp'])
+    baseProps = []
+    for quality in qualities:
+        if quality < 1 or quality > len(basePools):
+            LOG_ERR('_rollSoulAffixes, quality out of pool:', quality)
+            continue
+        prop = _rollBaseAffix(basePools[quality - 1], quality, schoolId)
+        if prop:
+            baseProps.append(prop)
+
+    luckyProp = []
+    if soulData['equipmentID'] == gameconst.EquipTypes.MAIN_TYPE_NECKLACE and (allowLucky or curLucky):
+        luckyProp = _rollLuckyProp(defLevel, schoolId, soulData['ID'], curLucky)
+    LOG_DBG('_rollSoulAffixes:', schoolId, defLevel, curLevel, allowLucky, baseProps, luckyProp)
+    return baseProps, luckyProp
+
+def rollEquipSoulProps(itemId, schoolId, allowLucky=False):
+    """掉落生成魂魄，返回 rollProps 字典。
+
+    1. 按 defLevel / defLevelWeight 定默认等级。之后只有默认等级替换会改它。
+    2. 用默认等级在 soulLevel 里随出目标等级。
+    3. 取 soulNumQuality.soulLevel 等于目标等级的品质组合。这一档没有组合时基础词条为空。
+    4. 按品质从 baseProp 对应词条库随基础词条。界面评分是品质分之和，和表里的 soulLevel 分开。
+    5. 魂魄可交易时，紫色项链没有幸运词缀，按 atkBlessWeight 的权重随紫、金或没有幸运，不占基础词条名额。橙色魂魄用 atkBlessWeight2。蓝色及以下、不可交易不出幸运词缀。掉落不走洗没概率。
+    稀有词条掉落不出。
+    """
+    soulData = soul_soul.datas.get(itemId)
+    if not soulData:
+        LOG_ERR('rollEquipSoulProps, soul config missing:', itemId)
+        return _emptySoulPayload()
+
+    defLevels = list(soulData['defLevel'])
+    defWeights = list(soulData['defLevelWeight'])
+    defLevel = _weightedPick(defLevels[:len(defWeights)], defWeights[:len(defLevels)])
+    if not defLevel:
+        LOG_ERR('rollEquipSoulProps, defLevel roll failed:', itemId)
+        return _emptySoulPayload()
+
+    payload = _emptySoulPayload(defLevel)
+    rolled = _rollSoulAffixes(soulData, schoolId, defLevel, allowLucky=allowLucky)
+    if not rolled:
+        return payload
+    payload['baseProps'], payload['luckyProp'] = rolled
+    return payload
+
+def rollEquipSoulWash(itemId, schoolId, defLevel, curLucky=None, allowLucky=False):
+    """普通洗练。不改默认等级，重随基础词条。
+
+    紫色、橙色项链已有幸运词缀时，按 loseWeight / loseWeight2 决定是否洗没，未洗没则原样保留。
+    没有幸运词缀时，消耗的是可交易材料才按 atkBlessWeight / atkBlessWeight2 的权重随紫、金或没有幸运。
+    蓝色及以下、消耗了不可交易材料时不出新的幸运词缀。
+    返回 {'baseProps', 'luckyProp'}。默认等级或配置不存在时返回 None。
+    目标等级没有品质组合时，baseProps 为空列表，这次预览仍然有效。
+    """
+    defLevel = int(defLevel or 0)
+    soulData = soul_soul.datas.get(itemId)
+    if not soulData or defLevel <= 0:
+        LOG_ERR('rollEquipSoulWash, bad args:', itemId, defLevel)
+        return None
+    rolled = _rollSoulAffixes(soulData, schoolId, defLevel, curLucky, allowLucky)
+    if not rolled:
+        return None
+    baseProps, luckyProp = rolled
+    return {'baseProps': baseProps, 'luckyProp': luckyProp}
+
+def soulWashCost(defLevel):
+    """普通洗练消耗。consume1 是魂魄碎片，consume2 是玄铁，consume3 原样带出。"""
+    lvCfg = soul_soulLevel.datas.get(int(defLevel or 0))
+    if not lvCfg:
+        return None
+    fragmentId = soul_soulRconst.datas['soulConsume']['value']
+    ironId = soul_soulRconst.datas['inlayType']['value']
+    return {
+        'fragmentItemId': fragmentId,
+        'fragmentNum': int(lvCfg['consume1']),
+        'ironItemId': ironId,
+        'ironNum': int(lvCfg['consume2']),
+        'consume3': int(lvCfg['consume3']),
+    }
+
+def _baseQualityKey(baseProps):
+    parts = []
+    for prop in baseProps or []:
+        if not isinstance(prop, (list, tuple)) or len(prop) < 2:
+            return ''
+        parts.append(str(int(prop[1])))
+    return ','.join(parts)
+
+def soulCurrentLevel(itemId, baseProps):
+    """当前等级。基础词条品质组合对应 soulNumQuality.soulLevel，对不上是 0。"""
+    if not baseProps:
+        return 0
+    soulData = soul_soul.datas.get(itemId)
+    if not soulData:
+        return 0
+    levelMap = soul_soulNumQuality.randomID2qualityLevel.get(int(soulData['propertyNumQuality']))
+    if not levelMap:
+        return 0
+    return int(levelMap.get(_baseQualityKey(baseProps)) or 0)
+
+def _soulRareQualityCeiling(itemId, defLevel):
+    """被洗练魂魄的品质和默认等级对应的稀有品质上限。没命中时不限制。
+
+    蓝色走 soulRareCeiling，紫色走 soulRareCeiling2，金色走 soulRareCeiling3。
+    区间形如 ((1, 5, 1), (6, 10, 2), ...)。
+    """
+    itemData = dataUtils.getCommItemData(itemId) or {}
+    quality = int(itemData.get('quality', 0) or 0)
+    ceilingKey = {
+        gameconst.ItemQuality.BLUE: 'soulRareCeiling',
+        gameconst.ItemQuality.PURPLE: 'soulRareCeiling2',
+        gameconst.ItemQuality.ORANGE: 'soulRareCeiling3',
+    }.get(quality)
+    if not ceilingKey:
+        if defLevel > 0:
+            LOG_ERR('_soulRareQualityCeiling, quality not covered:', itemId, quality)
+        return None
+    for lo, hi, ceiling in soul_soulRconst.datas[ceilingKey]['value']:
+        if lo <= defLevel <= hi:
+            return ceiling
+    if defLevel > 0:
+        LOG_ERR('_soulRareQualityCeiling, defLevel not covered:', itemId, quality, defLevel)
+    return None
+
+def _rareComboWithinCeiling(qualities, ceiling):
+    """品质 0 是空槽，不占上限。任一品质超过上限，整条组合不参与随机。"""
+    if ceiling is None:
+        return True
+    for quality in qualities:
+        if quality > ceiling:
+            return False
+    return True
+
+def _pickRareQualityCombo(randomId, curLevel, ceiling=None):
+    """按当前等级抽一对品质。randomQuality 是第一条，randomQuality2 是第二条。
+
+    ceiling 来自被洗练魂魄的默认等级。随机前先丢掉超过上限的组合，再按剩余权重抽。
+    """
+    combos = []
+    weights = []
+    hasRow = False
+    for row in soul_rareSoulNumQuality.datas.values():
+        if int(row['randomID']) != int(randomId) or int(row['soulLevel']) != int(curLevel):
+            continue
+        weight = int(row['randomProp'] or 0)
+        if weight <= 0 or row['randomQuality'] is None:
+            continue
+        hasRow = True
+        pair = (row['randomQuality'], row['randomQuality2'])
+        if not _rareComboWithinCeiling(pair, ceiling):
+            continue
+        combos.append(pair)
+        weights.append(weight)
+    if not hasRow:
+        LOG_ERR('_pickRareQualityCombo, no combo:', randomId, curLevel)
+        return []
+    if not combos:
+        LOG_DBG('_pickRareQualityCombo, ceiling filtered all:', randomId, curLevel, ceiling)
+        return []
+    picked = _weightedPick(combos, weights)
+    return list(picked) if picked else []
+
+def _appendClashRareProp(rareProps, usedAffixIds, pools, quality, schoolId):
+    """品质 0 是空槽。越界才报错。和已出词条撞 ID 时这条留空。"""
+    if quality == 0:
+        return
+    if quality < 1 or quality > len(pools):
+        LOG_ERR('rollEquipSoulClash, quality out of pool:', quality)
+        return
+    prop = _rollBaseAffix(pools[quality - 1], quality, schoolId, usedAffixIds)
+    if not prop:
+        return
+    rareProps.append(prop)
+    usedAffixIds.add(prop[0])
+
+def rollEquipSoulClash(itemId, schoolId, curLevel, defLevel, materialQuality=0):
+    """高阶对冲。按被消耗魂魄的当前等级重随稀有词条，基础词条和幸运词条不动。
+
+    被洗练魂魄的默认等级和品质查上限。蓝色走 soulRareCeiling，紫色走 soulRareCeiling2，
+    金色走 soulRareCeiling3。例如蓝色 (1, 5, 1)：默认等级在 1-5，
+    随机前丢掉品质大于 1 的组合，再在剩下的组合里抽。品质 0 是空槽，不占上限。
+
+    组合概率库读 rarePropertyNumQuality。每项是 (材料品质, 目标品质, 库ID)，
+    材料品质给目标品质对冲时用对应库。词条库仍是被洗练魂魄的 rareProp、rareProp2。
+
+    randomQuality 从 rareProp 出第一条，randomQuality2 从 rareProp2 出第二条。
+    品质 0 是空槽，不出这条词条。
+    同一轮按词条 ID 去重。第二条和第一条相同，或库里没有别的词条，第二条留空。
+
+    返回 {'rareProps'}。当前等级或配置不存在时返回 None。
+    这一档没有品质组合，或上限把组合滤空时，rareProps 为空列表，这次预览仍然有效。
+    """
+    curLevel = int(curLevel or 0)
+    soulData = soul_soul.datas.get(itemId)
+    if not soulData or curLevel <= 0:
+        LOG_ERR('rollEquipSoulClash, bad args:', itemId, curLevel)
+        return None
+    if defLevel <= 0:
+        LOG_ERR('rollEquipSoulClash, defLevel is 0:', itemId, curLevel)
+    ceiling = _soulRareQualityCeiling(itemId, defLevel)
+    itemData = dataUtils.getCommItemData(itemId) or {}
+    targetQuality = int(itemData.get('quality', 0) or 0)
+    libraryId = _soulClashRareLibraryId(materialQuality, targetQuality)
+    if not libraryId:
+        LOG_ERR('rollEquipSoulClash, rare library missing:', itemId, materialQuality, targetQuality)
+        return None
+    qualities = _pickRareQualityCombo(libraryId, curLevel, ceiling)
+    rareProps = []
+    usedAffixIds = set()
+    pools = (list(soulData['rareProp']), list(soulData['rareProp2']))
+    for quality, pool in zip(qualities, pools):
+        _appendClashRareProp(rareProps, usedAffixIds, pool, quality, schoolId)
+    LOG_DBG('rollEquipSoulClash:', itemId, schoolId, curLevel, defLevel, ceiling, libraryId, rareProps)
+    return {'rareProps': rareProps}
+
+def _soulClashRareLibraryId(materialQuality, targetQuality):
+    """材料品质给目标品质对冲时，用的组合概率库 ID。
+
+    rarePropertyNumQuality 形如 ((2, 2, 1), (2, 3, 2), (3, 3, 3), (3, 4, 4), (4, 4, 5))。
+    每项是 (材料品质, 目标品质, 组合概率库ID)。品质缺失或没命中返回 None。
+    """
+    if not materialQuality or not targetQuality:
+        return None
+    for matQ, tgtQ, libraryId in soul_soulRconst.datas['rarePropertyNumQuality']['value']:
+        if matQ == materialQuality and tgtQ == targetQuality:
+            return libraryId
+    return None
+
+def soulInlayForbidden(soulQuality, equipQuality):
+    """魂魄品质和装备品质是否命中 inlayRange，命中则不能镶嵌。
+
+    inlayRange 形如 ((3, 4), (2, 4))，每项是 (魂魄品质, 装备品质)。
+    蓝色是 2，紫色是 3，金色装备是 4。
+    """
+    for pair in soul_soulRconst.datas['inlayRange']['value']:
+        if pair[0] == soulQuality and pair[1] == equipQuality:
+            return True
+    return False
+
+def soulClashMaterialAllowed(materialQuality, targetQuality, materialLevel):
+    """对冲材料是否可用。等级用被消耗魂魄的当前等级，和玄铁消耗、稀有词条重随用的是同一档。
+
+    inlayLevelRestrict 形如 ((2, 2, 1), (2, 3, 5), (3, 3, 1), (3, 4, 10), (4, 4, 1))。
+    每项是 (材料品质, 目标品质, 最低等级)。材料当前等级达到该限制，才能给这个品质对冲。
+    品质缺失或组合没命中，不能当材料。
+    """
+    needLevel = _soulClashLevelRestrict(materialQuality, targetQuality)
+    if needLevel is None:
+        return False
+    return materialLevel >= needLevel
+
+def _soulClashLevelRestrict(materialQuality, targetQuality):
+    """材料品质给目标品质对冲时的最低等级。品质缺失或没命中返回 None。"""
+    if not materialQuality or not targetQuality:
+        return None
+    for matQ, tgtQ, minLevel in soul_soulRconst.datas['inlayLevelRestrict']['value']:
+        if matQ == materialQuality and tgtQ == targetQuality:
+            return minLevel
+    return None
+
+def soulClashCost(curLevel):
+    """高阶对冲的玄铁消耗。数量看被消耗魂魄的当前等级，取 consume3。"""
+    lvCfg = soul_soulLevel.datas.get(int(curLevel or 0))
+    if not lvCfg:
+        return None
+    ironId = soul_soulRconst.datas['inlayType']['value']
+    return {
+        'ironItemId': ironId,
+        'ironNum': int(lvCfg['consume3']),
+    }
+
+def rollItemProps(itemId, itemSubType, schoolId, allowLucky=False):
     if itemSubType in gameconst.ItemSubEnum.EQUIP_SOUL_TYPE:
-        return rollEquipSoulProps(itemId, schoolId)
-    return []
+        return rollEquipSoulProps(itemId, schoolId, allowLucky)
+    return {}
 
 def getIntDateTime(now, offsetSeconds=gameconst.GENERAL_CYCLE_TIME):
     now -= offsetSeconds
@@ -3565,15 +4203,6 @@ def updateMallItemPriceCache(stub, itemId, avgPrice):
 
 def isPremiumMonthCard(tp):
     return tp in (gameconst.PremiumType.BIG_MONTH_CARD, gameconst.PremiumType.SMALL_MONTH_CARD)
-
-def checkGmSoulProp(rollProps):
-    LOG_INFO("checkGmSoulProp", rollProps)
-    for prop in rollProps:
-        max_v = affix_affix.datas[prop[0]]['qualityValue'][-1][-1]
-        if prop[2] > max_v:
-            LOG_ERR("checkGmSoulProp fail! ", max_v, prop)
-            return False
-    return True
 
 def debugFullStack():
     import inspect
@@ -3731,8 +4360,116 @@ def collectAndShuffleValidPositions(center, radius, gridSize=2.0, checkFunc=None
             if validPos is not None:
                 validList.append(validPos)
 
+    random.shuffle(validList)
     if len(validList) <= n:
         return validList
 
-    random.shuffle(validList)
     return validList[:n]
+
+def checkEnterCrossWorldMap(fromMapId, toMapId, allowCrossWorld):
+    if not allowCrossWorld:
+        return gameconst.EnterLineMapType.NULL, toMapId
+    if fromMapId == toMapId:
+        return gameconst.EnterLineMapType.NULL, toMapId
+    if not gameconfig.isCrossWorld():
+        return gameconst.EnterLineMapType.NULL, toMapId
+    isCross = gameconfig.isCrossServer()
+    if isCross:
+        if toMapId not in WB_BASE.local2CrossMap:
+            return gameconst.EnterLineMapType.LEAVE_CROSS, toMapId
+    else:
+        if toMapId in WB_BASE.local2CrossMap:
+            return gameconst.EnterLineMapType.ENTER_CROSS, WB_BASE.local2CrossMap[toMapId]
+    return gameconst.EnterLineMapType.NULL, toMapId
+
+def checkInCrossWorldMap(mapId):
+    if not gameconfig.isCrossWorld():
+        return False
+    return mapId in WB_BASE.local2CrossMap
+
+# ---------------------------- 技能链路定向日志 ----------------------------
+# 线上 debug 日志不输出, 排查「技能已解锁但不在 build(activeSkills) 里」只能靠 INFO 定向埋点。
+# 为控制日志量, 只有同时满足下面两个条件才输出:
+#   1. 本次操作涉及关注技能 TRACE_SKILL_IDS
+#   2. 角色等级 < TRACE_SKILL_LEVEL_LIMIT
+# 90010010(符咒召唤) 的解锁条件是 TaoistSkill04 = 6 级, 所以窗口是 6~9 级;
+# 需要临时放开时只改这两个常量, 不用动各埋点。
+TRACE_SKILL_IDS = (90010010, 90010012)   # 90010012(变身) 与 90010010 同属形态组 modDic[1]
+TRACE_SKILL_LEVEL_LIMIT = 10
+
+
+def getTraceSkillLevel(owner):
+    """取角色等级, 仅供定向日志使用, 取不到返回 0"""
+    try:
+        _level = int(getattr(owner, 'level', 0) or 0)
+    except Exception:
+        _level = 0
+    if _level:
+        return _level
+    try:
+        return int(gameglobal.roleCache[owner.id]['level'])
+    except Exception:
+        return 0
+
+
+def isTraceSkill(skillIds):
+    """技能 id 集合里是否包含关注技能(过滤条件1)"""
+    if not skillIds:
+        return False
+    try:
+        for _skillId in skillIds:
+            if _skillId in TRACE_SKILL_IDS:
+                return True
+    except Exception:
+        return False
+    return False
+
+
+def traceSkill(owner, tag, skillIds, *args):
+    """定向技能日志, 涉及关注技能且角色等级 < TRACE_SKILL_LEVEL_LIMIT 时才输出 INFO
+
+    用法: utils.traceSkill(self, 'changeSkillSlot', (skillId,), 'fromSlot=', fromSlotId)
+    返回 True 表示本次确实打了日志, 方便埋点处写分支逻辑。
+    """
+    if owner is None or not isTraceSkill(skillIds):
+        return False
+
+    _level = getTraceSkillLevel(owner)
+    if _level <= 0 or _level >= TRACE_SKILL_LEVEL_LIMIT:
+        return False
+
+    try:
+        LOG_INFO('[SKILL_TRACE]', tag,
+                 'ownerId=', getattr(owner, 'id', 0),
+                 'gbId=', getattr(owner, 'gbID', 0) or getattr(owner, 'gbId', 0),
+                 'lv=', _level,
+                 *args)
+    except Exception:
+        # 埋点自身绝不能影响业务
+        pass
+    return True
+
+
+def getCorssServerReturnCityInfo(_mapId, direction):
+    # _mapData = GGD.datas.get(_mapId)
+    # if not _mapData or _mapData.get('ifSafeArea'):
+    #     return False, None, None
+    # _returnMapId = _mapData.get('returnMapID', 0)
+    _returnMapId = gameconst.MapIdDef.mapXinYuanCheng
+    if not _returnMapId or not formula.checkWorldLineType(_returnMapId):
+        LOG_ERR('corssServerReturnCity invalid returnMapID', _mapId, _returnMapId)
+        return False, None, None, None
+    elif _returnMapId == _mapId:
+        return False, None, None, None
+
+    _pos, _dir = None, direction
+    _sceneRes = GGD.datas[_returnMapId]['sceneRes']
+    _returnPosList = GPSSDD.datas.get(_sceneRes, {}).get('returnPos')
+    if _returnPosList:
+        _pos = random.choice(_returnPosList)
+    if not _pos or not _dir:
+        _tmpPos, _tmpDir = formula.getSpaceBornPosAndDir(_returnMapId)
+        _pos = _tmpPos if not _pos else _pos
+        _dir = _tmpDir if not _dir else _dir
+
+    return True, _returnMapId, _pos, _dir

@@ -147,6 +147,10 @@ datas = _tools.RODict({
         "ID": "color_weihu",
         "value": 84,
     }),
+    "color_yuchuangjue": _tools.RODict({
+        "ID": "color_yuchuangjue",
+        "value": 240,
+    }),
     "login_iOSUpdate_msgID": _tools.RODict({
         "ID": "login_iOSUpdate_msgID",
         "value": 54000789,
@@ -938,5 +942,25 @@ datas = _tools.RODict({
     "unregisterLogOutMsg": _tools.RODict({
         "ID": "unregisterLogOutMsg",
         "value": 54003516,
+    }),
+    "preCreateCharTime": _tools.RODict({
+        "ID": "preCreateCharTime",
+        "value": (72, 13),
+    }),
+    "preCreateCharNum": _tools.RODict({
+        "ID": "preCreateCharNum",
+        "value": (2, 1),
+    }),
+    "severOpenTime": _tools.RODict({
+        "ID": "severOpenTime",
+        "value": "yyyy年MM月dd日(东八区)开服",
+    }),
+    "preCreateCharText": _tools.RODict({
+        "ID": "preCreateCharText",
+        "value": "进入等待场景",
+    }),
+    "reBindMsg": _tools.RODict({
+        "ID": "reBindMsg",
+        "value": 54003533,
     })
 })

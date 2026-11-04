@@ -52,7 +52,8 @@ class WonderLandSwitch(object):
 class IWonderLandCell(object):
     def __init__(self):
         if self.wonderLandQuota.quotaDurState == gameconst.QuotaDurStatus.ENTER:
-            LOG_ERR('IWonderLandCell::init: wonderLandQuota.quotaDurState == gameconst.QuotaDurStatus.ENTER')
+            if not gameconfig.isCrossServer():
+                LOG_ERR('IWonderLandCell::init: wonderLandQuota.quotaDurState == gameconst.QuotaDurStatus.ENTER')
             self.wonderLandQuota.resetOnLogin()
 
     @utils.isMyself
@@ -384,14 +385,15 @@ class IWonderLandCell(object):
 
         _dur = WL_CD.datas['wonderLandNumTime']['value'] * 60
         self.wonderLandQuota.addWonderLandLeftTime(self, _dur)
+        self.showMsg(WL_CD.datas['wonderLand_timeExtensionSuccess']['value'], [])
         self.base.activityComplete(WL_CD.datas['wonderLandActID']['value'])
         self._startWonderLandTimer(gameconst.WONDER_LAND_DUR_RENEW)
 
-    def checkAddWonderLandDurationCondition(self, addType, costList, num, opUUID):
+    def checkAddWonderLandDurationCondition(self, addType, costList, num, opUUID, isExchange):
         if not self._checkAddWonderLandDurationCondition():
             return
 
-        self.base.doAddWonderLandTicket(addType, costList, num, True, True, gameconst.WonderAddTicketReason.CHECK_COND, opUUID)
+        self.base.doAddWonderLandTicket(addType, costList, num, True, True, gameconst.WonderAddTicketReason.CHECK_COND, opUUID, isExchange)
 
     def addWonderLandRewardRecord(self, rewardList):
         _dic = self.getTempMiscProp(gameconst.EntityPropsEnum.wonderLandRewardList, {})

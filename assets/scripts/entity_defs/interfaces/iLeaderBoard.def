@@ -62,7 +62,8 @@
         <onGetLeaderBoardList>
             <Arg>       STRING                              </Arg>
             <Arg>       LEADER_BOARD_IDX                    </Arg>
-            <Arg>       ARRAY   <of>        LEADER_BOARD_AVATAR_LEVEL_RUSH_RANK_DATA_INFO            </of>   </Arg>
+            <!-- 等级/战力/成就/冲级条目结构不同，按 PYTHON 原样转发，再由对应客户端方法序列化 -->
+            <Arg>       PYTHON                              </Arg>
             <Arg>       SCHOOL                              </Arg>
             <Arg>       LEADER_BOARD_PAGE                              </Arg>
             <Arg>       BOOL                                </Arg>

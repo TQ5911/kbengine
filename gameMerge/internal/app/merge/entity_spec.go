@@ -42,6 +42,15 @@ type ChildSpec struct {
 	ParentIDCol string
 	IDCol       string
 	IDBase      int64
+
+	// Level 是子表在实体树里的深度（root = 1，root 的直接子表 = 2，依此类推）。
+	// 用于跨层级顺序执行：level=N 必须等 level=N-1 跑完才能 join 对应 idmap。
+	Level int
+
+	// ParentName 是父表的物理表名。子表 join 时用 ParentName 去 idmap 仓库
+	// 查 parent map，而不是统一 join rootIDMap。
+	// 例如 tbl_Avatar_attr_item 的 ParentName = "tbl_Avatar_attr"。
+	ParentName string
 }
 
 // AnalyzeEntity 通过 dst schema 推断 EntitySpec。
@@ -123,11 +132,22 @@ func AnalyzeEntity(ctx context.Context, dst *sql.DB, name string) (*EntitySpec, 
 			slog.Warn("child max id failed, skip", "table", childName, "err", err)
 			continue
 		}
+		node := tree.ByName[childName]
+		level := 0
+		if node != nil {
+			level = node.Level
+		}
+		parentName := ""
+		if p := tablelevel.FindParent(childName, tree.ByName); p != nil {
+			parentName = p.Name
+		}
 		spec.Subs = append(spec.Subs, ChildSpec{
 			Name:        childName,
 			ParentIDCol: DefaultParentCol,
 			IDCol:       idCol,
 			IDBase:      childBase,
+			Level:       level,
+			ParentName:  parentName,
 		})
 	}
 

@@ -72,6 +72,45 @@ class AvatarBuildsMixin(object):
         LOG_INFO('onChangeSkillLv, base, ', skillId, toLv)
         self.cell.onChangeSkillLv(skillId, toLv)
 
+    def gmSetSkillLevel(self, skillId, targetLevel):
+        """GM设置技能等级(免消耗直设, 支持回退, 不返还消耗); 铭文替换技能需传原技能ID"""
+        LOG_INFO("gmSetSkillLevel", skillId, targetLevel)
+        utils.traceSkill(self, 'gmSetSkillLevel.in', (skillId,),
+                         'skillId=', skillId, 'targetLevel=', targetLevel,
+                         'slotId=', self.buildDic.getSlotId(skillId),
+                         'inLevels=', skillId in self.buildDic.skillLevels,
+                         'slots=', tuple(self.buildDic.activeSkills))
+        if skillId not in SSD.datas:
+            LOG_ERR("gmSetSkillLevel skillId not exist", skillId)
+            return False, 0, 0, 'skillId not exist'
+        _skillId = dataUtils.getSkillIdByMorphState(skillId, self.morphState)
+        if _skillId not in self.buildDic.skillLevels:
+            LOG_ERR("gmSetSkillLevel skill not unlocked", skillId, _skillId)
+            return False, 0, 0, 'skill not unlocked'
+        oldLevel = self.buildDic.skillLevels[_skillId]
+        maxLevel = self.buildDic.getMaxLevel(self, _skillId, _skillId)
+        if targetLevel < 1 or targetLevel > maxLevel:
+            LOG_ERR("gmSetSkillLevel targetLevel invalid", _skillId, targetLevel, maxLevel)
+            return False, 0, 0, 'targetLevel invalid, range 1~%d' % maxLevel
+        if targetLevel == oldLevel:
+            return True, oldLevel, targetLevel, ''
+
+        # 免消耗直设, 内含conflictSkill同步/召唤槽更新/onChangeSkillLv/客户端同步
+        self.buildDic.updateSkillLevel(self, [(_skillId, targetLevel)])
+        self.updateSkillScore()
+
+        # 刷新新手历程技能等级缓存(与levelUp同口径)
+        skillLvDatas = {}
+        for skillLv in self.buildDic.skillLevels.values():
+            skillLvDatas[skillLv] = skillLvDatas.get(skillLv, 0) + 1
+        self.clearBeginnerJourneyBehaviorStatusEx([gameconst.BjTaskType.BJ_TASK_TYPE_SKILL_LEVEL])
+        for skillLv, count in skillLvDatas.items():
+            self.beginnerJourney_onTaskEvent(
+                gameconst.BjTaskType.BJ_TASK_TYPE_SKILL_LEVEL,
+                delta=count,
+                level=skillLv)
+        return True, oldLevel, targetLevel, ''
+
     def _isCanUnlockSkill(self, isActive, skillId, lv, mid):
         condStr = SSD.datas[skillId]['unlockCondition']
 
@@ -92,6 +131,9 @@ class AvatarBuildsMixin(object):
                         continue
                     skillId = dataUtils.getSkillIdByMorphState(skillId, self.morphState)
                     if not self._isCanUnlockSkill(True, skillId, lv, mid):
+                        utils.traceSkill(self, 'unlockSkill.conditionNotMet', (skillId,),
+                                         'skillId=', skillId, 'morphState=', self.morphState,
+                                         'lv=', lv, 'mid=', mid)
                         continue
 
                     _buildSkillId = dataUtils.getSkillIdByMorphState(skillId, gameconst.MORPH_BUILD_STATE)
@@ -99,15 +141,29 @@ class AvatarBuildsMixin(object):
                     if taskId:
                        self.cannelTemporarySkill(taskId, _buildSkillId)
                     else:
+                        utils.traceSkill(self, 'unlockSkill.tryUnlock', (skillId,),
+                                         'skillId=', skillId, 'buildSkillId=', _buildSkillId,
+                                         'hasSkill=', self.hasSkill(skillId),
+                                         'slots=', tuple(self.buildDic.activeSkills))
                         if self.unlockActiveSkill(_buildSkillId, skillId, isNotify, lv, mid):
                             LOG_INFO('unlock skill', skillId)
                             unlockedSkills.append(skillId)
+                            utils.traceSkill(self, 'unlockSkill.unlocked', (skillId,),
+                                             'skillId=', skillId,
+                                             'slotId=', self.buildDic.getSlotId(skillId),
+                                             'slotsAfter=', tuple(self.buildDic.activeSkills))
 
         if unlockedSkills:
             self.updateSkillScore()
 
     def unlockActiveSkill(self, _buildSkillId, skillId, isNotify, lv, mid):
         if self.hasSkill(skillId):
+            # 已解锁就再也不处理槽位: 若此刻技能不在 activeSkills 里, 之后也不会被这里补上
+            utils.traceSkill(self, 'unlockActiveSkill.alreadyUnlocked', (skillId, _buildSkillId),
+                             'skillId=', skillId, 'buildSkillId=', _buildSkillId,
+                             'slotId=', self.buildDic.getSlotId(skillId),
+                             'slots=', tuple(self.buildDic.activeSkills),
+                             'levels=', tuple(self.buildDic.skillLevels.keys()))
             return False
 
         skillLv = 1
@@ -117,6 +173,13 @@ class AvatarBuildsMixin(object):
         recommendSlot = self.buildDic.getSkillRecommendSlot(self, _buildSkillId)
         if recommendSlot is not None:
             self.buildDic.changeSkillSlot(self, skillId, None, recommendSlot, reason=gameconst.CHANGE_SKILL_REASON_UNLOCK)
+            utils.traceSkill(self, 'unlockActiveSkill.placed', (skillId, _buildSkillId),
+                             'skillId=', skillId, 'recommendSlot=', recommendSlot,
+                             'slotsAfter=', tuple(self.buildDic.activeSkills))
+        else:
+            utils.traceSkill(self, 'unlockActiveSkill.levelOnlyNoSlot', (skillId, _buildSkillId),
+                             'skillId=', skillId, 'buildSkillId=', _buildSkillId,
+                             'slots=', tuple(self.buildDic.activeSkills))
 
         return True
 
@@ -134,6 +197,9 @@ class AvatarBuildsMixin(object):
         if self.hasSkill(_buildSkillId):
             return False
 
+        utils.traceSkill(self, 'unlockTemporarySkill', (_buildSkillId, _stateSkillId),
+                         'buildSkillId=', _buildSkillId, 'stateSkillId=', _stateSkillId,
+                         'skillLv=', skillLv, 'slots=', tuple(self.buildDic.activeSkills))
         self.buildDic.buildAddActiveSkill(self, _stateSkillId, skillLv)
         recommendSlot = self.buildDic.getSkillRecommendSlot(self, _buildSkillId)
         if recommendSlot is not None:
@@ -142,6 +208,12 @@ class AvatarBuildsMixin(object):
         return True
 
     def deleteTemporarySkill(self, _buildSkillId, _stateSkillId):
+        utils.traceSkill(self, 'deleteTemporarySkill.in', (_buildSkillId, _stateSkillId),
+                         'buildSkillId=', _buildSkillId, 'stateSkillId=', _stateSkillId,
+                         'morphState=', self.morphState,
+                         'slotOfState=', self.buildDic.getSlotId(_stateSkillId),
+                         'slotOfBuild=', self.buildDic.getSlotId(_buildSkillId),
+                         'slotsBefore=', tuple(self.buildDic.activeSkills))
         slotId = self.buildDic.getSlotId(_stateSkillId)
         if slotId is None:
             slotId = self.buildDic.getSlotId(_buildSkillId)
@@ -156,16 +228,28 @@ class AvatarBuildsMixin(object):
                 continue
             self.buildDic.buildRemoveActiveSkill(self, skillId)
 
+        utils.traceSkill(self, 'deleteTemporarySkill.done', (_buildSkillId, _stateSkillId),
+                         'buildSkillId=', _buildSkillId, 'stateSkillId=', _stateSkillId,
+                         'slotsAfter=', tuple(self.buildDic.activeSkills),
+                         'levelsAfter=', tuple(self.buildDic.skillLevels.keys()))
+
     def initNoviceBuild(self):
         pass
 
     def onChangeSkill(self, fromSkillId, toSkillId, fromSkillNextCastTime):
+        utils.traceSkill(self, 'onChangeSkill.in', (fromSkillId, toSkillId),
+                         'fromSkillId=', fromSkillId, 'toSkillId=', toSkillId,
+                         'fromInLevels=', fromSkillId in self.buildDic.skillLevels,
+                         'toInLevels=', toSkillId in self.buildDic.skillLevels,
+                         'slotsBefore=', tuple(self.buildDic.activeSkills))
         skillIds = self.buildDic.getSkillIds()
         if toSkillId in skillIds:
             LOG_WARN("onChangeSkill toSkillId was in buildDic", fromSkillId, toSkillId, skillIds)
 
         slotId = self.buildDic.getSlotId(fromSkillId)
         if slotId is None:
+            utils.traceSkill(self, 'onChangeSkill.fromNotInBuild', (fromSkillId, toSkillId),
+                             'fromSkillId=', fromSkillId, 'toSkillId=', toSkillId)
             return
 
         buildVal = self.buildDic
@@ -174,10 +258,17 @@ class AvatarBuildsMixin(object):
         buildVal.changeSkillSlot(self, toSkillId, None, slotId, fromSkillNextCastTime = fromSkillNextCastTime)
 
         self.client.onChangeSkill(fromSkillId, toSkillId)
+        utils.traceSkill(self, 'onChangeSkill.done', (fromSkillId, toSkillId),
+                         'fromSkillId=', fromSkillId, 'toSkillId=', toSkillId,
+                         'slotId=', slotId, 'slotsAfter=', tuple(self.buildDic.activeSkills))
 
     def buildAddActiveSkill(self, skillId, skillLv):
         if skillId in self.buildDic.skillLevels:
             skillLv = self.buildDic.skillLevels[skillId]
+        utils.traceSkill(self, 'buildAddActiveSkill', (skillId,),
+                         'skillId=', skillId, 'skillLv=', skillLv,
+                         'slotId=', self.buildDic.getSlotId(skillId),
+                         'slots=', tuple(self.buildDic.activeSkills))
         self.buildDic.doAddActiveSkill(self, skillId, skillLv)
         self.client.onUpdateSkillLevel([skillId], [skillLv])
 
@@ -196,6 +287,18 @@ class AvatarBuildsMixin(object):
         self._updateSkills(skillSlotInfos, True, True)
 
     def _updateSkills(self, skillSlotInfos, bNotifyClient=False, isMessage=False):
+        # 客户端拖拽原始请求: 这里能看到客户端到底发了什么 skillId/slotId, 是定位数据脱钩的源头
+        _reqSkillIds = []
+        for _slotInfo in skillSlotInfos or ():
+            try:
+                _reqSkillIds.append(_slotInfo.get('skillId'))
+            except Exception:
+                pass
+        utils.traceSkill(self, '_updateSkills.request', _reqSkillIds,
+                         'raw=', skillSlotInfos, 'morphState=', self.morphState,
+                         'slotsBefore=', tuple(self.buildDic.activeSkills),
+                         'levels=', tuple(self.buildDic.skillLevels.keys()))
+
         skillCheckList = []
         for skillSlotInfo in skillSlotInfos:
             skillId = skillSlotInfo['skillId']
@@ -205,7 +308,16 @@ class AvatarBuildsMixin(object):
             if toSlotId < 0:
                 toSlotId = None
 
+            utils.traceSkill(self, '_updateSkills.item', (_reqSkillIds[0] if _reqSkillIds else skillId, skillId),
+                             'rawSkillId=', skillSlotInfo.get('skillId'), 'skillId=', skillId,
+                             'toSlot=', toSlotId, 'morphState=', self.morphState,
+                             'inLevels=', skillId in self.buildDic.skillLevels,
+                             'isRightSlot=', self.buildDic.isRightSlot(skillId, toSlotId))
+
             if not self.buildDic.isRightSlot(skillId, toSlotId):
+                utils.traceSkill(self, '_updateSkills.isRightSlotFail', (skillId,),
+                                 'skillId=', skillId, 'toSlot=', toSlotId,
+                                 'slots=', tuple(self.buildDic.activeSkills))
                 return
 
             toSkillId = self.getSkillIdBySlotId(toSlotId)
@@ -225,6 +337,15 @@ class AvatarBuildsMixin(object):
                 currentSkillId = self.getSkillIdBySlotId(toSlotId)
 
                 _buildVal = self.buildDic
+                # 注意 inLevels 二元组: (目标槽现有技能是否在等级表, 要拖入的技能是否在等级表)。
+                # 第二个为 False 时, 下面 skillLevels[skillId] 会抛 KeyError,
+                # 而此时 changeSkillSlot(current->to) 已经执行过, 会留下空槽。
+                utils.traceSkill(self, 'onCheckUpdateSkillRet.item', (skillId, currentSkillId),
+                                 'skillId=', skillId, 'currentSkillId=', currentSkillId,
+                                 'fromSlot=', fromSlotId, 'toSlot=', toSlotId,
+                                 'inLevels=', (currentSkillId in _buildVal.skillLevels, skillId in _buildVal.skillLevels),
+                                 'slotsBefore=', tuple(_buildVal.activeSkills))
+
                 if currentSkillId:
                     _buildVal.changeSkillSlot(self, currentSkillId, toSlotId, fromSlotId)
                     if len(skillSlotInfos) == 1:
@@ -240,6 +361,10 @@ class AvatarBuildsMixin(object):
                     updateResult[fromSlotId] = _buildVal.activeSkills[fromSlotId]
                 if toSlotId is not None:
                     updateResult[toSlotId] = _buildVal.activeSkills[toSlotId]
+
+                utils.traceSkill(self, 'onCheckUpdateSkillRet.done', (skillId, currentSkillId),
+                                 'skillId=', skillId, 'currentSkillId=', currentSkillId,
+                                 'slotsAfter=', tuple(_buildVal.activeSkills))
 
             if updateResult and bNotifyClient:
                 self.client.dragSkillChangeBuildSkills(json.dumps(updateResult).encode('ascii'))
@@ -294,13 +419,13 @@ class ImpCombat(AvatarBuildsMixin):
         self.freeRecoverDeathPenaltyTimes = GP_SD.datas['freeExpRecCount']['value']
 
     @gamedecorator.crossServer
-    def recoverDeathPenaltyExp(self, exposed, expireTime, itemId):
+    def recoverDeathPenaltyExp(self, exposed, expireTime, itemId, isExchange=False):
         if gameconfig.isCrossServer():
-            self.syncMethodCallToLocalServerBase('_recoverDeathPenaltyExp', (expireTime, itemId))
+            self.syncMethodCallToLocalServerBase('_recoverDeathPenaltyExp', (expireTime, itemId, isExchange))
         else:
-            self._recoverDeathPenaltyExp(expireTime, itemId)
+            self._recoverDeathPenaltyExp(expireTime, itemId, isExchange=isExchange)
 
-    def _recoverDeathPenaltyExp(self, expireTime, itemId):
+    def _recoverDeathPenaltyExp(self, expireTime, itemId, isExchange=False):
         LOG_INFO('recoverDeathPenaltyExp:', expireTime, itemId)
         if expireTime < utils.curTS():
             LOG_ERR('recoverDeathPenaltyExp expireTime invalid:', expireTime, self.gbID)
@@ -336,12 +461,12 @@ class ImpCombat(AvatarBuildsMixin):
             _src = AAC_AACDD.datas.BONUS_SRC_RECOVER_DEAD_PENALTY_DEDUCT
             _deductVal = dropAward.DeductWealthVal()
             _deductVal.addWealthByItemId(itemId, _num)
-            res = self.canDeductWealth(_deductVal, sendMsg=True)
+            res = self.canDeductWealth(_deductVal, sendMsg=True, allowMoneyCoverBindMoney=isExchange)
             if not res:
                 LOG_WARN('recoverDeathPenaltyExp canDeductWealth failed:', self.gbID, res())
                 return
 
-            self.deductWealth(_src, _deductVal, _opUUID, gameclass.AwardDetailCls())
+            self.deductWealth(_src, _deductVal, _opUUID, gameclass.AwardDetailCls(), allowMoneyCoverBindMoney=isExchange)
 
         self.deathPenaltyData.removeDeathPenaltyVal(expireTime)
 
@@ -466,7 +591,18 @@ class ImpCombat(AvatarBuildsMixin):
 
     def changeMorphStateBase(self, morphState):
         if morphState == self.morphState:
+            # base 侧形态已是目标值就直接返回: 若槽里残留的是另一形态的技能, 这里不会修正
+            utils.traceSkill(self, 'changeMorphStateBase.sameState',
+                             tuple(self.buildDic.activeSkills) + tuple(self.buildDic.skillLevels.keys()),
+                             'morphState=', morphState,
+                             'slots=', tuple(self.buildDic.activeSkills))
             return
+
+        utils.traceSkill(self, 'changeMorphStateBase.in',
+                         tuple(self.buildDic.activeSkills) + tuple(self.buildDic.skillLevels.keys()),
+                         'from=', self.morphState, 'to=', morphState,
+                         'slotsBefore=', tuple(self.buildDic.activeSkills),
+                         'levels=', tuple(self.buildDic.skillLevels.keys()))
 
         self.morphState = morphState
 
@@ -481,6 +617,11 @@ class ImpCombat(AvatarBuildsMixin):
             if _newSkillId == _skillId:
                 continue
 
+            utils.traceSkill(self, 'changeMorphStateBase.swapSlot', (_skillId, _newSkillId),
+                             'slotId=', _slotId, 'oldSkillId=', _skillId, 'newSkillId=', _newSkillId,
+                             'oldInLevels=', _skillId in self.buildDic.skillLevels,
+                             'newInLevels=', _newSkillId in self.buildDic.skillLevels)
+
             self.buildDic.changeSkillSlot(self, _skillId, _slotId, None)
             _skillLevel = self.buildDic.skillLevels[_skillId]
             self.buildDic.doAddActiveSkill(self, _newSkillId, _skillLevel)
@@ -494,6 +635,12 @@ class ImpCombat(AvatarBuildsMixin):
 
         if updateResult:
             self.client.dragSkillChangeBuildSkills(json.dumps(updateResult).encode('ascii'))
+
+        utils.traceSkill(self, 'changeMorphStateBase.done',
+                         tuple(self.buildDic.activeSkills) + tuple(self.buildDic.skillLevels.keys()),
+                         'morphState=', morphState,
+                         'slotsAfter=', tuple(self.buildDic.activeSkills),
+                         'levelsAfter=', tuple(self.buildDic.skillLevels.keys()))
 
     # 变身状态 end ---------------------------------
 

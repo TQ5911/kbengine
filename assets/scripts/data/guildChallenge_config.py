@@ -162,5 +162,9 @@ datas = _tools.RODict({
     "guildChallengeTimeNot": _tools.RODict({
         "ID": "guildChallengeTimeNot",
         "value": 54003157,
+    }),
+    "diffUnlockText": _tools.RODict({
+        "ID": "diffUnlockText",
+        "value": "演武场达到{0}级解锁该难度",
     })
 })

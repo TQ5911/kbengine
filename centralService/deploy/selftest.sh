@@ -353,6 +353,115 @@ else
     if [ "$d" = "$REPO_ROOT/bin" ]; then ok "没有 dist/ 时退回 bin/"; else bad "回退逻辑不对: $d"; fi
 fi
 
+echo "== 11. 只装 systemd 单元的 playbook（systemd-only.yml）=="
+PB="$DEPLOY_DIR/ansible/systemd-only.yml"
+if [ -f "$PB" ]; then ok "playbook 存在"; else bad "缺少 $PB"; fi
+
+# 复用同一份 @KEY@ 模板的关键：Jinja2 分隔符必须被改成 @
+if grep -q 'variable_start_string: "@"' "$PB" && grep -q 'variable_end_string: "@"' "$PB"; then
+    ok "playbook 用 @ 作 Jinja2 分隔符（复用 bash 那套模板，不另建副本）"
+else
+    bad "playbook 没把 Jinja2 分隔符改成 @，会渲染出带 @KEY@ 的单元"
+fi
+
+# 防漂移：模板里出现的每个占位符，playbook 都必须注入同名变量
+tpl_keys="$(grep -oE '@[A-Z0-9_]+@' "$DEPLOY_DIR/templates/centralsvc.service.template" \
+            | tr -d '@' | sort -u)"
+missing=""
+for k in $tpl_keys; do
+    grep -qE "^        $k: " "$PB" || missing="$missing $k"
+done
+if [ -z "$missing" ]; then
+    ok "模板的全部占位符 playbook 都有注入（$(printf '%s' "$tpl_keys" | tr '\n' ' ')）"
+else
+    bad "模板新增了占位符但 playbook 没跟上:$missing"
+fi
+
+# 变量生成器：单服务 / 全部 / 非法名
+GEN="$DEPLOY_DIR/lib/gen_systemd_vars.py"
+if "$PY" -c "import ast,sys; ast.parse(open(sys.argv[1],encoding='utf-8').read())" "$GEN" 2>/dev/null; then
+    ok "gen_systemd_vars.py 语法正确"
+else
+    bad "gen_systemd_vars.py 语法错误"
+fi
+
+printf 'only=maple\nprefix=/home/fengyan/Server/centralService/bin\nunit_prefix=centralsvc\nuser=fengyan\ngroup=fengyan\ntimezone=Asia/Shanghai\ngotraceback=crash\nstart_timeout=90\nstop_timeout=30\nrestart_sec=3\nlog_mode=file\nprotect_home=\nsvc_state=restarted\nenable=true\ncheck_ports=false\nport_timeout=60\nensure_user=true\nfix_owner=false\nbackup=true\n' > "$tmp/sd.conf"
+if "$PY" "$GEN" "$tmp/sd.conf" "$DEPLOY_DIR/instances.conf" > "$tmp/sd.json" 2>/dev/null; then
+    ok "变量生成器可执行"
+    # install_root 是远程路径，必须原样保留，不能被 MSYS 转成 Windows 路径
+    if grep -q '"install_root": "/home/fengyan/Server/centralService/bin"' "$tmp/sd.json"; then
+        ok "远程安装根目录未被 MSYS 路径转换污染"
+    else
+        bad "install_root 被改写: $(grep install_root "$tmp/sd.json")"
+    fi
+    if grep -q '"maple"' "$tmp/sd.json" && ! grep -q '"admin"' "$tmp/sd.json"; then
+        ok "--only 只生成指定服务"
+    else
+        bad "--only 过滤失效"
+    fi
+else
+    bad "变量生成器执行失败"
+fi
+
+printf 'only=nope\nprefix=/x\n' > "$tmp/sd-bad.conf"
+if "$PY" "$GEN" "$tmp/sd-bad.conf" "$DEPLOY_DIR/instances.conf" >/dev/null 2>&1; then
+    bad "未知服务名未被拒绝"
+else
+    ok "未知服务名会被拒绝"
+fi
+
+# 封装脚本语法
+if bash -n "$DEPLOY_DIR/install-systemd.sh" 2>/dev/null; then
+    ok "install-systemd.sh 语法正确"
+else
+    bad "install-systemd.sh 语法错误"
+fi
+
+# 有 jinja2 时，验证与 bash 渲染结果一致（两条渲染路径不能分叉）
+if "$PY" -c "import jinja2" >/dev/null 2>&1; then
+    "$PY" - "$DEPLOY_DIR" "$tmp" <<'PYJ'
+import sys, re
+from jinja2 import Environment, FileSystemLoader
+deploy, tmp = sys.argv[1], sys.argv[2]
+env = Environment(loader=FileSystemLoader(deploy + "/templates"),
+                  variable_start_string="@", variable_end_string="@",
+                  keep_trailing_newline=True)
+out = env.get_template("centralsvc.service.template").render(
+    SERVICE="maple", DESCRIPTION="大区/地图数据服务",
+    INSTALL_ROOT="/home/fengyan/Server/centralService/bin",
+    SERVICE_USER="fengyan", SERVICE_GROUP="fengyan",
+    TIMEZONE="Asia/Shanghai", GOTRACEBACK="crash",
+    START_TIMEOUT="90", STOP_TIMEOUT="30", RESTART_SEC="3", PROTECT_HOME="no",
+    STDOUT_TARGET="append:/home/fengyan/Server/centralService/bin/maple/maple.out.log",
+    STDERR_TARGET="append:/home/fengyan/Server/centralService/bin/maple/maple.out.log")
+open(tmp + "/jinja.service", "w", encoding="utf-8", newline="\n").write(out)
+leftover = re.findall(r"@[A-Z0-9_]+@", out)
+sys.exit(1 if leftover else 0)
+PYJ
+    if [ $? -eq 0 ]; then ok "Jinja2 渲染无残留占位符"; else bad "Jinja2 渲染仍有 @KEY@ 残留"; fi
+
+    # 同一组值再用 bash 渲染器渲染一遍，两者必须一致
+    ( . "$DEPLOY_DIR/lib/common.sh"
+      tpl_clear
+      tpl_set SERVICE maple; tpl_set DESCRIPTION 大区/地图数据服务
+      tpl_set INSTALL_ROOT /home/fengyan/Server/centralService/bin
+      tpl_set SERVICE_USER fengyan; tpl_set SERVICE_GROUP fengyan
+      tpl_set TIMEZONE Asia/Shanghai; tpl_set GOTRACEBACK crash
+      tpl_set START_TIMEOUT 90; tpl_set STOP_TIMEOUT 30; tpl_set RESTART_SEC 3
+      tpl_set PROTECT_HOME no
+      tpl_set STDOUT_TARGET "append:/home/fengyan/Server/centralService/bin/maple/maple.out.log"
+      tpl_set STDERR_TARGET "append:/home/fengyan/Server/centralService/bin/maple/maple.out.log"
+      render_template "$DEPLOY_DIR/templates/centralsvc.service.template" "$tmp/bash2.service" )
+    # 末尾换行不影响 systemd 解析，比较前统一补一个
+    if diff <(sed -e '$a\' "$tmp/jinja.service") <(sed -e '$a\' "$tmp/bash2.service") >/dev/null 2>&1; then
+        ok "Jinja2 与 bash 两条渲染路径结果一致"
+    else
+        bad "两条渲染路径结果不一致，模板会分叉"
+    fi
+else
+    log_dim "跳过：未安装 jinja2，未验证两条渲染路径一致性"
+fi
+
 echo
 if [ "$fails" -eq 0 ]; then printf '\033[32m全部通过\033[0m\n'; else printf '\033[31m%d 项失败\033[0m\n' "$fails"; fi
 exit "$fails"

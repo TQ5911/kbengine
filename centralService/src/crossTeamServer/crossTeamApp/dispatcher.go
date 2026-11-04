@@ -18,11 +18,14 @@ type teamTask struct {
 }
 
 // teamWorker 队伍 worker：持有 teamId % workerNum == idx 的全部队伍，
-// 单 goroutine 串行消费 channel，队伍数据无需加锁。
+// 单 goroutine 串行消费 channel，队伍数据与脏队伍集合无需加锁。
 type teamWorker struct {
 	idx   int
 	ch    chan teamTask
 	teams map[uint64]*CrossTeamData
+	// dirtyTeams 成员状态脏队伍集合（推送模型）：reportMemberState 标脏写 true，
+	// worker 500ms tick 组包推送后整表清空，仅本 worker goroutine 读写
+	dirtyTeams map[uint64]bool
 }
 
 // TeamDispatcher 中心服并发模型：
@@ -39,7 +42,12 @@ func NewTeamDispatcher(app *CrossTeamApp, workerNum int) *TeamDispatcher {
 	}
 	d := &TeamDispatcher{app: app, workers: make([]*teamWorker, workerNum)}
 	for i := range d.workers {
-		d.workers[i] = &teamWorker{idx: i, ch: make(chan teamTask, 1024), teams: make(map[uint64]*CrossTeamData)}
+		d.workers[i] = &teamWorker{
+			idx:        i,
+			ch:         make(chan teamTask, 1024),
+			teams:      make(map[uint64]*CrossTeamData),
+			dirtyTeams: make(map[uint64]bool),
+		}
 		w := d.workers[i]
 		common.ExecuteConcurrently(func() { d.runWorker(w) })
 	}
@@ -49,6 +57,8 @@ func NewTeamDispatcher(app *CrossTeamApp, workerNum int) *TeamDispatcher {
 func (d *TeamDispatcher) runWorker(w *teamWorker) {
 	sweepTicker := time.NewTicker(WORKER_SWEEP_SECONDS * time.Second)
 	defer sweepTicker.Stop()
+	pushTicker := time.NewTicker(WORKER_PUSH_STATE_MS * time.Millisecond)
+	defer pushTicker.Stop()
 	for {
 		select {
 		case task := <-w.ch:
@@ -64,6 +74,8 @@ func (d *TeamDispatcher) runWorker(w *teamWorker) {
 			}()
 		case <-sweepTicker.C:
 			d.sweep(w)
+		case <-pushTicker.C:
+			d.pushDirtyMemberStates(w)
 		}
 	}
 }
@@ -75,20 +87,21 @@ func (d *TeamDispatcher) sweep(w *teamWorker) {
 			appLog.Errorf("team worker %d sweep panic: %v", w.idx, r)
 		}
 	}()
-	now := time.Now().Unix()
 	// debug：打印本 worker 当前所有队伍及成员，便于测试观测
-	for _, team := range w.teams {
-		memberStr := joinIds(sortedKeys(team.Members))
-		if memberStr != "" {
-			memberStr += ","
-		}
-		appLog.Debugf(
-			"worker %d sweep teams, %d:[%s]",
-			w.idx,
-			team.TeamId,
-			memberStr,
-		)
-	}
+	// for _, team := range w.teams {
+	// 	memberStr := joinIds(sortedKeys(team.Members))
+	// 	if memberStr != "" {
+	// 		memberStr += ","
+	// 	}
+	// 	appLog.Debugf(
+	// 		"worker %d sweep teams, %d:[%s]",
+	// 		w.idx,
+	// 		team.TeamId,
+	// 		memberStr,
+	// 	)
+	// }
+
+	now := time.Now().Unix()
 	for _, team := range w.teams {
 		// 申请 60s 超时清理（瞬态数据）：移除后通知队长，客户端同步从申请列表剔除
 		for gbId, apply := range team.Applicants {
@@ -102,9 +115,9 @@ func (d *TeamDispatcher) sweep(w *teamWorker) {
 		}
 		// 讨伐检查/建空间超时
 		if team.CrusadeState == CRUSADE_STATE_CHECKING && now >= team.CrusadeDeadline {
-			d.app.crusadeAbort(w, team, CRUSADE_ABORT_CHECK_TIMEOUT, "")
+			d.app.crusadeAbort(w, team, CRUSADE_ABORT_CHECK_TIMEOUT, "", "")
 		} else if team.CrusadeState == CRUSADE_STATE_SPACE_CREATING && now >= team.CrusadeDeadline {
-			d.app.crusadeAbort(w, team, CRUSADE_ABORT_SPACE_FAILED, "")
+			d.app.crusadeAbort(w, team, CRUSADE_ABORT_SPACE_FAILED, "", "")
 		}
 	}
 }
@@ -123,7 +136,8 @@ func (w *teamWorker) getTeam(teamId uint64) *CrossTeamData {
 // collectTeamList 跨 worker 收集可入列表的队伍（按 target 过滤，
 // 排除 InDungeon 队伍），按 createTS 升序排序后返回。
 // 条目携带 isCross/dunServer 元数据：本服目标队伍仅对同服请求方可见，
-// 过滤在 GetTeamList 按请求 serverId 进行（快照为全组共享，版本号语义不变）。
+// 过滤与条数截断（TEAM_LIST_MAX_TEAMS）在 GetTeamList 按请求 serverId 进行
+// （快照为全组共享，版本号语义不变）。
 // 数据量 ≤8k 队，全量收集即可，无需索引结构。
 // 调用方为 RPC goroutine，不得在 worker 任务内调用（会死锁）。
 func (d *TeamDispatcher) collectTeamList(target int32) []*teamListEntry {
@@ -174,7 +188,9 @@ func (d *TeamDispatcher) collectTeamList(target int32) []*teamListEntry {
 }
 
 // filterTeamListByServer 按请求方本服 id 过滤本服目标队伍（D3-1：本服队伍仅同服可见，
-// 跨服队伍不做限制）；版本号语义不变（版本对比先于过滤，快照本身为全组共享）
+// 跨服队伍不做限制）；过滤后超 TEAM_LIST_WARN_TEAMS 打告警，超 TEAM_LIST_MAX_TEAMS 截取
+// 前 N 条下发（快照已按创建时间倒序，截断保留本请求方可见的最新 N 队，控制单包数据量）；
+// 版本号语义不变（版本对比先于过滤，快照本身为全组共享）
 func filterTeamListByServer(entries []*teamListEntry, serverId uint32) []*pb.TeamListItem {
 	out := make([]*pb.TeamListItem, 0, len(entries))
 	for _, e := range entries {
@@ -182,6 +198,22 @@ func filterTeamListByServer(entries []*teamListEntry, serverId uint32) []*pb.Tea
 			continue
 		}
 		out = append(out, e.item)
+	}
+	if len(out) > TEAM_LIST_MAX_TEAMS {
+		appLog.Warnf(
+			"team list truncated, serverId=%d visible=%d sent=%d",
+			serverId,
+			len(out),
+			TEAM_LIST_MAX_TEAMS,
+		)
+		out = out[:TEAM_LIST_MAX_TEAMS]
+	} else if len(out) > TEAM_LIST_WARN_TEAMS {
+		appLog.Warnf(
+			"team list oversized, serverId=%d visible=%d warnThreshold=%d",
+			serverId,
+			len(out),
+			TEAM_LIST_WARN_TEAMS,
+		)
 	}
 	return out
 }
@@ -201,6 +233,38 @@ func (d *TeamDispatcher) foreachTeamOfServer(serverId uint32, fn func(w *teamWor
 			}
 		}}
 	}
+}
+
+// pushDirtyMemberStates worker 500ms 推送分支（推送模型常态下行）：
+// 遍历脏队伍集合，对标记为 true 且队伍仍存在的 teamId 组全量成员快照 item，
+// 交给 app 层 pushTeamMemberStates 分桶分发；遍历结束整表清空（标脏写 true、
+// 每轮推送后整体清表，与 map[uint64]bool 类型配套）——发送失败仅打日志，
+// 丢本轮不重试；队伍已解散/转团队退役的残留 key 随整表清空，无需单独处理。
+// 仅 worker goroutine 内调用，单 goroutine 串行无需加锁
+func (d *TeamDispatcher) pushDirtyMemberStates(w *teamWorker) {
+	if len(w.dirtyTeams) == 0 {
+		return
+	}
+
+	now := time.Now().Unix()
+	items := make([]*pb.TeamMemberStatePushItem, 0, len(w.dirtyTeams))
+	for teamId, dirty := range w.dirtyTeams {
+		if !dirty {
+			continue
+		}
+		team := w.getTeam(teamId)
+		if team == nil {
+			continue
+		}
+		items = append(items, &pb.TeamMemberStatePushItem{
+			TeamId:   teamId,
+			Members:  collectMemberStates(team),
+			ReportTS: now,
+		})
+	}
+	// 每轮消费完整体清空（go 1.21 clear 内建）：最差情况发送失败即丢本轮，不做保留
+	clear(w.dirtyTeams)
+	d.app.pushTeamMemberStates(items)
 }
 
 // matchPoolOp 散人池操作：入池/取消/队伍摘要事件等所有变更都走 pool 所属 goroutine 的 channel
@@ -236,8 +300,8 @@ type teamSummary struct {
 
 // matchPool 单个 target 的散人匹配池：
 // per-target 单 goroutine 持有 pool map 与队伍摘要索引，从结构上消除锁；
-// 撮合轮次是纯内存计算（先 drain 操作队列再撮合），撮合结果交异步通知协程发 RPC，
-// worker 永远不做 IO，入池请求不会排在慢流程后面。
+// 撮合轮次是纯内存计算（先 drain 操作队列再撮合），撮合结果在 pool goroutine 内
+// 同步发 RPC（与队伍 worker 的推送点一致，低频通知直接发可保证消息顺序）。
 type matchPool struct {
 	target  int32
 	opChan  chan matchPoolOp
@@ -331,16 +395,16 @@ func (p *matchPool) matchTick() {
 	now := time.Now().Unix()
 
 	// debug：打印本匹配池当前的队伍与散人，便于测试观测
-	appLog.Debugf(
-		"match tick teams, %d:[%s]",
-		p.target,
-		joinIds(sortedKeys(p.teams)),
-	)
-	appLog.Debugf(
-		"match tick players, %d:[%s]",
-		p.target,
-		joinIds(sortedKeys(p.players)),
-	)
+	// appLog.Debugf(
+	// 	"match tick teams, %d:[%s]",
+	// 	p.target,
+	// 	joinIds(sortedKeys(p.teams)),
+	// )
+	// appLog.Debugf(
+	// 	"match tick players, %d:[%s]",
+	// 	p.target,
+	// 	joinIds(sortedKeys(p.players)),
+	// )
 
 	// 超时扫描：按各散人入池时生效的超时值判定，删除并下发 MatchTimeout，玩家需重新发起（无自动重试）
 	for gbId, mp := range p.players {
@@ -403,7 +467,7 @@ func (p *matchPool) matchTick() {
 			if !ts.isCross && cand.info.ServerId != ts.dunServer {
 				continue
 			}
-			// 配对：出池 + 异步通知散人所在服，MatchJoin 最终由队满兜底
+			// 配对：出池 + 同步通知散人所在服，MatchJoin 最终由队满兜底
 			matched[cand.info.GbId] = true
 			delete(p.players, cand.info.GbId)
 			p.app.matchPools.clearPlayer(cand.info.GbId)
@@ -419,68 +483,47 @@ func (p *matchPool) matchTick() {
 	}
 }
 
-// notifyMatchSuccess 撮合成功异步通知（两段式第一段）：向散人所在服发 MatchSuccess，
-// 由其本服权威复检后发 MatchJoin 完成入队
+// notifyMatchSuccess 撮合成功同步通知（两段式第一段）：向散人所在服发 MatchSuccess，
+// 由其本服权威复检后发 MatchJoin 完成入队。
+// 与 teamOps/crusadeOps 的推送点一致直接同步发：保证通知顺序，低频事件无需 IO 隔离
 func (p *matchPool) notifyMatchSuccess(teamId uint64, mp *matchPlayer) {
-	app := p.app
-	serverId := mp.info.ServerId
-	gbId := mp.info.GbId
-	target := p.target
-	common.ExecuteConcurrently(func() {
-		app.sendToServer(serverId, "matchSuccess", func(client *pb.GameServerClient) error {
-			_, err := client.MatchSuccess(&pb.MatchSuccessMsg{TeamId: teamId, Target: target, GbId: gbId})
-			return err
+	p.app.sendToServer(mp.info.ServerId, teamId, "matchSuccess", func(client *pb.GameServerClient) error {
+		_, err := client.MatchSuccess(&pb.MatchSuccessMsg{
+			TeamId: teamId,
+			Target: p.target,
+			GbId:   mp.info.GbId,
 		})
+		return err
 	})
 }
 
-// notifyMatchTimeout 匹配超时异步通知
+// notifyMatchTimeout 匹配超时同步通知
 func (p *matchPool) notifyMatchTimeout(mp *matchPlayer) {
-	app := p.app
-	serverId := mp.info.ServerId
-	gbId := mp.info.GbId
-	target := p.target
-	common.ExecuteConcurrently(func() {
-		app.sendToServer(serverId, "matchTimeout", func(client *pb.GameServerClient) error {
-			_, err := client.MatchTimeout(&pb.MatchTimeoutMsg{Target: target, GbId: gbId})
-			return err
-		})
+	p.app.sendToServer(mp.info.ServerId, mp.info.GbId, "matchTimeout", func(client *pb.GameServerClient) error {
+		_, err := client.MatchTimeout(&pb.MatchTimeoutMsg{Target: p.target, GbId: mp.info.GbId})
+		return err
 	})
 }
 
-// notifyMatchStart 入池成功异步通知：客户端匹配 UI 开始倒计时（enterTS 为入池时间，
+// notifyMatchStart 入池成功同步通知：客户端匹配 UI 开始倒计时（enterTS 为入池时间，
 // timeoutSeconds 为本次入池生效的超时，客户端主读配表，此处冗余校准）
 func (p *matchPool) notifyMatchStart(mp *matchPlayer) {
-	app := p.app
-	serverId := mp.info.ServerId
-	gbId := mp.info.GbId
-	target := p.target
-	enterTS := mp.enterTS
-	timeoutSeconds := mp.timeoutSeconds
-	common.ExecuteConcurrently(func() {
-		app.sendToServer(serverId, "matchStart", func(client *pb.GameServerClient) error {
-			_, err := client.MatchStart(&pb.MatchStartMsg{
-				Target:         target,
-				GbId:           gbId,
-				EnterTS:        enterTS,
-				TimeoutSeconds: timeoutSeconds,
-			})
-			return err
+	p.app.sendToServer(mp.info.ServerId, mp.info.GbId, "matchStart", func(client *pb.GameServerClient) error {
+		_, err := client.MatchStart(&pb.MatchStartMsg{
+			Target:         p.target,
+			GbId:           mp.info.GbId,
+			EnterTS:        mp.enterTS,
+			TimeoutSeconds: mp.timeoutSeconds,
 		})
+		return err
 	})
 }
 
-// notifyMatchStop 取消匹配确认异步通知（撮合成功/超时分别走 MatchSuccess/MatchTimeout，不走这里）
+// notifyMatchStop 取消匹配确认同步通知（撮合成功/超时分别走 MatchSuccess/MatchTimeout，不走这里）
 func (p *matchPool) notifyMatchStop(mp *matchPlayer) {
-	app := p.app
-	serverId := mp.info.ServerId
-	gbId := mp.info.GbId
-	target := p.target
-	common.ExecuteConcurrently(func() {
-		app.sendToServer(serverId, "matchStop", func(client *pb.GameServerClient) error {
-			_, err := client.MatchStop(&pb.MatchStopMsg{Target: target, GbId: gbId})
-			return err
-		})
+	p.app.sendToServer(mp.info.ServerId, mp.info.GbId, "matchStop", func(client *pb.GameServerClient) error {
+		_, err := client.MatchStop(&pb.MatchStopMsg{Target: p.target, GbId: mp.info.GbId})
+		return err
 	})
 }
 
@@ -527,7 +570,7 @@ func (m *MatchPoolMgr) EnterPool(player *pb.MatchPlayerInfo, target int32, timeo
 		p.dirty = true
 		// 入池成功通知：客户端匹配 UI 开始倒计时
 		p.notifyMatchStart(mp)
-		appLog.Infof(
+		appLog.Debugf(
 			"enter match pool, target=%d gbId=%d serverId=%d timeout=%ds",
 			target,
 			player.GbId,
@@ -560,7 +603,7 @@ func (m *MatchPoolMgr) LeavePool(gbId uint64) {
 		}
 		delete(p.players, gbId)
 		p.notifyMatchStop(mp)
-		appLog.Infof(
+		appLog.Debugf(
 			"leave match pool, target=%d gbId=%d",
 			target,
 			gbId,

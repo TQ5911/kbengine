@@ -47,6 +47,7 @@ datas ={
           "Props": {
             "ChestGroupID": "",
             "GroupID": "",
+            "IsAttack": 0,
             "Level": 1,
             "LightPillar": "",
             "MapEntityScale": 0,
@@ -3262,7 +3263,7 @@ datas ={
           "ClassName": "Npc",
           "ClassNameType": 1,
           "CustomID": "",
-          "Dir": 227.7162,
+          "Dir": 269.6013,
           "DisplayName": "",
           "EliteCustomID": "",
           "EntityID": 18000002,
@@ -3793,7 +3794,9 @@ datas ={
             "Radius": 0.0,
             "RefreshNum": 1,
             "RefreshTime": 1,
+            "RefreshTimedID": 0,
             "Remark": "",
+            "ShowInSceneMap": 1,
             "ShowMonsterGroupID": ""
           }
         }

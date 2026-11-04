@@ -54,6 +54,7 @@
         <reqLeaseItem>
             <Exposed/>
             <Arg>   UINT64   </Arg>
+            <Arg>   BOOL     </Arg>
         </reqLeaseItem>
 
         <!-- API: 下架 -->

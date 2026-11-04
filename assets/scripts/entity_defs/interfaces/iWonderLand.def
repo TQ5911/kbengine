@@ -53,12 +53,14 @@
             <Arg>          UINT8                        </Arg>
             <Arg>          UINT8                        </Arg>
             <Arg>          OP_UUID                      </Arg>
+            <Arg>          BOOL                         </Arg>
         </doAddWonderLandTicket>
 
         <addWonderLandTicket> <Exposed/>
             <Arg>          ITEM_ID                      </Arg>
             <Arg>          UINT8                        </Arg>
             <Arg>          UINT8                        </Arg>
+            <Arg>          BOOL                         </Arg>
         </addWonderLandTicket>
 
         <addWonderLandDurFailed>
@@ -150,6 +152,7 @@
             <Arg>           PYTHON                      </Arg>
             <Arg>           UINT8                       </Arg>
             <Arg>           OP_UUID                     </Arg>
+            <Arg>           BOOL                        </Arg>
         </checkAddWonderLandDurationCondition>
 
         <doSendWonderLandLoginData>

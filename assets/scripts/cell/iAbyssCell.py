@@ -18,6 +18,7 @@ import abyss_floor as AB_FD
 import abyss_config as AB_CD
 import creep_base as CBD
 import activityControl_config as AC_CD
+import activityControl_activityData as AC_ADD
 import const_const as CONST
 import conflict_conflict_def as C_C_DD
 import message_Message_def as MMD
@@ -82,23 +83,29 @@ class IAbyssCell(object):
             gameconfig.getCrossServerId(),
         )
 
-    def isAbyssBossFloor(self):
-        return formula.fetchMapId(self.spaceNo) == 5204 or formula.fetchMapId(self.spaceNo) == 5205
-
-    def checkAbyssBossFloor(self, floor):
-        return floor == 4 or floor == 5
-
     def checkCanEnterAbyssCell(self, floor):
+        actData = AC_ADD.datas.get(AB_CD.datas['abyssActID']['value'])
+        if actData:
+            now = utils.curTS()
+            openTimeCron = actData['openTimeCron']
+            endTimeCron = actData['endTimeCron']
+            nextOpen, _ = utils.nextByCronTupleList(openTimeCron, now)
+            nextEnd, _ = utils.nextByCronTupleList(endTimeCron, now)
+            if (nextOpen or nextEnd) and not utils.checkInTimePeriod(now, [openTimeCron, endTimeCron]):
+                LOG_WARN('IAbyssCell::checkCanEnterAbyssCell not in open time, floor: {}'.format(floor))
+                return
+
         if not utils.isActOpen(AB_CD.datas['abyssActID']['value']):
             self.showMsg(AC_CD.datas['activity_notOpen']['value'], [])
             return
 
-        if self.level < AB_FD.datas[floor]['needLv']:
-            LOG_ERR('IAbyssCell::enterAbyss: level < needLv: {} < {}'.format(self.level, AB_FD.datas[floor]['needLv']))
+        if self.level < AB_FD.datas[floor]['needLv'] or utils.getWorldLevel() < AB_FD.datas[floor]['serverLv']:
+            LOG_WARN('IAbyssCell::enterAbyss: level < needLv or worldLevel < serverLv: {} {} {} {}'.format(
+                self.level, AB_FD.datas[floor]['needLv'], utils.getWorldLevel(), AB_FD.datas[floor]['serverLv']))
             return
 
         if self.totalScore < AB_FD.datas[floor]['needScore']:
-            LOG_ERR('IAbyssCell::enterAbyss: totalScore < needScore: {} < {}'.format(self.totalScore, AB_FD.datas[floor]['needScore']))
+            LOG_WARN('IAbyssCell::enterAbyss: totalScore < needScore: {} < {}'.format(self.totalScore, AB_FD.datas[floor]['needScore']))
             return
 
         mapId = AB_FD.datas[floor]['ID']
@@ -185,19 +192,12 @@ class IAbyssCell(object):
         if not formula.inAbyssScene(self.spaceNo):
             return
 
-        if self.isAbyssBossFloor():
-            return
-
         self._cancelAbyssTimer()
-        self.abyssQuota.checkout()
+        self.abyssQuota.reset(AB_CD.datas['abyss_exitJugeTime']['value'])
         self._onLeftTimeSync()
 
     def _dealWithAbyssTimer(self, oldSpaceNo, newSpaceNo):
         LOG_INFO('IAbyssCell::_dealWithAbyssTimer: {} {}'.format(oldSpaceNo, newSpaceNo))
-
-        if self.isAbyssBossFloor():
-            LOG_INFO("isAbyssBossFloor _dealWithAbyssTimer pass")
-            return
 
         _oldNeedTimer = formula.inAbyssScene(oldSpaceNo)
         _newNeedTimer = formula.inAbyssScene(newSpaceNo)
@@ -212,14 +212,10 @@ class IAbyssCell(object):
 
         else:
             self._cancelAbyssTimer()
-            self.abyssQuota.checkout()
+            self.abyssQuota.reset(AB_CD.datas['abyss_exitJugeTime']['value'])
             self._onLeftTimeSync()
 
     def _startAbyssTimer(self, durStatus):
-        if self.isAbyssBossFloor():
-            LOG_INFO("isAbyssBossFloor _startAbyssTimer pass")
-            return
-
         self._cancelAbyssTimer()
 
         _now = utils.curTS()
@@ -343,15 +339,16 @@ class IAbyssCell(object):
 
         _dur = AB_CD.datas['abyssNumTime']['value'] * 60
         self.abyssQuota.addAbyssLeftTime(self, _dur)
+        self.showMsg(AB_CD.datas['abyss_timeExtensionSuccess']['value'], [])
         self.base.activityComplete(AB_CD.datas['abyssActID']['value'])
         self._startAbyssTimer(gameconst.ABYSS_DUR_RENEW)
         self.doSyncAbyssData()
 
-    def checkAddAbyssDurationCondition(self, addType, costList, num, opUUID):
+    def checkAddAbyssDurationCondition(self, addType, costList, num, opUUID, isExchange):
         if not self._checkAddAbyssDurationCondition():
             return
 
-        self.base.doAddAbyssTicket(addType, costList, num, True, True, gameconst.AbyssAddTicketReason.CHECK_COND, opUUID)
+        self.base.doAddAbyssTicket(addType, costList, num, True, True, gameconst.AbyssAddTicketReason.CHECK_COND, opUUID, isExchange)
 
     def addAbyssRewardRecord(self, rewardList):
         _dic = self.getTempMiscProp(gameconst.EntityPropsEnum.abyssRewardList, {})
@@ -362,9 +359,6 @@ class IAbyssCell(object):
             _dic[_itemId][_bindType] = _dic[_itemId].get(_bindType, 0) + _data['itemNum']
 
         self.setTempMiscProp(gameconst.EntityPropsEnum.abyssRewardList, _dic)
-        #boss层不弹归墟奖励结算
-        if self.isAbyssBossFloor():
-            return
         self.client.onAddAbyssRewardRecord(rewardList)
 
     def clearAbyssRewardRecord(self):
@@ -388,8 +382,6 @@ class IAbyssCell(object):
             _switchData = _switchVal.toClientData()
 
         _endTime = utils.curTS() + self.abyssQuota.calcLeftTime()
-        if self.isAbyssBossFloor():
-            return
         self.client.onAbyssLoginData(_endTime, _masterSwitch, _switchData, _rewardList)
 
     def onLogonEnterAbyssCB(self, spaceMgrBoxCellId):
@@ -416,20 +408,6 @@ class IAbyssCell(object):
         isBlocked, leftSec, _ = self.checkBossMutexBlockAutoEnter(AB_FD.datas[floor]['ID'])
         if isBlocked:
             self.showMsg(MMD.datas.mutexSceneMsg, [str(leftSec)])
-            return
-
-        #归墟世界boss临时代码
-        if self.checkAbyssBossFloor(floor):
-            self._commonNeedCast(
-                C_C_DD.datas.teleportCast,
-                gameconst.StateEnum.Teleporting,
-                gameconst.CastEnum.teleportAnchor,
-                '_doEnterCrossServerAbyss',
-                (floor, extra),
-                CONST.datas['teleportTime'].get("value", gameconst.ANCHOR_CAST_DUR),
-                '_abyssUnlock',
-                ()
-            )
             return
 
         if self.abyssQuota.leftTime <= 0:
@@ -490,10 +468,7 @@ class IAbyssCell(object):
 
     def _crossServerAbyssLeave(self):
         LOG_DBG("[lj]crossServerAbyssLeave")
-        self.applyLeaveTeam(self.id)
-        self.leaveRaid(self.id)
         gameengine.getAbyssStubBySpaceNo(self.spaceNo).onLeaveAbyssWithToSpaceNo(self.gbId, 0)
-        self.spaceMgr.onPlayerLeave(self.gbId, self.id, self)
 
         self.base.onCrossServerAbyssLeave()
 
@@ -504,6 +479,29 @@ class IAbyssCell(object):
             self.clientDistinctIdCell,
             utils.curTS()
         )
+
+    def _onAbyssTimeSync(self):
+        if formula.inAbyssScene(self.spaceNo) and self._isAbyssOutOfOpenTime():
+            LOG_INFO('IAbyssCell::_onAbyssTimeSync out of open time, leave', self.spaceNo)
+            self._crossServerAbyssLeave()
+            return
+
+        self._onLeftTimeSync()
+
+    def _isAbyssOutOfOpenTime(self):
+        actData = AC_ADD.datas.get(AB_CD.datas['abyssActID']['value'])
+        if not actData:
+            return False
+
+        now = utils.curTS()
+        openTimeCron = actData['openTimeCron']
+        endTimeCron = actData['endTimeCron']
+        nextOpen, _ = utils.nextByCronTupleList(openTimeCron, now)
+        nextEnd, _ = utils.nextByCronTupleList(endTimeCron, now)
+        if not nextOpen and not nextEnd:
+            return False
+
+        return not utils.checkInTimePeriod(now, [openTimeCron, endTimeCron])
 
     def _onLeftTimeSync(self):
         self.abyssQuota.refreshEnterTime()
@@ -516,10 +514,6 @@ class IAbyssCell(object):
     def doSyncAbyssData(self):
         LOG_INFO('IAbyssCell::doSyncAbyssData')
         if not gameconfig.isCrossServer():
-            return
-
-        if self.isAbyssBossFloor():
-            LOG_INFO("isAbyssBossFloor doSyncAbyssData pass")
             return
 
         leftTime = self.abyssQuota.calcLeftTime()

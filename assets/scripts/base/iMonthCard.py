@@ -62,29 +62,45 @@ class IMonthCard(object):
             return True
         return False
 
-    def addMonthCardByItemAction(self, monthCardId, gridId, itemId, useNum, opUUID, ctx):
-        LOG_INFO("addMonthCardByItemAction ", monthCardId, gridId, itemId, useNum, opUUID, ctx)
-        effectiveCount = 0
+    def addMonthCardByItem(self, monthCardId, itemId, useNum, opUUID, ctx):
         seconds = BCBCCD.datas['durationHours']['value'] * 3600
-        for _ in range(0, useNum):
-            if not self.checkCanAddMonthCard(monthCardId):
-                break
-            effectiveCount += 1
-            self.doAddMonthCard(seconds, monthCardId)
-        ctx.usedCount = effectiveCount
-            
-        return effectiveCount == 0
-
-    def addMonthCardByItem(self, monthCardId, opUUID, ctx):
-        seconds = BCBCCD.datas['durationHours']['value'] * 3600
-        if not self.checkCanAddMonthCard(monthCardId):
-            self.cell.onPendingUseItemFinished(ctx.pendingOpId, gameconst.UseItemEnum.FALSE)
-            self.onMessagePre(BCBCCD.datas["durationHoursLimitMsg"]["value"], [])
-            return False
-        self.doAddMonthCard(seconds, monthCardId)
-        self.cell.onPendingUseItemFinished(ctx.pendingOpId, gameconst.UseItemEnum.TRUE)
+        if ctx.fromOrder:
+            effectiveCount = 0
+            for _ in range(0, useNum):
+                if not self.checkCanAddMonthCard(monthCardId):
+                    break
+                effectiveCount += 1
+                self.doAddMonthCard(opUUID, seconds, monthCardId)
+            ctx.usedCount = effectiveCount
+                
+            return effectiveCount == 0
+        else:
+            effectiveCount = 0
+            for _ in range(0, useNum):
+                if not self.checkCanAddMonthCard(monthCardId):
+                    self.onMessagePre(BCBCCD.datas["durationHoursLimitMsg"]["value"], [])
+                    break
+                effectiveCount += 1
+                self.doAddMonthCard(opUUID, seconds, monthCardId)
+            remainCount = useNum - effectiveCount
+            LOG_INFO("addMonthCardByItem", remainCount, useNum, effectiveCount)
+            if remainCount > 0:
+                self.doMonthCardReturn(opUUID, itemId, remainCount)
+            self.cell.onPendingUseItemFinished(ctx.pendingOpId, gameconst.UseItemEnum.TRUE)
         return True
     
+    def doMonthCardReturn(self, opUUID, itemId, remainCount):
+        LOG_INFO("doMonthCardReturn", opUUID, itemId, remainCount)
+        if remainCount <= 0:
+            return
+        srcType = AAC_AACDD.datas.BONUS_SRC_FROM_ITEM
+        detail = gameclass.AwardDetailCls()
+        awardVal = dropAward.AwardVal()
+        awardVal.addWealthByItemId(itemId, remainCount)
+        awardCtx = self.getAvatarAwardCtx(0, None)
+        opUUID = KBEngine.genUUID64()
+        self.addWealth(srcType, awardVal, opUUID, detail, awardCtx)
+
     def checkCanAddMonthCard(self, monthCardId):
         monthCardExpireTime = self.monthCardExpireTime if monthCardId == gameconst.PremiumType.SMALL_MONTH_CARD else self.bigMonthCardExpireTime
         durationHoursLimit = BCBCCD.datas['durationHoursLimit']['value']
@@ -98,7 +114,8 @@ class IMonthCard(object):
         return True
 
     #只要调用了这个，就会发一次月卡获得奖励
-    def doAddMonthCard(self, seconds, monthCardId):
+    def doAddMonthCard(self, opUUID, seconds, monthCardId):
+        fromNoneBig = monthCardId == gameconst.PremiumType.BIG_MONTH_CARD and self.bigMonthCardExpireTime < utils.curTS()
         monthCardExpireTime = self.monthCardExpireTime if monthCardId == gameconst.PremiumType.SMALL_MONTH_CARD else self.bigMonthCardExpireTime
         self.unlockBag(gameconst.BagTypeEnum.BAG_TYPE_NORMAL, 'unlock by action: doAddMonthCard')
         LOG_INFO("before add month card", monthCardId, monthCardExpireTime, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(monthCardExpireTime)))
@@ -106,6 +123,8 @@ class IMonthCard(object):
             self.monthCardExpireTime = max(self.monthCardExpireTime, utils.curTS()) + seconds
         else:
             self.bigMonthCardExpireTime = max(self.bigMonthCardExpireTime, utils.curTS()) + seconds
+        if fromNoneBig:
+            self.onMaterialSaleBigMonthCard()
         monthCardExpireTime = self.monthCardExpireTime if monthCardId == gameconst.PremiumType.SMALL_MONTH_CARD else self.bigMonthCardExpireTime
         LOG_INFO("after add month card", monthCardId, monthCardExpireTime, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(monthCardExpireTime)))
 
@@ -123,7 +142,6 @@ class IMonthCard(object):
             _ctx
         )
         awardCtx = self.getAvatarAwardCtx(0, None)
-        opUUID = KBEngine.genUUID64()
         self.addWealth(_src, _awardVal, opUUID, _detail, awardCtx)
         self.updateRedisVIPFlag()
         self.cell.syncMonthCardInfo(self.monthCardExpireTime, self.bigMonthCardExpireTime)
@@ -146,7 +164,6 @@ class IMonthCard(object):
         )
 
         self.checkAndGetHangupTime()
-        return opUUID
 
     @gamedecorator.offlineCallback
     def gmDeductMonthCard(self, monthCardId, seconds):
@@ -170,6 +187,17 @@ class IMonthCard(object):
         if self.cell:
             self.cell.syncMonthCardInfo(self.monthCardExpireTime, self.bigMonthCardExpireTime)
         return True, oldExpire, newExpire
+
+    @gamedecorator.offlineCallback
+    def gmSetHangupMinutes(self, minutes):
+        oldMinutes = self.remainHangupMinutes
+        now = utils.curTS()
+        self.remainHangupMinutes = minutes
+        # 标记今日已领取，避免随后的每日补发把GM设置的时长覆盖或累加
+        self.lastFreeHangupGetTime = now
+        self.lastMonthCardHangupGetTime = now
+        LOG_INFO("gmSetHangupMinutes", oldMinutes, minutes)
+        return True, oldMinutes, minutes
 
     @gamedecorator.limitcall(5, keyFun=lambda x: '{1}'.format(*x))
     def tryGetMonthCardDailyReward(self, exposed, cardType):
@@ -615,14 +643,14 @@ class IMonthCard(object):
             return
 
     @gamedecorator.checkGameconfigEnable('monthCard')
-    def clientBuyPremiumGoods(self, exposed, premiumId):
+    def clientBuyPremiumGoods(self, exposed, premiumId, isExchange=False):
         LOG_INFO("clientBuyPremiumGoods", premiumId)
         #目前特权商品只有月卡
         if not utils.isPremiumMonthCard(premiumId):
             LOG_WARN('clientBuyPremiumGoods', 'premiumId not premium month card', premiumId)
             return
 
-        self.buyMonthCard(premiumId)
+        self.buyMonthCard(premiumId, isExchange=isExchange)
 
     def _isMonthCardFirstPurchase(self, premiumId):
         if premiumId == gameconst.PremiumType.BIG_MONTH_CARD:
@@ -631,7 +659,7 @@ class IMonthCard(object):
             return self.monthCardFirstPurchaseFlag
         return False
 
-    def buyMonthCard(self, premiumId):
+    def buyMonthCard(self, premiumId, isExchange=False):
         cfgData = BCBPGD.datas.get(premiumId)
         if not self.checkCanAddMonthCard(premiumId):
             self.onMessagePre(BCBCCD.datas["durationHoursLimitMsg"]["value"], [])
@@ -642,7 +670,7 @@ class IMonthCard(object):
         deductWealthVal = dropAward.DeductWealthVal()
         deductWealthVal.addWealthByItemId(costItem[0], costItem[1])
 
-        res = self.canDeductWealth(deductWealthVal)
+        res = self.canDeductWealth(deductWealthVal, allowMoneyCoverBindMoney=isExchange)
         if not res:
             LOG_WARN('buyMonthCard: items not enough:', deductWealthVal, res())
             return
@@ -650,10 +678,10 @@ class IMonthCard(object):
         detail = gameclass.AwardDetailCls(buyCreditId=premiumId)
         opUUID = KBEngine.genUUID64()
         srcType = AAC_AACDD.datas.BONUS_SRC_BUY_CURRENCY_GIFT
-        self.deductWealth(srcType, deductWealthVal, opUUID, detail)
+        self.deductWealth(srcType, deductWealthVal, opUUID, detail, allowMoneyCoverBindMoney=isExchange)
 
         seconds = BCBCCD.datas['durationHours']['value'] * 3600
-        opUUID = self.doAddMonthCard(seconds, premiumId)
+        self.doAddMonthCard(opUUID, seconds, premiumId)
         if self._isMonthCardFirstPurchase(premiumId):
             LOG_INFO("buyMonthCard", "first purchase", premiumId)
             if premiumId == gameconst.PremiumType.BIG_MONTH_CARD:

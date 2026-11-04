@@ -376,7 +376,7 @@ class UseItemCtx(object):
 
     def __init__(self, targetId=0, argsList=None, withMailId=0,\
                  bindType=gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED,
-                 itemObj=None, usedCount = 0):
+                 itemObj=None, usedCount = 0, fromOrder = False):
         self.targetId = targetId
         if argsList is None:
             self.argsList = []
@@ -388,6 +388,7 @@ class UseItemCtx(object):
         self.bindType = bindType
         self.itemObj = itemObj
         self.usedCount = usedCount
+        self.fromOrder = fromOrder
 
     def _lateReload(self):
         super(UseItemCtx, self)._lateReload()

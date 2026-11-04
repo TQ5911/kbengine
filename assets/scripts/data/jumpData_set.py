@@ -179,5 +179,10 @@ datas = _tools.RODict({
         "ID": "mountHhorizontalMinSpeed",
         "value": "2.7",
         "Type": "float"
+    }),
+    "thirdJumpCheckTime": _tools.RODict({
+        "ID": "thirdJumpCheckTime",
+        "value": "0.2",
+        "Type": "float"
     })
 })

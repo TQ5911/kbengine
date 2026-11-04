@@ -66,7 +66,7 @@ class IAuctionMixin(object):
                 return gameconst.AuctionErrno.ERR_AUCTION_EQUIP_IN_DROP_REPAIR
             
             # 没有词条的魂魄不允许上交易行
-            if _w_itemObj.isSoul() and len(_w_itemObj.rollProps) == 0:
+            if _w_itemObj.isSoul() and not _w_itemObj.hasSoulAffix():
                 return gameconst.AuctionErrno.ERR_AUCTION_SOUL_WITH_EMPTY_ROLL_PROPS
             
             if not dataUtils.checkAuctionAllowListing(_w_itemObj.itemId):

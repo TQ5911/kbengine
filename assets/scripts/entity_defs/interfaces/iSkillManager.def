@@ -807,6 +807,57 @@
             <Type>          FLOAT          </Type>
             <Flags>         CELL_PRIVATE   </Flags>
         </adjSkillDmgAnti>
+
+        <uniEnh>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </uniEnh>
+        <baseUniEnh>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </baseUniEnh>
+        <adjUniEnh>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjUniEnh>
+        <uniAnti>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </uniAnti>
+        <baseUniAnti>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </baseUniAnti>
+        <adjUniAnti>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjUniAnti>
+        
+        <minAllArmor>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </minAllArmor>
+        <baseMinAllArmor>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </baseMinAllArmor>
+        <adjMinAllArmor>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjMinAllArmor>
+        <maxAllArmor>
+            <Type>          INT32          </Type>
+            <Flags>         OWN_CLIENT     </Flags>
+        </maxAllArmor>
+        <baseMaxAllArmor>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </baseMaxAllArmor>
+        <adjMaxAllArmor>
+            <Type>          INT32          </Type>
+            <Flags>         CELL_PRIVATE   </Flags>
+        </adjMaxAllArmor>
+
     </Properties>
 
     <CellMethods>

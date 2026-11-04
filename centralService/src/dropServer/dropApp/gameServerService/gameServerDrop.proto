@@ -46,6 +46,7 @@ message NotifyCollectionCacheData {
     repeated uint32 collectionIds = 1;
     repeated uint64 uniqueIds = 2;
     repeated int64 collExpireTimes = 3;
+    repeated uint32 collectionServerIds = 4; // 与 collectionIds 并列
 }
 
 message NotifyDropCacheData {
@@ -71,6 +72,7 @@ message DropRequest {
     int64 returnTime = 13;
     uint32 ownerServerId = 14;
     bool isFirst = 15;
+    uint32 collectionServerId = 16; // 采集物所在游戏服id(与 collectionId 并列)
 }
 
 // 掉落响应
@@ -218,6 +220,7 @@ message ReturnInfo {
     int64 returnTime = 2;
     uint32 dropType = 3;
     bytes equipInfo = 4;
+    bytes extraInfo = 5;
 }
 
 message RewardInfo {
@@ -276,6 +279,7 @@ message CustodyRequest {
     uint32 ownerServerId = 6;
     uint64 ownerId = 7;
     int64 returnTime = 8;
+    bytes extraInfo = 9;
 }
 
 // 托管响应
@@ -315,6 +319,7 @@ message NotifyCleanCollections {
     repeated uint32 collectionIds = 1;
     repeated uint64 uniqueIds = 2;
     repeated int64 collExpireTimes = 3;
+    repeated uint32 collectionServerIds = 4; // 与 collectionIds 并列
 }
 
 message NotifyCustodyEquip {

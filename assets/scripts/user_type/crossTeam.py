@@ -2,6 +2,8 @@
 # 跨服组队数据类型：
 # CrossTeamMemberCacheVal  成员缓存（姓名/等级/职业/战力/血量/所在服/spaceNo/position/分组位置）
 # CrossTeamCacheVal        玩家视角队伍缓存（Avatar 持有，参照 TeamCacheValInPlayer）
+# TeamUpCreating           无队邀请组队 cell 内存状态（预分配 teamId + 邀请/应答/已同意记录，
+#                          Avatar cell 惰性持有，cell 销毁即清，条目 30s 惰性过期）
 # teamInfoPbToStreamDict   中心 CrossTeamInfo pb -> streamDict 纯转换（CrossTeamStub 已不维护
 #                          队伍缓存，全量推送/登录恢复均直接由 pb 转换下发）
 # memberInfoPbToStreamDict 中心 MemberInfo pb -> 成员 streamDict 纯转换（单成员增量推送用，
@@ -12,6 +14,17 @@
 
 import gameconst
 import userType
+
+
+class TeamUpCreating(object):
+    # 无队邀请组队（单对象管理本功能全部 cell 内存状态，Avatar cell 惰性持有、cell 销毁即清）：
+    # 我作为邀请人预分配的队伍 id + 邀请/应答/已同意记录；条目 30s 惰性过期（gameconst.TEAM_UP_INVITE_TIMEOUT）
+    def __init__(self):
+        self.teamId = 0        # 预分配队伍 id：首次发无队邀请时 genUUID64；本 cell 后续建队优先复用
+        self.invitees = {}     # 我邀请过的人：gbId -> ts
+        self.creating = False  # 本流程自动建队在途
+        self.inviteIns = {}    # 我收到未应答的无队邀请：inviterGbId -> (teamId, ts)
+        self.accepted = {}     # 我答应过的邀请：teamId -> (inviterGbId, ts)
 
 
 def emptyTeamMarkInfo():
@@ -36,7 +49,7 @@ def markInfoPbToStreamDict(markInfo):
 def teamInfoPbToStreamDict(teamInfo):
     # 中心 CrossTeamInfo pb -> 客户端 streamDict（与 CrossTeamCacheVal.toStreamDict 同构）。
     # pb 不含成员高频状态快照（hp/spaceNo/position），按默认初始值填充，
-    # 客户端随后由 3s 的 onCrossTeamMemberState 广播覆盖。
+    # 客户端随后由每秒拉取的 onCrossTeamMemberState 覆盖。
     # 服务端按 groupIdx 分组、组内按 pos 升序下发；成员 dict 中携带 groupIdx/pos，
     # 既供服务端缓存重建，也随 CROSS_TEAM_MEMBER_CACHE_VAL 序列化下发客户端。
     _blockedSet = set(teamInfo.blockedMembers)
@@ -49,8 +62,9 @@ def teamInfoPbToStreamDict(teamInfo):
             'level': _m.level,
             'school': _m.school,
             'score': _m.score,
-            'hp': 1,
-            'maxHp': 1,
+            # 入队时快照（中心 MemberInfo.hp/maxHp），后续由增量状态推送覆盖
+            'hp': _m.hp,
+            'maxHp': _m.maxHp,
             'spaceNo': 0,
             'position': (0, 0, 0),
             'groupIdx': _m.groupIdx,
@@ -131,7 +145,7 @@ def teamInfoPbToStreamDict(teamInfo):
 def memberInfoPbToStreamDict(memberInfo):
     # 中心 MemberInfo pb -> 成员 streamDict（与 teamInfoPbToStreamDict 成员条目同构）。
     # pb 不含成员高频状态快照（hp/spaceNo/position），按默认初始值填充，
-    # 客户端随后由 3s 的 onCrossTeamMemberState 广播覆盖。
+    # 客户端随后由每秒拉取的 onCrossTeamMemberState 覆盖。
     # isBlockMics 直接用中心填充值（MemberJoinPush 单个成员推送无队伍 blockedMembers 列表；
     # 全量推送走 teamInfoPbToStreamDict 按 blockedMembers 判定）
     return {
@@ -141,8 +155,9 @@ def memberInfoPbToStreamDict(memberInfo):
         'level': memberInfo.level,
         'school': memberInfo.school,
         'score': memberInfo.score,
-        'hp': 1,
-        'maxHp': 1,
+        # 入队时快照（中心 MemberInfo.hp/maxHp），后续由增量状态推送覆盖
+        'hp': memberInfo.hp,
+        'maxHp': memberInfo.maxHp,
         'spaceNo': 0,
         'position': (0, 0, 0),
         'groupIdx': memberInfo.groupIdx,
@@ -166,7 +181,7 @@ class CrossTeamMemberCacheVal(userType.UserSingleType):
         self.level = level
         self.school = school
         self.score = score
-        # 高频状态快照（中心 3s 广播覆盖）
+        # 高频状态快照（每秒拉取覆盖）
         self.hp = 1
         self.maxHp = 1
         self.spaceNo = 0
@@ -461,6 +476,13 @@ class CrossTeamCacheVal(userType.UserSingleType):
         for _key in ('enableMics', 'isBlockMics', 'enableSpeaker', 'inVoiceRoom'):
             if _key in voiceDict:
                 setattr(_member, _key, voiceDict[_key])
+        return _member
+
+    def updateMemberName(self, gbId, name):
+        # 成员改名落地（onCrossTeamMemberRename 独立推送）
+        _member = self.memberDict.get(gbId)
+        if _member:
+            _member.playerName = name
         return _member
 
     def updateMemberState(self, gbId, stateDict):

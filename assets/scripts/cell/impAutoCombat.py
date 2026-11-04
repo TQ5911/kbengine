@@ -119,11 +119,6 @@ class ImpAutoCombat(object):
         self.autoCmbtDic.pop('priorityTargetEnemyId', None)
         self.removeState(gameconst.StateEnum.autoFight)
 
-    def doFollowCaptainStopAutoCombat(self):
-        _dstPos = self.getCaptainPosition()
-        if _dstPos and sMath.distance2D(self.position, _dstPos) > gameconst.DEFAULT_AOI:
-            self.removeState(gameconst.StateEnum.autoFight)
-
     def selfStopAutoCombat(self, reason=''):
         LOG_DBG("selfStopAutoCombat::", reason)
         if self.hasState(gameconst.StateEnum.autoFight):
@@ -534,18 +529,6 @@ class ImpAutoCombat(object):
         self.autoCmbtDic['skill'] = None
         self.autoCmbtDic['lastSkill'] = None
 
-    def _needFollowCaptain(self):
-        captainSpaceNo = self.getCaptainSpaceNo()
-        if captainSpaceNo and formula.inWorldLineScene(captainSpaceNo) and captainSpaceNo != self.spaceNo:
-            return True
-        _dstPos = self.getCaptainPosition()
-        if self.autoCombat == gameconst.AutoCombatStatus.Idle:
-            if _dstPos and sMath.distance2D(self.position, _dstPos) > C_CD.datas['autoFightFollowRange']['value']:
-                return True
-        if _dstPos and sMath.distance2D(self.position, _dstPos) > gameconst.DEFAULT_AOI:
-            return True
-        return False
-
     def _getCombatTarget(self, skill):
         _target = None
         targetType = skill.getTarget(skill.skillId)
@@ -594,14 +577,12 @@ class ImpAutoCombat(object):
         _target = None
         if includeSelf:
             _target = self
-        if self.teamInfo.howManyMember() <= 0:
-            return _target
+        # 本服组队/团已废弃，队友实体统一走 AOI 队友集合（跨服成员缓存无 playerBox，
+        # AOI 半径大于自动战斗索敌距离，距离过滤后结果与旧"全队员遍历"等价）
         minHpPercent = -1
-        for teamMemberVal in self.teamInfo.teamPlayerDict.values():
-            if not teamMemberVal.playerBox:
-                continue
-            _mEnt = KBEngine.entities.get(teamMemberVal.playerBox.id)
-            if not _mEnt:
+        for _entId in self.teammateEntIdInAoiSet:
+            _mEnt = KBEngine.entities.get(_entId)
+            if not _mEnt or not self.isTeammate(_mEnt.gbId):
                 continue
             if not includeSelf and _mEnt.id == self.id:
                 continue
@@ -629,13 +610,11 @@ class ImpAutoCombat(object):
             return self.getNearestEnemy()
 
     def getTeamTargets(self):
+        # 本服组队/团已废弃，队友实体统一走 AOI 队友集合（集合不含自己）
         _targets = []
-        for _playerGBID, _playerBaseVal in self.teamInfo.teamPlayerDict.items():
-            if _playerGBID == self.gbId or not _playerBaseVal.playerBox:
-                continue
-
-            teamMember = KBEngine.entities.get(_playerBaseVal.playerBox.id)
-            if not teamMember:
+        for _entId in self.teammateEntIdInAoiSet:
+            teamMember = KBEngine.entities.get(_entId)
+            if not teamMember or not self.isTeammate(teamMember.gbId):
                 continue
 
             _target = KBEngine.entities.get(teamMember.selectedTargetId)
@@ -691,9 +670,8 @@ class ImpAutoCombat(object):
             return
 
         hpPercent = self.hp / self.fullHp if self.fullHp else 1
-        lowHPAutoCounter = C_CD.datas['lowHPAutoCounter']['value']
         mapId = formula.fetchMapId(self.spaceNo)
-        if not isGather and mapId not in C_CD.datas['triggerAutoCounter']['value'] and hpPercent > lowHPAutoCounter / 100.0:
+        if not isGather and mapId not in C_CD.datas['triggerAutoCounter']['value'] and hpPercent > self.autoFightCounterHp / 100.0:
             return
 
         self.fightBackTarget = _ent.id
@@ -799,7 +777,6 @@ class ImpAutoCombat(object):
             #任务目标(priorityTargetEnemyId)
             #同伴选择
             #就近
-            targetsList = []
             entityIdList = self.getTargetIdsByTargetType('Enemy')
             priorityTargetEnemyIds = self.autoCmbtDic.get('priorityTargetEnemyId', None)
             _teamTargetIds = self.getTeamTargets()
@@ -821,7 +798,6 @@ class ImpAutoCombat(object):
                     # 反击过程中，不攻击非仇恨目标
                     continue
                 if entity.IsCombatUnit and utils.checkCachedTargetType('Enemy', self, entity):
-                    targetsList.append(entity)
                     _val = (
                         # 1.任务目标
                         1 if entity.IsMonster and priorityTargetEnemyIds and entity.monsterId in priorityTargetEnemyIds else 0,
@@ -1152,6 +1128,19 @@ class ImpAutoCombat(object):
 
     def _setAutoCombatReliveReturnTimes(self, times):
         self.autoCombatReliveReturnTimes = times
+
+    @utils.isMyself
+    @gamedecorator.crossServer
+    def setAutoFightCounterHp(self, exposed, hp):
+        self._setAutoFightCounterHp(hp)
+        self.syncMethodCallToLocalServerCell('_setAutoFightCounterHp', (hp,))
+
+    def _setAutoFightCounterHp(self, hp):
+        minHp, maxHp = C_CD.datas['autoFightCounterRange']['value']
+        if hp < minHp or hp > maxHp:
+            LOG_WARN('_setAutoFightCounterHp out of range', self.id, hp, minHp, maxHp)
+            return
+        self.autoFightCounterHp = hp
 
     @gamedecorator.crossServer
     @utils.isMyself

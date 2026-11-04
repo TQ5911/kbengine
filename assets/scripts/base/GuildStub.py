@@ -286,10 +286,11 @@ class GuildStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCycleE
                 continue
             getattr(_guildBox, func)(*args)
 
-    def checkGuildNameValid(self, guildBox, avatarBox, ctx, oldName):
+    def checkGuildNameValid(self, guildBox, avatarBox, ctx, guildUUID, oldName):
+        LOG_DBG('checkGuildNameValid: ', guildBox, avatarBox, ctx, guildUUID, oldName)
         gameglobal.localBaseApp.getRedisClient().setnx(
             utils.getGuildNameRedisKey(ctx['name']),
-            str(guildBox.guildUUID),
+            str(guildUUID),
             functools.partial(self._onCheckGuildNameValid, guildBox, avatarBox, ctx, oldName)
         )
 

@@ -3272,6 +3272,11 @@ namespace KBEngine
 
 	}
 
+	public class BIG_DATA_CLIENT : List<Byte>
+	{
+
+	}
+
 	public class GUILD_VOICE_MEMBER_STATE
 	{
 		public UInt64 gbId = 0;
@@ -5598,6 +5603,20 @@ namespace KBEngine
 
 	}
 
+	public class WAIT_MAP_SERVER_INFO
+	{
+		public Int32 serverId = 0;
+		public Int32 freeNum = 0;
+
+	}
+
+	public class PRE_CREATE_INFO
+	{
+		public Byte isPreCreatePeriod = 0;
+		public List<WAIT_MAP_SERVER_INFO> waitMapServers = new List<WAIT_MAP_SERVER_INFO>();
+
+	}
+
 	public class CLIENT_SKILL_VAL
 	{
 		public UInt32 skillId = 0;
@@ -5646,6 +5665,14 @@ namespace KBEngine
 	{
 		public UInt32 affixId = 0;
 		public float affixVal = 0f;
+
+	}
+
+	public class SOUL_AFFIX_VAL
+	{
+		public UInt32 affixId = 0;
+		public float affixVal = 0f;
+		public Byte quality = 0;
 
 	}
 
@@ -5708,6 +5735,18 @@ namespace KBEngine
 		public Byte whyInMyBag = 0;
 		public List<UInt16> blessFailLevels = new List<UInt16>();
 		public List<UInt16> blessFailCounts = new List<UInt16>();
+		public Byte soulDefLevel = 0;
+		public List<SOUL_AFFIX_VAL> soulBaseAffixes = new List<SOUL_AFFIX_VAL>();
+		public List<SOUL_AFFIX_VAL> soulRareAffixes = new List<SOUL_AFFIX_VAL>();
+		public List<SOUL_AFFIX_VAL> soulLuckyAffix = new List<SOUL_AFFIX_VAL>();
+		public Byte soulBindFromWash = 0;
+		public Byte soulBindFromClash = 0;
+		public Byte soulBindFromInherit = 0;
+		public Byte soulHasPreviewWash = 0;
+		public List<SOUL_AFFIX_VAL> soulPreviewWashBase = new List<SOUL_AFFIX_VAL>();
+		public List<SOUL_AFFIX_VAL> soulPreviewWashLucky = new List<SOUL_AFFIX_VAL>();
+		public Byte soulHasPreviewClash = 0;
+		public List<SOUL_AFFIX_VAL> soulPreviewClashRare = new List<SOUL_AFFIX_VAL>();
 
 	}
 
@@ -5869,6 +5908,7 @@ namespace KBEngine
 		public UInt32 level = 0;
 		public Byte sex = 0;
 		public Byte picFrameId = 0;
+		public Int32 serverId = 0;
 
 	}
 
@@ -5878,28 +5918,6 @@ namespace KBEngine
 		public Int32 code = 0;
 		public string voiceUrl = "";
 		public Byte msgType = 0;
-
-	}
-
-	public class CLIENT_TEAM_MEMBER_VAL
-	{
-		public UInt64 playerGbId = 0;
-		public string playerName = "";
-		public Int32 score = 0;
-		public UInt32 level = 0;
-		public UInt16 school = 0;
-		public Byte sex = 0;
-		public Byte picFrameId = 0;
-		public Byte bOnline = 0;
-		public UInt32 spaceNo = 0;
-		public Vector3 position = new Vector3(0f, 0f, 0f);
-		public Int32 hp = 0;
-		public Int32 fullHp = 0;
-		public Byte enableMics = 0;
-		public Byte isBlockMics = 0;
-		public Byte enableSpeaker = 0;
-		public Byte inVoiceRoom = 0;
-		public string openId = "";
 
 	}
 
@@ -5921,40 +5939,6 @@ namespace KBEngine
 		public List<CLIENT_TEAM_MARK_VAL> playerList = new List<CLIENT_TEAM_MARK_VAL>();
 		public List<CLIENT_TEAM_MARK_VAL> sceneList = new List<CLIENT_TEAM_MARK_VAL>();
 		public Byte onlyCaptainCanMark = 0;
-
-	}
-
-	public class CLIENT_TEAM_INFO
-	{
-		public UInt64 teamId = 0;
-		public Byte teamTarget = 0;
-		public UInt32 teamAutoMatchTime = 0;
-		public UInt32 teamMinLv = 0;
-		public UInt32 teamMinScore = 0;
-		public UInt64 teamCaptainGbId = 0;
-		public List<CLIENT_TEAM_MEMBER_VAL> teamMemberList = new List<CLIENT_TEAM_MEMBER_VAL>();
-		public Byte teamMicsSwitch = 0;
-		public Byte teamMicsBlocked = 0;
-		public string recruitInfo = "";
-		public Byte isPublish = 0;
-		public CLIENT_TEAM_MARK_INFO teamMarkInfo = new CLIENT_TEAM_MARK_INFO();
-		public Byte memberNum = 0;
-		public Byte isAutoExpedition = 0;
-		public string password = "";
-		public Byte siegeWarCamp = 0;
-		public UInt32 lastDungeonFinishedTime = 0;
-
-	}
-
-	public class APPLY_JOIN_INFO
-	{
-		public UInt64 gbId = 0;
-		public string playerName = "";
-		public Int32 score = 0;
-		public UInt32 level = 0;
-		public UInt16 school = 0;
-		public Byte sex = 0;
-		public SByte applySource = 0;
 
 	}
 
@@ -6059,6 +6043,17 @@ namespace KBEngine
 
 	}
 
+	public class CROSS_TEAM_TEAM_UP_REPLY_VAL
+	{
+		public UInt64 gbId = 0;
+		public string playerName = "";
+		public UInt16 school = 0;
+		public UInt32 level = 0;
+		public Byte agree = 0;
+		public Byte reason = 0;
+
+	}
+
 	public class CROSS_TEAM_APPLY_VAL
 	{
 		public UInt64 teamId = 0;
@@ -6081,58 +6076,6 @@ namespace KBEngine
 		public string intro = "";
 		public Byte autoEnter = 0;
 		public string password = "";
-
-	}
-
-	public class RAID_APPLY_JOIN_CLIENT_VAL
-	{
-		public Byte raidJoinType = 0;
-		public UInt64 joinPlayerGBID = 0;
-		public UInt64 joinTeamUUID = 0;
-		public List<APPLY_JOIN_INFO> raidJoinPlayerList = new List<APPLY_JOIN_INFO>();
-		public UInt32 tCreate = 0;
-
-	}
-
-	public class RAID_DUNGEON_CLIENT_CACHE_VAL
-	{
-		public UInt32 dungeonNo = 0;
-		public UInt32 spaceNo = 0;
-
-	}
-
-	public class RAID_TEAM_CLIENT_VAL
-	{
-		public Byte teamIDX = 0;
-		public UInt64 teamCaptainGBID = 0;
-		public List<CLIENT_TEAM_MEMBER_VAL> teamPlayerList = new List<CLIENT_TEAM_MEMBER_VAL>();
-
-	}
-
-	public class RAID_CLIENT_VAL
-	{
-		public UInt64 raidUUID = 0;
-		public Byte raidCapacity = 0;
-		public UInt64 raidLeaderGBID = 0;
-		public Byte raidLeaderTeamIDX = 0;
-		public UInt64 raidDeputyGBID = 0;
-		public Byte raidDeputyTeamIDX = 0;
-		public Byte raidTarget = 0;
-		public Byte raidMicsSwitch = 0;
-		public Byte raidMicsBlocked = 0;
-		public List<RAID_DUNGEON_CLIENT_CACHE_VAL> raidDungeonRecords = new List<RAID_DUNGEON_CLIENT_CACHE_VAL>();
-		public List<RAID_TEAM_CLIENT_VAL> raidTeamList = new List<RAID_TEAM_CLIENT_VAL>();
-		public UInt32 raidMinLevel = 0;
-		public Int32 raidMinScore = 0;
-		public Byte isPublish = 0;
-		public UInt32 raidAutoMatchTime = 0;
-		public string recruitInfo = "";
-		public Byte memberNum = 0;
-		public CLIENT_TEAM_MARK_INFO raidMarkInfo = new CLIENT_TEAM_MARK_INFO();
-		public Byte isAutoExpedition = 0;
-		public string password = "";
-		public Byte siegeWarCamp = 0;
-		public UInt32 lastDungeonFinishedTime = 0;
 
 	}
 
@@ -6955,6 +6898,7 @@ namespace KBEngine
 		public UInt32 itemId = 0;
 		public UInt32 itemNum = 0;
 		public Byte bindType = 0;
+		public string attrJson = "";
 
 	}
 
@@ -7330,7 +7274,7 @@ namespace KBEngine
 	public class BOSS_MUTEX_COOL_DOWN_INFO
 	{
 		public Byte groupId = 0;
-		public UInt32 endTs = 0;
+		public UInt32 startTs = 0;
 		public UInt32 srcMapId = 0;
 		public UInt16 srcLineNo = 0;
 
@@ -7593,6 +7537,13 @@ namespace KBEngine
 
 	}
 
+	public class TEMP_ENMITY_ITEM
+	{
+		public UInt64 gbId = 0;
+		public UInt32 expireTime = 0;
+
+	}
+
 	public class COIN_TICKET_CLIENT_VAL
 	{
 		public UInt32 itemId = 0;
@@ -7656,6 +7607,13 @@ namespace KBEngine
 		public List<TEST_REWARD_RECHARGE_INFO> recharge = new List<TEST_REWARD_RECHARGE_INFO>();
 		public List<TEST_REWARD_MINE_GUILD_INFO> mineGuild = new List<TEST_REWARD_MINE_GUILD_INFO>();
 		public List<TEST_REWARD_POWER_RANK_INFO> powerRank = new List<TEST_REWARD_POWER_RANK_INFO>();
+
+	}
+
+	public class DAILY_PICKED_VAL
+	{
+		public UInt32 id = 0;
+		public UInt16 cnt = 0;
 
 	}
 

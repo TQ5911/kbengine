@@ -3,6 +3,8 @@
     </Interfaces>
 
     <Properties>
+        <!-- 结构：{groupId: {'startTs': 冷却起始时间戳, 'srcMapId': 来源地图ID, 'srcLineNo': 来源分线号}}
+             冷却时长不再存记录里，判定时按"源地图+目标地图"用公式动态计算 -->
         <bossMutexCoolDownDict>
             <Type>          PY_DICT                 </Type>
             <Flags>         CELL_PRIVATE            </Flags>

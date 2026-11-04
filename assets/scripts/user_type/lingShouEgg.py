@@ -24,7 +24,7 @@ class LingShouEggItem(Item.Item):
         _itemData = dataUtils.getCommItemData(self.itemId)
         self.quality = _itemData['quality']
         self.petId = ID_IDD.datas[self.itemId].get('indexID', 0)
-        self.rollProps = []
+        self.rollProps = {}
 
     def attr2Dict(self):
         _dict = super().attr2Dict()

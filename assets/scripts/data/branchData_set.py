@@ -47,10 +47,6 @@ datas = _tools.RODict({
         "ID": "Branch_fullCapacityMsg",
         "value": 54001086,
     }),
-    "Branch_creepNotRefresh": _tools.RODict({
-        "ID": "Branch_creepNotRefresh",
-        "value": _tools.ROList([4, 5, 6, 7, 100, 103]),
-    }),
     "Branch_activePlayer": _tools.RODict({
         "ID": "Branch_activePlayer",
         "value": 5,
@@ -62,5 +58,9 @@ datas = _tools.RODict({
     "Branch_allocationPlan": _tools.RODict({
         "ID": "Branch_allocationPlan",
         "value": 1,
+    }),
+    "Branch_switchCdMsg": _tools.RODict({
+        "ID": "Branch_switchCdMsg",
+        "value": 54001087,
     })
 })

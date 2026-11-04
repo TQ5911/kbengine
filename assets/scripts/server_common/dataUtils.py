@@ -9,6 +9,7 @@ import functools
 import utils
 import gameconst
 import gameengine
+import gameconfig
 
 import rewardData_rewardData as RDDT
 import itemData_set as ID_SET
@@ -398,6 +399,10 @@ def hasPetItemBagRwdItems(rewardId, rwdData=None):
 def isLingShouItem(itemId):
     itemData = getCommItemData(itemId)
     return itemData and itemData['type'] == gameconst.ItemEnum.LingShou
+
+def isMountItem(itemId):
+    itemData = getCommItemData(itemId)
+    return itemData and itemData['type'] == gameconst.ItemEnum.Normal and itemData['subType'] == gameconst.ItemSubEnum.Mount
 
 def isLingShouEquipmentItem(itemId):
     itemData = getCommItemData(itemId)
@@ -815,12 +820,52 @@ def checkAutoDisassemblySwitch(cliConfig):
         return False
     return True
 
-# 检查魂魄入包自动分解开关
-def checkSoulSwitch(cliConfig):
-    # 自动分解开关
-    autoSwitch = utils.bhas(cliConfig, gameconst.AUTO_DISA_KEY.SOUL)
-    if not autoSwitch:
+def getBitField(value, offset, bits):
+    """读取位段值"""
+    return (value >> offset) & ((1 << bits) - 1)
+
+
+# 是否开启了魂魄分解（魂魄分解开关位）
+def checkSoulFilterConfig(cliConfig):
+    if not cliConfig:
         return False
+    return bool(utils.bhas(cliConfig, gameconst.AUTO_DISA_KEY.SOUL))
+
+
+# 检测单个魂魄是否满足自动分解筛选条件（词条数量<=目标 且 词条品质<=目标 且 可交易）
+def checkSoulAutoDisassemble(cliConfig, soulItem):
+    if not cliConfig or soulItem is None:
+        return False
+    # 可交易开关（魂魄独立于装备/道具的 TRADE 位）
+    isCanTrade = utils.bhas(cliConfig, gameconst.AUTO_DISA_KEY.SOUL_TRADE)
+    if not isCanTrade and soulItem.bindType != gameconst.ItemBindType.BIND:
+        return False
+
+    if not checkSoulFilterConfig(cliConfig):
+        return False
+
+    countTarget = getBitField(cliConfig, gameconst.AUTO_DISA_KEY.SOUL_AFFIX_COUNT,
+                              gameconst.AUTO_DISA_SOUL_BITS.COUNT_BITS)
+    qualityTarget = getBitField(cliConfig, gameconst.AUTO_DISA_KEY.SOUL_AFFIX_QUALITY,
+                                gameconst.AUTO_DISA_SOUL_BITS.QUALITY_BITS)
+
+    payload = soulItem.exportSoulPayload()
+    baseProps = payload.get('baseProps') or []
+    rareProps = payload.get('rareProps') or []
+    luckyProp = payload.get('luckyProp') or []
+
+    count = len(baseProps) + len(rareProps) + (1 if luckyProp else 0)
+    if count > countTarget:
+        return False
+
+    # 品质判断取各词条品质的最大值
+    if count > 0:
+        qualities = [int(p[1]) for p in baseProps] + [int(p[1]) for p in rareProps]
+        if luckyProp:
+            qualities.append(int(luckyProp[1]))
+        if max(qualities) > qualityTarget:
+            return False
+
     return True
         
 # 检测自动分解来源
@@ -914,3 +959,6 @@ def getGuildGamePlayPoints(dataType):
         if pointType == dataType:
             break
     return 0 if currentPoints is None else currentPoints
+
+def checkAllianceCross():
+    return gameconfig.enableAllianceCross() == 1 and gameconfig.visibleConfigEnabled('guild_unionCrossServer')

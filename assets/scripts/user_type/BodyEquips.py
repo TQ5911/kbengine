@@ -291,8 +291,64 @@ class BodyEquips(userType.UserSingleType):
             bagEquipItem.uniqueId,
             detail
         )
-        
 
+        self.calculateBeginnerJourneyBehaviors(owner)
+
+    def calculateBeginnerJourneyBehaviors(self, owner):
+        owner.base.clearBeginnerJourneyBehaviorStatusEx([gameconst.BjTaskType.BJ_TASK_TYPE_EQUIP_STRENGTHEN,\
+                                                         gameconst.BjTaskType.BJ_TASK_TYPE_EQUIP_GRADE,\
+                                                         gameconst.BjTaskType.BJ_TASK_TYPE_WEAPON_BLESS,\
+                                                         gameconst.BjTaskType.BJ_TASK_TYPE_WEAPON_INSCRIPTION,\
+                                                         gameconst.BjTaskType.BJ_TASK_TYPE_EQUIP_AFFIX,\
+                                                         gameconst.BjTaskType.BJ_TASK_TYPE_EQUIP_SOUL])
+
+        for equipObj in self.equips_map.values():
+            datas = []
+            datas.append(
+                    (gameconst.BjTaskType.BJ_TASK_TYPE_EQUIP_STRENGTHEN,
+                    {'delta':1, 'quality':equipObj.getQuality(), 'strengthenLevel':equipObj.getEnhanceLevel(), 'part':equipObj.getEquipType()}))
+        
+            datas.append(
+                    (gameconst.BjTaskType.BJ_TASK_TYPE_EQUIP_GRADE,
+                    {'delta':1, 'quality':equipObj.getQuality(), 'grade':equipObj.getGrade(), 'part':equipObj.getEquipType()}))
+
+            datas.append(
+                (gameconst.BjTaskType.BJ_TASK_TYPE_WEAPON_BLESS,
+                {'delta':1, 'level':equipObj.getBlessMaxLv()}))
+        
+            qualityDatas = equipObj.getGlyphQulityData()
+            if qualityDatas:
+                for qualityData in qualityDatas:
+                    if not qualityData:
+                        continue
+                    if len(qualityData) == 2:
+                        if qualityData[0] == qualityData[1]:
+                            datas.append(
+                                (gameconst.BjTaskType.BJ_TASK_TYPE_WEAPON_INSCRIPTION,
+                                {'delta':1, 'quality':qualityData[0], 'numSlot':2}))
+                        else:
+                            datas.append(
+                                (gameconst.BjTaskType.BJ_TASK_TYPE_WEAPON_INSCRIPTION,
+                                {'delta':1, 'quality':qualityData[0], 'numSlot':1}))
+                            datas.append(
+                                (gameconst.BjTaskType.BJ_TASK_TYPE_WEAPON_INSCRIPTION,
+                                {'delta':1, 'quality':qualityData[1], 'numSlot':1}))
+                    else:
+                        datas.append(
+                                (gameconst.BjTaskType.BJ_TASK_TYPE_WEAPON_INSCRIPTION,
+                                {'delta':1, 'quality':qualityData[0], 'numSlot':1}))
+        
+            datas.append(
+                (gameconst.BjTaskType.BJ_TASK_TYPE_EQUIP_AFFIX,
+                {'delta':1, 'score':equipObj.calcSpiritScore()}))
+
+
+            datas.append(
+                (gameconst.BjTaskType.BJ_TASK_TYPE_EQUIP_SOUL,
+                {'delta':1, 'score':equipObj.calcSoulScore()}))
+            if len(datas) > 0:
+                owner.base.beginnerJourneyOnTaskEvents(datas)
+               
     def updateEquipDressAppearance(self, owner, uniqueId):
         slotId, equipItem = self.getEquipItemByUniqueId(uniqueId)
         if equipItem:
@@ -326,6 +382,7 @@ class BodyEquips(userType.UserSingleType):
             detail
         )
 
+        self.calculateBeginnerJourneyBehaviors(owner)
         if owner.client:
             owner.client.onUndressEquipment(slotId)
         return equipItem

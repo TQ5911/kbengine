@@ -15,17 +15,6 @@ datas ={
     "hpPercent": 0.0,
     "transition": {}
   },
-  "1004": {
-    "type": "delayLoop",
-    "firstDelay": 1800.0,
-    "loopDelay": 0.0,
-    "loopNum": 1,
-    "transition": {
-      "finished": [
-        1005
-      ]
-    }
-  },
   "1001": {
     "type": "dunStart",
     "transition": {
@@ -33,16 +22,9 @@ datas ={
         1003,
         1017,
         1018,
-        1004,
         1019
       ]
     }
-  },
-  "1005": {
-    "type": "dunEnd",
-    "exitTime": 5.0,
-    "isDungeonDone": 1,
-    "transition": {}
   },
   "1016": {
     "type": "createMonster",

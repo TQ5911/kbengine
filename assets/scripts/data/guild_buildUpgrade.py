@@ -17,32 +17,32 @@ import crontab
 datas = _tools.RODict({ 
     1: _tools.RODict({
         "ID": 1,
-        "upgradeExp": 15000,
+        "upgradeExp": 7000,
         "upgradeCost": 7500,
         "juYingGeLv": 2
     }),
     2: _tools.RODict({
         "ID": 2,
-        "upgradeExp": 100000,
-        "upgradeCost": 50000,
+        "upgradeExp": 45000,
+        "upgradeCost": 46500,
         "juYingGeLv": 3
     }),
     3: _tools.RODict({
         "ID": 3,
-        "upgradeExp": 300000,
-        "upgradeCost": 150000,
+        "upgradeExp": 125000,
+        "upgradeCost": 135000,
         "juYingGeLv": 4
     }),
     4: _tools.RODict({
         "ID": 4,
-        "upgradeExp": 800000,
-        "upgradeCost": 400000,
+        "upgradeExp": 300000,
+        "upgradeCost": 320000,
         "juYingGeLv": 5
     }),
     5: _tools.RODict({
         "ID": 5,
-        "upgradeExp": 900000,
-        "upgradeCost": 450000,
+        "upgradeExp": 325000,
+        "upgradeCost": 340000,
         "juYingGeLv": 6
     })
 })

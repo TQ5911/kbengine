@@ -58,27 +58,27 @@ class IComplexTeleport(object):
     @gamedecorator.limitcall(1)
     def enterWorldLine(self, exposed, lineType, lineNo, desTelId):
         """进入大世界分线"""
-        LOG_INFO('enterWorldLine::~', lineType, lineNo, desTelId)
+        LOG_INFO('enterWorldLine::~', formula.lineInfo(spaceNo=self.spaceNo), '->', formula.lineInfo(lineType, lineNo), desTelId)
         src = dungeonSrc.DungeonFromClientSrc(self.base, self.gbId)
         self._enterWorldLine(lineType, lineNo, desTelId, src)
 
     def _enterWorldLine(self, lineType, lineNo, desTelId, src, position=None, direction=None):
         """进入大世界分线"""
         if not self.canDoCompleteTeleport(canLeaveFromLine=True, noErrorMsg=True):
-            LOG_WARN('_enterWorldLine:: can\'t enter space from current spaceNo', self.spaceNo)
+            LOG_WARN('_enterWorldLine:: can\'t enter space from current spaceNo', formula.lineInfo(spaceNo=self.spaceNo), '->', formula.lineInfo(lineType, lineNo))
             return
         if lineNo >= utils.fetchLineMaxNumber(gameconst.MapIdDef.mapWorldLine):
-            LOG_WARN("_enterWorldLine:: can\'t enter lineNo", lineNo)
+            LOG_WARN("_enterWorldLine:: can\'t enter lineNo", formula.lineInfo(spaceNo=self.spaceNo), '->', formula.lineInfo(lineType, lineNo))
             return
         if formula.inWorldLineScene(self.spaceNo):
             # NOTE(): 客户端不允许在大世界接口使用·enterWorldLine·重新进入大世界
-            LOG_WARN("_enterWorldLine:: can\'t enter line if already in worldline", lineNo, self.spaceNo)
+            LOG_WARN("_enterWorldLine:: can\'t enter line if already in worldline", formula.lineInfo(spaceNo=self.spaceNo), '->', formula.lineInfo(lineType, lineNo))
             return
 
         self.doEnterWorldLine(lineType, lineNo, src, desTelId, position, direction)
 
     def doEnterWorldLine(self, lineType, lineNo, src, desTelId, position=None, direction=None):
-        LOG_INFO("doEnterWorldLine::", lineType, lineNo, src, desTelId, position, direction)
+        LOG_INFO("doEnterWorldLine::", formula.lineInfo(spaceNo=self.spaceNo), '->', formula.lineInfo(lineType, lineNo), src, desTelId, position, direction)
         lCtx = {'extra': {}}
         eCtx = {
             'lineType': lineType,
@@ -105,9 +105,9 @@ class IComplexTeleport(object):
         canLeave = self.packComplexTeleportLeaveData(lCtx, canLeaveFromLine=True)
         if not canLeave:
             if canLeave.extra not in gameconst.CompleteTeleportLeaveFailReason.COLL_USEROPRERRNO:
-                gameengine.panicStack('enterWorldLine::fatal error when try to enter world line', self.spaceNo, context)
+                gameengine.panicStack('enterWorldLine::fatal error when try to enter world line', formula.lineInfo(spaceNo=self.spaceNo), formula.lineInfo(lineType, lineNo), context)
             else:
-                LOG_WARN("enterWorldLine::failed, errno={}".format(canLeave.extra), self.spaceNo, context)
+                LOG_WARN("enterWorldLine::failed, errno={}".format(canLeave.extra), formula.lineInfo(spaceNo=self.spaceNo), formula.lineInfo(lineType, lineNo), context)
             return
 
         if not self.onCheckMapUnlocked(lineType):
@@ -116,7 +116,7 @@ class IComplexTeleport(object):
         self.telFromSpaceToSpace(self.spaceNo, spaceNo, options=options, context=context)
 
     def switchSelfLine(self, lineNo, src):
-        LOG_INFO("switchSelfLine::", lineNo, src)
+        LOG_INFO("switchSelfLine::", formula.lineInfo(spaceNo=self.spaceNo), '->', formula.lineInfo(formula.fetchMapId(self.spaceNo), lineNo), src)
         assert lineNo >= 0
         lCtx = {'extra': {}}
         eCtx = {'lineNo': lineNo}
@@ -126,19 +126,19 @@ class IComplexTeleport(object):
         canLeave = self.packComplexTeleportLeaveData(lCtx, canLeaveFromLine=True)
         if not canLeave:
             if canLeave.extra not in gameconst.CompleteTeleportLeaveFailReason.COLL_USEROPRERRNO:
-                gameengine.panicStack('switchSelfLine::fatal error when try to enter world line', self.spaceNo, _context)
+                gameengine.panicStack('switchSelfLine::fatal error when try to enter world line', formula.lineInfo(spaceNo=self.spaceNo), '->', formula.lineInfo(formula.fetchMapId(self.spaceNo), lineNo), _context)
             else:
-                LOG_WARN("switchSelfLine::failed, errno={}".format(canLeave.extra), self.spaceNo, _context)
+                LOG_WARN("switchSelfLine::failed, errno={}".format(canLeave.extra), formula.lineInfo(spaceNo=self.spaceNo), '->', formula.lineInfo(formula.fetchMapId(self.spaceNo), lineNo), _context)
             return
 
         fromSpaceNo = self.spaceNo
         fromSpaceLineNo = formula.parseLineNo(fromSpaceNo)
         if fromSpaceLineNo == lineNo:
-            gameengine.panicStack('switchSelfLine::cant enter smae lineno', fromSpaceNo, fromSpaceLineNo, lineNo)
+            gameengine.panicStack('switchSelfLine::cant enter smae lineno', formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(formula.fetchMapId(fromSpaceNo), lineNo))
             return
 
         if not self._checkSwitchLine(lineNo):
-            LOG_ERR("switchSelfLine:: check switch line failed", fromSpaceNo, fromSpaceLineNo, lineNo)
+            LOG_ERR("switchSelfLine:: check switch line failed", formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(formula.fetchMapId(fromSpaceNo), lineNo))
             return
 
         toSpaceNo = formula.combineLineSpaceNo(formula.fetchMapId(fromSpaceNo), lineNo)
@@ -209,12 +209,34 @@ class IComplexTeleport(object):
 
         return False
 
+    def crossWorldMapChangeOutsideRecord(self, _m_records):
+        LOG_DBG('crossWorldMapChangeOutsideRecord1')
+        for i_mapId in reversed(list(_m_records)):
+            if not utils.checkInCrossWorldMap(i_mapId):
+                continue
+            _res, _returnMapId, _pos, _dir = utils.getCorssServerReturnCityInfo(i_mapId, self.direction)
+            if not _res:
+                LOG_DBG('crossWorldMapChangeOutsideRecord2 not res')
+                continue
+
+            LOG_DBG('crossWorldMapChangeOutsideRecord3', i_mapId, _m_records[i_mapId])
+            record = _m_records[i_mapId]
+            mapId = _returnMapId
+            spaceNo = formula.combineLineSpaceNo(mapId, 0)
+            _m_records[mapId] = outsideRecord.OutsideRecord(
+                spaceNo, _pos, _dir, record.hp, record.mp, record.isDie
+            )
+            _m_records.pop(i_mapId)
+            LOG_DBG('crossWorldMapChangeOutsideRecord4', mapId, _m_records[mapId])
+    
     def tryGetLastTeleportOutesideRecord(self, fromSpaceNo, spaceType=0):
         _m_records = self.getTeleportOutsideRecord()
         self.mineWarChangeOutsideRecord(_m_records)
+        self.crossWorldMapChangeOutsideRecord(_m_records)
         for i_mapId in reversed(list(_m_records)):
             # 大世界分线
             if i_mapId in gameconst.MapIdDef.mapWorldSet or formula._isInnerDemonSpace(_m_records[i_mapId].spaceNo):
+                LOG_INFO('tryGetLastTeleportOutesideRecord', i_mapId, _m_records[i_mapId])
                 # BOSS互斥组冷却中的地图不能回传，跳过该记录，由调用方走兜底(回主城)
                 # 记录中的 spaceNo 可精确到分线，同分线（触发冷却的源分线）允许回传
                 _toLineNo = formula.parseLineNo(_m_records[i_mapId].spaceNo)
@@ -315,8 +337,7 @@ class IComplexTeleport(object):
             m_spaceNo = toSpaceNo
         return m_pos, m_dir, m_spaceNo
 
-    def doLeaveFromSapceToSpace(self, fromSpaceNo, toSpaceNo, options, context,
-                                spaceType=0, noCheckGamePlayLeave=True):
+    def doLeaveFromSapceToSpace(self, fromSpaceNo, toSpaceNo, options, context, useRecord=True):
         """统一离开场景方法
 
         Arguments:
@@ -326,20 +347,22 @@ class IComplexTeleport(object):
             context {PY_DICT} -- 传送上下文
 
         Keyword Arguments:
-            spaceType {int} -- 指明当前spaceType, 大世界副本需要使用, 一般使用默认值即可 (default: {0})
-            noCheckGamePlayLeave {bool} -- 强制玩家离开, 战场场景使用 (default: {True})
         """
-        LOG_INFO("doLeaveFromSapceToSpace::", fromSpaceNo, toSpaceNo, options, context, spaceType, noCheckGamePlayLeave)
+        LOG_INFO("doLeaveFromSapceToSpace::", fromSpaceNo, toSpaceNo, options, context)
         lCtx, eCtx = context['l'], context['e']
         canLeave = self.packComplexTeleportLeaveData(lCtx, judgeLeaveSrc=context.get('src'))
         if not canLeave:
             LOG_ERR("doLeaveFromSapceToSpace:: can\'t package leave context", canLeave,
-                      fromSpaceNo, toSpaceNo, options, context, spaceType, noCheckGamePlayLeave,)
+                      fromSpaceNo, toSpaceNo, options, context)
             return
 
-        _mMapId, _mOutsideRecord = self.tryGetLastTeleportOutesideRecord(fromSpaceNo, spaceType=spaceType)
-        toSpaceNo = _mOutsideRecord.spaceNo if _mOutsideRecord else toSpaceNo
-        LOG_DBG('     doLeaveFromSapceToSpace, _mOutsideRecord:', _mMapId, _mOutsideRecord)
+        if useRecord:
+            _mMapId, _mOutsideRecord = self.tryGetLastTeleportOutesideRecord(fromSpaceNo)
+            toSpaceNo = _mOutsideRecord.spaceNo if _mOutsideRecord else toSpaceNo
+            LOG_DBG('     doLeaveFromSapceToSpace, _mOutsideRecord:', _mMapId, _mOutsideRecord)
+        else:
+            toSpaceNo = toSpaceNo
+
         self.telFromSpaceToSpace(self.spaceNo, toSpaceNo, options=options, context=context)
 
     def canDoCompleteTeleport(self, **options):
@@ -472,7 +495,7 @@ class IComplexTeleport(object):
 
         hasCheck = context.get('hasCheck', False) if context else False
         if not hasCheck and not utils.checkCanChangeSceneAndShowMsg(self, fromSpaceNo, toSpaceNo):
-            LOG_ERR('telFromSpaceToSpace:: can\'t teleport', fromSpaceNo, toSpaceNo)
+            LOG_ERR('telFromSpaceToSpace:: can\'t teleport', formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(spaceNo=toSpaceNo))
             return
 
         context['hasCheck'] = True
@@ -485,14 +508,14 @@ class IComplexTeleport(object):
                 toSpaceNo = formula.combineLineSpaceNo(lineType, lineNo)
 
         if fromSpaceNo == toSpaceNo:
-            gameengine.panicStack('telFromSpaceToSpace:: {} == {}, can\'t teleport, lineNo={}', fromSpaceNo, toSpaceNo, lineNo)
+            gameengine.panicStack('telFromSpaceToSpace:: same space, can\'t teleport', formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(spaceNo=toSpaceNo), 'ctxLineNo', lineNo)
             return
 
-        LOG_INFO('telFromSpaceToSpace:: {} -> {}, context={}, options={}, lineNo={}'.format(
-            fromSpaceNo, 
-            toSpaceNo, 
-            context, 
-            options, 
+        LOG_INFO('telFromSpaceToSpace:: {} -> {}, context={}, options={}, ctxLineNo={}'.format(
+            formula.lineInfo(spaceNo=fromSpaceNo),
+            formula.lineInfo(spaceNo=toSpaceNo),
+            context,
+            options,
             context['e'].get('lineNo', -1),
         ))
 
@@ -520,7 +543,7 @@ class IComplexTeleport(object):
 
         if not fromSpaceMethods or not toSpaceMethods:
             if not gameconfig.isCrossServer():
-                LOG_ERR('telFromSpaceToSpaceContinue:: fromSpaceMethods or toSpaceMethods is None', fromSpaceNo, toSpaceNo)
+                LOG_ERR('telFromSpaceToSpaceContinue:: fromSpaceMethods or toSpaceMethods is None', formula.lineInfo(spaceNo=fromSpaceNo), formula.lineInfo(spaceNo=toSpaceNo))
                 return
 
         _enum = gameconst.ComplexTeleportMethodTypeEnum
@@ -545,7 +568,7 @@ class IComplexTeleport(object):
                 if not r:
                     # NOTE(): errorMSg由方法内部处理并报出
                     LOG_WARN('telFromSpaceToSpace:: pre-enter failed',
-                                fromSpaceNo, toSpaceNo, options, context)
+                                formula.lineInfo(spaceNo=fromSpaceNo), formula.lineInfo(spaceNo=toSpaceNo), options, context)
                     self.onTeleFromSpaceToSpaceFailed(fromSpaceNo, toSpaceNo, options, context)
                     return
 
@@ -556,11 +579,11 @@ class IComplexTeleport(object):
         _orgToSpaceNo = toSpaceNo
         if context['spaceNo'] != toSpaceNo:
             LOG_WARN("telFromSpaceToSpaceContinue:: overwrite toSapceNo {} => {}".format(
-                toSpaceNo, context['spaceNo']))
+                formula.lineInfo(spaceNo=toSpaceNo), formula.lineInfo(spaceNo=context['spaceNo'])))
             toSpaceNo = context['spaceNo']
 
-        LOG_INFO('telFromSpaceToSpaceContinue:: {} -> {} ==> {}, lineNo={}, options={}, context={}'.format(
-            fromSpaceNo, _orgToSpaceNo, toSpaceNo, context['e'].get('lineNo', -1), options, context))
+        LOG_INFO('telFromSpaceToSpaceContinue:: {} -> {} ==> {}, ctxLineNo={}, options={}, context={}'.format(
+            formula.lineInfo(spaceNo=fromSpaceNo), formula.lineInfo(spaceNo=_orgToSpaceNo), formula.lineInfo(spaceNo=toSpaceNo), context['e'].get('lineNo', -1), options, context))
 
         _src = context.get('src')
         position, direction = context['position'], context['direction']
@@ -586,6 +609,7 @@ class IComplexTeleport(object):
             if fromLineType != lineType:
                 extra['toLine'] = True # 如果从副本进入大世界只有走这里
                 extra["telToMainCityWhenFull"] = True
+                extra["allowCrossWorld"] = _src._extra.get("allowCrossWorld", 0) if _src else 0
                 self.applyEnterLineInternal(lineType, lineNo, position, direction, extra)
             else:
                 self.switchLineAndPosition(lineNo, position, src=_src, extra=extra)
@@ -625,13 +649,13 @@ class IComplexTeleport(object):
                                           context=None):
         assert context
 
-        LOG_INFO('onTeleportFromSpaceToSpaceSucceed:: {} -> {} ==> {}, lineNo={}, context={}, options={}'.format(
-            fromSpaceNo, 
-            toSpaceNo, 
-            self.spaceNo, 
-            context['e'].get('lineNo', -1), 
+        LOG_INFO('onTeleportFromSpaceToSpaceSucceed:: {} -> {} ==> {}, ctxLineNo={}, context={}, options={}'.format(
+            formula.lineInfo(spaceNo=fromSpaceNo),
+            formula.lineInfo(spaceNo=toSpaceNo),
+            formula.lineInfo(spaceNo=self.spaceNo),
+            context['e'].get('lineNo', -1),
             context,
-            options, 
+            options,
         ))
 
 
@@ -640,7 +664,7 @@ class IComplexTeleport(object):
 
         if not fromSpaceMethods or not toSpaceMethods:
             if not gameconfig.isCrossServer():
-                LOG_ERR('telFromSpaceToSpaceContinue:: fromSpaceMethods or toSpaceMethods is None', fromSpaceNo, toSpaceNo)
+                LOG_ERR('telFromSpaceToSpaceContinue:: fromSpaceMethods or toSpaceMethods is None', formula.lineInfo(spaceNo=fromSpaceNo), formula.lineInfo(spaceNo=toSpaceNo))
                 return
 
         _enum = gameconst.ComplexTeleportMethodTypeEnum
@@ -695,7 +719,7 @@ class IComplexTeleport(object):
     def onTeleportFromSpaceToLineSpaceFail(self, checkCode, fromSpaceNo, toSpaceNo,
                                           options: complexTeleportOption.ComplexTeleportOpt,
                                           context=None):
-        LOG_WARN("onTeleportFromSpaceToLineSpaceFail::", checkCode, fromSpaceNo, toSpaceNo, options, context)
+        LOG_WARN("onTeleportFromSpaceToLineSpaceFail::", checkCode, formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(spaceNo=toSpaceNo), options, context)
         self.releaseTeleportLock(self.teleportLock)
     # ----------------------------------------------------------------------
     # RAID DUNGEON
@@ -751,21 +775,17 @@ class IComplexTeleport(object):
             self.modifyHP(self.getDefaultReliveHP(), self.id, gameconst.SourceType.SrcTpDefault, self.id)
 
         # callback base
-        _extra['raidId'] = self.raidUUID
-        _extra['totalNum'] = self.raidInfo.raidPlayerNum
-        _extra['joinType'] = self.joinType
-        
-        # 跨服组队首领巢穴（crossTeamId 标记）不走本服 CHIEF 进本回调
-        # （raidId/totalNum 取不到本服 Raid 数据；本服模式空间 playMode 亦落 CHIEF，需排除）
-        if (self.spaceMgr.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CHIEF
-                and not _extra.get('crossTeamId')):
-            self.base.onEnterChiefDungeon(self.spaceMgr.dungeonPlayMode.spaceUUID, self.spaceNo, dungeonNo, spaceMgrBox, _extra)
-        else:
-            self.base.onEnterDungeon(self.spaceNo, spaceMgrBox, _extra)
-        self._createRaidDungeonTrap(dungeonNo)
+        # 跨服组队首领巢穴唯一链路（旧本服团队 raidUUID/joinType 随旧系统删除）：
+        # 队伍 id/人数取跨服缓存（本服模式与跨服服镜像上均可得），joinType 落默认值
+        _extra['raidId'] = _extra['crossTeamId']
+        _extra['totalNum'] = self.getActiveTeamMemberCount()
+        _extra['joinType'] = gameconst.TeamJoinType.DEFAULT
+
+        self.base.onEnterDungeon(self.spaceNo, spaceMgrBox, _extra)
+        self._startCrossTeamDungeonTrap(dungeonNo)
 
         # set dungeon timeout
-        endTime = int(self.spaceMgr.dungeonPlayMode.getTEnd(dungeonNo))
+        endTime = self.spaceMgr.getDungeonActualEndTime(dungeonNo)
         if endTime:
             self.client.changeDungeonRemainTime(self.spaceNo, endTime)
 
@@ -781,8 +801,16 @@ class IComplexTeleport(object):
             _extra.setdefault('school', self.school)
             _extra.setdefault('level', self.level)
             _extra.setdefault('eId', self.id)
+            _extra.setdefault('gbId', self.gbId)
         _dungeonStub = gameengine.getDungeonStubBySpaceNo(toSpaceNo)
-        _dungeonStub.enterDungeonSpaceSuccess(toSpaceNo, self.base, self.gbId, self.raidUUID, _extra)
+        # 跨服组队首领巢穴：归属 id 用跨服 teamId（旧本服团队链路已删除）
+        _dungeonStub.enterDungeonSpaceSuccess(toSpaceNo, self.base, self.gbId, _extra.get('crossTeamId', 0), _extra)
+
+        # 落地复查队伍归属（同小队线 _afterEnter_teamDungeon 的并发补退，本服/跨服服通用）
+        _enterTeamId = _extra.get('crossTeamId', 0)
+        if _enterTeamId and not _extra.get('gmEnter') and _enterTeamId != self._crossTeamId():
+            LOG_WARN('_afterEnter_raidDungeon::~ team mismatch after enter, exit dungeon', _enterTeamId, self._crossTeamId())
+            self.exitCrossTeamDungeonOnTeamLeave(_enterTeamId)
         return True
 
     def _beforeLeave_raidDungeon(self, fromSpaceNo, toSpaceNo, options, context):
@@ -923,7 +951,7 @@ class IComplexTeleport(object):
             self.modifyHP(self.getDefaultReliveHP(), self.id, gameconst.SourceType.SrcTpDefault, self.id)
 
         # send real end time to avatar self client
-        endTime = int(spaceMgr.dungeonPlayMode.getTEnd(dungeonNo))
+        endTime = spaceMgr.getDungeonActualEndTime(dungeonNo)
         if endTime:
             self.client.changeDungeonRemainTime(toSpaceNo, endTime)
 
@@ -1005,13 +1033,15 @@ class IComplexTeleport(object):
         self.spaceMgrId = 0
 
         if formula.inDungeonScene(fromSpaceNo):
+            # 第 4 参 teamUUID 仅作日志透传（SingleDungeonStub.leaveDungeonSpaceSucc 不消费）；
+            # 本服组队已废弃，改带跨服队伍 id（无队为 0）
             gameengine\
                 .getDungeonStubByDungeonNo(dungeonNo, gameconst.DungeonEnterTypeEnum.SINGLE)\
                 .leaveDungeonSpaceSucc(
                     fromSpaceNo, 
                     self.base, 
                     self.gbId, 
-                    self.teamId, 
+                    self._crossTeamId(), 
                     {
                         'spaceUUID': context['l']['spaceUUID'],
                         'spaceNo': self.spaceNo,
@@ -1072,7 +1102,9 @@ class IComplexTeleport(object):
         self.releaseGlobalTeleportLock('telsucc')
 
         # create dungeon trap
-        self._doCreateTeamDungeonTrap(dungeonNo)
+        # （跨服组队副本唯一链路：本服模式/跨服服镜像统一由 _startCrossTeamDungeonTrap
+        # 按 _isInCrossTeamDungeonSpace 判定启动；旧本服队伍 trap 随旧组队系统删除）
+        self._startCrossTeamDungeonTrap(dungeonNo)
 
         self.spaceMgrId = spaceMgrBox.id
         self.spaceMgr.onPlayerEnter(self.id)
@@ -1084,47 +1116,41 @@ class IComplexTeleport(object):
             self.modifyHP(self.getDefaultReliveHP(), self.id, gameconst.SourceType.SrcTpDefault, self.id)
 
         # send real end time to avatar self client
-        endTime = int(self.spaceMgr.dungeonPlayMode.getTEnd(dungeonNo))
+        endTime = self.spaceMgr.getDungeonActualEndTime(dungeonNo)
         if endTime:
             self.client.changeDungeonRemainTime(toSpaceNo, endTime)
 
-        # 跨服组队副本（crossTeamId 标记）不走本服 CRUSADE 进本回调
-        # （teamUUID/totalNum 取不到本服 Team 数据；本服模式空间 playMode 亦落 CRUSADE，需排除）
-        if (self.spaceMgr.dungeonPlayMode.playMode == gameconst.DungeonPlayModeEnum.CRUSADE
-                and not extra.get('crossTeamId')):
-            _kwargs = dict(
-                GameSvrId=None, dtEventTime=None, vGameAppid=None,
-                iBattleID=dungeonNo,
-                iTeamID=self.teamId,
-                TeamUserNum=self.teamInfo.howManyMember(),
-            )
-            extra['tlogProps'] = _kwargs
-            extra['actId'] = gameconst.ACT_ID_CONST.ACTIVITY_CRUSADE_ID
-            extra['teamUUID'] = self.teamId
-            extra['totalNum'] = self.teamInfo.howManyMember()
-            extra['joinType'] = self.joinType
-            self.base.onEnterCrusadeDungeon(self.spaceMgr.dungeonPlayMode.spaceUUID, toSpaceNo, dungeonNo, spaceMgrBox, extra)
-        else:
-            self.base.onEnterDungeon(toSpaceNo, spaceMgrBox, extra)
+        # 跨服组队副本唯一链路（旧本服队伍的 CRUSADE 进本回调/tlog 分支与本服队伍
+        # stub 登记分支已随旧组队系统删除）：统一走 onEnterDungeon + 副本 stub 登记
+        # 埋点字段补齐（对照首领线 _afterEnter_raidDungeon 写法）：
+        # 人数取跨服缓存（本服模式与跨服服镜像上均可得），joinType 落默认值
+        extra['totalNum'] = self.getActiveTeamMemberCount()
+        extra['joinType'] = gameconst.TeamJoinType.DEFAULT
+        self.base.onEnterDungeon(toSpaceNo, spaceMgrBox, extra)
 
         self.enableAutoCombatAfterEnterSpace(dungeonNo)
 
-        if (self.spaceMgr.dungeonPlayMode.playMode in gameconst.DungeonPlayModeEnum.COLL_CROSS
-                or extra.get('crossTeamId')):
-            # 跨服组队副本：无本服队伍，改经副本 stub 做 founders 簿记
-            # （本服 team 线由 TeamStub.onEnterTeamDungeon 登记）；
-            # 跨服服空间认 CROSS playMode，本服模式空间 playMode 落本服枚举、认 crossTeamId
-            # 顺带补齐结算展示字段（本服链路在上游已带，跨服链路在此补；DungeonExtraData.loadDatas 消费）
-            extra['spaceUUID'] = self.spaceMgr.dungeonPlayMode.spaceUUID
-            extra.setdefault('name', self.name)
-            extra.setdefault('sex', self.sex)
-            extra.setdefault('school', self.school)
-            extra.setdefault('level', self.level)
-            extra.setdefault('eId', self.id)
-            gameengine.getDungeonStubBySpaceNo(toSpaceNo).enterDungeonSpaceSuccess(
-                toSpaceNo, self.base, self.gbId, extra.get('teamUUID', 0), extra)
-        else:
-            gameengine.getTeamStub(self.teamId).onEnterTeamDungeon(self.base, self.gbId, self.teamId, dungeonNo, toSpaceNo)
+        # 跨服组队副本：无本服队伍，经副本 stub 做 founders 簿记 + 结算数据登记；
+        # 跨服服空间认 CROSS playMode，本服模式空间 playMode 落本服枚举、认 crossTeamId
+        # 顺带补齐结算展示字段（本服链路在上游已带，跨服链路在此补；DungeonExtraData.loadDatas 消费）
+        extra['spaceUUID'] = self.spaceMgr.dungeonPlayMode.spaceUUID
+        extra.setdefault('name', self.name)
+        extra.setdefault('sex', self.sex)
+        extra.setdefault('school', self.school)
+        extra.setdefault('level', self.level)
+        extra.setdefault('eId', self.id)
+        extra.setdefault('gbId', self.gbId)
+        gameengine.getDungeonStubBySpaceNo(toSpaceNo).enterDungeonSpaceSuccess(
+            toSpaceNo, self.base, self.gbId, extra.get('teamUUID', 0), extra)
+
+        # 落地复查队伍归属（本服/跨服服传送进本通用；镜像直进不经本传送链，其落地对账
+        # 见 onLogonEnterCrusadeDungeonCB 的一次性标记）：进本传送与退队/解散并发时，
+        # 退队联动退本（exitCrossTeamDungeonOnTeamLeave）在传送途中会因"不在副本空间"
+        # 空转，落地后旧队已退/换队，此处比对进本归属队并补退
+        _enterTeamId = extra.get('crossTeamId', 0) or extra.get('teamUUID', 0)
+        if _enterTeamId and not extra.get('gmEnter') and _enterTeamId != self._crossTeamId():
+            LOG_WARN('_afterEnter_teamDungeon::~ team mismatch after enter, exit dungeon', _enterTeamId, self._crossTeamId())
+            self.exitCrossTeamDungeonOnTeamLeave(_enterTeamId)
         return True
 
     def _beforeLeave_teamDungeon(self, fromSpaceNo, toSpaceNo, options, context):
@@ -1208,7 +1234,7 @@ class IComplexTeleport(object):
     # ----------------------------------------------------------------------
 
     def _beforeEnter_worldLine(self, fromSpaceNo, toSpaceNo, options, context):
-        LOG_INFO('_beforeEnter_worldLine::~')
+        LOG_INFO('_beforeEnter_worldLine::~', formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(spaceNo=toSpaceNo))
         context.setdefault('direction', self.direction)
         context.setdefault('position', self.position)
         context.setdefault('spaceNo', toSpaceNo)
@@ -1218,7 +1244,7 @@ class IComplexTeleport(object):
         else:
             r = self.aquireTeleportLock(gameconst.TeleportLockEnum.ENTER_LINE)
         if not r:
-            LOG_ERR("_beforeEnter_worldLine:: aquire teleportlock failed", self.teleportLock, self.teleportLockRlsT)
+            LOG_ERR("_beforeEnter_worldLine:: aquire teleportlock failed", formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(spaceNo=toSpaceNo), self.teleportLock, self.teleportLockRlsT)
             return r
 
         _overwrite = context['e'].get('overwrite')
@@ -1233,7 +1259,7 @@ class IComplexTeleport(object):
         return True
 
     def _afterEnter_worldLine(self, fromSpaceNo, toSpaceNo, options, context):
-        LOG_INFO('_afterEnter_worldLine::~')
+        LOG_INFO('_afterEnter_worldLine::~', formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(spaceNo=toSpaceNo))
 
         self.releaseTeleportLock(gameconst.TeleportLockEnum.ENTER_LINE)
         self.releaseGlobalTeleportLock('telsucc')
@@ -1252,7 +1278,7 @@ class IComplexTeleport(object):
         return True
 
     def _beforeLeave_worldLine(self, fromSpaceNo, toSpaceNo, options, context):
-        LOG_INFO('_beforeLeave_worldLine::~')
+        LOG_INFO('_beforeLeave_worldLine::~', formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(spaceNo=toSpaceNo))
 
         # 【【任务】离开场景关闭自动战斗对gamePlay全部生效】
         self.tryDisableAutoCombatWhenLeaveSpace(formula.parseDungeonNoBySpaceNo(fromSpaceNo))
@@ -1264,7 +1290,7 @@ class IComplexTeleport(object):
         return True
 
     def _afterLeave_worldLine(self, fromSpaceNo, toSpaceNo, options, context):
-        LOG_INFO('_afterLeave_worldLine::~', fromSpaceNo, toSpaceNo)
+        LOG_INFO('_afterLeave_worldLine::~', formula.lineInfo(spaceNo=fromSpaceNo), '->', formula.lineInfo(spaceNo=toSpaceNo))
         context['spaceMgrCell'].onPlayerLeave(self.gbId, self.id, self.base)
         self.spaceMgrId = 0
 
@@ -1728,7 +1754,7 @@ class IComplexTeleport(object):
             self.modifyHP(self.getDefaultReliveHP(), self.id, gameconst.SourceType.SrcTpDefault, self.id)
 
         # send real end time to avatar self client
-        endTime = int(self.spaceMgr.dungeonPlayMode.getTEnd(dungeonNo))
+        endTime = self.spaceMgr.getDungeonActualEndTime(dungeonNo)
         if endTime:
             self.client.changeDungeonRemainTime(toSpaceNo, endTime)
 

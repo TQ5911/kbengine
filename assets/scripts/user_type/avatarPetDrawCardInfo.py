@@ -91,10 +91,10 @@ petDrawCardInfoInstance = petDrawCardInfoInstance()
 
 
 class drawCardRecord(userType.UserSingleType):
-    def __init__(self, id=0, ts=0, items=[]):
+    def __init__(self, id=0, ts=0, items=None):
         self.id = id
         self.ts = ts
-        self.items = items
+        self.items = items if items is not None else []
         self.itemsBit = 0
 
     def initFromDict(self, dataDict):

@@ -452,7 +452,7 @@ def _onLoadOfflineCallback(cbData, num, insertId, err, entId, gbId, finishCallba
                     funcName = callbackName.decode('ascii')
                     func = getattr(avatar, funcName)
                     if not getattr(func, 'offlineCall', False):
-                        LOG_ERR('function is not offline callable:', entId, gbId, callbackName, argData)
+                        LOG_ERR('avatar function is not offline callable:', entId, gbId, callbackName, argData)
                         continue
                     func(*args)
                 except Exception as e:
@@ -657,6 +657,7 @@ def loadAccountOfflineCallbacks(accountName, callback):
     加载账号离线回调
     """
     _sql = 'SELECT `id`, `callbackName`, hex(`args`) FROM `game_account_offline_callbacks` where accountName=%s order by id limit 2000' % utils.escape_string(accountName)
+    LOG_DBG('loadAccountOfflineCallbacks ', accountName)
     KBEngine.executeRawDatabaseCommand(_sql, callback)
 
 

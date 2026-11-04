@@ -13,6 +13,7 @@ import gameengine
 import iCentralStub
 import gameconst
 import json
+import dataUtils
 
 from proto.gameServerAlliance_pb2 import GameClient, \
     AllianceService_Stub, \
@@ -450,6 +451,7 @@ class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCen
         _req.serverId = serverId
         _req.pageIndex = pageIndex
         _req.pageSize = pageSize
+        _req.crossServerFlag = dataUtils.checkAllianceCross()
         self._call(lambda c, r, d: c.asStub.getLeagueList(None, r, None), _req, {'box': box, 'func': func, 'args': args})
 
     def onLeagueListResult(self, reply):
@@ -471,6 +473,7 @@ class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCen
         _req = SearchLeagueRequest()
         _req.keyword = keyword
         _req.serverId = serverId
+        _req.crossServerFlag = dataUtils.checkAllianceCross()
         self._call(lambda c, r, d: c.asStub.searchLeague(None, r, None), _req, {'box': box})
 
     def onSearchLeagueResult(self, reply):
@@ -601,6 +604,7 @@ class AllianceStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer, iCen
         _req.leaderLevel = leaderLevel
         _req.leaderProfession = leaderProfession
         _req.leaderGender = leaderGender
+        _req.crossServerFlag = dataUtils.checkAllianceCross()
         self._call(lambda c, r, d: c.asStub.applyToJoin(None, r, None), _req, {'box': box})
 
     def onApplyLeagueToJoinResult(self, reply):

@@ -5,6 +5,7 @@ from KBEDebug import *
 import formula
 import utils
 import sMath
+import gameconfig
 import gameconst
 import random
 import gametimer
@@ -16,6 +17,7 @@ import SkillManager
 
 
 import creep_base as CBD
+import creep_coefficient as CCF
 import creep_group as CRG
 import skill_skill as SSD
 import const_const as C_C_DD
@@ -309,10 +311,27 @@ class IAICombatUnit(SkillManager.SkillManager):
     def getKeepHate(self):
         return self.getCreepData().get('keepHate', 0)
 
+    def _coefficientDropModes(self):
+        # 只读系数表。shareReward 为空时分配、表现、经验都按 0。
+        coeff = CCF.datas.get(self.getCreepData().get('coefficientType', 0), {})
+        shareRaw = coeff.get('shareReward') if coeff else None
+        rewardModes = shareRaw[0] if shareRaw else ()
+        expMode = shareRaw[1][0] if shareRaw and len(shareRaw) > 1 and shareRaw[1] else 0
+        displayRaw = coeff.get('displayMode') or ()
+        rewardIDs = coeff.get('rewardID') or ()
+        shares = []
+        displays = []
+        lv = self.level
+        for i, rid in enumerate(rewardIDs):
+            if not rid or rid + lv - 1 not in RDRDD.datas:
+                continue
+            shares.append(rewardModes[i] if i < len(rewardModes) else 0)
+            displays.append(displayRaw[i] if i < len(displayRaw) else 0)
+        return shares, displays, expMode
+
     def getDeathDrop(self):
         rewardIDList = dataUtils.getMonsterRewardIds(self.creepbaseId, self.level)
-        shareRewardIDList = self.getCreepData().get('shareReward', [])
-        displayModeList = self.getCreepData().get('displayMode', [])
+        shareRewardIDList, displayModeList, expMode = self._coefficientDropModes()
         if type(rewardIDList) == tuple:
             rewardIDList = list(rewardIDList)
         elif type(rewardIDList) == int:
@@ -326,30 +345,16 @@ class IAICombatUnit(SkillManager.SkillManager):
             goodRewardIDs.append(rewardID)
 
         rewardIDList = goodRewardIDs
-
-        if type(shareRewardIDList) == tuple:
-            shareRewardIDList = list(shareRewardIDList)
-        elif type(shareRewardIDList) == int:
-            shareRewardIDList = [shareRewardIDList]
-        else:
-            shareRewardIDList = []
-        if type(displayModeList) == tuple:
-            displayModeList = list(displayModeList)
-        elif type(displayModeList) == int:
-            displayModeList = [displayModeList]
-        else:
-            displayModeList = []
         if len(shareRewardIDList) < len(rewardIDList):
             shareRewardIDList.extend([0] * (len(rewardIDList) - len(shareRewardIDList)))
-        if len(displayModeList) < len(rewardIDList):
             displayModeList.extend([0] * (len(rewardIDList) - len(displayModeList)))
         #城战期间所有怪物都要掉落灵核(包括副本)
-        if utils.isInSiegeWarBiddingTime() and self.IsMonster:
+        if gameconfig.enableSiegeWar() and utils.isInSiegeWarBiddingTime() and self.IsMonster:
             cbReward = CBC.datas['cityBattle_reward']['value']
             rewardIDList.append(cbReward[0])
             shareRewardIDList.append(cbReward[1])
             displayModeList.append(cbReward[2])
-        return rewardIDList, shareRewardIDList, displayModeList
+        return rewardIDList, shareRewardIDList, displayModeList, expMode
 
     def getBornAction(self):
         return self.getCreepData().get('bornAction', '')

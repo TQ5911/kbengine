@@ -22,6 +22,7 @@ import dropAward
 import AffixInfo
 import GlyphInfo
 import SpiritInfo
+import SoulInfo
 
 import drop_gearQualityWeight as DGQWD
 import gearBase_gearBase as GBGBD
@@ -130,6 +131,10 @@ class EquipmentItem(BaseItem.BaseItem):
     def setDropFixEndTime(self, t):
         self.equipAttr.dropFixEndTime = t
 
+    def simpleAttr2Json(self):
+        extra = {}
+        return self.equipAttr.toSimpleJson(extraAttrs=extra)
+
     def attr2Json(self):
         extra = {}
         return self.equipAttr.toJson(extraAttrs=extra)
@@ -232,8 +237,8 @@ class EquipmentItem(BaseItem.BaseItem):
         return itemsDic, currencyDic
     
     def soulSocketNeedItems(self):
-        currencyId = int(SSRCD.datas['inlayType']['value'])
-        num = int(SSRCD.datas['inlayConsume']['value'])
+        currencyId = SSRCD.datas['inlayType']['value']
+        num = SSRCD.datas['inlayConsume']['value']
 
         return {}, {currencyId: num}
 
@@ -449,6 +454,280 @@ class EquipmentItem(BaseItem.BaseItem):
             self.applyEquipEffectToAvatar(owner)
         return encVal
 
+    def gmSetEnhance(self, gbId, owner, enhanceLv, bindEnhanceCost=-1, syncMaxLv=0, onBody=False):
+        """
+        GM直设强化等级/强化绑定值, base(背包/仓库)与cell(身上)共用
+        gbId: 玩家gbId; owner: base/cell的Avatar实体(onBody时用于卸下/穿上装备效果)
+        返回 (ret, errCode), errCode 为 gameconst.GMCommandErr: GM_RET_EQUIP_GROWING_FORBIDDEN 禁止养成, GM_RET_EQUIP_LV_OUT_OF_RANGE 强化等级超出配置范围
+        """
+        if dataUtils.checkEquipGrowingForbidden(gbId, self):
+            LOG_ERR('gmSetEnhance, equipment can not be growing:', self.itemId, self.uniqueId)
+            return False, gameconst.GMCommandErr.GM_RET_EQUIP_GROWING_FORBIDDEN
+        if enhanceLv > 0 and not self.checkEnhancementValid(enhanceLv):
+            LOG_ERR('gmSetEnhance, enhanceLv out of cfg range:', self.itemId, self.uniqueId, enhanceLv)
+            return False, gameconst.GMCommandErr.GM_RET_EQUIP_LV_OUT_OF_RANGE
+
+        levelBefore = self.getEnhanceLevel()
+        maxLvBefore = self.getMaxEnhanceLevel()
+        bindCostBefore = self.equipAttr.bindEnhanceCost
+        opUUID = KBEngine.genUUID64()
+        if enhanceLv > 0:
+            self.doEnhanceEquip(owner, opUUID, enhanceLv, onBody=onBody, isGM=True)
+        else:
+            #0级没有配置行, 直接置强化等级
+            if onBody:
+                self.removeEquipEffectToAvatar(owner)
+            self.equipAttr.doEnhanceLv(0, isGM=True)
+            if onBody:
+                self.applyEquipEffectToAvatar(owner)
+        if syncMaxLv and self.equipAttr.maxEnhanceLv > enhanceLv:
+            #铭文/附灵槽位按历史最高强化等级开启, 由GM决定是否一并下调
+            self.equipAttr.maxEnhanceLv = enhanceLv
+        if bindEnhanceCost >= 0:
+            self.setBindEnhanceCost(bindEnhanceCost)
+        self.equipAttr.setDirtyFlag()
+        LOG_INFO('gmSetEnhance success:', self.itemId, self.uniqueId,
+                 levelBefore, self.getEnhanceLevel(), maxLvBefore, self.getMaxEnhanceLevel(),
+                 bindCostBefore, self.equipAttr.bindEnhanceCost, opUUID)
+        return True, 0
+
+    def gmSetGrade(self, gbId, owner, grade, bindValue=-1, onBody=False):
+        """
+        GM直设升阶等级/升阶绑定值, base(背包/仓库)与cell(身上)共用
+        gbId: 玩家gbId; owner: base/cell的Avatar实体(onBody时用于卸下/穿上装备效果)
+        返回 (ret, errCode), errCode 为 gameconst.GMCommandErr: GM_RET_EQUIP_GROWING_FORBIDDEN 禁止养成, GM_RET_EQUIP_LV_OUT_OF_RANGE 升阶等级超出配置范围
+        """
+        if dataUtils.checkEquipGrowingForbidden(gbId, self):
+            LOG_ERR('gmSetGrade, equipment can not be growing:', self.itemId, self.uniqueId)
+            return False, gameconst.GMCommandErr.GM_RET_EQUIP_GROWING_FORBIDDEN
+        if grade > 1:
+            #1阶是默认初始阶, 无配置行; 2阶及以上必须有对应升阶配置
+            if grade > GEGCD.datas['equipmentClassLevel']['value']:
+                LOG_ERR('gmSetGrade, grade out of cfg range:', self.itemId, self.uniqueId, grade)
+                return False, gameconst.GMCommandErr.GM_RET_EQUIP_LV_OUT_OF_RANGE
+            upgradeKey = dataUtils.getEquipUpgradeKey(self.equipAttr.equipType, self.equipAttr.quality, grade)
+            if not GEES.datas.get(upgradeKey):
+                LOG_ERR('gmSetGrade, no upgrade cfg:', self.itemId, self.uniqueId, upgradeKey)
+                return False, gameconst.GMCommandErr.GM_RET_EQUIP_LV_OUT_OF_RANGE
+
+        gradeBefore = self.getGrade()
+        bindValueBefore = self.equipAttr.bindValue
+        opUUID = KBEngine.genUUID64()
+        if onBody:
+            self.removeEquipEffectToAvatar(owner)
+        self.equipAttr.doUpgrade(grade)
+        if onBody:
+            self.applyEquipEffectToAvatar(owner)
+        if bindValue >= 0:
+            self.setBindValue(bindValue)
+        self.equipAttr.setDirtyFlag()
+        LOG_INFO('gmSetGrade success:', self.itemId, self.uniqueId,
+                 gradeBefore, self.getGrade(), bindValueBefore, self.equipAttr.bindValue, opUUID)
+        return True, 0
+
+    def gmSetSpirit(self, gbId, owner, spiritPos, affixIds, bindType=-1, onBody=False):
+        """
+        GM直设附灵槽位词缀/槽位绑定状态, base(背包/仓库)与cell(身上)共用
+        gbId: 玩家gbId; owner: base/cell的Avatar实体(onBody时用于卸下/穿上装备效果)
+        affixIds: 词缀字符串, 格式 "affixId:affixVal,affixId:affixVal", 空串表示清空该槽位词缀
+        bindType: -1不修改, 其余取 gameconst.ItemBindType
+        返回 (ret, errCode), errCode 为 gameconst.GMCommandErr: GM_RET_EQUIP_GROWING_FORBIDDEN 禁止养成, GM_RET_ARGS_ERR 槽位未开启/词缀不合法
+        """
+        if dataUtils.checkEquipGrowingForbidden(gbId, self):
+            LOG_ERR('gmSetSpirit, equipment can not be growing:', self.itemId, self.uniqueId)
+            return False, gameconst.GMCommandErr.GM_RET_EQUIP_GROWING_FORBIDDEN
+        # 附灵槽位(组)数量按历史最高强化等级开启, 只允许操作已开启槽位
+        if spiritPos < 0 or spiritPos >= self.equipAttr.spiritSlotNum:
+            LOG_ERR('gmSetSpirit, spiritPos not opened:', self.itemId, self.uniqueId, spiritPos)
+            return False, gameconst.GMCommandErr.GM_RET_ARGS_ERR
+
+        affixPairs = []
+        affixIds = affixIds.strip()
+        if affixIds:
+            for token in affixIds.split(','):
+                pair = token.split(':')
+                if len(pair) != 2:
+                    LOG_ERR('gmSetSpirit, affix format error:', self.itemId, self.uniqueId, affixIds)
+                    return False, gameconst.GMCommandErr.GM_RET_ARGS_ERR
+                try:
+                    affixId = int(pair[0])
+                    affixVal = float(pair[1]) if '.' in pair[1] else int(pair[1])
+                except ValueError:
+                    LOG_ERR('gmSetSpirit, affix value error:', self.itemId, self.uniqueId, affixIds)
+                    return False, gameconst.GMCommandErr.GM_RET_ARGS_ERR
+                affixPairs.append((affixId, affixVal))
+
+        # 词缀宽松校验: 存在于词缀表且非铭文词缀, 全部校验通过后再落地修改
+        iLevel = dataUtils.getEquipItemData(self.itemId)['iLevel']
+        newAffixes = []
+        for affixId, affixVal in affixPairs:
+            affixData = AFAFD.datas.get(affixId)
+            if not affixData or affixData.get('inscription'):
+                LOG_ERR('gmSetSpirit, invalid spirit affixId:', self.itemId, self.uniqueId, affixId)
+                return False, gameconst.GMCommandErr.GM_RET_ARGS_ERR
+            for existAffix in newAffixes:
+                if existAffix.afxId == affixId:
+                    LOG_ERR('gmSetSpirit, duplicate affixId:', self.itemId, self.uniqueId, affixId)
+                    return False, gameconst.GMCommandErr.GM_RET_ARGS_ERR
+            newAffixes.append(AffixInfo.genRandomAffix(affixId, iLevel, affixVal, False))
+
+        spiritDataBefore = self.getSpiritDatas()
+        spiritBindTypeBefore = gameconst.ItemBindType.BIND if self.isSpiritBindType(spiritPos) else gameconst.ItemBindType.NORMAL
+        if onBody:
+            self.removeEquipEffectToAvatar(owner)
+        if spiritPos + 1 > len(self.equipAttr.spiritDatas):
+            for _ in range(len(self.equipAttr.spiritDatas), spiritPos + 1):
+                self.equipAttr.spiritDatas.append(SpiritInfo.SpiritInfo())
+        self.equipAttr.spiritDatas[spiritPos].UpdateSpiritAffixes(newAffixes)
+        if bindType >= 0:
+            self.setSpiritBindType(spiritPos, bindType)
+        # 清 preview 残留, 避免客户端预览面板显示旧值
+        if spiritPos < len(self.equipAttr.previewSpiritDatas):
+            previewSpiritData = self.equipAttr.previewSpiritDatas[spiritPos]
+            if previewSpiritData:
+                previewSpiritData.UpdateSpiritAffixes([])
+        self.removePreviewSpiritBindType(spiritPos)
+        self.equipAttr.calcScore()
+        self.equipAttr.setDirtyFlag()
+        self.onEquipAffixChanged()
+        if onBody:
+            self.applyEquipEffectToAvatar(owner)
+        spiritBindTypeAfter = gameconst.ItemBindType.BIND if self.isSpiritBindType(spiritPos) else gameconst.ItemBindType.NORMAL
+        LOG_INFO('gmSetSpirit success:', self.itemId, self.uniqueId, spiritPos,
+                 spiritDataBefore, self.getSpiritDatas(), spiritBindTypeBefore, spiritBindTypeAfter)
+        return True, 0
+
+    def gmSetGlyph(self, gbId, owner, glyphPos, affixIds, bindType=-1, onBody=False):
+        """
+        GM直设铭文槽位词缀/槽位绑定状态, base(背包/仓库)与cell(身上)共用
+        gbId: 玩家gbId; owner: base/cell的Avatar实体(onBody时用于卸下/穿上装备效果)
+        affixIds: 词缀字符串, 格式 "affixId:affixVal,affixId:affixVal", 空串表示清空该槽位词缀
+        bindType: -1不修改, 其余取 gameconst.ItemBindType
+        返回 (ret, errCode), errCode 为 gameconst.GMCommandErr: GM_RET_EQUIP_GROWING_FORBIDDEN 禁止养成, GM_RET_ARGS_ERR 槽位未开启/词缀不合法
+        """
+        if dataUtils.checkEquipGrowingForbidden(gbId, self):
+            LOG_ERR('gmSetGlyph, equipment can not be growing:', self.itemId, self.uniqueId)
+            return False, gameconst.GMCommandErr.GM_RET_EQUIP_GROWING_FORBIDDEN
+        # 铭文槽位按历史最高强化等级开启, 只允许操作已开启槽位
+        if not self.equipAttr.checkSlotNum(glyphPos):
+            LOG_ERR('gmSetGlyph, glyphPos not opened:', self.itemId, self.uniqueId, glyphPos)
+            return False, gameconst.GMCommandErr.GM_RET_ARGS_ERR
+
+        affixPairs = []
+        affixIds = affixIds.strip()
+        if affixIds:
+            for token in affixIds.split(','):
+                pair = token.split(':')
+                if len(pair) != 2:
+                    LOG_ERR('gmSetGlyph, affix format error:', self.itemId, self.uniqueId, affixIds)
+                    return False, gameconst.GMCommandErr.GM_RET_ARGS_ERR
+                try:
+                    affixId = int(pair[0])
+                    affixVal = float(pair[1]) if '.' in pair[1] else int(pair[1])
+                except ValueError:
+                    LOG_ERR('gmSetGlyph, affix value error:', self.itemId, self.uniqueId, affixIds)
+                    return False, gameconst.GMCommandErr.GM_RET_ARGS_ERR
+                affixPairs.append((affixId, affixVal))
+
+        # 词缀宽松校验: 存在于词缀表且为铭文词缀(带inscription), 全部校验通过后再落地修改
+        iLevel = dataUtils.getEquipItemData(self.itemId)['iLevel']
+        newAffixes = []
+        for affixId, affixVal in affixPairs:
+            affixData = AFAFD.datas.get(affixId)
+            if not affixData or not affixData.get('inscription'):
+                LOG_ERR('gmSetGlyph, invalid glyph affixId:', self.itemId, self.uniqueId, affixId)
+                return False, gameconst.GMCommandErr.GM_RET_ARGS_ERR
+            for existAffix in newAffixes:
+                if existAffix.afxId == affixId:
+                    LOG_ERR('gmSetGlyph, duplicate affixId:', self.itemId, self.uniqueId, affixId)
+                    return False, gameconst.GMCommandErr.GM_RET_ARGS_ERR
+            newAffixes.append(AffixInfo.genRandomAffix(affixId, iLevel, affixVal, True))
+
+        glyphDataBefore = self.getGlyphDatas()
+        glyphBindTypeBefore = gameconst.ItemBindType.BIND if glyphPos in self.equipAttr.glyphBindTypes else gameconst.ItemBindType.NORMAL
+        if onBody:
+            self.removeEquipEffectToAvatar(owner)
+        self.equipAttr.updateGlyphInfo(glyphPos, newAffixes)
+        if bindType >= 0:
+            self.setGlyphBindType(glyphPos, bindType)
+        # 清 preview 残留, 避免客户端预览面板显示旧值
+        if glyphPos < len(self.equipAttr.previewGlyphDatas):
+            previewGlyphData = self.equipAttr.previewGlyphDatas[glyphPos]
+            if previewGlyphData:
+                previewGlyphData.updateGlyphAffixes([])
+        self.removePreviewGlyphBindType(glyphPos)
+        self.equipAttr.calcScore()
+        self.equipAttr.setDirtyFlag()
+        self.onEquipAffixChanged()
+        if onBody:
+            self.applyEquipEffectToAvatar(owner)
+        glyphBindTypeAfter = gameconst.ItemBindType.BIND if glyphPos in self.equipAttr.glyphBindTypes else gameconst.ItemBindType.NORMAL
+        LOG_INFO('gmSetGlyph success:', self.itemId, self.uniqueId, glyphPos,
+                 glyphDataBefore, self.getGlyphDatas(), glyphBindTypeBefore, glyphBindTypeAfter)
+        return True, 0
+
+    def gmSetBless(self, gbId, owner, luckyVal, maxBlessLv=-1, blessLvRate=-1, bindBlessCost=-1, onBody=False):
+        """
+        GM直设祝福幸运值/历史最高幸运值/保底回溯进度/祝福绑定值, base(背包/仓库)与cell(身上)共用
+        gbId: 玩家gbId; owner: base/cell的Avatar实体(onBody时用于卸下/穿上装备效果)
+        luckyVal: 目标幸运值; maxBlessLv/blessLvRate/bindBlessCost: -1不修改
+        返回 (ret, errCode), errCode 为 gameconst.GMCommandErr: GM_RET_EQUIP_GROWING_FORBIDDEN 禁止养成,
+            GM_RET_ARGS_ERR 装备不可祝福, GM_RET_EQUIP_LV_OUT_OF_RANGE 幸运值超出配置范围
+        """
+        if dataUtils.checkEquipGrowingForbidden(gbId, self):
+            LOG_ERR('gmSetBless, equipment can not be growing:', self.itemId, self.uniqueId)
+            return False, gameconst.GMCommandErr.GM_RET_EQUIP_GROWING_FORBIDDEN
+        if not dataUtils.checkEquipmentBlessType(self.equipAttr.equipType, self.getQuality()):
+            LOG_ERR('gmSetBless, equipment can not bless:', self.itemId, self.uniqueId)
+            return False, gameconst.GMCommandErr.GM_RET_ARGS_ERR
+
+        gearBlessMaxValue = GEGCD.datas['gearBlessMaxValue']['value']
+        if luckyVal < 0 or luckyVal > gearBlessMaxValue or not GEBLD.datas.get(self.equipAttr.getBlessKey(luckyVal)):
+            LOG_ERR('gmSetBless, luckyVal out of cfg range:', self.itemId, self.uniqueId, luckyVal)
+            return False, gameconst.GMCommandErr.GM_RET_EQUIP_LV_OUT_OF_RANGE
+        if maxBlessLv >= 0 and (maxBlessLv > gearBlessMaxValue or not GEBLD.datas.get(self.equipAttr.getBlessKey(maxBlessLv))):
+            LOG_ERR('gmSetBless, maxBlessLv out of cfg range:', self.itemId, self.uniqueId, maxBlessLv)
+            return False, gameconst.GMCommandErr.GM_RET_EQUIP_LV_OUT_OF_RANGE
+
+        blessDataBefore = self.getBlessDatas()
+        maxBlessLvBefore = self.equipAttr.maxBlessLv
+        blessLvRateBefore = self.equipAttr.blessLvRate
+        bindBlessCostBefore = self.equipAttr.bindBlessCost
+        if onBody:
+            self.removeEquipEffectToAvatar(owner)
+        # 从未祝福过的装备先按 blessing() 同款逻辑创建祝福词条
+        if len(self.equipAttr.blessAffixes) == 0:
+            iLevel = dataUtils.getEquipItemData(self.itemId)['iLevel']
+            blessAffixId = dataUtils.getBlessAffixIdByGearType(self.equipAttr.equipType)
+            if not blessAffixId:
+                LOG_ERR('gmSetBless, no bless affix cfg:', self.itemId, self.uniqueId, self.equipAttr.equipType)
+                if onBody:
+                    self.applyEquipEffectToAvatar(owner)
+                return False, gameconst.GMCommandErr.GM_RET_ARGS_ERR
+            self.equipAttr.blessAffixes = [AffixInfo.genBlessAffix(iLevel, blessAffixId)]
+        self.equipAttr.blessAffixes[0].affixVal = luckyVal
+        # 维护不变式 maxBlessLv >= luckyVal
+        if maxBlessLv >= 0:
+            self.equipAttr.maxBlessLv = max(maxBlessLv, luckyVal)
+        elif self.equipAttr.maxBlessLv < luckyVal:
+            self.equipAttr.maxBlessLv = luckyVal
+        if blessLvRate >= 0:
+            # 保底进度上限为对应配置行的 backtrack, 无配置则不允许设置
+            key = self.equipAttr.getBlessKey(max(luckyVal, self.equipAttr.maxBlessLv))
+            backtrack = GEBLD.datas.get(key, {}).get('backtrack', 0)
+            self.equipAttr.blessLvRate = min(blessLvRate, backtrack)
+        if bindBlessCost >= 0:
+            self.setBindBlessCost(bindBlessCost)
+        self.equipAttr.calcScore()
+        self.equipAttr.setDirtyFlag()
+        self.onEquipAffixChanged()
+        if onBody:
+            self.applyEquipEffectToAvatar(owner)
+        LOG_INFO('gmSetBless success:', self.itemId, self.uniqueId,
+                 blessDataBefore, self.getBlessDatas(), maxBlessLvBefore, self.equipAttr.maxBlessLv,
+                 blessLvRateBefore, self.equipAttr.blessLvRate, bindBlessCostBefore, self.equipAttr.bindBlessCost)
+        return True, 0
+
     def doUpgradeEquip(self, owner, opUUID, upgradeType, targetLv, onBody=False):
         LOG_INFO('in doUpgradeEquip', opUUID, upgradeType, targetLv, onBody)
 
@@ -547,10 +826,16 @@ class EquipmentItem(BaseItem.BaseItem):
         return True
 
     def getSoulAffixesLogStr(self):
-        return str(self.equipAttr.soulAffixes)
+        payload = self.equipAttr.soulPayload()
+        return 'defLevel=%s base=%s rare=%s lucky=%s bindFromWash=%s bindFromClash=%s bindFromInherit=%s previewWash=%s previewClash=%s' % (
+            payload['defLevel'], payload['baseProps'], payload['rareProps'], payload['luckyProp'],
+            payload['bindFromWash'], payload['bindFromClash'], payload['bindFromInherit'],
+            payload['previewWash'], payload['previewClash'])
     
     def doEquipSoulSocket(self, owner, rollProps, itemId, isEquip=False):
         ret = self.equipAttr.soulSocket(rollProps, itemId)
+        if ret:
+            self.refreshSoulBindFromPayload()
         return ret
 
     def doEquipGlyphWashing(self, owner, glyphPos, affixIds = None):
@@ -850,6 +1135,10 @@ class EquipmentItem(BaseItem.BaseItem):
         self.equipAttr.soulBindType = bindType
         self._updateBindType()
 
+    def refreshSoulBindFromPayload(self):
+        """镶嵌魂魄的绑定跟着洗练、对冲、继承三条来源走。"""
+        self.setSoulBindType(SoulInfo.calcBindType(self.equipAttr.soulPayload()))
+
     def getBindValue(self):
         return self.equipAttr.bindValue
 
@@ -930,7 +1219,7 @@ class EquipmentItem(BaseItem.BaseItem):
             for glyphAffix in glyphData.glyphAffixes:
                 doAffixObj(self, glyphAffix)
             
-        for soulAffix in self.equipAttr.soulAffixes:
+        for soulAffix in self.equipAttr.iterSoulCombatAffixes():
             doAffixObj(self, soulAffix)
         return
 
@@ -978,7 +1267,7 @@ class EquipmentItem(BaseItem.BaseItem):
             for glyphAffix in glyphData.glyphAffixes:
                 doAffixObj(self, glyphAffix)
 
-        for soulAffix in self.equipAttr.soulAffixes:
+        for soulAffix in self.equipAttr.iterSoulCombatAffixes():
             doAffixObj(self, soulAffix)
         return
 
@@ -1065,7 +1354,7 @@ class EquipmentItem(BaseItem.BaseItem):
 
     def getBlessVal(self):
         blessVal = 0
-        for affixe in self.equipAttr.soulAffixes:
+        for affixe in self.equipAttr.iterSoulCombatAffixes():
             affixData = AFAFD.datas.get(affixe.afxId)
             if not affixData:
                 continue
@@ -1302,7 +1591,35 @@ class EquipmentItem(BaseItem.BaseItem):
     
     def getBlessFailCounts(self):
         return list(self.equipAttr.blessLvFailedCount.values())
-
+    
+    def getEquipType(self):
+        return self.equipAttr.equipType
+    
+    def getGlyphQulityData(self):
+        result = None
+        for glyphData in self.equipAttr.glyphInfo:
+            if result is None:
+                result = []
+            qulityData = glyphData.getQulityDatas()
+            if qulityData:
+                result.append(qulityData)
+        return result
+    
+    def calcSpiritScore(self):
+        affixTotalScore = 0
+        for idx, spiritData in enumerate(self.equipAttr.spiritDatas):
+            if idx != self.equipAttr.spiritGroup:
+                continue
+            for spiritAffix in spiritData.spiritAffixes:
+                affixTotalScore += spiritAffix.getAfxScore(self.equipAttr.school)
+        return affixTotalScore
+    
+    def calcSoulScore(self):
+        affixTotalScore = 0
+        for oneAffix in self.equipAttr.soulAffixes:
+            affixTotalScore += oneAffix.getAfxScore(self.equipAttr.school)
+        return affixTotalScore
+    
 class EquipAttr(userType.UserSingleType):
 
     def __init__(self):
@@ -1323,6 +1640,16 @@ class EquipAttr(userType.UserSingleType):
         # 附灵编组
         self.soulAffixes = []
         self.soulItemId = 0
+        # 魂魄实例：默认等级、分类词条、绑定来源、未保留的洗练结果
+        self.soulDefLevel = 0
+        self.soulBaseProps = []
+        self.soulRareProps = []
+        self.soulLuckyProp = []
+        self.soulBindFromWash = 0
+        self.soulBindFromClash = 0
+        self.soulBindFromInherit = 0
+        self.soulPreviewWash = None
+        self.soulPreviewClash = None
         self.spiritGroup = 0
         # 铭文数据
         self.glyphInfo = []
@@ -1379,6 +1706,9 @@ class EquipAttr(userType.UserSingleType):
     def __setstate__(self, state):
         self.__init__()
         self.__dict__.update(state)
+        # 旧存档只有 soulAffixes，没有分类字段
+        if 'soulBaseProps' not in state and self.soulAffixes:
+            SoulInfo.writeEquip(self, None, legacyAffixes=self.soulAffixes)
 
     @classmethod
     def _checkIgnores_(cls):
@@ -1457,6 +1787,14 @@ class EquipAttr(userType.UserSingleType):
         self.baseAttrsByAfxVal = {}
         self.skillAddLvDic = {}
 
+    def toSimpleJson(self, extraAttrs=None):
+        _jsonDic = {
+            'enhanceLv': self.enhanceLv,
+            'grade': self.grade,
+        }
+        _jsonDic.update(extraAttrs)
+        return json.dumps(_jsonDic)
+
     def toJson(self, extraAttrs=None):
         if not self.attrJson or self.checkDirty():
             self.attrJson = json.dumps(self.toAttrDic(extraAttrs=extraAttrs))
@@ -1488,7 +1826,7 @@ class EquipAttr(userType.UserSingleType):
         for oneAffix in self.soulAffixes:
             soulAffixes.append(oneAffix.toAfxClientDic())
 
-        return {
+        clientDic = {
             'spiritDatas': spiritDatas,
             'previewSpiritDatas': previewSpiritDatas,
             'previewSpiritBindTypes': list(self.previewSpiritBindTypes),
@@ -1520,6 +1858,8 @@ class EquipAttr(userType.UserSingleType):
             'blessFailLevels': list(self.blessLvFailedCount.keys()),  
             'blessFailCounts': list(self.blessLvFailedCount.values()),  
         }
+        clientDic.update(SoulInfo.clientFields(self.soulPayload()))
+        return clientDic
     
     def toAttrDic(self, extraAttrs=None):
         blessAffixes = []
@@ -1556,6 +1896,15 @@ class EquipAttr(userType.UserSingleType):
             'blessAffixes': blessAffixes,
             'soulAffixes': soulAffixes,
             'soulItemId': self.soulItemId,
+            'soulDefLevel': self.soulDefLevel,
+            'soulBaseProps': self.soulBaseProps,
+            'soulRareProps': self.soulRareProps,
+            'soulLuckyProp': self.soulLuckyProp,
+            'soulBindFromWash': self.soulBindFromWash,
+            'soulBindFromClash': self.soulBindFromClash,
+            'soulBindFromInherit': self.soulBindFromInherit,
+            'soulPreviewWash': self.soulPreviewWash,
+            'soulPreviewClash': self.soulPreviewClash,
             'glyphInfos': glyphInfos,
             'previewGlyphDatas': previewGlyphDatas,
             'previewGlyphBindTypes': list(self.previewGlyphBindTypes),
@@ -1654,6 +2003,24 @@ class EquipAttr(userType.UserSingleType):
                 self.soulAffixes.append(affixObj)
             
             self.soulItemId = value.get('soulItemId', 0)
+            if 'soulBaseProps' in value:
+                soulPayload = {
+                    'defLevel': value.get('soulDefLevel', 0),
+                    'baseProps': value.get('soulBaseProps', []),
+                    'rareProps': value.get('soulRareProps', []),
+                    'luckyProp': value.get('soulLuckyProp', []),
+                    'bindFromWash': value.get('soulBindFromWash', 0),
+                    'bindFromClash': value.get('soulBindFromClash', 0),
+                    'bindFromInherit': value.get('soulBindFromInherit', 0),
+                    'previewWash': value.get('soulPreviewWash', None),
+                    'previewClash': value.get('soulPreviewClash', None),
+                }
+                SoulInfo.writeEquip(self, soulPayload)
+                soulMigrated = False
+            else:
+                hadSoul = bool(self.soulAffixes)
+                SoulInfo.writeEquip(self, None, legacyAffixes=self.soulAffixes)
+                soulMigrated = hadSoul
 
             self.washingLuckData = value.get('washingLuckData', {})
 
@@ -1675,6 +2042,8 @@ class EquipAttr(userType.UserSingleType):
             self.glyphBindTypes = value.get('glyphBindTypes', [])
             self.spiritBindTypes = value.get('spiritBindTypes', [])
             self.soulBindType = value.get('soulBindType', gameconst.ItemBindType.BINDTYPE_NOT_SPECIFIED)
+            if self.soulItemId:
+                self.soulBindType = SoulInfo.calcBindType(SoulInfo.readEquip(self))
             blessLvFailedCount = value.get('blessLvFailedCount', {})
             for k,v in blessLvFailedCount.items():
                 self.blessLvFailedCount[int(k)] = v
@@ -1700,7 +2069,7 @@ class EquipAttr(userType.UserSingleType):
             oldScore = value.get('score', 0)
             self.calcScore()
 
-            if oldScore == self.score:
+            if oldScore == self.score and not soulMigrated:
                 self.attrJson = jsonStr
                 self.setDirtyFlag(False)
             return value
@@ -1906,11 +2275,11 @@ class EquipAttr(userType.UserSingleType):
             for glyphAffix in glyphData.glyphAffixes:
                 affixTotalScore += glyphAffix.getAfxScore(self.school)
         
-        for oneAffix in self.soulAffixes:
+        for oneAffix in self.iterSoulCombatAffixes():
             affixTotalScore += oneAffix.getAfxScore(self.school)
 
         self.score = totalAttrScore + affixTotalScore
-
+    
     def resetAfxInitAttr(self):
         return
 
@@ -1982,12 +2351,22 @@ class EquipAttr(userType.UserSingleType):
                     break
         return blessAffixId
 
+    def soulPayload(self):
+        return SoulInfo.readEquip(self)
+
+    def iterSoulCombatAffixes(self):
+        for affix in self.soulAffixes:
+            yield affix
+        for prop in self.soulRareProps:
+            affix = SoulInfo.propToAffix(prop)
+            if affix:
+                yield affix
+        affix = SoulInfo.propToAffix(self.soulLuckyProp)
+        if affix:
+            yield affix
+
     def soulSocket(self, rollProps, itemId):
-        self.soulAffixes = []
-        for propData in rollProps:
-            affixObj = AffixInfo.Affix(propData[0])
-            affixObj.affixVal = propData[2]
-            self.soulAffixes.append(affixObj)
+        SoulInfo.writeEquip(self, rollProps)
         self.soulItemId = itemId
         self.calcScore()
         self.setDirtyFlag()
@@ -2176,7 +2555,7 @@ class EquipAttr(userType.UserSingleType):
             if glyphPos == glyphData.getGlyphPos():
                 return glyphData
         return None
-
+    
     def blessing(self):
         LOG_INFO('in blessing')
         templateData = dataUtils.getEquipItemData(self.templateId)

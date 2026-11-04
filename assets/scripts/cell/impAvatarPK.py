@@ -109,7 +109,9 @@ class ImpAvatarPK(object):
                 self.showMsg(A_ACD.datas['evilMeterLimitMsg']['value'], [])
                 return
 
-            if self.inPKSafeArea():
+            _mapId = formula.fetchMapId(self.spaceNo)
+            _modeType = GPGP.datas[_mapId]['ModeType']
+            if _modeType == gameconst.GamePlayModeType.Safe:
                 self.showMsg(A_ACD.datas['cannotSwitchMode']['value'], [])
                 return
         
@@ -170,9 +172,8 @@ class ImpAvatarPK(object):
         return formula.inWolrdBossScene(self.spaceNo)
 
     def isPKEnemyTarget(self, target):
-        if self.inEnmityList(target.gbId):
-            return True
-        return utils.getEntityGuildRelation(self, target) == gameconst.GuildRelationType.ENEMY
+        # 防卫勾选攻击敌对：只打个人敌对（敌对列表/临时敌对），不含帮会宣战
+        return self.inEnmityList(target.gbId)
 
     def canAttackInDefendPK(self, target):
         if self.hasPKProtect(gameconst.PKProtectEnum.ATTACK_RED) and (target.inRedName() or target.isGreyName()):
@@ -193,6 +194,15 @@ class ImpAvatarPK(object):
             self._setPKProtect(gameconst.PKProtectEnum.ATTACK_ENEMY, False)
 
         self._refreshRefugeByScene()
+        self._applyRefugePKRelation()
+
+    def _applyRefugePKRelation(self):
+        nowActive = self.inRefugeMode()
+        if self.refugePKActive == nowActive:
+            return
+        LOG_DBG('_applyRefugePKRelation', self.gbId, self.refugePKActive, nowActive)
+        self.refugePKActive = nowActive
+        self._refreshPKTargetTypeCache()
 
     def _enterMineWarPKLock(self):
         _prop = gameconst.EntityPropsEnum.preMineWarPKState
@@ -203,8 +213,10 @@ class ImpAvatarPK(object):
             self._setPKModel(gameconst.PKModelEnum.ATTACK)
             self.changePKModeResetTargetId()
 
+        # 制裁：帮派、联盟保护默认勾上，队友、团队保护默认不勾
         _newVal = self.pkProtect
-        _newVal |= (1 << gameconst.PKProtectEnum.GUILD) | (1 << gameconst.PKProtectEnum.UNION)
+        _newVal |= (1 << gameconst.PKProtectEnum.GUILD) \
+            | (1 << gameconst.PKProtectEnum.UNION)
         _newVal &= ~((1 << gameconst.PKProtectEnum.TEAM) | (1 << gameconst.PKProtectEnum.GROUP))
         if _newVal != self.pkProtect:
             self.pkProtect = _newVal
@@ -379,6 +391,11 @@ class ImpAvatarPK(object):
             if target.hasBuff(gameconst.SIEGEWAR_WANTED_BUFF):
                 return False
 
+            # 帮会宣战不进紫名。避难生效后不再按帮会敌对，靠个人敌对打到对方仍进紫名
+            if utils.getEntityGuildRelation(self, target) == gameconst.GuildRelationType.ENEMY \
+                    and not (utils.refugeBlocksGuildEnemy(self, target) and self.inEnmityList(target.gbId)):
+                return
+
             _isCurGrey = utils.curTS() - self.tGreyNameStart <= PKD_PKDD.datas['grayNameDuration']['value']
             self.tGreyNameStart = utils.curTS()
             if not _isCurGrey:
@@ -421,7 +438,9 @@ class ImpAvatarPK(object):
         if self.pkModel == gameconst.PKModelEnum.ENEMY \
                 or (self.pkModel == gameconst.PKModelEnum.PEACE
                     and self.hasPKProtect(gameconst.PKProtectEnum.ATTACK_ENEMY)):
-            if utils.getEntityGuildRelation(self, target) == gameconst.GuildRelationType.ENEMY:
+            # 帮会敌对默认不改善恶；对方避难生效时仍走击杀表（敌对+避难为 -250）
+            if utils.getEntityGuildRelation(self, target) == gameconst.GuildRelationType.ENEMY \
+                    and not target.inRefugeMode():
                 return False
 
         if self.duelAttr.isDuelEnemy(target):
@@ -494,13 +513,15 @@ class ImpAvatarPK(object):
             self.reduceMoralValue(-pkValue, gameconst.MORAL_SRC_TYPE_KILL_PLAYER)
 
     def inPKProtect(self, target):
-        if self.hasPKProtect(gameconst.PKProtectEnum.TEAM) and self.isInTeam(target.gbId):
+        # 本服组队/团已废弃，队伍/团队保护统一读跨服队（访问层）
+        if self.hasPKProtect(gameconst.PKProtectEnum.TEAM) and self.inCrossTeam(target.gbId):
             return True
 
         if self.hasPKProtect(gameconst.PKProtectEnum.GUILD) and self.guildUUID and self.guildUUID == target.guildUUID:
             return True
 
-        if self.hasPKProtect(gameconst.PKProtectEnum.GROUP) and self.raidId and self.raidId == target.raidId:
+        # 团队保护（GROUP）：跨服大队（maxNum>5）按团线别保护（D4-2）
+        if self.hasPKProtect(gameconst.PKProtectEnum.GROUP) and self.inCrossRaid(target.gbId):
             return True
 
         if self.hasPKProtect(gameconst.PKProtectEnum.UNION) and utils.getGuildRelation(self.guildUUID, target.guildUUID) == gameconst.GuildRelationType.UNION:
@@ -559,7 +580,6 @@ class ImpAvatarPK(object):
             self._refreshRefugeDaily(now)
             return
 
-        dayCrossed = False
         if start and start < now:
             nextFive = self._nextFiveClock(start)
             end = min(now, nextFive)
@@ -572,15 +592,14 @@ class ImpAvatarPK(object):
                 self._closeRefuge()
                 self._refreshRefugeDaily(now)
                 return
-            dayCrossed = now >= nextFive
 
-        crossed = self._refreshRefugeDaily(now)
-        if dayCrossed or crossed:
-            self._closeRefuge()
-            return
-
+        # 跨天只刷新每日用量，避难开着就不关
+        refreshed = self._refreshRefugeDaily(now)
         if start:
             self.refugeConsumeStart = now
+        if refreshed and self.refugeOpen:
+            self._syncRefugeState()
+            self._syncRefugeBuff()
         LOG_DBG('_settleRefugeTime', self.gbId, self.refugeTime, self.refugeDailyUsed, self.refugeOpen)
 
     def _closeRefuge(self):
@@ -591,6 +610,7 @@ class ImpAvatarPK(object):
         self._removeRefugeBuff()
         if wasOpen:
             self._syncRefugeState()
+        self._applyRefugePKRelation()
 
     def _cancelRefugeExpireTimer(self):
         if self.refugeExpireTimerId:
@@ -613,14 +633,16 @@ class ImpAvatarPK(object):
 
     def _syncRefugeBuff(self):
         buffId = self._refugeBuffId()
-        if not self.inRefugeMode():
+        if not self.refugeOpen:
             self._removeRefugeBuff()
             return
         remain = self._refugeRemainSec()
         if remain <= 0:
             self._closeRefuge()
             return
-        self.addBuff(buffId, 1, self.id, duration=remain)
+        # 仅作显示 非避难图时间暂停也挂上, 永久时长避免暂停期间被倒计时摘掉
+        duration = remain if self._inRefugeMap() else 0
+        self.addBuff(buffId, 1, self.id, duration=duration)
 
     def _refreshRefugeByScene(self):
         self._settleRefugeTime()
@@ -645,11 +667,24 @@ class ImpAvatarPK(object):
             self._setRefugeExpireTimer(untilFive)
         self._syncRefugeBuff()
 
+    def closeRefugeOnCrossDayLogin(self):
+        offlineTs = int(self.refugeOfflineTime)
+        if not offlineTs:
+            return
+        self.refugeOfflineTime = 0
+        if self.refugeOpen and utils.checkDiffDay(utils.curTS(), offlineTs, gameconst.GENERAL_CYCLE_TIME):
+            LOG_DBG('closeRefugeOnCrossDayLogin', self.gbId, offlineTs, self.refugeTime, self.refugeDailyUsed)
+            self._closeRefuge()
+
     def _onRefugeOffline(self):
         self._settleRefugeTime()
         if self.refugeOpen:
-            self.refugeConsumeStart = utils.curTS()
-        LOG_DBG('_onRefugeOffline', self.gbId, self.refugeOpen, self.refugeConsumeStart, self.refugeTime)
+            # 下线停表，离线期间不扣避难时长，上线后再从当前时间继续计
+            self.refugeConsumeStart = 0
+            self.refugeOfflineTime = utils.curTS()
+        else:
+            self.refugeOfflineTime = 0
+        LOG_DBG('_onRefugeOffline', self.gbId, self.refugeOpen, self.refugeConsumeStart, self.refugeOfflineTime, self.refugeTime)
 
     def _getRefugeExtendCostList(self, count):
         cfg = PKD_PKDD.datas.get('refugePrice', {}).get('value')
@@ -668,11 +703,12 @@ class ImpAvatarPK(object):
         self.refugeTime = refugeTime
         self.refugeDailyUsed = refugeDailyUsed
         self.refugeConsumeStart = refugeConsumeStart
+        self._applyRefugePKRelation()
 
     @utils.isMyself
     @gamedecorator.limitcall(1)
     @gamedecorator.crossServer
-    def buyRefugeTime(self, exposed, count):
+    def buyRefugeTime(self, exposed, count, isExchange=False):
         LOG_DBG('buyRefugeTime', count)
         if count < 1:
             return
@@ -688,23 +724,39 @@ class ImpAvatarPK(object):
             LOG_ERR('buyRefugeTime missing refugePrice')
             return
 
+        if self.isCrossServerInOtherServer:
+            self.syncMethodCallToLocalServerCell('_buyRefugeTime', (count, bool(isExchange)))
+            return
+        self._buyRefugeTime(count, isExchange)
+
+    def _buyRefugeTime(self, count, isExchange):
+        costList = self._getRefugeExtendCostList(count)
+        if not costList:
+            LOG_ERR('_buyRefugeTime missing refugePrice')
+            return
         deductWealthVal = dropAward.DeductWealthVal()
         for itemId, itemNum in costList:
             deductWealthVal.addWealthByItemId(itemId, itemNum)
-
         self.base.onCheckAndCostWealth(
             gameconst.CELL,
             AAC_AACDD.datas.BONUS_SRC_BUY_ITEMS,
             'onBuyRefugeTimeCallback',
             deductWealthVal,
-            {'count': count},
+            {'count': count, 'isExchange': bool(isExchange)},
+            isExchange,
         )
 
     def onBuyRefugeTimeCallback(self, checkResult, extraProps):
         if not checkResult:
             return
-
         count = int(extraProps.get('count', 1))
+        if self.isCrossServerInLocalServer:
+            self.syncMethodCallToCrossServerCell(
+                '_buyRefugeTime', (count, bool(extraProps.get('isExchange', False))))
+            return
+        self._addBuyRefugeTime(count)
+
+    def _addBuyRefugeTime(self, count):
         hours = count * int(PKD_PKDD.datas['refugeExtendTime']['value'])
         self._settleRefugeTime()
         self.refugeTime = int(self.refugeTime) + hours * gameconst.ONE_HOUR_COST_SECONDES
@@ -712,7 +764,7 @@ class ImpAvatarPK(object):
         if self.refugeOpen:
             self._refreshRefugeByScene()
         self._syncRefugeState()
-        LOG_DBG('onBuyRefugeTimeCallback', self.gbId, hours, self.refugeTime)
+        LOG_DBG('_addBuyRefugeTime', self.gbId, hours, self.refugeTime)
 
     @utils.isMyself
     @gamedecorator.limitcall(1)
@@ -734,4 +786,5 @@ class ImpAvatarPK(object):
         self.refugeOpen = 1
         self._refreshRefugeByScene()
         self._syncRefugeState()
+        self._applyRefugePKRelation()
 

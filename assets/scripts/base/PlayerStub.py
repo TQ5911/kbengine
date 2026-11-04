@@ -216,6 +216,10 @@ class PlayerStub(iGlobal.IGlobal, iBaseNoCell.IBaseNoCell, iTimer.ITimer):
 
         box.onGetAvatarOnlineInfo(gbIds, _stateList)
 
+    def syncEnmityOnlineState(self, box, gbIds):
+        states = [1 if gbId in self.gbId2box else 0 for gbId in gbIds]
+        box.onSyncEnmityOnlineState(gbIds, states)
+
     def sendSysMsgToAvatars(self, toGBIDS, msgId, args):
         LOG_DBG('sendSysMsgToAvatars args:', toGBIDS, msgId, args)
         for _toGBID in toGBIDS:

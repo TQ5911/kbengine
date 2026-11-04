@@ -249,6 +249,12 @@ datas = _tools.RODict({
         "sendType": 1,
         "npcId": None
     }),
+    "SwitchPosition": _tools.RODict({
+        "ID": "SwitchPosition",
+        "EventID": 10040,
+        "sendType": 1,
+        "npcId": None
+    }),
     "Gettask": _tools.RODict({
         "ID": "Gettask",
         "EventID": 20000,

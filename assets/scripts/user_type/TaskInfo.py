@@ -24,6 +24,7 @@ import visible_visible as V_VD
 import rewardTask_config as RRTIC
 import rewardTask_taskInfo as RRTID
 import antiAddictCategory_antiAddictCategory_def as AAC_AACDD
+import battlePassUtils as BPU
 
 class TaskCountLimitType(object):
     TASK_LIMIT_CLAIM_COUNT = 0  # 领取任务时检查领取次数限制
@@ -413,7 +414,7 @@ class TaskInfo(userType.UserSingleType):
 
     def doSendUpdateTasksToClient(self, owner):
         if self.sendUpdateTasks:
-            LOG_INFO('     in doSendUpdateTasksToClient:', [(_t.taskId, _t.stat) for _t in self.sendUpdateTasks.values()])
+            LOG_DBG('     in doSendUpdateTasksToClient:', [(_t.taskId, _t.stat) for _t in self.sendUpdateTasks.values()])
             owner.client.onTaskUpdate([_t.toTaskClientDict() for _t in self.sendUpdateTasks.values()])
             self.sendUpdateTasks = {}
 
@@ -1398,6 +1399,36 @@ class TaskInfo(userType.UserSingleType):
         LOG_INFO("_afterTaskSubmitted ", task, popRewardUUID)
         if task.taskId in V_VD.taskDic:
             owner.updateVisibleByList(V_VD.taskDic[task.taskId])
+        # 父节点任务
+        if task.parentTaskId == 0:
+            # 地区任务
+            if task.taskType == gameconst.TaskType.TASK_TYPE_MAP_EXPLORE:
+                taskData = dataUtils.getTaskCfg(task.taskId)
+                if not taskData:
+                    gameengine.panicStack('_afterTaskSubmitted getTaskCfg from normal task data, no taskdata:', task.taskId)
+                else:
+                    mapId = dataUtils.getTaskFieldVal(taskData, 'ClaimNpcMapId')
+                    if mapId <=0:
+                        gameengine.panicStack('_afterTaskSubmitted getTaskCfg from normal task data, no map id 1:', task.taskId)
+                    else:
+                        # v5.2 新手历程 2=完成任务数
+                        owner.beginnerJourney_onTaskEvent(
+                            gameconst.BjTaskType.BJ_TASK_TYPE_TASK_FINISH,
+                            delta=1, taskSubType=task.taskType, areaId=mapId)
+            # 悬赏任务
+            elif task.taskType == gameconst.TaskType.TASK_TYPE_HOOK_REWARD:
+                taskData = RRTID.datas.get(task.taskId)
+                if not taskData:
+                    gameengine.panicStack('_afterTaskSubmitted getTaskCfg from reward task data, no taskdata:', task.taskId)
+                else:
+                    mapId = taskData.get('mapID', 0)
+                    if mapId <= 0:
+                        gameengine.panicStack('_afterTaskSubmitted getTaskCfg from reward task data, no map id 2:', task.taskId)
+                    else:
+                        # v5.2 新手历程 2=完成任务数
+                        owner.beginnerJourney_onTaskEvent(
+                            gameconst.BjTaskType.BJ_TASK_TYPE_TASK_FINISH,
+                            delta=1, taskSubType=task.taskType, areaId=mapId)
 
         owner.onTaskFinishedForNewbieStep(task.taskId)
         owner.checkUnlockBuildAndSkillByTask(True, task.taskId)
@@ -1425,6 +1456,7 @@ class TaskInfo(userType.UserSingleType):
                 gameconst.AchieveType.HOOK_TASK_REWARD,
                 actionContext.AchievementCtx(mapId=_data['mapID']))
             owner.triggerMapExplore(_data['mapID'], gameconst.AchieveType.HOOK_TASK_REWARD, 1)
+            owner.onBattlePassTask(BPU.TASK_BOUNTY, 1, 0, 0)
         elif task.taskType == gameconst.TaskType.TASK_TYPE_MAP_EXPLORE:
             taskData = dataUtils.getTaskCfg(task.taskId)
             if task.parentTaskId == 0:
@@ -1798,8 +1830,28 @@ class TaskInfo(userType.UserSingleType):
 
         self.addSendUpdatedTaskList(_uptaskList)
         self._afterTaskQuit(owner, _quitTaskIds, reason, opUUID)
+        self._dropResetTaskAfterQuit(owner, _rootTask)
 
         return len(_quitTaskIds) > 0
+
+    def _dropResetTaskAfterQuit(self, owner, rootTask):
+        # 可重置的手动任务放弃后从身上移除。客户端删掉根任务时会按开启条件重建成未领取。
+        if not rootTask:
+            return
+        taskData = dataUtils.getTaskCfg(rootTask.taskId)
+        if not taskData.get('IsCanReset', False):
+            return
+        if not dataUtils.getTaskFieldVal(taskData, 'ClaimCondManualTake') or not dataUtils.getTaskFieldVal(taskData, 'DispInTaskBar'):
+            return
+        remIds = self.remChildTask(rootTask.taskId)
+        for childId in remIds:
+            self.sendUpdateTasks.pop(childId, None)
+        self.sendUpdateTasks.pop(rootTask.taskId, None)
+        if self.remTask(rootTask.taskId):
+            remIds.append(rootTask.taskId)
+        LOG_INFO('_dropResetTaskAfterQuit', rootTask.taskId, remIds)
+        if remIds and owner.client:
+            owner.client.onTasksRem(remIds)
 
     def _afterTaskQuit(self, owner, quitTaskIds, reason, opUUID=0):
         if not opUUID:
@@ -1870,23 +1922,6 @@ class TaskInfo(userType.UserSingleType):
             tids = self.getChildTaskIds(tid, deep=deep + 1)
             tids and childTaskIds.extend(tids)
         return childTaskIds
-
-    def _cleanOldChildTasks(self, owner, syncTaskIdList):
-        remChildTaskIds = []
-        for taskId in syncTaskIdList:
-            _task = self.getTaskObj(taskId)
-            if not _task:
-                continue
-            if _task.parentTaskId != 0:
-                continue
-            if dataUtils.isSingleSupportTeamTask(taskId) and not _task.isInEndStat():
-                # 如果有进行中的单人支持的组队任务，不能被队长的任务覆盖
-                continue
-            remChildTaskIds.extend(self.remChildTask(_task.taskId))
-        if len(remChildTaskIds) > 0:
-            LOG_INFO('     in _cleanOldChildTasks, remChildTaskIds:', remChildTaskIds)
-            owner.client.onTasksRem(remChildTaskIds)
-        return
 
     def onTaskStepUpdate(self, owner, targetType, taskIds, args):
         LOG_DBG('TaskInfo::onTaskStepUpdate:', targetType, taskIds, args)

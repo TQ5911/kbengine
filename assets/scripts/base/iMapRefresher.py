@@ -25,7 +25,7 @@ class IMapRefresher(object):
         self.groupCollects = defaultdict(_defaultdict_list)
         self.nonGroupCollects = _defaultdict_list()
 
-    def startRrefreshTimer(self, spaceNo, policyIdsMap={}):
+    def startRrefreshTimer(self, spaceNo, policyIdsMap=None):
         pass
 
     def onRefreshEntity(self, spaceNo, entId):
@@ -48,7 +48,8 @@ class IMapRefresher(object):
             LOG_WARN('cannot get entities refresh r data for', spaceNo, mapId)
             return None
 
-    def calcValidPos(self, spaceNo, rId, posPool=[]):
+    def calcValidPos(self, spaceNo, rId, posPool=None):
+        posPool = posPool or []
         if spaceNo not in self.mapPosUsed:
             self.mapPosUsed[spaceNo] = []
 

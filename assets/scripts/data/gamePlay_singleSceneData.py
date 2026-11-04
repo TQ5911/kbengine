@@ -196,7 +196,7 @@ datas = _tools.RODict({
         "sceneName": "流沙故域一层",
         "defaultMapID": 1110,
         "returnPos": None,
-        "tmxRes": "wuDuShiKu_07",
+        "tmxRes": "liuShaGuCheng_02",
         "weatherType": 0,
     }),
     "field_liushagucheng_01": _tools.RODict({
@@ -204,7 +204,7 @@ datas = _tools.RODict({
         "sceneName": "流沙故域二层",
         "defaultMapID": 1111,
         "returnPos": None,
-        "tmxRes": "wuDuShiKu_07",
+        "tmxRes": "liuShaGuCheng_01",
         "weatherType": 0,
     }),
     "field_liushagucheng_03": _tools.RODict({
@@ -212,7 +212,7 @@ datas = _tools.RODict({
         "sceneName": "流沙故域三层",
         "defaultMapID": 1112,
         "returnPos": None,
-        "tmxRes": "wuDuShiKu_07",
+        "tmxRes": "liuShaGuCheng_03",
         "weatherType": 0,
     }),
     "field_liushagucheng_04": _tools.RODict({
@@ -220,7 +220,7 @@ datas = _tools.RODict({
         "sceneName": "流沙故域四层",
         "defaultMapID": 1113,
         "returnPos": None,
-        "tmxRes": "wuDuShiKu_07",
+        "tmxRes": "liuShaGuCheng_04",
         "weatherType": 0,
     }),
     "field_yueguanghaigang_08": _tools.RODict({
@@ -253,6 +253,14 @@ datas = _tools.RODict({
         "defaultMapID": 2103,
         "returnPos": None,
         "tmxRes": "taoFa_04",
+        "weatherType": 0,
+    }),
+    "field_taofa05": _tools.RODict({
+        "sceneRes": "field_taofa05",
+        "sceneName": "普通讨伐5",
+        "defaultMapID": 2105,
+        "returnPos": None,
+        "tmxRes": "taoFa_05",
         "weatherType": 0,
     }),
     "field_shouling_00": _tools.RODict({
@@ -477,6 +485,14 @@ datas = _tools.RODict({
         "defaultMapID": 5203,
         "returnPos": None,
         "tmxRes": "heiYanDiGong_03",
+        "weatherType": 0,
+    }),
+    "field_heiyandigong_04": _tools.RODict({
+        "sceneRes": "field_heiyandigong_04",
+        "sceneName": "黑炎地宫四层",
+        "defaultMapID": 5204,
+        "returnPos": None,
+        "tmxRes": "heiYanDiGong_04",
         "weatherType": 0,
     }),
     "field_leitai": _tools.RODict({

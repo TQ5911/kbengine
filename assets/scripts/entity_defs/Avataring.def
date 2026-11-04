@@ -170,6 +170,20 @@
             <Arg>       AVATARING_CHAT_MSG_BATCH    </Arg>
         </onRecvChannelMsgBatch>
 
+        <onOfficialMessage>
+            <Arg>       UINT8               </Arg>
+            <Arg>       UNICODE             </Arg>
+            <Arg>       UINT8               </Arg>
+            <Arg>       ARRAY   <of>    STRING     </of>        </Arg>
+            <Arg>       UINT64              </Arg>
+            <Arg>       STRING              </Arg>
+            <Arg>       UINT8               </Arg>
+        </onOfficialMessage>
+
+        <stopOfficialMessage>
+            <Arg>       UINT64              </Arg>
+        </stopOfficialMessage>
+
         <onEnterWaitMapSpace>
             <Arg>       SPACE_NO        </Arg>
             <Arg>       MAILBOX         </Arg>
@@ -276,5 +290,19 @@
         <checkTextSecurityResp>
             <Arg>           CHECK_TEXT_SECURITY_RESP     </Arg>
         </checkTextSecurityResp>
+
+        <onOfficialMessage>
+            <Arg>       UINT8               </Arg>
+            <Arg>       UNICODE             </Arg>
+            <Arg>       UINT8               </Arg>
+            <Arg>       ARRAY   <of>    STRING     </of>        </Arg>
+            <Arg>       UINT64              </Arg>
+            <Arg>       STRING              </Arg>
+            <Arg>       UINT8               </Arg>
+        </onOfficialMessage>
+
+        <stopOfficialMessage>
+            <Arg>       UINT64              </Arg>
+        </stopOfficialMessage>
     </ClientMethods>
 </root>

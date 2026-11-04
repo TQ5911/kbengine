@@ -174,10 +174,11 @@ class Accounting(KBEngine.Proxy, iClient.IClient, iTimer.ITimer):
             self.avataring.kickAvataring(gameconst.OFFLINE_REASON_SELECT_CHARACTER)
 
         ap = appearance.Appearance(weapon, breast, outfit, face)
+        _gbid = gbid or KBEngine.genUUID64()
         avataring = KBEngine.createEntityLocally('Avataring', {
             'accountingID': self.id,
-            'gbID': gbid if gbid else KBEngine.genUUID64(),
-            'gbId': gbid if gbid else KBEngine.genUUID64(),
+            'gbID': _gbid,
+            'gbId': _gbid,
             'name': name,
             'school': school,
             'sex': sex,

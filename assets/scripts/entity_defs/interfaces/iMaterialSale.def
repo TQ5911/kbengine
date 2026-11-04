@@ -1,0 +1,50 @@
+<root>
+    <Properties>
+        <materialSaleWeekTs>
+            <Type>          UINT32                      </Type>
+            <Flags>         BASE                        </Flags>
+            <Persistent>    true                        </Persistent>
+            <Default>       0                           </Default>
+        </materialSaleWeekTs>
+
+        <materialSaleUsedDic>
+            <Type>          PY_DICT                     </Type>
+            <Flags>         BASE                        </Flags>
+            <Persistent>    true                        </Persistent>
+            <Default>       {}                          </Default>
+        </materialSaleUsedDic>
+
+        <materialSaleMaxDic>
+            <Type>          PY_DICT                     </Type>
+            <Flags>         BASE                        </Flags>
+            <Persistent>    true                        </Persistent>
+            <Default>       {}                          </Default>
+        </materialSaleMaxDic>
+    </Properties>
+
+    <BaseMethods>
+        <reqBuyMaterialSale> <Exposed/>
+            <Arg>           UINT32          </Arg>   <!-- saleId -->
+            <Arg>           UINT32          </Arg>   <!-- num -->
+        </reqBuyMaterialSale>
+    </BaseMethods>
+
+    <CellMethods>
+    </CellMethods>
+
+    <ClientMethods>
+        <onMaterialSaleQuota>
+            <Arg>  ARRAY <of> UINT32 </of>  </Arg>   <!-- saleIds -->
+            <Arg>  ARRAY <of> UINT32 </of>  </Arg>   <!-- remain -->
+            <Arg>  ARRAY <of> UINT32 </of>  </Arg>   <!-- maxQuota -->
+            <Arg>  ARRAY <of> UINT32 </of>  </Arg>   <!-- unitPrice 元宝，大月卡为绑定元宝 -->
+        </onMaterialSaleQuota>
+        <onBuyMaterialSaleResult>
+            <Arg>           UINT32          </Arg>   <!-- saleId -->
+            <Arg>           UINT8           </Arg>   <!-- result:0成功 1失败 2元宝不足 3背包满 -->
+            <Arg>           UINT32          </Arg>   <!-- remain -->
+            <Arg>           UINT32          </Arg>   <!-- maxQuota -->
+            <Arg>           UINT32          </Arg>   <!-- unitPrice 元宝，大月卡为绑定元宝 -->
+        </onBuyMaterialSaleResult>
+    </ClientMethods>
+</root>

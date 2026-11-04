@@ -11,6 +11,12 @@
             <Flags>     BASE        </Flags>
             <Default>   {}          </Default>
         </accountDic>
+        
+        <gameServerHeartBeat>
+            <Type>      PY_DICT     </Type>
+            <Flags>     BASE        </Flags>
+            <Default>   {}          </Default>
+        </gameServerHeartBeat>
     </Properties>
 
     <BaseMethods>
@@ -27,6 +33,10 @@
             <Arg>       SERVER_ID                   </Arg>
             <Arg>       UNICODE                     </Arg>
         </onPong>
+
+        <onGameServerHeartBeat>
+            <Arg>       SERVER_ID                   </Arg>
+        </onGameServerHeartBeat>
 
         <onReqCrossServer>
             <Arg>           UNICODE                 </Arg>
@@ -71,5 +81,15 @@
             <Arg>           INT32                       </Arg>
             <Arg>           ARRAY <of> UNICODE </of>    </Arg>
         </onGlobalEventTips>
+
+        <crossBroadcastMsg>
+            <Arg>          UINT32                      </Arg>
+        </crossBroadcastMsg>
+
+        <onCrossBroadcastMsg>
+            <Arg>          UINT32                      </Arg>
+            <Arg>          UINT32                      </Arg>
+            <Arg>          UINT16                      </Arg>
+        </onCrossBroadcastMsg>
     </BaseMethods>
 </root>

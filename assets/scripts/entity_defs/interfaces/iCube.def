@@ -85,6 +85,7 @@
             <Arg>           ITEM_ID                 </Arg>
             <Arg>           UINT8                   </Arg>
             <Arg>           BOOL                    </Arg>
+            <Arg>           BOOL                    </Arg>
         </reqUseItemAddCubeTimes>
 
         <useItemAddCubeTimes>
@@ -95,6 +96,7 @@
             <Arg>           BOOL                    </Arg>
             <Arg>           UINT8                   </Arg>
             <Arg>           OP_UUID                 </Arg>
+            <Arg>           BOOL                    </Arg>
         </useItemAddCubeTimes>
 
         <addRoomDurationFailed>
@@ -121,6 +123,7 @@
 
         <cubePray> <Exposed/>
             <Arg>           UINT8                   </Arg>
+            <Arg>           BOOL                    </Arg>
         </cubePray>
 
         <onLogonEnterCubeGetSpaceBox>
@@ -166,6 +169,7 @@
             <Arg>           PYTHON                  </Arg>
             <Arg>           UINT8                   </Arg>
             <Arg>           OP_UUID                 </Arg>
+            <Arg>           BOOL                    </Arg>
         </checkAddCubeRoomDurationCondition>
 
         <directlyAddCubeRoomDuration>

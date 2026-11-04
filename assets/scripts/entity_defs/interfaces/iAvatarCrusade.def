@@ -16,11 +16,6 @@
     </Properties>
 
     <CellMethods>
-        <enterCrusadeDungeon>
-            <Exposed/>
-        </enterCrusadeDungeon>
-        <autoStartCrusadeDungeon>
-        </autoStartCrusadeDungeon>
     </CellMethods>
 
     <BaseMethods>
@@ -28,6 +23,7 @@
             <Exposed/>
             <Arg>   UINT16   </Arg>
             <Arg>   UINT16   </Arg>
+            <Arg>   BOOL    </Arg>
         </increaseCrusadeRewardNumber>
 
         <useItemToIncreaseCrusadeRewardNumber>
@@ -38,6 +34,7 @@
         <useCoinToIncreaseCrusadeRewardNumber>
             <Exposed/>
             <Arg>   UINT8   </Arg>
+            <Arg>   BOOL    </Arg>
         </useCoinToIncreaseCrusadeRewardNumber>
 
         <onUseItemToIncreaseCrusadeRewardNumber>
@@ -45,14 +42,6 @@
             <Arg>   UINT32      </Arg>
             <Arg>   PYTHON      </Arg>
         </onUseItemToIncreaseCrusadeRewardNumber>
-
-        <onEnterCrusadeDungeon>
-            <Arg>           UUID                </Arg>
-            <Arg>           SPACE_NO            </Arg>
-            <Arg>           DUNGEON_NO          </Arg>
-            <Arg>           MAILBOX             </Arg>
-            <Arg>           PYTHON              </Arg>
-        </onEnterCrusadeDungeon>
 
     </BaseMethods>
 

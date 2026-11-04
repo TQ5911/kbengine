@@ -1,0 +1,93 @@
+<root>
+    <Properties>
+        <!-- 已完成的子任务 taskID 列表 -->
+        <beginnerJourneyFinishedTasks>
+            <Type>          ARRAY   <of>    UINT32      </of>    </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </beginnerJourneyFinishedTasks>
+
+        <!-- 已领取的子任务奖励 taskID 列表 -->
+        <beginnerJourneyClaimedTaskRewards>
+            <Type>          ARRAY   <of>    UINT32      </of>    </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </beginnerJourneyClaimedTaskRewards>
+
+        <!-- 已领取的阶段奖励 phaseID 列表 -->
+        <beginnerJourneyClaimedPhaseRewards>
+            <Type>          ARRAY   <of>    UINT32      </of>    </Type>
+            <Flags>         BASE                    </Flags>
+            <Persistent>    true                    </Persistent>
+        </beginnerJourneyClaimedPhaseRewards>
+
+        <!-- 系统是否已关闭:0=开放,1=已关闭 (所有任务+奖励领取完后次日凌晨关闭) -->
+        <beginnerJourneyClosed>
+            <Type>          UINT8                              </Type>
+            <Flags>         BASE_AND_CLIENT                    </Flags>
+            <Persistent>    true                               </Persistent>
+        </beginnerJourneyClosed>
+
+        <!-- 2026-09-24 v4:行为累积统计 (taskID -> count) -->
+        <beginnerJourneyBehaviorStats>
+            <Type>          BEGINNER_JOURNEY_BEHAVIOR_STATS    </Type>
+            <Flags>         BASE                               </Flags>
+            <Persistent>    true                               </Persistent>
+        </beginnerJourneyBehaviorStats>
+
+        <beginnerJourneySpecialRewardFinished>
+            <Type>          UINT8                              </Type>
+            <Flags>         BASE_AND_CLIENT                    </Flags>
+            <Persistent>    true                               </Persistent>
+        </beginnerJourneySpecialRewardFinished>
+    </Properties>
+
+    <BaseMethods>
+        <takeBeginnerJourneyTaskReward> <Exposed/>
+            <Arg>           UINT32                  </Arg>
+        </takeBeginnerJourneyTaskReward>
+        <takeBeginnerJourneyPhaseReward> <Exposed/>
+            <Arg>           UINT32                  </Arg>
+        </takeBeginnerJourneyPhaseReward>
+        <takeBeginnerJourneySpecialReward> <Exposed/>
+        </takeBeginnerJourneySpecialReward>
+        <beginnerJourneyOnTaskEvents>
+            <Arg>  PYTHON  </Arg>
+        </beginnerJourneyOnTaskEvents>
+
+        <clearBeginnerJourneyBehaviorStatusEx>
+            <Arg>           ARRAY   <of>    UINT8  </of>   </Arg>
+        </clearBeginnerJourneyBehaviorStatusEx>
+    </BaseMethods>
+
+    <ClientMethods>
+        <!-- 登录时全量推送: 3 个状态数组 + 4 个进度数组 (平行数组, 索引对齐) -->
+        <onBeginnerJourneyTaskRecord>
+            <Arg>           ARRAY   <of>    UINT32  </of>   </Arg>
+            <Arg>           ARRAY   <of>    UINT32  </of>   </Arg>
+            <Arg>           ARRAY   <of>    UINT32  </of>   </Arg>
+            <Arg>           ARRAY   <of>    UINT32  </of>   </Arg>
+            <Arg>           ARRAY   <of>    UINT32  </of>   </Arg>
+            <Arg>           ARRAY   <of>    UINT32  </of>   </Arg>
+        </onBeginnerJourneyTaskRecord>
+
+        <onBeginnerJourneyTaskFinished>
+            <Arg>  UINT32  </Arg>
+        </onBeginnerJourneyTaskFinished>
+
+        <onBeginnerJourneyTaskReward>
+            <Arg>  UINT32  </Arg>
+        </onBeginnerJourneyTaskReward>
+
+        <onBeginnerJourneyPhaseReward>
+            <Arg>  UINT32  </Arg>
+        </onBeginnerJourneyPhaseReward>
+
+        <!-- 单任务进度更新推送: 每次累积后调用 (taskId, cur, targetNum, isFinished) -->
+        <onBeginnerJourneyTaskUpdate>
+            <Arg>  UINT32  </Arg>
+            <Arg>  UINT32  </Arg>
+            <Arg>  UINT32  </Arg>
+        </onBeginnerJourneyTaskUpdate>
+    </ClientMethods>
+</root>

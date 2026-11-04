@@ -42,20 +42,6 @@
             <Arg>            INT8            </Arg>
         </completeRaidDungeon>
 
-        <leaveTeamDungeon>
-            <Arg>            SPACE_NO        </Arg>
-            <Arg>            RAID_ID         </Arg>
-            <Arg>            PYTHON          </Arg>
-            <Arg>            MAILBOX         </Arg>
-        </leaveTeamDungeon>
-
-        <leaveRaidDungeon>
-            <Arg>            SPACE_NO        </Arg>
-            <Arg>            RAID_ID         </Arg>
-            <Arg>            PYTHON          </Arg>
-            <Arg>            MAILBOX         </Arg>
-        </leaveRaidDungeon>
-
         <releaseRaidDungeonCreatingLock>
             <Arg>   RAID_ID         </Arg>
         </releaseRaidDungeonCreatingLock>

@@ -259,5 +259,20 @@ datas = _tools.RODict({
         "ID": "cantSeeText",
         "value": "目标未在可见地图中",
         "Type": "string"
+    }),
+    "AllArmor": _tools.RODict({
+        "ID": "AllArmor",
+        "value": "基础全防御",
+        "Type": "string"
+    }),
+    "AffixCountText": _tools.RODict({
+        "ID": "AffixCountText",
+        "value": "{0}条",
+        "Type": "string"
+    }),
+    "SoulLevelRange": _tools.RODict({
+        "ID": "SoulLevelRange",
+        "value": "（{0}-{1}）",
+        "Type": "string"
     })
 })

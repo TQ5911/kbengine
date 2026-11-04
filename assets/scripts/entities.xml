@@ -10,17 +10,12 @@
 	<AdminStub/>
 	<PlayerStub/>
 	<BaseApp/>
-	<TeamStub/>
 	<CrossTeamStub/>
-	<TeamMatchStub/>
-	<TeamDungeonStub/>
 	<CrossTeamDungeonStub/>
 	<SingleDungeonStub/>
 	<WorldLineStub/>
 	<CubeStub/>
-	<RaidStub/>
 	<CrossServerStub/>
-	<RaidDungeonStub/>
 	<LoginStub/>
 	<ItemLinkStub/>
 	<GlobalMailStub/>
@@ -42,10 +37,8 @@
 	<SiegeWarSpaceStub/>
 	<SiegeWarSpaceMgr/>
 	<CrossDataStub/>
-	<WorldBossStub/>
 	<AntiAddictionStub/>
 	<OrderStub/>
-	<RaidMatchStub/>
 	<WorldRefreshEntityStub/>
 	<RedBagStub/>
 	<MineWarStub/>

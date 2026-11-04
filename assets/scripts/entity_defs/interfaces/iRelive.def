@@ -49,6 +49,7 @@
         <recoverDeathPenaltyExp> <Exposed/>
             <Arg>       LONGTIME        </Arg>
             <Arg>       ITEM_ID         </Arg>
+            <Arg>       BOOL            </Arg>
         </recoverDeathPenaltyExp>
 
         <removeDeathPenaltyExp> <Exposed/>
